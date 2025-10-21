@@ -17,131 +17,131 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
 
   @override
   Widget build(BuildContext context) => FutureBuilder<List<TaxInfo>>(
-    future: _reminderService.getTaxesNeedingReminder(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Card(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-        );
-      }
+        future: _reminderService.getTaxesNeedingReminder(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            );
+          }
 
-      if (snapshot.hasError) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                const Icon(Icons.error, color: Colors.red),
-                const SizedBox(height: 8),
-                Text(
-                  'Ошибка загрузки напоминаний: ${snapshot.error}',
-                  style: const TextStyle(color: Colors.red),
-                  textAlign: TextAlign.center,
+          if (snapshot.hasError) {
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    const Icon(Icons.error, color: Colors.red),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Ошибка загрузки напоминаний: ${snapshot.error}',
+                      style: const TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
-      }
+              ),
+            );
+          }
 
-      final reminders = snapshot.data ?? [];
+          final reminders = snapshot.data ?? [];
 
-      if (reminders.isEmpty) {
-        return const SizedBox.shrink();
-      }
+          if (reminders.isEmpty) {
+            return const SizedBox.shrink();
+          }
 
-      return Card(
-        margin: const EdgeInsets.all(16),
-        color: Colors.orange[50],
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+          return Card(
+            margin: const EdgeInsets.all(16),
+            color: Colors.orange[50],
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.notifications_active, color: Colors.orange[700]),
-                  const SizedBox(width: 8),
+                  Row(
+                    children: [
+                      Icon(Icons.notifications_active, color: Colors.orange[700]),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Напоминания о налогах',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.orange[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
                   Text(
-                    'Напоминания о налогах',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.orange[700],
+                    'У вас ${reminders.length} ${_getReminderText(reminders.length)} требуют внимания',
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  const SizedBox(height: 12),
+                  ...reminders.take(3).map(_buildReminderItem),
+                  if (reminders.length > 3) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      'И ещё ${reminders.length - 3} напоминаний...',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () => _showAllReminders(reminders),
+                      icon: const Icon(Icons.list),
+                      label: const Text('Посмотреть все'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange[700],
+                        foregroundColor: Colors.white,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              Text(
-                'У вас ${reminders.length} ${_getReminderText(reminders.length)} требуют внимания',
-                style: const TextStyle(fontSize: 14),
-              ),
-              const SizedBox(height: 12),
-              ...reminders.take(3).map(_buildReminderItem),
-              if (reminders.length > 3) ...[
-                const SizedBox(height: 8),
-                Text(
-                  'И ещё ${reminders.length - 3} напоминаний...',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => _showAllReminders(reminders),
-                  icon: const Icon(Icons.list),
-                  label: const Text('Посмотреть все'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[700],
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       );
-    },
-  );
 
   Widget _buildReminderItem(TaxInfo taxInfo) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      children: [
-        Text(taxInfo.taxTypeIcon, style: const TextStyle(fontSize: 16)),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${taxInfo.taxTypeDisplayName} - ${taxInfo.period}',
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Text(taxInfo.taxTypeIcon, style: const TextStyle(fontSize: 16)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${taxInfo.taxTypeDisplayName} - ${taxInfo.period}',
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    'К доплате: ${taxInfo.formattedTaxAmount}',
+                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                  ),
+                ],
               ),
-              Text(
-                'К доплате: ${taxInfo.formattedTaxAmount}',
-                style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-              ),
-            ],
-          ),
+            ),
+            IconButton(
+              onPressed: () => _sendReminder(taxInfo),
+              icon: const Icon(Icons.send, size: 16),
+              tooltip: 'Отправить напоминание',
+            ),
+          ],
         ),
-        IconButton(
-          onPressed: () => _sendReminder(taxInfo),
-          icon: const Icon(Icons.send, size: 16),
-          tooltip: 'Отправить напоминание',
-        ),
-      ],
-    ),
-  );
+      );
 
   String _getReminderText(int count) {
     if (count == 1) return 'налог';
@@ -216,84 +216,84 @@ class TaxReminderStatsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => FutureBuilder<Map<String, dynamic>>(
-    future: TaxReminderService().getReminderStatistics(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Card(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-        );
-      }
-
-      if (snapshot.hasError) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              'Ошибка загрузки статистики: ${snapshot.error}',
-              style: const TextStyle(color: Colors.red),
-            ),
-          ),
-        );
-      }
-
-      final stats = snapshot.data ?? {};
-      final recentReminders = stats['recentRemindersCount'] as int? ?? 0;
-      final overdueTaxes = stats['overdueTaxesCount'] as int? ?? 0;
-
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Статистика напоминаний',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        future: TaxReminderService().getReminderStatistics(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(child: CircularProgressIndicator()),
               ),
-              const SizedBox(height: 12),
-              Row(
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  'Ошибка загрузки статистики: ${snapshot.error}',
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+            );
+          }
+
+          final stats = snapshot.data ?? {};
+          final recentReminders = stats['recentRemindersCount'] as int? ?? 0;
+          final overdueTaxes = stats['overdueTaxesCount'] as int? ?? 0;
+
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: _buildStatItem(
-                      'Отправлено за неделю',
-                      recentReminders.toString(),
-                      Icons.send,
-                      Colors.blue,
-                    ),
+                  const Text(
+                    'Статистика напоминаний',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
-                  Expanded(
-                    child: _buildStatItem(
-                      'Просрочено',
-                      overdueTaxes.toString(),
-                      Icons.warning,
-                      Colors.red,
-                    ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatItem(
+                          'Отправлено за неделю',
+                          recentReminders.toString(),
+                          Icons.send,
+                          Colors.blue,
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildStatItem(
+                          'Просрочено',
+                          overdueTaxes.toString(),
+                          Icons.warning,
+                          Colors.red,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       );
-    },
-  );
 
   Widget _buildStatItem(String label, String value, IconData icon, Color color) => Column(
-    children: [
-      Icon(icon, color: color, size: 24),
-      const SizedBox(height: 4),
-      Text(
-        value,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
-      ),
-      Text(
-        label,
-        style: const TextStyle(fontSize: 12, color: Colors.grey),
-        textAlign: TextAlign.center,
-      ),
-    ],
-  );
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+          ),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
 }

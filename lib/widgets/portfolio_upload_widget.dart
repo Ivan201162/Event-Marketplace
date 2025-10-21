@@ -150,69 +150,71 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Widget _buildUploadButtons() => Wrap(
-    spacing: 8,
-    runSpacing: 8,
-    children: [
-      _buildUploadButton(icon: Icons.photo, label: 'Фото', onPressed: _showImagePicker),
-      _buildUploadButton(icon: Icons.videocam, label: 'Видео', onPressed: _showVideoPicker),
-      _buildUploadButton(icon: Icons.description, label: 'Документ', onPressed: _showFilePicker),
-    ],
-  );
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          _buildUploadButton(icon: Icons.photo, label: 'Фото', onPressed: _showImagePicker),
+          _buildUploadButton(icon: Icons.videocam, label: 'Видео', onPressed: _showVideoPicker),
+          _buildUploadButton(
+              icon: Icons.description, label: 'Документ', onPressed: _showFilePicker),
+        ],
+      );
 
   Widget _buildUploadButton({
     required IconData icon,
     required String label,
     required VoidCallback onPressed,
-  }) => ElevatedButton.icon(
-    onPressed: onPressed,
-    icon: Icon(icon, size: 18),
-    label: Text(label),
-    style: ElevatedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    ),
-  );
+  }) =>
+      ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 18),
+        label: Text(label),
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        ),
+      );
 
   Widget _buildUploadedItem(PortfolioItem item) => Container(
-    margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: Colors.green.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.green),
-    ),
-    child: Row(
-      children: [
-        Icon(_getItemIcon(item.type), color: Colors.green, size: 20),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                item.title ?? 'Без названия',
-                style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.green.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.green),
+        ),
+        child: Row(
+          children: [
+            Icon(_getItemIcon(item.type), color: Colors.green, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.title ?? 'Без названия',
+                    style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+                  ),
+                  if (item.description != null)
+                    Text(
+                      item.description!,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 10),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
               ),
-              if (item.description != null)
-                Text(
-                  item.description!,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 10),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-            ],
-          ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, size: 16),
+              onPressed: () {
+                ref
+                    .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+                    .removePortfolioItem(widget.userId, item.id);
+              },
+            ),
+          ],
         ),
-        IconButton(
-          icon: const Icon(Icons.close, size: 16),
-          onPressed: () {
-            ref
-                .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
-                .removePortfolioItem(widget.userId, item.id);
-          },
-        ),
-      ],
-    ),
-  );
+      );
 
   IconData _getItemIcon(String type) {
     switch (type) {
@@ -312,9 +314,7 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _uploadImage(File file) async {
-    await ref
-        .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
-        .uploadImage(
+    await ref.read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier).uploadImage(
           userId: widget.userId,
           imageFile: file,
           title: _titleController.text.isNotEmpty ? _titleController.text : null,
@@ -326,9 +326,7 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _uploadVideo(File file) async {
-    await ref
-        .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
-        .uploadVideo(
+    await ref.read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier).uploadVideo(
           userId: widget.userId,
           videoFile: file,
           title: _titleController.text.isNotEmpty ? _titleController.text : null,
@@ -340,9 +338,7 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _uploadDocument(File file) async {
-    await ref
-        .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
-        .uploadDocument(
+    await ref.read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier).uploadDocument(
           userId: widget.userId,
           documentFile: file,
           title: _titleController.text.isNotEmpty ? _titleController.text : null,

@@ -174,145 +174,146 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-    animation: _scaleAnimation,
-    builder: (context, child) {
-      return Transform.scale(
-        scale: _scaleAnimation.value,
-        child: Container(
-          width: 170,
-          margin: const EdgeInsets.only(right: 12),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: InkWell(
-            onTap: () => context.push('/specialist/${widget.specialist.id}'),
-            onTapDown: (_) {
-              setState(() => _isHovered = true);
-              _hoverController.forward();
-            },
-            onTapUp: (_) {
-              setState(() => _isHovered = false);
-              _hoverController.reverse();
-            },
-            onTapCancel: () {
-              setState(() => _isHovered = false);
-              _hoverController.reverse();
-            },
-            borderRadius: BorderRadius.circular(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Аватар специалиста
-                Container(
-                  height: 110,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                    image: widget.specialist.avatar != null
-                        ? DecorationImage(
-                            image: CachedNetworkImageProvider(widget.specialist.avatar!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                    color: widget.specialist.avatar == null
-                        ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                        : null,
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
+              width: 170,
+              margin: const EdgeInsets.only(right: 12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
                   ),
-                  child: widget.specialist.avatar == null
-                      ? const Center(child: Icon(Icons.person, size: 50, color: Colors.grey))
-                      : null,
-                ),
-                // Информация о специалисте
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.specialist.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          widget.specialist.category?.displayName ?? 'Категория',
-                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Spacer(),
-                        Row(
+                ],
+              ),
+              child: InkWell(
+                onTap: () => context.push('/specialist/${widget.specialist.id}'),
+                onTapDown: (_) {
+                  setState(() => _isHovered = true);
+                  _hoverController.forward();
+                },
+                onTapUp: (_) {
+                  setState(() => _isHovered = false);
+                  _hoverController.reverse();
+                },
+                onTapCancel: () {
+                  setState(() => _isHovered = false);
+                  _hoverController.reverse();
+                },
+                borderRadius: BorderRadius.circular(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Аватар специалиста
+                    Container(
+                      height: 110,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        image: widget.specialist.avatar != null
+                            ? DecorationImage(
+                                image: CachedNetworkImageProvider(widget.specialist.avatar!),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                        color: widget.specialist.avatar == null
+                            ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                            : null,
+                      ),
+                      child: widget.specialist.avatar == null
+                          ? const Center(child: Icon(Icons.person, size: 50, color: Colors.grey))
+                          : null,
+                    ),
+                    // Информация о специалисте
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.star, color: Colors.amber[600], size: 14),
-                            const SizedBox(width: 2),
                             Text(
-                              widget.specialist.rating.toString(),
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                              widget.specialist.name,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              widget.specialist.category?.displayName ?? 'Категория',
+                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                             const Spacer(),
-                            Text(
-                              '${widget.specialist.price}₸',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
-                              ),
+                            Row(
+                              children: [
+                                Icon(Icons.star, color: Colors.amber[600], size: 14),
+                                const SizedBox(width: 2),
+                                Text(
+                                  widget.specialist.rating.toString(),
+                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  '${widget.specialist.price}₸',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            // Интерактивные кнопки
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () => _openChat(context),
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 6),
+                                      minimumSize: Size.zero,
+                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      backgroundColor: Theme.of(context).primaryColor,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: const Text('Связаться', style: TextStyle(fontSize: 10)),
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () => _openBooking(context),
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(vertical: 6),
+                                      minimumSize: Size.zero,
+                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      backgroundColor: Colors.green,
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child:
+                                        const Text('Забронировать', style: TextStyle(fontSize: 10)),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
-                        // Интерактивные кнопки
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => _openChat(context),
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 6),
-                                  minimumSize: Size.zero,
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  backgroundColor: Theme.of(context).primaryColor,
-                                  foregroundColor: Colors.white,
-                                ),
-                                child: const Text('Связаться', style: TextStyle(fontSize: 10)),
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () => _openBooking(context),
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 6),
-                                  minimumSize: Size.zero,
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  backgroundColor: Colors.green,
-                                  foregroundColor: Colors.white,
-                                ),
-                                child: const Text('Забронировать', style: TextStyle(fontSize: 10)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
-    },
-  );
 
   /// Открыть чат с специалистом
   Future<void> _openChat(BuildContext context) async {

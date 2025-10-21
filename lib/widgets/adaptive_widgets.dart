@@ -24,17 +24,15 @@ class AdaptiveContainer extends StatelessWidget {
     final isDesktop = screenWidth > 1200;
 
     // Определяем максимальную ширину контента
-    final contentMaxWidth =
-        maxWidth ??
+    final contentMaxWidth = maxWidth ??
         (isDesktop
             ? 1200
             : isTablet
-            ? 800
-            : double.infinity);
+                ? 800
+                : double.infinity);
 
     // Определяем отступы
-    final contentPadding =
-        padding ??
+    final contentPadding = padding ??
         EdgeInsets.symmetric(horizontal: isTablet ? 32 : 16, vertical: isTablet ? 24 : 16);
 
     Widget content = Container(

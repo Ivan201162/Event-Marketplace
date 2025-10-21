@@ -33,29 +33,29 @@ class TypingIndicatorWidget extends StatelessWidget {
   }
 
   Widget _buildTypingAnimation() => SizedBox(
-    width: 20,
-    height: 20,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [_buildDot(0), _buildDot(1), _buildDot(2)],
-    ),
-  );
+        width: 20,
+        height: 20,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [_buildDot(0), _buildDot(1), _buildDot(2)],
+        ),
+      );
 
   Widget _buildDot(int index) => AnimatedContainer(
-    duration: const Duration(milliseconds: 600),
-    width: 4,
-    height: 4,
-    decoration: const BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
-    child: TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 600),
-      builder: (context, value, child) =>
-          Opacity(opacity: (value + index * 0.2) % 1.0, child: child),
-      onEnd: () {
-        // Перезапускаем анимацию
-      },
-    ),
-  );
+        duration: const Duration(milliseconds: 600),
+        width: 4,
+        height: 4,
+        decoration: const BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
+        child: TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: 1),
+          duration: const Duration(milliseconds: 600),
+          builder: (context, value, child) =>
+              Opacity(opacity: (value + index * 0.2) % 1.0, child: child),
+          onEnd: () {
+            // Перезапускаем анимацию
+          },
+        ),
+      );
 
   Widget _buildTypingText(List<TypingUser> users) {
     if (users.length == 1) {
@@ -140,13 +140,13 @@ class _AnimatedTypingIndicatorState extends State<AnimatedTypingIndicator>
   }
 
   Widget _buildAnimatedDots() => SizedBox(
-    width: 20,
-    height: 20,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [_buildAnimatedDot(0), _buildAnimatedDot(1), _buildAnimatedDot(2)],
-    ),
-  );
+        width: 20,
+        height: 20,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [_buildAnimatedDot(0), _buildAnimatedDot(1), _buildAnimatedDot(2)],
+        ),
+      );
 
   Widget _buildAnimatedDot(int index) {
     final delay = index * 0.2;

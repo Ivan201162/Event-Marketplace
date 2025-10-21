@@ -16,132 +16,132 @@ class FeedPostWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Card(
-    elevation: 2,
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок поста
-          Row(
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                backgroundImage: post.specialistPhotoUrl != null
-                    ? CachedNetworkImageProvider(post.specialistPhotoUrl!)
-                    : null,
-                child: post.specialistPhotoUrl == null ? const Icon(Icons.person) : null,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      post.specialistName,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    Text(
-                      _formatTimeAgo(post.createdAt),
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  switch (value) {
-                    case 'report':
-                      _showReportDialog(context);
-                      break;
-                    case 'hide':
-                      _hidePost(context);
-                      break;
-                  }
-                },
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'report',
-                    child: Row(
+              // Заголовок поста
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: post.specialistPhotoUrl != null
+                        ? CachedNetworkImageProvider(post.specialistPhotoUrl!)
+                        : null,
+                    child: post.specialistPhotoUrl == null ? const Icon(Icons.person) : null,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.report, size: 20),
-                        SizedBox(width: 8),
-                        Text('Пожаловаться'),
+                        Text(
+                          post.specialistName,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        Text(
+                          _formatTimeAgo(post.createdAt),
+                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                        ),
                       ],
                     ),
                   ),
-                  const PopupMenuItem(
-                    value: 'hide',
-                    child: Row(
-                      children: [
-                        Icon(Icons.visibility_off, size: 20),
-                        SizedBox(width: 8),
-                        Text('Скрыть'),
-                      ],
-                    ),
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      switch (value) {
+                        case 'report':
+                          _showReportDialog(context);
+                          break;
+                        case 'hide':
+                          _hidePost(context);
+                          break;
+                      }
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'report',
+                        child: Row(
+                          children: [
+                            Icon(Icons.report, size: 20),
+                            SizedBox(width: 8),
+                            Text('Пожаловаться'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: 'hide',
+                        child: Row(
+                          children: [
+                            Icon(Icons.visibility_off, size: 20),
+                            SizedBox(width: 8),
+                            Text('Скрыть'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Содержимое поста
+              if (post.content.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(post.content, style: const TextStyle(fontSize: 16)),
+                ),
+
+              // Медиа контент
+              if (post.mediaUrls.isNotEmpty) _buildMediaContent(),
+
+              // Теги
+              if (post.tags.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Wrap(
+                    spacing: 8,
+                    children: post.tags
+                        .map(
+                          (tag) => Chip(
+                            label: Text('#$tag'),
+                            backgroundColor: Colors.blue.withValues(alpha: 0.1),
+                            labelStyle: const TextStyle(color: Colors.blue, fontSize: 12),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+
+              const SizedBox(height: 12),
+
+              // Действия
+              Row(
+                children: [
+                  _buildActionButton(
+                    icon: post.isLikedBy('current_user') ? Icons.favorite : Icons.favorite_border,
+                    label: post.likes.toString(),
+                    color: post.isLikedBy('current_user') ? Colors.red : Colors.grey,
+                    onTap: onLike,
+                  ),
+                  const SizedBox(width: 24),
+                  _buildActionButton(
+                    icon: Icons.comment_outlined,
+                    label: post.comments.toString(),
+                    onTap: onComment,
+                  ),
+                  const SizedBox(width: 24),
+                  _buildActionButton(
+                    icon: Icons.share_outlined,
+                    label: post.shares.toString(),
+                    onTap: onShare,
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 12),
-
-          // Содержимое поста
-          if (post.content.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(post.content, style: const TextStyle(fontSize: 16)),
-            ),
-
-          // Медиа контент
-          if (post.mediaUrls.isNotEmpty) _buildMediaContent(),
-
-          // Теги
-          if (post.tags.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Wrap(
-                spacing: 8,
-                children: post.tags
-                    .map(
-                      (tag) => Chip(
-                        label: Text('#$tag'),
-                        backgroundColor: Colors.blue.withValues(alpha: 0.1),
-                        labelStyle: const TextStyle(color: Colors.blue, fontSize: 12),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-
-          const SizedBox(height: 12),
-
-          // Действия
-          Row(
-            children: [
-              _buildActionButton(
-                icon: post.isLikedBy('current_user') ? Icons.favorite : Icons.favorite_border,
-                label: post.likes.toString(),
-                color: post.isLikedBy('current_user') ? Colors.red : Colors.grey,
-                onTap: onLike,
-              ),
-              const SizedBox(width: 24),
-              _buildActionButton(
-                icon: Icons.comment_outlined,
-                label: post.comments.toString(),
-                onTap: onComment,
-              ),
-              const SizedBox(width: 24),
-              _buildActionButton(
-                icon: Icons.share_outlined,
-                label: post.shares.toString(),
-                onTap: onShare,
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildMediaContent() {
     if (post.mediaUrls.length == 1) {
@@ -205,21 +205,22 @@ class FeedPostWidget extends ConsumerWidget {
     required String label,
     Color? color,
     VoidCallback? onTap,
-  }) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(20),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color ?? Colors.grey[600], size: 20),
-          const SizedBox(width: 4),
-          Text(label, style: TextStyle(color: color ?? Colors.grey[600], fontSize: 14)),
-        ],
-      ),
-    ),
-  );
+  }) =>
+      InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color ?? Colors.grey[600], size: 20),
+              const SizedBox(width: 4),
+              Text(label, style: TextStyle(color: color ?? Colors.grey[600], fontSize: 14)),
+            ],
+          ),
+        ),
+      );
 
   void _showReportDialog(BuildContext context) {
     showDialog<void>(
@@ -412,73 +413,76 @@ class CommentWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      CircleAvatar(
-        backgroundImage: comment.userPhotoUrl != null
-            ? CachedNetworkImageProvider(comment.userPhotoUrl!)
-            : null,
-        radius: 16,
-        child: comment.userPhotoUrl == null ? const Icon(Icons.person, size: 16) : null,
-      ),
-      const SizedBox(width: 8),
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    comment.userName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(comment.content, style: const TextStyle(fontSize: 14)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 4),
-            Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            backgroundImage: comment.userPhotoUrl != null
+                ? CachedNetworkImageProvider(comment.userPhotoUrl!)
+                : null,
+            radius: 16,
+            child: comment.userPhotoUrl == null ? const Icon(Icons.person, size: 16) : null,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  _formatTimeAgo(comment.createdAt),
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                ),
-                const SizedBox(width: 16),
-                InkWell(
-                  onTap: () => _likeComment(ref),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        comment.isLikedBy('current_user') ? Icons.favorite : Icons.favorite_border,
-                        size: 14,
-                        color: comment.isLikedBy('current_user') ? Colors.red : Colors.grey[600],
+                      Text(
+                        comment.userName,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                       ),
-                      if (comment.likesCount > 0) ...[
-                        const SizedBox(width: 4),
-                        Text(
-                          comment.likesCount.toString(),
-                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                        ),
-                      ],
+                      const SizedBox(height: 4),
+                      Text(comment.content, style: const TextStyle(fontSize: 14)),
                     ],
                   ),
                 ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      _formatTimeAgo(comment.createdAt),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    ),
+                    const SizedBox(width: 16),
+                    InkWell(
+                      onTap: () => _likeComment(ref),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            comment.isLikedBy('current_user')
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            size: 14,
+                            color:
+                                comment.isLikedBy('current_user') ? Colors.red : Colors.grey[600],
+                          ),
+                          if (comment.likesCount > 0) ...[
+                            const SizedBox(width: 4),
+                            Text(
+                              comment.likesCount.toString(),
+                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
-      ),
-    ],
-  );
+          ),
+        ],
+      );
 
   Future<void> _likeComment(WidgetRef ref) async {
     try {

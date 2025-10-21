@@ -42,51 +42,52 @@ class SocialLinksWidget extends StatelessWidget {
   }
 
   Widget _buildSocialLink(SocialLink link) => GestureDetector(
-    onTap: () => _handleLinkTap(link),
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: _getPlatformColor(link.platform).withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _getPlatformColor(link.platform).withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(link.platform.icon, style: const TextStyle(fontSize: 20)),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        onTap: () => _handleLinkTap(link),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: _getPlatformColor(link.platform).withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: _getPlatformColor(link.platform).withValues(alpha: 0.3)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                _getPlatformName(link.platform),
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: _getPlatformColor(link.platform),
-                ),
+              Text(link.platform.icon, style: const TextStyle(fontSize: 20)),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _getPlatformName(link.platform),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: _getPlatformColor(link.platform),
+                    ),
+                  ),
+                  if (link.username.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text('@${link.username}',
+                        style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+                  ],
+                  if (link.followersCount != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      '${_formatFollowers(link.followersCount!)} подписчиков',
+                      style: TextStyle(fontSize: 9, color: Colors.grey[500]),
+                    ),
+                  ],
+                ],
               ),
-              if (link.username.isNotEmpty) ...[
-                const SizedBox(height: 2),
-                Text('@${link.username}', style: TextStyle(fontSize: 10, color: Colors.grey[600])),
-              ],
-              if (link.followersCount != null) ...[
-                const SizedBox(height: 2),
-                Text(
-                  '${_formatFollowers(link.followersCount!)} подписчиков',
-                  style: TextStyle(fontSize: 9, color: Colors.grey[500]),
-                ),
+              if (link.isVerified) ...[
+                const SizedBox(width: 8),
+                const Icon(Icons.verified, color: Colors.blue, size: 16),
               ],
             ],
           ),
-          if (link.isVerified) ...[
-            const SizedBox(width: 8),
-            const Icon(Icons.verified, color: Colors.blue, size: 16),
-          ],
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   String _getPlatformName(SocialPlatform platform) {
     switch (platform) {

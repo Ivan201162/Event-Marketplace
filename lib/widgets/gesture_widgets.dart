@@ -48,44 +48,44 @@ class _SwipeableWidgetState extends State<SwipeableWidget> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onHorizontalDragStart: _onDragStart,
-    onHorizontalDragUpdate: _onDragUpdate,
-    onHorizontalDragEnd: _onDragEnd,
-    child: Stack(
-      children: [
-        // Фоновые действия
-        if (widget.leftAction != null || widget.rightAction != null)
-          Positioned.fill(
-            child: Row(
-              children: [
-                if (widget.leftAction != null)
-                  Expanded(
-                    child: Container(
-                      color: Colors.red.withValues(alpha: 0.1),
-                      child: widget.leftAction,
-                    ),
-                  ),
-                const Spacer(),
-                if (widget.rightAction != null)
-                  Expanded(
-                    child: Container(
-                      color: Colors.green.withValues(alpha: 0.1),
-                      child: widget.rightAction,
-                    ),
-                  ),
-              ],
-            ),
-          ),
+        onHorizontalDragStart: _onDragStart,
+        onHorizontalDragUpdate: _onDragUpdate,
+        onHorizontalDragEnd: _onDragEnd,
+        child: Stack(
+          children: [
+            // Фоновые действия
+            if (widget.leftAction != null || widget.rightAction != null)
+              Positioned.fill(
+                child: Row(
+                  children: [
+                    if (widget.leftAction != null)
+                      Expanded(
+                        child: Container(
+                          color: Colors.red.withValues(alpha: 0.1),
+                          child: widget.leftAction,
+                        ),
+                      ),
+                    const Spacer(),
+                    if (widget.rightAction != null)
+                      Expanded(
+                        child: Container(
+                          color: Colors.green.withValues(alpha: 0.1),
+                          child: widget.rightAction,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
 
-        // Основной контент
-        AnimatedBuilder(
-          animation: _animation,
-          builder: (context, child) =>
-              Transform.translate(offset: Offset(_dragExtent, 0), child: widget.child),
+            // Основной контент
+            AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) =>
+                  Transform.translate(offset: Offset(_dragExtent, 0), child: widget.child),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   void _onDragStart(DragStartDetails details) {
     _isAnimating = false;
@@ -190,15 +190,15 @@ class _LongPressWidgetState extends State<LongPressWidget> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTapDown: _onTapDown,
-    onTapUp: _onTapUp,
-    onTapCancel: _onTapCancel,
-    child: AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) =>
-          Transform.scale(scale: _scaleAnimation.value, child: widget.child),
-    ),
-  );
+        onTapDown: _onTapDown,
+        onTapUp: _onTapUp,
+        onTapCancel: _onTapCancel,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) =>
+              Transform.scale(scale: _scaleAnimation.value, child: widget.child),
+        ),
+      );
 
   void _onTapDown(TapDownDetails details) {
     _isLongPressing = true;
@@ -255,16 +255,16 @@ class _PinchZoomWidgetState extends State<PinchZoomWidget> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onScaleStart: _onScaleStart,
-    onScaleUpdate: _onScaleUpdate,
-    onScaleEnd: _onScaleEnd,
-    child: Transform(
-      transform: Matrix4.identity()
-        ..translate(_offset.dx, _offset.dy)
-        ..scale(_scale),
-      child: widget.child,
-    ),
-  );
+        onScaleStart: _onScaleStart,
+        onScaleUpdate: _onScaleUpdate,
+        onScaleEnd: _onScaleEnd,
+        child: Transform(
+          transform: Matrix4.identity()
+            ..translate(_offset.dx, _offset.dy)
+            ..scale(_scale),
+          child: widget.child,
+        ),
+      );
 
   void _onScaleStart(ScaleStartDetails details) {
     _previousScale = _scale;
@@ -409,29 +409,27 @@ class DismissibleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Dismissible(
-    key: Key(dismissKey),
-    direction: direction,
-    background:
-        background ??
-        Container(
-          color: Colors.red,
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(left: 20),
-          child: const Icon(Icons.delete, color: Colors.white),
-        ),
-    secondaryBackground:
-        secondaryBackground ??
-        Container(
-          color: Colors.green,
-          alignment: Alignment.centerRight,
-          padding: const EdgeInsets.only(right: 20),
-          child: const Icon(Icons.archive, color: Colors.white),
-        ),
-    onDismissed: (direction) {
-      onDismissed?.call();
-    },
-    child: child,
-  );
+        key: Key(dismissKey),
+        direction: direction,
+        background: background ??
+            Container(
+              color: Colors.red,
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: 20),
+              child: const Icon(Icons.delete, color: Colors.white),
+            ),
+        secondaryBackground: secondaryBackground ??
+            Container(
+              color: Colors.green,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 20),
+              child: const Icon(Icons.archive, color: Colors.white),
+            ),
+        onDismissed: (direction) {
+          onDismissed?.call();
+        },
+        child: child,
+      );
 }
 
 /// Виджет с поддержкой жестов
@@ -462,15 +460,15 @@ class GestureDetectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: onTap,
-    onDoubleTap: onDoubleTap,
-    onLongPress: onLongPress,
-    onPanStart: onPanStart != null ? (_) => onPanStart!() : null,
-    onPanUpdate: onPanUpdate != null ? (_) => onPanUpdate!() : null,
-    onPanEnd: onPanEnd != null ? (_) => onPanEnd!() : null,
-    onScaleStart: onScaleStart != null ? (_) => onScaleStart!() : null,
-    onScaleUpdate: onScaleUpdate != null ? (_) => onScaleUpdate!() : null,
-    onScaleEnd: onScaleEnd != null ? (_) => onScaleEnd!() : null,
-    child: child,
-  );
+        onTap: onTap,
+        onDoubleTap: onDoubleTap,
+        onLongPress: onLongPress,
+        onPanStart: onPanStart != null ? (_) => onPanStart!() : null,
+        onPanUpdate: onPanUpdate != null ? (_) => onPanUpdate!() : null,
+        onPanEnd: onPanEnd != null ? (_) => onPanEnd!() : null,
+        onScaleStart: onScaleStart != null ? (_) => onScaleStart!() : null,
+        onScaleUpdate: onScaleUpdate != null ? (_) => onScaleUpdate!() : null,
+        onScaleEnd: onScaleEnd != null ? (_) => onScaleEnd!() : null,
+        child: child,
+      );
 }

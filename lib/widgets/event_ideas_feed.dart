@@ -133,89 +133,89 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
 
   @override
   Widget build(BuildContext context) => Column(
-    children: [
-      // Заголовок и поиск
-      _buildHeader(),
+        children: [
+          // Заголовок и поиск
+          _buildHeader(),
 
-      // Популярные теги
-      if (_popularTags.isNotEmpty) _buildPopularTags(),
+          // Популярные теги
+          if (_popularTags.isNotEmpty) _buildPopularTags(),
 
-      // Лента идей
-      Expanded(child: _buildIdeasFeed()),
-    ],
-  );
+          // Лента идей
+          Expanded(child: _buildIdeasFeed()),
+        ],
+      );
 
   Widget _buildHeader() => Padding(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      children: [
-        Row(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           children: [
-            Expanded(
-              child: Text(
-                widget.showUserIdeas ? 'Мои идеи' : 'Идеи мероприятий',
-                style: Theme.of(
-                  context,
-                ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.showUserIdeas ? 'Мои идеи' : 'Идеи мероприятий',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+
+                // Кнопка создания идеи
+                if (!widget.showUserIdeas)
+                  IconButton(
+                    onPressed: _createIdea,
+                    icon: const Icon(Icons.add_circle_outline),
+                    tooltip: 'Создать идею',
+                  ),
+              ],
             ),
 
-            // Кнопка создания идеи
-            if (!widget.showUserIdeas)
-              IconButton(
-                onPressed: _createIdea,
-                icon: const Icon(Icons.add_circle_outline),
-                tooltip: 'Создать идею',
+            const SizedBox(height: 16),
+
+            // Поиск
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Поиск идей...',
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                filled: true,
+                fillColor: Colors.grey[100],
               ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+                _loadIdeas();
+              },
+            ),
           ],
         ),
-
-        const SizedBox(height: 16),
-
-        // Поиск
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Поиск идей...',
-            prefixIcon: const Icon(Icons.search),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            filled: true,
-            fillColor: Colors.grey[100],
-          ),
-          onChanged: (value) {
-            setState(() {
-              _searchQuery = value;
-            });
-            _loadIdeas();
-          },
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildPopularTags() => Container(
-    height: 50,
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: _popularTags.length,
-      itemBuilder: (context, index) {
-        final tag = _popularTags[index];
-        return Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: FilterChip(
-            label: Text('#$tag'),
-            selected: _selectedCategory == tag,
-            onSelected: (selected) {
-              setState(() {
-                _selectedCategory = selected ? tag : null;
-              });
-              _loadIdeas();
-            },
-          ),
-        );
-      },
-    ),
-  );
+        height: 50,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _popularTags.length,
+          itemBuilder: (context, index) {
+            final tag = _popularTags[index];
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: FilterChip(
+                label: Text('#$tag'),
+                selected: _selectedCategory == tag,
+                onSelected: (selected) {
+                  setState(() {
+                    _selectedCategory = selected ? tag : null;
+                  });
+                  _loadIdeas();
+                },
+              ),
+            );
+          },
+        ),
+      );
 
   Widget _buildIdeasFeed() {
     if (_isLoading) {
@@ -263,53 +263,53 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
   }
 
   Widget _buildErrorState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text('Ошибка загрузки идей', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 8),
-        Text(
-          _error!,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text('Ошибка загрузки идей', style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Text(
+              _error!,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(onPressed: _loadIdeas, child: const Text('Повторить')),
+          ],
         ),
-        const SizedBox(height: 16),
-        ElevatedButton(onPressed: _loadIdeas, child: const Text('Повторить')),
-      ],
-    ),
-  );
+      );
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          widget.showUserIdeas ? 'Нет идей' : 'Нет идей мероприятий',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              widget.showUserIdeas ? 'Нет идей' : 'Нет идей мероприятий',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              widget.showUserIdeas
+                  ? 'Создайте свою первую идею мероприятия'
+                  : 'Специалисты еще не поделились идеями',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+            if (!widget.showUserIdeas) ...[
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: _createIdea,
+                icon: const Icon(Icons.add_circle_outline),
+                label: const Text('Создать идею'),
+              ),
+            ],
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          widget.showUserIdeas
-              ? 'Создайте свою первую идею мероприятия'
-              : 'Специалисты еще не поделились идеями',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-        if (!widget.showUserIdeas) ...[
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: _createIdea,
-            icon: const Icon(Icons.add_circle_outline),
-            label: const Text('Создать идею'),
-          ),
-        ],
-      ],
-    ),
-  );
+      );
 
   void _viewIdea(EventIdea idea) {
     Navigator.of(

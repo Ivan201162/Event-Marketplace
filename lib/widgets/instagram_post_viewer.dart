@@ -110,89 +110,89 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
   }
 
   Widget _buildPostHeader() => Padding(
-    padding: const EdgeInsets.all(16),
-    child: Row(
-      children: [
-        CircleAvatar(
-          radius: 20,
-          backgroundImage: widget.specialist.imageUrl != null
-              ? NetworkImage(widget.specialist.imageUrl!)
-              : null,
-          child: widget.specialist.imageUrl == null ? const Icon(Icons.person) : null,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.specialist.name,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-              Text(
-                _formatTime(widget.post.createdAt),
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-              ),
-            ],
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.more_vert),
-          onPressed: () {
-            // TODO(developer): Показать меню поста
-          },
-        ),
-      ],
-    ),
-  );
-
-  Widget _buildPostActions() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    child: Row(
-      children: [
-        IconButton(
-          icon: Icon(
-            _isLiked ? Icons.favorite : Icons.favorite_border,
-            color: _isLiked ? Colors.red : Colors.black,
-          ),
-          onPressed: _toggleLike,
-        ),
-        IconButton(
-          icon: const Icon(Icons.chat_bubble_outline),
-          onPressed: () {
-            // TODO(developer): Открыть комментарии
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.send),
-          onPressed: () {
-            // TODO(developer): Поделиться постом
-          },
-        ),
-        const Spacer(),
-        if (widget.post.mediaUrls.length > 1)
-          Row(
-            children: List.generate(
-              widget.post.mediaUrls.length,
-              (index) => Container(
-                width: 6,
-                height: 6,
-                margin: const EdgeInsets.symmetric(horizontal: 2),
-                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.shade400),
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: widget.specialist.imageUrl != null
+                  ? NetworkImage(widget.specialist.imageUrl!)
+                  : null,
+              child: widget.specialist.imageUrl == null ? const Icon(Icons.person) : null,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.specialist.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
+                  Text(
+                    _formatTime(widget.post.createdAt),
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                  ),
+                ],
               ),
             ),
-          ),
-      ],
-    ),
-  );
+            IconButton(
+              icon: const Icon(Icons.more_vert),
+              onPressed: () {
+                // TODO(developer): Показать меню поста
+              },
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildPostActions() => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            IconButton(
+              icon: Icon(
+                _isLiked ? Icons.favorite : Icons.favorite_border,
+                color: _isLiked ? Colors.red : Colors.black,
+              ),
+              onPressed: _toggleLike,
+            ),
+            IconButton(
+              icon: const Icon(Icons.chat_bubble_outline),
+              onPressed: () {
+                // TODO(developer): Открыть комментарии
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.send),
+              onPressed: () {
+                // TODO(developer): Поделиться постом
+              },
+            ),
+            const Spacer(),
+            if (widget.post.mediaUrls.length > 1)
+              Row(
+                children: List.generate(
+                  widget.post.mediaUrls.length,
+                  (index) => Container(
+                    width: 6,
+                    height: 6,
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.shade400),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
 
   Widget _buildPostLikes() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Text(
-      '$_likesCount отметок "Нравится"',
-      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          '$_likesCount отметок "Нравится"',
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+      );
 
   Widget _buildPostCaption() {
     if (widget.post.text == null || widget.post.text!.isEmpty) {
@@ -217,48 +217,48 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
   }
 
   Widget _buildPostComments() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: TextButton(
-      onPressed: () {
-        // TODO(developer): Открыть комментарии
-      },
-      child: Text(
-        'Посмотреть все ${widget.post.commentsCount} комментариев',
-        style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-      ),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: TextButton(
+          onPressed: () {
+            // TODO(developer): Открыть комментарии
+          },
+          child: Text(
+            'Посмотреть все ${widget.post.commentsCount} комментариев',
+            style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+          ),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.white,
-    appBar: AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.black),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-      title: const Text('Публикация', style: TextStyle(color: Colors.black)),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.share, color: Colors.black),
-          onPressed: () {
-            // TODO(developer): Поделиться постом
-          },
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: const Text('Публикация', style: TextStyle(color: Colors.black)),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.share, color: Colors.black),
+              onPressed: () {
+                // TODO(developer): Поделиться постом
+              },
+            ),
+          ],
         ),
-      ],
-    ),
-    body: Column(
-      children: [
-        _buildPostHeader(),
-        _buildMediaContent(),
-        _buildPostActions(),
-        _buildPostLikes(),
-        _buildPostCaption(),
-        _buildPostComments(),
-        const Spacer(),
-      ],
-    ),
-  );
+        body: Column(
+          children: [
+            _buildPostHeader(),
+            _buildMediaContent(),
+            _buildPostActions(),
+            _buildPostLikes(),
+            _buildPostCaption(),
+            _buildPostComments(),
+            const Spacer(),
+          ],
+        ),
+      );
 }

@@ -57,282 +57,283 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Создать идею мероприятия'),
-    content: SizedBox(
-      width: double.maxFinite,
-      height: MediaQuery.of(context).size.height * 0.8,
-      child: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Заголовок
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Название идеи *',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Введите название идеи';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Описание
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Описание *',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 4,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Введите описание';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Категория
-              DropdownButtonFormField<String>(
-                initialValue: _selectedCategory,
-                decoration: const InputDecoration(
-                  labelText: 'Категория',
-                  border: OutlineInputBorder(),
-                ),
-                items: _categories
-                    .map((category) => DropdownMenuItem(value: category, child: Text(category)))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCategory = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Изображения
-              _buildImageSelector(),
-              const SizedBox(height: 16),
-
-              // Дополнительные поля
-              _buildAdditionalFields(),
-              const SizedBox(height: 16),
-
-              // Теги
-              TextFormField(
-                controller: _tagsController,
-                decoration: const InputDecoration(
-                  labelText: 'Теги (через запятую)',
-                  border: OutlineInputBorder(),
-                  hintText: 'свадьба, романтично, лето',
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Ошибка
-              if (_error != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red[200]!),
+        title: const Text('Создать идею мероприятия'),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Заголовок
+                  TextFormField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Название идеи *',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Введите название идеи';
+                      }
+                      return null;
+                    },
                   ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.error_outline, color: Colors.red[600]),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(_error!, style: TextStyle(color: Colors.red[600])),
+                  const SizedBox(height: 16),
+
+                  // Описание
+                  TextFormField(
+                    controller: _descriptionController,
+                    decoration: const InputDecoration(
+                      labelText: 'Описание *',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 4,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Введите описание';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Категория
+                  DropdownButtonFormField<String>(
+                    initialValue: _selectedCategory,
+                    decoration: const InputDecoration(
+                      labelText: 'Категория',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: _categories
+                        .map((category) => DropdownMenuItem(value: category, child: Text(category)))
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCategory = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Изображения
+                  _buildImageSelector(),
+                  const SizedBox(height: 16),
+
+                  // Дополнительные поля
+                  _buildAdditionalFields(),
+                  const SizedBox(height: 16),
+
+                  // Теги
+                  TextFormField(
+                    controller: _tagsController,
+                    decoration: const InputDecoration(
+                      labelText: 'Теги (через запятую)',
+                      border: OutlineInputBorder(),
+                      hintText: 'свадьба, романтично, лето',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Ошибка
+                  if (_error != null) ...[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.red[50],
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.red[200]!),
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-            ],
+                      child: Row(
+                        children: [
+                          Icon(Icons.error_outline, color: Colors.red[600]),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(_error!, style: TextStyle(color: Colors.red[600])),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
-      ),
-    ),
-    actions: [
-      TextButton(
-        onPressed: _isUploading ? null : () => Navigator.of(context).pop(),
-        child: const Text('Отмена'),
-      ),
-      ElevatedButton(
-        onPressed: _isUploading ? null : _createIdea,
-        child: _isUploading
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : const Text('Создать'),
-      ),
-    ],
-  );
+        actions: [
+          TextButton(
+            onPressed: _isUploading ? null : () => Navigator.of(context).pop(),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: _isUploading ? null : _createIdea,
+            child: _isUploading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Создать'),
+          ),
+        ],
+      );
 
   Widget _buildImageSelector() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text('Изображения', style: TextStyle(fontWeight: FontWeight.bold)),
-      const SizedBox(height: 8),
-      if (_selectedImages.isEmpty) ...[
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _pickImages,
-                icon: const Icon(Icons.photo_library),
-                label: const Text('Галерея'),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: _takePhoto,
-                icon: const Icon(Icons.camera_alt),
-                label: const Text('Камера'),
-              ),
-            ),
-          ],
-        ),
-      ] else ...[
-        // Превью изображений
-        SizedBox(
-          height: 100,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: _selectedImages.length,
-            itemBuilder: (context, index) {
-              final image = _selectedImages[index];
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        File(image.path),
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedImages.removeAt(index);
-                          });
-                        },
-                        child: Container(
-                          width: 20,
-                          height: 20,
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.close, color: Colors.white, size: 12),
-                        ),
-                      ),
-                    ),
-                  ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Изображения', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          if (_selectedImages.isEmpty) ...[
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _pickImages,
+                    icon: const Icon(Icons.photo_library),
+                    label: const Text('Галерея'),
+                  ),
                 ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            OutlinedButton.icon(
-              onPressed: _pickImages,
-              icon: const Icon(Icons.add_photo_alternate),
-              label: const Text('Добавить'),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _takePhoto,
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Камера'),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            Text(
-              '${_selectedImages.length}/5',
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+          ] else ...[
+            // Превью изображений
+            SizedBox(
+              height: 100,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _selectedImages.length,
+                itemBuilder: (context, index) {
+                  final image = _selectedImages[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(
+                            File(image.path),
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedImages.removeAt(index);
+                              });
+                            },
+                            child: Container(
+                              width: 20,
+                              height: 20,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.close, color: Colors.white, size: 12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                OutlinedButton.icon(
+                  onPressed: _pickImages,
+                  icon: const Icon(Icons.add_photo_alternate),
+                  label: const Text('Добавить'),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '${_selectedImages.length}/5',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
-    ],
-  );
+        ],
+      );
 
   Widget _buildAdditionalFields() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text('Дополнительная информация', style: TextStyle(fontWeight: FontWeight.bold)),
-      const SizedBox(height: 8),
-      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Бюджет
-          Expanded(
-            child: TextFormField(
-              controller: _budgetController,
-              decoration: const InputDecoration(
-                labelText: 'Бюджет (₽)',
-                border: OutlineInputBorder(),
+          const Text('Дополнительная информация', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              // Бюджет
+              Expanded(
+                child: TextFormField(
+                  controller: _budgetController,
+                  decoration: const InputDecoration(
+                    labelText: 'Бюджет (₽)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
               ),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          const SizedBox(width: 8),
+              const SizedBox(width: 8),
 
-          // Длительность
-          Expanded(
-            child: TextFormField(
-              controller: _durationController,
-              decoration: const InputDecoration(
-                labelText: 'Длительность (ч)',
-                border: OutlineInputBorder(),
+              // Длительность
+              Expanded(
+                child: TextFormField(
+                  controller: _durationController,
+                  decoration: const InputDecoration(
+                    labelText: 'Длительность (ч)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
               ),
-              keyboardType: TextInputType.number,
-            ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              // Количество гостей
+              Expanded(
+                child: TextFormField(
+                  controller: _guestsController,
+                  decoration: const InputDecoration(
+                    labelText: 'Гости (чел)',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              const SizedBox(width: 8),
+
+              // Местоположение
+              Expanded(
+                child: TextFormField(
+                  controller: _locationController,
+                  decoration:
+                      const InputDecoration(labelText: 'Место', border: OutlineInputBorder()),
+                ),
+              ),
+            ],
           ),
         ],
-      ),
-      const SizedBox(height: 8),
-      Row(
-        children: [
-          // Количество гостей
-          Expanded(
-            child: TextFormField(
-              controller: _guestsController,
-              decoration: const InputDecoration(
-                labelText: 'Гости (чел)',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          const SizedBox(width: 8),
-
-          // Местоположение
-          Expanded(
-            child: TextFormField(
-              controller: _locationController,
-              decoration: const InputDecoration(labelText: 'Место', border: OutlineInputBorder()),
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
+      );
 
   Future<void> _pickImages() async {
     try {

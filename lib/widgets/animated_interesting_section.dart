@@ -194,66 +194,66 @@ class _InterestingCardState extends State<_InterestingCard> with SingleTickerPro
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-    animation: _scaleAnimation,
-    builder: (context, child) {
-      return Transform.scale(
-        scale: _scaleAnimation.value,
-        child: InkWell(
-          onTap: widget.onTap,
-          onTapDown: (_) {
-            setState(() => _isHovered = true);
-            _hoverController.forward();
-          },
-          onTapUp: (_) {
-            setState(() => _isHovered = false);
-            _hoverController.reverse();
-          },
-          onTapCancel: () {
-            setState(() => _isHovered = false);
-            _hoverController.reverse();
-          },
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: widget.color.withValues(alpha: _isHovered ? 0.15 : 0.1),
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: InkWell(
+              onTap: widget.onTap,
+              onTapDown: (_) {
+                setState(() => _isHovered = true);
+                _hoverController.forward();
+              },
+              onTapUp: (_) {
+                setState(() => _isHovered = false);
+                _hoverController.reverse();
+              },
+              onTapCancel: () {
+                setState(() => _isHovered = false);
+                _hoverController.reverse();
+              },
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: widget.color.withValues(alpha: _isHovered ? 0.4 : 0.3),
-                width: _isHovered ? 2 : 1,
-              ),
-              boxShadow: _isHovered
-                  ? [
-                      BoxShadow(
-                        color: widget.color.withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ]
-                  : null,
-            ),
-            child: Column(
-              children: [
-                AnimatedScale(
-                  scale: _isHovered ? 1.1 : 1.0,
-                  duration: const Duration(milliseconds: 200),
-                  child: Icon(widget.icon, color: widget.color, size: 32),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  widget.title,
-                  style: TextStyle(
-                    color: widget.color,
-                    fontWeight: _isHovered ? FontWeight.bold : FontWeight.w500,
-                    fontSize: 12,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: widget.color.withValues(alpha: _isHovered ? 0.15 : 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: widget.color.withValues(alpha: _isHovered ? 0.4 : 0.3),
+                    width: _isHovered ? 2 : 1,
                   ),
-                  textAlign: TextAlign.center,
+                  boxShadow: _isHovered
+                      ? [
+                          BoxShadow(
+                            color: widget.color.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
+                      : null,
                 ),
-              ],
+                child: Column(
+                  children: [
+                    AnimatedScale(
+                      scale: _isHovered ? 1.1 : 1.0,
+                      duration: const Duration(milliseconds: 200),
+                      child: Icon(widget.icon, color: widget.color, size: 32),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                        color: widget.color,
+                        fontWeight: _isHovered ? FontWeight.bold : FontWeight.w500,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
-    },
-  );
 }

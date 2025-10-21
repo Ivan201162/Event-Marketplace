@@ -25,11 +25,12 @@ class ThemeSwitchWidget extends ConsumerWidget {
     BuildContext context,
     ThemeMode themeMode,
     ThemeNotifier themeNotifier,
-  ) => IconButton(
-    onPressed: () => themeNotifier.toggleTheme(),
-    icon: Icon(_getThemeIcon(themeMode)),
-    tooltip: _getThemeTooltip(themeMode),
-  );
+  ) =>
+      IconButton(
+        onPressed: () => themeNotifier.toggleTheme(),
+        icon: Icon(_getThemeIcon(themeMode)),
+        tooltip: _getThemeTooltip(themeMode),
+      );
 
   Widget _buildFullSwitch(BuildContext context, ThemeMode themeMode, ThemeNotifier themeNotifier) =>
       Card(
@@ -51,8 +52,8 @@ class ThemeSwitchWidget extends ConsumerWidget {
                 Text(
                   _getThemeDescription(themeMode),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -198,8 +199,8 @@ class ThemeIndicator extends ConsumerWidget {
           Text(
             _getThemeLabel(themeMode),
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-            ),
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
           ),
         ],
       ),

@@ -281,40 +281,41 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Отклонить скидку'),
-    content: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text('Вы уверены, что хотите отклонить предложение скидки?'),
-        const SizedBox(height: 16),
-        TextField(
-          controller: _reasonController,
-          decoration: const InputDecoration(
-            labelText: 'Причина отклонения (необязательно)',
-            border: OutlineInputBorder(),
-          ),
-          maxLines: 3,
+        title: const Text('Отклонить скидку'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Вы уверены, что хотите отклонить предложение скидки?'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _reasonController,
+              decoration: const InputDecoration(
+                labelText: 'Причина отклонения (необязательно)',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+          ],
         ),
-      ],
-    ),
-    actions: [
-      TextButton(
-        onPressed: _isLoading ? null : () => Navigator.pop(context),
-        child: const Text('Отмена'),
-      ),
-      ElevatedButton(
-        onPressed: _isLoading ? null : _rejectDiscount,
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-        child: _isLoading
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : const Text('Отклонить'),
-      ),
-    ],
-  );
+        actions: [
+          TextButton(
+            onPressed: _isLoading ? null : () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: _isLoading ? null : _rejectDiscount,
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, foregroundColor: Colors.white),
+            child: _isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Отклонить'),
+          ),
+        ],
+      );
 
   Future<void> _rejectDiscount() async {
     setState(() {
@@ -357,27 +358,27 @@ class OfferDiscountWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => ResponsiveCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.local_offer, color: Colors.blue),
-            SizedBox(width: 8),
-            ResponsiveText('Предложить скидку', isTitle: true),
+            const Row(
+              children: [
+                Icon(Icons.local_offer, color: Colors.blue),
+                SizedBox(width: 8),
+                ResponsiveText('Предложить скидку', isTitle: true),
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text('Предложите клиенту скидку для увеличения шансов на бронирование.'),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () => _showOfferDiscountDialog(context, ref),
+              icon: const Icon(Icons.local_offer),
+              label: const Text('Предложить скидку'),
+            ),
           ],
         ),
-        const SizedBox(height: 12),
-        const Text('Предложите клиенту скидку для увеличения шансов на бронирование.'),
-        const SizedBox(height: 16),
-        ElevatedButton.icon(
-          onPressed: () => _showOfferDiscountDialog(context, ref),
-          icon: const Icon(Icons.local_offer),
-          label: const Text('Предложить скидку'),
-        ),
-      ],
-    ),
-  );
+      );
 
   void _showOfferDiscountDialog(BuildContext context, WidgetRef ref) {
     showDialog<void>(

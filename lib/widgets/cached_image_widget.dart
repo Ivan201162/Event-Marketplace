@@ -201,33 +201,33 @@ class CachedImageGrid extends StatelessWidget {
   }
 
   Widget _buildImageItem(BuildContext context, String imageUrl, int index) => GestureDetector(
-    onTap: onImageTap,
-    child: CachedImageWidget(
-      imageUrl: imageUrl,
-      borderRadius: BorderRadius.circular(8),
-      placeholder: Container(
-        color: Colors.grey[200],
-        child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-      ),
-      errorWidget: Container(
-        color: Colors.grey[300],
-        child: const Center(child: Icon(Icons.broken_image, color: Colors.grey)),
-      ),
-    ),
-  );
+        onTap: onImageTap,
+        child: CachedImageWidget(
+          imageUrl: imageUrl,
+          borderRadius: BorderRadius.circular(8),
+          placeholder: Container(
+            color: Colors.grey[200],
+            child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+          ),
+          errorWidget: Container(
+            color: Colors.grey[300],
+            child: const Center(child: Icon(Icons.broken_image, color: Colors.grey)),
+          ),
+        ),
+      );
 
   Widget _buildMoreIndicator(BuildContext context, int remainingCount) => Container(
-    decoration: BoxDecoration(
-      color: Colors.black.withValues(alpha: 0.6),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Center(
-      child: Text(
-        '+$remainingCount',
-        style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-    ),
-  );
+        decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.6),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Text(
+            '+$remainingCount',
+            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
 }
 
 /// Кэшированный список изображений
@@ -248,33 +248,33 @@ class CachedImageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-    height: height,
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: imageUrls.length,
-      itemBuilder: (context, index) => Container(
-        width: height,
-        margin: EdgeInsets.only(right: index < imageUrls.length - 1 ? spacing : 0),
-        child: GestureDetector(
-          onTap: onImageTap,
-          child: CachedImageWidget(
-            imageUrl: imageUrls[index],
+        height: height,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: imageUrls.length,
+          itemBuilder: (context, index) => Container(
             width: height,
-            height: height,
-            borderRadius: BorderRadius.circular(8),
-            placeholder: Container(
-              color: Colors.grey[200],
-              child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-            ),
-            errorWidget: Container(
-              color: Colors.grey[300],
-              child: const Center(child: Icon(Icons.broken_image, color: Colors.grey)),
+            margin: EdgeInsets.only(right: index < imageUrls.length - 1 ? spacing : 0),
+            child: GestureDetector(
+              onTap: onImageTap,
+              child: CachedImageWidget(
+                imageUrl: imageUrls[index],
+                width: height,
+                height: height,
+                borderRadius: BorderRadius.circular(8),
+                placeholder: Container(
+                  color: Colors.grey[200],
+                  child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                ),
+                errorWidget: Container(
+                  color: Colors.grey[300],
+                  child: const Center(child: Icon(Icons.broken_image, color: Colors.grey)),
+                ),
+              ),
             ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Кэшированное изображение с ленивой загрузкой
@@ -308,32 +308,32 @@ class _LazyCachedImageState extends State<LazyCachedImage> {
 
   @override
   Widget build(BuildContext context) => VisibilityDetector(
-    key: Key(widget.imageUrl),
-    onVisibilityChanged: (visibilityInfo) {
-      if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
-        setState(() {
-          _isVisible = true;
-        });
-      }
-    },
-    child: _isVisible
-        ? CachedImageWidget(
-            imageUrl: widget.imageUrl,
-            width: widget.width,
-            height: widget.height,
-            fit: widget.fit,
-            borderRadius: widget.borderRadius,
-            placeholder: widget.placeholder,
-            errorWidget: widget.errorWidget,
-            fadeInDuration: widget.fadeInDuration,
-          )
-        : Container(
-            width: widget.width,
-            height: widget.height,
-            color: Colors.grey[200],
-            child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-          ),
-  );
+        key: Key(widget.imageUrl),
+        onVisibilityChanged: (visibilityInfo) {
+          if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
+            setState(() {
+              _isVisible = true;
+            });
+          }
+        },
+        child: _isVisible
+            ? CachedImageWidget(
+                imageUrl: widget.imageUrl,
+                width: widget.width,
+                height: widget.height,
+                fit: widget.fit,
+                borderRadius: widget.borderRadius,
+                placeholder: widget.placeholder,
+                errorWidget: widget.errorWidget,
+                fadeInDuration: widget.fadeInDuration,
+              )
+            : Container(
+                width: widget.width,
+                height: widget.height,
+                color: Colors.grey[200],
+                child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+              ),
+      );
 }
 
 /// Простой виджет для определения видимости (заглушка)

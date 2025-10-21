@@ -166,29 +166,29 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
   }
 
   Widget _buildSummaryRow(String label, String value, {bool isHighlighted = false}) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            color: isHighlighted ? Colors.blue[800] : Colors.black87,
-            fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.normal,
-          ),
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14,
+                color: isHighlighted ? Colors.blue[800] : Colors.black87,
+                fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 14,
+                color: isHighlighted ? Colors.blue[800] : Colors.black87,
+                fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
         ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 14,
-            color: isHighlighted ? Colors.blue[800] : Colors.black87,
-            fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.normal,
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildPaymentStatus() {
     final summary = _paymentSummary!;
@@ -274,59 +274,60 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
   }
 
   Widget _buildAdvancePaymentForm() => Container(
-    margin: const EdgeInsets.only(top: 16),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.grey[50],
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.grey[300]!),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Авансовый платеж', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 16),
-
-        // Сумма аванса
-        TextField(
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Сумма аванса (₽)',
-            border: OutlineInputBorder(),
-            suffixText: '₽',
-          ),
-          value: _advanceAmount.toStringAsFixed(0),
-          onChanged: (value) {
-            setState(() {
-              _advanceAmount = double.tryParse(value) ?? 0.0;
-            });
-          },
+        margin: const EdgeInsets.only(top: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!),
         ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Авансовый платеж',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 16),
 
-        const SizedBox(height: 8),
-        Text(
-          'Рекомендуемая сумма: ${_paymentService.calculateRecommendedAdvance(widget.totalAmount).toStringAsFixed(0)} ₽ (30% от общей суммы)',
-          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            // Сумма аванса
+            TextField(
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Сумма аванса (₽)',
+                border: OutlineInputBorder(),
+                suffixText: '₽',
+              ),
+              value: _advanceAmount.toStringAsFixed(0),
+              onChanged: (value) {
+                setState(() {
+                  _advanceAmount = double.tryParse(value) ?? 0.0;
+                });
+              },
+            ),
+
+            const SizedBox(height: 8),
+            Text(
+              'Рекомендуемая сумма: ${_paymentService.calculateRecommendedAdvance(widget.totalAmount).toStringAsFixed(0)} ₽ (30% от общей суммы)',
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Виджет оплаты
+            BankPaymentWidget(
+              amount: _advanceAmount,
+              currency: 'RUB',
+              orderId: 'advance_${widget.bookingId}',
+              description: 'Авансовый платеж за бронирование',
+              customerEmail: 'customer@example.com', // TODO(developer): Получить из профиля
+              customerPhone: '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
+              onPaymentInitiated: (result) {
+                _showSuccess('Авансовый платеж инициализирован');
+                _loadPaymentSummary();
+              },
+            ),
+          ],
         ),
-
-        const SizedBox(height: 16),
-
-        // Виджет оплаты
-        BankPaymentWidget(
-          amount: _advanceAmount,
-          currency: 'RUB',
-          orderId: 'advance_${widget.bookingId}',
-          description: 'Авансовый платеж за бронирование',
-          customerEmail: 'customer@example.com', // TODO(developer): Получить из профиля
-          customerPhone: '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
-          onPaymentInitiated: (result) {
-            _showSuccess('Авансовый платеж инициализирован');
-            _loadPaymentSummary();
-          },
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildFinalPaymentForm() {
     final summary = _paymentSummary!;

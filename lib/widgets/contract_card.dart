@@ -183,18 +183,18 @@ class ContractCard extends StatelessWidget {
   }
 
   Widget _buildPaymentInfo(ThemeData theme, String label, String value, IconData icon) => Column(
-    children: [
-      Icon(icon, size: 16, color: theme.colorScheme.primary),
-      const SizedBox(height: 4),
-      Text(
-        label,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-        ),
-      ),
-      Text(value, style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600)),
-    ],
-  );
+        children: [
+          Icon(icon, size: 16, color: theme.colorScheme.primary),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
+          Text(value, style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600)),
+        ],
+      );
 
   Color _getStatusColor(ContractStatus status) {
     switch (status) {

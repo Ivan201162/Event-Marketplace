@@ -342,26 +342,9 @@ class AuthService {
           ..setCustomParameters({'prompt': 'select_account'});
         userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
-        // Configure Google Sign-In with proper client ID
-        final GoogleSignIn googleSignIn = GoogleSignIn();
-
-        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-        if (googleUser == null) {
-          throw FirebaseAuthException(code: 'canceled', message: 'Google sign-in canceled');
-        }
-
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-        if (googleAuth.idToken == null) {
-          throw FirebaseAuthException(
-            code: 'invalid-credential',
-            message: 'Failed to get Google authentication tokens',
-          );
-        }
-
-        final credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-        );
-        userCredential = await _auth.signInWithCredential(credential);
+        // Use Firebase Auth with Google provider directly
+        final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        userCredential = await _auth.signInWithProvider(googleProvider);
       }
 
       final user = userCredential.user;
@@ -508,7 +491,7 @@ class AuthService {
 
       if (!kIsWeb) {
         try {
-          await GoogleSignIn().signOut();
+          // Google sign out is handled by Firebase Auth
         } catch (_) {}
       }
       await _auth.signOut();

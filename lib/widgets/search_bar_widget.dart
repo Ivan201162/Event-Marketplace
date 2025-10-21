@@ -37,51 +37,51 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 
   @override
   Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-      color: Colors.grey[100],
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.grey[300]!),
-    ),
-    child: Row(
-      children: [
-        //
-        Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Icon(Icons.search, color: Colors.grey[600], size: 20),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!),
         ),
-        //
-        Expanded(
-          child: TextField(
-            controller: _controller,
-            onChanged: (value) {
-              setState(() => _isSearching = value.isNotEmpty);
-              widget.onChanged?.call(value);
-            },
-            decoration: InputDecoration(
-              hintText: widget.hintText,
-              hintStyle: TextStyle(color: Colors.grey[500]),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        child: Row(
+          children: [
+            //
+            Padding(
+              padding: const EdgeInsets.only(left: 16),
+              child: Icon(Icons.search, color: Colors.grey[600], size: 20),
             ),
-          ),
+            //
+            Expanded(
+              child: TextField(
+                controller: _controller,
+                onChanged: (value) {
+                  setState(() => _isSearching = value.isNotEmpty);
+                  widget.onChanged?.call(value);
+                },
+                decoration: InputDecoration(
+                  hintText: widget.hintText,
+                  hintStyle: TextStyle(color: Colors.grey[500]),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                ),
+              ),
+            ),
+            //
+            if (_isSearching)
+              IconButton(
+                icon: Icon(Icons.clear, color: Colors.grey[600]),
+                onPressed: () {
+                  _controller.clear();
+                  setState(() => _isSearching = false);
+                  widget.onChanged?.call('');
+                },
+              ),
+            //
+            if (widget.onFilterTap != null)
+              IconButton(
+                icon: Icon(Icons.tune, color: Colors.grey[600]),
+                onPressed: widget.onFilterTap,
+              ),
+          ],
         ),
-        //
-        if (_isSearching)
-          IconButton(
-            icon: Icon(Icons.clear, color: Colors.grey[600]),
-            onPressed: () {
-              _controller.clear();
-              setState(() => _isSearching = false);
-              widget.onChanged?.call('');
-            },
-          ),
-        //
-        if (widget.onFilterTap != null)
-          IconButton(
-            icon: Icon(Icons.tune, color: Colors.grey[600]),
-            onPressed: widget.onFilterTap,
-          ),
-      ],
-    ),
-  );
+      );
 }

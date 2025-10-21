@@ -66,50 +66,50 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Заголовок с фильтрами и кнопкой загрузки
-      _buildHeader(),
-      const SizedBox(height: 16),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Заголовок с фильтрами и кнопкой загрузки
+          _buildHeader(),
+          const SizedBox(height: 16),
 
-      // Контент галереи
-      Expanded(child: _buildGalleryContent()),
-    ],
-  );
+          // Контент галереи
+          Expanded(child: _buildGalleryContent()),
+        ],
+      );
 
   Widget _buildHeader() => Row(
-    children: [
-      Expanded(
-        child: Text(
-          'Галерея',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-      ),
+        children: [
+          Expanded(
+            child: Text(
+              'Галерея',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
 
-      // Фильтр избранного
-      if (_galleryItems.isNotEmpty) ...[
-        FilterChip(
-          label: const Text('Избранное'),
-          selected: _showFeaturedOnly,
-          onSelected: (selected) async {
-            setState(() {
-              _showFeaturedOnly = selected;
-            });
-            await _loadGallery();
-          },
-        ),
-        const SizedBox(width: 8),
-      ],
+          // Фильтр избранного
+          if (_galleryItems.isNotEmpty) ...[
+            FilterChip(
+              label: const Text('Избранное'),
+              selected: _showFeaturedOnly,
+              onSelected: (selected) async {
+                setState(() {
+                  _showFeaturedOnly = selected;
+                });
+                await _loadGallery();
+              },
+            ),
+            const SizedBox(width: 8),
+          ],
 
-      // Кнопка загрузки (только для владельца)
-      if (widget.isOwner)
-        IconButton(
-          onPressed: _uploadMedia,
-          icon: const Icon(Icons.add_photo_alternate),
-          tooltip: 'Добавить медиа',
-        ),
-    ],
-  );
+          // Кнопка загрузки (только для владельца)
+          if (widget.isOwner)
+            IconButton(
+              onPressed: _uploadMedia,
+              icon: const Icon(Icons.add_photo_alternate),
+              tooltip: 'Добавить медиа',
+            ),
+        ],
+      );
 
   Widget _buildGalleryContent() {
     if (_isLoading) {
@@ -149,55 +149,55 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
   }
 
   Widget _buildErrorState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text('Ошибка загрузки галереи', style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        Text(
-          _error!,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text('Ошибка загрузки галереи', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(
+              _error!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(onPressed: _loadGallery, child: const Text('Повторить')),
+          ],
         ),
-        const SizedBox(height: 16),
-        ElevatedButton(onPressed: _loadGallery, child: const Text('Повторить')),
-      ],
-    ),
-  );
+      );
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          _showFeaturedOnly ? 'Нет избранных работ' : 'Галерея пуста',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              _showFeaturedOnly ? 'Нет избранных работ' : 'Галерея пуста',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _showFeaturedOnly
+                  ? 'Добавьте избранные работы в галерею'
+                  : widget.isOwner
+                      ? 'Добавьте свои работы в галерею'
+                      : 'Специалист еще не добавил работы в галерею',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+            if (widget.isOwner && !_showFeaturedOnly) ...[
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: _uploadMedia,
+                icon: const Icon(Icons.add_photo_alternate),
+                label: const Text('Добавить работы'),
+              ),
+            ],
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          _showFeaturedOnly
-              ? 'Добавьте избранные работы в галерею'
-              : widget.isOwner
-              ? 'Добавьте свои работы в галерею'
-              : 'Специалист еще не добавил работы в галерею',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-        if (widget.isOwner && !_showFeaturedOnly) ...[
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: _uploadMedia,
-            icon: const Icon(Icons.add_photo_alternate),
-            label: const Text('Добавить работы'),
-          ),
-        ],
-      ],
-    ),
-  );
+      );
 
   void _showMediaViewer(GalleryItem item) {
     Navigator.of(context).push(
@@ -328,54 +328,54 @@ class _MediaViewerScreenState extends State<MediaViewerScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.black,
-    appBar: AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.close, color: Colors.white),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-      title: Text(
-        '${_currentIndex + 1} / ${widget.items.length}',
-        style: const TextStyle(color: Colors.white),
-      ),
-      actions: [
-        if (widget.onLike != null)
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.white),
-            onPressed: () => widget.onLike!(widget.items[_currentIndex]),
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.close, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-      ],
-    ),
-    body: PageView.builder(
-      controller: _pageController,
-      onPageChanged: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      itemCount: widget.items.length,
-      itemBuilder: (context, index) {
-        final item = widget.items[index];
-        return Center(
-          child: item.isImage
-              ? Image.network(
-                  item.url,
-                  fit: BoxFit.contain,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return const Center(child: CircularProgressIndicator(color: Colors.white));
-                  },
-                )
-              : const Center(
-                  child: Text(
-                    'Видео просмотр пока не реализован',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-        );
-      },
-    ),
-  );
+          title: Text(
+            '${_currentIndex + 1} / ${widget.items.length}',
+            style: const TextStyle(color: Colors.white),
+          ),
+          actions: [
+            if (widget.onLike != null)
+              IconButton(
+                icon: const Icon(Icons.favorite_border, color: Colors.white),
+                onPressed: () => widget.onLike!(widget.items[_currentIndex]),
+              ),
+          ],
+        ),
+        body: PageView.builder(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          itemCount: widget.items.length,
+          itemBuilder: (context, index) {
+            final item = widget.items[index];
+            return Center(
+              child: item.isImage
+                  ? Image.network(
+                      item.url,
+                      fit: BoxFit.contain,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(child: CircularProgressIndicator(color: Colors.white));
+                      },
+                    )
+                  : const Center(
+                      child: Text(
+                        'Видео просмотр пока не реализован',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+            );
+          },
+        ),
+      );
 }

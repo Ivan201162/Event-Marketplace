@@ -250,116 +250,119 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _buildHeader(),
-      if (_isLoading) const _LoadingWidget(),
-      if (_error != null) _ErrorWidget(error: _error!, onRetry: _loadPrices),
-      if (!_isLoading && _error == null) ...[if (_showAddForm) _buildAddForm(), _buildPricesList()],
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeader(),
+          if (_isLoading) const _LoadingWidget(),
+          if (_error != null) _ErrorWidget(error: _error!, onRetry: _loadPrices),
+          if (!_isLoading && _error == null) ...[
+            if (_showAddForm) _buildAddForm(),
+            _buildPricesList()
+          ],
+        ],
+      );
 
   Widget _buildHeader() => Container(
-    padding: const EdgeInsets.all(16),
-    child: Row(
-      children: [
-        const Icon(Icons.price_check, color: Colors.green),
-        const SizedBox(width: 8),
-        const Expanded(
-          child: Text(
-            'Управление ценами',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-        if (!_showAddForm)
-          ElevatedButton.icon(
-            onPressed: _showAddPriceForm,
-            icon: const Icon(Icons.add),
-            label: const Text('Добавить цену'),
-          ),
-      ],
-    ),
-  );
-
-  Widget _buildAddForm() => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    child: Card(
-      elevation: 2,
-      child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              _editingPrice == null ? 'Добавить цену' : 'Редактировать цену',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _serviceNameController,
-              decoration: const InputDecoration(
-                labelText: 'Название услуги *',
-                border: OutlineInputBorder(),
+            const Icon(Icons.price_check, color: Colors.green),
+            const SizedBox(width: 8),
+            const Expanded(
+              child: Text(
+                'Управление ценами',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _priceController,
-              decoration: const InputDecoration(
-                labelText: 'Цена (₽) *',
-                border: OutlineInputBorder(),
+            if (!_showAddForm)
+              ElevatedButton.icon(
+                onPressed: _showAddPriceForm,
+                icon: const Icon(Icons.add),
+                label: const Text('Добавить цену'),
               ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Описание услуги',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 2,
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _durationController,
-              decoration: const InputDecoration(
-                labelText: 'Продолжительность',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: _editingPrice == null ? _addPrice : _updatePrice,
-                  child: Text(_editingPrice == null ? 'Добавить' : 'Обновить'),
-                ),
-                const SizedBox(width: 8),
-                TextButton(onPressed: _hideAddForm, child: const Text('Отмена')),
-              ],
-            ),
           ],
         ),
-      ),
-    ),
-  );
+      );
+
+  Widget _buildAddForm() => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Card(
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _editingPrice == null ? 'Добавить цену' : 'Редактировать цену',
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _serviceNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Название услуги *',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _priceController,
+                  decoration: const InputDecoration(
+                    labelText: 'Цена (₽) *',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Описание услуги',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _durationController,
+                  decoration: const InputDecoration(
+                    labelText: 'Продолжительность',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: _editingPrice == null ? _addPrice : _updatePrice,
+                      child: Text(_editingPrice == null ? 'Добавить' : 'Обновить'),
+                    ),
+                    const SizedBox(width: 8),
+                    TextButton(onPressed: _hideAddForm, child: const Text('Отмена')),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
 
   Widget _buildPricesList() => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    child: Column(
-      children: _prices
-          .map(
-            (price) => _PriceCard(
-              price: price,
-              onEdit: () => _startEditing(price),
-              onDelete: () => _deletePrice(price),
-              onToggleStatus: () => _togglePriceStatus(price),
-            ),
-          )
-          .toList(),
-    ),
-  );
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          children: _prices
+              .map(
+                (price) => _PriceCard(
+                  price: price,
+                  onEdit: () => _startEditing(price),
+                  onDelete: () => _deletePrice(price),
+                  onToggleStatus: () => _togglePriceStatus(price),
+                ),
+              )
+              .toList(),
+        ),
+      );
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
@@ -401,15 +404,15 @@ class _LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: const Row(
-      children: [
-        SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
-        SizedBox(width: 12),
-        Text('Загружаем цены...'),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: const Row(
+          children: [
+            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(width: 12),
+            Text('Загружаем цены...'),
+          ],
+        ),
+      );
 }
 
 /// Виджет ошибки
@@ -421,21 +424,21 @@ class _ErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Ошибка загрузки цен',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Ошибка загрузки цен',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            const SizedBox(height: 8),
+            Text(error, style: const TextStyle(color: Colors.red)),
+            const SizedBox(height: 12),
+            ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(error, style: const TextStyle(color: Colors.red)),
-        const SizedBox(height: 12),
-        ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
-      ],
-    ),
-  );
+      );
 }
 
 /// Карточка цены
@@ -454,101 +457,101 @@ class _PriceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.only(bottom: 8),
-    child: Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: Card(
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        price.serviceName,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            price.serviceName,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          if (price.description != null) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              price.description!,
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                          ],
+                        ],
                       ),
-                      if (price.description != null) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          price.description!,
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: price.isActive ? Colors.green : Colors.grey,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    price.isActive ? 'Активна' : 'Неактивна',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
                     ),
-                  ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: price.isActive ? Colors.green : Colors.grey,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        price.isActive ? 'Активна' : 'Неактивна',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Text(
+                      '${price.price.toStringAsFixed(0)} ₽',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                    if (price.duration != null) ...[
+                      const SizedBox(width: 8),
+                      Text(
+                        '• ${price.duration}',
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: onEdit,
+                      icon: const Icon(Icons.edit, size: 20),
+                      tooltip: 'Редактировать',
+                    ),
+                    IconButton(
+                      onPressed: onToggleStatus,
+                      icon: Icon(price.isActive ? Icons.pause : Icons.play_arrow, size: 20),
+                      tooltip: price.isActive ? 'Деактивировать' : 'Активировать',
+                    ),
+                    IconButton(
+                      onPressed: onDelete,
+                      icon: const Icon(Icons.delete, size: 20, color: Colors.red),
+                      tooltip: 'Удалить',
+                    ),
+                    const Spacer(),
+                    Text(
+                      'Обновлено: ${_formatDate(price.updatedAt)}',
+                      style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Text(
-                  '${price.price.toStringAsFixed(0)} ₽',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
-                  ),
-                ),
-                if (price.duration != null) ...[
-                  const SizedBox(width: 8),
-                  Text(
-                    '• ${price.duration}',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.edit, size: 20),
-                  tooltip: 'Редактировать',
-                ),
-                IconButton(
-                  onPressed: onToggleStatus,
-                  icon: Icon(price.isActive ? Icons.pause : Icons.play_arrow, size: 20),
-                  tooltip: price.isActive ? 'Деактивировать' : 'Активировать',
-                ),
-                IconButton(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete, size: 20, color: Colors.red),
-                  tooltip: 'Удалить',
-                ),
-                const Spacer(),
-                Text(
-                  'Обновлено: ${_formatDate(price.updatedAt)}',
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Форматирование даты

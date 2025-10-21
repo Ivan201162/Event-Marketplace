@@ -4,19 +4,6 @@ import '../models/search_filters.dart';
 import '../models/specialist.dart';
 import '../services/specialist_service.dart';
 
-/// Search filters notifier
-class SearchFiltersNotifier extends StateNotifier<SearchFilters> {
-  SearchFiltersNotifier() : super(SearchFilters.empty());
-  
-  void updateFilters(SearchFilters filters) {
-    state = filters;
-  }
-  
-  void clearFilters() {
-    state = SearchFilters.empty();
-  }
-}
-
 /// Specialist service provider
 final specialistServiceProvider = Provider<SpecialistService>((ref) {
   return SpecialistService();
@@ -68,8 +55,8 @@ final specialistsBySpecializationProvider = FutureProvider.family<List<Specialis
 });
 
 /// Search filters provider
-final searchFiltersProvider = StateNotifierProvider<SearchFiltersNotifier, SearchFilters>((ref) {
-  return SearchFiltersNotifier();
+final searchFiltersProvider = Provider<SearchFilters>((ref) {
+  return SearchFilters.empty();
 });
 
 /// Search results provider

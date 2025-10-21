@@ -71,35 +71,35 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Заголовок с кнопкой создания
-      _buildHeader(),
-      const SizedBox(height: 16),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Заголовок с кнопкой создания
+          _buildHeader(),
+          const SizedBox(height: 16),
 
-      // Список сторис
-      _buildStoriesList(),
-    ],
-  );
+          // Список сторис
+          _buildStoriesList(),
+        ],
+      );
 
   Widget _buildHeader() => Row(
-    children: [
-      Expanded(
-        child: Text(
-          widget.showAllStories ? 'Все сторис' : 'Мои сторис',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-      ),
+        children: [
+          Expanded(
+            child: Text(
+              widget.showAllStories ? 'Все сторис' : 'Мои сторис',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
 
-      // Кнопка создания сторис (только для своих сторис)
-      if (!widget.showAllStories)
-        IconButton(
-          onPressed: _createStory,
-          icon: const Icon(Icons.add_circle_outline),
-          tooltip: 'Создать сторис',
-        ),
-    ],
-  );
+          // Кнопка создания сторис (только для своих сторис)
+          if (!widget.showAllStories)
+            IconButton(
+              onPressed: _createStory,
+              icon: const Icon(Icons.add_circle_outline),
+              tooltip: 'Создать сторис',
+            ),
+        ],
+      );
 
   Widget _buildStoriesList() {
     if (_isLoading) {
@@ -139,53 +139,53 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
   }
 
   Widget _buildErrorState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text('Ошибка загрузки сторис', style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
-        Text(
-          _error!,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text('Ошибка загрузки сторис', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(
+              _error!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(onPressed: _loadStories, child: const Text('Повторить')),
+          ],
         ),
-        const SizedBox(height: 16),
-        ElevatedButton(onPressed: _loadStories, child: const Text('Повторить')),
-      ],
-    ),
-  );
+      );
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.auto_stories_outlined, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          widget.showAllStories ? 'Нет активных сторис' : 'Нет сторис',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.auto_stories_outlined, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              widget.showAllStories ? 'Нет активных сторис' : 'Нет сторис',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              widget.showAllStories
+                  ? 'Специалисты еще не создали сторис'
+                  : 'Создайте свою первую сторис',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+            if (!widget.showAllStories) ...[
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: _createStory,
+                icon: const Icon(Icons.add_circle_outline),
+                label: const Text('Создать сторис'),
+              ),
+            ],
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          widget.showAllStories
-              ? 'Специалисты еще не создали сторис'
-              : 'Создайте свою первую сторис',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-        if (!widget.showAllStories) ...[
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: _createStory,
-            icon: const Icon(Icons.add_circle_outline),
-            label: const Text('Создать сторис'),
-          ),
-        ],
-      ],
-    ),
-  );
+      );
 
   void _viewStory(Story story) {
     Navigator.of(context).push(
@@ -242,7 +242,8 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
         if (mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
+          ).showSnackBar(
+              SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
         }
       }
     }
@@ -259,133 +260,133 @@ class StoryCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: onTap,
-    child: Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: story.expiresAt.isBefore(DateTime.now()) ? Colors.grey : Colors.blue,
-          width: 3,
-        ),
-      ),
-      child: Stack(
-        children: [
-          // Основное изображение
-          ClipOval(
-            child: story.mediaUrl.isNotEmpty
-                ? Image.network(
-                    story.mediaUrl,
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Container(
+        onTap: onTap,
+        child: Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: story.expiresAt.isBefore(DateTime.now()) ? Colors.grey : Colors.blue,
+              width: 3,
+            ),
+          ),
+          child: Stack(
+            children: [
+              // Основное изображение
+              ClipOval(
+                child: story.mediaUrl.isNotEmpty
+                    ? Image.network(
+                        story.mediaUrl,
                         width: 80,
                         height: 80,
-                        color: Colors.grey[200],
-                        child: const Center(child: CircularProgressIndicator()),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      width: 80,
-                      height: 80,
-                      color: Colors.grey[200],
-                      child: Icon(
-                        story.isVideo ? Icons.video_library : Icons.image,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  )
-                : Container(
-                    width: 80,
-                    height: 80,
-                    color: Colors.black,
-                    child: story.title.isNotEmpty
-                        ? Center(
-                            child: Text(
-                              story.title,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )
-                        : Icon(
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            width: 80,
+                            height: 80,
+                            color: Colors.grey[200],
+                            child: const Center(child: CircularProgressIndicator()),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          width: 80,
+                          height: 80,
+                          color: Colors.grey[200],
+                          child: Icon(
                             story.isVideo ? Icons.video_library : Icons.image,
                             color: Colors.grey[400],
                           ),
-                  ),
-          ),
-
-          // Индикатор истечения времени
-          if (!story.expiresAt.isBefore(DateTime.now()))
-            Positioned(
-              top: 4,
-              right: 4,
-              child: Container(
-                width: 12,
-                height: 12,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
-              ),
-            ),
-
-          // Кнопка удаления
-          if (onDelete != null)
-            Positioned(
-              top: -4,
-              right: -4,
-              child: GestureDetector(
-                onTap: onDelete,
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                  child: const Icon(Icons.close, color: Colors.white, size: 12),
-                ),
-              ),
-            ),
-
-          // Индикатор просмотров
-          if (story.viewCount > 0)
-            Positioned(
-              bottom: 4,
-              left: 4,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.visibility, color: Colors.white, size: 10),
-                    const SizedBox(width: 2),
-                    Text(
-                      story.viewCount.toString(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : Container(
+                        width: 80,
+                        height: 80,
+                        color: Colors.black,
+                        child: story.title.isNotEmpty
+                            ? Center(
+                                child: Text(
+                                  story.title,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
+                            : Icon(
+                                story.isVideo ? Icons.video_library : Icons.image,
+                                color: Colors.grey[400],
+                              ),
                       ),
-                    ),
-                  ],
-                ),
               ),
-            ),
-        ],
-      ),
-    ),
-  );
+
+              // Индикатор истечения времени
+              if (!story.expiresAt.isBefore(DateTime.now()))
+                Positioned(
+                  top: 4,
+                  right: 4,
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                  ),
+                ),
+
+              // Кнопка удаления
+              if (onDelete != null)
+                Positioned(
+                  top: -4,
+                  right: -4,
+                  child: GestureDetector(
+                    onTap: onDelete,
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                      child: const Icon(Icons.close, color: Colors.white, size: 12),
+                    ),
+                  ),
+                ),
+
+              // Индикатор просмотров
+              if (story.viewCount > 0)
+                Positioned(
+                  bottom: 4,
+                  left: 4,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.visibility, color: Colors.white, size: 10),
+                        const SizedBox(width: 2),
+                        Text(
+                          story.viewCount.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
 }

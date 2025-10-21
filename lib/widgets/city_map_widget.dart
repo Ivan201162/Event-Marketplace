@@ -221,27 +221,27 @@ class _CityMapWidgetState extends State<CityMapWidget> {
   }
 
   Widget _buildMapControls(ThemeData theme) => Positioned(
-    right: 16,
-    top: 16,
-    child: Column(
-      children: [
-        // Кнопка "Мое местоположение"
-        FloatingActionButton.small(
-          onPressed: widget.onLocationRequested,
-          backgroundColor: theme.cardColor,
-          child: Icon(Icons.my_location, color: theme.colorScheme.primary),
-        ),
-        const SizedBox(height: 8),
+        right: 16,
+        top: 16,
+        child: Column(
+          children: [
+            // Кнопка "Мое местоположение"
+            FloatingActionButton.small(
+              onPressed: widget.onLocationRequested,
+              backgroundColor: theme.cardColor,
+              child: Icon(Icons.my_location, color: theme.colorScheme.primary),
+            ),
+            const SizedBox(height: 8),
 
-        // Кнопка "Центр России"
-        FloatingActionButton.small(
-          onPressed: _centerOnRussia,
-          backgroundColor: theme.cardColor,
-          child: Icon(Icons.public, color: theme.colorScheme.primary),
+            // Кнопка "Центр России"
+            FloatingActionButton.small(
+              onPressed: _centerOnRussia,
+              backgroundColor: theme.cardColor,
+              child: Icon(Icons.public, color: theme.colorScheme.primary),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   void _centerOnRussia() {
     setState(() {

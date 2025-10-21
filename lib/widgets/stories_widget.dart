@@ -50,34 +50,34 @@ class StoriesWidget extends ConsumerWidget {
   }
 
   Widget _buildAddStoryButton(BuildContext context) => Container(
-    width: 80,
-    margin: const EdgeInsets.symmetric(horizontal: 4),
-    child: Column(
-      children: [
-        GestureDetector(
-          onTap: () => _addStory(context),
-          child: Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey[300]!, width: 2),
-              color: Colors.grey[100],
+        width: 80,
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: () => _addStory(context),
+              child: Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey[300]!, width: 2),
+                  color: Colors.grey[100],
+                ),
+                child: Icon(Icons.add, color: Colors.grey[600], size: 30),
+              ),
             ),
-            child: Icon(Icons.add, color: Colors.grey[600], size: 30),
-          ),
+            const SizedBox(height: 4),
+            Text(
+              'Добавить',
+              style: Theme.of(context).textTheme.bodySmall,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ),
-        const SizedBox(height: 4),
-        Text(
-          'Добавить',
-          style: Theme.of(context).textTheme.bodySmall,
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildStoryItem(BuildContext context, UserStory story) {
     final isViewed = story.viewedBy.isNotEmpty;
@@ -128,17 +128,17 @@ class StoriesWidget extends ConsumerWidget {
                         ],
                       )
                     : story.imageUrl != null
-                    ? CachedNetworkImage(
-                        imageUrl: story.imageUrl!,
-                        fit: BoxFit.cover,
-                        width: 70,
-                        height: 70,
-                        placeholder: (context, url) =>
-                            Container(color: Colors.grey[200], child: const Icon(Icons.image)),
-                        errorWidget: (context, url, error) =>
-                            Container(color: Colors.grey[200], child: const Icon(Icons.image)),
-                      )
-                    : Container(color: Colors.grey[200], child: const Icon(Icons.image)),
+                        ? CachedNetworkImage(
+                            imageUrl: story.imageUrl!,
+                            fit: BoxFit.cover,
+                            width: 70,
+                            height: 70,
+                            placeholder: (context, url) =>
+                                Container(color: Colors.grey[200], child: const Icon(Icons.image)),
+                            errorWidget: (context, url, error) =>
+                                Container(color: Colors.grey[200], child: const Icon(Icons.image)),
+                          )
+                        : Container(color: Colors.grey[200], child: const Icon(Icons.image)),
               ),
             ),
           ),
@@ -156,25 +156,25 @@ class StoriesWidget extends ConsumerWidget {
   }
 
   Widget _buildLoadingStories() => ListView.builder(
-    scrollDirection: Axis.horizontal,
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    itemCount: 3,
-    itemBuilder: (context, index) => Container(
-      width: 80,
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      child: Column(
-        children: [
-          Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey[200]),
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        itemCount: 3,
+        itemBuilder: (context, index) => Container(
+          width: 80,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          child: Column(
+            children: [
+              Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey[200]),
+              ),
+              const SizedBox(height: 4),
+              Container(width: 40, height: 12, color: Colors.grey[200]),
+            ],
           ),
-          const SizedBox(height: 4),
-          Container(width: 40, height: 12, color: Colors.grey[200]),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   void _addStory(BuildContext context) {
     showModalBottomSheet<void>(

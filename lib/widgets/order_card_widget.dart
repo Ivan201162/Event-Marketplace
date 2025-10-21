@@ -21,86 +21,86 @@ class OrderCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.only(bottom: 12),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок и статус
-            Row(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    order.title,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                // Заголовок и статус
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        order.title,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    _buildStatusChip(),
+                  ],
                 ),
-                _buildStatusChip(),
-              ],
-            ),
 
-            const SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-            // Описание
-            Text(
-              order.description,
-              style: TextStyle(color: Colors.grey[600], fontSize: 14),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-
-            const SizedBox(height: 12),
-
-            // Детали
-            Row(
-              children: [
-                _buildDetailChip(
-                  icon: Icons.attach_money,
-                  text: '${order.budget} ₽',
-                  color: Colors.green,
-                ),
-                const SizedBox(width: 8),
-                _buildDetailChip(
-                  icon: Icons.schedule,
-                  text: order.deadline != null ? _formatDate(order.deadline!) : 'Не указан',
-                  color: Colors.blue,
-                ),
-                const SizedBox(width: 8),
-                _buildDetailChip(
-                  icon: Icons.location_on,
-                  text: order.location ?? 'Не указано',
-                  color: Colors.orange,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // Приоритет и категория
-            Row(
-              children: [
-                _buildPriorityChip(),
-                const SizedBox(width: 8),
-                _buildCategoryChip(),
-                const Spacer(),
+                // Описание
                 Text(
-                  'Создана ${_formatRelativeDate(order.createdAt)}',
-                  style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  order.description,
+                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
+
+                const SizedBox(height: 12),
+
+                // Детали
+                Row(
+                  children: [
+                    _buildDetailChip(
+                      icon: Icons.attach_money,
+                      text: '${order.budget} ₽',
+                      color: Colors.green,
+                    ),
+                    const SizedBox(width: 8),
+                    _buildDetailChip(
+                      icon: Icons.schedule,
+                      text: order.deadline != null ? _formatDate(order.deadline!) : 'Не указан',
+                      color: Colors.blue,
+                    ),
+                    const SizedBox(width: 8),
+                    _buildDetailChip(
+                      icon: Icons.location_on,
+                      text: order.location ?? 'Не указано',
+                      color: Colors.orange,
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Приоритет и категория
+                Row(
+                  children: [
+                    _buildPriorityChip(),
+                    const SizedBox(width: 8),
+                    _buildCategoryChip(),
+                    const Spacer(),
+                    Text(
+                      'Создана ${_formatRelativeDate(order.createdAt)}',
+                      style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                    ),
+                  ],
+                ),
+
+                // Действия
+                if (_shouldShowActions()) ...[const SizedBox(height: 12), _buildActionButtons()],
               ],
             ),
-
-            // Действия
-            if (_shouldShowActions()) ...[const SizedBox(height: 12), _buildActionButtons()],
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildStatusChip() {
     Color color;
@@ -199,53 +199,53 @@ class OrderCardWidget extends StatelessWidget {
   }
 
   Widget _buildCategoryChip() => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-    decoration: BoxDecoration(
-      color: Colors.blue.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(6),
-    ),
-    child: Text(
-      order.category ?? 'Не указана',
-      style: const TextStyle(color: Colors.blue, fontSize: 10, fontWeight: FontWeight.w500),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.blue.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          order.category ?? 'Не указана',
+          style: const TextStyle(color: Colors.blue, fontSize: 10, fontWeight: FontWeight.w500),
+        ),
+      );
 
   Widget _buildActionButtons() => Row(
-    children: [
-      if (order.status == OrderStatus.pending) ...[
-        TextButton.icon(
-          onPressed: onEdit,
-          icon: const Icon(Icons.edit, size: 16),
-          label: const Text('Редактировать'),
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.blue,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          ),
-        ),
-        const SizedBox(width: 8),
-        TextButton.icon(
-          onPressed: onCancel,
-          icon: const Icon(Icons.cancel, size: 16),
-          label: const Text('Отменить'),
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.red,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          ),
-        ),
-      ],
-      if (order.status == OrderStatus.inProgress) ...[
-        TextButton.icon(
-          onPressed: onComplete,
-          icon: const Icon(Icons.check, size: 16),
-          label: const Text('Завершить'),
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.green,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          ),
-        ),
-      ],
-    ],
-  );
+        children: [
+          if (order.status == OrderStatus.pending) ...[
+            TextButton.icon(
+              onPressed: onEdit,
+              icon: const Icon(Icons.edit, size: 16),
+              label: const Text('Редактировать'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.blue,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              ),
+            ),
+            const SizedBox(width: 8),
+            TextButton.icon(
+              onPressed: onCancel,
+              icon: const Icon(Icons.cancel, size: 16),
+              label: const Text('Отменить'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              ),
+            ),
+          ],
+          if (order.status == OrderStatus.inProgress) ...[
+            TextButton.icon(
+              onPressed: onComplete,
+              icon: const Icon(Icons.check, size: 16),
+              label: const Text('Завершить'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.green,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              ),
+            ),
+          ],
+        ],
+      );
 
   bool _shouldShowActions() =>
       order.status == OrderStatus.pending || order.status == OrderStatus.inProgress;

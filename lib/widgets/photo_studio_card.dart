@@ -315,22 +315,22 @@ class PhotoStudioCard extends StatelessWidget {
   }
 
   Widget _buildPlaceholderImage(ThemeData theme) => Container(
-    width: double.infinity,
-    height: double.infinity,
-    decoration: BoxDecoration(
-      color: theme.colorScheme.surface,
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.photo_camera, size: 48, color: theme.colorScheme.outline),
-        const SizedBox(height: 8),
-        Text(
-          'Фотостудия',
-          style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline),
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
         ),
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.photo_camera, size: 48, color: theme.colorScheme.outline),
+            const SizedBox(height: 8),
+            Text(
+              'Фотостудия',
+              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline),
+            ),
+          ],
+        ),
+      );
 }

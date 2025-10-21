@@ -13,100 +13,101 @@ class PaymentCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Card(
-    elevation: 2,
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок с типом и статусом
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        elevation: 2,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    payment.typeDisplayName ?? payment.displayName,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
+                // Заголовок с типом и статусом
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        payment.typeDisplayName ?? payment.displayName,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    _buildStatusChip(payment.status),
+                  ],
                 ),
-                _buildStatusChip(payment.status),
-              ],
-            ),
 
-            const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-            // Сумма
-            Row(
-              children: [
-                Icon(Icons.attach_money, size: 20, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(
-                  '${payment.amount.toStringAsFixed(0)} ${payment.currency}',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                // Сумма
+                Row(
+                  children: [
+                    Icon(Icons.attach_money,
+                        size: 20, color: Theme.of(context).colorScheme.primary),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${payment.amount.toStringAsFixed(0)} ${payment.currency}',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-              ],
-            ),
 
-            const SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-            // Описание
-            ...[
-              Text(
-                payment.description ?? 'Платеж',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-              const SizedBox(height: 8),
-            ],
-
-            // Информация о датах
-            Row(
-              children: [
-                Icon(
-                  Icons.schedule,
-                  size: 16,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Создан: ${_formatDate(payment.createdAt)}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-                ),
-              ],
-            ),
-
-            if (payment.completedAt != null) ...[
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Icon(Icons.check_circle, size: 16, color: Colors.green),
-                  const SizedBox(width: 8),
+                // Описание
+                ...[
                   Text(
-                    'Завершен: ${_formatDate(payment.completedAt!)}',
-                    style: const TextStyle(fontSize: 12, color: Colors.green),
+                    payment.description ?? 'Платеж',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+
+                // Информация о датах
+                Row(
+                  children: [
+                    Icon(
+                      Icons.schedule,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Создан: ${_formatDate(payment.createdAt)}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+
+                if (payment.completedAt != null) ...[
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.check_circle, size: 16, color: Colors.green),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Завершен: ${_formatDate(payment.completedAt!)}',
+                        style: const TextStyle(fontSize: 12, color: Colors.green),
+                      ),
+                    ],
                   ),
                 ],
-              ),
-            ],
 
-            // Действия
-            if (showActions && payment.isPending) ...[
-              const SizedBox(height: 12),
-              _buildActionButtons(context, ref),
-            ],
-          ],
+                // Действия
+                if (showActions && payment.isPending) ...[
+                  const SizedBox(height: 12),
+                  _buildActionButtons(context, ref),
+                ],
+              ],
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   /// Построить чип статуса
   Widget _buildStatusChip(PaymentStatus status) {
@@ -167,29 +168,29 @@ class PaymentCard extends ConsumerWidget {
 
   /// Построить кнопки действий
   Widget _buildActionButtons(BuildContext context, WidgetRef ref) => Row(
-    children: [
-      Expanded(
-        child: ElevatedButton.icon(
-          onPressed: () => _showPaymentDialog(context, ref),
-          icon: const Icon(Icons.payment, size: 16),
-          label: const Text('Оплатить'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
+        children: [
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: () => _showPaymentDialog(context, ref),
+              icon: const Icon(Icons.payment, size: 16),
+              label: const Text('Оплатить'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+              ),
+            ),
           ),
-        ),
-      ),
-      const SizedBox(width: 8),
-      Expanded(
-        child: OutlinedButton.icon(
-          onPressed: () => _showCancelDialog(context, ref),
-          icon: const Icon(Icons.cancel, size: 16),
-          label: const Text('Отменить'),
-          style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
-        ),
-      ),
-    ],
-  );
+          const SizedBox(width: 8),
+          Expanded(
+            child: OutlinedButton.icon(
+              onPressed: () => _showCancelDialog(context, ref),
+              icon: const Icon(Icons.cancel, size: 16),
+              label: const Text('Отменить'),
+              style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+            ),
+          ),
+        ],
+      );
 
   /// Показать диалог оплаты
   void _showPaymentDialog(BuildContext context, WidgetRef ref) {
@@ -268,7 +269,6 @@ class PaymentDialog extends ConsumerStatefulWidget {
 }
 
 class _PaymentDialogState extends ConsumerState<PaymentDialog> {
-
   @override
   Widget build(BuildContext context) {
     // TODO(developer): Implement payment form provider
@@ -299,36 +299,36 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
 
   /// Построить селектор способа оплаты
   Widget _buildPaymentMethodSelector() => const Column(
-    children: [
-      RadioListTile<String>(
-        title: Text('Банковская карта'),
-        subtitle: Text('Visa, MasterCard, МИР'),
-        value: 'card',
-        // groupValue: _selectedPaymentMethod,
-        // onChanged: (value) {
-        //   setState(() => _selectedPaymentMethod = value!);
-        // },
-      ),
-      RadioListTile<String>(
-        title: Text('СБП'),
-        subtitle: Text('Система быстрых платежей'),
-        value: 'sbp',
-        // groupValue: _selectedPaymentMethod,
-        // onChanged: (value) {
-        //   setState(() => _selectedPaymentMethod = value!);
-        // },
-      ),
-      RadioListTile<String>(
-        title: Text('Электронные деньги'),
-        subtitle: Text('ЮMoney, QIWI, WebMoney'),
-        value: 'ewallet',
-        // groupValue: _selectedPaymentMethod,
-        // onChanged: (value) {
-        //   setState(() => _selectedPaymentMethod = value!);
-        // },
-      ),
-    ],
-  );
+        children: [
+          RadioListTile<String>(
+            title: Text('Банковская карта'),
+            subtitle: Text('Visa, MasterCard, МИР'),
+            value: 'card',
+            // groupValue: _selectedPaymentMethod,
+            // onChanged: (value) {
+            //   setState(() => _selectedPaymentMethod = value!);
+            // },
+          ),
+          RadioListTile<String>(
+            title: Text('СБП'),
+            subtitle: Text('Система быстрых платежей'),
+            value: 'sbp',
+            // groupValue: _selectedPaymentMethod,
+            // onChanged: (value) {
+            //   setState(() => _selectedPaymentMethod = value!);
+            // },
+          ),
+          RadioListTile<String>(
+            title: Text('Электронные деньги'),
+            subtitle: Text('ЮMoney, QIWI, WebMoney'),
+            value: 'ewallet',
+            // groupValue: _selectedPaymentMethod,
+            // onChanged: (value) {
+            //   setState(() => _selectedPaymentMethod = value!);
+            // },
+          ),
+        ],
+      );
 
   /// Обработать платеж
   Future<void> _processPayment() async {
@@ -362,82 +362,83 @@ class PaymentStatisticsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Card(
-    elevation: 4,
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Статистика платежей',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Row(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: _buildStatItem(
-                  context,
-                  'Всего',
-                  '${statistics['totalCount'] ?? 0}',
-                  '${(statistics['totalAmount'] as num? ?? 0).toStringAsFixed(0)} ₽',
-                  Colors.blue,
+              Text(
+                'Статистика платежей',
+                style:
+                    Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      'Всего',
+                      '${statistics['totalCount'] ?? 0}',
+                      '${(statistics['totalAmount'] as num? ?? 0).toStringAsFixed(0)} ₽',
+                      Colors.blue,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      'Завершено',
+                      '${statistics['completedCount'] ?? 0}',
+                      '${(statistics['completedAmount'] as num? ?? 0).toStringAsFixed(0)} ₽',
+                      Colors.green,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      'Ожидает',
+                      '${statistics['pendingCount'] ?? 0}',
+                      '${(statistics['pendingAmount'] as num? ?? 0).toStringAsFixed(0)} ₽',
+                      Colors.orange,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildStatItem(
+                      context,
+                      'Неудачные',
+                      '${statistics['failedCount'] ?? 0}',
+                      '0 ₽',
+                      Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              LinearProgressIndicator(
+                value: (statistics['completionRate'] as num? ?? 0) / 100,
+                backgroundColor: Colors.grey.withValues(alpha: 0.3),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  (statistics['completionRate'] as num? ?? 0) > 80 ? Colors.green : Colors.orange,
                 ),
               ),
-              Expanded(
-                child: _buildStatItem(
-                  context,
-                  'Завершено',
-                  '${statistics['completedCount'] ?? 0}',
-                  '${(statistics['completedAmount'] as num? ?? 0).toStringAsFixed(0)} ₽',
-                  Colors.green,
+              const SizedBox(height: 8),
+              Text(
+                'Процент завершенных: ${(statistics['completionRate'] as num? ?? 0).toStringAsFixed(1)}%',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _buildStatItem(
-                  context,
-                  'Ожидает',
-                  '${statistics['pendingCount'] ?? 0}',
-                  '${(statistics['pendingAmount'] as num? ?? 0).toStringAsFixed(0)} ₽',
-                  Colors.orange,
-                ),
-              ),
-              Expanded(
-                child: _buildStatItem(
-                  context,
-                  'Неудачные',
-                  '${statistics['failedCount'] ?? 0}',
-                  '0 ₽',
-                  Colors.red,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          LinearProgressIndicator(
-            value: (statistics['completionRate'] as num? ?? 0) / 100,
-            backgroundColor: Colors.grey.withValues(alpha: 0.3),
-            valueColor: AlwaysStoppedAnimation<Color>(
-              (statistics['completionRate'] as num? ?? 0) > 80 ? Colors.green : Colors.orange,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Процент завершенных: ${(statistics['completionRate'] as num? ?? 0).toStringAsFixed(1)}%',
-            style: TextStyle(
-              fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   /// Построить элемент статистики
   Widget _buildStatItem(
@@ -446,35 +447,36 @@ class PaymentStatisticsWidget extends ConsumerWidget {
     String count,
     String amount,
     Color color,
-  ) => Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: color.withValues(alpha: 0.3)),
-    ),
-    child: Column(
-      children: [
-        Text(
-          count,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-          ),
+        child: Column(
+          children: [
+            Text(
+              count,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              amount,
+              style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w500),
+            ),
+          ],
         ),
-        const SizedBox(height: 4),
-        Text(
-          amount,
-          style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w500),
-        ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Виджет расчета платежей
@@ -547,13 +549,13 @@ class PaymentCalculationWidget extends ConsumerWidget {
 
   /// Построить строку платежа
   Widget _buildPaymentRow(BuildContext context, String label, String amount, Color color) => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Text(label, style: const TextStyle(fontSize: 14)),
-      Text(
-        amount,
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
-      ),
-    ],
-  );
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 14)),
+          Text(
+            amount,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
+          ),
+        ],
+      );
 }

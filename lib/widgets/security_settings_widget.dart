@@ -64,9 +64,8 @@ class SecuritySettingsWidget extends ConsumerWidget {
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: securityState.isLoading
-                      ? null
-                      : () => _showEncryptionDialog(context, ref),
+                  onPressed:
+                      securityState.isLoading ? null : () => _showEncryptionDialog(context, ref),
                   icon: Icon(securityState.isEncryptionEnabled ? Icons.lock_open : Icons.lock),
                   label: Text(
                     securityState.isEncryptionEnabled
@@ -122,18 +121,18 @@ class SecuritySettingsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatusRow(String label, String value, Color color) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ResponsiveText(label, isSubtitle: true),
-        ResponsiveText(
-          value,
-          style: TextStyle(color: color, fontWeight: FontWeight.w500),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ResponsiveText(label, isSubtitle: true),
+            ResponsiveText(
+              value,
+              style: TextStyle(color: color, fontWeight: FontWeight.w500),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
@@ -278,35 +277,35 @@ class PasswordValidationWidget extends ConsumerWidget {
   }
 
   Widget _buildStrengthIndicator(PasswordValidationState state) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: LinearProgressIndicator(
-              value: state.strengthProgress,
-              backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: state.strengthProgress,
+                  backgroundColor: Colors.grey[300],
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                state.strengthDescription,
+                style: TextStyle(
+                  color: Color(state.strengthColor),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
+          const SizedBox(height: 4),
           Text(
-            state.strengthDescription,
-            style: TextStyle(
-              color: Color(state.strengthColor),
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
-            ),
+            'Сила пароля: ${state.validation!.strength.score}/5',
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
         ],
-      ),
-      const SizedBox(height: 4),
-      Text(
-        'Сила пароля: ${state.validation!.strength.score}/5',
-        style: const TextStyle(fontSize: 12, color: Colors.grey),
-      ),
-    ],
-  );
+      );
 }
 
 /// Виджет для отображения статистики безопасности
@@ -368,19 +367,19 @@ class SecurityStatsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatRow(String label, String value, IconData icon, Color color) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Row(
-      children: [
-        Icon(icon, size: 20, color: color),
-        const SizedBox(width: 12),
-        Expanded(child: ResponsiveText(label, isSubtitle: true)),
-        ResponsiveText(
-          value,
-          style: TextStyle(fontWeight: FontWeight.w500, color: color),
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: color),
+            const SizedBox(width: 12),
+            Expanded(child: ResponsiveText(label, isSubtitle: true)),
+            ResponsiveText(
+              value,
+              style: TextStyle(fontWeight: FontWeight.w500, color: color),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Виджет для отображения рекомендаций по безопасности

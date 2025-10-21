@@ -57,118 +57,118 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.all(16),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок
-          Row(
+        margin: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.calendar_today),
-              const SizedBox(width: 8),
-              const Text(
-                'Календарь доступности',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              // Заголовок
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Календарь доступности',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  if (widget.isOwner)
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      onPressed: _openCalendarSettings,
+                      tooltip: 'Настройки календаря',
+                    ),
+                ],
               ),
-              const Spacer(),
-              if (widget.isOwner)
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: _openCalendarSettings,
-                  tooltip: 'Настройки календаря',
-                ),
+
+              const SizedBox(height: 16),
+
+              // Календарь
+              if (_isLoading)
+                const Center(child: CircularProgressIndicator())
+              else
+                _buildCompactCalendar(),
             ],
           ),
-
-          const SizedBox(height: 16),
-
-          // Календарь
-          if (_isLoading)
-            const Center(child: CircularProgressIndicator())
-          else
-            _buildCompactCalendar(),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildCompactCalendar() => TableCalendar<AvailabilityCalendar>(
-    firstDay: DateTime.utc(2020),
-    lastDay: DateTime.utc(2030, 12, 31),
-    focusedDay: _focusedDay,
-    eventLoader: _getEventsForDay,
-    startingDayOfWeek: StartingDayOfWeek.monday,
-    calendarStyle: const CalendarStyle(
-      outsideDaysVisible: false,
-      markersMaxCount: 1,
-      markerDecoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-      cellMargin: EdgeInsets.all(2),
-      cellPadding: EdgeInsets.all(4),
-    ),
-    headerStyle: const HeaderStyle(
-      formatButtonVisible: false,
-      titleCentered: true,
-      leftChevronIcon: Icon(Icons.chevron_left, size: 20),
-      rightChevronIcon: Icon(Icons.chevron_right, size: 20),
-      titleTextStyle: TextStyle(fontSize: 16),
-    ),
-    onDaySelected: (selectedDay, focusedDay) {
-      setState(() {
-        _focusedDay = focusedDay;
-      });
-      _showDayDetails(selectedDay);
-    },
-    onPageChanged: (focusedDay) {
-      setState(() {
-        _focusedDay = focusedDay;
-      });
-      _loadAvailabilityData();
-    },
-    calendarBuilders: CalendarBuilders(
-      markerBuilder: (context, day, events) {
-        if (events.isEmpty) {
-          return null;
-        }
+        firstDay: DateTime.utc(2020),
+        lastDay: DateTime.utc(2030, 12, 31),
+        focusedDay: _focusedDay,
+        eventLoader: _getEventsForDay,
+        startingDayOfWeek: StartingDayOfWeek.monday,
+        calendarStyle: const CalendarStyle(
+          outsideDaysVisible: false,
+          markersMaxCount: 1,
+          markerDecoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+          cellMargin: EdgeInsets.all(2),
+          cellPadding: EdgeInsets.all(4),
+        ),
+        headerStyle: const HeaderStyle(
+          formatButtonVisible: false,
+          titleCentered: true,
+          leftChevronIcon: Icon(Icons.chevron_left, size: 20),
+          rightChevronIcon: Icon(Icons.chevron_right, size: 20),
+          titleTextStyle: TextStyle(fontSize: 16),
+        ),
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _focusedDay = focusedDay;
+          });
+          _showDayDetails(selectedDay);
+        },
+        onPageChanged: (focusedDay) {
+          setState(() {
+            _focusedDay = focusedDay;
+          });
+          _loadAvailabilityData();
+        },
+        calendarBuilders: CalendarBuilders(
+          markerBuilder: (context, day, events) {
+            if (events.isEmpty) {
+              return null;
+            }
 
-        final availability = events.first;
-        return Container(
-          margin: const EdgeInsets.all(1),
-          decoration: BoxDecoration(
-            color: availability.isAvailable ? Colors.green : Colors.red,
-            shape: BoxShape.circle,
-          ),
-          width: 6,
-          height: 6,
-        );
-      },
-      todayBuilder: (context, day, focusedDay) {
-        final isToday = isSameDay(day, DateTime.now());
-        if (!isToday) {
-          return null;
-        }
-
-        return Container(
-          margin: const EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text(
-              '${day.day}',
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
+            final availability = events.first;
+            return Container(
+              margin: const EdgeInsets.all(1),
+              decoration: BoxDecoration(
+                color: availability.isAvailable ? Colors.green : Colors.red,
+                shape: BoxShape.circle,
               ),
-            ),
-          ),
-        );
-      },
-    ),
-  );
+              width: 6,
+              height: 6,
+            );
+          },
+          todayBuilder: (context, day, focusedDay) {
+            final isToday = isSameDay(day, DateTime.now());
+            if (!isToday) {
+              return null;
+            }
+
+            return Container(
+              margin: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  '${day.day}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
 
   List<AvailabilityCalendar> _getEventsForDay(DateTime day) =>
       _availabilityData.where((availability) {
@@ -264,32 +264,32 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
   }
 
   Widget _buildTimeSlotInfo(TimeSlot slot) => Container(
-    margin: const EdgeInsets.only(bottom: 4),
-    padding: const EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      color: slot.isAvailable ? Colors.green.shade50 : Colors.red.shade50,
-      border: Border.all(color: slot.isAvailable ? Colors.green : Colors.red),
-      borderRadius: BorderRadius.circular(4),
-    ),
-    child: Row(
-      children: [
-        Icon(
-          slot.isAvailable ? Icons.check_circle : Icons.block,
-          color: slot.isAvailable ? Colors.green : Colors.red,
-          size: 16,
+        margin: const EdgeInsets.only(bottom: 4),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: slot.isAvailable ? Colors.green.shade50 : Colors.red.shade50,
+          border: Border.all(color: slot.isAvailable ? Colors.green : Colors.red),
+          borderRadius: BorderRadius.circular(4),
         ),
-        const SizedBox(width: 8),
-        Text(
-          '${_formatTime(slot.startTime)} - ${_formatTime(slot.endTime)}',
-          style: const TextStyle(fontSize: 12),
+        child: Row(
+          children: [
+            Icon(
+              slot.isAvailable ? Icons.check_circle : Icons.block,
+              color: slot.isAvailable ? Colors.green : Colors.red,
+              size: 16,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${_formatTime(slot.startTime)} - ${_formatTime(slot.endTime)}',
+              style: const TextStyle(fontSize: 12),
+            ),
+            if (slot.note != null) ...[
+              const Spacer(),
+              Text(slot.note!, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+            ],
+          ],
         ),
-        if (slot.note != null) ...[
-          const Spacer(),
-          Text(slot.note!, style: const TextStyle(color: Colors.grey, fontSize: 10)),
-        ],
-      ],
-    ),
-  );
+      );
 
   void _openCalendarSettings() {
     Navigator.push(

@@ -58,51 +58,51 @@ class RecommendationsSection extends ConsumerWidget {
   }
 
   Widget _buildLoadingState() => const Padding(
-    padding: EdgeInsets.all(16),
-    child: Center(child: CircularProgressIndicator()),
-  );
+        padding: EdgeInsets.all(16),
+        child: Center(child: CircularProgressIndicator()),
+      );
 
   Widget _buildErrorState(Object error) => Padding(
-    padding: const EdgeInsets.all(16),
-    child: Center(
-      child: Column(
-        children: [
-          const Icon(Icons.error_outline, size: 48, color: Colors.red),
-          const SizedBox(height: 16),
-          const Text(
-            'Ошибка загрузки рекомендаций',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Column(
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              const SizedBox(height: 16),
+              const Text(
+                'Ошибка загрузки рекомендаций',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                error.toString(),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            error.toString(),
-            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildEmptyState() => Padding(
-    padding: const EdgeInsets.all(16),
-    child: Center(
-      child: Column(
-        children: [
-          const Icon(Icons.recommend_outlined, size: 48, color: Colors.grey),
-          const SizedBox(height: 16),
-          const Text(
-            'Пока нет рекомендаций',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Column(
+            children: [
+              const Icon(Icons.recommend_outlined, size: 48, color: Colors.grey),
+              const SizedBox(height: 16),
+              const Text(
+                'Пока нет рекомендаций',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Закажите услуги, чтобы получать персональные рекомендации',
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Закажите услуги, чтобы получать персональные рекомендации',
-            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

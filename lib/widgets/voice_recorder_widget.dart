@@ -63,144 +63,147 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.1),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-      ],
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (_isRecording) ...[
-          _buildRecordingUI(),
-        ] else if (_isUploading) ...[
-          _buildUploadingUI(),
-        ] else ...[
-          _buildReadyToRecordUI(),
-        ],
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (_isRecording) ...[
+              _buildRecordingUI(),
+            ] else if (_isUploading) ...[
+              _buildUploadingUI(),
+            ] else ...[
+              _buildReadyToRecordUI(),
+            ],
+          ],
+        ),
+      );
 
   Widget _buildReadyToRecordUI() => Column(
-    children: [
-      const Icon(Icons.mic, size: 48, color: Colors.red),
-      const SizedBox(height: 16),
-      const Text(
-        'Нажмите и удерживайте для записи',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-      ),
-      const SizedBox(height: 16),
-      GestureDetector(
-        onTapDown: (_) => _startRecording(),
-        onTapUp: (_) => _stopRecording(),
-        onTapCancel: _cancelRecording,
-        child: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.red,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(color: Colors.red.withValues(alpha: 0.3), blurRadius: 12, spreadRadius: 2),
-            ],
-          ),
-          child: const Icon(Icons.mic, color: Colors.white, size: 32),
-        ),
-      ),
-    ],
-  );
-
-  Widget _buildRecordingUI() => Column(
-    children: [
-      AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) => Transform.scale(
-          scale: _scaleAnimation.value,
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Colors.red,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.red.withValues(alpha: _pulseAnimation.value * 0.5),
-                  blurRadius: 20,
-                  spreadRadius: 5,
-                ),
-              ],
-            ),
-            child: const Icon(Icons.stop, color: Colors.white, size: 40),
-          ),
-        ),
-      ),
-      const SizedBox(height: 16),
-      Text(
-        _formatDuration(_recordingDuration),
-        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red),
-      ),
-      const SizedBox(height: 8),
-      const Text('Запись...', style: TextStyle(fontSize: 16, color: Colors.grey)),
-      const SizedBox(height: 16),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildActionButton(
-            icon: Icons.cancel,
-            label: 'Отмена',
-            color: Colors.grey,
-            onTap: _cancelRecording,
+          const Icon(Icons.mic, size: 48, color: Colors.red),
+          const SizedBox(height: 16),
+          const Text(
+            'Нажмите и удерживайте для записи',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
-          _buildActionButton(
-            icon: Icons.send,
-            label: 'Отправить',
-            color: Colors.green,
-            onTap: _sendVoiceMessage,
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTapDown: (_) => _startRecording(),
+            onTapUp: (_) => _stopRecording(),
+            onTapCancel: _cancelRecording,
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.red.withValues(alpha: 0.3), blurRadius: 12, spreadRadius: 2),
+                ],
+              ),
+              child: const Icon(Icons.mic, color: Colors.white, size: 32),
+            ),
           ),
         ],
-      ),
-    ],
-  );
+      );
+
+  Widget _buildRecordingUI() => Column(
+        children: [
+          AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) => Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.red.withValues(alpha: _pulseAnimation.value * 0.5),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: const Icon(Icons.stop, color: Colors.white, size: 40),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            _formatDuration(_recordingDuration),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red),
+          ),
+          const SizedBox(height: 8),
+          const Text('Запись...', style: TextStyle(fontSize: 16, color: Colors.grey)),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildActionButton(
+                icon: Icons.cancel,
+                label: 'Отмена',
+                color: Colors.grey,
+                onTap: _cancelRecording,
+              ),
+              _buildActionButton(
+                icon: Icons.send,
+                label: 'Отправить',
+                color: Colors.green,
+                onTap: _sendVoiceMessage,
+              ),
+            ],
+          ),
+        ],
+      );
 
   Widget _buildUploadingUI() => const Column(
-    children: [
-      CircularProgressIndicator(),
-      SizedBox(height: 16),
-      Text('Отправка голосового сообщения...', style: TextStyle(fontSize: 16, color: Colors.grey)),
-    ],
-  );
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          Text('Отправка голосового сообщения...',
+              style: TextStyle(fontSize: 16, color: Colors.grey)),
+        ],
+      );
 
   Widget _buildActionButton({
     required IconData icon,
     required String label,
     required Color color,
     required VoidCallback onTap,
-  }) => GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: Colors.white, size: 20),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+  }) =>
+      GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Future<void> _startRecording() async {
     final success = await _voiceService.startRecording();

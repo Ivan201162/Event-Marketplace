@@ -45,9 +45,8 @@ class MediaMessageWidget extends StatelessWidget {
             child: Container(
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
               child: Column(
-                crossAxisAlignment: isOwnMessage
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    isOwnMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: [
                   if (!isOwnMessage) ...[
                     Text(

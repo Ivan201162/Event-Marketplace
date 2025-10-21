@@ -54,38 +54,38 @@ class _WorkActWidgetState extends State<WorkActWidget> {
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.all(16),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          const SizedBox(height: 16),
-          if (_error != null) _buildError(),
-          if (_error != null) const SizedBox(height: 16),
-          _buildForm(),
-          const SizedBox(height: 16),
-          _buildServicesSection(),
-          const SizedBox(height: 16),
-          _buildActions(),
-        ],
-      ),
-    ),
-  );
+        margin: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 16),
+              if (_error != null) _buildError(),
+              if (_error != null) const SizedBox(height: 16),
+              _buildForm(),
+              const SizedBox(height: 16),
+              _buildServicesSection(),
+              const SizedBox(height: 16),
+              _buildActions(),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildHeader() => Row(
-    children: [
-      const Icon(Icons.description, color: Colors.blue),
-      const SizedBox(width: 8),
-      const Text(
-        'Акт выполненных работ',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-      const Spacer(),
-      if (widget.workAct != null) _buildStatusChip(widget.workAct!.status),
-    ],
-  );
+        children: [
+          const Icon(Icons.description, color: Colors.blue),
+          const SizedBox(width: 8),
+          const Text(
+            'Акт выполненных работ',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const Spacer(),
+          if (widget.workAct != null) _buildStatusChip(widget.workAct!.status),
+        ],
+      );
 
   Widget _buildStatusChip(WorkActStatus status) {
     Color color;
@@ -113,151 +113,152 @@ class _WorkActWidgetState extends State<WorkActWidget> {
   }
 
   Widget _buildError() => Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: Colors.red.shade50,
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.red.shade200),
-    ),
-    child: Row(
-      children: [
-        Icon(Icons.error, color: Colors.red.shade700),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(_error!, style: TextStyle(color: Colors.red.shade700)),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.red.shade50,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.red.shade200),
         ),
-        IconButton(onPressed: () => setState(() => _error = null), icon: const Icon(Icons.close)),
-      ],
-    ),
-  );
+        child: Row(
+          children: [
+            Icon(Icons.error, color: Colors.red.shade700),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(_error!, style: TextStyle(color: Colors.red.shade700)),
+            ),
+            IconButton(
+                onPressed: () => setState(() => _error = null), icon: const Icon(Icons.close)),
+          ],
+        ),
+      );
 
   Widget _buildForm() => Form(
-    key: _formKey,
-    child: Column(
-      children: [
-        TextFormField(
-          controller: _eventNameController,
-          decoration: const InputDecoration(
-            labelText: 'Название мероприятия',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.event),
-          ),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Введите название мероприятия';
-            }
-            return null;
-          },
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: _eventNameController,
+              decoration: const InputDecoration(
+                labelText: 'Название мероприятия',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.event),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Введите название мероприятия';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _eventDateController,
+              decoration: const InputDecoration(
+                labelText: 'Дата мероприятия',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.calendar_today),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Введите дату мероприятия';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _eventLocationController,
+              decoration: const InputDecoration(
+                labelText: 'Место проведения',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.location_on),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Введите место проведения';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _notesController,
+              decoration: const InputDecoration(
+                labelText: 'Примечания',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.note),
+              ),
+              maxLines: 3,
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _eventDateController,
-          decoration: const InputDecoration(
-            labelText: 'Дата мероприятия',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.calendar_today),
-          ),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Введите дату мероприятия';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _eventLocationController,
-          decoration: const InputDecoration(
-            labelText: 'Место проведения',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.location_on),
-          ),
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Введите место проведения';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _notesController,
-          decoration: const InputDecoration(
-            labelText: 'Примечания',
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.note),
-          ),
-          maxLines: 3,
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildServicesSection() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Выполненные работы',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Row(
+            children: [
+              const Text(
+                'Выполненные работы',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              ElevatedButton.icon(
+                onPressed: _addService,
+                icon: const Icon(Icons.add),
+                label: const Text('Добавить'),
+              ),
+            ],
           ),
-          const Spacer(),
-          ElevatedButton.icon(
-            onPressed: _addService,
-            icon: const Icon(Icons.add),
-            label: const Text('Добавить'),
-          ),
+          const SizedBox(height: 8),
+          if (_services.isEmpty)
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: const Center(
+                child: Text('Добавьте выполненные работы', style: TextStyle(color: Colors.grey)),
+              ),
+            )
+          else
+            ...(_services.asMap().entries.map((entry) {
+              final index = entry.key;
+              final service = entry.value;
+              return _buildServiceItem(service, index);
+            })),
+          const SizedBox(height: 16),
+          _buildTotalAmount(),
         ],
-      ),
-      const SizedBox(height: 8),
-      if (_services.isEmpty)
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: const Center(
-            child: Text('Добавьте выполненные работы', style: TextStyle(color: Colors.grey)),
-          ),
-        )
-      else
-        ...(_services.asMap().entries.map((entry) {
-          final index = entry.key;
-          final service = entry.value;
-          return _buildServiceItem(service, index);
-        })),
-      const SizedBox(height: 16),
-      _buildTotalAmount(),
-    ],
-  );
+      );
 
   Widget _buildServiceItem(ServiceItem service, int index) => Card(
-    margin: const EdgeInsets.symmetric(vertical: 4),
-    child: ListTile(
-      title: Text(service.name),
-      subtitle: Text(
-        'Количество: ${service.quantity}, Цена: ${service.price.toStringAsFixed(2)} ₽',
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '${service.totalPrice.toStringAsFixed(2)} ₽',
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        child: ListTile(
+          title: Text(service.name),
+          subtitle: Text(
+            'Количество: ${service.quantity}, Цена: ${service.price.toStringAsFixed(2)} ₽',
           ),
-          const SizedBox(width: 8),
-          IconButton(onPressed: () => _editService(index), icon: const Icon(Icons.edit)),
-          IconButton(
-            onPressed: () => _removeService(index),
-            icon: const Icon(Icons.delete, color: Colors.red),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '${service.totalPrice.toStringAsFixed(2)} ₽',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(width: 8),
+              IconButton(onPressed: () => _editService(index), icon: const Icon(Icons.edit)),
+              IconButton(
+                onPressed: () => _removeService(index),
+                icon: const Icon(Icons.delete, color: Colors.red),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildTotalAmount() {
     final totalAmount = _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
@@ -287,46 +288,46 @@ class _WorkActWidgetState extends State<WorkActWidget> {
   }
 
   Widget _buildActions() => Row(
-    children: [
-      if (widget.workAct == null) ...[
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: _isLoading ? null : _createWorkAct,
-            icon: _isLoading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.save),
-            label: const Text('Создать акт'),
-          ),
-        ),
-      ] else ...[
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: _isLoading ? null : _updateWorkAct,
-            icon: _isLoading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.save),
-            label: const Text('Обновить акт'),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: _isLoading ? null : _generatePDF,
-            icon: const Icon(Icons.picture_as_pdf),
-            label: const Text('PDF'),
-          ),
-        ),
-      ],
-    ],
-  );
+        children: [
+          if (widget.workAct == null) ...[
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: _isLoading ? null : _createWorkAct,
+                icon: _isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.save),
+                label: const Text('Создать акт'),
+              ),
+            ),
+          ] else ...[
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: _isLoading ? null : _updateWorkAct,
+                icon: _isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.save),
+                label: const Text('Обновить акт'),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: _isLoading ? null : _generatePDF,
+                icon: const Icon(Icons.picture_as_pdf),
+                label: const Text('PDF'),
+              ),
+            ),
+          ],
+        ],
+      );
 
   // ========== МЕТОДЫ ==========
 
@@ -524,85 +525,86 @@ class _ServiceDialogState extends State<_ServiceDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: Text(widget.service == null ? 'Добавить работу' : 'Редактировать работу'),
-    content: Form(
-      key: _formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Название работы',
-              border: OutlineInputBorder(),
-            ),
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Введите название работы';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-          Row(
+        title: Text(widget.service == null ? 'Добавить работу' : 'Редактировать работу'),
+        content: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: TextFormField(
-                  controller: _quantityController,
-                  decoration: const InputDecoration(
-                    labelText: 'Количество',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Введите количество';
-                    }
-                    final quantity = int.tryParse(value);
-                    if (quantity == null || quantity <= 0) {
-                      return 'Введите корректное количество';
-                    }
-                    return null;
-                  },
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Название работы',
+                  border: OutlineInputBorder(),
                 ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Введите название работы';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextFormField(
-                  controller: _priceController,
-                  decoration: const InputDecoration(
-                    labelText: 'Цена (₽)',
-                    border: OutlineInputBorder(),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _quantityController,
+                      decoration: const InputDecoration(
+                        labelText: 'Количество',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Введите количество';
+                        }
+                        final quantity = int.tryParse(value);
+                        if (quantity == null || quantity <= 0) {
+                          return 'Введите корректное количество';
+                        }
+                        return null;
+                      },
+                    ),
                   ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Введите цену';
-                    }
-                    final price = double.tryParse(value);
-                    if (price == null || price < 0) {
-                      return 'Введите корректную цену';
-                    }
-                    return null;
-                  },
-                ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _priceController,
+                      decoration: const InputDecoration(
+                        labelText: 'Цена (₽)',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Введите цену';
+                        }
+                        final price = double.tryParse(value);
+                        if (price == null || price < 0) {
+                          return 'Введите корректную цену';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _descriptionController,
+                decoration:
+                    const InputDecoration(labelText: 'Описание', border: OutlineInputBorder()),
+                maxLines: 2,
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: _descriptionController,
-            decoration: const InputDecoration(labelText: 'Описание', border: OutlineInputBorder()),
-            maxLines: 2,
-          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          ElevatedButton(onPressed: _saveService, child: const Text('Сохранить')),
         ],
-      ),
-    ),
-    actions: [
-      TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
-      ElevatedButton(onPressed: _saveService, child: const Text('Сохранить')),
-    ],
-  );
+      );
 
   void _saveService() {
     if (!_formKey.currentState!.validate()) return;
@@ -611,9 +613,8 @@ class _ServiceDialogState extends State<_ServiceDialog> {
       name: _nameController.text.trim(),
       quantity: int.parse(_quantityController.text),
       price: double.parse(_priceController.text),
-      description: _descriptionController.text.trim().isEmpty
-          ? null
-          : _descriptionController.text.trim(),
+      description:
+          _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
     );
 
     widget.onSave(service);

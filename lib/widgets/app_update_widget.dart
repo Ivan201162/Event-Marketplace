@@ -226,31 +226,31 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
   }
 
   Widget _buildInfoRow(String label, String value, IconData icon) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      children: [
-        Icon(icon, size: 20, color: Colors.grey[600]),
-        const SizedBox(width: 12),
-        Expanded(child: ResponsiveText(label, isSubtitle: true)),
-        ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: Colors.grey[600]),
+            const SizedBox(width: 12),
+            Expanded(child: ResponsiveText(label, isSubtitle: true)),
+            ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+          ],
+        ),
+      );
 
   Widget _buildStatusRow(String label, String value, Color color) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      children: [
-        Icon(Icons.info, size: 20, color: color),
-        const SizedBox(width: 12),
-        Expanded(child: ResponsiveText(label, isSubtitle: true)),
-        ResponsiveText(
-          value,
-          style: TextStyle(color: color, fontWeight: FontWeight.w500),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Icon(Icons.info, size: 20, color: color),
+            const SizedBox(width: 12),
+            Expanded(child: ResponsiveText(label, isSubtitle: true)),
+            ResponsiveText(
+              value,
+              style: TextStyle(color: color, fontWeight: FontWeight.w500),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Виджет для отображения информации о версии
@@ -315,25 +315,25 @@ class VersionInfoWidget extends ConsumerWidget {
   }
 
   Widget _buildInfoRow(String label, String value, IconData icon) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 20, color: Colors.grey[600]),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ResponsiveText(label, isSubtitle: true),
-              const SizedBox(height: 4),
-              ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-            ],
-          ),
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 20, color: Colors.grey[600]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ResponsiveText(label, isSubtitle: true),
+                  const SizedBox(height: 4),
+                  ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   String _getUpdateTypeDescription(UpdateType type) {
     switch (type) {

@@ -123,12 +123,12 @@ class AnalyticsButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => ElevatedButton(
-    onPressed: () {
-      _trackButtonClick(ref);
-      onPressed?.call();
-    },
-    child: child,
-  );
+        onPressed: () {
+          _trackButtonClick(ref);
+          onPressed?.call();
+        },
+        child: child,
+      );
 
   void _trackButtonClick(WidgetRef ref) {
     if (!FeatureFlags.analyticsEnabled) return;
@@ -151,11 +151,11 @@ class AnalyticsNavigator extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Navigator(
-    onGenerateRoute: (settings) {
-      _trackNavigation(ref, settings.name ?? 'unknown');
-      return MaterialPageRoute<void>(builder: (context) => child, settings: settings);
-    },
-  );
+        onGenerateRoute: (settings) {
+          _trackNavigation(ref, settings.name ?? 'unknown');
+          return MaterialPageRoute<void>(builder: (context) => child, settings: settings);
+        },
+      );
 
   void _trackNavigation(WidgetRef ref, String routeName) {
     if (!FeatureFlags.analyticsEnabled) return;
@@ -178,20 +178,20 @@ class AnalyticsErrorBoundary extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Builder(
-    builder: (context) {
-      try {
-        return child;
-      } catch (error, stackTrace) {
-        _trackError(ref, error, stackTrace);
+        builder: (context) {
+          try {
+            return child;
+          } catch (error, stackTrace) {
+            _trackError(ref, error, stackTrace);
 
-        if (errorBuilder != null) {
-          return errorBuilder!(error, stackTrace);
-        }
+            if (errorBuilder != null) {
+              return errorBuilder!(error, stackTrace);
+            }
 
-        return ErrorWidget(error);
-      }
-    },
-  );
+            return ErrorWidget(error);
+          }
+        },
+      );
 
   void _trackError(WidgetRef ref, Object error, StackTrace stackTrace) {
     if (!FeatureFlags.analyticsEnabled) return;

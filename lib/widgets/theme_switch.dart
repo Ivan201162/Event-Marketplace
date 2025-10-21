@@ -87,18 +87,18 @@ class ThemeSwitch extends ConsumerWidget {
   }
 
   List<DropdownMenuItem<ThemeMode>> _buildThemeItems(BuildContext context) => [
-    DropdownMenuItem(value: ThemeMode.light, child: _buildThemeItem(ThemeMode.light)),
-    DropdownMenuItem(value: ThemeMode.dark, child: _buildThemeItem(ThemeMode.dark)),
-    DropdownMenuItem(value: ThemeMode.system, child: _buildThemeItem(ThemeMode.system)),
-  ];
+        DropdownMenuItem(value: ThemeMode.light, child: _buildThemeItem(ThemeMode.light)),
+        DropdownMenuItem(value: ThemeMode.dark, child: _buildThemeItem(ThemeMode.dark)),
+        DropdownMenuItem(value: ThemeMode.system, child: _buildThemeItem(ThemeMode.system)),
+      ];
 
   Widget _buildThemeItem(ThemeMode themeMode) => Row(
-    children: [
-      _buildThemeIcon(themeMode),
-      const SizedBox(width: 12),
-      Text(_getThemeName(themeMode), style: const TextStyle(fontSize: 16)),
-    ],
-  );
+        children: [
+          _buildThemeIcon(themeMode),
+          const SizedBox(width: 12),
+          Text(_getThemeName(themeMode), style: const TextStyle(fontSize: 16)),
+        ],
+      );
 
   Widget _buildThemeIcon(ThemeMode themeMode) {
     IconData icon;

@@ -116,15 +116,15 @@ class _DiscountLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: const Row(
-      children: [
-        SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
-        SizedBox(width: 12),
-        Text('Загружаем предложения скидок...'),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: const Row(
+          children: [
+            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(width: 12),
+            Text('Загружаем предложения скидок...'),
+          ],
+        ),
+      );
 }
 
 /// Виджет ошибки
@@ -136,21 +136,21 @@ class _DiscountErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Ошибка загрузки скидок',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Ошибка загрузки скидок',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            const SizedBox(height: 8),
+            Text(error, style: const TextStyle(color: Colors.red)),
+            const SizedBox(height: 12),
+            ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(error, style: const TextStyle(color: Colors.red)),
-        const SizedBox(height: 12),
-        ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
-      ],
-    ),
-  );
+      );
 }
 
 /// Список скидок
@@ -163,33 +163,33 @@ class _DiscountsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 8),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              Icon(Icons.local_offer, color: Colors.orange, size: 20),
-              SizedBox(width: 8),
-              Text(
-                'Предложения скидок',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.local_offer, color: Colors.orange, size: 20),
+                  SizedBox(width: 8),
+                  Text(
+                    'Предложения скидок',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            ...discounts.map(
+              (discount) => _DiscountCard(
+                discount: discount,
+                onAccept: () => onAccept(discount),
+                onReject: () => onReject(discount),
+              ),
+            ),
+          ],
         ),
-        ...discounts.map(
-          (discount) => _DiscountCard(
-            discount: discount,
-            onAccept: () => onAccept(discount),
-            onReject: () => onReject(discount),
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Карточка скидки
@@ -202,76 +202,76 @@ class _DiscountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-    child: Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: Card(
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
-                  ),
-                  child: Text(
-                    'Скидка: -${discount.discountPercent.toStringAsFixed(0)}%',
-                    style: const TextStyle(
-                      color: Colors.orange,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                      ),
+                      child: Text(
+                        'Скидка: -${discount.discountPercent.toStringAsFixed(0)}%',
+                        style: const TextStyle(
+                          color: Colors.orange,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
-                  ),
+                    const Spacer(),
+                    Text(
+                      'До: ${_formatDate(discount.expiresAt)}',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
                 ),
-                const Spacer(),
-                Text(
-                  'До: ${_formatDate(discount.expiresAt)}',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                if (discount.message != null) ...[
+                  const SizedBox(height: 8),
+                  Text(discount.message!, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                ],
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: onAccept,
+                        icon: const Icon(Icons.check, size: 16),
+                        label: const Text('Принять'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: onReject,
+                        icon: const Icon(Icons.close, size: 16),
+                        label: const Text('Отклонить'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          side: const BorderSide(color: Colors.red),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            if (discount.message != null) ...[
-              const SizedBox(height: 8),
-              Text(discount.message!, style: const TextStyle(fontSize: 14, color: Colors.grey)),
-            ],
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: onAccept,
-                    icon: const Icon(Icons.check, size: 16),
-                    label: const Text('Принять'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: onReject,
-                    icon: const Icon(Icons.close, size: 16),
-                    label: const Text('Отклонить'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Форматирование даты

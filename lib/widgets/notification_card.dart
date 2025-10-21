@@ -50,8 +50,8 @@ class NotificationCard extends StatelessWidget {
                           child: Text(
                             notification.title,
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: notification.read ? FontWeight.w500 : FontWeight.w600,
-                            ),
+                                  fontWeight: notification.read ? FontWeight.w500 : FontWeight.w600,
+                                ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),

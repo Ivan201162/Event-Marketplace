@@ -282,8 +282,7 @@ class ValidationHintWidget extends StatelessWidget {
           Expanded(
             child: Text(
               hint,
-              style:
-                  style ??
+              style: style ??
                   theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
           ),

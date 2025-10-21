@@ -205,34 +205,39 @@ class SubscriptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: const CircleAvatar(child: Icon(Icons.person)),
-    title: Text('Подписка ${subscription.plan.toString().split('.').last}'),
-    subtitle: Text('Подписан с ${_formatDate(subscription.startedAt)}'),
-    trailing: PopupMenuButton<String>(
-      onSelected: (value) {
-        switch (value) {
-          case 'unsubscribe':
-            onUnsubscribe?.call();
-            break;
-          case 'view_profile':
-            // TODO(developer): Перейти к профилю специалиста
-            break;
-        }
-      },
-      itemBuilder: (context) => [
-        const PopupMenuItem(
-          value: 'view_profile',
-          child: Row(children: [Icon(Icons.person, size: 20), SizedBox(width: 8), Text('Профиль')]),
+        leading: const CircleAvatar(child: Icon(Icons.person)),
+        title: Text('Подписка ${subscription.plan.toString().split('.').last}'),
+        subtitle: Text('Подписан с ${_formatDate(subscription.startedAt)}'),
+        trailing: PopupMenuButton<String>(
+          onSelected: (value) {
+            switch (value) {
+              case 'unsubscribe':
+                onUnsubscribe?.call();
+                break;
+              case 'view_profile':
+                // TODO(developer): Перейти к профилю специалиста
+                break;
+            }
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'view_profile',
+              child: Row(
+                  children: [Icon(Icons.person, size: 20), SizedBox(width: 8), Text('Профиль')]),
+            ),
+            const PopupMenuItem(
+              value: 'unsubscribe',
+              child: Row(
+                children: [
+                  Icon(Icons.person_remove, size: 20),
+                  SizedBox(width: 8),
+                  Text('Отписаться')
+                ],
+              ),
+            ),
+          ],
         ),
-        const PopupMenuItem(
-          value: 'unsubscribe',
-          child: Row(
-            children: [Icon(Icons.person_remove, size: 20), SizedBox(width: 8), Text('Отписаться')],
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
@@ -333,31 +338,31 @@ class NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: CircleAvatar(
-      backgroundImage: notification.specialistPhotoUrl != null
-          ? CachedNetworkImageProvider(notification.specialistPhotoUrl!)
-          : null,
-      child: notification.specialistPhotoUrl == null ? const Icon(Icons.person) : null,
-    ),
-    title: Text(notification.title),
-    subtitle: Text(notification.body),
-    trailing: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          _formatTimeAgo(notification.createdAt),
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        leading: CircleAvatar(
+          backgroundImage: notification.specialistPhotoUrl != null
+              ? CachedNetworkImageProvider(notification.specialistPhotoUrl!)
+              : null,
+          child: notification.specialistPhotoUrl == null ? const Icon(Icons.person) : null,
         ),
-        if (!notification.isRead)
-          Container(
-            width: 8,
-            height: 8,
-            decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-          ),
-      ],
-    ),
-    onTap: onTap,
-  );
+        title: Text(notification.title),
+        subtitle: Text(notification.body),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              _formatTimeAgo(notification.createdAt),
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            if (!notification.isRead)
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+              ),
+          ],
+        ),
+        onTap: onTap,
+      );
 
   String _formatTimeAgo(DateTime dateTime) {
     final now = DateTime.now();

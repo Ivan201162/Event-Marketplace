@@ -62,23 +62,23 @@ class ShareWidget extends ConsumerWidget {
   }
 
   Widget _buildIconButton(BuildContext context) => IconButton(
-    onPressed: () => _shareContent(context),
-    icon: Icon(icon ?? Icons.share),
-    tooltip: title ?? 'Поделиться',
-  );
+        onPressed: () => _shareContent(context),
+        icon: Icon(icon ?? Icons.share),
+        tooltip: title ?? 'Поделиться',
+      );
 
   Widget _buildButton(BuildContext context) => ElevatedButton.icon(
-    onPressed: () => _shareContent(context),
-    icon: Icon(icon ?? Icons.share),
-    label: Text(title ?? 'Поделиться'),
-  );
+        onPressed: () => _shareContent(context),
+        icon: Icon(icon ?? Icons.share),
+        label: Text(title ?? 'Поделиться'),
+      );
 
   Widget _buildListTile(BuildContext context) => ListTile(
-    leading: Icon(icon ?? Icons.share),
-    title: Text(title ?? 'Поделиться'),
-    subtitle: const Text('Поделиться с друзьями'),
-    onTap: () => _shareContent(context),
-  );
+        leading: Icon(icon ?? Icons.share),
+        title: Text(title ?? 'Поделиться'),
+        subtitle: const Text('Поделиться с друзьями'),
+        onTap: () => _shareContent(context),
+      );
 
   Future<void> _shareContent(BuildContext context) async {
     try {
@@ -153,14 +153,14 @@ class EventShareWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ShareWidget(
-    event: event,
-    title: title ?? 'Поделиться событием',
-    icon: icon ?? Icons.share,
-    showAsButton: showAsButton,
-    showAsIconButton: showAsIconButton,
-    showAsListTile: showAsListTile,
-    customMessage: customMessage,
-  );
+        event: event,
+        title: title ?? 'Поделиться событием',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+        customMessage: customMessage,
+      );
 }
 
 /// Виджет для шаринга профиля
@@ -185,14 +185,14 @@ class ProfileShareWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ShareWidget(
-    user: user,
-    title: title ?? 'Поделиться профилем',
-    icon: icon ?? Icons.share,
-    showAsButton: showAsButton,
-    showAsIconButton: showAsIconButton,
-    showAsListTile: showAsListTile,
-    customMessage: customMessage,
-  );
+        user: user,
+        title: title ?? 'Поделиться профилем',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+        customMessage: customMessage,
+      );
 }
 
 /// Виджет для шаринга бронирования
@@ -217,14 +217,14 @@ class BookingShareWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ShareWidget(
-    booking: booking,
-    title: title ?? 'Поделиться бронированием',
-    icon: icon ?? Icons.share,
-    showAsButton: showAsButton,
-    showAsIconButton: showAsIconButton,
-    showAsListTile: showAsListTile,
-    customMessage: customMessage,
-  );
+        booking: booking,
+        title: title ?? 'Поделиться бронированием',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+        customMessage: customMessage,
+      );
 }
 
 /// Виджет для шаринга текста
@@ -247,13 +247,13 @@ class TextShareWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ShareWidget(
-    text: text,
-    title: title ?? 'Поделиться текстом',
-    icon: icon ?? Icons.share,
-    showAsButton: showAsButton,
-    showAsIconButton: showAsIconButton,
-    showAsListTile: showAsListTile,
-  );
+        text: text,
+        title: title ?? 'Поделиться текстом',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+      );
 }
 
 /// Виджет для шаринга ссылки
@@ -278,14 +278,14 @@ class LinkShareWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ShareWidget(
-    url: url,
-    title: title ?? 'Поделиться ссылкой',
-    icon: icon ?? Icons.share,
-    showAsButton: showAsButton,
-    showAsIconButton: showAsIconButton,
-    showAsListTile: showAsListTile,
-    customMessage: description,
-  );
+        url: url,
+        title: title ?? 'Поделиться ссылкой',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+        customMessage: description,
+      );
 }
 
 /// Диалог для выбора способа шаринга
@@ -373,13 +373,14 @@ class ShareDialog extends StatelessWidget {
     required String title,
     required String subtitle,
     required VoidCallback onTap,
-  }) => ListTile(
-    leading: Icon(icon),
-    title: Text(title),
-    subtitle: Text(subtitle),
-    onTap: onTap,
-    contentPadding: EdgeInsets.zero,
-  );
+  }) =>
+      ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        subtitle: Text(subtitle),
+        onTap: onTap,
+        contentPadding: EdgeInsets.zero,
+      );
 
   Future<void> _shareContent(BuildContext context) async {
     Navigator.of(context).pop();

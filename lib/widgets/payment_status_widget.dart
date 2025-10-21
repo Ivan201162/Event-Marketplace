@@ -38,70 +38,70 @@ class PaymentStatusWidget extends ConsumerWidget {
   }
 
   Widget _buildNoPayments(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: Colors.grey.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(Icons.payment, size: 16, color: Colors.grey[600]),
-        const SizedBox(width: 4),
-        Text(
-          'Платеж не создан',
-          style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.grey.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
         ),
-      ],
-    ),
-  );
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.payment, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 4),
+            Text(
+              'Платеж не создан',
+              style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildLoading(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: Colors.blue.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        SizedBox(
-          width: 12,
-          height: 12,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.blue[600]!),
-          ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.blue.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
         ),
-        const SizedBox(width: 6),
-        Text(
-          'Загрузка...',
-          style: TextStyle(fontSize: 12, color: Colors.blue[600], fontWeight: FontWeight.w500),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 12,
+              height: 12,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue[600]!),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              'Загрузка...',
+              style: TextStyle(fontSize: 12, color: Colors.blue[600], fontWeight: FontWeight.w500),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildError(BuildContext context, Object error) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: Colors.red.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(Icons.error_outline, size: 16, color: Colors.red[600]),
-        const SizedBox(width: 4),
-        Text(
-          'Ошибка загрузки',
-          style: TextStyle(fontSize: 12, color: Colors.red[600], fontWeight: FontWeight.w500),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.red.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
         ),
-      ],
-    ),
-  );
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, size: 16, color: Colors.red[600]),
+            const SizedBox(width: 4),
+            Text(
+              'Ошибка загрузки',
+              style: TextStyle(fontSize: 12, color: Colors.red[600], fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildCompactStatus(BuildContext context, BookingPayment payment) {
     return _buildPaymentStatusChip(
@@ -114,30 +114,32 @@ class PaymentStatusWidget extends ConsumerWidget {
   Widget _buildDetailedStatus(
     BuildContext context,
     BookingPayment payment,
-  ) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Заголовок
-      Row(
+  ) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.payment, size: 20, color: Colors.grey[700]),
-          const SizedBox(width: 8),
-          Text(
-            'Статус оплаты',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          // Заголовок
+          Row(
+            children: [
+              Icon(Icons.payment, size: 20, color: Colors.grey[700]),
+              const SizedBox(width: 8),
+              Text(
+                'Статус оплаты',
+                style:
+                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
+          const SizedBox(height: 12),
+
+          // Информация о платеже
+          _buildPaymentCard(context, payment),
+          const SizedBox(height: 8),
+
+          // Общая информация
+          if (showDetails) ...[_buildPaymentSummary(context, payment)],
         ],
-      ),
-      const SizedBox(height: 12),
-
-      // Информация о платеже
-      _buildPaymentCard(context, payment),
-      const SizedBox(height: 8),
-
-      // Общая информация
-      if (showDetails) ...[_buildPaymentSummary(context, payment)],
-    ],
-  );
+      );
 
   Widget _buildPaymentStatusChip(
     BuildContext context,
@@ -213,71 +215,71 @@ class PaymentStatusWidget extends ConsumerWidget {
   }
 
   Widget _buildPaymentCard(BuildContext context, BookingPayment payment) => Card(
-    margin: EdgeInsets.zero,
-    child: Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок платежа
-          Row(
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.payment, size: 20),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Платеж',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              // Заголовок платежа
+              Row(
+                children: [
+                  Icon(Icons.payment, size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Платеж',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                        Text(
+                          '${payment.amount.toStringAsFixed(0)} ₽',
+                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                        ),
+                      ],
                     ),
+                  ),
+                  _buildStatusChip(context, payment.status),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              // Дополнительная информация
+              ...[
+                Text(
+                  'Платеж',
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                ),
+                const SizedBox(height: 4),
+              ],
+
+              // Даты
+              Row(
+                children: [
+                  Icon(Icons.access_time, size: 14, color: Colors.grey[500]),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Создан: ${_formatDate(payment.updatedAt)}',
+                    style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                  ),
+                  if (payment.status == 'paid' || payment.status == 'completed') ...[
+                    const SizedBox(width: 12),
+                    Icon(Icons.check_circle, size: 14, color: Colors.green[500]),
+                    const SizedBox(width: 4),
                     Text(
-                      '${payment.amount.toStringAsFixed(0)} ₽',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                      'Оплачен: ${_formatDate(payment.updatedAt)}',
+                      style: TextStyle(color: Colors.green[500], fontSize: 11),
                     ),
                   ],
-                ),
+                ],
               ),
-              _buildStatusChip(context, payment.status),
             ],
           ),
-
-          const SizedBox(height: 8),
-
-          // Дополнительная информация
-          ...[
-            Text(
-              'Платеж',
-              style: TextStyle(color: Colors.grey[600], fontSize: 12),
-            ),
-            const SizedBox(height: 4),
-          ],
-
-          // Даты
-          Row(
-            children: [
-              Icon(Icons.access_time, size: 14, color: Colors.grey[500]),
-              const SizedBox(width: 4),
-              Text(
-                'Создан: ${_formatDate(payment.updatedAt)}',
-                style: TextStyle(color: Colors.grey[500], fontSize: 11),
-              ),
-              if (payment.status == 'paid' || payment.status == 'completed') ...[
-                const SizedBox(width: 12),
-                Icon(Icons.check_circle, size: 14, color: Colors.green[500]),
-                const SizedBox(width: 4),
-                Text(
-                  'Оплачен: ${_formatDate(payment.updatedAt)}',
-                  style: TextStyle(color: Colors.green[500], fontSize: 11),
-                ),
-              ],
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildStatusChip(BuildContext context, String status) {
     Color backgroundColor;
@@ -390,22 +392,22 @@ class PaymentStatusWidget extends ConsumerWidget {
   }
 
   Widget _buildSummaryRow(String label, String value, [Color? valueColor]) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 2),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: valueColor ?? Colors.grey[800],
-          ),
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: valueColor ?? Colors.grey[800],
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   String _formatDate(DateTime date) =>
       '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';

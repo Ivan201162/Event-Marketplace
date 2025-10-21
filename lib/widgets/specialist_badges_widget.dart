@@ -22,30 +22,30 @@ class SpecialistBadgesWidget extends StatelessWidget {
   }
 
   Widget _buildBadge(SpecialistBadge badge) => Container(
-    padding: EdgeInsets.symmetric(horizontal: showText ? 8.0 : 4.0, vertical: 2),
-    decoration: BoxDecoration(
-      color: badge.color,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: badge.borderColor ?? badge.color),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(badge.icon, size: size, color: badge.textColor),
-        if (showText) ...[
-          const SizedBox(width: 4),
-          Text(
-            badge.text,
-            style: TextStyle(
-              color: badge.textColor,
-              fontSize: size * 0.6,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ],
-    ),
-  );
+        padding: EdgeInsets.symmetric(horizontal: showText ? 8.0 : 4.0, vertical: 2),
+        decoration: BoxDecoration(
+          color: badge.color,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: badge.borderColor ?? badge.color),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(badge.icon, size: size, color: badge.textColor),
+            if (showText) ...[
+              const SizedBox(width: 4),
+              Text(
+                badge.text,
+                style: TextStyle(
+                  color: badge.textColor,
+                  fontSize: size * 0.6,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ],
+        ),
+      );
 }
 
 /// Модель бейджа специалиста

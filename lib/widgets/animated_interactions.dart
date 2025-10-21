@@ -89,32 +89,32 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTapDown: _handleTapDown,
-    onTapUp: _handleTapUp,
-    onTapCancel: _handleTapCancel,
-    onTap: _handleTap,
-    child: AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) => Transform.scale(
-        scale: _scaleAnimation.value,
-        child: Material(
-          elevation: _isPressed ? widget.elevation * 0.5 : widget.elevation,
-          borderRadius: BorderRadius.circular(widget.borderRadius),
-          color: widget.backgroundColor ?? Theme.of(context).primaryColor,
-          child: Container(
-            padding: widget.padding,
-            child: DefaultTextStyle(
-              style: TextStyle(
-                color: widget.foregroundColor ?? Colors.white,
-                fontWeight: FontWeight.w600,
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) => Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Material(
+              elevation: _isPressed ? widget.elevation * 0.5 : widget.elevation,
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              color: widget.backgroundColor ?? Theme.of(context).primaryColor,
+              child: Container(
+                padding: widget.padding,
+                child: DefaultTextStyle(
+                  style: TextStyle(
+                    color: widget.foregroundColor ?? Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  child: widget.child,
+                ),
               ),
-              child: widget.child,
             ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Анимированная иконка с эффектами
@@ -200,22 +200,22 @@ class _AnimatedIconButtonState extends State<AnimatedIconButton>
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTapDown: _handleTapDown,
-    onTapUp: _handleTapUp,
-    onTapCancel: _handleTapCancel,
-    onTap: _handleTap,
-    child: AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) => Transform.scale(
-        scale: _scaleAnimation.value,
-        child: Icon(
-          widget.icon,
-          size: widget.size,
-          color: widget.color ?? Theme.of(context).iconTheme.color,
+        onTapDown: _handleTapDown,
+        onTapUp: _handleTapUp,
+        onTapCancel: _handleTapCancel,
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) => Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Icon(
+              widget.icon,
+              size: widget.size,
+              color: widget.color ?? Theme.of(context).iconTheme.color,
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Анимированная кнопка лайка
@@ -285,21 +285,21 @@ class _AnimatedLikeButtonState extends State<AnimatedLikeButton>
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: _handleTap,
-    child: AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) => Transform.scale(
-        scale: _scaleAnimation.value,
-        child: Icon(
-          widget.isLiked ? Icons.favorite : Icons.favorite_border,
-          size: widget.size,
-          color: widget.isLiked
-              ? widget.likedColor
-              : (widget.unlikedColor ?? Theme.of(context).iconTheme.color),
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) => Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Icon(
+              widget.isLiked ? Icons.favorite : Icons.favorite_border,
+              size: widget.size,
+              color: widget.isLiked
+                  ? widget.likedColor
+                  : (widget.unlikedColor ?? Theme.of(context).iconTheme.color),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Анимированная кнопка репоста
@@ -359,19 +359,19 @@ class _AnimatedShareButtonState extends State<AnimatedShareButton>
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: _handleTap,
-    child: AnimatedBuilder(
-      animation: _rotationAnimation,
-      builder: (context, child) => Transform.rotate(
-        angle: _rotationAnimation.value,
-        child: Icon(
-          Icons.share,
-          size: widget.size,
-          color: widget.color ?? Theme.of(context).iconTheme.color,
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _rotationAnimation,
+          builder: (context, child) => Transform.rotate(
+            angle: _rotationAnimation.value,
+            child: Icon(
+              Icons.share,
+              size: widget.size,
+              color: widget.color ?? Theme.of(context).iconTheme.color,
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Анимированная кнопка сохранения
@@ -435,21 +435,21 @@ class _AnimatedSaveButtonState extends State<AnimatedSaveButton>
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: _handleTap,
-    child: AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) => Transform.scale(
-        scale: _scaleAnimation.value,
-        child: Icon(
-          widget.isSaved ? Icons.bookmark : Icons.bookmark_border,
-          size: widget.size,
-          color: widget.isSaved
-              ? widget.savedColor
-              : (widget.unsavedColor ?? Theme.of(context).iconTheme.color),
+        onTap: _handleTap,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) => Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Icon(
+              widget.isSaved ? Icons.bookmark : Icons.bookmark_border,
+              size: widget.size,
+              color: widget.isSaved
+                  ? widget.savedColor
+                  : (widget.unsavedColor ?? Theme.of(context).iconTheme.color),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Анимированная кнопка с пульсацией
@@ -513,11 +513,11 @@ class _PulsingButtonState extends State<PulsingButton> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: widget.onPressed,
-    child: AnimatedBuilder(
-      animation: _pulseAnimation,
-      builder: (context, child) =>
-          Transform.scale(scale: _pulseAnimation.value, child: widget.child),
-    ),
-  );
+        onTap: widget.onPressed,
+        child: AnimatedBuilder(
+          animation: _pulseAnimation,
+          builder: (context, child) =>
+              Transform.scale(scale: _pulseAnimation.value, child: widget.child),
+        ),
+      );
 }

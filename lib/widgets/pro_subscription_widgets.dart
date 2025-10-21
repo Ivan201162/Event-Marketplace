@@ -37,14 +37,13 @@ class SubscriptionPlansWidget extends ConsumerWidget {
                     color: isCurrentPlan
                         ? Theme.of(context).primaryColor
                         : isPopular
-                        ? Colors.orange
-                        : Colors.grey.shade300,
+                            ? Colors.orange
+                            : Colors.grey.shade300,
                     width: isCurrentPlan || isPopular ? 2 : 1,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  color: isCurrentPlan
-                      ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                      : null,
+                  color:
+                      isCurrentPlan ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : null,
                 ),
                 child: Column(
                   children: [
@@ -129,9 +128,8 @@ class SubscriptionPlansWidget extends ConsumerWidget {
                             child: ElevatedButton(
                               onPressed: isCurrentPlan ? null : () => onPlanSelected(plan),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: isCurrentPlan
-                                    ? Colors.grey
-                                    : Theme.of(context).primaryColor,
+                                backgroundColor:
+                                    isCurrentPlan ? Colors.grey : Theme.of(context).primaryColor,
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(vertical: 12),
                                 shape: RoundedRectangleBorder(
@@ -279,15 +277,15 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
   }
 
   Widget _buildInfoRow(String label, String value) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
+            Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+          ],
+        ),
+      );
 
   Color _getStatusColor(SubscriptionStatus status) {
     switch (status) {
@@ -486,19 +484,19 @@ class SubscriptionStatsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatRow(String label, String value, IconData icon, [Color? color]) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Row(
-      children: [
-        Icon(icon, color: color ?? Colors.grey, size: 24),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(label, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Icon(icon, color: color ?? Colors.grey, size: 24),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(label, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+            ),
+            Text(
+              value,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+            ),
+          ],
         ),
-        Text(
-          value,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
-        ),
-      ],
-    ),
-  );
+      );
 }

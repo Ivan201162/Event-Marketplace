@@ -20,61 +20,62 @@ class EventIdeaCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    elevation: 2,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Изображения
-          if (idea.hasImages) _buildImages(),
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Изображения
+              if (idea.hasImages) _buildImages(),
 
-          // Контент
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Заголовок
-                Text(
-                  idea.title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+              // Контент
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Заголовок
+                    Text(
+                      idea.title,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Описание
+                    Text(
+                      idea.description,
+                      style:
+                          Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Метаданные
+                    _buildMetadata(),
+                    const SizedBox(height: 12),
+
+                    // Теги
+                    if (idea.tags.isNotEmpty) _buildTags(),
+
+                    const SizedBox(height: 12),
+
+                    // Действия
+                    _buildActions(),
+                  ],
                 ),
-                const SizedBox(height: 8),
-
-                // Описание
-                Text(
-                  idea.description,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 12),
-
-                // Метаданные
-                _buildMetadata(),
-                const SizedBox(height: 12),
-
-                // Теги
-                if (idea.tags.isNotEmpty) _buildTags(),
-
-                const SizedBox(height: 12),
-
-                // Действия
-                _buildActions(),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildImages() {
     if (idea.images.length == 1) {
@@ -171,76 +172,77 @@ class EventIdeaCard extends StatelessWidget {
   }
 
   Widget _buildMetadata() => Row(
-    children: [
-      // Бюджет
-      if (idea.budget != null) ...[
-        _buildMetadataItem(icon: Icons.attach_money, text: idea.formattedBudget),
-        const SizedBox(width: 16),
-      ],
+        children: [
+          // Бюджет
+          if (idea.budget != null) ...[
+            _buildMetadataItem(icon: Icons.attach_money, text: idea.formattedBudget),
+            const SizedBox(width: 16),
+          ],
 
-      // Длительность
-      if (idea.duration != null) ...[
-        _buildMetadataItem(icon: Icons.access_time, text: idea.formattedDuration),
-        const SizedBox(width: 16),
-      ],
+          // Длительность
+          if (idea.duration != null) ...[
+            _buildMetadataItem(icon: Icons.access_time, text: idea.formattedDuration),
+            const SizedBox(width: 16),
+          ],
 
-      // Количество гостей
-      if (idea.guests != null) ...[
-        _buildMetadataItem(icon: Icons.people, text: idea.formattedGuests),
-      ],
-    ],
-  );
+          // Количество гостей
+          if (idea.guests != null) ...[
+            _buildMetadataItem(icon: Icons.people, text: idea.formattedGuests),
+          ],
+        ],
+      );
 
   Widget _buildMetadataItem({required IconData icon, required String text}) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(icon, size: 16, color: Colors.grey[600]),
-      const SizedBox(width: 4),
-      Text(text, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-    ],
-  );
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: Colors.grey[600]),
+          const SizedBox(width: 4),
+          Text(text, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+        ],
+      );
 
   Widget _buildTags() => Wrap(
-    spacing: 4,
-    runSpacing: 4,
-    children: idea.tags
-        .take(3)
-        .map(
-          (tag) => Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.blue[50],
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.blue[200]!),
-            ),
-            child: Text(
-              '#$tag',
-              style: TextStyle(fontSize: 10, color: Colors.blue[700], fontWeight: FontWeight.w500),
-            ),
-          ),
-        )
-        .toList(),
-  );
+        spacing: 4,
+        runSpacing: 4,
+        children: idea.tags
+            .take(3)
+            .map(
+              (tag) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Text(
+                  '#$tag',
+                  style:
+                      TextStyle(fontSize: 10, color: Colors.blue[700], fontWeight: FontWeight.w500),
+                ),
+              ),
+            )
+            .toList(),
+      );
 
   Widget _buildActions() => Row(
-    children: [
-      // Лайки
-      _buildActionButton(icon: Icons.favorite_border, count: idea.likes, onTap: onLike),
-      const SizedBox(width: 16),
+        children: [
+          // Лайки
+          _buildActionButton(icon: Icons.favorite_border, count: idea.likes, onTap: onLike),
+          const SizedBox(width: 16),
 
-      // Комментарии
-      _buildActionButton(icon: Icons.comment_outlined, count: idea.comments, onTap: onComment),
-      const SizedBox(width: 16),
+          // Комментарии
+          _buildActionButton(icon: Icons.comment_outlined, count: idea.comments, onTap: onComment),
+          const SizedBox(width: 16),
 
-      // Просмотры
-      _buildActionButton(icon: Icons.visibility_outlined, count: idea.views),
+          // Просмотры
+          _buildActionButton(icon: Icons.visibility_outlined, count: idea.views),
 
-      const Spacer(),
+          const Spacer(),
 
-      // Время
-      Text(idea.timeAgo, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
-    ],
-  );
+          // Время
+          Text(idea.timeAgo, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+        ],
+      );
 
   Widget _buildActionButton({required IconData icon, required int count, VoidCallback? onTap}) =>
       GestureDetector(

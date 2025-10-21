@@ -288,9 +288,8 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundImage: specialist.avatarUrl != null
-                ? NetworkImage(specialist.avatarUrl!)
-                : null,
+            backgroundImage:
+                specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
             child: specialist.avatarUrl == null ? const Icon(Icons.person) : null,
           ),
           const SizedBox(width: 12),

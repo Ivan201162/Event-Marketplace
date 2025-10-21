@@ -121,80 +121,81 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer> with Ticker
   }
 
   Widget _buildProgressIndicator() => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-    child: Row(
-      children: List.generate(
-        widget.stories.length,
-        (index) => Expanded(
-          child: Container(
-            height: 3,
-            margin: EdgeInsets.only(right: index < widget.stories.length - 1 ? 4 : 0),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(2),
-            ),
-            child: index == _currentIndex
-                ? AnimatedBuilder(
-                    animation: _progressAnimation,
-                    builder: (context, child) => FractionallySizedBox(
-                      alignment: Alignment.centerLeft,
-                      widthFactor: _progressAnimation.value,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(2),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: Row(
+          children: List.generate(
+            widget.stories.length,
+            (index) => Expanded(
+              child: Container(
+                height: 3,
+                margin: EdgeInsets.only(right: index < widget.stories.length - 1 ? 4 : 0),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+                child: index == _currentIndex
+                    ? AnimatedBuilder(
+                        animation: _progressAnimation,
+                        builder: (context, child) => FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: _progressAnimation.value,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )
-                : index < _currentIndex
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  )
-                : null,
+                      )
+                    : index < _currentIndex
+                        ? Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          )
+                        : null,
+              ),
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildStoryContent(Story story) => Container(
-    width: double.infinity,
-    height: double.infinity,
-    decoration: const BoxDecoration(color: Colors.black),
-    child: Stack(
-      children: [
-        // Изображение/видео
-        Center(
-          child: Image.network(
-            story.mediaUrl,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) =>
-                const Center(child: Icon(Icons.image, color: Colors.white, size: 100)),
-          ),
-        ),
-
-        // Текст сторис
-        if (story.text.isNotEmpty)
-          Positioned(
-            bottom: 100,
-            left: 16,
-            right: 16,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(8),
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(color: Colors.black),
+        child: Stack(
+          children: [
+            // Изображение/видео
+            Center(
+              child: Image.network(
+                story.mediaUrl,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Center(child: Icon(Icons.image, color: Colors.white, size: 100)),
               ),
-              child: Text(story.text, style: const TextStyle(color: Colors.white, fontSize: 16)),
             ),
-          ),
-      ],
-    ),
-  );
+
+            // Текст сторис
+            if (story.text.isNotEmpty)
+              Positioned(
+                bottom: 100,
+                left: 16,
+                right: 16,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child:
+                      Text(story.text, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                ),
+              ),
+          ],
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {

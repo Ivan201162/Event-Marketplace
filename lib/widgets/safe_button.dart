@@ -28,19 +28,19 @@ class _SafeButtonState extends State<SafeButton> {
 
   @override
   Widget build(BuildContext context) => ElevatedButton(
-    onPressed: _getOnPressed(),
-    style: widget.style,
-    child: widget.isLoading
-        ? const SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
-          )
-        : widget.child,
-  );
+        onPressed: _getOnPressed(),
+        style: widget.style,
+        child: widget.isLoading
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : widget.child,
+      );
 
   VoidCallback? _getOnPressed() {
     if (widget.isLoading || _isInCooldown) {
@@ -110,13 +110,14 @@ class _SafeIconButtonState extends State<SafeIconButton> {
 
   @override
   Widget build(BuildContext context) => IconButton(
-    onPressed: _getOnPressed(),
-    icon: widget.isLoading
-        ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-        : widget.icon,
-    tooltip: widget.tooltip,
-    style: widget.style,
-  );
+        onPressed: _getOnPressed(),
+        icon: widget.isLoading
+            ? const SizedBox(
+                width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+            : widget.icon,
+        tooltip: widget.tooltip,
+        style: widget.style,
+      );
 
   VoidCallback? _getOnPressed() {
     if (widget.isLoading || _isInCooldown) {

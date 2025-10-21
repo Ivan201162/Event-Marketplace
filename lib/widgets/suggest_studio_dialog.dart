@@ -319,9 +319,8 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
     });
 
     try {
-      final suggestedPrice = _priceController.text.isNotEmpty
-          ? double.tryParse(_priceController.text)
-          : null;
+      final suggestedPrice =
+          _priceController.text.isNotEmpty ? double.tryParse(_priceController.text) : null;
 
       await _linkService.createStudioSuggestion(
         bookingId: widget.bookingId,

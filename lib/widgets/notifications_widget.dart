@@ -89,44 +89,44 @@ class NotificationsWidget extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.notifications_none, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          'Нет уведомлений',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.notifications_none, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Нет уведомлений',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Здесь будут появляться уведомления о новых заявках, отзывах и других событиях',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Здесь будут появляться уведомления о новых заявках, отзывах и других событиях',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildErrorState(BuildContext context, Object error) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
-        const SizedBox(height: 16),
-        Text(
-          'Ошибка загрузки уведомлений',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.red[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Ошибка загрузки уведомлений',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.red[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error.toString(),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          error.toString(),
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red[500]),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 
   void _handleNotificationTap(
     BuildContext context,
@@ -301,49 +301,49 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-    child: ListTile(
-      leading: _buildNotificationIcon(context),
-      title: Text(
-        notification.title ?? 'Уведомление',
-        style: TextStyle(
-          fontWeight: notification.isRead == true ? FontWeight.normal : FontWeight.bold,
-        ),
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(notification.message ?? ''),
-          const SizedBox(height: 4),
-          Text(
-            _formatDate(notification.createdAt),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-          ),
-        ],
-      ),
-      trailing: PopupMenuButton(
-        itemBuilder: (context) => [
-          const PopupMenuItem(
-            value: 'delete',
-            child: Row(
-              children: [
-                Icon(Icons.delete, color: Colors.red),
-                SizedBox(width: 8),
-                Text('Удалить'),
-              ],
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: ListTile(
+          leading: _buildNotificationIcon(context),
+          title: Text(
+            notification.title ?? 'Уведомление',
+            style: TextStyle(
+              fontWeight: notification.isRead == true ? FontWeight.normal : FontWeight.bold,
             ),
           ),
-        ],
-        onSelected: (value) {
-          if (value == 'delete') {
-            onDelete();
-          }
-        },
-      ),
-      onTap: onTap,
-      tileColor: notification.isRead == true ? null : Colors.blue.withValues(alpha: 0.05),
-    ),
-  );
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(notification.message ?? ''),
+              const SizedBox(height: 4),
+              Text(
+                _formatDate(notification.createdAt),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              ),
+            ],
+          ),
+          trailing: PopupMenuButton(
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'delete',
+                child: Row(
+                  children: [
+                    Icon(Icons.delete, color: Colors.red),
+                    SizedBox(width: 8),
+                    Text('Удалить'),
+                  ],
+                ),
+              ),
+            ],
+            onSelected: (value) {
+              if (value == 'delete') {
+                onDelete();
+              }
+            },
+          ),
+          onTap: onTap,
+          tileColor: notification.isRead == true ? null : Colors.blue.withValues(alpha: 0.05),
+        ),
+      );
 
   Widget _buildNotificationIcon(BuildContext context) {
     var iconData = Icons.notifications;

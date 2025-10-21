@@ -23,19 +23,24 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.all(16),
-    child: Column(
-      children: [
-        if (widget.showTitle) const ListTile(leading: Icon(Icons.sort), title: Text('Сортировка')),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [_buildSortingOptions(), const SizedBox(height: 16), _buildActionButtons()],
-          ),
+        margin: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            if (widget.showTitle)
+              const ListTile(leading: Icon(Icons.sort), title: Text('Сортировка')),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  _buildSortingOptions(),
+                  const SizedBox(height: 16),
+                  _buildActionButtons()
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildSortingOptions() {
     final sortOptions = ref.watch(sortOptionsProvider);
@@ -73,24 +78,24 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
   }
 
   Widget _buildActionButtons() => Row(
-    children: [
-      Expanded(
-        child: OutlinedButton.icon(
-          onPressed: _clearSorting,
-          icon: const Icon(Icons.clear),
-          label: const Text('Сбросить'),
-        ),
-      ),
-      const SizedBox(width: 16),
-      Expanded(
-        child: ElevatedButton.icon(
-          onPressed: _applySorting,
-          icon: const Icon(Icons.sort),
-          label: const Text('Применить'),
-        ),
-      ),
-    ],
-  );
+        children: [
+          Expanded(
+            child: OutlinedButton.icon(
+              onPressed: _clearSorting,
+              icon: const Icon(Icons.clear),
+              label: const Text('Сбросить'),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: _applySorting,
+              icon: const Icon(Icons.sort),
+              label: const Text('Применить'),
+            ),
+          ),
+        ],
+      );
 
   void _applySorting() {
     ref.read(searchSortingProvider.notifier).updateSorting(_currentSorting);
@@ -329,14 +334,15 @@ class SortingStatsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatItem(String label, String value, IconData icon) => Column(
-    children: [
-      Icon(icon, size: 16, color: Colors.blue.shade600),
-      const SizedBox(height: 4),
-      Text(
-        value,
-        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
-      ),
-      Text(label, style: TextStyle(fontSize: 10, color: Colors.blue.shade600)),
-    ],
-  );
+        children: [
+          Icon(icon, size: 16, color: Colors.blue.shade600),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style:
+                TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+          ),
+          Text(label, style: TextStyle(fontSize: 10, color: Colors.blue.shade600)),
+        ],
+      );
 }

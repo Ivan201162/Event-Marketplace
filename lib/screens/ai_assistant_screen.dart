@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/app_theme.dart';
+// import '../core/app_theme.dart'; // File doesn't exist
 import '../core/constants/app_routes.dart';
-import '../models/ai_message.dart';
+import '../models/ai_message.dart' as ai_message;
 import '../providers/auth_providers.dart';
 import '../services/ai_assistant_service.dart';
 import '../widgets/enhanced_page_transition.dart';
@@ -58,7 +58,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
         children: [
           Expanded(
             child: user.when(
-              data: (userData) => _buildChatInterface(userData?.id ?? ''),
+              data: (userData) => _buildChatInterface(userData?.uid ?? ''),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => _buildErrorWidget(error.toString()),
             ),
@@ -75,7 +75,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            gradient: BrandColors.primaryGradient,
+            gradient: Colors.primaryGradient,
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Icon(Icons.smart_toy_rounded, color: Colors.white, size: 24),
@@ -101,7 +101,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
     ],
   );
 
-  Widget _buildChatInterface(String userId) => StreamBuilder<List<AIMessage>>(
+  Widget _buildChatInterface(String userId) => StreamBuilder<List<ai_message.AIMessage>>(
     stream: _aiService.getMessageHistory(userId),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -142,11 +142,11 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              gradient: BrandColors.primaryGradient,
+              gradient: Colors.primaryGradient,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: BrandColors.primary.withValues(alpha: 0.3),
+                  color: Colors.primary.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -178,14 +178,14 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
       {
         'text': 'Подбери ведущего для свадьбы',
         'icon': Icons.mic_rounded,
-        'color': BrandColors.primary,
+        'color': Colors.primary,
       },
       {
         'text': 'Какой бюджет на корпоратив?',
         'icon': Icons.account_balance_wallet_rounded,
-        'color': BrandColors.secondary,
+        'color': Colors.secondary,
       },
-      {'text': 'Найди фотографа', 'icon': Icons.camera_alt_rounded, 'color': BrandColors.accent},
+      {'text': 'Найди фотографа', 'icon': Icons.camera_alt_rounded, 'color': Colors.accent},
     ];
 
     return Column(
@@ -224,7 +224,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
     );
   }
 
-  Widget _buildMessageBubble(AIMessage message) {
+  Widget _buildMessageBubble(ai_message.AIMessage message) {
     final isUser = message.isUser;
 
     return Padding(
@@ -238,7 +238,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                gradient: BrandColors.primaryGradient,
+                gradient: Colors.primaryGradient,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Icon(Icons.smart_toy_rounded, color: Colors.white, size: 18),
@@ -250,7 +250,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
               constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isUser ? BrandColors.primary : Colors.grey[100],
+                color: isUser ? Colors.primary : Colors.grey[100],
                 borderRadius: BorderRadius.circular(20).copyWith(
                   bottomLeft: isUser ? const Radius.circular(20) : const Radius.circular(4),
                   bottomRight: isUser ? const Radius.circular(4) : const Radius.circular(20),
@@ -303,15 +303,15 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
     );
   }
 
-  Widget _buildSpecialistCard(AIMessage message) {
+  Widget _buildSpecialistCard(ai_message.AIMessage message) {
     if (!message.hasSpecialist) return const SizedBox.shrink();
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: BrandColors.primary.withValues(alpha: 0.1),
+        color: Colors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: BrandColors.primary.withValues(alpha: 0.3)),
+        border: Border.all(color: Colors.primary.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,7 +322,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: BrandColors.primary,
+                  color: Colors.primary,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: message.specialistImageUrl != null
@@ -372,7 +372,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
             Text(
               '${message.specialistPrice!.toStringAsFixed(0)} ₽/час',
               style: const TextStyle(
-                color: BrandColors.primary,
+                color: Colors.primary,
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
@@ -385,7 +385,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                 child: ElevatedButton(
                   onPressed: () => _viewSpecialistProfile(message.specialistId!),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: BrandColors.primary,
+                    backgroundColor: Colors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -398,8 +398,8 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                 child: OutlinedButton(
                   onPressed: () => _bookSpecialist(message.specialistId!),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: BrandColors.primary,
-                    side: const BorderSide(color: BrandColors.primary),
+                    foregroundColor: Colors.primary,
+                    side: const BorderSide(color: Colors.primary),
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
@@ -443,7 +443,7 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
           const SizedBox(width: 12),
           Container(
             decoration: BoxDecoration(
-              gradient: BrandColors.primaryGradient,
+              gradient: Colors.primaryGradient,
               borderRadius: BorderRadius.circular(25),
             ),
             child: IconButton(
@@ -483,8 +483,8 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
     _scrollToBottom();
 
     final user = ref.read(currentUserProvider).value;
-    if (user?.id != null) {
-      _aiService.sendMessage(user!.id, message);
+    if (user?.uid != null) {
+      _aiService.sendMessage(user!.uid, message);
     }
   }
 
@@ -527,8 +527,8 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
             onPressed: () {
               Navigator.of(context).pop();
               final user = ref.read(currentUserProvider).value;
-              if (user?.id != null) {
-                _aiService.clearMessageHistory(user!.id);
+              if (user?.uid != null) {
+                _aiService.clearMessageHistory(user!.uid);
               }
             },
             style: ElevatedButton.styleFrom(

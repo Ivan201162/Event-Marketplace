@@ -76,17 +76,15 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
   void _preloadImage() {
     if (widget.enableMemoryOptimization) {
       // Предзагрузка изображения в кэш
-      precacheImage(CachedNetworkImageProvider(_effectiveImageUrl), context)
-          .then((_) {
-            if (mounted) {
-              setState(() {});
-            }
-          })
-          .catchError((error) {
-            if (mounted) {
-              setState(() {});
-            }
-          });
+      precacheImage(CachedNetworkImageProvider(_effectiveImageUrl), context).then((_) {
+        if (mounted) {
+          setState(() {});
+        }
+      }).catchError((error) {
+        if (mounted) {
+          setState(() {});
+        }
+      });
     } else {
       setState(() {});
     }
@@ -171,13 +169,13 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
   }
 
   Widget _buildImageBuilder(ImageProvider imageProvider) => Container(
-    width: widget.width,
-    height: widget.height,
-    decoration: BoxDecoration(
-      borderRadius: widget.borderRadius,
-      image: DecorationImage(image: imageProvider, fit: widget.fit),
-    ),
-  );
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          borderRadius: widget.borderRadius,
+          image: DecorationImage(image: imageProvider, fit: widget.fit),
+        ),
+      );
 }
 
 /// Специализированный виджет для аватаров с оптимизацией

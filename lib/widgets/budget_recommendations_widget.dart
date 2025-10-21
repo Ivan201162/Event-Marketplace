@@ -115,15 +115,15 @@ class _BudgetLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: const Row(
-      children: [
-        SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
-        SizedBox(width: 12),
-        Text('Анализируем бюджет...'),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: const Row(
+          children: [
+            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(width: 12),
+            Text('Анализируем бюджет...'),
+          ],
+        ),
+      );
 }
 
 /// Виджет ошибки для рекомендаций по бюджету
@@ -135,21 +135,21 @@ class _BudgetErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Ошибка анализа бюджета',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Ошибка анализа бюджета',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            const SizedBox(height: 8),
+            Text(error, style: const TextStyle(color: Colors.red)),
+            const SizedBox(height: 12),
+            ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(error, style: const TextStyle(color: Colors.red)),
-        const SizedBox(height: 12),
-        ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
-      ],
-    ),
-  );
+      );
 }
 
 /// Список рекомендаций по бюджету
@@ -166,35 +166,35 @@ class _BudgetRecommendationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 8),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              Icon(Icons.account_balance_wallet, color: Colors.green, size: 20),
-              SizedBox(width: 8),
-              Text(
-                'Предложения по бюджету',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.account_balance_wallet, color: Colors.green, size: 20),
+                  SizedBox(width: 8),
+                  Text(
+                    'Предложения по бюджету',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            ...recommendations.map(
+              (recommendation) => _BudgetRecommendationCard(
+                recommendation: recommendation,
+                onTap: () {
+                  onRecommendationShown?.call(recommendation.id);
+                  onBudgetIncrease?.call(recommendation.additionalBudget, recommendation.category);
+                },
+              ),
+            ),
+          ],
         ),
-        ...recommendations.map(
-          (recommendation) => _BudgetRecommendationCard(
-            recommendation: recommendation,
-            onTap: () {
-              onRecommendationShown?.call(recommendation.id);
-              onBudgetIncrease?.call(recommendation.additionalBudget, recommendation.category);
-            },
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Карточка рекомендации по бюджету
@@ -206,73 +206,74 @@ class _BudgetRecommendationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-    child: Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: Card(
+          elevation: 2,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(_getCategoryIcon(recommendation.category), color: Colors.green, size: 24),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          recommendation.reason,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  Row(
+                    children: [
+                      Icon(_getCategoryIcon(recommendation.category),
+                          color: Colors.green, size: 24),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              recommendation.reason,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Категория: ${recommendation.category.displayName}',
+                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Категория: ${recommendation.category.displayName}',
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _BudgetInfo(
+                          label: 'Текущий бюджет',
+                          amount: recommendation.currentBudget,
+                          color: Colors.blue,
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _BudgetInfo(
+                          label: 'Дополнительно',
+                          amount: recommendation.additionalBudget,
+                          color: Colors.orange,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _BudgetInfo(
+                          label: 'Итого',
+                          amount: recommendation.totalBudget,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: _BudgetInfo(
-                      label: 'Текущий бюджет',
-                      amount: recommendation.currentBudget,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _BudgetInfo(
-                      label: 'Дополнительно',
-                      amount: recommendation.additionalBudget,
-                      color: Colors.orange,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _BudgetInfo(
-                      label: 'Итого',
-                      amount: recommendation.totalBudget,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   IconData _getCategoryIcon(SpecialistCategory category) {
     switch (category) {
@@ -308,24 +309,24 @@ class _BudgetInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(6),
-      border: Border.all(color: color.withValues(alpha: 0.3)),
-    ),
-    child: Column(
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
-        const SizedBox(height: 2),
-        Text(
-          '${amount.toStringAsFixed(0)} ₽',
-          style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
+        child: Column(
+          children: [
+            Text(
+              label,
+              style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              '${amount.toStringAsFixed(0)} ₽',
+              style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }

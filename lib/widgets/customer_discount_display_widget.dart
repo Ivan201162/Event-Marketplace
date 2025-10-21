@@ -239,76 +239,74 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
   }
 
   Widget _buildPriceHistorySection(BuildContext context, WidgetRef ref) => Consumer(
-    builder: (context, ref, child) => ref
-        .watch(priceHistoryProvider(bookingId))
-        .when(
-          data: (priceHistory) {
-            if (priceHistory.isEmpty) {
-              return const SizedBox.shrink();
-            }
+        builder: (context, ref, child) => ref.watch(priceHistoryProvider(bookingId)).when(
+              data: (priceHistory) {
+                if (priceHistory.isEmpty) {
+                  return const SizedBox.shrink();
+                }
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Row(
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.history, size: 20),
-                    SizedBox(width: 8),
-                    ResponsiveText('История изменений цены', isTitle: true),
+                    const Row(
+                      children: [
+                        Icon(Icons.history, size: 20),
+                        SizedBox(width: 8),
+                        ResponsiveText('История изменений цены', isTitle: true),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    ...priceHistory.take(3).map(_buildPriceHistoryItem),
+                    if (priceHistory.length > 3) ...[
+                      const SizedBox(height: 8),
+                      TextButton(
+                        onPressed: () => _showFullPriceHistory(context, priceHistory),
+                        child: const Text('Показать всю историю'),
+                      ),
+                    ],
                   ],
-                ),
-                const SizedBox(height: 8),
-                ...priceHistory.take(3).map(_buildPriceHistoryItem),
-                if (priceHistory.length > 3) ...[
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () => _showFullPriceHistory(context, priceHistory),
-                    child: const Text('Показать всю историю'),
-                  ),
-                ],
-              ],
-            );
-          },
-          loading: () => const SizedBox.shrink(),
-          error: (error, stack) => const SizedBox.shrink(),
-        ),
-  );
+                );
+              },
+              loading: () => const SizedBox.shrink(),
+              error: (error, stack) => const SizedBox.shrink(),
+            ),
+      );
 
   Widget _buildPriceHistoryItem(PriceHistory history) => Container(
-    margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: Colors.grey.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-    ),
-    child: Row(
-      children: [
-        Icon(
-          history.isDiscount ? Icons.trending_down : Icons.trending_up,
-          color: history.isDiscount ? Colors.green : Colors.red,
-          size: 16,
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
         ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${history.oldPrice.toStringAsFixed(0)} ₽ → ${history.newPrice.toStringAsFixed(0)} ₽',
-                style: const TextStyle(fontWeight: FontWeight.w500),
+        child: Row(
+          children: [
+            Icon(
+              history.isDiscount ? Icons.trending_down : Icons.trending_up,
+              color: history.isDiscount ? Colors.green : Colors.red,
+              size: 16,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${history.oldPrice.toStringAsFixed(0)} ₽ → ${history.newPrice.toStringAsFixed(0)} ₽',
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(history.reason, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                ],
               ),
-              Text(history.reason, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-            ],
-          ),
+            ),
+            Text(
+              _formatDate(history.changedAt),
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
         ),
-        Text(
-          _formatDate(history.changedAt),
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
-        ),
-      ],
-    ),
-  );
+      );
 
   IconData _getDiscountIcon() {
     switch (discount!.status) {
@@ -450,40 +448,41 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Отклонить скидку'),
-    content: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text('Вы уверены, что хотите отклонить предложение скидки?'),
-        const SizedBox(height: 16),
-        TextField(
-          controller: _reasonController,
-          decoration: const InputDecoration(
-            labelText: 'Причина отклонения (необязательно)',
-            border: OutlineInputBorder(),
-          ),
-          maxLines: 3,
+        title: const Text('Отклонить скидку'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Вы уверены, что хотите отклонить предложение скидки?'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _reasonController,
+              decoration: const InputDecoration(
+                labelText: 'Причина отклонения (необязательно)',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
+            ),
+          ],
         ),
-      ],
-    ),
-    actions: [
-      TextButton(
-        onPressed: _isLoading ? null : () => Navigator.pop(context),
-        child: const Text('Отмена'),
-      ),
-      ElevatedButton(
-        onPressed: _isLoading ? null : _rejectDiscount,
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-        child: _isLoading
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : const Text('Отклонить'),
-      ),
-    ],
-  );
+        actions: [
+          TextButton(
+            onPressed: _isLoading ? null : () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: _isLoading ? null : _rejectDiscount,
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red, foregroundColor: Colors.white),
+            child: _isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Отклонить'),
+          ),
+        ],
+      );
 
   Future<void> _rejectDiscount() async {
     setState(() {

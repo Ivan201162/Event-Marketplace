@@ -23,15 +23,10 @@ void main() {
     late MockCollectionReference<Map<String, dynamic>> mockReviewsCollection;
     late MockDocumentReference<Map<String, dynamic>> mockDocumentRef;
     late MockQuery<Map<String, dynamic>> mockQuery;
-    late MockQuerySnapshot<Map<String, dynamic>> mockQuerySnapshot;
 
     setUp(() {
       mockFirestore = MockFirebaseFirestore();
       mockReviewsCollection = MockCollectionReference<Map<String, dynamic>>();
-      mockDocumentRef = MockDocumentReference<Map<String, dynamic>>();
-      mockDocumentSnapshot = MockDocumentSnapshot<Map<String, dynamic>>();
-      mockQuery = MockQuery<Map<String, dynamic>>();
-      mockQuerySnapshot = MockQuerySnapshot<Map<String, dynamic>>();
 
       when(mockFirestore.collection('reviews')).thenReturn(mockReviewsCollection);
       when(mockReviewsCollection.doc(any)).thenReturn(mockDocumentRef);

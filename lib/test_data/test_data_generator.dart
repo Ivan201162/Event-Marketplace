@@ -8,6 +8,7 @@ import '../models/event_idea.dart';
 import '../models/review.dart';
 import '../models/specialist.dart';
 import '../models/user.dart';
+import '../models/enums.dart';
 
 /// Генератор тестовых данных для Event Marketplace
 class TestDataGenerator {

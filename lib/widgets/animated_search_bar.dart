@@ -59,81 +59,81 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTicker
   }
 
   Widget _buildSearchField() => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Найти специалиста',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 12),
-        Focus(
-          onFocusChange: (hasFocus) {
-            setState(() {
-              _isFocused = hasFocus;
-            });
-            if (hasFocus) {
-              _animationController.forward();
-            } else {
-              _animationController.reverse();
-            }
-          },
-          child: TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Найти специалиста…',
-              prefixIcon: Icon(
-                Icons.search,
-                color: _isFocused ? Theme.of(context).primaryColor : Colors.grey[600],
-              ),
-              suffixIcon: _searchController.text.isNotEmpty
-                  ? IconButton(
-                      onPressed: () {
-                        _searchController.clear();
-                        setState(() {});
-                      },
-                      icon: const Icon(Icons.clear),
-                    )
-                  : IconButton(
-                      onPressed: () {
-                        if (_searchController.text.isNotEmpty) {
-                          widget.onSearch(_searchController.text);
-                        }
-                      },
-                      icon: const Icon(Icons.search),
-                    ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(
-                  color: _isFocused ? Theme.of(context).primaryColor : Colors.grey[300]!,
-                  width: _isFocused ? 2 : 1,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Colors.grey[300]!),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-                borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
-              ),
-              filled: true,
-              fillColor: _isFocused
-                  ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
-                  : Theme.of(context).cardColor,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Найти специалиста',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            onChanged: (value) {
-              setState(() {});
-            },
-            onSubmitted: (query) {
-              if (query.isNotEmpty) {
-                widget.onSearch(query);
-              }
-            },
-          ),
+            const SizedBox(height: 12),
+            Focus(
+              onFocusChange: (hasFocus) {
+                setState(() {
+                  _isFocused = hasFocus;
+                });
+                if (hasFocus) {
+                  _animationController.forward();
+                } else {
+                  _animationController.reverse();
+                }
+              },
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Найти специалиста…',
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: _isFocused ? Theme.of(context).primaryColor : Colors.grey[600],
+                  ),
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() {});
+                          },
+                          icon: const Icon(Icons.clear),
+                        )
+                      : IconButton(
+                          onPressed: () {
+                            if (_searchController.text.isNotEmpty) {
+                              widget.onSearch(_searchController.text);
+                            }
+                          },
+                          icon: const Icon(Icons.search),
+                        ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                      color: _isFocused ? Theme.of(context).primaryColor : Colors.grey[300]!,
+                      width: _isFocused ? 2 : 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: Colors.grey[300]!),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+                  ),
+                  filled: true,
+                  fillColor: _isFocused
+                      ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
+                      : Theme.of(context).cardColor,
+                ),
+                onChanged: (value) {
+                  setState(() {});
+                },
+                onSubmitted: (query) {
+                  if (query.isNotEmpty) {
+                    widget.onSearch(query);
+                  }
+                },
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }

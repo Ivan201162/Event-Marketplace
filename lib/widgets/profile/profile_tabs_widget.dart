@@ -85,69 +85,69 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
   }
 
   Widget _buildPortfolioTab() => const Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey),
-        SizedBox(height: 16),
-        Text('Портфолио пусто'),
-        SizedBox(height: 8),
-        Text('Добавьте свои работы', style: TextStyle(color: Colors.grey)),
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text('Портфолио пусто'),
+            SizedBox(height: 8),
+            Text('Добавьте свои работы', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
 
   Widget _buildServicesTab() => const Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.work_outline, size: 64, color: Colors.grey),
-        SizedBox(height: 16),
-        Text('Услуги не добавлены'),
-        SizedBox(height: 8),
-        Text('Добавьте свои услуги', style: TextStyle(color: Colors.grey)),
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.work_outline, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text('Услуги не добавлены'),
+            SizedBox(height: 8),
+            Text('Добавьте свои услуги', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
 
   Widget _buildReviewsTab() => const Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey),
-        SizedBox(height: 16),
-        Text('Отзывы отсутствуют'),
-        SizedBox(height: 8),
-        Text('Пока нет отзывов', style: TextStyle(color: Colors.grey)),
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text('Отзывы отсутствуют'),
+            SizedBox(height: 8),
+            Text('Пока нет отзывов', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
 
   Widget _buildOrdersTab() => const Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.shopping_bag_outlined, size: 64, color: Colors.grey),
-        SizedBox(height: 16),
-        Text('Заказы отсутствуют'),
-        SizedBox(height: 8),
-        Text('Пока нет заказов', style: TextStyle(color: Colors.grey)),
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.shopping_bag_outlined, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text('Заказы отсутствуют'),
+            SizedBox(height: 8),
+            Text('Пока нет заказов', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
 
   Widget _buildFavoritesTab() => const Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.favorite_outline, size: 64, color: Colors.grey),
-        SizedBox(height: 16),
-        Text('Избранное пусто'),
-        SizedBox(height: 8),
-        Text('Добавьте специалистов в избранное', style: TextStyle(color: Colors.grey)),
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.favorite_outline, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text('Избранное пусто'),
+            SizedBox(height: 8),
+            Text('Добавьте специалистов в избранное', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
 
   Widget _buildAboutTab() {
     final theme = Theme.of(context);

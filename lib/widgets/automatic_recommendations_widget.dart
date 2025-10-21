@@ -111,15 +111,15 @@ class _LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: const Row(
-      children: [
-        SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
-        SizedBox(width: 12),
-        Text('Загружаем рекомендации...'),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: const Row(
+          children: [
+            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(width: 12),
+            Text('Загружаем рекомендации...'),
+          ],
+        ),
+      );
 }
 
 /// Виджет ошибки
@@ -131,21 +131,21 @@ class _ErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Ошибка загрузки рекомендаций',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Ошибка загрузки рекомендаций',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            const SizedBox(height: 8),
+            Text(error, style: const TextStyle(color: Colors.red)),
+            const SizedBox(height: 12),
+            ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(error, style: const TextStyle(color: Colors.red)),
-        const SizedBox(height: 12),
-        ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
-      ],
-    ),
-  );
+      );
 }
 
 /// Список рекомендаций
@@ -162,44 +162,44 @@ class _RecommendationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 8),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              Icon(Icons.lightbulb_outline, color: Colors.orange, size: 20),
-              SizedBox(width: 8),
-              Text(
-                'Рекомендуем добавить...',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.lightbulb_outline, color: Colors.orange, size: 20),
+                  SizedBox(width: 8),
+                  Text(
+                    'Рекомендуем добавить...',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 120,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: recommendations.length,
-            itemBuilder: (context, index) {
-              final recommendation = recommendations[index];
-              return _RecommendationCard(
-                recommendation: recommendation,
-                onTap: () {
-                  onRecommendationShown?.call(recommendation.id);
-                  onSpecialistSelected?.call(recommendation.specialist);
+            ),
+            SizedBox(
+              height: 120,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: recommendations.length,
+                itemBuilder: (context, index) {
+                  final recommendation = recommendations[index];
+                  return _RecommendationCard(
+                    recommendation: recommendation,
+                    onTap: () {
+                      onRecommendationShown?.call(recommendation.id);
+                      onSpecialistSelected?.call(recommendation.specialist);
+                    },
+                  );
                 },
-              );
-            },
-          ),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Карточка рекомендации
@@ -211,76 +211,76 @@ class _RecommendationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    width: 200,
-    margin: const EdgeInsets.only(right: 12),
-    child: Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+        width: 200,
+        margin: const EdgeInsets.only(right: 12),
+        child: Card(
+          elevation: 2,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundImage: recommendation.specialist.avatarUrl != null
-                        ? NetworkImage(recommendation.specialist.avatarUrl!)
-                        : null,
-                    child: recommendation.specialist.avatarUrl == null
-                        ? Text(
-                            recommendation.specialist.name.isNotEmpty
-                                ? recommendation.specialist.name[0].toUpperCase()
-                                : '?',
-                            style: const TextStyle(fontSize: 12),
-                          )
-                        : null,
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 16,
+                        backgroundImage: recommendation.specialist.avatarUrl != null
+                            ? NetworkImage(recommendation.specialist.avatarUrl!)
+                            : null,
+                        child: recommendation.specialist.avatarUrl == null
+                            ? Text(
+                                recommendation.specialist.name.isNotEmpty
+                                    ? recommendation.specialist.name[0].toUpperCase()
+                                    : '?',
+                                style: const TextStyle(fontSize: 12),
+                              )
+                            : null,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          recommendation.specialist.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      recommendation.specialist.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                recommendation.reason,
-                style: const TextStyle(fontSize: 11, color: Colors.grey),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  Icon(Icons.star, size: 12, color: Colors.amber[600]),
-                  const SizedBox(width: 4),
+                  const SizedBox(height: 8),
                   Text(
-                    recommendation.specialist.rating.toStringAsFixed(1),
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                    recommendation.reason,
+                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const Spacer(),
-                  Text(
-                    '${recommendation.specialist.price.toStringAsFixed(0)} ₽',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
+                  Row(
+                    children: [
+                      Icon(Icons.star, size: 12, color: Colors.amber[600]),
+                      const SizedBox(width: 4),
+                      Text(
+                        recommendation.specialist.rating.toStringAsFixed(1),
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${recommendation.specialist.price.toStringAsFixed(0)} ₽',
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 }

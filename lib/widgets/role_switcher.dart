@@ -40,12 +40,10 @@ class RoleSwitcher extends ConsumerWidget {
                     icon: const Icon(Icons.person),
                     label: const Text('Клиент'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: currentRole == UserRole.customer
-                          ? Colors.blue
-                          : Colors.grey[300],
-                      foregroundColor: currentRole == UserRole.customer
-                          ? Colors.white
-                          : Colors.grey[600],
+                      backgroundColor:
+                          currentRole == UserRole.customer ? Colors.blue : Colors.grey[300],
+                      foregroundColor:
+                          currentRole == UserRole.customer ? Colors.white : Colors.grey[600],
                     ),
                   ),
                 ),
@@ -58,12 +56,10 @@ class RoleSwitcher extends ConsumerWidget {
                     icon: const Icon(Icons.work),
                     label: const Text('Специалист'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: currentRole == UserRole.specialist
-                          ? Colors.green
-                          : Colors.grey[300],
-                      foregroundColor: currentRole == UserRole.specialist
-                          ? Colors.white
-                          : Colors.grey[600],
+                      backgroundColor:
+                          currentRole == UserRole.specialist ? Colors.green : Colors.grey[300],
+                      foregroundColor:
+                          currentRole == UserRole.specialist ? Colors.white : Colors.grey[600],
                     ),
                   ),
                 ),

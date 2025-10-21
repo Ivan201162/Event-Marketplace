@@ -106,18 +106,19 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
   }
 
   Widget _buildLoadingWidget() => Container(
-    height: 100,
-    margin: const EdgeInsets.symmetric(vertical: 16),
-    child: const Center(child: CircularProgressIndicator()),
-  );
+        height: 100,
+        margin: const EdgeInsets.symmetric(vertical: 16),
+        child: const Center(child: CircularProgressIndicator()),
+      );
 
   Widget _buildEmptyWidget() => Container(
-    height: 100,
-    margin: const EdgeInsets.symmetric(vertical: 16),
-    child: const Center(
-      child: Text('Пока нет активных сторисов', style: TextStyle(color: Colors.grey, fontSize: 16)),
-    ),
-  );
+        height: 100,
+        margin: const EdgeInsets.symmetric(vertical: 16),
+        child: const Center(
+          child: Text('Пока нет активных сторисов',
+              style: TextStyle(color: Colors.grey, fontSize: 16)),
+        ),
+      );
 
   Widget _buildStoryCircle(String userId, List<Story> stories) {
     final hasUnviewedStories = stories.any((story) => !story.isViewedBy(userId));
@@ -304,23 +305,23 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   }
 
   Widget _buildStoryContent(Story story) => SizedBox(
-    width: double.infinity,
-    height: double.infinity,
-    child: (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
-        ? _buildVideoContent(story)
-        : _buildImageContent(story),
-  );
+        width: double.infinity,
+        height: double.infinity,
+        child: (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
+            ? _buildVideoContent(story)
+            : _buildImageContent(story),
+      );
 
   Widget _buildImageContent(Story story) => Image.network(
-    story.mediaUrl,
-    fit: BoxFit.cover,
-    loadingBuilder: (context, child, loadingProgress) {
-      if (loadingProgress == null) return child;
-      return const Center(child: CircularProgressIndicator(color: Colors.white));
-    },
-    errorBuilder: (context, error, stackTrace) =>
-        const Center(child: Icon(Icons.error, color: Colors.white, size: 50)),
-  );
+        story.mediaUrl,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return const Center(child: CircularProgressIndicator(color: Colors.white));
+        },
+        errorBuilder: (context, error, stackTrace) =>
+            const Center(child: Icon(Icons.error, color: Colors.white, size: 50)),
+      );
 
   Widget _buildVideoContent(Story story) {
     // В реальном приложении здесь бы использовался video_player
@@ -340,62 +341,62 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   }
 
   Widget _buildTopBar() => Positioned(
-    top: 0,
-    left: 0,
-    right: 0,
-    child: SafeArea(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Прогресс-бары
-            Row(
-              children: List.generate(
-                widget.stories.length,
-                (index) => Expanded(
-                  child: Container(
-                    height: 3,
-                    margin: EdgeInsets.only(right: index < widget.stories.length - 1 ? 4 : 0),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                    child: index <= _currentIndex
-                        ? Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          )
-                        : null,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Кнопка закрытия
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        top: 0,
+        left: 0,
+        right: 0,
+        child: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               children: [
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.close, color: Colors.white, size: 28),
-                ),
-                Text(
-                  '${_currentIndex + 1}/${widget.stories.length}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                // Прогресс-бары
+                Row(
+                  children: List.generate(
+                    widget.stories.length,
+                    (index) => Expanded(
+                      child: Container(
+                        height: 3,
+                        margin: EdgeInsets.only(right: index < widget.stories.length - 1 ? 4 : 0),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                        child: index <= _currentIndex
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              )
+                            : null,
+                      ),
+                    ),
                   ),
+                ),
+                const SizedBox(height: 16),
+                // Кнопка закрытия
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                    ),
+                    Text(
+                      '${_currentIndex + 1}/${widget.stories.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildBottomBar() {
     if (_currentIndex >= widget.stories.length) return const SizedBox.shrink();
@@ -441,27 +442,27 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   }
 
   Widget _buildNavigationButtons() => Positioned(
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    child: Row(
-      children: [
-        // Левая область для перехода к предыдущему сторису
-        Expanded(
-          child: GestureDetector(
-            onTap: _previousStory,
-            child: Container(color: Colors.transparent),
-          ),
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        child: Row(
+          children: [
+            // Левая область для перехода к предыдущему сторису
+            Expanded(
+              child: GestureDetector(
+                onTap: _previousStory,
+                child: Container(color: Colors.transparent),
+              ),
+            ),
+            // Правая область для перехода к следующему сторису
+            Expanded(
+              child: GestureDetector(
+                onTap: _nextStory,
+                child: Container(color: Colors.transparent),
+              ),
+            ),
+          ],
         ),
-        // Правая область для перехода к следующему сторису
-        Expanded(
-          child: GestureDetector(
-            onTap: _nextStory,
-            child: Container(color: Colors.transparent),
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 }

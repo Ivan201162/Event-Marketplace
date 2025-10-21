@@ -89,12 +89,12 @@ class MonitoringStatusWidget extends ConsumerWidget {
   }
 
   Widget _buildStatusChip(bool isInitialized) => Chip(
-    label: Text(isInitialized ? 'Активен' : 'Неактивен'),
-    backgroundColor: isInitialized
-        ? Colors.green.withValues(alpha: 0.2)
-        : Colors.orange.withValues(alpha: 0.2),
-    labelStyle: TextStyle(color: isInitialized ? Colors.green : Colors.orange, fontSize: 12),
-  );
+        label: Text(isInitialized ? 'Активен' : 'Неактивен'),
+        backgroundColor: isInitialized
+            ? Colors.green.withValues(alpha: 0.2)
+            : Colors.orange.withValues(alpha: 0.2),
+        labelStyle: TextStyle(color: isInitialized ? Colors.green : Colors.orange, fontSize: 12),
+      );
 }
 
 /// Виджет для отображения метрик приложения
@@ -177,40 +177,41 @@ class AppMetricsWidget extends ConsumerWidget {
     String value,
     Color color,
     IconData icon,
-  ) => Row(
-    children: [
-      Icon(icon, color: color, size: 16),
-      const SizedBox(width: 8),
-      Text('$label: ', style: Theme.of(context).textTheme.bodyMedium),
-      Text(
-        value,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
-      ),
-    ],
-  );
+  ) =>
+      Row(
+        children: [
+          Icon(icon, color: color, size: 16),
+          const SizedBox(width: 8),
+          Text('$label: ', style: Theme.of(context).textTheme.bodyMedium),
+          Text(
+            value,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
+          ),
+        ],
+      );
 
   Widget _buildLoadingRow(BuildContext context, String label) => Row(
-    children: [
-      const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-      const SizedBox(width: 8),
-      Text('$label: Загрузка...', style: Theme.of(context).textTheme.bodyMedium),
-    ],
-  );
+        children: [
+          const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+          const SizedBox(width: 8),
+          Text('$label: Загрузка...', style: Theme.of(context).textTheme.bodyMedium),
+        ],
+      );
 
   Widget _buildErrorRow(BuildContext context, String label, String error) => Row(
-    children: [
-      const Icon(Icons.error, color: Colors.red, size: 16),
-      const SizedBox(width: 8),
-      Expanded(
-        child: Text(
-          '$label: Ошибка - $error',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red),
-        ),
-      ),
-    ],
-  );
+        children: [
+          const Icon(Icons.error, color: Colors.red, size: 16),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '$label: Ошибка - $error',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red),
+            ),
+          ),
+        ],
+      );
 }
 
 /// Виджет для управления мониторингом
@@ -323,9 +324,9 @@ class MonitoringLogsWidget extends ConsumerWidget {
                         Text(
                           'Последняя ошибка',
                           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                          ),
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ],
                     ),

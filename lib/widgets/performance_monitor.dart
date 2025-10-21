@@ -53,27 +53,28 @@ class PerformanceMonitor extends ConsumerWidget {
   }
 
   Widget _buildDetailRow(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 2),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text('$label: ', style: const TextStyle(color: Colors.white, fontSize: 12)),
-        Text(
-          value,
-          style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('$label: ', style: const TextStyle(color: Colors.white, fontSize: 12)),
+            Text(
+              value,
+              style:
+                  const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildStatusIndicator(bool needsOptimization) => Container(
-    width: 8,
-    height: 8,
-    decoration: BoxDecoration(
-      color: needsOptimization ? Colors.red : Colors.green,
-      shape: BoxShape.circle,
-    ),
-  );
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+          color: needsOptimization ? Colors.red : Colors.green,
+          shape: BoxShape.circle,
+        ),
+      );
 
   String _getConnectionSpeedText(ConnectionSpeed speed) {
     switch (speed) {
@@ -185,15 +186,15 @@ class OptimizationControls extends ConsumerWidget {
       );
 
   Widget _buildActionButtons(PerformanceNotifier notifier) => Row(
-    children: [
-      ElevatedButton(onPressed: () => notifier.clearCache(), child: const Text('Очистить кэш')),
-      const SizedBox(width: 8),
-      ElevatedButton(
-        onPressed: () => notifier.forceCleanup(),
-        child: const Text('Очистить память'),
-      ),
-    ],
-  );
+        children: [
+          ElevatedButton(onPressed: () => notifier.clearCache(), child: const Text('Очистить кэш')),
+          const SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: () => notifier.forceCleanup(),
+            child: const Text('Очистить память'),
+          ),
+        ],
+      );
 
   String _getOptimizationLevelText(OptimizationLevel level) {
     switch (level) {
@@ -248,25 +249,25 @@ class PerformanceStats extends ConsumerWidget {
   }
 
   Widget _buildStatRow(String label, String value, Color color) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            value,
-            style: TextStyle(color: color, fontWeight: FontWeight.bold),
-          ),
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                value,
+                style: TextStyle(color: color, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Color _getFPSColor(double fps) {
     if (fps >= 50) {

@@ -51,9 +51,8 @@ class SpecialistProposalWidget extends StatelessWidget {
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
-                border: !isFromCurrentUser
-                    ? Border.all(color: Theme.of(context).dividerColor)
-                    : null,
+                border:
+                    !isFromCurrentUser ? Border.all(color: Theme.of(context).dividerColor) : null,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),

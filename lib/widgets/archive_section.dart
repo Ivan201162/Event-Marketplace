@@ -43,9 +43,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
       if (source == null) return;
 
       if (source == ImageSource.gallery) {
-        await ref
-            .read(archiveUploadStateProvider.notifier)
-            .uploadArchiveFromGallery(
+        await ref.read(archiveUploadStateProvider.notifier).uploadArchiveFromGallery(
               bookingId: widget.bookingId,
               uploadedBy: widget.currentUserId,
             );
@@ -73,26 +71,26 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
   }
 
   Future<ImageSource?> _showSourceDialog() async => showDialog<ImageSource>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Выберите источник'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.photo_library),
-            title: const Text('Галерея'),
-            onTap: () => Navigator.of(context).pop(ImageSource.gallery),
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Выберите источник'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Галерея'),
+                onTap: () => Navigator.of(context).pop(ImageSource.gallery),
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Камера'),
+                onTap: () => Navigator.of(context).pop(ImageSource.camera),
+              ),
+            ],
           ),
-          ListTile(
-            leading: const Icon(Icons.camera_alt),
-            title: const Text('Камера'),
-            onTap: () => Navigator.of(context).pop(ImageSource.camera),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Future<void> _deleteArchive(EventArchive archive) async {
     try {
@@ -198,100 +196,102 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
   }
 
   Widget _buildEmptyState() => Container(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      children: [
-        Icon(Icons.folder_open, size: 64, color: Colors.grey.shade400),
-        const SizedBox(height: 16),
-        Text('Архив пуст', style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
-        const SizedBox(height: 8),
-        Text(
-          'Загрузите фото и видео после завершения мероприятия',
-          style: TextStyle(color: Colors.grey.shade500),
-          textAlign: TextAlign.center,
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          children: [
+            Icon(Icons.folder_open, size: 64, color: Colors.grey.shade400),
+            const SizedBox(height: 16),
+            Text('Архив пуст', style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
+            const SizedBox(height: 8),
+            Text(
+              'Загрузите фото и видео после завершения мероприятия',
+              style: TextStyle(color: Colors.grey.shade500),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildErrorWidget(Object error) => Container(
-    padding: const EdgeInsets.all(32),
-    child: Column(
-      children: [
-        Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
-        const SizedBox(height: 16),
-        Text('Ошибка загрузки', style: TextStyle(fontSize: 18, color: Colors.red.shade600)),
-        const SizedBox(height: 8),
-        Text(
-          error.toString(),
-          style: TextStyle(fontSize: 14, color: Colors.red.shade500),
-          textAlign: TextAlign.center,
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          children: [
+            Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
+            const SizedBox(height: 16),
+            Text('Ошибка загрузки', style: TextStyle(fontSize: 18, color: Colors.red.shade600)),
+            const SizedBox(height: 8),
+            Text(
+              error.toString(),
+              style: TextStyle(fontSize: 14, color: Colors.red.shade500),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => ref.refresh(bookingArchivesProvider(widget.bookingId)),
+              child: const Text('Повторить'),
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: () => ref.refresh(bookingArchivesProvider(widget.bookingId)),
-          child: const Text('Повторить'),
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildArchivesList(List<EventArchive> archives) =>
       Column(children: archives.map(_buildArchiveItem).toList());
 
   Widget _buildArchiveItem(EventArchive archive) => Container(
-    margin: const EdgeInsets.only(bottom: 12),
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.grey.shade300),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: ListTile(
-      leading: _buildArchiveIcon(archive),
-      title: Text(archive.fileName ?? 'Файл', style: const TextStyle(fontWeight: FontWeight.w500)),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(archive.formattedFileSize),
-          if (archive.description != null && archive.description!.isNotEmpty)
-            Text(archive.description!, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
-          Text(
-            'Загружено: ${_formatDate(archive.uploadedAt)}',
-            style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
-          ),
-        ],
-      ),
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) {
-          switch (value) {
-            case 'download':
-              _downloadArchive(archive);
-              break;
-            case 'delete':
-              _deleteArchive(archive);
-              break;
-          }
-        },
-        itemBuilder: (context) => [
-          const PopupMenuItem(
-            value: 'download',
-            child: Row(children: [Icon(Icons.download), SizedBox(width: 8), Text('Скачать')]),
-          ),
-          if (_canUpload)
-            const PopupMenuItem(
-              value: 'delete',
-              child: Row(
-                children: [
-                  Icon(Icons.delete, color: Colors.red),
-                  SizedBox(width: 8),
-                  Text('Удалить', style: TextStyle(color: Colors.red)),
-                ],
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: ListTile(
+          leading: _buildArchiveIcon(archive),
+          title:
+              Text(archive.fileName ?? 'Файл', style: const TextStyle(fontWeight: FontWeight.w500)),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(archive.formattedFileSize),
+              if (archive.description != null && archive.description!.isNotEmpty)
+                Text(archive.description!,
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+              Text(
+                'Загружено: ${_formatDate(archive.uploadedAt)}',
+                style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
               ),
-            ),
-        ],
-      ),
-      onTap: () => _showArchivePreview(archive),
-    ),
-  );
+            ],
+          ),
+          trailing: PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                case 'download':
+                  _downloadArchive(archive);
+                  break;
+                case 'delete':
+                  _deleteArchive(archive);
+                  break;
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'download',
+                child: Row(children: [Icon(Icons.download), SizedBox(width: 8), Text('Скачать')]),
+              ),
+              if (_canUpload)
+                const PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete, color: Colors.red),
+                      SizedBox(width: 8),
+                      Text('Удалить', style: TextStyle(color: Colors.red)),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          onTap: () => _showArchivePreview(archive),
+        ),
+      );
 
   Widget _buildArchiveIcon(EventArchive archive) {
     if (archive.isImage) {

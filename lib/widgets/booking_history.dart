@@ -68,110 +68,110 @@ class BookingHistory extends ConsumerWidget {
   }
 
   Widget _buildBookingItem(BuildContext context, Booking booking) => Container(
-    margin: const EdgeInsets.only(bottom: 16),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withValues(alpha: 0.1),
-          spreadRadius: 1,
-          blurRadius: 4,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Заголовок заказа
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                booking.serviceName ?? 'Услуга',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            _buildStatusChip(booking.status.name),
-          ],
-        ),
-        const SizedBox(height: 12),
-
-        // Информация о специалисте
-        Row(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.blue.shade100,
-              child: Text(
-                (booking.specialistName.isNotEmpty ?? false)
-                    ? booking.specialistName.substring(0, 1).toUpperCase()
-                    : 'С',
-                style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    booking.specialistName ?? 'Специалист',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    'Категория', // TODO: Добавить поле category в модель Booking
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
-                  ),
-                ],
-              ),
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.1),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
-        const SizedBox(height: 12),
-
-        // Детали заказа
-        _buildDetailRow(Icons.calendar_today, 'Дата', _formatDate(booking.eventDate)),
-        _buildDetailRow(Icons.access_time, 'Время', _formatTime(booking.eventDate)),
-        _buildDetailRow(Icons.location_on, 'Место', booking.location ?? 'Место не указано'),
-        _buildDetailRow(Icons.attach_money, 'Стоимость', '${booking.totalPrice.toInt()} ₽'),
-
-        const SizedBox(height: 16),
-
-        // Действия
-        Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () {
-                  // TODO(developer): Открыть детали заказа
-                },
-                child: const Text('Подробнее'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            if (booking.status.name == 'confirmed')
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // TODO(developer): Открыть чат с специалистом
-                  },
-                  child: const Text('Написать'),
+            // Заголовок заказа
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    booking.serviceName ?? 'Услуга',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
+                _buildStatusChip(booking.status.name),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Информация о специалисте
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.blue.shade100,
+                  child: Text(
+                    (booking.specialistName.isNotEmpty ?? false)
+                        ? booking.specialistName.substring(0, 1).toUpperCase()
+                        : 'С',
+                    style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        booking.specialistName ?? 'Специалист',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                      ),
+                      Text(
+                        'Категория', // TODO: Добавить поле category в модель Booking
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Детали заказа
+            _buildDetailRow(Icons.calendar_today, 'Дата', _formatDate(booking.eventDate)),
+            _buildDetailRow(Icons.access_time, 'Время', _formatTime(booking.eventDate)),
+            _buildDetailRow(Icons.location_on, 'Место', booking.location ?? 'Место не указано'),
+            _buildDetailRow(Icons.attach_money, 'Стоимость', '${booking.totalPrice.toInt()} ₽'),
+
+            const SizedBox(height: 16),
+
+            // Действия
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      // TODO(developer): Открыть детали заказа
+                    },
+                    child: const Text('Подробнее'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                if (booking.status.name == 'confirmed')
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // TODO(developer): Открыть чат с специалистом
+                      },
+                      child: const Text('Написать'),
+                    ),
+                  ),
+              ],
+            ),
           ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildStatusChip(String status) {
     Color color;
@@ -209,24 +209,24 @@ class BookingHistory extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.history, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          'История заказов пуста',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.history, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'История заказов пуста',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Когда вы сделаете заказ,\nон появится здесь',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Когда вы сделаете заказ,\nон появится здесь',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 
   void _leaveReview(BuildContext context, Map<String, dynamic> booking) {
     // TODO(developer): Открыть экран создания отзыва
@@ -257,40 +257,40 @@ class BookingHistory extends ConsumerWidget {
   }
 
   List<Map<String, dynamic>> _getMockBookings() => [
-    {
-      'id': '1',
-      'service': 'Ведение свадьбы',
-      'specialistName': 'Анна Петрова',
-      'specialistAvatar': null,
-      'date': '15.12.2024',
-      'time': '18:00',
-      'location': 'Ресторан "Золотой"',
-      'price': '25000',
-      'status': 'completed',
-    },
-    {
-      'id': '2',
-      'service': 'Фотосессия',
-      'specialistName': 'Михаил Иванов',
-      'specialistAvatar': null,
-      'date': '22.12.2024',
-      'time': '14:00',
-      'location': 'Парк Горького',
-      'price': '15000',
-      'status': 'upcoming',
-    },
-    {
-      'id': '3',
-      'service': 'Музыкальное сопровождение',
-      'specialistName': 'Елена Сидорова',
-      'specialistAvatar': null,
-      'date': '10.12.2024',
-      'time': '19:00',
-      'location': 'Дом культуры',
-      'price': '12000',
-      'status': 'cancelled',
-    },
-  ];
+        {
+          'id': '1',
+          'service': 'Ведение свадьбы',
+          'specialistName': 'Анна Петрова',
+          'specialistAvatar': null,
+          'date': '15.12.2024',
+          'time': '18:00',
+          'location': 'Ресторан "Золотой"',
+          'price': '25000',
+          'status': 'completed',
+        },
+        {
+          'id': '2',
+          'service': 'Фотосессия',
+          'specialistName': 'Михаил Иванов',
+          'specialistAvatar': null,
+          'date': '22.12.2024',
+          'time': '14:00',
+          'location': 'Парк Горького',
+          'price': '15000',
+          'status': 'upcoming',
+        },
+        {
+          'id': '3',
+          'service': 'Музыкальное сопровождение',
+          'specialistName': 'Елена Сидорова',
+          'specialistAvatar': null,
+          'date': '10.12.2024',
+          'time': '19:00',
+          'location': 'Дом культуры',
+          'price': '12000',
+          'status': 'cancelled',
+        },
+      ];
 
   String _formatDate(DateTime date) =>
       '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
@@ -299,16 +299,16 @@ class BookingHistory extends ConsumerWidget {
       '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
 
   Widget _buildDetailRow(IconData icon, String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      children: [
-        Icon(icon, size: 16, color: Colors.grey[600]),
-        const SizedBox(width: 8),
-        Text('$label: ', style: TextStyle(color: Colors.grey[600], fontSize: 14)),
-        Expanded(
-          child: Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Icon(icon, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 8),
+            Text('$label: ', style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+            Expanded(
+              child: Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }

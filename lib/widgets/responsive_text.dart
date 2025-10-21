@@ -72,8 +72,7 @@ class ResponsiveText extends StatelessWidget {
     }
 
     // Адаптивные отступы
-    final responsiveStyle =
-        style?.copyWith(
+    final responsiveStyle = style?.copyWith(
           fontSize: responsiveFontSize,
           fontWeight: isTitle ? FontWeight.bold : style?.fontWeight,
         ) ??

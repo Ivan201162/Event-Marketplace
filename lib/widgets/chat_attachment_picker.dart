@@ -22,105 +22,106 @@ class ChatAttachmentPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    height: 200,
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor,
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    child: Column(
-      children: [
-        // Ручка для перетаскивания
-        Container(
-          width: 40,
-          height: 4,
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(2),
-          ),
+        height: 200,
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
-
-        // Заголовок
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
-            'Прикрепить файл',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ),
-
-        // Опции прикрепления
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: GridView.count(
-              crossAxisCount: 4,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              children: [
-                _buildAttachmentOption(
-                  context,
-                  icon: Icons.photo_library,
-                  label: 'Фото',
-                  color: Colors.blue,
-                  onTap: () => _pickImage(context),
-                ),
-                _buildAttachmentOption(
-                  context,
-                  icon: Icons.videocam,
-                  label: 'Видео',
-                  color: Colors.red,
-                  onTap: () => _pickVideo(context),
-                ),
-                _buildAttachmentOption(
-                  context,
-                  icon: Icons.audiotrack,
-                  label: 'Аудио',
-                  color: Colors.green,
-                  onTap: () => _pickAudio(context),
-                ),
-                _buildAttachmentOption(
-                  context,
-                  icon: Icons.description,
-                  label: 'Документ',
-                  color: Colors.orange,
-                  onTap: () => _pickDocument(context),
-                ),
-                _buildAttachmentOption(
-                  context,
-                  icon: Icons.camera_alt,
-                  label: 'Камера',
-                  color: Colors.purple,
-                  onTap: () => _takePhoto(context),
-                ),
-                _buildAttachmentOption(
-                  context,
-                  icon: Icons.videocam_outlined,
-                  label: 'Запись',
-                  color: Colors.teal,
-                  onTap: () => _recordVideo(context),
-                ),
-                _buildAttachmentOption(
-                  context,
-                  icon: Icons.attach_file,
-                  label: 'Файл',
-                  color: Colors.grey,
-                  onTap: () => _pickFile(context),
-                ),
-                _buildAttachmentOption(
-                  context,
-                  icon: Icons.location_on,
-                  label: 'Местоположение',
-                  color: Colors.brown,
-                  onTap: () => _shareLocation(context),
-                ),
-              ],
+        child: Column(
+          children: [
+            // Ручка для перетаскивания
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.symmetric(vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
+
+            // Заголовок
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                'Прикрепить файл',
+                style:
+                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            // Опции прикрепления
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: GridView.count(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  children: [
+                    _buildAttachmentOption(
+                      context,
+                      icon: Icons.photo_library,
+                      label: 'Фото',
+                      color: Colors.blue,
+                      onTap: () => _pickImage(context),
+                    ),
+                    _buildAttachmentOption(
+                      context,
+                      icon: Icons.videocam,
+                      label: 'Видео',
+                      color: Colors.red,
+                      onTap: () => _pickVideo(context),
+                    ),
+                    _buildAttachmentOption(
+                      context,
+                      icon: Icons.audiotrack,
+                      label: 'Аудио',
+                      color: Colors.green,
+                      onTap: () => _pickAudio(context),
+                    ),
+                    _buildAttachmentOption(
+                      context,
+                      icon: Icons.description,
+                      label: 'Документ',
+                      color: Colors.orange,
+                      onTap: () => _pickDocument(context),
+                    ),
+                    _buildAttachmentOption(
+                      context,
+                      icon: Icons.camera_alt,
+                      label: 'Камера',
+                      color: Colors.purple,
+                      onTap: () => _takePhoto(context),
+                    ),
+                    _buildAttachmentOption(
+                      context,
+                      icon: Icons.videocam_outlined,
+                      label: 'Запись',
+                      color: Colors.teal,
+                      onTap: () => _recordVideo(context),
+                    ),
+                    _buildAttachmentOption(
+                      context,
+                      icon: Icons.attach_file,
+                      label: 'Файл',
+                      color: Colors.grey,
+                      onTap: () => _pickFile(context),
+                    ),
+                    _buildAttachmentOption(
+                      context,
+                      icon: Icons.location_on,
+                      label: 'Местоположение',
+                      color: Colors.brown,
+                      onTap: () => _shareLocation(context),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildAttachmentOption(
     BuildContext context, {
@@ -128,29 +129,30 @@ class ChatAttachmentPicker extends StatelessWidget {
     required String label,
     required Color color,
     required VoidCallback onTap,
-  }) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(12),
-    child: Container(
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+  }) =>
+      InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w500),
-            textAlign: TextAlign.center,
+        child: Container(
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
-        ],
-      ),
-    ),
-  );
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color, size: 24),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
 
   Future<void> _pickImage(BuildContext context) async {
     try {
@@ -293,48 +295,48 @@ class FileUploadProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(12),
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor,
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.grey[300]!),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+        padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.attach_file, size: 16, color: Colors.grey[600]),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                fileName,
-                style: const TextStyle(fontSize: 12),
-                overflow: TextOverflow.ellipsis,
-              ),
+            Row(
+              children: [
+                Icon(Icons.attach_file, size: 16, color: Colors.grey[600]),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    fileName,
+                    style: const TextStyle(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (onCancel != null)
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 16),
+                    onPressed: onCancel,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+              ],
             ),
-            if (onCancel != null)
-              IconButton(
-                icon: const Icon(Icons.close, size: 16),
-                onPressed: onCancel,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-              ),
+            const SizedBox(height: 8),
+            LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '${(progress * 100).toInt()}%',
+              style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+            ),
           ],
         ),
-        const SizedBox(height: 8),
-        LinearProgressIndicator(
-          value: progress,
-          backgroundColor: Colors.grey[300],
-          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          '${(progress * 100).toInt()}%',
-          style: TextStyle(fontSize: 10, color: Colors.grey[600]),
-        ),
-      ],
-    ),
-  );
+      );
 }

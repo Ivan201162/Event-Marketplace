@@ -172,18 +172,18 @@ class OfflineDetailsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatusRow(String label, String value, Color color) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ResponsiveText(label, isSubtitle: true),
-        ResponsiveText(
-          value,
-          style: TextStyle(color: color, fontWeight: FontWeight.w500),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ResponsiveText(label, isSubtitle: true),
+            ResponsiveText(
+              value,
+              style: TextStyle(color: color, fontWeight: FontWeight.w500),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Виджет для отображения информации о кэше
@@ -272,15 +272,15 @@ class CacheInfoWidget extends ConsumerWidget {
   }
 
   Widget _buildInfoRow(String label, String value) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ResponsiveText(label, isSubtitle: true),
-        ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ResponsiveText(label, isSubtitle: true),
+            ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+          ],
+        ),
+      );
 
   void _showClearCacheDialog(BuildContext context, WidgetRef ref) {
     showDialog<void>(

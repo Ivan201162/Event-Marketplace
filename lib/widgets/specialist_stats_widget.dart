@@ -49,150 +49,152 @@ class SpecialistStatsWidget extends ConsumerWidget {
     BuildContext context,
     AsyncValue<SpecialistStats> statsAsync,
     AsyncValue<ReviewStats> reviewsStatsAsync,
-  ) => Row(
-    children: [
-      // Рейтинг
-      Expanded(
-        child: _buildStatCard(
-          context,
-          'Рейтинг',
-          reviewsStatsAsync.when(
-            data: (stats) => stats.averageRating.toStringAsFixed(1),
-            loading: () => '...',
-            error: (_, __) => '0.0',
+  ) =>
+      Row(
+        children: [
+          // Рейтинг
+          Expanded(
+            child: _buildStatCard(
+              context,
+              'Рейтинг',
+              reviewsStatsAsync.when(
+                data: (stats) => stats.averageRating.toStringAsFixed(1),
+                loading: () => '...',
+                error: (_, __) => '0.0',
+              ),
+              Icons.star,
+              Colors.amber,
+              subtitle: reviewsStatsAsync.when(
+                data: (stats) => '${stats.totalReviews} отзывов',
+                loading: () => '',
+                error: (_, __) => '0 отзывов',
+              ),
+            ),
           ),
-          Icons.star,
-          Colors.amber,
-          subtitle: reviewsStatsAsync.when(
-            data: (stats) => '${stats.totalReviews} отзывов',
-            loading: () => '',
-            error: (_, __) => '0 отзывов',
-          ),
-        ),
-      ),
 
-      const SizedBox(width: 12),
+          const SizedBox(width: 12),
 
-      // Всего заявок
-      Expanded(
-        child: _buildStatCard(
-          context,
-          'Заявки',
-          statsAsync.when(
-            data: (stats) => stats.totalBookings.toString(),
-            loading: () => '...',
-            error: (_, __) => '0',
+          // Всего заявок
+          Expanded(
+            child: _buildStatCard(
+              context,
+              'Заявки',
+              statsAsync.when(
+                data: (stats) => stats.totalBookings.toString(),
+                loading: () => '...',
+                error: (_, __) => '0',
+              ),
+              Icons.event,
+              Colors.blue,
+              subtitle: statsAsync.when(
+                data: (stats) => 'всего',
+                loading: () => '',
+                error: (_, __) => '',
+              ),
+            ),
           ),
-          Icons.event,
-          Colors.blue,
-          subtitle: statsAsync.when(
-            data: (stats) => 'всего',
-            loading: () => '',
-            error: (_, __) => '',
-          ),
-        ),
-      ),
 
-      const SizedBox(width: 12),
+          const SizedBox(width: 12),
 
-      // Завершенные заявки
-      Expanded(
-        child: _buildStatCard(
-          context,
-          'Завершено',
-          statsAsync.when(
-            data: (stats) => stats.completedBookings.toString(),
-            loading: () => '...',
-            error: (_, __) => '0',
+          // Завершенные заявки
+          Expanded(
+            child: _buildStatCard(
+              context,
+              'Завершено',
+              statsAsync.when(
+                data: (stats) => stats.completedBookings.toString(),
+                loading: () => '...',
+                error: (_, __) => '0',
+              ),
+              Icons.done_all,
+              Colors.green,
+              subtitle: statsAsync.when(
+                data: (stats) => '${_calculateCompletionRate(stats)}%',
+                loading: () => '',
+                error: (_, __) => '0%',
+              ),
+            ),
           ),
-          Icons.done_all,
-          Colors.green,
-          subtitle: statsAsync.when(
-            data: (stats) => '${_calculateCompletionRate(stats)}%',
-            loading: () => '',
-            error: (_, __) => '0%',
-          ),
-        ),
-      ),
-    ],
-  );
+        ],
+      );
 
   /// Построить детальную статистику
   Widget _buildDetailedStats(
     BuildContext context,
     AsyncValue<SpecialistStats> statsAsync,
     AsyncValue<ReviewStats> reviewsStatsAsync,
-  ) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Детальная статистика',
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 12),
+  ) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Детальная статистика',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 12),
 
-      // Статистика по статусам заявок
-      statsAsync.when(
-        data: (stats) => _buildBookingStatusStats(context, stats),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, __) => const SizedBox.shrink(),
-      ),
+          // Статистика по статусам заявок
+          statsAsync.when(
+            data: (stats) => _buildBookingStatusStats(context, stats),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
 
-      const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-      // Распределение рейтингов
-      reviewsStatsAsync.when(
-        data: (stats) => _buildRatingDistribution(context, stats),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, __) => const SizedBox.shrink(),
-      ),
-    ],
-  );
+          // Распределение рейтингов
+          reviewsStatsAsync.when(
+            data: (stats) => _buildRatingDistribution(context, stats),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+        ],
+      );
 
   /// Построить статистику по статусам заявок
   Widget _buildBookingStatusStats(BuildContext context, SpecialistStats stats) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Заявки по статусам',
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 8),
-      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: _buildStatusItem(
-              context,
-              'Ожидают',
-              stats.pendingBookings,
-              Colors.orange,
-              Icons.schedule,
-            ),
+          Text(
+            'Заявки по статусам',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _buildStatusItem(
-              context,
-              'Подтверждены',
-              stats.confirmedBookings,
-              Colors.blue,
-              Icons.check_circle,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _buildStatusItem(
-              context,
-              'Завершены',
-              stats.completedBookings,
-              Colors.green,
-              Icons.done_all,
-            ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatusItem(
+                  context,
+                  'Ожидают',
+                  stats.pendingBookings,
+                  Colors.orange,
+                  Icons.schedule,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildStatusItem(
+                  context,
+                  'Подтверждены',
+                  stats.confirmedBookings,
+                  Colors.blue,
+                  Icons.check_circle,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildStatusItem(
+                  context,
+                  'Завершены',
+                  stats.completedBookings,
+                  Colors.green,
+                  Icons.done_all,
+                ),
+              ),
+            ],
           ),
         ],
-      ),
-    ],
-  );
+      );
 
   /// Построить распределение рейтингов
   Widget _buildRatingDistribution(BuildContext context, ReviewStats stats) {
@@ -244,37 +246,38 @@ class SpecialistStatsWidget extends ConsumerWidget {
     IconData icon,
     Color color, {
     String? subtitle,
-  }) => Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: color.withValues(alpha: 0.3)),
-    ),
-    child: Column(
-      children: [
-        Icon(icon, color: color, size: 24),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
+  }) =>
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
-        Text(
-          title,
-          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-          textAlign: TextAlign.center,
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
+            ),
+            Text(
+              title,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+            if (subtitle != null) ...[
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                style: TextStyle(fontSize: 10, color: Colors.grey[500]),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ],
         ),
-        if (subtitle != null) ...[
-          const SizedBox(height: 2),
-          Text(
-            subtitle,
-            style: TextStyle(fontSize: 10, color: Colors.grey[500]),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ],
-    ),
-  );
+      );
 
   /// Построить элемент статуса
   Widget _buildStatusItem(
@@ -283,29 +286,30 @@ class SpecialistStatsWidget extends ConsumerWidget {
     int count,
     Color color,
     IconData icon,
-  ) => Container(
-    padding: const EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(6),
-      border: Border.all(color: color.withValues(alpha: 0.3)),
-    ),
-    child: Column(
-      children: [
-        Icon(icon, color: color, size: 16),
-        const SizedBox(height: 4),
-        Text(
-          count.toString(),
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
-        Text(
-          label,
-          style: TextStyle(fontSize: 10, color: Colors.grey[600]),
-          textAlign: TextAlign.center,
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 16),
+            const SizedBox(height: 4),
+            Text(
+              count.toString(),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+            ),
+            Text(
+              label,
+              style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   /// Рассчитать процент завершения
   String _calculateCompletionRate(SpecialistStats stats) {

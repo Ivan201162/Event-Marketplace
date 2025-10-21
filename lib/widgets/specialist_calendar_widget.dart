@@ -42,107 +42,109 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.all(16),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок
-          Row(
+        margin: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.calendar_today, color: Colors.blue),
-              const SizedBox(width: 8),
-              Text(
-                'Доступность специалиста',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              // Заголовок
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today, color: Colors.blue),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Доступность специалиста',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
+              const SizedBox(height: 16),
+
+              // Легенда
+              _buildLegend(),
+              const SizedBox(height: 16),
+
+              // Календарь
+              TableCalendar<DateTime>(
+                firstDay: DateTime.utc(2020),
+                lastDay: DateTime.utc(2030, 12, 31),
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                eventLoader: _getEventsForDay,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                calendarStyle: CalendarStyle(
+                  outsideDaysVisible: false,
+                  weekendTextStyle: const TextStyle(color: Colors.red),
+                  holidayTextStyle: const TextStyle(color: Colors.red),
+                  defaultTextStyle: const TextStyle(color: Colors.black),
+                  selectedDecoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  todayDecoration:
+                      const BoxDecoration(color: Colors.orange, shape: BoxShape.circle),
+                  markerDecoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                  markersMaxCount: 1,
+                  markerSize: 6,
+                  markerMargin: const EdgeInsets.symmetric(horizontal: 1),
+                ),
+                headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+                onDaySelected: (selectedDay, focusedDay) {
+                  if (!isSameDay(_selectedDay, selectedDay)) {
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+
+                    widget.onDateSelected?.call(selectedDay);
+                  }
+                },
+                onPageChanged: (focusedDay) {
+                  _focusedDay = focusedDay;
+                },
+                calendarBuilders: CalendarBuilders(
+                  defaultBuilder: (context, day, focusedDay) => _buildDayCell(day, focusedDay),
+                  todayBuilder: (context, day, focusedDay) =>
+                      _buildDayCell(day, focusedDay, isToday: true),
+                  selectedBuilder: (context, day, focusedDay) =>
+                      _buildDayCell(day, focusedDay, isSelected: true),
+                  markerBuilder: (context, day, events) {
+                    if (events.isNotEmpty) {
+                      return Positioned(
+                        bottom: 1,
+                        child: Container(
+                          width: 6,
+                          height: 6,
+                          decoration:
+                              const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Информация о выбранной дате
+              if (_selectedDay != null) _buildSelectedDateInfo(),
             ],
           ),
-          const SizedBox(height: 16),
-
-          // Легенда
-          _buildLegend(),
-          const SizedBox(height: 16),
-
-          // Календарь
-          TableCalendar<DateTime>(
-            firstDay: DateTime.utc(2020),
-            lastDay: DateTime.utc(2030, 12, 31),
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            eventLoader: _getEventsForDay,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            calendarStyle: CalendarStyle(
-              outsideDaysVisible: false,
-              weekendTextStyle: const TextStyle(color: Colors.red),
-              holidayTextStyle: const TextStyle(color: Colors.red),
-              defaultTextStyle: const TextStyle(color: Colors.black),
-              selectedDecoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                shape: BoxShape.circle,
-              ),
-              todayDecoration: const BoxDecoration(color: Colors.orange, shape: BoxShape.circle),
-              markerDecoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-              markersMaxCount: 1,
-              markerSize: 6,
-              markerMargin: const EdgeInsets.symmetric(horizontal: 1),
-            ),
-            headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
-            onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDay, selectedDay)) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                });
-
-                widget.onDateSelected?.call(selectedDay);
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-            calendarBuilders: CalendarBuilders(
-              defaultBuilder: (context, day, focusedDay) => _buildDayCell(day, focusedDay),
-              todayBuilder: (context, day, focusedDay) =>
-                  _buildDayCell(day, focusedDay, isToday: true),
-              selectedBuilder: (context, day, focusedDay) =>
-                  _buildDayCell(day, focusedDay, isSelected: true),
-              markerBuilder: (context, day, events) {
-                if (events.isNotEmpty) {
-                  return Positioned(
-                    bottom: 1,
-                    child: Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Информация о выбранной дате
-          if (_selectedDay != null) _buildSelectedDateInfo(),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildLegend() => Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      _buildLegendItem(color: Colors.green, label: 'Свободно', icon: Icons.check_circle),
-      _buildLegendItem(color: Colors.red, label: 'Занято', icon: Icons.cancel),
-      _buildLegendItem(color: Colors.orange, label: 'Сегодня', icon: Icons.today),
-    ],
-  );
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildLegendItem(color: Colors.green, label: 'Свободно', icon: Icons.check_circle),
+          _buildLegendItem(color: Colors.red, label: 'Занято', icon: Icons.cancel),
+          _buildLegendItem(color: Colors.orange, label: 'Сегодня', icon: Icons.today),
+        ],
+      );
 
   Widget _buildLegendItem({required Color color, required String label, required IconData icon}) =>
       Row(
@@ -242,8 +244,8 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                   isPast
                       ? 'Прошедшая дата'
                       : isBusy
-                      ? 'Специалист занят в этот день'
-                      : 'Специалист доступен для бронирования',
+                          ? 'Специалист занят в этот день'
+                          : 'Специалист доступен для бронирования',
                   style: TextStyle(color: isBusy ? Colors.red : Colors.green, fontSize: 14),
                 ),
               ],
@@ -293,37 +295,37 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.all(8),
-    child: Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        margin: const EdgeInsets.all(8),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.calendar_today, size: 20, color: Colors.blue),
-              const SizedBox(width: 8),
-              Text(
-                'Доступность',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today, size: 20, color: Colors.blue),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Доступность',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
+              const SizedBox(height: 12),
+
+              // Мини-календарь на текущий месяц
+              _buildMiniCalendar(context),
+
+              const SizedBox(height: 12),
+
+              // Статистика
+              _buildAvailabilityStats(),
             ],
           ),
-          const SizedBox(height: 12),
-
-          // Мини-календарь на текущий месяц
-          _buildMiniCalendar(context),
-
-          const SizedBox(height: 12),
-
-          // Статистика
-          _buildAvailabilityStats(),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildMiniCalendar(BuildContext context) {
     final now = DateTime.now();
@@ -382,8 +384,8 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
                     color: isToday
                         ? Colors.orange
                         : isBusy
-                        ? Colors.red.withValues(alpha: 0.3)
-                        : Colors.green.withValues(alpha: 0.3),
+                            ? Colors.red.withValues(alpha: 0.3)
+                            : Colors.green.withValues(alpha: 0.3),
                     shape: BoxShape.circle,
                     border: isBusy ? Border.all(color: Colors.red) : null,
                   ),
@@ -395,8 +397,8 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
                         color: isToday
                             ? Colors.white
                             : isBusy
-                            ? Colors.red
-                            : Colors.green,
+                                ? Colors.red
+                                : Colors.green,
                         fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
@@ -429,14 +431,14 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
   }
 
   Widget _buildStatItem(String label, int count, Color color) => Column(
-    children: [
-      Text(
-        '$count',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
-      ),
-      Text(label, style: TextStyle(fontSize: 12, color: color)),
-    ],
-  );
+        children: [
+          Text(
+            '$count',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+          ),
+          Text(label, style: TextStyle(fontSize: 12, color: color)),
+        ],
+      );
 
   String _getMonthName(int month) {
     const months = [

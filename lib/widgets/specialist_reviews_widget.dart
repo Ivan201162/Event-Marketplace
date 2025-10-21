@@ -51,78 +51,78 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
   /// Построить статистику отзывов
   Widget _buildReviewStatistics(SpecialistReviewStats statistics) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
-    child: Column(
-      children: [
-        // Общий рейтинг
-        Row(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
+        child: Column(
           children: [
-            // Большой рейтинг
-            Column(
+            // Общий рейтинг
+            Row(
               children: [
-                Text(
-                  statistics.averageRating.toStringAsFixed(1),
-                  style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                ),
-                Row(
-                  children: List.generate(
-                    5,
-                    (index) => Icon(
-                      index < statistics.averageRating ? Icons.star : Icons.star_border,
-                      color: Colors.amber,
-                      size: 20,
+                // Большой рейтинг
+                Column(
+                  children: [
+                    Text(
+                      statistics.averageRating.toStringAsFixed(1),
+                      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                     ),
-                  ),
+                    Row(
+                      children: List.generate(
+                        5,
+                        (index) => Icon(
+                          index < statistics.averageRating ? Icons.star : Icons.star_border,
+                          color: Colors.amber,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${statistics.totalReviews} отзывов',
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                  ],
                 ),
-                Text(
-                  '${statistics.totalReviews} отзывов',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+
+                const SizedBox(width: 24),
+
+                // Распределение рейтингов
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(5, (index) {
+                      final rating = 5 - index;
+                      const count = 0; // TODO(developer): Implement ratingCounts
+                      final percentage = statistics.totalReviews > 0
+                          ? (count / statistics.totalReviews * 100)
+                          : 0.0;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Row(
+                          children: [
+                            Text('$rating', style: const TextStyle(fontSize: 12)),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.star, color: Colors.amber, size: 12),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: LinearProgressIndicator(
+                                value: percentage / 100,
+                                backgroundColor: Colors.grey[300],
+                                valueColor: const AlwaysStoppedAnimation<Color>(Colors.amber),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text('$count', style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
                 ),
               ],
             ),
-
-            const SizedBox(width: 24),
-
-            // Распределение рейтингов
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(5, (index) {
-                  final rating = 5 - index;
-                  const count = 0; // TODO(developer): Implement ratingCounts
-                  final percentage = statistics.totalReviews > 0
-                      ? (count / statistics.totalReviews * 100)
-                      : 0.0;
-
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Row(
-                      children: [
-                        Text('$rating', style: const TextStyle(fontSize: 12)),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.star, color: Colors.amber, size: 12),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: LinearProgressIndicator(
-                            value: percentage / 100,
-                            backgroundColor: Colors.grey[300],
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.amber),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Text('$count', style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
-                  );
-                }),
-              ),
-            ),
           ],
         ),
-      ],
-    ),
-  );
+      );
 
   /// Построить список отзывов
   Widget _buildReviewsList(List<Review> reviews) {
@@ -168,160 +168,161 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
   /// Построить карточку отзыва
   Widget _buildReviewCard(Review review) => Card(
-    elevation: 2,
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок отзыва
-          Row(
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Аватар клиента
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.grey[300],
-                child: const Text(
-                  'К', // Заглушка для имени клиента
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-              ),
-
-              const SizedBox(width: 12),
-
-              // Информация о клиенте
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Клиент ${review.clientId.substring(0, 8)}...', // Заглушка
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              // Заголовок отзыва
+              Row(
+                children: [
+                  // Аватар клиента
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.grey[300],
+                    child: const Text(
+                      'К', // Заглушка для имени клиента
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                     ),
-                    const SizedBox(height: 2),
-                    Row(
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  // Информация о клиенте
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Рейтинг
-                        Row(
-                          children: List.generate(
-                            5,
-                            (index) => Icon(
-                              index < review.rating ? Icons.star : Icons.star_border,
-                              color: Colors.amber,
-                              size: 14,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
                         Text(
-                          '${review.rating}.0',
-                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          'Клиент ${review.clientId.substring(0, 8)}...', // Заглушка
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            // Рейтинг
+                            Row(
+                              children: List.generate(
+                                5,
+                                (index) => Icon(
+                                  index < review.rating ? Icons.star : Icons.star_border,
+                                  color: Colors.amber,
+                                  size: 14,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              '${review.rating}.0',
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+
+                  // Дата
+                  Text(
+                    _formatDate(review.createdAt),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                  ),
+                ],
               ),
 
-              // Дата
-              Text(
-                _formatDate(review.createdAt),
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
+              const SizedBox(height: 12),
+
+              // Заголовок отзыва
+              if ((review.title?.isNotEmpty ?? false)) ...[
+                Text(review.title!,
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+              ],
+
+              // Комментарий
+              ...[
+                Text(
+                  review.comment ?? '',
+                  style: TextStyle(fontSize: 14, color: Colors.grey[700], height: 1.4),
+                ),
+                const SizedBox(height: 12),
+              ],
+
+              // Теги
+              if (review.tags.isNotEmpty) ...[
+                // TODO(developer): Implement tags
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: review.tags
+                      .map(
+                        (tag) => Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            tag,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.blue[700],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
             ],
           ),
-
-          const SizedBox(height: 12),
-
-          // Заголовок отзыва
-          if ((review.title?.isNotEmpty ?? false)) ...[
-            Text(review.title!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-          ],
-
-          // Комментарий
-          ...[
-            Text(
-              review.comment ?? '',
-              style: TextStyle(fontSize: 14, color: Colors.grey[700], height: 1.4),
-            ),
-            const SizedBox(height: 12),
-          ],
-
-          // Теги
-          if (review.tags.isNotEmpty) ...[
-            // TODO(developer): Implement tags
-            Wrap(
-              spacing: 6,
-              runSpacing: 4,
-              children: review.tags
-                  .map(
-                    (tag) => Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        tag,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.blue[700],
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ],
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   /// Построить пустые отзывы
   Widget _buildEmptyReviews() => Container(
-    padding: const EdgeInsets.all(32),
-    decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
-    child: Column(
-      children: [
-        Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          'Отзывов пока нет',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey[600]),
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          children: [
+            Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Отзывов пока нет',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Станьте первым, кто оставит отзыв об этом специалисте',
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Станьте первым, кто оставит отзыв об этом специалисте',
-          style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 
   /// Построить виджет ошибки
   Widget _buildErrorWidget(Object error) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.red.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      children: [
-        Icon(Icons.error_outline, color: Colors.red[600]),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            'Ошибка загрузки отзывов: $error',
-            style: TextStyle(color: Colors.red[700], fontSize: 14),
-          ),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.red.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
         ),
-      ],
-    ),
-  );
+        child: Row(
+          children: [
+            Icon(Icons.error_outline, color: Colors.red[600]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Ошибка загрузки отзывов: $error',
+                style: TextStyle(color: Colors.red[700], fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+      );
 
   /// Показать все отзывы
   void _showAllReviews(List<Review> reviews) {

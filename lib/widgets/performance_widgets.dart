@@ -19,19 +19,19 @@ class _LazyLoadWidgetState extends State<LazyLoadWidget> {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-    height: widget.height,
-    child: VisibilityDetector(
-      onVisibilityChanged: (visibilityInfo) {
-        if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
-          setState(() {
-            _isVisible = true;
-          });
-          widget.onVisible?.call();
-        }
-      },
-      child: _isVisible ? widget.child : const SizedBox.shrink(),
-    ),
-  );
+        height: widget.height,
+        child: VisibilityDetector(
+          onVisibilityChanged: (visibilityInfo) {
+            if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
+              setState(() {
+                _isVisible = true;
+              });
+              widget.onVisible?.call();
+            }
+          },
+          child: _isVisible ? widget.child : const SizedBox.shrink(),
+        ),
+      );
 }
 
 /// Простой детектор видимости
@@ -49,12 +49,12 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
 
   @override
   Widget build(BuildContext context) => NotificationListener<ScrollNotification>(
-    onNotification: (notification) {
-      _checkVisibility();
-      return false;
-    },
-    child: Container(key: _key, child: widget.child),
-  );
+        onNotification: (notification) {
+          _checkVisibility();
+          return false;
+        },
+        child: Container(key: _key, child: widget.child),
+      );
 
   void _checkVisibility() {
     final renderBox = _key.currentContext?.findRenderObject() as RenderBox?;
@@ -67,8 +67,7 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
       final visibleBottom = position.dy + size.height > 0;
 
       if (visibleTop && visibleBottom) {
-        final visibleHeight =
-            (position.dy + size.height).clamp(0.0, screenSize.height) -
+        final visibleHeight = (position.dy + size.height).clamp(0.0, screenSize.height) -
             position.dy.clamp(0.0, screenSize.height);
         final visibleFraction = visibleHeight / size.height;
 
@@ -104,17 +103,17 @@ class CachedImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-    width: width,
-    height: height,
-    child: CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: fit,
-      placeholder: (context, url) =>
-          placeholder ?? const Center(child: CircularProgressIndicator()),
-      errorWidget: (context, url, error) =>
-          errorWidget ?? Container(color: Colors.grey[300], child: const Icon(Icons.error)),
-    ),
-  );
+        width: width,
+        height: height,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: fit,
+          placeholder: (context, url) =>
+              placeholder ?? const Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) =>
+              errorWidget ?? Container(color: Colors.grey[300], child: const Icon(Icons.error)),
+        ),
+      );
 }
 
 /// Виджет с виртуализацией списка

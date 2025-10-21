@@ -17,30 +17,30 @@ class NotificationsListWidget extends StatefulWidget {
 class _NotificationsListWidgetState extends State<NotificationsListWidget> {
   @override
   Widget build(BuildContext context) => StreamBuilder<List<AppNotification>>(
-    stream: NotificationService.getUserNotificationsStream(widget.userId),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const _LoadingWidget();
-      }
+        stream: NotificationService.getUserNotificationsStream(widget.userId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const _LoadingWidget();
+          }
 
-      if (snapshot.hasError) {
-        return _ErrorWidget(error: snapshot.error.toString(), onRetry: () => setState(() {}));
-      }
+          if (snapshot.hasError) {
+            return _ErrorWidget(error: snapshot.error.toString(), onRetry: () => setState(() {}));
+          }
 
-      final notifications = snapshot.data ?? [];
+          final notifications = snapshot.data ?? [];
 
-      if (notifications.isEmpty) {
-        return const _EmptyWidget();
-      }
+          if (notifications.isEmpty) {
+            return const _EmptyWidget();
+          }
 
-      return _NotificationsList(
-        notifications: notifications,
-        onNotificationTap: widget.onNotificationTap,
-        onMarkAsRead: _markAsRead,
-        onMarkAllAsRead: _markAllAsRead,
+          return _NotificationsList(
+            notifications: notifications,
+            onNotificationTap: widget.onNotificationTap,
+            onMarkAsRead: _markAsRead,
+            onMarkAllAsRead: _markAllAsRead,
+          );
+        },
       );
-    },
-  );
 
   Future<void> _markAsRead(String notificationId) async {
     try {
@@ -78,9 +78,9 @@ class _LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: const Center(child: CircularProgressIndicator()),
-  );
+        padding: const EdgeInsets.all(16),
+        child: const Center(child: CircularProgressIndicator()),
+      );
 }
 
 /// Виджет ошибки
@@ -92,27 +92,27 @@ class _ErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.error_outline, size: 64, color: Colors.red),
-        const SizedBox(height: 16),
-        const Text(
-          'Ошибка загрузки уведомлений',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            const Text(
+              'Ошибка загрузки уведомлений',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error,
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          error,
-          style: const TextStyle(color: Colors.grey),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16),
-        ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
-      ],
-    ),
-  );
+      );
 }
 
 /// Виджет пустого состояния
@@ -121,25 +121,25 @@ class _EmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(32),
-    child: const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.notifications_none, size: 64, color: Colors.grey),
-        SizedBox(height: 16),
-        Text(
-          'Нет уведомлений',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+        padding: const EdgeInsets.all(32),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.notifications_none, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'Нет уведомлений',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Здесь будут отображаться ваши уведомления',
+              style: TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        SizedBox(height: 8),
-        Text(
-          'Здесь будут отображаться ваши уведомления',
-          style: TextStyle(color: Colors.grey),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Список уведомлений
@@ -158,38 +158,39 @@ class _NotificationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-    children: [
-      _buildHeader(),
-      Expanded(
-        child: ListView.builder(
-          itemCount: notifications.length,
-          itemBuilder: (context, index) {
-            final notification = notifications[index];
-            return _NotificationCard(
-              notification: notification,
-              onTap: () {
-                if (!(notification['isRead'] as bool? ?? false)) {
-                  onMarkAsRead(notification['id'] as String? ?? '');
-                }
-                onNotificationTap?.call(notification);
+        children: [
+          _buildHeader(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                final notification = notifications[index];
+                return _NotificationCard(
+                  notification: notification,
+                  onTap: () {
+                    if (!(notification['isRead'] as bool? ?? false)) {
+                      onMarkAsRead(notification['id'] as String? ?? '');
+                    }
+                    onNotificationTap?.call(notification);
+                  },
+                );
               },
-            );
-          },
-        ),
-      ),
-    ],
-  );
+            ),
+          ),
+        ],
+      );
 
   Widget _buildHeader() => Container(
-    padding: const EdgeInsets.all(16),
-    child: Row(
-      children: [
-        const Text('Уведомления', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        const Spacer(),
-        TextButton(onPressed: onMarkAllAsRead, child: const Text('Отметить все как прочитанные')),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            const Text('Уведомления', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Spacer(),
+            TextButton(
+                onPressed: onMarkAllAsRead, child: const Text('Отметить все как прочитанные')),
+          ],
+        ),
+      );
 }
 
 /// Карточка уведомления
@@ -201,58 +202,58 @@ class _NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-    child: Card(
-      elevation: (notification['isRead'] as bool? ?? false) ? 1 : 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              _buildIcon(),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      notification['title'] as String? ?? 'Уведомление',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: (notification['isRead'] as bool? ?? false)
-                            ? FontWeight.normal
-                            : FontWeight.bold,
-                      ),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: Card(
+          elevation: (notification['isRead'] as bool? ?? false) ? 1 : 2,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  _buildIcon(),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          notification['title'] as String? ?? 'Уведомление',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: (notification['isRead'] as bool? ?? false)
+                                ? FontWeight.normal
+                                : FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          notification['body'] as String? ?? '',
+                          style: const TextStyle(fontSize: 14, color: Colors.grey),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _formatDate(notification['createdAt']),
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      notification['body'] as String? ?? '',
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                  ),
+                  if (!(notification['isRead'] as bool? ?? false))
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _formatDate(notification['createdAt']),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
+                ],
               ),
-              if (!(notification['isRead'] as bool? ?? false))
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-                ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildIcon() {
     IconData iconData;

@@ -131,19 +131,20 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
   }
 
   Widget _buildShimmerLoading() => Shimmer.fromColors(
-    baseColor: Colors.grey[300]!,
-    highlightColor: Colors.grey[100]!,
-    child: Column(
-      children: List.generate(
-        5,
-        (index) => Container(
-          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          height: 100,
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Column(
+          children: List.generate(
+            5,
+            (index) => Container(
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              height: 100,
+              decoration:
+                  BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildLoadingWidget() => widget.loadingWidget ?? _buildShimmerLoading();
 
@@ -367,23 +368,23 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
   }
 
   Widget _buildShimmerLoading() => Shimmer.fromColors(
-    baseColor: Colors.grey[300]!,
-    highlightColor: Colors.grey[100]!,
-    child: GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: widget.crossAxisCount,
-        crossAxisSpacing: widget.crossAxisSpacing,
-        mainAxisSpacing: widget.mainAxisSpacing,
-        childAspectRatio: widget.childAspectRatio,
-      ),
-      itemCount: 6,
-      itemBuilder: (context, index) => Container(
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-      ),
-    ),
-  );
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: widget.crossAxisCount,
+            crossAxisSpacing: widget.crossAxisSpacing,
+            mainAxisSpacing: widget.mainAxisSpacing,
+            childAspectRatio: widget.childAspectRatio,
+          ),
+          itemCount: 6,
+          itemBuilder: (context, index) => Container(
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+      );
 
   Widget _buildLoadingWidget() => widget.loadingWidget ?? _buildShimmerLoading();
 

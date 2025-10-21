@@ -159,64 +159,64 @@ class PortfolioGridWidget extends StatelessWidget {
   }
 
   Widget _buildImageItem(String imageUrl) => GestureDetector(
-    onTap: () {
-      // TODO(developer): Открыть изображение в полноэкранном режиме
-    },
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.2),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
+        onTap: () {
+          // TODO(developer): Открыть изображение в полноэкранном режиме
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withValues(alpha: 0.2),
+                spreadRadius: 1,
+                blurRadius: 3,
+                offset: const Offset(0, 1),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          imageUrl,
-          width: double.infinity,
-          height: double.infinity,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => _buildPlaceholder('image'),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              imageUrl,
+              width: double.infinity,
+              height: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => _buildPlaceholder('image'),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildAddButton() => GestureDetector(
-    onTap: onAddItem,
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade300, width: 2),
-      ),
-      child: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add_circle_outline, size: 32, color: Colors.grey),
-            SizedBox(height: 8),
-            Text('Добавить', style: TextStyle(color: Colors.grey, fontSize: 12)),
-          ],
+        onTap: onAddItem,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300, width: 2),
+          ),
+          child: const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_circle_outline, size: 32, color: Colors.grey),
+                SizedBox(height: 8),
+                Text('Добавить', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              ],
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildPlaceholder(String type) => Container(
-    width: double.infinity,
-    height: double.infinity,
-    color: Colors.grey.shade200,
-    child: Center(
-      child: Icon(
-        type == 'video' ? Icons.videocam : Icons.image,
-        size: 32,
-        color: Colors.grey.shade400,
-      ),
-    ),
-  );
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.grey.shade200,
+        child: Center(
+          child: Icon(
+            type == 'video' ? Icons.videocam : Icons.image,
+            size: 32,
+            color: Colors.grey.shade400,
+          ),
+        ),
+      );
 }

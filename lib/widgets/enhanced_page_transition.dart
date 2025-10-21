@@ -204,19 +204,19 @@ class AnimatedList extends StatefulWidget {
 class _AnimatedListState extends State<AnimatedList> {
   @override
   Widget build(BuildContext context) => Column(
-    children: widget.children.asMap().entries.map((entry) {
-      final index = entry.key;
-      final child = entry.value;
+        children: widget.children.asMap().entries.map((entry) {
+          final index = entry.key;
+          final child = entry.value;
 
-      return AnimatedContent(
-        delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
-        duration: widget.itemDuration,
-        curve: widget.curve,
-        type: widget.itemType,
-        child: child,
+          return AnimatedContent(
+            delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
+            duration: widget.itemDuration,
+            curve: widget.curve,
+            type: widget.itemType,
+            child: child,
+          );
+        }).toList(),
       );
-    }).toList(),
-  );
 }
 
 /// Виджет для анимированной сетки
@@ -248,22 +248,22 @@ class AnimatedGrid extends StatefulWidget {
 class _AnimatedGridState extends State<AnimatedGrid> {
   @override
   Widget build(BuildContext context) => GridView.builder(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: widget.crossAxisCount,
-      crossAxisSpacing: widget.crossAxisSpacing,
-      mainAxisSpacing: widget.mainAxisSpacing,
-    ),
-    itemCount: widget.children.length,
-    itemBuilder: (context, index) => AnimatedContent(
-      delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
-      duration: widget.itemDuration,
-      curve: widget.curve,
-      type: widget.itemType,
-      child: widget.children[index],
-    ),
-  );
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: widget.crossAxisCount,
+          crossAxisSpacing: widget.crossAxisSpacing,
+          mainAxisSpacing: widget.mainAxisSpacing,
+        ),
+        itemCount: widget.children.length,
+        itemBuilder: (context, index) => AnimatedContent(
+          delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
+          duration: widget.itemDuration,
+          curve: widget.curve,
+          type: widget.itemType,
+          child: widget.children[index],
+        ),
+      );
 }
 
 /// Виджет для анимированной кнопки
@@ -309,10 +309,10 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTapDown: (_) => _controller.forward(),
-    onTapUp: (_) => _controller.reverse(),
-    onTapCancel: () => _controller.reverse(),
-    onTap: widget.onPressed,
-    child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
-  );
+        onTapDown: (_) => _controller.forward(),
+        onTapUp: (_) => _controller.reverse(),
+        onTapCancel: () => _controller.reverse(),
+        onTap: widget.onPressed,
+        child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
+      );
 }

@@ -61,8 +61,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
   void _filterIdeas() {
     setState(() {
       _filteredIdeas = _allIdeas.where((idea) {
-        final matchesSearch =
-            _searchQuery.isEmpty ||
+        final matchesSearch = _searchQuery.isEmpty ||
             idea.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             idea.description.toLowerCase().contains(_searchQuery.toLowerCase()) ||
             idea.tags.any((tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()));
@@ -89,266 +88,277 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
 
   @override
   Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Заголовок
-      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Выберите идеи для заявки',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+          // Заголовок
+          Row(
+            children: [
+              Text(
+                'Выберите идеи для заявки',
+                style:
+                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+              ),
+              const Spacer(),
+              Text(
+                '${_selectedIdeas.length}/${widget.maxSelections}',
+                style: Theme.of(
+                  context,
+                )
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
+            ],
           ),
-          const Spacer(),
-          Text(
-            '${_selectedIdeas.length}/${widget.maxSelections}',
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+
+          const SizedBox(height: 16),
+
+          // Поиск и фильтры
+          _buildSearchAndFilters(),
+
+          const SizedBox(height: 16),
+
+          // Выбранные идеи
+          if (_selectedIdeas.isNotEmpty) ...[_buildSelectedIdeas(), const SizedBox(height: 16)],
+
+          // Список идей
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _filteredIdeas.isEmpty
+                    ? _buildEmptyState()
+                    : _buildIdeasGrid(),
           ),
         ],
-      ),
-
-      const SizedBox(height: 16),
-
-      // Поиск и фильтры
-      _buildSearchAndFilters(),
-
-      const SizedBox(height: 16),
-
-      // Выбранные идеи
-      if (_selectedIdeas.isNotEmpty) ...[_buildSelectedIdeas(), const SizedBox(height: 16)],
-
-      // Список идей
-      Expanded(
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _filteredIdeas.isEmpty
-            ? _buildEmptyState()
-            : _buildIdeasGrid(),
-      ),
-    ],
-  );
+      );
 
   Widget _buildSearchAndFilters() => Column(
-    children: [
-      // Поиск
-      TextField(
-        decoration: InputDecoration(
-          hintText: 'Поиск идей...',
-          prefixIcon: const Icon(Icons.search),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        ),
-        onChanged: (value) {
-          setState(() {
-            _searchQuery = value;
-          });
-          _filterIdeas();
-        },
-      ),
+        children: [
+          // Поиск
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Поиск идей...',
+              prefixIcon: const Icon(Icons.search),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+            onChanged: (value) {
+              setState(() {
+                _searchQuery = value;
+              });
+              _filterIdeas();
+            },
+          ),
 
-      const SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-      // Фильтр по категориям
-      SizedBox(
-        height: 40,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: EventIdeaCategory.values.length + 1,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: FilterChip(
-                  label: const Text('Все'),
-                  selected: _selectedCategory == null,
-                  onSelected: (selected) {
-                    setState(() {
-                      _selectedCategory = null;
-                    });
-                    _filterIdeas();
-                  },
-                ),
-              );
-            }
+          // Фильтр по категориям
+          SizedBox(
+            height: 40,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: EventIdeaCategory.values.length + 1,
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: FilterChip(
+                      label: const Text('Все'),
+                      selected: _selectedCategory == null,
+                      onSelected: (selected) {
+                        setState(() {
+                          _selectedCategory = null;
+                        });
+                        _filterIdeas();
+                      },
+                    ),
+                  );
+                }
 
-            final EventIdeaCategory category = EventIdeaCategory.values[index - 1];
-            return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: FilterChip(
-                label: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(category.icon),
-                    const SizedBox(width: 4),
-                    Text(category.displayName),
-                  ],
-                ),
-                selected: _selectedCategory == category,
-                onSelected: (selected) {
-                  setState(() {
-                    _selectedCategory = selected ? category : null;
-                  });
-                  _filterIdeas();
-                },
-              ),
-            );
-          },
-        ),
-      ),
-    ],
-  );
+                final EventIdeaCategory category = EventIdeaCategory.values[index - 1];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: FilterChip(
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(category.icon),
+                        const SizedBox(width: 4),
+                        Text(category.displayName),
+                      ],
+                    ),
+                    selected: _selectedCategory == category,
+                    onSelected: (selected) {
+                      setState(() {
+                        _selectedCategory = selected ? category : null;
+                      });
+                      _filterIdeas();
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
 
   Widget _buildSelectedIdeas() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Выбранные идеи:',
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-      ),
-      const SizedBox(height: 8),
-      SizedBox(
-        height: 120,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: _selectedIdeas.length,
-          itemBuilder: (BuildContext context, int index) {
-            final EventIdea idea = _selectedIdeas[index];
-            return Container(
-              width: 100,
-              margin: const EdgeInsets.only(right: 8),
-              child: Stack(
-                children: [
-                  Card(
-                    clipBehavior: Clip.antiAlias,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Image.network(
-                            idea.imageUrl ?? '',
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Выбранные идеи:',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 120,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _selectedIdeas.length,
+              itemBuilder: (BuildContext context, int index) {
+                final EventIdea idea = _selectedIdeas[index];
+                return Container(
+                  width: 100,
+                  margin: const EdgeInsets.only(right: 8),
+                  child: Stack(
+                    children: [
+                      Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Image.network(
+                                idea.imageUrl ?? '',
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                  child: Icon(
+                                    Icons.image_not_supported,
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
                               ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: Text(
+                                idea.title,
+                                style: Theme.of(context).textTheme.bodySmall,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: GestureDetector(
+                          onTap: () => _toggleIdeaSelection(idea),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.error,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.close,
+                              size: 16,
+                              color: Theme.of(context).colorScheme.onError,
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Text(
-                            idea.title,
-                            style: Theme.of(context).textTheme.bodySmall,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 4,
-                    right: 4,
-                    child: GestureDetector(
-                      onTap: () => _toggleIdeaSelection(idea),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.error,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.close,
-                          size: 16,
-                          color: Theme.of(context).colorScheme.onError,
-                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            );
-          },
-        ),
-      ),
-    ],
-  );
-
-  Widget _buildIdeasGrid() => GridView.builder(
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2,
-      childAspectRatio: 0.8,
-      crossAxisSpacing: 12,
-      mainAxisSpacing: 12,
-    ),
-    itemCount: _filteredIdeas.length,
-    itemBuilder: (BuildContext context, int index) {
-      final EventIdea idea = _filteredIdeas[index];
-      final bool isSelected = _selectedIdeas.contains(idea);
-      final bool canSelect = _selectedIdeas.length < widget.maxSelections || isSelected;
-
-      return Stack(
-        children: [
-          _buildEventIdeaCard(idea, () => _toggleIdeaSelection(idea)),
-          if (isSelected)
-            Positioned(
-              top: 8,
-              left: 8,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.check, size: 16, color: Theme.of(context).colorScheme.onPrimary),
-              ),
+                );
+              },
             ),
-          if (!canSelect)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Center(child: Icon(Icons.block, color: Colors.white, size: 32)),
-              ),
-            ),
+          ),
         ],
       );
-    },
-  );
+
+  Widget _buildIdeasGrid() => GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.8,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        itemCount: _filteredIdeas.length,
+        itemBuilder: (BuildContext context, int index) {
+          final EventIdea idea = _filteredIdeas[index];
+          final bool isSelected = _selectedIdeas.contains(idea);
+          final bool canSelect = _selectedIdeas.length < widget.maxSelections || isSelected;
+
+          return Stack(
+            children: [
+              _buildEventIdeaCard(idea, () => _toggleIdeaSelection(idea)),
+              if (isSelected)
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child:
+                        Icon(Icons.check, size: 16, color: Theme.of(context).colorScheme.onPrimary),
+                  ),
+                ),
+              if (!canSelect)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Center(child: Icon(Icons.block, color: Colors.white, size: 32)),
+                  ),
+                ),
+            ],
+          );
+        },
+      );
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.lightbulb_outline,
-          size: 64,
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.lightbulb_outline,
+              size: 64,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Идеи не найдены',
+              style: Theme.of(
+                context,
+              )
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Попробуйте изменить фильтры или поисковый запрос',
+              style: Theme.of(
+                context,
+              )
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        Text(
-          'Идеи не найдены',
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Попробуйте изменить фильтры или поисковый запрос',
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -427,62 +437,62 @@ class IdeaSelectorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Dialog(
-    child: Container(
-      width: MediaQuery.of(context).size.width * 0.9,
-      height: MediaQuery.of(context).size.height * 0.8,
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // Заголовок
-          Row(
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.8,
+          padding: const EdgeInsets.all(16),
+          child: Column(
             children: [
-              Text(
-                'Выберите идеи',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+              // Заголовок
+              Row(
+                children: [
+                  Text(
+                    'Выберите идеи',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
               ),
-              const Spacer(),
-              IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.close),
+
+              const SizedBox(height: 16),
+
+              // Виджет выбора идей
+              Expanded(
+                child: IdeaSelectorWidget(
+                  onIdeasSelected: onIdeasSelected,
+                  selectedIdeas: selectedIdeas,
+                  maxSelections: maxSelections,
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Кнопки
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Отмена'),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Готово'),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-
-          const SizedBox(height: 16),
-
-          // Виджет выбора идей
-          Expanded(
-            child: IdeaSelectorWidget(
-              onIdeasSelected: onIdeasSelected,
-              selectedIdeas: selectedIdeas,
-              maxSelections: maxSelections,
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Кнопки
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Отмена'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Готово'),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

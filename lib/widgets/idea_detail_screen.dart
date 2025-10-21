@@ -37,132 +37,133 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text(widget.idea.title),
-      actions: [
-        IconButton(onPressed: _shareIdea, icon: const Icon(Icons.share), tooltip: 'Поделиться'),
-        IconButton(
-          onPressed: _toggleLike,
-          icon: const Icon(Icons.favorite_border),
-          tooltip: 'Лайк',
-        ),
-      ],
-    ),
-    body: Column(
-      children: [
-        // Основная информация об идее
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Изображения
-                if (widget.idea.hasImages) _buildImages(),
-
-                const SizedBox(height: 16),
-
-                // Заголовок
-                Text(
-                  widget.idea.title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-                ),
-
-                const SizedBox(height: 8),
-
-                // Автор и время
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 16,
-                      backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                      backgroundImage: widget.idea.authorAvatar != null
-                          ? NetworkImage(widget.idea.authorAvatar!)
-                          : null,
-                      child: widget.idea.authorAvatar == null
-                          ? Text(
-                              (widget.idea.authorName ?? 'П').isNotEmpty
-                                  ? (widget.idea.authorName ?? 'П')[0].toUpperCase()
-                                  : '?',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            )
-                          : null,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.idea.authorName ?? 'Пользователь',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            widget.idea.timeAgo,
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Описание
-                Text(widget.idea.description, style: Theme.of(context).textTheme.bodyLarge),
-
-                const SizedBox(height: 16),
-
-                // Метаданные
-                _buildMetadata(),
-
-                const SizedBox(height: 16),
-
-                // Теги
-                if (widget.idea.tags.isNotEmpty) _buildTags(),
-
-                const SizedBox(height: 16),
-
-                // Статистика
-                _buildStats(),
-              ],
+        appBar: AppBar(
+          title: Text(widget.idea.title),
+          actions: [
+            IconButton(onPressed: _shareIdea, icon: const Icon(Icons.share), tooltip: 'Поделиться'),
+            IconButton(
+              onPressed: _toggleLike,
+              icon: const Icon(Icons.favorite_border),
+              tooltip: 'Лайк',
             ),
-          ),
-        ),
-
-        // Вкладки
-        TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Комментарии'),
-            Tab(text: 'Подробнее'),
           ],
         ),
+        body: Column(
+          children: [
+            // Основная информация об идее
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Изображения
+                    if (widget.idea.hasImages) _buildImages(),
 
-        // Контент вкладок
-        Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            children: [
-              IdeaCommentsWidget(ideaId: widget.idea.id),
-              _buildDetailsTab(),
-            ],
-          ),
+                    const SizedBox(height: 16),
+
+                    // Заголовок
+                    Text(
+                      widget.idea.title,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Автор и время
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                          backgroundImage: widget.idea.authorAvatar != null
+                              ? NetworkImage(widget.idea.authorAvatar!)
+                              : null,
+                          child: widget.idea.authorAvatar == null
+                              ? Text(
+                                  (widget.idea.authorName ?? 'П').isNotEmpty
+                                      ? (widget.idea.authorName ?? 'П')[0].toUpperCase()
+                                      : '?',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                )
+                              : null,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.idea.authorName ?? 'Пользователь',
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                              ),
+                              Text(
+                                widget.idea.timeAgo,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Описание
+                    Text(widget.idea.description, style: Theme.of(context).textTheme.bodyLarge),
+
+                    const SizedBox(height: 16),
+
+                    // Метаданные
+                    _buildMetadata(),
+
+                    const SizedBox(height: 16),
+
+                    // Теги
+                    if (widget.idea.tags.isNotEmpty) _buildTags(),
+
+                    const SizedBox(height: 16),
+
+                    // Статистика
+                    _buildStats(),
+                  ],
+                ),
+              ),
+            ),
+
+            // Вкладки
+            TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(text: 'Комментарии'),
+                Tab(text: 'Подробнее'),
+              ],
+            ),
+
+            // Контент вкладок
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  IdeaCommentsWidget(ideaId: widget.idea.id),
+                  _buildDetailsTab(),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildImages() {
     if (widget.idea.images.length == 1) {
@@ -211,116 +212,119 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
   }
 
   Widget _buildMetadata() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Детали мероприятия',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Детали мероприятия',
+                style:
+                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              if (widget.idea.budget != null) ...[
+                _buildMetadataRow(
+                  icon: Icons.attach_money,
+                  label: 'Бюджет',
+                  value: widget.idea.formattedBudget,
+                ),
+              ],
+              if (widget.idea.duration != null) ...[
+                _buildMetadataRow(
+                  icon: Icons.access_time,
+                  label: 'Длительность',
+                  value: widget.idea.formattedDuration,
+                ),
+              ],
+              if (widget.idea.guests != null) ...[
+                _buildMetadataRow(
+                  icon: Icons.people,
+                  label: 'Гости',
+                  value: widget.idea.formattedGuests,
+                ),
+              ],
+              if (widget.idea.location != null) ...[
+                _buildMetadataRow(
+                  icon: Icons.location_on,
+                  label: 'Место',
+                  value: widget.idea.location!,
+                ),
+              ],
+              if (widget.idea.category != null) ...[
+                _buildMetadataRow(
+                  icon: Icons.category,
+                  label: 'Категория',
+                  value: widget.idea.category!,
+                ),
+              ],
+            ],
           ),
-          const SizedBox(height: 12),
-          if (widget.idea.budget != null) ...[
-            _buildMetadataRow(
-              icon: Icons.attach_money,
-              label: 'Бюджет',
-              value: widget.idea.formattedBudget,
-            ),
-          ],
-          if (widget.idea.duration != null) ...[
-            _buildMetadataRow(
-              icon: Icons.access_time,
-              label: 'Длительность',
-              value: widget.idea.formattedDuration,
-            ),
-          ],
-          if (widget.idea.guests != null) ...[
-            _buildMetadataRow(
-              icon: Icons.people,
-              label: 'Гости',
-              value: widget.idea.formattedGuests,
-            ),
-          ],
-          if (widget.idea.location != null) ...[
-            _buildMetadataRow(
-              icon: Icons.location_on,
-              label: 'Место',
-              value: widget.idea.location!,
-            ),
-          ],
-          if (widget.idea.category != null) ...[
-            _buildMetadataRow(
-              icon: Icons.category,
-              label: 'Категория',
-              value: widget.idea.category!,
-            ),
-          ],
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildMetadataRow({
     required IconData icon,
     required String label,
     required String value,
-  }) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      children: [
-        Icon(icon, size: 20, color: Colors.grey[600]),
-        const SizedBox(width: 12),
-        Text(
-          '$label: ',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+  }) =>
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: Colors.grey[600]),
+            const SizedBox(width: 12),
+            Text(
+              '$label: ',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            ),
+            Expanded(child: Text(value, style: Theme.of(context).textTheme.bodyMedium)),
+          ],
         ),
-        Expanded(child: Text(value, style: Theme.of(context).textTheme.bodyMedium)),
-      ],
-    ),
-  );
+      );
 
   Widget _buildTags() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Теги',
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 8),
-      Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: widget.idea.tags
-            .map(
-              (tag) => Chip(
-                label: Text('#$tag'),
-                backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                labelStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            )
-            .toList(),
-      ),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Теги',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: widget.idea.tags
+                .map(
+                  (tag) => Chip(
+                    label: Text('#$tag'),
+                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    labelStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      );
 
   Widget _buildStats() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStatItem(icon: Icons.favorite, count: widget.idea.likes, label: 'Лайки'),
-          _buildStatItem(icon: Icons.comment, count: widget.idea.comments, label: 'Комментарии'),
-          _buildStatItem(icon: Icons.visibility, count: widget.idea.views, label: 'Просмотры'),
-          _buildStatItem(icon: Icons.share, count: widget.idea.shares, label: 'Поделились'),
-        ],
-      ),
-    ),
-  );
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildStatItem(icon: Icons.favorite, count: widget.idea.likes, label: 'Лайки'),
+              _buildStatItem(
+                  icon: Icons.comment, count: widget.idea.comments, label: 'Комментарии'),
+              _buildStatItem(icon: Icons.visibility, count: widget.idea.views, label: 'Просмотры'),
+              _buildStatItem(icon: Icons.share, count: widget.idea.shares, label: 'Поделились'),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildStatItem({required IconData icon, required int count, required String label}) =>
       Column(
@@ -339,41 +343,41 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
       );
 
   Widget _buildDetailsTab() => SingleChildScrollView(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Дополнительная информация',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 16),
-
-        // Здесь можно добавить дополнительную информацию
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Создано',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${widget.idea.createdAt.day}.${widget.idea.createdAt.month}.${widget.idea.createdAt.year} в ${widget.idea.createdAt.hour}:${widget.idea.createdAt.minute.toString().padLeft(2, '0')}',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Дополнительная информация',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
-          ),
+            const SizedBox(height: 16),
+
+            // Здесь можно добавить дополнительную информацию
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Создано',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${widget.idea.createdAt.day}.${widget.idea.createdAt.month}.${widget.idea.createdAt.year} в ${widget.idea.createdAt.hour}:${widget.idea.createdAt.minute.toString().padLeft(2, '0')}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   void _shareIdea() {
     // Здесь можно добавить логику шаринга

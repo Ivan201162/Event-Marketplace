@@ -225,23 +225,23 @@ class AnimatedListView extends StatefulWidget {
 class _AnimatedListViewState extends State<AnimatedListView> {
   @override
   Widget build(BuildContext context) => Column(
-    children: widget.children.asMap().entries.map((entry) {
-      final index = entry.key;
-      final child = entry.value;
+        children: widget.children.asMap().entries.map((entry) {
+          final index = entry.key;
+          final child = entry.value;
 
-      return FadeInWidget(
-        duration: widget.duration,
-        delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
-        curve: widget.curve,
-        child: SlideInUpWidget(
-          duration: widget.duration,
-          delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
-          curve: widget.curve,
-          child: child,
-        ),
+          return FadeInWidget(
+            duration: widget.duration,
+            delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
+            curve: widget.curve,
+            child: SlideInUpWidget(
+              duration: widget.duration,
+              delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
+              curve: widget.curve,
+              child: child,
+            ),
+          );
+        }).toList(),
       );
-    }).toList(),
-  );
 }
 
 /// Виджет для анимированной кнопки
@@ -287,24 +287,24 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTapDown: (_) {
-      if (widget.onPressed != null) {
-        _controller.forward();
-      }
-    },
-    onTapUp: (_) {
-      if (widget.onPressed != null) {
-        _controller.reverse();
-      }
-    },
-    onTapCancel: () {
-      if (widget.onPressed != null) {
-        _controller.reverse();
-      }
-    },
-    onTap: widget.onPressed,
-    child: ScaleTransition(scale: _animation, child: widget.child),
-  );
+        onTapDown: (_) {
+          if (widget.onPressed != null) {
+            _controller.forward();
+          }
+        },
+        onTapUp: (_) {
+          if (widget.onPressed != null) {
+            _controller.reverse();
+          }
+        },
+        onTapCancel: () {
+          if (widget.onPressed != null) {
+            _controller.reverse();
+          }
+        },
+        onTap: widget.onPressed,
+        child: ScaleTransition(scale: _animation, child: widget.child),
+      );
 }
 
 /// Виджет для анимированного перехода между страницами
@@ -356,9 +356,9 @@ class _AnimatedPageTransitionState extends State<AnimatedPageTransition>
 
   @override
   Widget build(BuildContext context) => FadeTransition(
-    opacity: _fadeAnimation,
-    child: SlideTransition(position: _slideAnimation, child: widget.child),
-  );
+        opacity: _fadeAnimation,
+        child: SlideTransition(position: _slideAnimation, child: widget.child),
+      );
 }
 
 /// Виджет для анимированного индикатора загрузки
@@ -400,14 +400,14 @@ class _AnimatedLoadingIndicatorState extends State<AnimatedLoadingIndicator>
 
   @override
   Widget build(BuildContext context) => RotationTransition(
-    turns: _animation,
-    child: SizedBox(
-      width: widget.size,
-      height: widget.size,
-      child: CircularProgressIndicator(
-        color: widget.color ?? Theme.of(context).colorScheme.primary,
-        strokeWidth: 2,
-      ),
-    ),
-  );
+        turns: _animation,
+        child: SizedBox(
+          width: widget.size,
+          height: widget.size,
+          child: CircularProgressIndicator(
+            color: widget.color ?? Theme.of(context).colorScheme.primary,
+            strokeWidth: 2,
+          ),
+        ),
+      );
 }

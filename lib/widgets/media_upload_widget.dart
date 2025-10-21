@@ -42,83 +42,83 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.all(16),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          const SizedBox(height: 16),
-          _buildDescriptionField(),
-          const SizedBox(height: 16),
-          _buildFileSelection(),
-          const SizedBox(height: 16),
-          _buildSelectedFiles(),
-          const SizedBox(height: 16),
-          _buildUploadButton(),
-          if (_isUploading) _buildUploadProgress(),
-          if (_uploadError != null) _buildError(),
-        ],
-      ),
-    ),
-  );
+        margin: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 16),
+              _buildDescriptionField(),
+              const SizedBox(height: 16),
+              _buildFileSelection(),
+              const SizedBox(height: 16),
+              _buildSelectedFiles(),
+              const SizedBox(height: 16),
+              _buildUploadButton(),
+              if (_isUploading) _buildUploadProgress(),
+              if (_uploadError != null) _buildError(),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildHeader() => Row(
-    children: [
-      const Icon(Icons.cloud_upload, color: Colors.blue),
-      const SizedBox(width: 8),
-      const Text(
-        'Загрузка медиафайлов',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-      ),
-      const Spacer(),
-      if (_selectedFiles.isNotEmpty)
-        Text(
-          '${_selectedFiles.length} файлов',
-          style: const TextStyle(color: Colors.grey, fontSize: 14),
-        ),
-    ],
-  );
+        children: [
+          const Icon(Icons.cloud_upload, color: Colors.blue),
+          const SizedBox(width: 8),
+          const Text(
+            'Загрузка медиафайлов',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const Spacer(),
+          if (_selectedFiles.isNotEmpty)
+            Text(
+              '${_selectedFiles.length} файлов',
+              style: const TextStyle(color: Colors.grey, fontSize: 14),
+            ),
+        ],
+      );
 
   Widget _buildDescriptionField() => TextField(
-    controller: _descriptionController,
-    decoration: const InputDecoration(
-      labelText: 'Описание медиафайлов',
-      hintText: 'Опишите загружаемые файлы...',
-      border: OutlineInputBorder(),
-      prefixIcon: Icon(Icons.description),
-    ),
-    maxLines: 3,
-  );
+        controller: _descriptionController,
+        decoration: const InputDecoration(
+          labelText: 'Описание медиафайлов',
+          hintText: 'Опишите загружаемые файлы...',
+          border: OutlineInputBorder(),
+          prefixIcon: Icon(Icons.description),
+        ),
+        maxLines: 3,
+      );
 
   Widget _buildFileSelection() => Row(
-    children: [
-      Expanded(
-        child: ElevatedButton.icon(
-          onPressed: _isUploading ? null : _selectImages,
-          icon: const Icon(Icons.photo_library),
-          label: const Text('Выбрать фото'),
-        ),
-      ),
-      const SizedBox(width: 8),
-      Expanded(
-        child: ElevatedButton.icon(
-          onPressed: _isUploading ? null : _selectVideos,
-          icon: const Icon(Icons.video_library),
-          label: const Text('Выбрать видео'),
-        ),
-      ),
-      const SizedBox(width: 8),
-      Expanded(
-        child: ElevatedButton.icon(
-          onPressed: _isUploading ? null : _selectFiles,
-          icon: const Icon(Icons.attach_file),
-          label: const Text('Выбрать файлы'),
-        ),
-      ),
-    ],
-  );
+        children: [
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: _isUploading ? null : _selectImages,
+              icon: const Icon(Icons.photo_library),
+              label: const Text('Выбрать фото'),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: _isUploading ? null : _selectVideos,
+              icon: const Icon(Icons.video_library),
+              label: const Text('Выбрать видео'),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: _isUploading ? null : _selectFiles,
+              icon: const Icon(Icons.attach_file),
+              label: const Text('Выбрать файлы'),
+            ),
+          ),
+        ],
+      );
 
   Widget _buildSelectedFiles() {
     if (_selectedFiles.isEmpty) {
@@ -140,17 +140,17 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
   }
 
   Widget _buildFileItem(XFile file, int index) => Card(
-    margin: const EdgeInsets.symmetric(vertical: 4),
-    child: ListTile(
-      leading: _getFileIcon(file.path),
-      title: Text(file.name, style: const TextStyle(fontSize: 14)),
-      subtitle: Text(_getFileSize(file.path), style: const TextStyle(fontSize: 12)),
-      trailing: IconButton(
-        onPressed: _isUploading ? null : () => _removeFile(index),
-        icon: const Icon(Icons.close, color: Colors.red),
-      ),
-    ),
-  );
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        child: ListTile(
+          leading: _getFileIcon(file.path),
+          title: Text(file.name, style: const TextStyle(fontSize: 14)),
+          subtitle: Text(_getFileSize(file.path), style: const TextStyle(fontSize: 12)),
+          trailing: IconButton(
+            onPressed: _isUploading ? null : () => _removeFile(index),
+            icon: const Icon(Icons.close, color: Colors.red),
+          ),
+        ),
+      );
 
   Widget _getFileIcon(String filePath) {
     final extension = filePath.split('.').last.toLowerCase();
@@ -182,48 +182,50 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
   }
 
   Widget _buildUploadButton() => SizedBox(
-    width: double.infinity,
-    child: ElevatedButton.icon(
-      onPressed: _selectedFiles.isEmpty || _isUploading ? null : _uploadFiles,
-      icon: _isUploading
-          ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-          : const Icon(Icons.cloud_upload),
-      label: Text(_isUploading ? 'Загрузка...' : 'Загрузить файлы'),
-      style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 12)),
-    ),
-  );
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _selectedFiles.isEmpty || _isUploading ? null : _uploadFiles,
+          icon: _isUploading
+              ? const SizedBox(
+                  width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+              : const Icon(Icons.cloud_upload),
+          label: Text(_isUploading ? 'Загрузка...' : 'Загрузить файлы'),
+          style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 12)),
+        ),
+      );
 
   Widget _buildUploadProgress() => Column(
-    children: [
-      const SizedBox(height: 16),
-      LinearProgressIndicator(value: _uploadProgress),
-      const SizedBox(height: 8),
-      Text('${(_uploadProgress * 100).toStringAsFixed(1)}%', style: const TextStyle(fontSize: 14)),
-    ],
-  );
+        children: [
+          const SizedBox(height: 16),
+          LinearProgressIndicator(value: _uploadProgress),
+          const SizedBox(height: 8),
+          Text('${(_uploadProgress * 100).toStringAsFixed(1)}%',
+              style: const TextStyle(fontSize: 14)),
+        ],
+      );
 
   Widget _buildError() => Container(
-    margin: const EdgeInsets.only(top: 16),
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: Colors.red.shade50,
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.red.shade200),
-    ),
-    child: Row(
-      children: [
-        Icon(Icons.error, color: Colors.red.shade700),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(_uploadError!, style: TextStyle(color: Colors.red.shade700)),
+        margin: const EdgeInsets.only(top: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.red.shade50,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.red.shade200),
         ),
-        IconButton(
-          onPressed: () => setState(() => _uploadError = null),
-          icon: const Icon(Icons.close),
+        child: Row(
+          children: [
+            Icon(Icons.error, color: Colors.red.shade700),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(_uploadError!, style: TextStyle(color: Colors.red.shade700)),
+            ),
+            IconButton(
+              onPressed: () => setState(() => _uploadError = null),
+              icon: const Icon(Icons.close),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   // ========== МЕТОДЫ ==========
 
@@ -293,9 +295,8 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
         bookingId: widget.bookingId,
         specialistId: widget.specialistId,
         files: _selectedFiles,
-        description: _descriptionController.text.trim().isEmpty
-            ? null
-            : _descriptionController.text.trim(),
+        description:
+            _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
       );
 
       setState(() {

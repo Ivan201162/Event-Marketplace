@@ -80,15 +80,15 @@ class _PricingLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: const Row(
-      children: [
-        SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
-        SizedBox(width: 12),
-        Text('Загружаем статистику цен...'),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: const Row(
+          children: [
+            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(width: 12),
+            Text('Загружаем статистику цен...'),
+          ],
+        ),
+      );
 }
 
 /// Виджет ошибки
@@ -100,21 +100,21 @@ class _PricingErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Ошибка загрузки статистики цен',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Ошибка загрузки статистики цен',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            const SizedBox(height: 8),
+            Text(error, style: const TextStyle(color: Colors.red)),
+            const SizedBox(height: 12),
+            ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(error, style: const TextStyle(color: Colors.red)),
-        const SizedBox(height: 12),
-        ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
-      ],
-    ),
-  );
+      );
 }
 
 /// Виджет отсутствия данных
@@ -123,15 +123,15 @@ class _NoPricingDataWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: const Row(
-      children: [
-        Icon(Icons.info_outline, color: Colors.grey, size: 20),
-        SizedBox(width: 12),
-        Text('Нет данных о завершенных заказах', style: TextStyle(color: Colors.grey)),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: const Row(
+          children: [
+            Icon(Icons.info_outline, color: Colors.grey, size: 20),
+            SizedBox(width: 12),
+            Text('Нет данных о завершенных заказах', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
 }
 
 /// Виджет статистики цен
@@ -148,31 +148,31 @@ class _PricingStatsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 8),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              Icon(Icons.analytics, color: Colors.blue, size: 20),
-              SizedBox(width: 8),
-              Text(
-                'Средний прайс по заказам',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.analytics, color: Colors.blue, size: 20),
+                  SizedBox(width: 8),
+                  Text(
+                    'Средний прайс по заказам',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ],
               ),
+            ),
+            _PricingStatsCard(stats: stats),
+            if (showHistory && history.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              _PricingHistoryWidget(history: history),
             ],
-          ),
+          ],
         ),
-        _PricingStatsCard(stats: stats),
-        if (showHistory && history.isNotEmpty) ...[
-          const SizedBox(height: 16),
-          _PricingHistoryWidget(history: history),
-        ],
-      ],
-    ),
-  );
+      );
 }
 
 /// Карточка статистики цен
@@ -183,86 +183,86 @@ class _PricingStatsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    child: Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Card(
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: _PricingStatItem(
-                    label: 'Средний прайс',
-                    value: stats.averagePrice,
-                    color: Colors.blue,
-                    isMain: true,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _PricingStatItem(
-                    label: 'Заказов',
-                    value: stats.totalOrders.toDouble(),
-                    color: Colors.green,
-                    isCount: true,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _PricingStatItem(
-                    label: 'Минимальный',
-                    value: stats.minPrice,
-                    color: Colors.orange,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _PricingStatItem(
-                    label: 'Максимальный',
-                    value: stats.maxPrice,
-                    color: Colors.red,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _PricingStatItem(
-                    label: 'Медианный',
-                    value: stats.medianPrice,
-                    color: Colors.purple,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _PricingStatItem(
+                        label: 'Средний прайс',
+                        value: stats.averagePrice,
+                        color: Colors.blue,
+                        isMain: true,
+                      ),
                     ),
-                    child: Text(
-                      'Обновлено: ${_formatDate(stats.lastUpdated)}',
-                      style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _PricingStatItem(
+                        label: 'Заказов',
+                        value: stats.totalOrders.toDouble(),
+                        color: Colors.green,
+                        isCount: true,
+                      ),
                     ),
-                  ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _PricingStatItem(
+                        label: 'Минимальный',
+                        value: stats.minPrice,
+                        color: Colors.orange,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _PricingStatItem(
+                        label: 'Максимальный',
+                        value: stats.maxPrice,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _PricingStatItem(
+                        label: 'Медианный',
+                        value: stats.medianPrice,
+                        color: Colors.purple,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          'Обновлено: ${_formatDate(stats.lastUpdated)}',
+                          style: const TextStyle(fontSize: 10, color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Элемент статистики цены
@@ -283,26 +283,28 @@ class _PricingStatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(6),
-      border: Border.all(color: color.withValues(alpha: 0.3)),
-    ),
-    child: Column(
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: isMain ? 12 : 10, color: color, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
-        const SizedBox(height: 2),
-        Text(
-          isCount ? value.toInt().toString() : '${value.toStringAsFixed(0)} ₽',
-          style: TextStyle(fontSize: isMain ? 16 : 12, color: color, fontWeight: FontWeight.bold),
+        child: Column(
+          children: [
+            Text(
+              label,
+              style:
+                  TextStyle(fontSize: isMain ? 12 : 10, color: color, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              isCount ? value.toInt().toString() : '${value.toStringAsFixed(0)} ₽',
+              style:
+                  TextStyle(fontSize: isMain ? 16 : 12, color: color, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Виджет истории цен
@@ -313,25 +315,25 @@ class _PricingHistoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    child: Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'История цен (последние месяцы)',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Card(
+          elevation: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'История цен (последние месяцы)',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                const SizedBox(height: 12),
+                ...history.take(6).map((entry) => _HistoryEntryWidget(entry: entry)),
+              ],
             ),
-            const SizedBox(height: 12),
-            ...history.take(6).map((entry) => _HistoryEntryWidget(entry: entry)),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Виджет записи истории
@@ -342,32 +344,32 @@ class _HistoryEntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-    decoration: BoxDecoration(
-      color: Colors.grey.withValues(alpha: 0.05),
-      borderRadius: BorderRadius.circular(6),
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: Text(
-            _formatMonth(entry.month),
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        decoration: BoxDecoration(
+          color: Colors.grey.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(6),
         ),
-        Text(
-          '${entry.averagePrice.toStringAsFixed(0)} ₽',
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                _formatMonth(entry.month),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Text(
+              '${entry.averagePrice.toStringAsFixed(0)} ₽',
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '(${entry.orderCount} зак.)',
+              style: const TextStyle(fontSize: 10, color: Colors.grey),
+            ),
+          ],
         ),
-        const SizedBox(width: 8),
-        Text(
-          '(${entry.orderCount} зак.)',
-          style: const TextStyle(fontSize: 10, color: Colors.grey),
-        ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Форматирование даты

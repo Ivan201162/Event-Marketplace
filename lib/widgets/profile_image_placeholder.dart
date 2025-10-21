@@ -149,8 +149,7 @@ class ProfileAvatar extends StatelessWidget {
       );
     } else {
       // Показываем placeholder
-      avatarWidget =
-          placeholder ??
+      avatarWidget = placeholder ??
           ProfileImagePlaceholder(
             size: size,
             name: name,

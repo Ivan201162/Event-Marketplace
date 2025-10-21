@@ -49,23 +49,23 @@ class CalendarExportWidget extends ConsumerWidget {
   }
 
   Widget _buildIconButton(BuildContext context) => IconButton(
-    onPressed: () => _exportCalendar(context),
-    icon: Icon(icon ?? Icons.calendar_today),
-    tooltip: title ?? 'Экспорт в календарь',
-  );
+        onPressed: () => _exportCalendar(context),
+        icon: Icon(icon ?? Icons.calendar_today),
+        tooltip: title ?? 'Экспорт в календарь',
+      );
 
   Widget _buildButton(BuildContext context) => ElevatedButton.icon(
-    onPressed: () => _exportCalendar(context),
-    icon: Icon(icon ?? Icons.calendar_today),
-    label: Text(title ?? 'Экспорт в календарь'),
-  );
+        onPressed: () => _exportCalendar(context),
+        icon: Icon(icon ?? Icons.calendar_today),
+        label: Text(title ?? 'Экспорт в календарь'),
+      );
 
   Widget _buildListTile(BuildContext context) => ListTile(
-    leading: Icon(icon ?? Icons.calendar_today),
-    title: Text(title ?? 'Экспорт в календарь'),
-    subtitle: const Text('Сохранить в календарное приложение'),
-    onTap: () => _exportCalendar(context),
-  );
+        leading: Icon(icon ?? Icons.calendar_today),
+        title: Text(title ?? 'Экспорт в календарь'),
+        subtitle: const Text('Сохранить в календарное приложение'),
+        onTap: () => _exportCalendar(context),
+      );
 
   Future<void> _exportCalendar(BuildContext context) async {
     try {
@@ -133,12 +133,12 @@ class EventCalendarExportWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CalendarExportWidget(
-    event: event,
-    title: title ?? 'Экспорт события',
-    icon: icon ?? Icons.calendar_today,
-    showAsButton: showAsButton,
-    showAsIconButton: showAsIconButton,
-  );
+        event: event,
+        title: title ?? 'Экспорт события',
+        icon: icon ?? Icons.calendar_today,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+      );
 }
 
 /// Виджет для экспорта одного бронирования
@@ -159,12 +159,12 @@ class BookingCalendarExportWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CalendarExportWidget(
-    booking: booking,
-    title: title ?? 'Экспорт бронирования',
-    icon: icon ?? Icons.calendar_today,
-    showAsButton: showAsButton,
-    showAsIconButton: showAsIconButton,
-  );
+        booking: booking,
+        title: title ?? 'Экспорт бронирования',
+        icon: icon ?? Icons.calendar_today,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+      );
 }
 
 /// Виджет для экспорта нескольких событий

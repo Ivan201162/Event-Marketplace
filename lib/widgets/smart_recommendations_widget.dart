@@ -290,9 +290,8 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                 CircleAvatar(
                   radius: 24,
                   backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-                  backgroundImage: specialist.avatarUrl != null
-                      ? NetworkImage(specialist.avatarUrl!)
-                      : null,
+                  backgroundImage:
+                      specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
                   child: specialist.avatarUrl == null
                       ? Text(
                           specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
@@ -468,26 +467,28 @@ class SmartRecommendationsWidget extends ConsumerWidget {
   }
 
   Widget _buildLoadingCard(BuildContext context) => Container(
-    height: 100,
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    child: const Center(child: CircularProgressIndicator()),
-  );
+        height: 100,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: const Center(child: CircularProgressIndicator()),
+      );
 
   Widget _buildErrorCard(BuildContext context, String error) => Container(
-    height: 100,
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    child: Center(
-      child: Text('Ошибка: $error', style: TextStyle(color: Theme.of(context).colorScheme.error)),
-    ),
-  );
+        height: 100,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child:
+              Text('Ошибка: $error', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+        ),
+      );
 
   Widget _buildEmptyRecommendations(BuildContext context, String message) => Container(
-    height: 100,
-    margin: const EdgeInsets.symmetric(horizontal: 16),
-    child: Center(
-      child: Text(message, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-    ),
-  );
+        height: 100,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child: Text(message,
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        ),
+      );
 
   String _formatPopulation(int population) {
     if (population >= 1000000) {

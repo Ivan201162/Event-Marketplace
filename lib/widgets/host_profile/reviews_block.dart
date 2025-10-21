@@ -63,9 +63,7 @@ class ReviewsBlock extends StatelessWidget {
           if (reviews.isEmpty)
             _buildEmptyReviews(context)
           else
-            ...reviews
-                .take(3)
-                .map(
+            ...reviews.take(3).map(
                   (review) => Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: _buildReviewCard(context, review),

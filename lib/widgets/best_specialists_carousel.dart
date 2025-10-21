@@ -51,87 +51,87 @@ class _SpecialistCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    width: 160,
-    margin: const EdgeInsets.only(right: 12),
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor,
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.1),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: InkWell(
-      onTap: () => context.push('/specialist/${specialist.id}'),
-      borderRadius: BorderRadius.circular(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Аватар специалиста
-          Container(
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              image: specialist.avatar != null
-                  ? DecorationImage(image: NetworkImage(specialist.avatar!), fit: BoxFit.cover)
-                  : null,
-              color: specialist.avatar == null
-                  ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                  : null,
+        width: 160,
+        margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-            child: specialist.avatar == null
-                ? const Center(child: Icon(Icons.person, size: 40, color: Colors.grey))
-                : null,
-          ),
-          // Информация о специалисте
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    specialist.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    specialist.category?.displayName ?? 'Категория',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const Spacer(),
-                  Row(
+          ],
+        ),
+        child: InkWell(
+          onTap: () => context.push('/specialist/${specialist.id}'),
+          borderRadius: BorderRadius.circular(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Аватар специалиста
+              Container(
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  image: specialist.avatar != null
+                      ? DecorationImage(image: NetworkImage(specialist.avatar!), fit: BoxFit.cover)
+                      : null,
+                  color: specialist.avatar == null
+                      ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                      : null,
+                ),
+                child: specialist.avatar == null
+                    ? const Center(child: Icon(Icons.person, size: 40, color: Colors.grey))
+                    : null,
+              ),
+              // Информация о специалисте
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.star, color: Colors.amber[600], size: 14),
-                      const SizedBox(width: 2),
                       Text(
-                        specialist.rating.toString(),
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        specialist.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        specialist.category?.displayName ?? 'Категория',
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const Spacer(),
-                      Text(
-                        '${specialist.price}₸',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
-                        ),
+                      Row(
+                        children: [
+                          Icon(Icons.star, color: Colors.amber[600], size: 14),
+                          const SizedBox(width: 2),
+                          Text(
+                            specialist.rating.toString(),
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${specialist.price}₸',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

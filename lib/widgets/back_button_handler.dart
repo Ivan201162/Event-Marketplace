@@ -17,22 +17,22 @@ class BackButtonHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => PopScope(
-    canPop: false,
-    onPopInvokedWithResult: (didPop, result) async {
-      if (showBackConfirmation) {
-        final dialogResult = await BackUtils.showBackConfirmationDialog(context);
-        if (dialogResult ?? false) {
-          BackUtils.handleBackButton(context);
-        }
-      } else if (showExitConfirmation) {
-        final dialogResult = await BackUtils.showExitConfirmationDialog(context);
-        if (dialogResult ?? false) {
-          BackUtils.handleSystemBackButton(context);
-        }
-      } else {
-        BackUtils.handleSystemBackButton(context);
-      }
-    },
-    child: child,
-  );
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) async {
+          if (showBackConfirmation) {
+            final dialogResult = await BackUtils.showBackConfirmationDialog(context);
+            if (dialogResult ?? false) {
+              BackUtils.handleBackButton(context);
+            }
+          } else if (showExitConfirmation) {
+            final dialogResult = await BackUtils.showExitConfirmationDialog(context);
+            if (dialogResult ?? false) {
+              BackUtils.handleSystemBackButton(context);
+            }
+          } else {
+            BackUtils.handleSystemBackButton(context);
+          }
+        },
+        child: child,
+      );
 }

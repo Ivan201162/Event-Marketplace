@@ -26,165 +26,166 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Заголовок
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Прикрепить файл',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            // Заголовок
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Прикрепить файл',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                IconButton(icon: const Icon(Icons.close), onPressed: widget.onCancel),
+              ],
             ),
-            IconButton(icon: const Icon(Icons.close), onPressed: widget.onCancel),
+            const SizedBox(height: 16),
+
+            // Кнопки выбора файлов
+            if (!_isUploading) ...[
+              _buildFileTypeButton(
+                icon: Icons.image,
+                label: 'Фото',
+                description: 'JPG, PNG, GIF',
+                onTap: () => _pickFiles(FileType.image),
+              ),
+              const SizedBox(height: 12),
+              _buildFileTypeButton(
+                icon: Icons.videocam,
+                label: 'Видео',
+                description: 'MP4, MOV, AVI',
+                onTap: () => _pickFiles(FileType.video),
+              ),
+              const SizedBox(height: 12),
+              _buildFileTypeButton(
+                icon: Icons.audiotrack,
+                label: 'Аудио',
+                description: 'MP3, WAV, AAC',
+                onTap: () => _pickFiles(FileType.audio),
+              ),
+              const SizedBox(height: 12),
+              _buildFileTypeButton(
+                icon: Icons.description,
+                label: 'Документы',
+                description: 'PDF, DOC, TXT',
+                onTap: () => _pickFiles(
+                  FileType.custom,
+                  allowedExtensions: AppConstants.supportedDocumentFormats,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildFileTypeButton(
+                icon: Icons.folder,
+                label: 'Любой файл',
+                description: 'Выбрать файл',
+                onTap: () => _pickFiles(FileType.any),
+              ),
+            ],
+
+            // Прогресс загрузки
+            if (_isUploading) ...[
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Загрузка: $_uploadingFileName',
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 4),
+                        LinearProgressIndicator(
+                          value: _uploadProgress,
+                          backgroundColor: Colors.grey[300],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            // Информация о поддерживаемых форматах
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Поддерживаемые форматы:',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                  ),
+                  const SizedBox(height: 8),
+                  ..._fileService.getSupportedFileTypes().entries.map(
+                        (entry) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2),
+                          child: Text(
+                            '${entry.key}: ${entry.value.join(', ').toUpperCase()}',
+                            style: const TextStyle(fontSize: 11),
+                          ),
+                        ),
+                      ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Максимальный размер: ${AppConstants.maxImageUploadSizeMB}MB (изображения), ${AppConstants.maxVideoUploadSizeMB}MB (видео), ${AppConstants.maxAudioUploadSizeMB}MB (аудио), 10MB (документы)',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 16),
-
-        // Кнопки выбора файлов
-        if (!_isUploading) ...[
-          _buildFileTypeButton(
-            icon: Icons.image,
-            label: 'Фото',
-            description: 'JPG, PNG, GIF',
-            onTap: () => _pickFiles(FileType.image),
-          ),
-          const SizedBox(height: 12),
-          _buildFileTypeButton(
-            icon: Icons.videocam,
-            label: 'Видео',
-            description: 'MP4, MOV, AVI',
-            onTap: () => _pickFiles(FileType.video),
-          ),
-          const SizedBox(height: 12),
-          _buildFileTypeButton(
-            icon: Icons.audiotrack,
-            label: 'Аудио',
-            description: 'MP3, WAV, AAC',
-            onTap: () => _pickFiles(FileType.audio),
-          ),
-          const SizedBox(height: 12),
-          _buildFileTypeButton(
-            icon: Icons.description,
-            label: 'Документы',
-            description: 'PDF, DOC, TXT',
-            onTap: () => _pickFiles(
-              FileType.custom,
-              allowedExtensions: AppConstants.supportedDocumentFormats,
-            ),
-          ),
-          const SizedBox(height: 12),
-          _buildFileTypeButton(
-            icon: Icons.folder,
-            label: 'Любой файл',
-            description: 'Выбрать файл',
-            onTap: () => _pickFiles(FileType.any),
-          ),
-        ],
-
-        // Прогресс загрузки
-        if (_isUploading) ...[
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Загрузка: $_uploadingFileName',
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height: 4),
-                    LinearProgressIndicator(
-                      value: _uploadProgress,
-                      backgroundColor: Colors.grey[300],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-
-        // Информация о поддерживаемых форматах
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Поддерживаемые форматы:',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-              ),
-              const SizedBox(height: 8),
-              ..._fileService.getSupportedFileTypes().entries.map(
-                (entry) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Text(
-                    '${entry.key}: ${entry.value.join(', ').toUpperCase()}',
-                    style: const TextStyle(fontSize: 11),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Максимальный размер: ${AppConstants.maxImageUploadSizeMB}MB (изображения), ${AppConstants.maxVideoUploadSizeMB}MB (видео), ${AppConstants.maxAudioUploadSizeMB}MB (аудио), 10MB (документы)',
-                style: TextStyle(fontSize: 11),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildFileTypeButton({
     required IconData icon,
     required String label,
     required String description,
     required VoidCallback onTap,
-  }) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(8),
-    child: Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
+  }) =>
+      InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 24, color: Colors.blue[600]),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-                Text(description, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-              ],
-            ),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!),
+            borderRadius: BorderRadius.circular(8),
           ),
-          Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
-        ],
-      ),
-    ),
-  );
+          child: Row(
+            children: [
+              Icon(icon, size: 24, color: Colors.blue[600]),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(label, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
+                    Text(description, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  ],
+                ),
+              ),
+              Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+            ],
+          ),
+        ),
+      );
 
   Future<void> _pickFiles(FileType fileType, {List<String>? allowedExtensions}) async {
     try {
@@ -316,45 +317,45 @@ class ChatFileMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 4),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          border: Border.all(color: Colors.grey[300]!),
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        child: InkWell(
+          onTap: onTap,
           borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            _buildFileIcon(),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    fileName,
-                    style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _formatFileSize(fileSize),
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                  ),
-                ],
-              ),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(12),
             ),
-            Icon(Icons.download, size: 20, color: Colors.grey[600]),
-          ],
+            child: Row(
+              children: [
+                _buildFileIcon(),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        fileName,
+                        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        _formatFileSize(fileSize),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(Icons.download, size: 20, color: Colors.grey[600]),
+              ],
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildFileIcon() {
     IconData icon;

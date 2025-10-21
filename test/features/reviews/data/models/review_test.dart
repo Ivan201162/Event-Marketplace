@@ -11,7 +11,7 @@ class MockDocumentSnapshot extends Mock implements DocumentSnapshot<Map<String, 
     when(id).thenReturn(_id);
     when(data()).thenReturn(_data);
     when(exists).thenReturn(true);
-    when(metadata).thenReturn(SnapshotMetadata(false, false, false));
+    when(metadata).thenReturn(SnapshotMetadata(false, false, false, false));
   }
 
   @override

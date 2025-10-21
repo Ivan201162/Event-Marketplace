@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/search_filters.dart';
 import '../models/specialist.dart';
 import '../models/specialist_filters.dart';
 import '../providers/specialist_providers.dart';
@@ -38,17 +39,17 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen> {
     });
 
     try {
+      final searchFilters = SearchFilters(
+        query: _filters.searchQuery,
+        city: _filters.city,
+        minRating: _filters.minRating,
+        minPrice: _filters.minPrice?.toInt(),
+        maxPrice: _filters.maxPrice?.toInt(),
+        isAvailable: true,
+      );
       final specialists = await ref
           .read(specialistServiceProvider)
-          .searchSpecialists(
-            query: _filters.query,
-            category: _filters.category,
-            minPrice: _filters.minPrice,
-            maxPrice: _filters.maxPrice,
-            minRating: _filters.minRating,
-            location: _filters.location,
-            availableDates: _filters.availableDates,
-          );
+          .searchSpecialists(searchFilters);
       setState(() {
         _specialists = specialists;
         _isLoading = false;

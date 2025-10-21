@@ -182,50 +182,50 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
   }
 
   Widget _buildDetailSection(ThemeData theme, String title, List<Widget> children) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        title,
-        style: theme.textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: theme.colorScheme.primary,
-        ),
-      ),
-      const SizedBox(height: 12),
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(children: children),
-      ),
-    ],
-  );
-
-  Widget _buildDetailRow(ThemeData theme, String label, String value) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 140,
-          child: Text(
-            label,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
             ),
           ),
-        ),
-        Expanded(
-          child: Text(
-            value,
-            style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(children: children),
           ),
+        ],
+      );
+
+  Widget _buildDetailRow(ThemeData theme, String label, String value) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 140,
+              child: Text(
+                label,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                value,
+                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   List<Widget> _buildPaymentsList(ThemeData theme) {
     if (_isLoadingPayments) {
@@ -256,51 +256,51 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
   }
 
   Widget _buildPaymentItem(ThemeData theme, Payment payment) => Container(
-    margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: theme.colorScheme.surface,
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
-    ),
-    child: Row(
-      children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: _getPaymentStatusColor(payment.status),
-            shape: BoxShape.circle,
-          ),
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _getPaymentTypeDisplayName(payment.type),
-                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+        child: Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: _getPaymentStatusColor(payment.status),
+                shape: BoxShape.circle,
               ),
-              Text(
-                '${payment.amount.toStringAsFixed(0)} ₽ • ${_getPaymentMethodDisplayName(payment.method)}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _getPaymentTypeDisplayName(payment.type),
+                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  Text(
+                    '${payment.amount.toStringAsFixed(0)} ₽ • ${_getPaymentMethodDisplayName(payment.method)}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Text(
+              _getPaymentStatusDisplayName(payment.status),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: _getPaymentStatusColor(payment.status),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
-        Text(
-          _getPaymentStatusDisplayName(payment.status),
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: _getPaymentStatusColor(payment.status),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 
   Color _getStatusColor(ContractStatus status) {
     switch (status) {

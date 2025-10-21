@@ -21,124 +21,125 @@ class IdeaCommentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.only(bottom: 8),
-    child: Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок комментария
-          Row(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundImage: comment.authorAvatar != null
-                    ? NetworkImage(comment.authorAvatar!)
-                    : null,
-                child: comment.authorAvatar == null
-                    ? Text(
-                        comment.authorName.isNotEmpty ? comment.authorName[0].toUpperCase() : '?',
-                      )
-                    : null,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      comment.authorName,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      _formatDate(comment.createdAt),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (onDelete != null)
-                IconButton(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline),
-                  iconSize: 18,
-                ),
-            ],
-          ),
-
-          const SizedBox(height: 8),
-
-          // Содержимое комментария
-          Text(comment.content, style: Theme.of(context).textTheme.bodyMedium),
-
-          const SizedBox(height: 8),
-
-          // Действия
-          Row(
-            children: [
-              GestureDetector(
-                onTap: onLike,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.thumb_up_outlined,
-                      size: 16,
-                      color: comment.likesCount > 0
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      comment.likesCount.toString(),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: comment.likesCount > 0
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 16),
-              if (onReply != null && showReplies)
-                GestureDetector(
-                  onTap: onReply,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.reply,
-                        size: 16,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Ответить',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+              // Заголовок комментария
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundImage:
+                        comment.authorAvatar != null ? NetworkImage(comment.authorAvatar!) : null,
+                    child: comment.authorAvatar == null
+                        ? Text(
+                            comment.authorName.isNotEmpty
+                                ? comment.authorName[0].toUpperCase()
+                                : '?',
+                          )
+                        : null,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          comment.authorName,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                         ),
+                        Text(
+                          _formatDate(comment.createdAt),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (onDelete != null)
+                    IconButton(
+                      onPressed: onDelete,
+                      icon: const Icon(Icons.delete_outline),
+                      iconSize: 18,
+                    ),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              // Содержимое комментария
+              Text(comment.content, style: Theme.of(context).textTheme.bodyMedium),
+
+              const SizedBox(height: 8),
+
+              // Действия
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: onLike,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.thumb_up_outlined,
+                          size: 16,
+                          color: comment.likesCount > 0
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          comment.likesCount.toString(),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: comment.likesCount > 0
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  if (onReply != null && showReplies)
+                    GestureDetector(
+                      onTap: onReply,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.reply,
+                            size: 16,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Ответить',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              const Spacer(),
-              if (comment.updatedAt != comment.createdAt)
-                Text(
-                  'изменено',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
+                    ),
+                  const Spacer(),
+                  if (comment.updatedAt != comment.createdAt)
+                    Text(
+                      'изменено',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            fontStyle: FontStyle.italic,
+                          ),
+                    ),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
@@ -185,51 +186,51 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
 
   @override
   Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (widget.replyTo != null) ...[
-            Text(
-              'Ответ на комментарий ${widget.replyTo!.authorName}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 8),
-          ],
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: widget.hintText,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  ),
-                  maxLines: null,
-                  textInputAction: TextInputAction.newline,
+              if (widget.replyTo != null) ...[
+                Text(
+                  'Ответ на комментарий ${widget.replyTo!.authorName}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                onPressed: _isSubmitting ? null : _submitComment,
-                icon: _isSubmitting
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.send),
+                const SizedBox(height: 8),
+              ],
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        hintText: widget.hintText,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      ),
+                      maxLines: null,
+                      textInputAction: TextInputAction.newline,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: _isSubmitting ? null : _submitComment,
+                    icon: _isSubmitting
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.send),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Future<void> _submitComment() async {
     final content = _controller.text.trim();
@@ -289,15 +290,15 @@ class CommentsListWidget extends StatelessWidget {
             Text(
               'Пока нет комментариев',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
             ),
             const SizedBox(height: 8),
             Text(
               'Будьте первым, кто оставит комментарий',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
             ),
           ],
         ),

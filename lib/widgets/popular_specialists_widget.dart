@@ -37,62 +37,62 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.trending_up, color: Colors.orange),
-            const SizedBox(width: 8),
-            const Text(
-              'Популярные специалисты недели',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                const Icon(Icons.trending_up, color: Colors.orange),
+                const SizedBox(width: 8),
+                const Text(
+                  'Популярные специалисты недели',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {
+                    // TODO: Переход к полному списку популярных специалистов
+                  },
+                  child: const Text('Все'),
+                ),
+              ],
             ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                // TODO: Переход к полному списку популярных специалистов
-              },
-              child: const Text('Все'),
-            ),
+            const SizedBox(height: 16),
+            if (_isLoading)
+              const Center(child: CircularProgressIndicator())
+            else if (_specialists.isEmpty)
+              _buildEmptyState()
+            else
+              SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _specialists.length,
+                  itemBuilder: (context, index) {
+                    final specialist = _specialists[index];
+                    return _buildSpecialistCard(specialist);
+                  },
+                ),
+              ),
           ],
         ),
-        const SizedBox(height: 16),
-        if (_isLoading)
-          const Center(child: CircularProgressIndicator())
-        else if (_specialists.isEmpty)
-          _buildEmptyState()
-        else
-          SizedBox(
-            height: 200,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _specialists.length,
-              itemBuilder: (context, index) {
-                final specialist = _specialists[index];
-                return _buildSpecialistCard(specialist);
-              },
-            ),
-          ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildEmptyState() => Container(
-    height: 200,
-    decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
-    child: const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.people_outline, size: 48, color: Colors.grey),
-          SizedBox(height: 8),
-          Text('Популярные специалисты появятся здесь', style: TextStyle(color: Colors.grey)),
-        ],
-      ),
-    ),
-  );
+        height: 200,
+        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.people_outline, size: 48, color: Colors.grey),
+              SizedBox(height: 8),
+              Text('Популярные специалисты появятся здесь', style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildSpecialistCard(Map<String, dynamic> specialist) {
     final name = (specialist['name'] as String?) ?? 'Без имени';

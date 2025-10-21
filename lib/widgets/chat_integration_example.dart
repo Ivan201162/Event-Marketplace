@@ -51,30 +51,30 @@ class ChatAppBarWithNotifications extends StatelessWidget implements PreferredSi
 
   @override
   Widget build(BuildContext context) => AppBar(
-    title: Text(title),
-    actions: [
-      // Бейдж уведомлений
-      NotificationBadge(
-        userId: userId,
-        child: IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/notifications');
-          },
-          icon: const Icon(Icons.notifications),
-        ),
-      ),
+        title: Text(title),
+        actions: [
+          // Бейдж уведомлений
+          NotificationBadge(
+            userId: userId,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/notifications');
+              },
+              icon: const Icon(Icons.notifications),
+            ),
+          ),
 
-      // Кнопка предложений (только для организаторов)
-      if (_isOrganizer(userId))
-        IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/organizer-proposals');
-          },
-          icon: const Icon(Icons.people_alt),
-          tooltip: 'Мои предложения',
-        ),
-    ],
-  );
+          // Кнопка предложений (только для организаторов)
+          if (_isOrganizer(userId))
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/organizer-proposals');
+              },
+              icon: const Icon(Icons.people_alt),
+              tooltip: 'Мои предложения',
+            ),
+        ],
+      );
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -93,16 +93,16 @@ class ChatScreenExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: ChatAppBarWithNotifications(
-      title: 'Чат с заказчиком',
-      userId: FirebaseAuth.instance.currentUser?.uid,
-    ),
-    body: ChatWithProposalButton(
-      customerId: customerId,
-      eventId: eventId,
-      chatMessages: _buildChatMessages(),
-    ),
-  );
+        appBar: ChatAppBarWithNotifications(
+          title: 'Чат с заказчиком',
+          userId: FirebaseAuth.instance.currentUser?.uid,
+        ),
+        body: ChatWithProposalButton(
+          customerId: customerId,
+          eventId: eventId,
+          chatMessages: _buildChatMessages(),
+        ),
+      );
 
   Widget _buildChatMessages() {
     // Здесь должен быть ваш существующий виджет чата

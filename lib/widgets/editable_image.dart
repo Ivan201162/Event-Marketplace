@@ -16,45 +16,45 @@ class EditableImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: _showImagePicker,
-    child: Stack(
-      children: [
-        // Основное изображение
-        Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(color: Colors.grey[300], shape: BoxShape.circle),
-          child: imageUrl != null
-              ? CachedNetworkImage(
-                  imageUrl: imageUrl!,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    color: Colors.grey[300],
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-                  errorWidget: (context, url, error) =>
-                      Container(color: Colors.grey[300], child: Icon(placeholder, size: 50)),
-                )
-              : Icon(placeholder, size: 50),
-        ),
-        // Иконка редактирования
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
+        onTap: _showImagePicker,
+        child: Stack(
+          children: [
+            // Основное изображение
+            Container(
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(color: Colors.grey[300], shape: BoxShape.circle),
+              child: imageUrl != null
+                  ? CachedNetworkImage(
+                      imageUrl: imageUrl!,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey[300],
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          Container(color: Colors.grey[300], child: Icon(placeholder, size: 50)),
+                    )
+                  : Icon(placeholder, size: 50),
             ),
-            child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
-          ),
+            // Иконка редактирования
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   void _showImagePicker() {
     // TODO: Реализовать выбор изображения

@@ -451,13 +451,13 @@ class ResponsiveLayoutBuilder extends StatelessWidget {
   const ResponsiveLayoutBuilder({super.key, required this.builder});
 
   final Widget Function(BuildContext context, ScreenType screenType, BoxConstraints constraints)
-  builder;
+      builder;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) {
-      final screenType = ResponsiveUtils.getScreenType(context);
-      return builder(context, screenType, constraints);
-    },
-  );
+        builder: (context, constraints) {
+          final screenType = ResponsiveUtils.getScreenType(context);
+          return builder(context, screenType, constraints);
+        },
+      );
 }

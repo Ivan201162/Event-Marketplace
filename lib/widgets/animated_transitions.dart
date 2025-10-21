@@ -354,21 +354,21 @@ class AnimatedListWidget extends StatefulWidget {
 class _AnimatedListWidgetState extends State<AnimatedListWidget> {
   @override
   Widget build(BuildContext context) => Column(
-    children: widget.children.asMap().entries.map((entry) {
-      final index = entry.key;
-      final child = entry.value;
+        children: widget.children.asMap().entries.map((entry) {
+          final index = entry.key;
+          final child = entry.value;
 
-      return AnimatedEntranceWidget(
-        duration: widget.duration,
-        delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
-        curve: widget.curve,
-        animationType: widget.animationType,
-        slideDirection: widget.slideDirection,
-        slideOffset: widget.slideOffset,
-        child: child,
+          return AnimatedEntranceWidget(
+            duration: widget.duration,
+            delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
+            curve: widget.curve,
+            animationType: widget.animationType,
+            slideDirection: widget.slideDirection,
+            slideOffset: widget.slideOffset,
+            child: child,
+          );
+        }).toList(),
       );
-    }).toList(),
-  );
 }
 
 /// Виджет для анимации нажатия
@@ -426,12 +426,12 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTapDown: widget.onPressed != null ? _onTapDown : null,
-    onTapUp: widget.onPressed != null ? _onTapUp : null,
-    onTapCancel: widget.onPressed != null ? _onTapCancel : null,
-    onTap: widget.onPressed,
-    child: ScaleTransition(scale: _animation, child: widget.child),
-  );
+        onTapDown: widget.onPressed != null ? _onTapDown : null,
+        onTapUp: widget.onPressed != null ? _onTapUp : null,
+        onTapCancel: widget.onPressed != null ? _onTapCancel : null,
+        onTap: widget.onPressed,
+        child: ScaleTransition(scale: _animation, child: widget.child),
+      );
 }
 
 /// Виджет для анимации появления с задержкой
@@ -462,19 +462,19 @@ class StaggeredAnimationWidget extends StatefulWidget {
 class _StaggeredAnimationWidgetState extends State<StaggeredAnimationWidget> {
   @override
   Widget build(BuildContext context) => Column(
-    children: widget.children.asMap().entries.map((entry) {
-      final index = entry.key;
-      final child = entry.value;
+        children: widget.children.asMap().entries.map((entry) {
+          final index = entry.key;
+          final child = entry.value;
 
-      return AnimatedEntranceWidget(
-        duration: widget.duration,
-        delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
-        curve: widget.curve,
-        animationType: widget.animationType,
-        slideDirection: widget.slideDirection,
-        slideOffset: widget.slideOffset,
-        child: child,
+          return AnimatedEntranceWidget(
+            duration: widget.duration,
+            delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
+            curve: widget.curve,
+            animationType: widget.animationType,
+            slideDirection: widget.slideDirection,
+            slideOffset: widget.slideOffset,
+            child: child,
+          );
+        }).toList(),
       );
-    }).toList(),
-  );
 }

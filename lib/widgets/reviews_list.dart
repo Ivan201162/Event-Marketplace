@@ -90,12 +90,10 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage: review.userAvatarUrl != null
-                      ? NetworkImage(review.userAvatarUrl!)
-                      : null,
-                  child: review.userAvatarUrl == null
-                      ? Text(review.userName.substring(0, 1))
-                      : null,
+                  backgroundImage:
+                      review.userAvatarUrl != null ? NetworkImage(review.userAvatarUrl!) : null,
+                  child:
+                      review.userAvatarUrl == null ? Text(review.userName.substring(0, 1)) : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(

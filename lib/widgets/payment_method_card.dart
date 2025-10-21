@@ -48,9 +48,8 @@ class PaymentMethodCard extends StatelessWidget {
                 ),
                 child: Icon(
                   _getMethodIcon(methodInfo),
-                  color: isSelected
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurfaceVariant,
+                  color:
+                      isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
                   size: 24,
                 ),
               ),

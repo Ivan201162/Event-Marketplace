@@ -98,25 +98,25 @@ class LanguageSelector extends ConsumerWidget {
   }
 
   List<DropdownMenuItem<Locale>> _buildLanguageItems(BuildContext context) => [
-    DropdownMenuItem(
-      value: const Locale('ru', 'RU'),
-      child: _buildLanguageItem(const Locale('ru', 'RU')),
-    ),
-    DropdownMenuItem(
-      value: const Locale('en', 'US'),
-      child: _buildLanguageItem(const Locale('en', 'US')),
-    ),
-  ];
+        DropdownMenuItem(
+          value: const Locale('ru', 'RU'),
+          child: _buildLanguageItem(const Locale('ru', 'RU')),
+        ),
+        DropdownMenuItem(
+          value: const Locale('en', 'US'),
+          child: _buildLanguageItem(const Locale('en', 'US')),
+        ),
+      ];
 
   Widget _buildLanguageItem(Locale locale) => Row(
-    children: [
-      if (showFlag) ...[_buildFlag(locale), const SizedBox(width: 12)],
-      Text(
-        _getLanguageName(locale, showNativeName, showEnglishName, showCode),
-        style: const TextStyle(fontSize: 16),
-      ),
-    ],
-  );
+        children: [
+          if (showFlag) ...[_buildFlag(locale), const SizedBox(width: 12)],
+          Text(
+            _getLanguageName(locale, showNativeName, showEnglishName, showCode),
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+      );
 
   Widget _buildFlag(Locale locale) {
     String flagEmoji;

@@ -1,72 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod/riverpod.dart';
 
 import '../models/app_user.dart';
 import '../services/auth_service.dart';
-
-/// Onboarding state notifier
-class OnboardingNotifier extends StateNotifier<bool> {
-  OnboardingNotifier() : super(false);
-  
-  void setOnboardingComplete(bool value) {
-    state = value;
-  }
-}
-
-/// Auth loading state notifier
-class AuthLoadingNotifier extends StateNotifier<bool> {
-  AuthLoadingNotifier() : super(false);
-  
-  void setLoading(bool value) {
-    state = value;
-  }
-}
-
-/// Phone verification ID notifier
-class PhoneVerificationIdNotifier extends StateNotifier<String?> {
-  PhoneVerificationIdNotifier() : super(null);
-  
-  void setVerificationId(String? value) {
-    state = value;
-  }
-}
-
-/// Phone auth state notifier
-class PhoneAuthStateNotifier extends StateNotifier<PhoneAuthState> {
-  PhoneAuthStateNotifier() : super(PhoneAuthState.idle);
-  
-  void setState(PhoneAuthState value) {
-    state = value;
-  }
-}
-
-/// Phone number notifier
-class PhoneNumberNotifier extends StateNotifier<String?> {
-  PhoneNumberNotifier() : super(null);
-  
-  void setPhoneNumber(String? value) {
-    state = value;
-  }
-}
-
-/// Phone auth timer notifier
-class PhoneAuthTimerNotifier extends StateNotifier<int> {
-  PhoneAuthTimerNotifier() : super(0);
-  
-  void setTimer(int value) {
-    state = value;
-  }
-}
-
-/// Can resend code notifier
-class CanResendCodeNotifier extends StateNotifier<bool> {
-  CanResendCodeNotifier() : super(false);
-  
-  void setCanResend(bool value) {
-    state = value;
-  }
-}
 
 /// Auth service provider
 final authServiceProvider = Provider<AuthService>((ref) {
@@ -110,25 +46,25 @@ final isProfileCompleteProvider = Provider<bool>((ref) {
 });
 
 /// User onboarding state provider
-final onboardingStateProvider = StateNotifierProvider<OnboardingNotifier, bool>((ref) => OnboardingNotifier());
+final onboardingStateProvider = Provider<bool>((ref) => false);
 
 /// Auth loading state provider
-final authLoadingProvider = StateNotifierProvider<AuthLoadingNotifier, bool>((ref) => AuthLoadingNotifier());
+final authLoadingProvider = Provider<bool>((ref) => false);
 
 /// Phone verification ID provider
-final phoneVerificationIdProvider = StateNotifierProvider<PhoneVerificationIdNotifier, String?>((ref) => PhoneVerificationIdNotifier());
+final phoneVerificationIdProvider = Provider<String?>((ref) => null);
 
 /// Phone auth state provider
-final phoneAuthStateProvider = StateNotifierProvider<PhoneAuthStateNotifier, PhoneAuthState>((ref) => PhoneAuthStateNotifier());
+final phoneAuthStateProvider = Provider<PhoneAuthState>((ref) => PhoneAuthState.idle);
 
 /// Phone number provider
-final phoneNumberProvider = StateNotifierProvider<PhoneNumberNotifier, String?>((ref) => PhoneNumberNotifier());
+final phoneNumberProvider = Provider<String?>((ref) => null);
 
 /// Phone auth timer provider
-final phoneAuthTimerProvider = StateNotifierProvider<PhoneAuthTimerNotifier, int>((ref) => PhoneAuthTimerNotifier());
+final phoneAuthTimerProvider = Provider<int>((ref) => 0);
 
 /// Can resend code provider
-final canResendCodeProvider = StateNotifierProvider<CanResendCodeNotifier, bool>((ref) => CanResendCodeNotifier());
+final canResendCodeProvider = Provider<bool>((ref) => false);
 
 /// Phone auth states
 enum PhoneAuthState {

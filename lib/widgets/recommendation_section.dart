@@ -56,38 +56,38 @@ class RecommendationSection extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Row(
-      children: [
-        if (icon != null) ...[
-          Text(icon!, style: const TextStyle(fontSize: 20)),
-          const SizedBox(width: 8),
-        ],
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              if (subtitle != null) ...[
-                const SizedBox(height: 4),
-                Text(
-                  subtitle!,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            if (icon != null) ...[
+              Text(icon!, style: const TextStyle(fontSize: 20)),
+              const SizedBox(width: 8),
             ],
-          ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle!,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildFullList(BuildContext context, List<Recommendation> recommendations) =>
       ListView.builder(
@@ -105,36 +105,36 @@ class RecommendationSection extends StatelessWidget {
       );
 
   Widget _buildCompactList(BuildContext context, List<Recommendation> recommendations) => SizedBox(
-    height: 120,
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: recommendations.length,
-      itemBuilder: (context, index) {
-        final recommendation = recommendations[index];
-        return SizedBox(
-          width: 280,
-          child: RecommendationCard(
-            recommendation: recommendation,
-            compact: true,
-            onTap: () => onRecommendationTap?.call(recommendation),
-            onBook: () => onRecommendationBook?.call(recommendation),
-          ),
-        );
-      },
-    ),
-  );
+        height: 120,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: recommendations.length,
+          itemBuilder: (context, index) {
+            final recommendation = recommendations[index];
+            return SizedBox(
+              width: 280,
+              child: RecommendationCard(
+                recommendation: recommendation,
+                compact: true,
+                onTap: () => onRecommendationTap?.call(recommendation),
+                onBook: () => onRecommendationBook?.call(recommendation),
+              ),
+            );
+          },
+        ),
+      );
 
   Widget _buildViewAllButton(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: SizedBox(
-      width: double.infinity,
-      child: OutlinedButton(
-        onPressed: onViewAll,
-        child: Text('Смотреть все (${recommendations.length})'),
-      ),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: onViewAll,
+            child: Text('Смотреть все (${recommendations.length})'),
+          ),
+        ),
+      );
 }
 
 /// Виджет для отображения горизонтального списка рекомендаций
@@ -201,51 +201,50 @@ class HorizontalRecommendationList extends StatelessWidget {
   }
 
   Widget _buildAvatar(dynamic specialist) => CircleAvatar(
-    radius: 20,
-    backgroundImage: specialist.avatarUrl != null
-        ? NetworkImage(specialist.avatarUrl as String)
-        : null,
-    child: specialist.avatarUrl == null
-        ? Text(
-            (specialist.name as String).isNotEmpty
-                ? (specialist.name as String)[0].toUpperCase()
-                : '?',
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-          )
-        : null,
-  );
+        radius: 20,
+        backgroundImage:
+            specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl as String) : null,
+        child: specialist.avatarUrl == null
+            ? Text(
+                (specialist.name as String).isNotEmpty
+                    ? (specialist.name as String)[0].toUpperCase()
+                    : '?',
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              )
+            : null,
+      );
 
   Widget _buildName(dynamic specialist) => Text(
-    specialist.name as String,
-    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-    maxLines: 1,
-    overflow: TextOverflow.ellipsis,
-  );
+        specialist.name as String,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      );
 
   Widget _buildRating(dynamic specialist) => Row(
-    children: [
-      const Icon(Icons.star, size: 12, color: Colors.amber),
-      const SizedBox(width: 2),
-      Text(
-        (specialist.rating as num).toStringAsFixed(1),
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-      ),
-    ],
-  );
+        children: [
+          const Icon(Icons.star, size: 12, color: Colors.amber),
+          const SizedBox(width: 2),
+          Text(
+            (specialist.rating as num).toStringAsFixed(1),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+        ],
+      );
 
   Widget _buildPrice(dynamic specialist) => Text(
-    specialist.priceRangeString as String,
-    style: TextStyle(fontSize: 12, color: Colors.green[700], fontWeight: FontWeight.w500),
-  );
+        specialist.priceRangeString as String,
+        style: TextStyle(fontSize: 12, color: Colors.green[700], fontWeight: FontWeight.w500),
+      );
 
   Widget _buildTypeBadge(BuildContext context, Recommendation recommendation) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-    decoration: BoxDecoration(
-      color: _getTypeColor(context, recommendation.type).withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Text(recommendation.type.icon, style: const TextStyle(fontSize: 10)),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: _getTypeColor(context, recommendation.type).withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(recommendation.type.icon, style: const TextStyle(fontSize: 10)),
+      );
 
   Color _getTypeColor(BuildContext context, RecommendationType type) {
     switch (type) {

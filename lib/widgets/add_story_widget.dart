@@ -29,36 +29,36 @@ class _AddStoryWidgetState extends ConsumerState<AddStoryWidget> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: _showAddStoryDialog,
-    child: Container(
-      width: 70,
-      margin: const EdgeInsets.only(right: 12),
-      child: Column(
-        children: [
-          // Кнопка добавления
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.grey.shade300, width: 2),
-              color: Colors.grey.shade100,
-            ),
-            child: const Icon(Icons.add, color: Colors.grey, size: 24),
+        onTap: _showAddStoryDialog,
+        child: Container(
+          width: 70,
+          margin: const EdgeInsets.only(right: 12),
+          child: Column(
+            children: [
+              // Кнопка добавления
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey.shade300, width: 2),
+                  color: Colors.grey.shade100,
+                ),
+                child: const Icon(Icons.add, color: Colors.grey, size: 24),
+              ),
+              const SizedBox(height: 4),
+              // Текст
+              const Text(
+                'Добавить',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
-          const SizedBox(height: 4),
-          // Текст
-          const Text(
-            'Добавить',
-            style: TextStyle(fontSize: 12, color: Colors.grey),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   void _showAddStoryDialog() {
     showDialog<void>(
@@ -246,39 +246,39 @@ class UserStoriesWidget extends ConsumerWidget {
   }
 
   Widget _buildStoryCircle(BuildContext context, Story story) => GestureDetector(
-    onTap: () => _openStory(context, story),
-    child: Container(
-      width: 70,
-      margin: const EdgeInsets.only(right: 12),
-      child: Column(
-        children: [
-          // Аватарка с обводкой
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.blue, width: 3),
-            ),
-            child: CircleAvatar(
-              radius: 27,
-              backgroundColor: Colors.blue.withValues(alpha: 0.1),
-              child: const Icon(Icons.auto_stories, color: Colors.blue, size: 24),
-            ),
+        onTap: () => _openStory(context, story),
+        child: Container(
+          width: 70,
+          margin: const EdgeInsets.only(right: 12),
+          child: Column(
+            children: [
+              // Аватарка с обводкой
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.blue, width: 3),
+                ),
+                child: CircleAvatar(
+                  radius: 27,
+                  backgroundColor: Colors.blue.withValues(alpha: 0.1),
+                  child: const Icon(Icons.auto_stories, color: Colors.blue, size: 24),
+                ),
+              ),
+              const SizedBox(height: 4),
+              // Время до истечения
+              Text(
+                _formatTimeUntilExpiry(story.timeUntilExpiry),
+                style: const TextStyle(fontSize: 10, color: Colors.grey),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
-          const SizedBox(height: 4),
-          // Время до истечения
-          Text(
-            _formatTimeUntilExpiry(story.timeUntilExpiry),
-            style: const TextStyle(fontSize: 10, color: Colors.grey),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   String _formatTimeUntilExpiry(Duration duration) {
     if (duration.inHours > 0) {

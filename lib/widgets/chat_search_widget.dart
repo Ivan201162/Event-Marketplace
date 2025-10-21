@@ -21,27 +21,27 @@ class _ChatSearchWidgetState extends State<ChatSearchWidget> {
 
   @override
   Widget build(BuildContext context) => TextField(
-    controller: _controller,
-    decoration: InputDecoration(
-      hintText: 'Поиск в чатах...',
-      prefixIcon: const Icon(Icons.search),
-      suffixIcon: _controller.text.isNotEmpty
-          ? IconButton(icon: const Icon(Icons.clear), onPressed: _clearSearch)
-          : null,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      filled: true,
-      fillColor: Colors.grey[100],
-    ),
-    onChanged: (value) {
-      setState(() {
-        _isSearching = value.isNotEmpty;
-      });
-      widget.onSearchChanged(value);
-    },
-    onSubmitted: (value) {
-      // TODO: Выполнить поиск
-    },
-  );
+        controller: _controller,
+        decoration: InputDecoration(
+          hintText: 'Поиск в чатах...',
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: _controller.text.isNotEmpty
+              ? IconButton(icon: const Icon(Icons.clear), onPressed: _clearSearch)
+              : null,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          filled: true,
+          fillColor: Colors.grey[100],
+        ),
+        onChanged: (value) {
+          setState(() {
+            _isSearching = value.isNotEmpty;
+          });
+          widget.onSearchChanged(value);
+        },
+        onSubmitted: (value) {
+          // TODO: Выполнить поиск
+        },
+      );
 
   void _clearSearch() {
     _controller.clear();

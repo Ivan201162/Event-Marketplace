@@ -13,23 +13,24 @@ class PaymentMethodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Способ оплаты',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Способ оплаты',
+                style:
+                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              ...PaymentMethod.values.map(
+                (method) => _buildPaymentMethodTile(context, method, selectedMethod == method),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          ...PaymentMethod.values.map(
-            (method) => _buildPaymentMethodTile(context, method, selectedMethod == method),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildPaymentMethodTile(BuildContext context, PaymentMethod method, bool isSelected) =>
       Container(

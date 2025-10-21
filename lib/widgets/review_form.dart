@@ -277,17 +277,17 @@ class ReviewFormDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Dialog(
-    child: Container(
-      constraints: const BoxConstraints(maxWidth: 500),
-      padding: const EdgeInsets.all(24),
-      child: SingleChildScrollView(
-        child: ReviewForm(
-          specialistId: specialistId,
-          specialistName: specialistName,
-          onReviewSubmitted: onReviewSubmitted,
-          initialReview: initialReview,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500),
+          padding: const EdgeInsets.all(24),
+          child: SingleChildScrollView(
+            child: ReviewForm(
+              specialistId: specialistId,
+              specialistName: specialistName,
+              onReviewSubmitted: onReviewSubmitted,
+              initialReview: initialReview,
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }

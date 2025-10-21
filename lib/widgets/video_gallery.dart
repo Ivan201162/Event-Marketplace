@@ -53,117 +53,120 @@ class VideoGallery extends ConsumerWidget {
   }
 
   Widget _buildVideoItem(BuildContext context, UserPost video) => GestureDetector(
-    onTap: () => _openVideoPlayer(context, video),
-    child: Container(
-      decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Превью видео
-            if (video.thumbnailUrl != null)
-              CachedNetworkImage(
-                imageUrl: video.thumbnailUrl!,
-                fit: BoxFit.cover,
-                placeholder: (context, url) =>
-                    Container(color: Colors.grey[300], child: const Icon(Icons.video_library)),
-                errorWidget: (context, url, error) =>
-                    Container(color: Colors.grey[300], child: const Icon(Icons.video_library)),
-              )
-            else
-              Container(color: Colors.grey[300], child: const Icon(Icons.video_library)),
-            // Градиент для лучшей видимости кнопки
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Colors.black.withValues(alpha: 0.3)],
+        onTap: () => _openVideoPlayer(context, video),
+        child: Container(
+          decoration:
+              BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Превью видео
+                if (video.thumbnailUrl != null)
+                  CachedNetworkImage(
+                    imageUrl: video.thumbnailUrl!,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        Container(color: Colors.grey[300], child: const Icon(Icons.video_library)),
+                    errorWidget: (context, url, error) =>
+                        Container(color: Colors.grey[300], child: const Icon(Icons.video_library)),
+                  )
+                else
+                  Container(color: Colors.grey[300], child: const Icon(Icons.video_library)),
+                // Градиент для лучшей видимости кнопки
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black.withValues(alpha: 0.3)],
+                    ),
+                  ),
                 ),
-              ),
+                // Кнопка воспроизведения
+                const Center(child: Icon(Icons.play_circle_filled, color: Colors.white, size: 48)),
+                // Длительность видео (если доступна)
+                Positioned(
+                  bottom: 8,
+                  right: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      '0:00', // TODO(developer): Получить длительность видео
+                      style:
+                          TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            // Кнопка воспроизведения
-            const Center(child: Icon(Icons.play_circle_filled, color: Colors.white, size: 48)),
-            // Длительность видео (если доступна)
-            Positioned(
-              bottom: 8,
-              right: 8,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Text(
-                  '0:00', // TODO(developer): Получить длительность видео
-                  style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                ),
-              ),
+          ),
+        ),
+      );
+
+  Widget _buildLoadingGrid() => GridView.builder(
+        padding: const EdgeInsets.all(8),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+          childAspectRatio: 16 / 9,
+        ),
+        itemCount: 6,
+        itemBuilder: (context, index) => Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration:
+                BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+      );
+
+  Widget _buildEmptyState(BuildContext context) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.video_library, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Пока нет видео',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Когда пользователь опубликует видео,\nоно появится здесь',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
-      ),
-    ),
-  );
-
-  Widget _buildLoadingGrid() => GridView.builder(
-    padding: const EdgeInsets.all(8),
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 2,
-      crossAxisSpacing: 8,
-      mainAxisSpacing: 8,
-      childAspectRatio: 16 / 9,
-    ),
-    itemCount: 6,
-    itemBuilder: (context, index) => Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: Container(
-        decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(8)),
-      ),
-    ),
-  );
-
-  Widget _buildEmptyState(BuildContext context) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.video_library, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          'Пока нет видео',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Когда пользователь опубликует видео,\nоно появится здесь',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildErrorWidget(BuildContext context, String error) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          'Ошибка загрузки видео',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Ошибка загрузки видео',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          error,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 
   void _openVideoPlayer(BuildContext context, UserPost video) {
     Navigator.of(
@@ -209,101 +212,101 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.black,
-    appBar: AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.share, color: Colors.white),
-          onPressed: _shareVideo,
-        ),
-        IconButton(
-          icon: const Icon(Icons.more_vert, color: Colors.white),
-          onPressed: _showVideoMenu,
-        ),
-      ],
-    ),
-    body: GestureDetector(
-      onTap: () {
-        setState(() {
-          _showControls = !_showControls;
-        });
-      },
-      child: Stack(
-        children: [
-          // Видео плеер
-          Center(
-            child: _isInitialized
-                ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                : const CircularProgressIndicator(color: Colors.white),
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          // Контролы
-          if (_showControls && _isInitialized)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withValues(alpha: 0.3),
-                      Colors.transparent,
-                      Colors.black.withValues(alpha: 0.3),
-                    ],
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    const Spacer(),
-                    // Основные контролы
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          icon: Icon(
-                            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                            color: Colors.white,
-                            size: 48,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              if (_controller.value.isPlaying) {
-                                _controller.pause();
-                              } else {
-                                _controller.play();
-                              }
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    // Прогресс бар
-                    VideoProgressIndicator(
-                      _controller,
-                      allowScrubbing: true,
-                      colors: const VideoProgressColors(
-                        playedColor: Colors.white,
-                        bufferedColor: Colors.grey,
-                        backgroundColor: Colors.black26,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.share, color: Colors.white),
+              onPressed: _shareVideo,
+            ),
+            IconButton(
+              icon: const Icon(Icons.more_vert, color: Colors.white),
+              onPressed: _showVideoMenu,
+            ),
+          ],
+        ),
+        body: GestureDetector(
+          onTap: () {
+            setState(() {
+              _showControls = !_showControls;
+            });
+          },
+          child: Stack(
+            children: [
+              // Видео плеер
+              Center(
+                child: _isInitialized
+                    ? AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      )
+                    : const CircularProgressIndicator(color: Colors.white),
+              ),
+              // Контролы
+              if (_showControls && _isInitialized)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.3),
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 0.3),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                  ],
+                    child: Column(
+                      children: [
+                        const Spacer(),
+                        // Основные контролы
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                color: Colors.white,
+                                size: 48,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  if (_controller.value.isPlaying) {
+                                    _controller.pause();
+                                  } else {
+                                    _controller.play();
+                                  }
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        // Прогресс бар
+                        VideoProgressIndicator(
+                          _controller,
+                          allowScrubbing: true,
+                          colors: const VideoProgressColors(
+                            playedColor: Colors.white,
+                            bufferedColor: Colors.grey,
+                            backgroundColor: Colors.black26,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-        ],
-      ),
-    ),
-  );
+            ],
+          ),
+        ),
+      );
 
   void _shareVideo() {
     // TODO(developer): Реализовать шаринг видео

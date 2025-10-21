@@ -49,34 +49,34 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
 
   @override
   Widget build(BuildContext context) => Container(
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 10,
-          offset: const Offset(0, -2),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
-      ],
-    ),
-    child: SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: _buildNavigationItems(),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: _buildNavigationItems(),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   List<Widget> _buildNavigationItems() => [
-    _buildNavItem(0, Icons.home_outlined, Icons.home, 'Главная'),
-    _buildNavItem(1, Icons.newspaper_outlined, Icons.newspaper, 'Лента'),
-    _buildNavItem(2, Icons.assignment_outlined, Icons.assignment, 'Заявки'),
-    _buildNavItem(3, Icons.chat_bubble_outline, Icons.chat_bubble, 'Чаты'),
-    _buildNavItem(4, Icons.lightbulb_outline, Icons.lightbulb, 'Идеи'),
-  ];
+        _buildNavItem(0, Icons.home_outlined, Icons.home, 'Главная'),
+        _buildNavItem(1, Icons.newspaper_outlined, Icons.newspaper, 'Лента'),
+        _buildNavItem(2, Icons.assignment_outlined, Icons.assignment, 'Заявки'),
+        _buildNavItem(3, Icons.chat_bubble_outline, Icons.chat_bubble, 'Чаты'),
+        _buildNavItem(4, Icons.lightbulb_outline, Icons.lightbulb, 'Идеи'),
+      ];
 
   Widget _buildNavItem(int index, IconData icon, IconData activeIcon, String label) {
     final isSelected = widget.currentIndex == index;
@@ -114,11 +114,11 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
                   AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 200),
                     style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                      color: isSelected
-                          ? Theme.of(context).primaryColor
-                          : Theme.of(context).textTheme.bodyMedium?.color,
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                    ),
+                          color: isSelected
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context).textTheme.bodyMedium?.color,
+                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                        ),
                     child: Text(label),
                   ),
                 ],
@@ -186,23 +186,23 @@ class _ModernFABState extends State<ModernFAB> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-    animation: _animationController,
-    builder: (context, child) => Transform.scale(
-      scale: _scaleAnimation.value,
-      child: Transform.rotate(
-        angle: _rotationAnimation.value,
-        child: FloatingActionButton(
-          onPressed: _onPressed,
-          tooltip: widget.tooltip,
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Icon(widget.icon, size: 28),
+        animation: _animationController,
+        builder: (context, child) => Transform.scale(
+          scale: _scaleAnimation.value,
+          child: Transform.rotate(
+            angle: _rotationAnimation.value,
+            child: FloatingActionButton(
+              onPressed: _onPressed,
+              tooltip: widget.tooltip,
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: Icon(widget.icon, size: 28),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Контейнер для экрана с современной навигацией
@@ -226,10 +226,11 @@ class ModernScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: appBar,
-    body: body,
-    bottomNavigationBar: ModernNavigationBar(currentIndex: currentIndex, onTap: onNavigationTap),
-    floatingActionButton: fab,
-    floatingActionButtonLocation: floatingActionButtonLocation,
-  );
+        appBar: appBar,
+        body: body,
+        bottomNavigationBar:
+            ModernNavigationBar(currentIndex: currentIndex, onTap: onNavigationTap),
+        floatingActionButton: fab,
+        floatingActionButtonLocation: floatingActionButtonLocation,
+      );
 }

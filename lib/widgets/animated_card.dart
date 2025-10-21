@@ -45,20 +45,21 @@ class _AnimatedCardState extends State<AnimatedCard> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: widget.onTap,
-    onTapDown: (_) => _controller.forward(),
-    onTapUp: (_) => _controller.reverse(),
-    onTapCancel: () => _controller.reverse(),
-    child: AnimatedBuilder(
-      animation: _scaleAnimation,
-      builder: (context, child) => Transform.scale(
-        scale: _scaleAnimation.value,
-        child: Card(
-          elevation: widget.elevation,
-          margin: widget.margin,
-          child: Padding(padding: widget.padding ?? const EdgeInsets.all(16), child: widget.child),
+        onTap: widget.onTap,
+        onTapDown: (_) => _controller.forward(),
+        onTapUp: (_) => _controller.reverse(),
+        onTapCancel: () => _controller.reverse(),
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) => Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Card(
+              elevation: widget.elevation,
+              margin: widget.margin,
+              child:
+                  Padding(padding: widget.padding ?? const EdgeInsets.all(16), child: widget.child),
+            ),
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }

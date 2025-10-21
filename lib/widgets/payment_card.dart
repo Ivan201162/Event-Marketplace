@@ -63,9 +63,9 @@ class PaymentCard extends StatelessWidget {
                       Text(
                         payment.formattedAmount,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: _getStatusColor(payment.status),
-                          fontWeight: FontWeight.bold,
-                        ),
+                              color: _getStatusColor(payment.status),
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 2),
                       Container(

@@ -12,41 +12,41 @@ class AppReviewDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => AlertDialog(
-    title: const Row(
-      children: [
-        Text('⭐'),
-        SizedBox(width: 8),
-        Expanded(child: Text('Оцените приложение')),
-      ],
-    ),
-    content: const Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Нам важно ваше мнение! Если вам нравится приложение, пожалуйста, оставьте отзыв в магазине.',
+        title: const Row(
+          children: [
+            Text('⭐'),
+            SizedBox(width: 8),
+            Expanded(child: Text('Оцените приложение')),
+          ],
         ),
-        SizedBox(height: 16),
-        Text('Ваша оценка поможет другим пользователям найти наше приложение.'),
-      ],
-    ),
-    actions: [
-      TextButton(
-        onPressed: () {
-          ref.read(appReviewProvider.notifier).dismissReviewRequest();
-          Navigator.of(context).pop();
-        },
-        child: const Text('Позже'),
-      ),
-      ElevatedButton(
-        onPressed: () {
-          ref.read(appReviewProvider.notifier).requestReview();
-          Navigator.of(context).pop();
-        },
-        child: const Text('Оценить'),
-      ),
-    ],
-  );
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Нам важно ваше мнение! Если вам нравится приложение, пожалуйста, оставьте отзыв в магазине.',
+            ),
+            SizedBox(height: 16),
+            Text('Ваша оценка поможет другим пользователям найти наше приложение.'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              ref.read(appReviewProvider.notifier).dismissReviewRequest();
+              Navigator.of(context).pop();
+            },
+            child: const Text('Позже'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              ref.read(appReviewProvider.notifier).requestReview();
+              Navigator.of(context).pop();
+            },
+            child: const Text('Оценить'),
+          ),
+        ],
+      );
 }
 
 /// Виджет для отображения настроек отзывов
@@ -198,30 +198,30 @@ class AppReviewSettingsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatusRow(String label, String value, Color color) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ResponsiveText(label, isSubtitle: true),
-        ResponsiveText(
-          value,
-          style: TextStyle(color: color, fontWeight: FontWeight.w500),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ResponsiveText(label, isSubtitle: true),
+            ResponsiveText(
+              value,
+              style: TextStyle(color: color, fontWeight: FontWeight.w500),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildInfoRow(String label, String value, IconData icon) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      children: [
-        Icon(icon, size: 20, color: Colors.grey[600]),
-        const SizedBox(width: 12),
-        Expanded(child: ResponsiveText(label, isSubtitle: true)),
-        ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: Colors.grey[600]),
+            const SizedBox(width: 12),
+            Expanded(child: ResponsiveText(label, isSubtitle: true)),
+            ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+          ],
+        ),
+      );
 
   void _showResetDialog(BuildContext context, WidgetRef ref) {
     showDialog<void>(
@@ -323,19 +323,19 @@ class ReviewStatsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatRow(String label, String value, IconData icon, Color color) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Row(
-      children: [
-        Icon(icon, size: 20, color: color),
-        const SizedBox(width: 12),
-        Expanded(child: ResponsiveText(label, isSubtitle: true)),
-        ResponsiveText(
-          value,
-          style: TextStyle(fontWeight: FontWeight.w500, color: color),
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: color),
+            const SizedBox(width: 12),
+            Expanded(child: ResponsiveText(label, isSubtitle: true)),
+            ResponsiveText(
+              value,
+              style: TextStyle(fontWeight: FontWeight.w500, color: color),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }
 
 /// Виджет для отображения рекомендаций по отзывам

@@ -50,129 +50,129 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
 
   @override
   Widget build(BuildContext context) => Dialog(
-    child: Container(
-      constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
-      child: Column(
-        children: [
-          AppBar(
-            title: Text(widget.existingFAQ == null ? 'Новый вопрос' : 'Редактировать вопрос'),
-            actions: [
-              TextButton(
-                onPressed: _isSaving ? null : _saveFAQ,
-                child: _isSaving
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Сохранить'),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
+          child: Column(
+            children: [
+              AppBar(
+                title: Text(widget.existingFAQ == null ? 'Новый вопрос' : 'Редактировать вопрос'),
+                actions: [
+                  TextButton(
+                    onPressed: _isSaving ? null : _saveFAQ,
+                    child: _isSaving
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Сохранить'),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Вопрос
+                      TextField(
+                        controller: _questionController,
+                        decoration: const InputDecoration(
+                          labelText: 'Вопрос *',
+                          border: OutlineInputBorder(),
+                          hintText: 'Введите часто задаваемый вопрос',
+                        ),
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Ответ
+                      TextField(
+                        controller: _answerController,
+                        decoration: const InputDecoration(
+                          labelText: 'Ответ *',
+                          border: OutlineInputBorder(),
+                          hintText: 'Введите подробный ответ на вопрос',
+                          alignLabelWithHint: true,
+                        ),
+                        maxLines: 6,
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Категория и порядок
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DropdownButtonFormField<String>(
+                              initialValue: _selectedCategory,
+                              decoration: const InputDecoration(
+                                labelText: 'Категория',
+                                border: OutlineInputBorder(),
+                              ),
+                              items: const [
+                                DropdownMenuItem(value: 'general', child: Text('Общие вопросы')),
+                                DropdownMenuItem(value: 'pricing', child: Text('Цены и оплата')),
+                                DropdownMenuItem(value: 'booking', child: Text('Бронирование')),
+                                DropdownMenuItem(value: 'services', child: Text('Услуги')),
+                                DropdownMenuItem(value: 'equipment', child: Text('Оборудование')),
+                                DropdownMenuItem(
+                                  value: 'cancellation',
+                                  child: Text('Отмена и возврат'),
+                                ),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedCategory = value!;
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: TextField(
+                              controller: _orderController,
+                              decoration: const InputDecoration(
+                                labelText: 'Порядок',
+                                border: OutlineInputBorder(),
+                                hintText: '0',
+                              ),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Настройки
+                      _buildSettingsSection(),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Вопрос
-                  TextField(
-                    controller: _questionController,
-                    decoration: const InputDecoration(
-                      labelText: 'Вопрос *',
-                      border: OutlineInputBorder(),
-                      hintText: 'Введите часто задаваемый вопрос',
-                    ),
-                    textCapitalization: TextCapitalization.sentences,
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Ответ
-                  TextField(
-                    controller: _answerController,
-                    decoration: const InputDecoration(
-                      labelText: 'Ответ *',
-                      border: OutlineInputBorder(),
-                      hintText: 'Введите подробный ответ на вопрос',
-                      alignLabelWithHint: true,
-                    ),
-                    maxLines: 6,
-                    textCapitalization: TextCapitalization.sentences,
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Категория и порядок
-                  Row(
-                    children: [
-                      Expanded(
-                        child: DropdownButtonFormField<String>(
-                          initialValue: _selectedCategory,
-                          decoration: const InputDecoration(
-                            labelText: 'Категория',
-                            border: OutlineInputBorder(),
-                          ),
-                          items: const [
-                            DropdownMenuItem(value: 'general', child: Text('Общие вопросы')),
-                            DropdownMenuItem(value: 'pricing', child: Text('Цены и оплата')),
-                            DropdownMenuItem(value: 'booking', child: Text('Бронирование')),
-                            DropdownMenuItem(value: 'services', child: Text('Услуги')),
-                            DropdownMenuItem(value: 'equipment', child: Text('Оборудование')),
-                            DropdownMenuItem(
-                              value: 'cancellation',
-                              child: Text('Отмена и возврат'),
-                            ),
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedCategory = value!;
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: TextField(
-                          controller: _orderController,
-                          decoration: const InputDecoration(
-                            labelText: 'Порядок',
-                            border: OutlineInputBorder(),
-                            hintText: '0',
-                          ),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Настройки
-                  _buildSettingsSection(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildSettingsSection() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text('Настройки', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      const SizedBox(height: 8),
-      SwitchListTile(
-        title: const Text('Опубликовать вопрос'),
-        subtitle: const Text('Клиенты смогут видеть этот вопрос'),
-        value: _isPublished,
-        onChanged: (value) {
-          setState(() {
-            _isPublished = value;
-          });
-        },
-      ),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Настройки', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          SwitchListTile(
+            title: const Text('Опубликовать вопрос'),
+            subtitle: const Text('Клиенты смогут видеть этот вопрос'),
+            value: _isPublished,
+            onChanged: (value) {
+              setState(() {
+                _isPublished = value;
+              });
+            },
+          ),
+        ],
+      );
 
   Future<void> _saveFAQ() async {
     final question = _questionController.text.trim();

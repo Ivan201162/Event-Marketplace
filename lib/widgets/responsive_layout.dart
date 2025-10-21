@@ -83,21 +83,21 @@ class ResponsiveScaffold extends StatelessWidget {
   }
 
   Widget _buildDesktopLayout(BuildContext context) => Scaffold(
-    appBar: appBar,
-    body: Row(
-      children: [
-        // Боковая панель навигации
-        if (drawer != null) SizedBox(width: 280, child: drawer),
-        // Основной контент
-        Expanded(child: body),
-        // Правая панель (если есть)
-        if (endDrawer != null) SizedBox(width: 280, child: endDrawer),
-      ],
-    ),
-    floatingActionButton: floatingActionButton,
-    floatingActionButtonLocation: floatingActionButtonLocation,
-    backgroundColor: backgroundColor,
-  );
+        appBar: appBar,
+        body: Row(
+          children: [
+            // Боковая панель навигации
+            if (drawer != null) SizedBox(width: 280, child: drawer),
+            // Основной контент
+            Expanded(child: body),
+            // Правая панель (если есть)
+            if (endDrawer != null) SizedBox(width: 280, child: endDrawer),
+          ],
+        ),
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
+        backgroundColor: backgroundColor,
+      );
 }
 
 /// Адаптивная навигационная панель
@@ -130,29 +130,29 @@ class ResponsiveNavigationBar extends StatelessWidget {
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) => BottomNavigationBar(
-    currentIndex: currentIndex,
-    onTap: onTap,
-    type: BottomNavigationBarType.fixed,
-    backgroundColor: backgroundColor,
-    selectedItemColor: selectedItemColor,
-    unselectedItemColor: unselectedItemColor,
-    items: items
-        .map((item) => BottomNavigationBarItem(icon: item.icon, label: item.label))
-        .toList(),
-  );
+        currentIndex: currentIndex,
+        onTap: onTap,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: backgroundColor,
+        selectedItemColor: selectedItemColor,
+        unselectedItemColor: unselectedItemColor,
+        items: items
+            .map((item) => BottomNavigationBarItem(icon: item.icon, label: item.label))
+            .toList(),
+      );
 
   Widget _buildNavigationRail(BuildContext context) => NavigationRail(
-    selectedIndex: currentIndex,
-    onDestinationSelected: onTap,
-    backgroundColor: backgroundColor,
-    selectedIconTheme: IconThemeData(color: selectedItemColor),
-    unselectedIconTheme: IconThemeData(color: unselectedItemColor),
-    selectedLabelTextStyle: TextStyle(color: selectedItemColor),
-    unselectedLabelTextStyle: TextStyle(color: unselectedItemColor),
-    destinations: items
-        .map((item) => NavigationRailDestination(icon: item.icon, label: Text(item.label)))
-        .toList(),
-  );
+        selectedIndex: currentIndex,
+        onDestinationSelected: onTap,
+        backgroundColor: backgroundColor,
+        selectedIconTheme: IconThemeData(color: selectedItemColor),
+        unselectedIconTheme: IconThemeData(color: unselectedItemColor),
+        selectedLabelTextStyle: TextStyle(color: selectedItemColor),
+        unselectedLabelTextStyle: TextStyle(color: unselectedItemColor),
+        destinations: items
+            .map((item) => NavigationRailDestination(icon: item.icon, label: Text(item.label)))
+            .toList(),
+      );
 }
 
 /// Элемент навигации
@@ -307,8 +307,7 @@ class ResponsiveButton extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: onPressed,
-      style:
-          style?.copyWith(
+      style: style?.copyWith(
             padding: WidgetStateProperty.all(effectivePadding),
             textStyle: WidgetStateProperty.all(TextStyle(fontSize: fontSize)),
           ) ??

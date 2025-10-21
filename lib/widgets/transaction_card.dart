@@ -112,9 +112,9 @@ class TransactionCard extends StatelessWidget {
                   Text(
                     transaction.formattedAmount,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: _getTypeColor(transaction.type),
-                      fontWeight: FontWeight.bold,
-                    ),
+                          color: _getTypeColor(transaction.type),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 2),
                   Text(

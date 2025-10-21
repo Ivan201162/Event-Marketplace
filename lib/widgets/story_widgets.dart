@@ -297,106 +297,108 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.black,
-    body: Stack(
-      children: [
-        // Медиа контент
-        Center(
-          child: widget.story.type == StoryType.image
-              ? CachedNetworkImage(
-                  imageUrl: widget.story.mediaUrl,
-                  fit: BoxFit.contain,
-                  placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) =>
-                      const Center(child: Icon(Icons.error, color: Colors.white, size: 64)),
-                )
-              : widget.story.type == StoryType.video
-              ? const Center(child: Icon(Icons.play_circle_fill, color: Colors.white, size: 64))
-              : Center(
-                  child: Text(
-                    widget.story.caption,
-                    style: const TextStyle(color: Colors.white, fontSize: 24),
-                    textAlign: TextAlign.center,
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            // Медиа контент
+            Center(
+              child: widget.story.type == StoryType.image
+                  ? CachedNetworkImage(
+                      imageUrl: widget.story.mediaUrl,
+                      fit: BoxFit.contain,
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          const Center(child: Icon(Icons.error, color: Colors.white, size: 64)),
+                    )
+                  : widget.story.type == StoryType.video
+                      ? const Center(
+                          child: Icon(Icons.play_circle_fill, color: Colors.white, size: 64))
+                      : Center(
+                          child: Text(
+                            widget.story.caption,
+                            style: const TextStyle(color: Colors.white, fontSize: 24),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+            ),
+
+            // Заголовок
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 16,
+              left: 16,
+              right: 16,
+              child: Row(
+                children: [
+                  CircleAvatar(backgroundImage: NetworkImage(widget.story.specialistPhotoUrl)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.story.specialistName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          _formatTimeAgo(widget.story.createdAt),
+                          style: const TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-        ),
-
-        // Заголовок
-        Positioned(
-          top: MediaQuery.of(context).padding.top + 16,
-          left: 16,
-          right: 16,
-          child: Row(
-            children: [
-              CircleAvatar(backgroundImage: NetworkImage(widget.story.specialistPhotoUrl)),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.story.specialistName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      _formatTimeAgo(widget.story.createdAt),
-                      style: const TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: widget.onClose,
-                icon: const Icon(Icons.close, color: Colors.white),
-              ),
-            ],
-          ),
-        ),
-
-        // Подпись
-        if (widget.story.caption.isNotEmpty)
-          Positioned(
-            bottom: 100,
-            left: 16,
-            right: 16,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                widget.story.caption,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
+                  IconButton(
+                    onPressed: widget.onClose,
+                    icon: const Icon(Icons.close, color: Colors.white),
+                  ),
+                ],
               ),
             ),
-          ),
 
-        // Действия
-        Positioned(
-          bottom: 40,
-          right: 16,
-          child: Column(
-            children: [
-              IconButton(
-                onPressed: _likeStory,
-                icon: Icon(
-                  widget.story.likes > 0 ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.white,
-                  size: 32,
+            // Подпись
+            if (widget.story.caption.isNotEmpty)
+              Positioned(
+                bottom: 100,
+                left: 16,
+                right: 16,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    widget.story.caption,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                  ),
                 ),
               ),
-              Text(widget.story.likes.toString(), style: const TextStyle(color: Colors.white)),
-            ],
-          ),
+
+            // Действия
+            Positioned(
+              bottom: 40,
+              right: 16,
+              child: Column(
+                children: [
+                  IconButton(
+                    onPressed: _likeStory,
+                    icon: Icon(
+                      widget.story.likes > 0 ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                  Text(widget.story.likes.toString(), style: const TextStyle(color: Colors.white)),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Future<void> _likeStory() async {
     try {
