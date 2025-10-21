@@ -40,9 +40,7 @@ class EnhancedReviewService {
 
         final bookingData = bookingDoc.data()!;
         if (bookingData['status'] != 'completed') {
-          throw Exception(
-            'Отзыв можно оставить только для завершенных заказов',
-          );
+          throw Exception('Отзыв можно оставить только для завершенных заказов');
         }
       }
 
@@ -60,8 +58,10 @@ class EnhancedReviewService {
       }
 
       // Получаем имя специалиста
-      final specialistDoc =
-          await _firestore.collection(_specialistsCollection).doc(specialistId).get();
+      final specialistDoc = await _firestore
+          .collection(_specialistsCollection)
+          .doc(specialistId)
+          .get();
 
       final specialistName = specialistDoc.exists
           ? (specialistDoc.data()?['name'] ?? 'Unknown specialist')
@@ -143,11 +143,7 @@ class EnhancedReviewService {
           .get();
 
       if (reviewsSnapshot.docs.isEmpty) {
-        return const ReviewStats(
-          totalReviews: 0,
-          averageRating: 0,
-          ratingDistribution: {},
-        );
+        return const ReviewStats(totalReviews: 0, averageRating: 0, ratingDistribution: {});
       }
 
       final reviews = reviewsSnapshot.docs.map(Review.fromDocument).toList();
@@ -171,27 +167,19 @@ class EnhancedReviewService {
       );
     } catch (e) {
       debugPrint('Ошибка получения статистики отзывов: $e');
-      return const ReviewStats(
-        totalReviews: 0,
-        averageRating: 0,
-        ratingDistribution: {},
-      );
+      return const ReviewStats(totalReviews: 0, averageRating: 0, ratingDistribution: {});
     }
   }
 
   /// Получить поток статистики отзывов
   Stream<ReviewStats> getSpecialistReviewStatsStream(String specialistId) => _firestore
-          .collection(_reviewsCollection)
-          .where('specialistId', isEqualTo: specialistId)
-          .where('isDeleted', isEqualTo: false)
-          .snapshots()
-          .map((snapshot) {
+      .collection(_reviewsCollection)
+      .where('specialistId', isEqualTo: specialistId)
+      .where('isDeleted', isEqualTo: false)
+      .snapshots()
+      .map((snapshot) {
         if (snapshot.docs.isEmpty) {
-          return const ReviewStats(
-            totalReviews: 0,
-            averageRating: 0,
-            ratingDistribution: {},
-          );
+          return const ReviewStats(totalReviews: 0, averageRating: 0, ratingDistribution: {});
         }
 
         final reviews = snapshot.docs.map(Review.fromDocument).toList();
@@ -406,10 +394,7 @@ class ReviewStats {
     if (totalReviews == 0) return {};
 
     return ratingDistribution.map(
-      (rating, count) => MapEntry(
-        rating,
-        (count / totalReviews) * 100,
-      ),
+      (rating, count) => MapEntry(rating, (count / totalReviews) * 100),
     );
   }
 

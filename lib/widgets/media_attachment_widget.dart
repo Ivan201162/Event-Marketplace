@@ -4,11 +4,7 @@ import '../services/media_upload_service.dart';
 
 /// Виджет для прикрепления медиафайлов к сообщению
 class MediaAttachmentWidget extends StatefulWidget {
-  const MediaAttachmentWidget({
-    super.key,
-    required this.onMediaSelected,
-    required this.onError,
-  });
+  const MediaAttachmentWidget({super.key, required this.onMediaSelected, required this.onError});
   final Function(MediaUploadResult) onMediaSelected;
   final Function(String) onError;
 
@@ -54,9 +50,7 @@ class _MediaAttachmentWidgetState extends State<MediaAttachmentWidget> {
 
           Text(
             'Прикрепить файл',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 20),
@@ -71,9 +65,7 @@ class _MediaAttachmentWidgetState extends State<MediaAttachmentWidget> {
               ),
               child: Column(
                 children: [
-                  CircularProgressIndicator(
-                    color: theme.colorScheme.primary,
-                  ),
+                  CircularProgressIndicator(color: theme.colorScheme.primary),
                   const SizedBox(height: 12),
                   Text(
                     'Загрузка $_uploadingFileName...',
@@ -181,23 +173,15 @@ class _MediaAttachmentWidgetState extends State<MediaAttachmentWidget> {
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.2),
-          ),
+          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              size: 32,
-              color: theme.colorScheme.primary,
-            ),
+            Icon(icon, size: 32, color: theme.colorScheme.primary),
             const SizedBox(height: 8),
             Text(
               label,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
             ),
           ],

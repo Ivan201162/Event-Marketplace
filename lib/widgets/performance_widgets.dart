@@ -5,12 +5,7 @@ import 'package:flutter/material.dart';
 
 /// Виджет с ленивой загрузкой
 class LazyLoadWidget extends StatefulWidget {
-  const LazyLoadWidget({
-    super.key,
-    required this.child,
-    this.height,
-    this.onVisible,
-  });
+  const LazyLoadWidget({super.key, required this.child, this.height, this.onVisible});
   final Widget child;
   final double? height;
   final VoidCallback? onVisible;
@@ -24,28 +19,24 @@ class _LazyLoadWidgetState extends State<LazyLoadWidget> {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: widget.height,
-        child: VisibilityDetector(
-          onVisibilityChanged: (visibilityInfo) {
-            if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
-              setState(() {
-                _isVisible = true;
-              });
-              widget.onVisible?.call();
-            }
-          },
-          child: _isVisible ? widget.child : const SizedBox.shrink(),
-        ),
-      );
+    height: widget.height,
+    child: VisibilityDetector(
+      onVisibilityChanged: (visibilityInfo) {
+        if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
+          setState(() {
+            _isVisible = true;
+          });
+          widget.onVisible?.call();
+        }
+      },
+      child: _isVisible ? widget.child : const SizedBox.shrink(),
+    ),
+  );
 }
 
 /// Простой детектор видимости
 class VisibilityDetector extends StatefulWidget {
-  const VisibilityDetector({
-    super.key,
-    required this.child,
-    required this.onVisibilityChanged,
-  });
+  const VisibilityDetector({super.key, required this.child, required this.onVisibilityChanged});
   final Widget child;
   final void Function(VisibilityInfo) onVisibilityChanged;
 
@@ -58,15 +49,12 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
 
   @override
   Widget build(BuildContext context) => NotificationListener<ScrollNotification>(
-        onNotification: (notification) {
-          _checkVisibility();
-          return false;
-        },
-        child: Container(
-          key: _key,
-          child: widget.child,
-        ),
-      );
+    onNotification: (notification) {
+      _checkVisibility();
+      return false;
+    },
+    child: Container(key: _key, child: widget.child),
+  );
 
   void _checkVisibility() {
     final renderBox = _key.currentContext?.findRenderObject() as RenderBox?;
@@ -79,13 +67,12 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
       final visibleBottom = position.dy + size.height > 0;
 
       if (visibleTop && visibleBottom) {
-        final visibleHeight = (position.dy + size.height).clamp(0.0, screenSize.height) -
+        final visibleHeight =
+            (position.dy + size.height).clamp(0.0, screenSize.height) -
             position.dy.clamp(0.0, screenSize.height);
         final visibleFraction = visibleHeight / size.height;
 
-        widget.onVisibilityChanged(
-          VisibilityInfo(visibleFraction: visibleFraction),
-        );
+        widget.onVisibilityChanged(VisibilityInfo(visibleFraction: visibleFraction));
       }
     }
   }
@@ -117,24 +104,17 @@ class CachedImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: width,
-        height: height,
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
-          fit: fit,
-          placeholder: (context, url) =>
-              placeholder ??
-              const Center(
-                child: CircularProgressIndicator(),
-              ),
-          errorWidget: (context, url, error) =>
-              errorWidget ??
-              Container(
-                color: Colors.grey[300],
-                child: const Icon(Icons.error),
-              ),
-        ),
-      );
+    width: width,
+    height: height,
+    child: CachedNetworkImage(
+      imageUrl: imageUrl,
+      fit: fit,
+      placeholder: (context, url) =>
+          placeholder ?? const Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) =>
+          errorWidget ?? Container(color: Colors.grey[300], child: const Icon(Icons.error)),
+    ),
+  );
 }
 
 /// Виджет с виртуализацией списка
@@ -161,11 +141,7 @@ class VirtualizedList extends StatelessWidget {
         itemBuilder: itemBuilder,
       );
     } else {
-      return ListView.builder(
-        padding: padding,
-        itemCount: itemCount,
-        itemBuilder: itemBuilder,
-      );
+      return ListView.builder(padding: padding, itemCount: itemCount, itemBuilder: itemBuilder);
     }
   }
 }
@@ -262,17 +238,11 @@ class _PaginatedListState extends State<PaginatedList> {
     }
 
     if (_items.isEmpty && _isLoading) {
-      return widget.loadingWidget ??
-          const Center(
-            child: CircularProgressIndicator(),
-          );
+      return widget.loadingWidget ?? const Center(child: CircularProgressIndicator());
     }
 
     if (_items.isEmpty) {
-      return widget.emptyWidget ??
-          const Center(
-            child: Text('Нет данных'),
-          );
+      return widget.emptyWidget ?? const Center(child: Text('Нет данных'));
     }
 
     return NotificationListener<ScrollNotification>(
@@ -331,10 +301,7 @@ class _DebouncedWidgetState extends State<DebouncedWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: _debounce,
-        child: widget.child,
-      );
+  Widget build(BuildContext context) => GestureDetector(onTap: _debounce, child: widget.child);
 }
 
 /// Виджет с троттлингом
@@ -365,10 +332,7 @@ class _ThrottledWidgetState extends State<ThrottledWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: _throttle,
-        child: widget.child,
-      );
+  Widget build(BuildContext context) => GestureDetector(onTap: _throttle, child: widget.child);
 }
 
 /// Виджет с предзагрузкой
@@ -418,10 +382,7 @@ class _PreloadWidgetState extends State<PreloadWidget> {
   @override
   Widget build(BuildContext context) {
     if (_isPreloading) {
-      return widget.loadingWidget ??
-          const Center(
-            child: CircularProgressIndicator(),
-          );
+      return widget.loadingWidget ?? const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {

@@ -79,12 +79,12 @@ class SpecialistReportService {
   }
 
   /// Получить детальный отчет по конкретному специалисту
-  Future<SpecialistDetailReport> generateSpecialistDetailReport(
-    String specialistId,
-  ) async {
+  Future<SpecialistDetailReport> generateSpecialistDetailReport(String specialistId) async {
     try {
-      final specialistDoc =
-          await _firestore.collection('specialist_profiles').doc(specialistId).get();
+      final specialistDoc = await _firestore
+          .collection('specialist_profiles')
+          .doc(specialistId)
+          .get();
 
       if (!specialistDoc.exists) {
         throw Exception('Специалист не найден');
@@ -133,9 +133,7 @@ class SpecialistReport {
     required this.generatedAt,
   });
 
-  factory SpecialistReport.fromSpecialists(
-    List<SpecialistProfile> specialists,
-  ) {
+  factory SpecialistReport.fromSpecialists(List<SpecialistProfile> specialists) {
     final totalSpecialists = specialists.length;
     final verifiedSpecialists = specialists.where((s) => s.isVerified).length;
     final availableSpecialists = specialists.where((s) => s.isAvailable).length;
@@ -184,10 +182,7 @@ class SpecialistReport {
 
 /// Отчет по категориям
 class CategoryReport {
-  const CategoryReport({
-    required this.categoryStats,
-    required this.generatedAt,
-  });
+  const CategoryReport({required this.categoryStats, required this.generatedAt});
 
   factory CategoryReport.fromSpecialists(List<SpecialistProfile> specialists) {
     final categoryStats = <String, CategoryStats>{};
@@ -227,10 +222,7 @@ class CategoryReport {
       );
     }
 
-    return CategoryReport(
-      categoryStats: categoryStats,
-      generatedAt: DateTime.now(),
-    );
+    return CategoryReport(categoryStats: categoryStats, generatedAt: DateTime.now());
   }
 
   final Map<String, CategoryStats> categoryStats;

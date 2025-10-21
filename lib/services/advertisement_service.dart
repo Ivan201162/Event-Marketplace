@@ -23,12 +23,7 @@ class AdvertisementService {
           .orderBy('endDate')
           .get();
 
-      return snapshot.docs
-          .map((doc) => AdCampaign.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
-          .toList();
+      return snapshot.docs.map((doc) => AdCampaign.fromMap({'id': doc.id, ...doc.data()})).toList();
     } catch (e) {
       debugPrint('ERROR: [advertisement_service] Ошибка получения кампаний: $e');
       return [];
@@ -44,12 +39,7 @@ class AdvertisementService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => AdCampaign.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
-          .toList();
+      return snapshot.docs.map((doc) => AdCampaign.fromMap({'id': doc.id, ...doc.data()})).toList();
     } catch (e) {
       debugPrint('ERROR: [advertisement_service] Ошибка получения кампаний пользователя: $e');
       return [];
@@ -96,10 +86,9 @@ class AdvertisementService {
       final snapshot = await query.orderBy('createdAt', descending: true).limit(limit).get();
 
       return snapshot.docs
-          .map((doc) => Advertisement.fromMap({
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              }))
+          .map(
+            (doc) => Advertisement.fromMap({'id': doc.id, ...doc.data() as Map<String, dynamic>}),
+          )
           .toList();
     } catch (e) {
       debugPrint('ERROR: [advertisement_service] Ошибка получения рекламных объявлений: $e');
@@ -122,7 +111,8 @@ class AdvertisementService {
   }) async {
     try {
       debugPrint(
-          'INFO: [advertisement_service] Создание рекламной кампании для пользователя $userId');
+        'INFO: [advertisement_service] Создание рекламной кампании для пользователя $userId',
+      );
 
       final campaign = AdCampaign(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -174,7 +164,8 @@ class AdvertisementService {
   }) async {
     try {
       debugPrint(
-          'INFO: [advertisement_service] Создание рекламного объявления для пользователя $userId');
+        'INFO: [advertisement_service] Создание рекламного объявления для пользователя $userId',
+      );
 
       final advertisement = Advertisement(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -228,16 +219,10 @@ class AdvertisementService {
       final doc = await _firestore.collection('advertisements').doc(adId).get();
 
       if (!doc.exists) {
-        return PaymentResult(
-          success: false,
-          errorMessage: 'Рекламное объявление не найдено',
-        );
+        return PaymentResult(success: false, errorMessage: 'Рекламное объявление не найдено');
       }
 
-      final ad = Advertisement.fromMap({
-        'id': doc.id,
-        ...doc.data()!,
-      });
+      final ad = Advertisement.fromMap({'id': doc.id, ...doc.data()!});
 
       // Создаем платеж
       final paymentResult = await _paymentService.createAdvertisementPayment(
@@ -279,18 +264,12 @@ class AdvertisementService {
       return paymentResult;
     } catch (e) {
       debugPrint('ERROR: [advertisement_service] Ошибка покупки рекламы: $e');
-      return PaymentResult(
-        success: false,
-        errorMessage: e.toString(),
-      );
+      return PaymentResult(success: false, errorMessage: e.toString());
     }
   }
 
   /// Активация рекламы после успешной оплаты
-  Future<bool> activateAdvertisement({
-    required String adId,
-    required String transactionId,
-  }) async {
+  Future<bool> activateAdvertisement({required String adId, required String transactionId}) async {
     try {
       debugPrint('INFO: [advertisement_service] Активация рекламы $adId');
 
@@ -358,9 +337,7 @@ class AdvertisementService {
       await _firestore.collection('advertisements').doc(adId).update({
         'status': AdStatus.rejected.toString().split('.').last,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
-        'metadata': {
-          'rejectionReason': reason,
-        },
+        'metadata': {'rejectionReason': reason},
       });
 
       debugPrint('INFO: [advertisement_service] Реклама успешно отклонена');
@@ -378,9 +355,7 @@ class AdvertisementService {
     int? clicks,
   }) async {
     try {
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      };
+      final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
 
       if (impressions != null) {
         updateData['impressions'] = FieldValue.increment(impressions);
@@ -442,7 +417,8 @@ class AdvertisementService {
       await batch.commit();
 
       debugPrint(
-          'INFO: [advertisement_service] Обработано ${snapshot.docs.length} истекших рекламных объявлений');
+        'INFO: [advertisement_service] Обработано ${snapshot.docs.length} истекших рекламных объявлений',
+      );
     } catch (e) {
       debugPrint('ERROR: [advertisement_service] Ошибка проверки истекшей рекламы: $e');
     }
@@ -480,10 +456,9 @@ class AdvertisementService {
       final snapshot = await query.orderBy('createdAt', descending: true).limit(limit).get();
 
       return snapshot.docs
-          .map((doc) => Advertisement.fromMap({
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              }))
+          .map(
+            (doc) => Advertisement.fromMap({'id': doc.id, ...doc.data() as Map<String, dynamic>}),
+          )
           .toList();
     } catch (e) {
       debugPrint('ERROR: [advertisement_service] Ошибка получения рекламы для отображения: $e');

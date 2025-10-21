@@ -7,13 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Theme Tests', () {
     testWidgets('should display light theme by default', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: TestThemeWidget())));
 
       await tester.pumpAndSettle();
 
@@ -23,13 +17,7 @@ void main() {
     });
 
     testWidgets('should switch to dark theme when toggled', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: TestThemeWidget())));
 
       await tester.pumpAndSettle();
 
@@ -47,13 +35,7 @@ void main() {
     });
 
     testWidgets('should maintain theme state across rebuilds', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: TestThemeWidget())));
 
       await tester.pumpAndSettle();
 
@@ -63,13 +45,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Перестраиваем виджет
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: TestThemeWidget())));
 
       await tester.pumpAndSettle();
 
@@ -79,13 +55,7 @@ void main() {
     });
 
     testWidgets('should have correct color scheme in light theme', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: TestThemeWidget())));
 
       await tester.pumpAndSettle();
 
@@ -101,13 +71,7 @@ void main() {
     });
 
     testWidgets('should have correct color scheme in dark theme', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: TestThemeWidget())));
 
       await tester.pumpAndSettle();
 
@@ -187,18 +151,9 @@ void main() {
     });
 
     test('should have correct animation durations', () {
-      expect(
-        AppStyles.shortAnimation,
-        equals(const Duration(milliseconds: 200)),
-      );
-      expect(
-        AppStyles.mediumAnimation,
-        equals(const Duration(milliseconds: 300)),
-      );
-      expect(
-        AppStyles.longAnimation,
-        equals(const Duration(milliseconds: 500)),
-      );
+      expect(AppStyles.shortAnimation, equals(const Duration(milliseconds: 200)));
+      expect(AppStyles.mediumAnimation, equals(const Duration(milliseconds: 300)));
+      expect(AppStyles.longAnimation, equals(const Duration(milliseconds: 500)));
     });
 
     test('should have correct curves', () {
@@ -210,11 +165,7 @@ void main() {
 
   group('Responsive Tests', () {
     testWidgets('should detect mobile screen size', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ResponsiveTestWidget(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: ResponsiveTestWidget()));
 
       // Устанавливаем размер экрана для мобильного устройства
       await tester.binding.setSurfaceSize(const Size(400, 800));
@@ -226,11 +177,7 @@ void main() {
     });
 
     testWidgets('should detect tablet screen size', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ResponsiveTestWidget(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: ResponsiveTestWidget()));
 
       // Устанавливаем размер экрана для планшета
       await tester.binding.setSurfaceSize(const Size(800, 600));
@@ -242,11 +189,7 @@ void main() {
     });
 
     testWidgets('should detect desktop screen size', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ResponsiveTestWidget(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: ResponsiveTestWidget()));
 
       // Устанавливаем размер экрана для десктопа
       await tester.binding.setSurfaceSize(const Size(1400, 900));
@@ -287,15 +230,15 @@ class ResponsiveTestWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Column(
-          children: [
-            if (AppStyles.isMobile(context))
-              const Text('Mobile')
-            else if (AppStyles.isTablet(context))
-              const Text('Tablet')
-            else if (AppStyles.isDesktop(context))
-              const Text('Desktop'),
-          ],
-        ),
-      );
+    body: Column(
+      children: [
+        if (AppStyles.isMobile(context))
+          const Text('Mobile')
+        else if (AppStyles.isTablet(context))
+          const Text('Tablet')
+        else if (AppStyles.isDesktop(context))
+          const Text('Desktop'),
+      ],
+    ),
+  );
 }

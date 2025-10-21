@@ -19,146 +19,103 @@ class _BudgetRecommendationsTestScreenState extends ConsumerState<BudgetRecommen
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Тест рекомендаций по бюджету'),
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.white,
+    appBar: AppBar(
+      title: const Text('Тест рекомендаций по бюджету'),
+      backgroundColor: Colors.green,
+      foregroundColor: Colors.white,
+    ),
+    body: Column(
+      children: [
+        _buildBudgetAndSpecialistSelection(),
+        const Divider(),
+        Expanded(
+          child: _selectedSpecialistIds.isEmpty
+              ? const Center(
+                  child: Text(
+                    'Выберите специалистов для анализа бюджета',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                )
+              : BudgetRecommendationsWidget(
+                  currentBudget: _currentBudget,
+                  selectedSpecialistIds: _selectedSpecialistIds,
+                  userId: _testUserId,
+                  onBudgetIncrease: _onBudgetIncrease,
+                ),
         ),
-        body: Column(
-          children: [
-            _buildBudgetAndSpecialistSelection(),
-            const Divider(),
-            Expanded(
-              child: _selectedSpecialistIds.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'Выберите специалистов для анализа бюджета',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    )
-                  : BudgetRecommendationsWidget(
-                      currentBudget: _currentBudget,
-                      selectedSpecialistIds: _selectedSpecialistIds,
-                      userId: _testUserId,
-                      onBudgetIncrease: _onBudgetIncrease,
-                    ),
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildBudgetAndSpecialistSelection() => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Бюджет
+        const Text('Текущий бюджет:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Row(
           children: [
-            // Бюджет
-            const Text(
-              'Текущий бюджет:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            Expanded(
+              child: Slider(
+                value: _currentBudget,
+                min: 10000,
+                max: 200000,
+                divisions: 19,
+                label: '${_currentBudget.toStringAsFixed(0)} ₽',
+                onChanged: (value) {
+                  setState(() {
+                    _currentBudget = value;
+                  });
+                },
               ),
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: Slider(
-                    value: _currentBudget,
-                    min: 10000,
-                    max: 200000,
-                    divisions: 19,
-                    label: '${_currentBudget.toStringAsFixed(0)} ₽',
-                    onChanged: (value) {
-                      setState(() {
-                        _currentBudget = value;
-                      });
-                    },
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
-                  ),
-                  child: Text(
-                    '${_currentBudget.toStringAsFixed(0)} ₽',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Выбор специалистов
-            const Text(
-              'Выберите специалистов:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.green.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+              ),
+              child: Text(
+                '${_currentBudget.toStringAsFixed(0)} ₽',
+                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
               ),
             ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _buildSpecialistChips(),
-            ),
-            const SizedBox(height: 16),
-            if (_selectedSpecialistIds.isNotEmpty) ...[
-              const Text(
-                'Выбранные специалисты:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: _buildSelectedSpecialistChips(),
-              ),
-            ],
           ],
         ),
-      );
+        const SizedBox(height: 16),
+
+        // Выбор специалистов
+        const Text(
+          'Выберите специалистов:',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Wrap(spacing: 8, runSpacing: 8, children: _buildSpecialistChips()),
+        const SizedBox(height: 16),
+        if (_selectedSpecialistIds.isNotEmpty) ...[
+          const Text(
+            'Выбранные специалисты:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Wrap(spacing: 8, runSpacing: 8, children: _buildSelectedSpecialistChips()),
+        ],
+      ],
+    ),
+  );
 
   List<Widget> _buildSpecialistChips() {
     const testSpecialists = [
       _TestSpecialist('host_1', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('dj_1', 'DJ Мария', SpecialistCategory.dj),
-      _TestSpecialist(
-        'photographer_1',
-        'Фотограф Алексей',
-        SpecialistCategory.photographer,
-      ),
-      _TestSpecialist(
-        'videographer_1',
-        'Видеограф Елена',
-        SpecialistCategory.videographer,
-      ),
-      _TestSpecialist(
-        'decorator_1',
-        'Декоратор Ольга',
-        SpecialistCategory.decorator,
-      ),
-      _TestSpecialist(
-        'musician_1',
-        'Музыкант Дмитрий',
-        SpecialistCategory.musician,
-      ),
-      _TestSpecialist(
-        'animator_1',
-        'Аниматор Анна',
-        SpecialistCategory.animator,
-      ),
+      _TestSpecialist('photographer_1', 'Фотограф Алексей', SpecialistCategory.photographer),
+      _TestSpecialist('videographer_1', 'Видеограф Елена', SpecialistCategory.videographer),
+      _TestSpecialist('decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator),
+      _TestSpecialist('musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician),
+      _TestSpecialist('animator_1', 'Аниматор Анна', SpecialistCategory.animator),
     ];
 
     return testSpecialists.map((specialist) {
@@ -181,18 +138,18 @@ class _BudgetRecommendationsTestScreenState extends ConsumerState<BudgetRecommen
   }
 
   List<Widget> _buildSelectedSpecialistChips() => _selectedSpecialistIds.map((id) {
-        final specialist = _getTestSpecialistById(id);
-        return Chip(
-          label: Text(specialist.name),
-          avatar: Text(specialist.category.emoji),
-          deleteIcon: const Icon(Icons.close, size: 18),
-          onDeleted: () {
-            setState(() {
-              _selectedSpecialistIds.remove(id);
-            });
-          },
-        );
-      }).toList();
+    final specialist = _getTestSpecialistById(id);
+    return Chip(
+      label: Text(specialist.name),
+      avatar: Text(specialist.category.emoji),
+      deleteIcon: const Icon(Icons.close, size: 18),
+      onDeleted: () {
+        setState(() {
+          _selectedSpecialistIds.remove(id);
+        });
+      },
+    );
+  }).toList();
 
   void _onBudgetIncrease(double additionalBudget, SpecialistCategory category) {
     setState(() {
@@ -214,31 +171,11 @@ class _BudgetRecommendationsTestScreenState extends ConsumerState<BudgetRecommen
     const testSpecialists = [
       _TestSpecialist('host_1', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('dj_1', 'DJ Мария', SpecialistCategory.dj),
-      _TestSpecialist(
-        'photographer_1',
-        'Фотограф Алексей',
-        SpecialistCategory.photographer,
-      ),
-      _TestSpecialist(
-        'videographer_1',
-        'Видеограф Елена',
-        SpecialistCategory.videographer,
-      ),
-      _TestSpecialist(
-        'decorator_1',
-        'Декоратор Ольга',
-        SpecialistCategory.decorator,
-      ),
-      _TestSpecialist(
-        'musician_1',
-        'Музыкант Дмитрий',
-        SpecialistCategory.musician,
-      ),
-      _TestSpecialist(
-        'animator_1',
-        'Аниматор Анна',
-        SpecialistCategory.animator,
-      ),
+      _TestSpecialist('photographer_1', 'Фотограф Алексей', SpecialistCategory.photographer),
+      _TestSpecialist('videographer_1', 'Видеограф Елена', SpecialistCategory.videographer),
+      _TestSpecialist('decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator),
+      _TestSpecialist('musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician),
+      _TestSpecialist('animator_1', 'Аниматор Анна', SpecialistCategory.animator),
     ];
 
     return testSpecialists.firstWhere((s) => s.id == id);

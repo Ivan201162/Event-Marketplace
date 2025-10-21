@@ -126,14 +126,13 @@ class MediaService {
     required MediaType type,
     String? title,
     String? description,
-  }) async =>
-      _uploadMediaFile(
-        file: file,
-        userId: userId,
-        type: type,
-        title: title,
-        description: description,
-      );
+  }) async => _uploadMediaFile(
+    file: file,
+    userId: userId,
+    type: type,
+    title: title,
+    description: description,
+  );
 
   /// Внутренний метод загрузки медиафайла
   Future<MediaItem> _uploadMediaFile({
@@ -203,9 +202,7 @@ class MediaService {
 
       await _firestore.collection(_collection).doc(mediaItem.id).set(mediaItem.toMap());
 
-      SafeLog.info(
-        'MediaService: Media uploaded successfully: ${mediaItem.id}',
-      );
+      SafeLog.info('MediaService: Media uploaded successfully: ${mediaItem.id}');
       return mediaItem;
     } on Exception catch (e) {
       SafeLog.error('MediaService: Error uploading media file: $e');
@@ -302,11 +299,7 @@ class MediaService {
   }
 
   /// Обновить информацию о медиафайле
-  Future<void> updateMedia(
-    String mediaId, {
-    String? title,
-    String? description,
-  }) async {
+  Future<void> updateMedia(String mediaId, {String? title, String? description}) async {
     try {
       SafeLog.info('MediaService: Updating media: $mediaId');
 
@@ -375,8 +368,10 @@ class MediaService {
     try {
       SafeLog.info('MediaService: Getting media stats for user: $userId');
 
-      final querySnapshot =
-          await _firestore.collection(_collection).where('userId', isEqualTo: userId).get();
+      final querySnapshot = await _firestore
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .get();
 
       var photoCount = 0;
       var videoCount = 0;

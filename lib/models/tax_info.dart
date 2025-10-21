@@ -118,30 +118,32 @@ class TaxInfo {
 
   /// Создать из Map
   factory TaxInfo.fromMap(Map<String, dynamic> data) => TaxInfo(
-        id: data['id'] as String,
-        userId: data['userId'] as String,
-        specialistId: data['specialistId'] as String,
-        taxType: TaxType.values.firstWhere(
-          (e) => e.name == data['taxType'],
-          orElse: () => TaxType.individual,
-        ),
-        taxRate: (data['taxRate'] as num).toDouble(),
-        income: (data['income'] as num).toDouble(),
-        taxAmount: (data['taxAmount'] as num).toDouble(),
-        period: data['period'] as String,
-        createdAt:
-            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-        updatedAt:
-            data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
-        paidAt: data['paidAt'] != null ? (data['paidAt'] as Timestamp).toDate() : null,
-        paymentMethod: data['paymentMethod'] as String?,
-        notes: data['notes'] as String?,
-        isPaid: data['isPaid'] as bool? ?? false,
-        reminderSent: data['reminderSent'] as bool? ?? false,
-        nextReminderDate: data['nextReminderDate'] != null
-            ? (data['nextReminderDate'] as Timestamp).toDate()
-            : null,
-      );
+    id: data['id'] as String,
+    userId: data['userId'] as String,
+    specialistId: data['specialistId'] as String,
+    taxType: TaxType.values.firstWhere(
+      (e) => e.name == data['taxType'],
+      orElse: () => TaxType.individual,
+    ),
+    taxRate: (data['taxRate'] as num).toDouble(),
+    income: (data['income'] as num).toDouble(),
+    taxAmount: (data['taxAmount'] as num).toDouble(),
+    period: data['period'] as String,
+    createdAt: data['createdAt'] != null
+        ? (data['createdAt'] as Timestamp).toDate()
+        : DateTime.now(),
+    updatedAt: data['updatedAt'] != null
+        ? (data['updatedAt'] as Timestamp).toDate()
+        : DateTime.now(),
+    paidAt: data['paidAt'] != null ? (data['paidAt'] as Timestamp).toDate() : null,
+    paymentMethod: data['paymentMethod'] as String?,
+    notes: data['notes'] as String?,
+    isPaid: data['isPaid'] as bool? ?? false,
+    reminderSent: data['reminderSent'] as bool? ?? false,
+    nextReminderDate: data['nextReminderDate'] != null
+        ? (data['nextReminderDate'] as Timestamp).toDate()
+        : null,
+  );
 
   final String id;
   final String userId;
@@ -162,22 +164,22 @@ class TaxInfo {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'specialistId': specialistId,
-        'taxType': taxType.name,
-        'taxRate': taxRate,
-        'income': income,
-        'taxAmount': taxAmount,
-        'period': period,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
-        'paymentMethod': paymentMethod,
-        'notes': notes,
-        'isPaid': isPaid,
-        'reminderSent': reminderSent,
-        'nextReminderDate': nextReminderDate != null ? Timestamp.fromDate(nextReminderDate!) : null,
-      };
+    'userId': userId,
+    'specialistId': specialistId,
+    'taxType': taxType.name,
+    'taxRate': taxRate,
+    'income': income,
+    'taxAmount': taxAmount,
+    'period': period,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
+    'paymentMethod': paymentMethod,
+    'notes': notes,
+    'isPaid': isPaid,
+    'reminderSent': reminderSent,
+    'nextReminderDate': nextReminderDate != null ? Timestamp.fromDate(nextReminderDate!) : null,
+  };
 
   /// Копировать с изменениями
   TaxInfo copyWith({
@@ -197,25 +199,24 @@ class TaxInfo {
     bool? isPaid,
     bool? reminderSent,
     DateTime? nextReminderDate,
-  }) =>
-      TaxInfo(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        specialistId: specialistId ?? this.specialistId,
-        taxType: taxType ?? this.taxType,
-        taxRate: taxRate ?? this.taxRate,
-        income: income ?? this.income,
-        taxAmount: taxAmount ?? this.taxAmount,
-        period: period ?? this.period,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        paidAt: paidAt ?? this.paidAt,
-        paymentMethod: paymentMethod ?? this.paymentMethod,
-        notes: notes ?? this.notes,
-        isPaid: isPaid ?? this.isPaid,
-        reminderSent: reminderSent ?? this.reminderSent,
-        nextReminderDate: nextReminderDate ?? this.nextReminderDate,
-      );
+  }) => TaxInfo(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    specialistId: specialistId ?? this.specialistId,
+    taxType: taxType ?? this.taxType,
+    taxRate: taxRate ?? this.taxRate,
+    income: income ?? this.income,
+    taxAmount: taxAmount ?? this.taxAmount,
+    period: period ?? this.period,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    paidAt: paidAt ?? this.paidAt,
+    paymentMethod: paymentMethod ?? this.paymentMethod,
+    notes: notes ?? this.notes,
+    isPaid: isPaid ?? this.isPaid,
+    reminderSent: reminderSent ?? this.reminderSent,
+    nextReminderDate: nextReminderDate ?? this.nextReminderDate,
+  );
 
   /// Получить отображаемое название типа налогообложения
   String get taxTypeDisplayName => taxType.displayName;

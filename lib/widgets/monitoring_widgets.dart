@@ -34,10 +34,7 @@ class MonitoringStatusWidget extends ConsumerWidget {
                   color: monitoringState.isInitialized ? Colors.green : Colors.orange,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  'Мониторинг',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text('Мониторинг', style: Theme.of(context).textTheme.titleMedium),
                 const Spacer(),
                 _buildStatusChip(monitoringState.isInitialized),
               ],
@@ -92,15 +89,12 @@ class MonitoringStatusWidget extends ConsumerWidget {
   }
 
   Widget _buildStatusChip(bool isInitialized) => Chip(
-        label: Text(isInitialized ? 'Активен' : 'Неактивен'),
-        backgroundColor: isInitialized
-            ? Colors.green.withValues(alpha: 0.2)
-            : Colors.orange.withValues(alpha: 0.2),
-        labelStyle: TextStyle(
-          color: isInitialized ? Colors.green : Colors.orange,
-          fontSize: 12,
-        ),
-      );
+    label: Text(isInitialized ? 'Активен' : 'Неактивен'),
+    backgroundColor: isInitialized
+        ? Colors.green.withValues(alpha: 0.2)
+        : Colors.orange.withValues(alpha: 0.2),
+    labelStyle: TextStyle(color: isInitialized ? Colors.green : Colors.orange, fontSize: 12),
+  );
 }
 
 /// Виджет для отображения метрик приложения
@@ -121,10 +115,7 @@ class AppMetricsWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Метрики приложения',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Метрики приложения', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
 
             // Состояние сети
@@ -186,54 +177,40 @@ class AppMetricsWidget extends ConsumerWidget {
     String value,
     Color color,
     IconData icon,
-  ) =>
-      Row(
-        children: [
-          Icon(icon, color: color, size: 16),
-          const SizedBox(width: 8),
-          Text(
-            '$label: ',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ],
-      );
+  ) => Row(
+    children: [
+      Icon(icon, color: color, size: 16),
+      const SizedBox(width: 8),
+      Text('$label: ', style: Theme.of(context).textTheme.bodyMedium),
+      Text(
+        value,
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
+      ),
+    ],
+  );
 
   Widget _buildLoadingRow(BuildContext context, String label) => Row(
-        children: [
-          const SizedBox(
-            width: 16,
-            height: 16,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '$label: Загрузка...',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-      );
+    children: [
+      const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+      const SizedBox(width: 8),
+      Text('$label: Загрузка...', style: Theme.of(context).textTheme.bodyMedium),
+    ],
+  );
 
   Widget _buildErrorRow(BuildContext context, String label, String error) => Row(
-        children: [
-          const Icon(Icons.error, color: Colors.red, size: 16),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              '$label: Ошибка - $error',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.red,
-                  ),
-            ),
-          ),
-        ],
-      );
+    children: [
+      const Icon(Icons.error, color: Colors.red, size: 16),
+      const SizedBox(width: 8),
+      Expanded(
+        child: Text(
+          '$label: Ошибка - $error',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red),
+        ),
+      ),
+    ],
+  );
 }
 
 /// Виджет для управления мониторингом
@@ -242,7 +219,6 @@ class MonitoringControlWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final monitoringState = ref.watch(monitoringStateProvider);
     final monitoringNotifier = ref.read(monitoringStateProvider.notifier);
 
     return Card(
@@ -253,10 +229,7 @@ class MonitoringControlWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Управление мониторингом',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Управление мониторингом', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -329,10 +302,7 @@ class MonitoringLogsWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              'Логи мониторинга',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Логи мониторинга', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
             if (monitoringState.lastError != null) ...[
               Container(
@@ -353,24 +323,19 @@ class MonitoringLogsWidget extends ConsumerWidget {
                         Text(
                           'Последняя ошибка',
                           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      monitoringState.lastError!,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
+                    Text(monitoringState.lastError!, style: Theme.of(context).textTheme.bodySmall),
                     if (monitoringState.lastErrorTime != null) ...[
                       const SizedBox(height: 4),
                       Text(
                         'Время: ${monitoringState.lastErrorTime!.toLocal().toString()}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey,
-                            ),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
                       ),
                     ],
                   ],
@@ -387,17 +352,11 @@ class MonitoringLogsWidget extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                      size: 16,
-                    ),
+                    const Icon(Icons.check_circle, color: Colors.green, size: 16),
                     const SizedBox(width: 8),
                     Text(
                       'Ошибок не обнаружено',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.green,
-                          ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.green),
                     ),
                   ],
                 ),

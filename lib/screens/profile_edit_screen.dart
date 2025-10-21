@@ -91,10 +91,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка выбора изображения: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка выбора изображения: $e'), backgroundColor: Colors.red),
       );
     }
   }
@@ -112,10 +109,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       // Загружаем аватар, если выбран новый
       if (_selectedImage != null) {
         final bytes = await _selectedImage!.readAsBytes();
-        avatarUrl = await SupabaseService.uploadAvatar(
-          _selectedImage!.path,
-          bytes,
-        );
+        avatarUrl = await SupabaseService.uploadAvatar(_selectedImage!.path, bytes);
       }
 
       // Обновляем профиль
@@ -129,10 +123,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Профиль обновлен успешно!'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Профиль обновлен успешно!'), backgroundColor: Colors.green),
         );
         context.pop();
       } else {
@@ -141,10 +132,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка обновления профиля: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка обновления профиля: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -193,10 +181,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : const Text(
-                    'Сохранить',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                : const Text('Сохранить', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -206,9 +191,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -216,32 +199,20 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               'Ошибка загрузки профиля',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               _error!,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadCurrentProfile,
-              child: const Text('Повторить'),
-            ),
+            ElevatedButton(onPressed: _loadCurrentProfile, child: const Text('Повторить')),
           ],
         ),
       );
@@ -286,14 +257,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
               backgroundImage: _selectedImage != null
                   ? FileImage(_selectedImage!)
                   : (_currentProfile?.avatarUrl != null
-                      ? NetworkImage(_currentProfile!.avatarUrl!)
-                      : null),
+                        ? NetworkImage(_currentProfile!.avatarUrl!)
+                        : null),
               child: _selectedImage == null && _currentProfile?.avatarUrl == null
-                  ? Icon(
-                      Icons.person,
-                      size: 60,
-                      color: theme.primaryColor,
-                    )
+                  ? Icon(Icons.person, size: 60, color: theme.primaryColor)
                   : null,
             ),
             Positioned(
@@ -316,10 +283,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         const SizedBox(height: 16),
         Text(
           'Нажмите на камеру, чтобы изменить фото',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
-          ),
+          style: TextStyle(color: Colors.grey[600], fontSize: 14),
         ),
       ],
     );
@@ -331,10 +295,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       children: [
         const Text(
           'Основная информация',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
 
@@ -376,13 +337,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Навыки',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Навыки', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
 
         // Поле для добавления навыков
@@ -400,10 +355,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
               ),
             ),
             const SizedBox(width: 8),
-            ElevatedButton(
-              onPressed: _addSkill,
-              child: const Text('Добавить'),
-            ),
+            ElevatedButton(onPressed: _addSkill, child: const Text('Добавить')),
           ],
         ),
         const SizedBox(height: 16),
@@ -451,10 +403,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       children: [
         const Text(
           'Дополнительная информация',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
 

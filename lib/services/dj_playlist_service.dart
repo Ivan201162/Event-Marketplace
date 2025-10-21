@@ -79,14 +79,8 @@ class DJPlaylistService {
         .orderBy('uploadedAt', descending: true)
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => MediaFile.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
-              .toList(),
+          (snapshot) =>
+              snapshot.docs.map((doc) => MediaFile.fromMap({'id': doc.id, ...doc.data()})).toList(),
         );
   }
 
@@ -141,21 +135,19 @@ class DJPlaylistService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) async {
-      final playlists = <DJPlaylist>[];
+          final playlists = <DJPlaylist>[];
 
-      for (final doc in snapshot.docs) {
-        final playlist = DJPlaylist.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
+          for (final doc in snapshot.docs) {
+            final playlist = DJPlaylist.fromMap({'id': doc.id, ...doc.data()});
 
-        // Загружаем медиафайлы для плейлиста
-        final mediaFiles = await _getMediaFilesByIds(playlist.mediaFileIds);
-        playlists.add(playlist.copyWith(mediaFiles: mediaFiles));
-      }
+            // Загружаем медиафайлы для плейлиста
+            final mediaFiles = await _getMediaFilesByIds(playlist.mediaFileIds);
+            playlists.add(playlist.copyWith(mediaFiles: mediaFiles));
+          }
 
-      return playlists;
-    }).asyncMap((future) => future);
+          return playlists;
+        })
+        .asyncMap((future) => future);
   }
 
   /// Получить публичные плейлисты
@@ -171,28 +163,23 @@ class DJPlaylistService {
         .limit(50)
         .snapshots()
         .map((snapshot) async {
-      final playlists = <DJPlaylist>[];
+          final playlists = <DJPlaylist>[];
 
-      for (final doc in snapshot.docs) {
-        final playlist = DJPlaylist.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
+          for (final doc in snapshot.docs) {
+            final playlist = DJPlaylist.fromMap({'id': doc.id, ...doc.data()});
 
-        // Загружаем медиафайлы для плейлиста
-        final mediaFiles = await _getMediaFilesByIds(playlist.mediaFileIds);
-        playlists.add(playlist.copyWith(mediaFiles: mediaFiles));
-      }
+            // Загружаем медиафайлы для плейлиста
+            final mediaFiles = await _getMediaFilesByIds(playlist.mediaFileIds);
+            playlists.add(playlist.copyWith(mediaFiles: mediaFiles));
+          }
 
-      return playlists;
-    }).asyncMap((future) => future);
+          return playlists;
+        })
+        .asyncMap((future) => future);
   }
 
   /// Обновить плейлист
-  Future<void> updatePlaylist(
-    String playlistId,
-    Map<String, dynamic> updates,
-  ) async {
+  Future<void> updatePlaylist(String playlistId, Map<String, dynamic> updates) async {
     if (!FeatureFlags.djPlaylistsEnabled) {
       throw Exception('Плейлисты диджеев отключены');
     }
@@ -236,10 +223,7 @@ class DJPlaylistService {
         throw Exception('Файл не найден');
       }
 
-      final mediaFile = MediaFile.fromMap({
-        'id': doc.id,
-        ...doc.data()!,
-      });
+      final mediaFile = MediaFile.fromMap({'id': doc.id, ...doc.data()!});
 
       // Удаляем файл из Storage
       try {
@@ -341,14 +325,7 @@ class DJPlaylistService {
           .where(FieldPath.documentId, whereIn: mediaFileIds)
           .get();
 
-      return query.docs
-          .map(
-            (doc) => MediaFile.fromMap({
-              'id': doc.id,
-              ...doc.data(),
-            }),
-          )
-          .toList();
+      return query.docs.map((doc) => MediaFile.fromMap({'id': doc.id, ...doc.data()})).toList();
     } catch (e) {
       debugPrint('Error getting media files by IDs: $e');
       return [];
@@ -366,10 +343,7 @@ class DJPlaylistService {
       final batch = _firestore.batch();
 
       for (final doc in playlistsQuery.docs) {
-        final playlist = DJPlaylist.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
+        final playlist = DJPlaylist.fromMap({'id': doc.id, ...doc.data()});
 
         final updatedMediaFileIds = playlist.mediaFileIds.where((id) => id != mediaFileId).toList();
 
@@ -420,57 +394,57 @@ class DJPlaylistService {
 
   /// Создать mock VK плейлист для демонстрации
   VKPlaylist _createMockVKPlaylist() => VKPlaylist(
-        id: 'mock_vk_playlist',
-        title: 'Лучшие хиты 2024',
-        description: 'Популярные треки этого года',
-        coverImageUrl: 'https://via.placeholder.com/300x300/4CAF50/FFFFFF?text=VK+Playlist',
-        trackCount: 5,
-        ownerId: 'mock_user',
-        ownerName: 'Mock DJ',
-        createdAt: DateTime.now().subtract(const Duration(days: 30)),
-        tracks: [
-          const VKTrack(
-            id: '1',
-            title: 'Summer Vibes',
-            artist: 'Chill Artist',
-            duration: Duration(minutes: 3, seconds: 45),
-            url: 'https://example.com/track1.mp3',
-            albumTitle: 'Summer Collection',
-          ),
-          const VKTrack(
-            id: '2',
-            title: 'Night Drive',
-            artist: 'Electronic DJ',
-            duration: Duration(minutes: 4, seconds: 12),
-            url: 'https://example.com/track2.mp3',
-            albumTitle: 'Night Sessions',
-          ),
-          const VKTrack(
-            id: '3',
-            title: 'Dance Floor',
-            artist: 'Party Master',
-            duration: Duration(minutes: 3, seconds: 28),
-            url: 'https://example.com/track3.mp3',
-            albumTitle: 'Club Hits',
-          ),
-          const VKTrack(
-            id: '4',
-            title: 'Sunset Dreams',
-            artist: 'Ambient Creator',
-            duration: Duration(minutes: 5, seconds: 33),
-            url: 'https://example.com/track4.mp3',
-            albumTitle: 'Dreams & Visions',
-          ),
-          const VKTrack(
-            id: '5',
-            title: 'Energy Boost',
-            artist: 'Power DJ',
-            duration: Duration(minutes: 3, seconds: 56),
-            url: 'https://example.com/track5.mp3',
-            albumTitle: 'High Energy',
-          ),
-        ],
-      );
+    id: 'mock_vk_playlist',
+    title: 'Лучшие хиты 2024',
+    description: 'Популярные треки этого года',
+    coverImageUrl: 'https://via.placeholder.com/300x300/4CAF50/FFFFFF?text=VK+Playlist',
+    trackCount: 5,
+    ownerId: 'mock_user',
+    ownerName: 'Mock DJ',
+    createdAt: DateTime.now().subtract(const Duration(days: 30)),
+    tracks: [
+      const VKTrack(
+        id: '1',
+        title: 'Summer Vibes',
+        artist: 'Chill Artist',
+        duration: Duration(minutes: 3, seconds: 45),
+        url: 'https://example.com/track1.mp3',
+        albumTitle: 'Summer Collection',
+      ),
+      const VKTrack(
+        id: '2',
+        title: 'Night Drive',
+        artist: 'Electronic DJ',
+        duration: Duration(minutes: 4, seconds: 12),
+        url: 'https://example.com/track2.mp3',
+        albumTitle: 'Night Sessions',
+      ),
+      const VKTrack(
+        id: '3',
+        title: 'Dance Floor',
+        artist: 'Party Master',
+        duration: Duration(minutes: 3, seconds: 28),
+        url: 'https://example.com/track3.mp3',
+        albumTitle: 'Club Hits',
+      ),
+      const VKTrack(
+        id: '4',
+        title: 'Sunset Dreams',
+        artist: 'Ambient Creator',
+        duration: Duration(minutes: 5, seconds: 33),
+        url: 'https://example.com/track4.mp3',
+        albumTitle: 'Dreams & Visions',
+      ),
+      const VKTrack(
+        id: '5',
+        title: 'Energy Boost',
+        artist: 'Power DJ',
+        duration: Duration(minutes: 3, seconds: 56),
+        url: 'https://example.com/track5.mp3',
+        albumTitle: 'High Energy',
+      ),
+    ],
+  );
 
   /// Создать mock медиафайлы для демонстрации
   List<MediaFile> _createMockMediaFiles(String djId, List<VKTrack> tracks) => tracks
@@ -505,11 +479,15 @@ class DJPlaylistService {
     }
 
     try {
-      final playlistsQuery =
-          await _firestore.collection('dj_playlists').where('djId', isEqualTo: djId).get();
+      final playlistsQuery = await _firestore
+          .collection('dj_playlists')
+          .where('djId', isEqualTo: djId)
+          .get();
 
-      final mediaFilesQuery =
-          await _firestore.collection('dj_media_files').where('djId', isEqualTo: djId).get();
+      final mediaFilesQuery = await _firestore
+          .collection('dj_media_files')
+          .where('djId', isEqualTo: djId)
+          .get();
 
       final stats = <String, dynamic>{
         'total_playlists': playlistsQuery.docs.length,
@@ -521,10 +499,7 @@ class DJPlaylistService {
       };
 
       for (final doc in playlistsQuery.docs) {
-        final playlist = DJPlaylist.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
+        final playlist = DJPlaylist.fromMap({'id': doc.id, ...doc.data()});
 
         stats['total_play_count'] = (stats['total_play_count'] as int) + playlist.playCount;
         if (playlist.isPublic) {
@@ -533,10 +508,7 @@ class DJPlaylistService {
       }
 
       for (final doc in mediaFilesQuery.docs) {
-        final mediaFile = MediaFile.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
+        final mediaFile = MediaFile.fromMap({'id': doc.id, ...doc.data()});
 
         stats['total_size'] = (stats['total_size'] as int) + mediaFile.fileSize;
         if (mediaFile.duration != null) {

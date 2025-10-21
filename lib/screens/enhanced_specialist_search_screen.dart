@@ -50,445 +50,378 @@ class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecial
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Поиск специалистов'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: [
-            IconButton(
-              icon: Icon(
-                _showFilters ? Icons.filter_list_off : Icons.filter_list,
-              ),
-              onPressed: () {
-                setState(() {
-                  _showFilters = !_showFilters;
-                });
-              },
-            ),
-          ],
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Все специалисты'),
-              Tab(text: 'Быстрые фильтры'),
-            ],
-          ),
-        ),
-        body: Column(
-          children: [
-            // Поисковая строка
-            _buildSearchBar(),
-
-            // Фильтры
-            if (_showFilters) _buildFiltersSection(),
-
-            // Быстрые фильтры
-            if (_tabController.index == 1) _buildQuickFilters(),
-
-            // Результаты
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildAllSpecialistsTab(),
-                  _buildQuickFiltersTab(),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-
-  /// Построить поисковую строку
-  Widget _buildSearchBar() => Container(
-        padding: const EdgeInsets.all(16),
-        child: TextField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            hintText: 'Поиск по имени, городу, категории...',
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: _searchController.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _searchController.clear();
-                      setState(() {
-                        _searchQuery = '';
-                      });
-                    },
-                  )
-                : null,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            filled: true,
-            fillColor: Colors.grey[100],
-          ),
-          onChanged: (value) {
+    appBar: AppBar(
+      title: const Text('Поиск специалистов'),
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      actions: [
+        IconButton(
+          icon: Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
+          onPressed: () {
             setState(() {
-              _searchQuery = value;
+              _showFilters = !_showFilters;
             });
           },
         ),
-      );
+      ],
+      bottom: TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(text: 'Все специалисты'),
+          Tab(text: 'Быстрые фильтры'),
+        ],
+      ),
+    ),
+    body: Column(
+      children: [
+        // Поисковая строка
+        _buildSearchBar(),
+
+        // Фильтры
+        if (_showFilters) _buildFiltersSection(),
+
+        // Быстрые фильтры
+        if (_tabController.index == 1) _buildQuickFilters(),
+
+        // Результаты
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [_buildAllSpecialistsTab(), _buildQuickFiltersTab()],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  /// Построить поисковую строку
+  Widget _buildSearchBar() => Container(
+    padding: const EdgeInsets.all(16),
+    child: TextField(
+      controller: _searchController,
+      decoration: InputDecoration(
+        hintText: 'Поиск по имени, городу, категории...',
+        prefixIcon: const Icon(Icons.search),
+        suffixIcon: _searchController.text.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _searchController.clear();
+                  setState(() {
+                    _searchQuery = '';
+                  });
+                },
+              )
+            : null,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        filled: true,
+        fillColor: Colors.grey[100],
+      ),
+      onChanged: (value) {
+        setState(() {
+          _searchQuery = value;
+        });
+      },
+    ),
+  );
 
   /// Построить секцию фильтров
   Widget _buildFiltersSection() => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-          border: Border(
-            top: BorderSide(color: Colors.grey[300]!),
-            bottom: BorderSide(color: Colors.grey[300]!),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.grey[50],
+      border: Border(
+        top: BorderSide(color: Colors.grey[300]!),
+        bottom: BorderSide(color: Colors.grey[300]!),
+      ),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Фильтры',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                TextButton(
-                  onPressed: _clearFilters,
-                  child: const Text('Сбросить'),
-                ),
-              ],
+            Text(
+              'Фильтры',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
-
-            // Фильтр по категории
-            _buildCategoryFilter(),
-
-            const SizedBox(height: 16),
-
-            // Фильтр по цене
-            _buildPriceFilter(),
-
-            const SizedBox(height: 16),
-
-            // Фильтр по рейтингу
-            _buildRatingFilter(),
-
-            const SizedBox(height: 16),
-
-            // Фильтр по опыту
-            _buildExperienceFilter(),
-
-            const SizedBox(height: 16),
-
-            // Фильтр по дате
-            _buildDateFilter(),
-
-            const SizedBox(height: 16),
-
-            // Сортировка
-            _buildSortingFilter(),
+            TextButton(onPressed: _clearFilters, child: const Text('Сбросить')),
           ],
         ),
-      );
+        const SizedBox(height: 16),
+
+        // Фильтр по категории
+        _buildCategoryFilter(),
+
+        const SizedBox(height: 16),
+
+        // Фильтр по цене
+        _buildPriceFilter(),
+
+        const SizedBox(height: 16),
+
+        // Фильтр по рейтингу
+        _buildRatingFilter(),
+
+        const SizedBox(height: 16),
+
+        // Фильтр по опыту
+        _buildExperienceFilter(),
+
+        const SizedBox(height: 16),
+
+        // Фильтр по дате
+        _buildDateFilter(),
+
+        const SizedBox(height: 16),
+
+        // Сортировка
+        _buildSortingFilter(),
+      ],
+    ),
+  );
 
   /// Построить фильтр по категории
   Widget _buildCategoryFilter() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Категория',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          DropdownButtonFormField<SpecialistCategory?>(
-            initialValue: _selectedCategory,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-            ),
-            hint: const Text('Все категории'),
-            items: [
-              const DropdownMenuItem<SpecialistCategory?>(
-                child: Text('Все категории'),
-              ),
-              ...SpecialistCategory.values.map(
-                (category) => DropdownMenuItem<SpecialistCategory?>(
-                  value: category,
-                  child: Row(
-                    children: [
-                      Text(category.icon),
-                      const SizedBox(width: 8),
-                      Text(category.displayName),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-            onChanged: (value) {
-              setState(() {
-                _selectedCategory = value;
-              });
-            },
-          ),
-        ],
-      );
-
-  /// Построить фильтр по цене
-  Widget _buildPriceFilter() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Цена за час',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  initialValue: _minPrice > 0 ? _minPrice.toInt().toString() : '',
-                  decoration: const InputDecoration(
-                    labelText: 'От',
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    _minPrice = double.tryParse(value) ?? 0;
-                  },
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextFormField(
-                  initialValue: _maxPrice < 10000 ? _maxPrice.toInt().toString() : '',
-                  decoration: const InputDecoration(
-                    labelText: 'До',
-                    border: OutlineInputBorder(),
-                    isDense: true,
-                  ),
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    _maxPrice = double.tryParse(value) ?? 10000;
-                  },
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-
-  /// Построить фильтр по рейтингу
-  Widget _buildRatingFilter() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Минимальный рейтинг',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: List.generate(
-              5,
-              (index) => IconButton(
-                icon: Icon(
-                  Icons.star,
-                  color: index < _minRating ? Colors.amber : Colors.grey[300],
-                ),
-                onPressed: () {
-                  setState(() {
-                    _minRating = index + 1.0;
-                  });
-                },
-              ),
-            ),
-          ),
-        ],
-      );
-
-  /// Построить фильтр по опыту
-  Widget _buildExperienceFilter() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Уровень опыта',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: ExperienceLevel.values
-                .map(
-                  (level) => FilterChip(
-                    label: Text(level.displayName),
-                    selected: _selectedExperience == level,
-                    onSelected: (selected) {
-                      setState(() {
-                        _selectedExperience = selected ? level : null;
-                      });
-                    },
-                  ),
-                )
-                .toList(),
-          ),
-        ],
-      );
-
-  /// Построить фильтр по дате
-  Widget _buildDateFilter() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Доступная дата',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          InkWell(
-            onTap: _selectDate,
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
-              ),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Категория', style: Theme.of(context).textTheme.titleSmall),
+      const SizedBox(height: 8),
+      DropdownButtonFormField<SpecialistCategory?>(
+        initialValue: _selectedCategory,
+        decoration: const InputDecoration(border: OutlineInputBorder(), isDense: true),
+        hint: const Text('Все категории'),
+        items: [
+          const DropdownMenuItem<SpecialistCategory?>(child: Text('Все категории')),
+          ...SpecialistCategory.values.map(
+            (category) => DropdownMenuItem<SpecialistCategory?>(
+              value: category,
               child: Row(
                 children: [
-                  const Icon(Icons.calendar_today),
+                  Text(category.icon),
                   const SizedBox(width: 8),
-                  Text(
-                    _selectedDate != null
-                        ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
-                        : 'Выберите дату',
-                  ),
-                  if (_selectedDate != null) ...[
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        setState(() {
-                          _selectedDate = null;
-                        });
-                      },
-                    ),
-                  ],
+                  Text(category.displayName),
                 ],
               ),
             ),
           ),
         ],
-      );
+        onChanged: (value) {
+          setState(() {
+            _selectedCategory = value;
+          });
+        },
+      ),
+    ],
+  );
+
+  /// Построить фильтр по цене
+  Widget _buildPriceFilter() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Цена за час', style: Theme.of(context).textTheme.titleSmall),
+      const SizedBox(height: 8),
+      Row(
+        children: [
+          Expanded(
+            child: TextFormField(
+              initialValue: _minPrice > 0 ? _minPrice.toInt().toString() : '',
+              decoration: const InputDecoration(
+                labelText: 'От',
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                _minPrice = double.tryParse(value) ?? 0;
+              },
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: TextFormField(
+              initialValue: _maxPrice < 10000 ? _maxPrice.toInt().toString() : '',
+              decoration: const InputDecoration(
+                labelText: 'До',
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                _maxPrice = double.tryParse(value) ?? 10000;
+              },
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+
+  /// Построить фильтр по рейтингу
+  Widget _buildRatingFilter() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Минимальный рейтинг', style: Theme.of(context).textTheme.titleSmall),
+      const SizedBox(height: 8),
+      Row(
+        children: List.generate(
+          5,
+          (index) => IconButton(
+            icon: Icon(Icons.star, color: index < _minRating ? Colors.amber : Colors.grey[300]),
+            onPressed: () {
+              setState(() {
+                _minRating = index + 1.0;
+              });
+            },
+          ),
+        ),
+      ),
+    ],
+  );
+
+  /// Построить фильтр по опыту
+  Widget _buildExperienceFilter() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Уровень опыта', style: Theme.of(context).textTheme.titleSmall),
+      const SizedBox(height: 8),
+      Wrap(
+        spacing: 8,
+        children: ExperienceLevel.values
+            .map(
+              (level) => FilterChip(
+                label: Text(level.displayName),
+                selected: _selectedExperience == level,
+                onSelected: (selected) {
+                  setState(() {
+                    _selectedExperience = selected ? level : null;
+                  });
+                },
+              ),
+            )
+            .toList(),
+      ),
+    ],
+  );
+
+  /// Построить фильтр по дате
+  Widget _buildDateFilter() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Доступная дата', style: Theme.of(context).textTheme.titleSmall),
+      const SizedBox(height: 8),
+      InkWell(
+        onTap: _selectDate,
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.calendar_today),
+              const SizedBox(width: 8),
+              Text(
+                _selectedDate != null
+                    ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                    : 'Выберите дату',
+              ),
+              if (_selectedDate != null) ...[
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    setState(() {
+                      _selectedDate = null;
+                    });
+                  },
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
 
   /// Построить фильтр сортировки
   Widget _buildSortingFilter() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Сортировка',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          DropdownButtonFormField<SpecialistSorting>(
-            initialValue: _sorting,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              isDense: true,
-            ),
-            items: SpecialistSorting.values
-                .map(
-                  (sorting) => DropdownMenuItem<SpecialistSorting>(
-                    value: sorting,
-                    child: Text(sorting.displayName),
-                  ),
-                )
-                .toList(),
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  _sorting = value;
-                });
-              }
-            },
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Сортировка', style: Theme.of(context).textTheme.titleSmall),
+      const SizedBox(height: 8),
+      DropdownButtonFormField<SpecialistSorting>(
+        initialValue: _sorting,
+        decoration: const InputDecoration(border: OutlineInputBorder(), isDense: true),
+        items: SpecialistSorting.values
+            .map(
+              (sorting) => DropdownMenuItem<SpecialistSorting>(
+                value: sorting,
+                child: Text(sorting.displayName),
+              ),
+            )
+            .toList(),
+        onChanged: (value) {
+          if (value != null) {
+            setState(() {
+              _sorting = value;
+            });
+          }
+        },
+      ),
+    ],
+  );
 
   /// Построить быстрые фильтры
   Widget _buildQuickFilters() => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.blue[50],
-          border: Border(
-            top: BorderSide(color: Colors.blue[200]!),
-            bottom: BorderSide(color: Colors.blue[200]!),
-          ),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.blue[50],
+      border: Border(
+        top: BorderSide(color: Colors.blue[200]!),
+        bottom: BorderSide(color: Colors.blue[200]!),
+      ),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Популярные категории',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
           children: [
-            Text(
-              'Популярные категории',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                _buildQuickFilterChip(
-                  SpecialistCategory.photographer,
-                  '📸 Фотографы',
-                ),
-                _buildQuickFilterChip(
-                  SpecialistCategory.videographer,
-                  '🎥 Видеографы',
-                ),
-                _buildQuickFilterChip(
-                  SpecialistCategory.host,
-                  '🎤 Ведущие',
-                ),
-                _buildQuickFilterChip(
-                  SpecialistCategory.dj,
-                  '🎧 DJ',
-                ),
-                _buildQuickFilterChip(
-                  SpecialistCategory.decorator,
-                  '🎈 Декораторы',
-                ),
-                _buildQuickFilterChip(
-                  SpecialistCategory.musician,
-                  '🎵 Музыканты',
-                ),
-                _buildQuickFilterChip(
-                  SpecialistCategory.animator,
-                  '🎭 Аниматоры',
-                ),
-                _buildQuickFilterChip(
-                  SpecialistCategory.florist,
-                  '🌸 Флористы',
-                ),
-              ],
-            ),
+            _buildQuickFilterChip(SpecialistCategory.photographer, '📸 Фотографы'),
+            _buildQuickFilterChip(SpecialistCategory.videographer, '🎥 Видеографы'),
+            _buildQuickFilterChip(SpecialistCategory.host, '🎤 Ведущие'),
+            _buildQuickFilterChip(SpecialistCategory.dj, '🎧 DJ'),
+            _buildQuickFilterChip(SpecialistCategory.decorator, '🎈 Декораторы'),
+            _buildQuickFilterChip(SpecialistCategory.musician, '🎵 Музыканты'),
+            _buildQuickFilterChip(SpecialistCategory.animator, '🎭 Аниматоры'),
+            _buildQuickFilterChip(SpecialistCategory.florist, '🌸 Флористы'),
           ],
         ),
-      );
+      ],
+    ),
+  );
 
   /// Построить чип быстрого фильтра
   Widget _buildQuickFilterChip(SpecialistCategory category, String label) => FilterChip(
-        label: Text(label),
-        selected: _quickFilters.contains(category),
-        onSelected: (selected) {
-          setState(() {
-            if (selected) {
-              _quickFilters.add(category);
-            } else {
-              _quickFilters.remove(category);
-            }
-          });
-        },
-      );
+    label: Text(label),
+    selected: _quickFilters.contains(category),
+    onSelected: (selected) {
+      setState(() {
+        if (selected) {
+          _quickFilters.add(category);
+        } else {
+          _quickFilters.remove(category);
+        }
+      });
+    },
+  );
 
   /// Построить вкладку всех специалистов
   Widget _buildAllSpecialistsTab() {
@@ -546,11 +479,7 @@ class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecial
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text('Ошибка загрузки: $error'),
             const SizedBox(height: 16),
@@ -573,23 +502,14 @@ class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecial
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.filter_list,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.filter_list, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               'Выберите категории для фильтрации',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
-            Text(
-              'Используйте быстрые фильтры выше',
-              style: TextStyle(color: Colors.grey[500]),
-            ),
+            Text('Используйте быстрые фильтры выше', style: TextStyle(color: Colors.grey[500])),
           ],
         ),
       );
@@ -599,8 +519,9 @@ class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecial
 
     return specialistsAsync.when(
       data: (specialists) {
-        final filteredSpecialists =
-            specialists.where((specialist) => _quickFilters.contains(specialist.category)).toList();
+        final filteredSpecialists = specialists
+            .where((specialist) => _quickFilters.contains(specialist.category))
+            .toList();
 
         if (filteredSpecialists.isEmpty) {
           return _buildEmptyState();
@@ -627,9 +548,7 @@ class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecial
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Text('Ошибка загрузки: $error'),
-      ),
+      error: (error, stack) => Center(child: Text('Ошибка загрузки: $error')),
     );
   }
 
@@ -640,17 +559,11 @@ class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecial
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               'Нет специалистов по запросу',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
@@ -658,10 +571,7 @@ class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecial
               style: TextStyle(color: Colors.grey[500]),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _clearFilters,
-              child: const Text('Очистить фильтры'),
-            ),
+            ElevatedButton(onPressed: _clearFilters, child: const Text('Очистить фильтры')),
           ],
         ),
       );
@@ -671,17 +581,11 @@ class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecial
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.people,
-            size: 64,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.people, size: 64, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
             'Начните поиск специалистов',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(
@@ -812,13 +716,7 @@ class _EnhancedSpecialistSearchScreenState extends ConsumerState<EnhancedSpecial
 }
 
 /// Типы сортировки специалистов
-enum SpecialistSorting {
-  rating,
-  priceAsc,
-  priceDesc,
-  experience,
-  reviews,
-}
+enum SpecialistSorting { rating, priceAsc, priceDesc, experience, reviews }
 
 extension SpecialistSortingExtension on SpecialistSorting {
   String get displayName {

@@ -141,8 +141,9 @@ class Specialist extends Equatable {
       hourlyRate: data['hourlyRate']?.toDouble(),
       price: data['price']?.toDouble(),
       location: data['location'],
-      subcategories:
-          data['subcategories'] != null ? List<String>.from(data['subcategories']) : null,
+      subcategories: data['subcategories'] != null
+          ? List<String>.from(data['subcategories'])
+          : null,
       minBookingHours: data['minBookingHours'],
       maxBookingHours: data['maxBookingHours'],
       serviceAreas: data['serviceAreas'] != null ? List<String>.from(data['serviceAreas']) : null,
@@ -311,8 +312,9 @@ class Specialist extends Equatable {
       hourlyRate: data['hourlyRate']?.toDouble(),
       price: data['price']?.toDouble(),
       location: data['location'],
-      subcategories:
-          data['subcategories'] != null ? List<String>.from(data['subcategories']) : null,
+      subcategories: data['subcategories'] != null
+          ? List<String>.from(data['subcategories'])
+          : null,
       minBookingHours: data['minBookingHours'],
       maxBookingHours: data['maxBookingHours'],
       serviceAreas: data['serviceAreas'] != null ? List<String>.from(data['serviceAreas']) : null,
@@ -320,8 +322,9 @@ class Specialist extends Equatable {
       servicesWithPrices: data['servicesWithPrices'] != null
           ? Map<String, double>.from(data['servicesWithPrices'])
           : null,
-      availableDates:
-          data['availableDates'] != null ? List<DateTime>.from(data['availableDates']) : null,
+      availableDates: data['availableDates'] != null
+          ? List<DateTime>.from(data['availableDates'])
+          : null,
       busyDates: data['busyDates'] != null ? List<DateTime>.from(data['busyDates']) : null,
       displayName: data['displayName'] ?? data['name'],
       imageUrlValue: data['imageUrlValue'] ?? data['imageUrl'] ?? data['avatarUrl'],
@@ -451,67 +454,71 @@ class Specialist extends Equatable {
   /// Check if specialist is available on specific date
   bool isAvailableOnDate(DateTime date) {
     if (availableDates == null) return true;
-    return availableDates!.any((availableDate) =>
-        availableDate.year == date.year &&
-        availableDate.month == date.month &&
-        availableDate.day == date.day);
+    return availableDates!.any(
+      (availableDate) =>
+          availableDate.year == date.year &&
+          availableDate.month == date.month &&
+          availableDate.day == date.day,
+    );
   }
 
   /// Check if specialist is busy on specific date
   bool isDateBusy(DateTime date) {
     if (busyDates == null) return false;
-    return busyDates!.any((busyDate) =>
-        busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day);
+    return busyDates!.any(
+      (busyDate) =>
+          busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day,
+    );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        name,
-        specialization,
-        city,
-        rating,
-        pricePerHour,
-        avatarUrl,
-        imageUrl,
-        portfolio,
-        description,
-        bio,
-        services,
-        isAvailable,
-        isVerified,
-        completedEvents,
-        reviewCount,
-        createdAt,
-        updatedAt,
-        contactInfo,
-        contacts,
-        languages,
-        experience,
-        category,
-        experienceLevel,
-        yearsOfExperience,
-        hourlyRate,
-        price,
-        location,
-        subcategories,
-        minBookingHours,
-        maxBookingHours,
-        serviceAreas,
-        equipment,
-        servicesWithPrices,
-        availableDates,
-        busyDates,
-        displayName,
-        imageUrlValue,
-        categoryDisplayName,
-        priceRangeString,
-        totalReviews,
-        totalBookings,
-        avgRating,
-        categories,
-      ];
+    id,
+    userId,
+    name,
+    specialization,
+    city,
+    rating,
+    pricePerHour,
+    avatarUrl,
+    imageUrl,
+    portfolio,
+    description,
+    bio,
+    services,
+    isAvailable,
+    isVerified,
+    completedEvents,
+    reviewCount,
+    createdAt,
+    updatedAt,
+    contactInfo,
+    contacts,
+    languages,
+    experience,
+    category,
+    experienceLevel,
+    yearsOfExperience,
+    hourlyRate,
+    price,
+    location,
+    subcategories,
+    minBookingHours,
+    maxBookingHours,
+    serviceAreas,
+    equipment,
+    servicesWithPrices,
+    availableDates,
+    busyDates,
+    displayName,
+    imageUrlValue,
+    categoryDisplayName,
+    priceRangeString,
+    totalReviews,
+    totalBookings,
+    avgRating,
+    categories,
+  ];
 
   /// Get formatted price per hour
   String get formattedPricePerHour => '$pricePerHour ₽/час';

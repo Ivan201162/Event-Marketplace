@@ -58,9 +58,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           // Заголовок
           Text(
             isEditing ? 'Редактировать отзыв' : 'Оставить отзыв',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 8),
@@ -80,9 +78,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
               children: [
                 Text(
                   'Ваша оценка',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 16),
                 RatingSelectorWidget(
@@ -112,9 +108,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           // Комментарий
           Text(
             'Комментарий',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
           TextFormField(
@@ -122,9 +116,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
             maxLines: 4,
             decoration: InputDecoration(
               hintText: 'Расскажите о вашем опыте работы с этим специалистом...',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(color: theme.primaryColor),
@@ -196,10 +188,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
 
     if (_rating == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Пожалуйста, выберите оценку'),
-          backgroundColor: Colors.red,
-        ),
+        const SnackBar(content: Text('Пожалуйста, выберите оценку'), backgroundColor: Colors.red),
       );
       return;
     }
@@ -250,21 +239,16 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              widget.initialReview != null ? 'Отзыв обновлен' : 'Отзыв добавлен',
-            ),
+            content: Text(widget.initialReview != null ? 'Отзыв обновлен' : 'Отзыв добавлен'),
             backgroundColor: Colors.green,
           ),
         );
       }
     } on Exception catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {
@@ -293,17 +277,17 @@ class ReviewFormDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Dialog(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 500),
-          padding: const EdgeInsets.all(24),
-          child: SingleChildScrollView(
-            child: ReviewForm(
-              specialistId: specialistId,
-              specialistName: specialistName,
-              onReviewSubmitted: onReviewSubmitted,
-              initialReview: initialReview,
-            ),
-          ),
+    child: Container(
+      constraints: const BoxConstraints(maxWidth: 500),
+      padding: const EdgeInsets.all(24),
+      child: SingleChildScrollView(
+        child: ReviewForm(
+          specialistId: specialistId,
+          specialistName: specialistName,
+          onReviewSubmitted: onReviewSubmitted,
+          initialReview: initialReview,
         ),
-      );
+      ),
+    ),
+  );
 }

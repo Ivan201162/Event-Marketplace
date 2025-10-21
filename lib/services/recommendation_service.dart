@@ -37,10 +37,7 @@ class RecommendationService {
   }
 
   /// Получить активность пользователя
-  Future<List<UserActivity>> getUserActivity(
-    String userId, {
-    int limit = 100,
-  }) async {
+  Future<List<UserActivity>> getUserActivity(String userId, {int limit = 100}) async {
     try {
       final querySnapshot = await _firestore
           .collection(_activityCollection)
@@ -180,9 +177,7 @@ class RecommendationService {
     final total = categoryCount.values.fold(0, (sum, count) => sum + count);
     if (total == 0) return {};
 
-    return categoryCount.map(
-      (category, count) => MapEntry(category, count / total),
-    );
+    return categoryCount.map((category, count) => MapEntry(category, count / total));
   }
 
   /// Анализ городов в активности
@@ -199,9 +194,7 @@ class RecommendationService {
     final total = cityCount.values.fold(0, (sum, count) => sum + count);
     if (total == 0) return {};
 
-    return cityCount.map(
-      (city, count) => MapEntry(city, count / total),
-    );
+    return cityCount.map((city, count) => MapEntry(city, count / total));
   }
 
   /// Анализ цен в активности
@@ -260,10 +253,7 @@ class RecommendationService {
   }
 
   /// Сохранить рекомендации
-  Future<void> _saveRecommendations(
-    String userId,
-    List<Recommendation> recommendations,
-  ) async {
+  Future<void> _saveRecommendations(String userId, List<Recommendation> recommendations) async {
     try {
       // Удаляем старые рекомендации
       final oldRecommendations = await _firestore
@@ -333,12 +323,7 @@ class RecommendationService {
       final activities = await getUserActivity(userId);
 
       if (activities.isEmpty) {
-        return {
-          'totalActivities': 0,
-          'categories': {},
-          'cities': {},
-          'activityTypes': {},
-        };
+        return {'totalActivities': 0, 'categories': {}, 'cities': {}, 'activityTypes': {}};
       }
 
       final categoryStats = <String, int>{};

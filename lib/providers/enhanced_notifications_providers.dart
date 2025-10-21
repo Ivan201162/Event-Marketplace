@@ -9,36 +9,46 @@ final enhancedNotificationsServiceProvider = Provider<EnhancedNotificationsServi
 );
 
 /// Провайдер уведомлений пользователя
-final notificationsProvider =
-    FutureProvider.family<List<EnhancedNotification>, String>((ref, userId) async {
+final notificationsProvider = FutureProvider.family<List<EnhancedNotification>, String>((
+  ref,
+  userId,
+) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
   return service.getNotifications(userId: userId);
 });
 
 /// Провайдер непрочитанных уведомлений
-final unreadNotificationsProvider =
-    FutureProvider.family<List<EnhancedNotification>, String>((ref, userId) async {
+final unreadNotificationsProvider = FutureProvider.family<List<EnhancedNotification>, String>((
+  ref,
+  userId,
+) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
   return service.getUnreadNotifications(userId: userId);
 });
 
 /// Провайдер архивированных уведомлений
-final archivedNotificationsProvider =
-    FutureProvider.family<List<EnhancedNotification>, String>((ref, userId) async {
+final archivedNotificationsProvider = FutureProvider.family<List<EnhancedNotification>, String>((
+  ref,
+  userId,
+) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
   return service.getNotifications(userId: userId, includeArchived: true);
 });
 
 /// Провайдер уведомления по ID
-final notificationProvider =
-    FutureProvider.family<EnhancedNotification?, String>((ref, notificationId) async {
+final notificationProvider = FutureProvider.family<EnhancedNotification?, String>((
+  ref,
+  notificationId,
+) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
   return service.getNotificationById(notificationId);
 });
 
 /// Провайдер статистики уведомлений
-final notificationStatsProvider =
-    FutureProvider.family<NotificationStats, String>((ref, userId) async {
+final notificationStatsProvider = FutureProvider.family<NotificationStats, String>((
+  ref,
+  userId,
+) async {
   final service = ref.read(enhancedNotificationsServiceProvider);
   return service.getNotificationStats(userId);
 });
@@ -46,26 +56,18 @@ final notificationStatsProvider =
 /// Провайдер состояния создания уведомления (мигрирован с StateNotifierProvider)
 final createNotificationStateProvider =
     NotifierProvider<CreateNotificationStateNotifier, CreateNotificationState>(
-  () => CreateNotificationStateNotifier(),
-);
+      () => CreateNotificationStateNotifier(),
+    );
 
 /// Состояние создания уведомления
 class CreateNotificationState {
-  const CreateNotificationState({
-    this.isLoading = false,
-    this.error,
-    this.success = false,
-  });
+  const CreateNotificationState({this.isLoading = false, this.error, this.success = false});
 
   final bool isLoading;
   final String? error;
   final bool success;
 
-  CreateNotificationState copyWith({
-    bool? isLoading,
-    String? error,
-    bool? success,
-  }) =>
+  CreateNotificationState copyWith({bool? isLoading, String? error, bool? success}) =>
       CreateNotificationState(
         isLoading: isLoading ?? this.isLoading,
         error: error ?? this.error,
@@ -118,10 +120,7 @@ class CreateNotificationStateNotifier extends Notifier<CreateNotificationState> 
 
       state = state.copyWith(isLoading: false, success: true);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -133,26 +132,18 @@ class CreateNotificationStateNotifier extends Notifier<CreateNotificationState> 
 /// Провайдер состояния уведомлений (мигрирован с StateNotifierProvider)
 final notificationStateProvider =
     NotifierProvider.family<NotificationStateNotifier, NotificationState, String>(
-  (ref, notificationId) => NotificationStateNotifier(notificationId),
-);
+      (ref, notificationId) => NotificationStateNotifier(notificationId),
+    );
 
 /// Состояние уведомления
 class NotificationState {
-  const NotificationState({
-    this.isRead = false,
-    this.isArchived = false,
-    this.isLoading = false,
-  });
+  const NotificationState({this.isRead = false, this.isArchived = false, this.isLoading = false});
 
   final bool isRead;
   final bool isArchived;
   final bool isLoading;
 
-  NotificationState copyWith({
-    bool? isRead,
-    bool? isArchived,
-    bool? isLoading,
-  }) =>
+  NotificationState copyWith({bool? isRead, bool? isArchived, bool? isLoading}) =>
       NotificationState(
         isRead: isRead ?? this.isRead,
         isArchived: isArchived ?? this.isArchived,
@@ -177,10 +168,7 @@ class NotificationStateNotifier extends Notifier<NotificationState> {
 
     try {
       await _service.markAsRead(_notificationId);
-      state = state.copyWith(
-        isRead: true,
-        isLoading: false,
-      );
+      state = state.copyWith(isRead: true, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
       // TODO: Показать ошибку
@@ -192,10 +180,7 @@ class NotificationStateNotifier extends Notifier<NotificationState> {
 
     try {
       await _service.archiveNotification(_notificationId);
-      state = state.copyWith(
-        isArchived: true,
-        isLoading: false,
-      );
+      state = state.copyWith(isArchived: true, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false);
       // TODO: Показать ошибку
@@ -215,18 +200,15 @@ class NotificationStateNotifier extends Notifier<NotificationState> {
   }
 
   void setInitialState(bool isRead, bool isArchived) {
-    state = state.copyWith(
-      isRead: isRead,
-      isArchived: isArchived,
-    );
+    state = state.copyWith(isRead: isRead, isArchived: isArchived);
   }
 }
 
 /// Провайдер настроек уведомлений (мигрирован с StateNotifierProvider)
 final notificationSettingsProvider =
     NotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
-  () => NotificationSettingsNotifier(),
-);
+      () => NotificationSettingsNotifier(),
+    );
 
 /// Настройки уведомлений
 class NotificationSettings {
@@ -256,16 +238,15 @@ class NotificationSettings {
     Map<NotificationType, bool>? types,
     NotificationFrequency? frequency,
     QuietHours? quietHours,
-  }) =>
-      NotificationSettings(
-        enabled: enabled ?? this.enabled,
-        sound: sound ?? this.sound,
-        vibration: vibration ?? this.vibration,
-        badge: badge ?? this.badge,
-        types: types ?? this.types,
-        frequency: frequency ?? this.frequency,
-        quietHours: quietHours ?? this.quietHours,
-      );
+  }) => NotificationSettings(
+    enabled: enabled ?? this.enabled,
+    sound: sound ?? this.sound,
+    vibration: vibration ?? this.vibration,
+    badge: badge ?? this.badge,
+    types: types ?? this.types,
+    frequency: frequency ?? this.frequency,
+    quietHours: quietHours ?? this.quietHours,
+  );
 }
 
 /// Частота уведомлений
@@ -324,14 +305,13 @@ class QuietHours {
     int? startMinute,
     int? endHour,
     int? endMinute,
-  }) =>
-      QuietHours(
-        enabled: enabled ?? this.enabled,
-        startHour: startHour ?? this.startHour,
-        startMinute: startMinute ?? this.startMinute,
-        endHour: endHour ?? this.endHour,
-        endMinute: endMinute ?? this.endMinute,
-      );
+  }) => QuietHours(
+    enabled: enabled ?? this.enabled,
+    startHour: startHour ?? this.startHour,
+    startMinute: startMinute ?? this.startMinute,
+    endHour: endHour ?? this.endHour,
+    endMinute: endMinute ?? this.endMinute,
+  );
 }
 
 /// Нотификатор настроек уведомлений (мигрирован с StateNotifier)

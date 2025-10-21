@@ -8,10 +8,7 @@ import '../../widgets/analytics/analytics_card.dart';
 import '../../widgets/analytics/revenue_chart.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
-  const AnalyticsScreen({
-    super.key,
-    required this.userId,
-  });
+  const AnalyticsScreen({super.key, required this.userId});
   final String userId;
 
   @override
@@ -32,189 +29,160 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Аналитика'),
-          backgroundColor: Colors.indigo,
-          foregroundColor: Colors.white,
-          actions: [
-            PopupMenuButton<String>(
-              onSelected: (value) {
-                setState(() {
-                  _selectedPeriod = value;
-                });
-                _loadAnalytics();
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'week',
-                  child: Text('Неделя'),
-                ),
-                const PopupMenuItem(
-                  value: 'month',
-                  child: Text('Месяц'),
-                ),
-                const PopupMenuItem(
-                  value: 'year',
-                  child: Text('Год'),
-                ),
-              ],
-            ),
+    appBar: AppBar(
+      title: const Text('Аналитика'),
+      backgroundColor: Colors.indigo,
+      foregroundColor: Colors.white,
+      actions: [
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            setState(() {
+              _selectedPeriod = value;
+            });
+            _loadAnalytics();
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem(value: 'week', child: Text('Неделя')),
+            const PopupMenuItem(value: 'month', child: Text('Месяц')),
+            const PopupMenuItem(value: 'year', child: Text('Год')),
           ],
         ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Period Selector
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.indigo.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.calendar_today,
-                            color: Colors.indigo,
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            'Период: ${_getPeriodText(_selectedPeriod)}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.indigo,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Revenue Overview
-                    const Text(
-                      'Общая статистика',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    Row(
-                      children: [
-                        Expanded(
-                          child: AnalyticsCard(
-                            title: 'Общий доход',
-                            value: '${_getTotalRevenue().toInt()} ₽',
-                            icon: Icons.attach_money,
-                            color: Colors.green,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: AnalyticsCard(
-                            title: 'Транзакций',
-                            value: '${_transactions.length}',
-                            icon: Icons.receipt,
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    Row(
-                      children: [
-                        Expanded(
-                          child: AnalyticsCard(
-                            title: 'Донаты',
-                            value: '${_getDonationsCount()}',
-                            icon: Icons.favorite,
-                            color: Colors.pink,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: AnalyticsCard(
-                            title: 'Подписки',
-                            value: '${_getSubscriptionsCount()}',
-                            icon: Icons.diamond,
-                            color: Colors.purple,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Revenue Chart
-                    const Text(
-                      'Динамика доходов',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    RevenueChart(
-                      transactions: _transactions,
-                      period: _selectedPeriod,
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Transaction Types
-                    const Text(
-                      'Типы транзакций',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    _buildTransactionTypeChart(),
-
-                    const SizedBox(height: 24),
-
-                    // Recent Transactions
-                    const Text(
-                      'Последние транзакции',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    ..._transactions.take(5).map(
-                          _buildTransactionItem,
-                        ),
-
-                    if (_transactions.length > 5) ...[
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            // Navigate to full transactions list
-                          },
-                          child: const Text('Показать все транзакции'),
+      ],
+    ),
+    body: _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Period Selector
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.indigo.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.calendar_today, color: Colors.indigo),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Период: ${_getPeriodText(_selectedPeriod)}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.indigo,
                         ),
                       ),
                     ],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Revenue Overview
+                const Text(
+                  'Общая статистика',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Общий доход',
+                        value: '${_getTotalRevenue().toInt()} ₽',
+                        icon: Icons.attach_money,
+                        color: Colors.green,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Транзакций',
+                        value: '${_transactions.length}',
+                        icon: Icons.receipt,
+                        color: Colors.blue,
+                      ),
+                    ),
                   ],
                 ),
-              ),
-      );
+
+                const SizedBox(height: 12),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Донаты',
+                        value: '${_getDonationsCount()}',
+                        icon: Icons.favorite,
+                        color: Colors.pink,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: AnalyticsCard(
+                        title: 'Подписки',
+                        value: '${_getSubscriptionsCount()}',
+                        icon: Icons.diamond,
+                        color: Colors.purple,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+
+                // Revenue Chart
+                const Text(
+                  'Динамика доходов',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+
+                RevenueChart(transactions: _transactions, period: _selectedPeriod),
+
+                const SizedBox(height: 24),
+
+                // Transaction Types
+                const Text(
+                  'Типы транзакций',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+
+                _buildTransactionTypeChart(),
+
+                const SizedBox(height: 24),
+
+                // Recent Transactions
+                const Text(
+                  'Последние транзакции',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+
+                ..._transactions.take(5).map(_buildTransactionItem),
+
+                if (_transactions.length > 5) ...[
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        // Navigate to full transactions list
+                      },
+                      child: const Text('Показать все транзакции'),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+  );
 
   Widget _buildTransactionTypeChart() {
     final typeStats = _getTransactionTypeStats();
@@ -257,66 +225,60 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   }
 
   Widget _buildTransactionItem(Transaction transaction) => Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withValues(alpha: 0.1),
+          blurRadius: 4,
+          offset: const Offset(0, 2),
         ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: _getTransactionTypeColor(transaction.type).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                _getTransactionTypeIcon(transaction.type),
-                color: _getTransactionTypeColor(transaction.type),
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    transaction.description,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    _formatDate(transaction.timestamp),
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              '${transaction.amount.toInt()} ₽',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: transaction.status == TransactionStatus.success ? Colors.green : Colors.red,
-              ),
-            ),
-          ],
+      ],
+    ),
+    child: Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: _getTransactionTypeColor(transaction.type).withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            _getTransactionTypeIcon(transaction.type),
+            color: _getTransactionTypeColor(transaction.type),
+            size: 20,
+          ),
         ),
-      );
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                transaction.description,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                _formatDate(transaction.timestamp),
+                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              ),
+            ],
+          ),
+        ),
+        Text(
+          '${transaction.amount.toInt()} ₽',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: transaction.status == TransactionStatus.success ? Colors.green : Colors.red,
+          ),
+        ),
+      ],
+    ),
+  );
 
   Future<void> _loadAnalytics() async {
     setState(() {
@@ -341,15 +303,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       .fold(0, (sum, transaction) => sum + transaction.amount);
 
   int _getDonationsCount() => _transactions
-      .where(
-        (t) => t.type == TransactionType.donation && t.status == TransactionStatus.success,
-      )
+      .where((t) => t.type == TransactionType.donation && t.status == TransactionStatus.success)
       .length;
 
   int _getSubscriptionsCount() => _transactions
-      .where(
-        (t) => t.type == TransactionType.subscription && t.status == TransactionStatus.success,
-      )
+      .where((t) => t.type == TransactionType.subscription && t.status == TransactionStatus.success)
       .length;
 
   Map<TransactionType, double> _getTransactionTypeStats() {

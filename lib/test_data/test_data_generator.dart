@@ -641,25 +641,13 @@ class TestDataGenerator {
   List<String> _generateSubcategories(SpecialistCategory category) {
     switch (category) {
       case SpecialistCategory.photographer:
-        return [
-          'Свадебная фотография',
-          'Портретная съемка',
-          'Событийная фотография',
-        ];
+        return ['Свадебная фотография', 'Портретная съемка', 'Событийная фотография'];
       case SpecialistCategory.videographer:
         return ['Свадебное видео', 'Корпоративные ролики', 'Музыкальные клипы'];
       case SpecialistCategory.dj:
-        return [
-          'Свадебный диджей',
-          'Корпоративные мероприятия',
-          'Клубная музыка',
-        ];
+        return ['Свадебный диджей', 'Корпоративные мероприятия', 'Клубная музыка'];
       case SpecialistCategory.host:
-        return [
-          'Свадебный ведущий',
-          'Корпоративные мероприятия',
-          'Детские праздники',
-        ];
+        return ['Свадебный ведущий', 'Корпоративные мероприятия', 'Детские праздники'];
       case SpecialistCategory.florist:
         return ['Свадебная флористика', 'Букеты', 'Декор мероприятий'];
       default:
@@ -704,12 +692,7 @@ class TestDataGenerator {
   List<String> _generateEquipment(SpecialistCategory category) {
     switch (category) {
       case SpecialistCategory.photographer:
-        return [
-          'Профессиональный фотоаппарат',
-          'Штатив',
-          'Освещение',
-          'Объективы',
-        ];
+        return ['Профессиональный фотоаппарат', 'Штатив', 'Освещение', 'Объективы'];
       case SpecialistCategory.videographer:
         return ['Видеокамера 4K', 'Стабилизатор', 'Микрофоны', 'Освещение'];
       case SpecialistCategory.dj:
@@ -728,11 +711,7 @@ class TestDataGenerator {
       case SpecialistCategory.videographer:
         return ['Съемка мероприятий', 'Монтаж видео', 'Цветокоррекция'];
       case SpecialistCategory.dj:
-        return [
-          'Музыкальное сопровождение',
-          'Световое шоу',
-          'Ведение программы',
-        ];
+        return ['Музыкальное сопровождение', 'Световое шоу', 'Ведение программы'];
       case SpecialistCategory.host:
         return ['Ведение мероприятий', 'Конкурсы', 'Интерактивы'];
       default:
@@ -743,14 +722,14 @@ class TestDataGenerator {
   List<String> _generatePortfolioImages() => List.generate(5, (index) => _generatePhotoUrl());
 
   Map<String, String> _generateWorkingHours() => {
-        'monday': '09:00-18:00',
-        'tuesday': '09:00-18:00',
-        'wednesday': '09:00-18:00',
-        'thursday': '09:00-18:00',
-        'friday': '09:00-18:00',
-        'saturday': '10:00-16:00',
-        'sunday': 'выходной',
-      };
+    'monday': '09:00-18:00',
+    'tuesday': '09:00-18:00',
+    'wednesday': '09:00-18:00',
+    'thursday': '09:00-18:00',
+    'friday': '09:00-18:00',
+    'saturday': '10:00-16:00',
+    'sunday': 'выходной',
+  };
 
   String _generatePhoneNumber() =>
       '+7${_random.nextInt(900) + 100}${_random.nextInt(900) + 100}${_random.nextInt(10000).toString().padLeft(4, '0')}';
@@ -786,11 +765,7 @@ class TestDataGenerator {
   }
 
   BookingStatus _generateBookingStatus() {
-    final statuses = [
-      BookingStatus.pending,
-      BookingStatus.confirmed,
-      BookingStatus.completed,
-    ];
+    final statuses = [BookingStatus.pending, BookingStatus.confirmed, BookingStatus.completed];
     final weights = [0.2, 0.5, 0.3]; // Веса для статусов
 
     final random = _random.nextDouble();

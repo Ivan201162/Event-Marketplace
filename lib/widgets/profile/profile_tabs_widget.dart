@@ -4,11 +4,7 @@ import '../../models/user.dart';
 
 /// Виджет вкладок профиля
 class ProfileTabsWidget extends StatefulWidget {
-  const ProfileTabsWidget({
-    super.key,
-    required this.user,
-    required this.isCurrentUser,
-  });
+  const ProfileTabsWidget({super.key, required this.user, required this.isCurrentUser});
 
   final AppUser user;
   final bool isCurrentUser;
@@ -23,10 +19,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: widget.user.isSpecialist ? 4 : 3,
-      vsync: this,
-    );
+    _tabController = TabController(length: widget.user.isSpecialist ? 4 : 3, vsync: this);
   }
 
   @override
@@ -60,10 +53,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
             indicatorColor: theme.primaryColor,
             labelColor: theme.primaryColor,
             unselectedLabelColor: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
-            labelStyle: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-            ),
+            labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             tabs: widget.user.isSpecialist
                 ? const [
                     Tab(text: 'Портфолио'),
@@ -71,11 +61,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
                     Tab(text: 'Отзывы'),
                     Tab(text: 'О себе'),
                   ]
-                : const [
-                    Tab(text: 'Заказы'),
-                    Tab(text: 'Избранное'),
-                    Tab(text: 'О себе'),
-                  ],
+                : const [Tab(text: 'Заказы'), Tab(text: 'Избранное'), Tab(text: 'О себе')],
           ),
 
           // Содержимое табов
@@ -90,11 +76,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
                       _buildReviewsTab(),
                       _buildAboutTab(),
                     ]
-                  : [
-                      _buildOrdersTab(),
-                      _buildFavoritesTab(),
-                      _buildAboutTab(),
-                    ],
+                  : [_buildOrdersTab(), _buildFavoritesTab(), _buildAboutTab()],
             ),
           ),
         ],
@@ -103,69 +85,69 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
   }
 
   Widget _buildPortfolioTab() => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('Портфолио пусто'),
-            SizedBox(height: 8),
-            Text('Добавьте свои работы', style: TextStyle(color: Colors.grey)),
-          ],
-        ),
-      );
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey),
+        SizedBox(height: 16),
+        Text('Портфолио пусто'),
+        SizedBox(height: 8),
+        Text('Добавьте свои работы', style: TextStyle(color: Colors.grey)),
+      ],
+    ),
+  );
 
   Widget _buildServicesTab() => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.work_outline, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('Услуги не добавлены'),
-            SizedBox(height: 8),
-            Text('Добавьте свои услуги', style: TextStyle(color: Colors.grey)),
-          ],
-        ),
-      );
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.work_outline, size: 64, color: Colors.grey),
+        SizedBox(height: 16),
+        Text('Услуги не добавлены'),
+        SizedBox(height: 8),
+        Text('Добавьте свои услуги', style: TextStyle(color: Colors.grey)),
+      ],
+    ),
+  );
 
   Widget _buildReviewsTab() => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('Отзывы отсутствуют'),
-            SizedBox(height: 8),
-            Text('Пока нет отзывов', style: TextStyle(color: Colors.grey)),
-          ],
-        ),
-      );
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey),
+        SizedBox(height: 16),
+        Text('Отзывы отсутствуют'),
+        SizedBox(height: 8),
+        Text('Пока нет отзывов', style: TextStyle(color: Colors.grey)),
+      ],
+    ),
+  );
 
   Widget _buildOrdersTab() => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.shopping_bag_outlined, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('Заказы отсутствуют'),
-            SizedBox(height: 8),
-            Text('Пока нет заказов', style: TextStyle(color: Colors.grey)),
-          ],
-        ),
-      );
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.shopping_bag_outlined, size: 64, color: Colors.grey),
+        SizedBox(height: 16),
+        Text('Заказы отсутствуют'),
+        SizedBox(height: 8),
+        Text('Пока нет заказов', style: TextStyle(color: Colors.grey)),
+      ],
+    ),
+  );
 
   Widget _buildFavoritesTab() => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.favorite_outline, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('Избранное пусто'),
-            SizedBox(height: 8),
-            Text('Добавьте специалистов в избранное', style: TextStyle(color: Colors.grey)),
-          ],
-        ),
-      );
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.favorite_outline, size: 64, color: Colors.grey),
+        SizedBox(height: 16),
+        Text('Избранное пусто'),
+        SizedBox(height: 8),
+        Text('Добавьте специалистов в избранное', style: TextStyle(color: Colors.grey)),
+      ],
+    ),
+  );
 
   Widget _buildAboutTab() {
     final theme = Theme.of(context);
@@ -178,22 +160,15 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
           if (widget.user.bio != null && widget.user.bio!.isNotEmpty) ...[
             Text(
               'О себе',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text(
-              widget.user.bio!,
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text(widget.user.bio!, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 16),
           ],
           Text(
             'Информация',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           _buildInfoRow('Роль', widget.user.roleDisplayName),
@@ -222,12 +197,7 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
               ),
             ),
           ),
-          Expanded(
-            child: Text(
-              value,
-              style: theme.textTheme.bodyMedium,
-            ),
-          ),
+          Expanded(child: Text(value, style: theme.textTheme.bodyMedium)),
         ],
       ),
     );

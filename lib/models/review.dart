@@ -248,38 +248,38 @@ class Review extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        specialistId,
-        clientId,
-        clientName,
-        specialistName,
-        rating,
-        comment,
-        createdAt,
-        updatedAt,
-        images,
-        likedBy,
-        likesCount,
-        title,
-        hasComment,
-        tags,
-        isVerified,
-        isPublic,
-        serviceTags,
-        photos,
-        responses,
-        text,
-        formattedDate,
-        clientAvatarUrl,
-        date,
-        customerId,
-        customerName,
-        isEdited,
-        editedAt,
-        bookingId,
-        canDelete,
-        ratingColor,
-      ];
+    id,
+    specialistId,
+    clientId,
+    clientName,
+    specialistName,
+    rating,
+    comment,
+    createdAt,
+    updatedAt,
+    images,
+    likedBy,
+    likesCount,
+    title,
+    hasComment,
+    tags,
+    isVerified,
+    isPublic,
+    serviceTags,
+    photos,
+    responses,
+    text,
+    formattedDate,
+    clientAvatarUrl,
+    date,
+    customerId,
+    customerName,
+    isEdited,
+    editedAt,
+    bookingId,
+    canDelete,
+    ratingColor,
+  ];
 
   @override
   String toString() {
@@ -316,13 +316,13 @@ class ReviewStats extends Equatable {
 
   @override
   List<Object?> get props => [
-        averageRating,
-        totalReviews,
-        ratingDistribution,
-        verifiedReviews,
-        recentReviews,
-        topTags,
-      ];
+    averageRating,
+    totalReviews,
+    ratingDistribution,
+    verifiedReviews,
+    recentReviews,
+    topTags,
+  ];
 
   @override
   String toString() {
@@ -359,13 +359,13 @@ class SpecialistReviewStats extends Equatable {
 
   @override
   List<Object?> get props => [
-        specialistId,
-        averageRating,
-        totalReviews,
-        ratingDistribution,
-        topTags,
-        serviceRatings,
-      ];
+    specialistId,
+    averageRating,
+    totalReviews,
+    ratingDistribution,
+    topTags,
+    serviceRatings,
+  ];
 
   @override
   String toString() {

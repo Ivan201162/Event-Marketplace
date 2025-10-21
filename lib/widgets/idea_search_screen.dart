@@ -7,11 +7,11 @@ class IdeaSearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Поиск идей'),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Colors.white,
-        ),
-        body: const IdeaSearchWidget(),
-      );
+    appBar: AppBar(
+      title: const Text('Поиск идей'),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      foregroundColor: Colors.white,
+    ),
+    body: const IdeaSearchWidget(),
+  );
 }

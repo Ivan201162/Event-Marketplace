@@ -48,10 +48,7 @@ class DisputeService {
       await _firestore.collection('disputes').doc(disputeId).set(dispute.toMap());
 
       // Update payment status to disputed
-      await _paymentService.updatePaymentStatus(
-        paymentId,
-        PaymentStatus.disputed,
-      );
+      await _paymentService.updatePaymentStatus(paymentId, PaymentStatus.disputed);
 
       debugPrint('Dispute created: $disputeId');
       return dispute;
@@ -92,10 +89,7 @@ class DisputeService {
       if (status == DisputeStatus.resolved) {
         final dispute = await getDispute(disputeId);
         if (dispute != null) {
-          await _paymentService.updatePaymentStatus(
-            dispute.paymentId,
-            PaymentStatus.completed,
-          );
+          await _paymentService.updatePaymentStatus(dispute.paymentId, PaymentStatus.completed);
         }
       }
 
@@ -254,25 +248,16 @@ class DisputeService {
   }
 
   /// Gets dispute statistics
-  Future<DisputeStatistics> getDisputeStatistics({
-    DateTime? startDate,
-    DateTime? endDate,
-  }) async {
+  Future<DisputeStatistics> getDisputeStatistics({DateTime? startDate, DateTime? endDate}) async {
     try {
       Query query = _firestore.collection('disputes');
 
       if (startDate != null) {
-        query = query.where(
-          'createdAt',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        query = query.where(
-          'createdAt',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final snapshot = await query.get();
@@ -324,9 +309,7 @@ class DisputeService {
   /// Calculates average resolution time in days
   double _calculateAverageResolutionTime(List<Dispute> disputes) {
     final resolvedDisputes = disputes
-        .where(
-          (d) => d.status == DisputeStatus.resolved && d.resolvedAt != null,
-        )
+        .where((d) => d.status == DisputeStatus.resolved && d.resolvedAt != null)
         .toList();
 
     if (resolvedDisputes.isEmpty) return 0;
@@ -361,26 +344,26 @@ class Dispute {
   });
 
   factory Dispute.fromMap(Map<String, dynamic> map) => Dispute(
-        id: map['id'] as String,
-        paymentId: map['paymentId'] as String,
-        reason: map['reason'] as String,
-        description: map['description'] as String,
-        type: DisputeType.values.firstWhere(
-          (e) => e.toString().split('.').last == map['type'] as String,
-        ),
-        status: DisputeStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == map['status'] as String,
-        ),
-        raisedBy: map['raisedBy'] as String,
-        attachments: List<String>.from(map['attachments'] as List<dynamic>),
-        resolution: map['resolution'] as String?,
-        resolvedBy: map['resolvedBy'] as String?,
-        escalatedBy: map['escalatedBy'] as String?,
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        resolvedAt: (map['resolvedAt'] as Timestamp?)?.toDate(),
-        escalatedAt: (map['escalatedAt'] as Timestamp?)?.toDate(),
-      );
+    id: map['id'] as String,
+    paymentId: map['paymentId'] as String,
+    reason: map['reason'] as String,
+    description: map['description'] as String,
+    type: DisputeType.values.firstWhere(
+      (e) => e.toString().split('.').last == map['type'] as String,
+    ),
+    status: DisputeStatus.values.firstWhere(
+      (e) => e.toString().split('.').last == map['status'] as String,
+    ),
+    raisedBy: map['raisedBy'] as String,
+    attachments: List<String>.from(map['attachments'] as List<dynamic>),
+    resolution: map['resolution'] as String?,
+    resolvedBy: map['resolvedBy'] as String?,
+    escalatedBy: map['escalatedBy'] as String?,
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+    resolvedAt: (map['resolvedAt'] as Timestamp?)?.toDate(),
+    escalatedAt: (map['escalatedAt'] as Timestamp?)?.toDate(),
+  );
   final String id;
   final String paymentId;
   final String reason;
@@ -398,22 +381,22 @@ class Dispute {
   final DateTime? escalatedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'paymentId': paymentId,
-        'reason': reason,
-        'description': description,
-        'type': type.toString().split('.').last,
-        'status': status.toString().split('.').last,
-        'raisedBy': raisedBy,
-        'attachments': attachments,
-        'resolution': resolution,
-        'resolvedBy': resolvedBy,
-        'escalatedBy': escalatedBy,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-        'escalatedAt': escalatedAt != null ? Timestamp.fromDate(escalatedAt!) : null,
-      };
+    'id': id,
+    'paymentId': paymentId,
+    'reason': reason,
+    'description': description,
+    'type': type.toString().split('.').last,
+    'status': status.toString().split('.').last,
+    'raisedBy': raisedBy,
+    'attachments': attachments,
+    'resolution': resolution,
+    'resolvedBy': resolvedBy,
+    'escalatedBy': escalatedBy,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+    'escalatedAt': escalatedAt != null ? Timestamp.fromDate(escalatedAt!) : null,
+  };
 }
 
 /// Dispute comment model
@@ -428,13 +411,13 @@ class DisputeComment {
   });
 
   factory DisputeComment.fromMap(Map<String, dynamic> map) => DisputeComment(
-        id: map['id'] as String,
-        disputeId: map['disputeId'] as String,
-        comment: map['comment'] as String,
-        authorId: map['authorId'] as String,
-        authorName: map['authorName'] as String,
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-      );
+    id: map['id'] as String,
+    disputeId: map['disputeId'] as String,
+    comment: map['comment'] as String,
+    authorId: map['authorId'] as String,
+    authorName: map['authorName'] as String,
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+  );
   final String id;
   final String disputeId;
   final String comment;
@@ -443,13 +426,13 @@ class DisputeComment {
   final DateTime createdAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'disputeId': disputeId,
-        'comment': comment,
-        'authorId': authorId,
-        'authorName': authorName,
-        'createdAt': Timestamp.fromDate(createdAt),
-      };
+    'id': id,
+    'disputeId': disputeId,
+    'comment': comment,
+    'authorId': authorId,
+    'authorName': authorName,
+    'createdAt': Timestamp.fromDate(createdAt),
+  };
 }
 
 /// Dispute types

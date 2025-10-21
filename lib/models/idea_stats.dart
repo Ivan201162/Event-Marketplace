@@ -10,12 +10,12 @@ class IdeaStats {
 
   /// Создать из Map
   factory IdeaStats.fromMap(Map<String, dynamic> map) => IdeaStats(
-        ideaId: map['ideaId'] as String? ?? '',
-        likesCount: map['likesCount'] as int? ?? 0,
-        commentsCount: map['commentsCount'] as int? ?? 0,
-        savesCount: map['savesCount'] as int? ?? 0,
-        viewsCount: map['viewsCount'] as int? ?? 0,
-      );
+    ideaId: map['ideaId'] as String? ?? '',
+    likesCount: map['likesCount'] as int? ?? 0,
+    commentsCount: map['commentsCount'] as int? ?? 0,
+    savesCount: map['savesCount'] as int? ?? 0,
+    viewsCount: map['viewsCount'] as int? ?? 0,
+  );
   final String ideaId;
   final int likesCount;
   final int commentsCount;
@@ -24,12 +24,12 @@ class IdeaStats {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'ideaId': ideaId,
-        'likesCount': likesCount,
-        'commentsCount': commentsCount,
-        'savesCount': savesCount,
-        'viewsCount': viewsCount,
-      };
+    'ideaId': ideaId,
+    'likesCount': likesCount,
+    'commentsCount': commentsCount,
+    'savesCount': savesCount,
+    'viewsCount': viewsCount,
+  };
 
   /// Создать копию с изменениями
   IdeaStats copyWith({
@@ -38,14 +38,13 @@ class IdeaStats {
     int? commentsCount,
     int? savesCount,
     int? viewsCount,
-  }) =>
-      IdeaStats(
-        ideaId: ideaId ?? this.ideaId,
-        likesCount: likesCount ?? this.likesCount,
-        commentsCount: commentsCount ?? this.commentsCount,
-        savesCount: savesCount ?? this.savesCount,
-        viewsCount: viewsCount ?? this.viewsCount,
-      );
+  }) => IdeaStats(
+    ideaId: ideaId ?? this.ideaId,
+    likesCount: likesCount ?? this.likesCount,
+    commentsCount: commentsCount ?? this.commentsCount,
+    savesCount: savesCount ?? this.savesCount,
+    viewsCount: viewsCount ?? this.viewsCount,
+  );
 
   @override
   bool operator ==(Object other) {

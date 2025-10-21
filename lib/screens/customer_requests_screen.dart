@@ -39,152 +39,136 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Мои заявки'),
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Все', icon: Icon(Icons.list)),
-              Tab(text: 'На рассмотрении', icon: Icon(Icons.pending)),
-              Tab(text: 'Подтверждено', icon: Icon(Icons.check_circle)),
-              Tab(text: 'Завершено', icon: Icon(Icons.done_all)),
-            ],
-          ),
-          actions: [
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.sort),
-              onSelected: (value) {
-                setState(() {
-                  _selectedSortOption = value;
-                });
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'date_desc',
-                  child: Text('По дате (новые)'),
-                ),
-                const PopupMenuItem(
-                  value: 'date_asc',
-                  child: Text('По дате (старые)'),
-                ),
-                const PopupMenuItem(
-                  value: 'status',
-                  child: Text('По статусу'),
-                ),
-                const PopupMenuItem(
-                  value: 'price_desc',
-                  child: Text('По цене (убывание)'),
-                ),
-                const PopupMenuItem(
-                  value: 'price_asc',
-                  child: Text('По цене (возрастание)'),
-                ),
-              ],
-            ),
+    appBar: AppBar(
+      title: const Text('Мои заявки'),
+      bottom: TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(text: 'Все', icon: Icon(Icons.list)),
+          Tab(text: 'На рассмотрении', icon: Icon(Icons.pending)),
+          Tab(text: 'Подтверждено', icon: Icon(Icons.check_circle)),
+          Tab(text: 'Завершено', icon: Icon(Icons.done_all)),
+        ],
+      ),
+      actions: [
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.sort),
+          onSelected: (value) {
+            setState(() {
+              _selectedSortOption = value;
+            });
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem(value: 'date_desc', child: Text('По дате (новые)')),
+            const PopupMenuItem(value: 'date_asc', child: Text('По дате (старые)')),
+            const PopupMenuItem(value: 'status', child: Text('По статусу')),
+            const PopupMenuItem(value: 'price_desc', child: Text('По цене (убывание)')),
+            const PopupMenuItem(value: 'price_asc', child: Text('По цене (возрастание)')),
           ],
         ),
-        body: Consumer<AuthProvider>(
-          builder: (context, authProvider, child) {
-            if (authProvider.user == null) {
-              return const Center(
-                child: Text('Необходимо войти в систему'),
-              );
-            }
+      ],
+    ),
+    body: Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        if (authProvider.user == null) {
+          return const Center(child: Text('Необходимо войти в систему'));
+        }
 
-            return TabBarView(
-              controller: _tabController,
-              children: [
-                _buildBookingsList(authProvider.user!.id, 'all'),
-                _buildBookingsList(authProvider.user!.id, 'pending'),
-                _buildBookingsList(authProvider.user!.id, 'confirmed'),
-                _buildBookingsList(authProvider.user!.id, 'completed'),
-              ],
+        return TabBarView(
+          controller: _tabController,
+          children: [
+            _buildBookingsList(authProvider.user!.id, 'all'),
+            _buildBookingsList(authProvider.user!.id, 'pending'),
+            _buildBookingsList(authProvider.user!.id, 'confirmed'),
+            _buildBookingsList(authProvider.user!.id, 'completed'),
+          ],
+        );
+      },
+    ),
+  );
+
+  Widget _buildBookingsList(String customerId, String statusFilter) => StreamBuilder<List<Booking>>(
+    stream: _firestoreService.bookingsByCustomerStream(customerId),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const LoadingWidget();
+      }
+
+      if (snapshot.hasError) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text(
+                'Ошибка загрузки заявок: ${snapshot.error}',
+                style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                child: const Text('Повторить'),
+              ),
+            ],
+          ),
+        );
+      }
+
+      var bookings = snapshot.data ?? [];
+
+      // Фильтрация по статусу
+      if (statusFilter != 'all') {
+        bookings = bookings.where((booking) {
+          switch (statusFilter) {
+            case 'pending':
+              return booking.status == BookingStatus.pending;
+            case 'confirmed':
+              return booking.status == BookingStatus.confirmed;
+            case 'completed':
+              return booking.status == BookingStatus.completed;
+            default:
+              return true;
+          }
+        }).toList();
+      }
+
+      // Сортировка
+      bookings = _sortBookings(bookings, _selectedSortOption);
+
+      if (bookings.isEmpty) {
+        return _buildEmptyState(statusFilter);
+      }
+
+      return RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
+        },
+        child: ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: bookings.length,
+          itemBuilder: (context, index) {
+            final booking = bookings[index];
+            return BookingCard(
+              booking: booking,
+              onTap: () => _showBookingDetails(booking),
+              onCancel:
+                  booking.status == BookingStatus.pending ||
+                      booking.status == BookingStatus.confirmed
+                  ? () => _cancelBooking(booking)
+                  : null,
+              onReschedule: booking.status == BookingStatus.confirmed
+                  ? () => _rescheduleBooking(booking)
+                  : null,
             );
           },
         ),
       );
-
-  Widget _buildBookingsList(String customerId, String statusFilter) => StreamBuilder<List<Booking>>(
-        stream: _firestoreService.bookingsByCustomerStream(customerId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingWidget();
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Ошибка загрузки заявок: ${snapshot.error}',
-                    style: const TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: const Text('Повторить'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          var bookings = snapshot.data ?? [];
-
-          // Фильтрация по статусу
-          if (statusFilter != 'all') {
-            bookings = bookings.where((booking) {
-              switch (statusFilter) {
-                case 'pending':
-                  return booking.status == BookingStatus.pending;
-                case 'confirmed':
-                  return booking.status == BookingStatus.confirmed;
-                case 'completed':
-                  return booking.status == BookingStatus.completed;
-                default:
-                  return true;
-              }
-            }).toList();
-          }
-
-          // Сортировка
-          bookings = _sortBookings(bookings, _selectedSortOption);
-
-          if (bookings.isEmpty) {
-            return _buildEmptyState(statusFilter);
-          }
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              setState(() {});
-            },
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: bookings.length,
-              itemBuilder: (context, index) {
-                final booking = bookings[index];
-                return BookingCard(
-                  booking: booking,
-                  onTap: () => _showBookingDetails(booking),
-                  onCancel: booking.status == BookingStatus.pending ||
-                          booking.status == BookingStatus.confirmed
-                      ? () => _cancelBooking(booking)
-                      : null,
-                  onReschedule: booking.status == BookingStatus.confirmed
-                      ? () => _rescheduleBooking(booking)
-                      : null,
-                );
-              },
-            ),
-          );
-        },
-      );
+    },
+  );
 
   Widget _buildEmptyState(String statusFilter) {
     String message;
@@ -214,10 +198,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
         children: [
           Icon(icon, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text(
-            message,
-            style: const TextStyle(fontSize: 18, color: Colors.grey),
-          ),
+          Text(message, style: const TextStyle(fontSize: 18, color: Colors.grey)),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: () {
@@ -278,19 +259,13 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
               const SizedBox(height: 16),
               Text(
                 booking.title ?? booking.eventTitle,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: booking.status.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -298,20 +273,13 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
                     ),
                     child: Text(
                       booking.status.name,
-                      style: TextStyle(
-                        color: booking.status.color,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: TextStyle(color: booking.status.color, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              _buildDetailRow(
-                Icons.person,
-                'Специалист',
-                booking.specialistName ?? 'Не указан',
-              ),
+              _buildDetailRow(Icons.person, 'Специалист', booking.specialistName ?? 'Не указан'),
               _buildDetailRow(
                 Icons.calendar_today,
                 'Дата',
@@ -323,30 +291,16 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
                 '${booking.eventDate.hour.toString().padLeft(2, '0')}:${booking.eventDate.minute.toString().padLeft(2, '0')}',
               ),
               if (booking.location != null)
-                _buildDetailRow(
-                  Icons.location_on,
-                  'Место',
-                  booking.location!,
-                ),
+                _buildDetailRow(Icons.location_on, 'Место', booking.location!),
               _buildDetailRow(
                 Icons.attach_money,
                 'Сумма',
                 '${booking.totalPrice.toStringAsFixed(0)} ₽',
               ),
-              _buildDetailRow(
-                Icons.payment,
-                'Аванс',
-                '${booking.prepayment.toStringAsFixed(0)} ₽',
-              ),
+              _buildDetailRow(Icons.payment, 'Аванс', '${booking.prepayment.toStringAsFixed(0)} ₽'),
               if (booking.description != null) ...[
                 const SizedBox(height: 16),
-                const Text(
-                  'Описание',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                const Text('Описание', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
                 Text(booking.description!),
               ],
@@ -379,21 +333,16 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
   }
 
   Widget _buildDetailRow(IconData icon, String label, String value) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          children: [
-            Icon(icon, size: 20, color: Colors.grey[600]),
-            const SizedBox(width: 12),
-            Text(
-              '$label: ',
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-            Expanded(
-              child: Text(value),
-            ),
-          ],
-        ),
-      );
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      children: [
+        Icon(icon, size: 20, color: Colors.grey[600]),
+        const SizedBox(width: 12),
+        Text('$label: ', style: const TextStyle(fontWeight: FontWeight.w500)),
+        Expanded(child: Text(value)),
+      ],
+    ),
+  );
 
   Future<void> _cancelBooking(Booking booking) async {
     final confirmed = await showDialog<bool>(
@@ -405,10 +354,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
           'Аванс будет возвращен в течение 3-5 рабочих дней.',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Нет'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Нет')),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Да, отменить'),
@@ -423,19 +369,13 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Заявка отменена'),
-              backgroundColor: Colors.green,
-            ),
+            const SnackBar(content: Text('Заявка отменена'), backgroundColor: Colors.green),
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Ошибка отмены заявки: $e'),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text('Ошибка отмены заявки: $e'), backgroundColor: Colors.red),
           );
         }
       }
@@ -445,9 +385,7 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
   Future<void> _rescheduleBooking(Booking booking) async {
     // TODO(developer): Implement reschedule functionality
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Функция переноса будет добавлена в следующем обновлении'),
-      ),
+      const SnackBar(content: Text('Функция переноса будет добавлена в следующем обновлении')),
     );
   }
 }

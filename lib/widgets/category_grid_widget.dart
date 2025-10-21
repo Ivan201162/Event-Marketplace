@@ -40,15 +40,11 @@ class CategoryGridWidget extends ConsumerWidget {
   Widget _buildCategoryCard(BuildContext context, Map<String, dynamic> category) {
     return GestureDetector(
       onTap: () {
-        context.push(
-          '/search?category=${Uri.encodeComponent(category['name']!)}',
-        );
+        context.push('/search?category=${Uri.encodeComponent(category['name']!)}');
       },
       child: Card(
         elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -101,27 +97,14 @@ class CategoryGridWidget extends ConsumerWidget {
   Widget _buildEmptyState() {
     return Container(
       height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
       child: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.category_outlined,
-              size: 48,
-              color: Colors.grey,
-            ),
+            Icon(Icons.category_outlined, size: 48, color: Colors.grey),
             SizedBox(height: 8),
-            Text(
-              'Нет доступных категорий',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-            ),
+            Text('Нет доступных категорий', style: TextStyle(color: Colors.grey, fontSize: 14)),
           ],
         ),
       ),
@@ -131,39 +114,24 @@ class CategoryGridWidget extends ConsumerWidget {
   Widget _buildLoadingState() {
     return Container(
       height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Center(
-        child: CircularProgressIndicator(),
-      ),
+      decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+      child: const Center(child: CircularProgressIndicator()),
     );
   }
 
   Widget _buildErrorState(String error) {
     return Container(
       height: 200,
-      decoration: BoxDecoration(
-        color: Colors.red[50],
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: Colors.red[50], borderRadius: BorderRadius.circular(12)),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 48,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 8),
             Text(
               'Ошибка загрузки категорий',
-              style: TextStyle(
-                color: Colors.red[700],
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.red[700], fontSize: 14),
             ),
           ],
         ),

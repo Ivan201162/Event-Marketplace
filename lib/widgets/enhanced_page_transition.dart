@@ -40,22 +40,12 @@ class _EnhancedPageTransitionState extends State<EnhancedPageTransition>
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
 
     _animationController.forward();
   }
@@ -70,10 +60,7 @@ class _EnhancedPageTransitionState extends State<EnhancedPageTransition>
   Widget build(BuildContext context) {
     Widget content = FadeTransition(
       opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: widget.child,
-      ),
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
     );
 
     if (widget.enableSwipeBack) {
@@ -123,15 +110,9 @@ class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    );
+    _animation = CurvedAnimation(parent: _controller, curve: widget.curve);
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -150,20 +131,14 @@ class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProv
   Widget build(BuildContext context) {
     switch (widget.type) {
       case AnimationType.fadeIn:
-        return FadeTransition(
-          opacity: _animation,
-          child: widget.child,
-        );
+        return FadeTransition(opacity: _animation, child: widget.child);
       case AnimationType.slideUp:
         return SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(0, 0.3),
             end: Offset.zero,
           ).animate(_animation),
-          child: FadeTransition(
-            opacity: _animation,
-            child: widget.child,
-          ),
+          child: FadeTransition(opacity: _animation, child: widget.child),
         );
       case AnimationType.slideDown:
         return SlideTransition(
@@ -171,10 +146,7 @@ class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProv
             begin: const Offset(0, -0.3),
             end: Offset.zero,
           ).animate(_animation),
-          child: FadeTransition(
-            opacity: _animation,
-            child: widget.child,
-          ),
+          child: FadeTransition(opacity: _animation, child: widget.child),
         );
       case AnimationType.slideLeft:
         return SlideTransition(
@@ -182,10 +154,7 @@ class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProv
             begin: const Offset(0.3, 0),
             end: Offset.zero,
           ).animate(_animation),
-          child: FadeTransition(
-            opacity: _animation,
-            child: widget.child,
-          ),
+          child: FadeTransition(opacity: _animation, child: widget.child),
         );
       case AnimationType.slideRight:
         return SlideTransition(
@@ -193,41 +162,24 @@ class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProv
             begin: const Offset(-0.3, 0),
             end: Offset.zero,
           ).animate(_animation),
-          child: FadeTransition(
-            opacity: _animation,
-            child: widget.child,
-          ),
+          child: FadeTransition(opacity: _animation, child: widget.child),
         );
       case AnimationType.scale:
         return ScaleTransition(
           scale: _animation,
-          child: FadeTransition(
-            opacity: _animation,
-            child: widget.child,
-          ),
+          child: FadeTransition(opacity: _animation, child: widget.child),
         );
       case AnimationType.rotation:
         return RotationTransition(
           turns: _animation,
-          child: ScaleTransition(
-            scale: _animation,
-            child: widget.child,
-          ),
+          child: ScaleTransition(scale: _animation, child: widget.child),
         );
     }
   }
 }
 
 /// Типы анимаций
-enum AnimationType {
-  fadeIn,
-  slideUp,
-  slideDown,
-  slideLeft,
-  slideRight,
-  scale,
-  rotation,
-}
+enum AnimationType { fadeIn, slideUp, slideDown, slideLeft, slideRight, scale, rotation }
 
 /// Виджет для анимированного списка
 class AnimatedList extends StatefulWidget {
@@ -252,19 +204,19 @@ class AnimatedList extends StatefulWidget {
 class _AnimatedListState extends State<AnimatedList> {
   @override
   Widget build(BuildContext context) => Column(
-        children: widget.children.asMap().entries.map((entry) {
-          final index = entry.key;
-          final child = entry.value;
+    children: widget.children.asMap().entries.map((entry) {
+      final index = entry.key;
+      final child = entry.value;
 
-          return AnimatedContent(
-            delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
-            duration: widget.itemDuration,
-            curve: widget.curve,
-            type: widget.itemType,
-            child: child,
-          );
-        }).toList(),
+      return AnimatedContent(
+        delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
+        duration: widget.itemDuration,
+        curve: widget.curve,
+        type: widget.itemType,
+        child: child,
       );
+    }).toList(),
+  );
 }
 
 /// Виджет для анимированной сетки
@@ -296,22 +248,22 @@ class AnimatedGrid extends StatefulWidget {
 class _AnimatedGridState extends State<AnimatedGrid> {
   @override
   Widget build(BuildContext context) => GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: widget.crossAxisCount,
-          crossAxisSpacing: widget.crossAxisSpacing,
-          mainAxisSpacing: widget.mainAxisSpacing,
-        ),
-        itemCount: widget.children.length,
-        itemBuilder: (context, index) => AnimatedContent(
-          delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
-          duration: widget.itemDuration,
-          curve: widget.curve,
-          type: widget.itemType,
-          child: widget.children[index],
-        ),
-      );
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: widget.crossAxisCount,
+      crossAxisSpacing: widget.crossAxisSpacing,
+      mainAxisSpacing: widget.mainAxisSpacing,
+    ),
+    itemCount: widget.children.length,
+    itemBuilder: (context, index) => AnimatedContent(
+      delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
+      duration: widget.itemDuration,
+      curve: widget.curve,
+      type: widget.itemType,
+      child: widget.children[index],
+    ),
+  );
 }
 
 /// Виджет для анимированной кнопки
@@ -341,20 +293,12 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: widget.scale,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
   }
 
   @override
@@ -365,13 +309,10 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTapDown: (_) => _controller.forward(),
-        onTapUp: (_) => _controller.reverse(),
-        onTapCancel: () => _controller.reverse(),
-        onTap: widget.onPressed,
-        child: ScaleTransition(
-          scale: _scaleAnimation,
-          child: widget.child,
-        ),
-      );
+    onTapDown: (_) => _controller.forward(),
+    onTapUp: (_) => _controller.reverse(),
+    onTapCancel: () => _controller.reverse(),
+    onTap: widget.onPressed,
+    child: ScaleTransition(scale: _scaleAnimation, child: widget.child),
+  );
 }

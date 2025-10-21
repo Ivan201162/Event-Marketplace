@@ -25,16 +25,16 @@ class ChatMessageExtended {
   });
 
   factory ChatMessageExtended.fromChatMessage(ChatMessageExtended message) => ChatMessageExtended(
-        id: message.id,
-        chatId: message.chatId,
-        senderId: message.senderId,
-        senderName: message.senderName,
-        senderAvatar: message.senderAvatar,
-        content: message.content,
-        timestamp: message.timestamp,
-        isRead: message.isRead,
-        readBy: message.readBy,
-      );
+    id: message.id,
+    chatId: message.chatId,
+    senderId: message.senderId,
+    senderName: message.senderName,
+    senderAvatar: message.senderAvatar,
+    content: message.content,
+    timestamp: message.timestamp,
+    isRead: message.isRead,
+    readBy: message.readBy,
+  );
 
   factory ChatMessageExtended.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
@@ -56,7 +56,8 @@ class ChatMessageExtended {
       audioUrl: data['audioUrl'] as String?,
       audioDuration: data['audioDuration'] as int?,
       audioWaveform: data['audioWaveform'] as String?,
-      reactions: (data['reactions'] as List<dynamic>?)
+      reactions:
+          (data['reactions'] as List<dynamic>?)
               ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -64,9 +65,7 @@ class ChatMessageExtended {
       editedAt: (data['editedAt'] as Timestamp?)?.toDate(),
       replyToMessageId: data['replyToMessageId'] as String?,
       attachments: List<String>.from(data['attachments'] as List<dynamic>? ?? []),
-      metadata: Map<String, dynamic>.from(
-        data['metadata'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
   final String id;
@@ -90,26 +89,26 @@ class ChatMessageExtended {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'chatId': chatId,
-        'senderId': senderId,
-        'senderName': senderName,
-        'senderAvatar': senderAvatar,
-        'content': content,
-        'timestamp': Timestamp.fromDate(timestamp),
-        'isRead': isRead,
-        'readBy': readBy,
-        'type': type.name,
-        'audioUrl': audioUrl,
-        'audioDuration': audioDuration,
-        'audioWaveform': audioWaveform,
-        'reactions': reactions.map((e) => e.toMap()).toList(),
-        'isEdited': isEdited,
-        'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
-        'replyToMessageId': replyToMessageId,
-        'attachments': attachments,
-        'metadata': metadata,
-      };
+    'id': id,
+    'chatId': chatId,
+    'senderId': senderId,
+    'senderName': senderName,
+    'senderAvatar': senderAvatar,
+    'content': content,
+    'timestamp': Timestamp.fromDate(timestamp),
+    'isRead': isRead,
+    'readBy': readBy,
+    'type': type.name,
+    'audioUrl': audioUrl,
+    'audioDuration': audioDuration,
+    'audioWaveform': audioWaveform,
+    'reactions': reactions.map((e) => e.toMap()).toList(),
+    'isEdited': isEdited,
+    'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
+    'replyToMessageId': replyToMessageId,
+    'attachments': attachments,
+    'metadata': metadata,
+  };
 
   ChatMessageExtended copyWith({
     String? id,
@@ -131,37 +130,35 @@ class ChatMessageExtended {
     String? replyToMessageId,
     List<String>? attachments,
     Map<String, dynamic>? metadata,
-  }) =>
-      ChatMessageExtended(
-        id: id ?? this.id,
-        chatId: chatId ?? this.chatId,
-        senderId: senderId ?? this.senderId,
-        senderName: senderName ?? this.senderName,
-        senderAvatar: senderAvatar ?? this.senderAvatar,
-        content: content ?? this.content,
-        timestamp: timestamp ?? this.timestamp,
-        isRead: isRead ?? this.isRead,
-        readBy: readBy ?? this.readBy,
-        type: type ?? this.type,
-        audioUrl: audioUrl ?? this.audioUrl,
-        audioDuration: audioDuration ?? this.audioDuration,
-        audioWaveform: audioWaveform ?? this.audioWaveform,
-        reactions: reactions ?? this.reactions,
-        isEdited: isEdited ?? this.isEdited,
-        editedAt: editedAt ?? this.editedAt,
-        replyToMessageId: replyToMessageId ?? this.replyToMessageId,
-        attachments: attachments ?? this.attachments,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => ChatMessageExtended(
+    id: id ?? this.id,
+    chatId: chatId ?? this.chatId,
+    senderId: senderId ?? this.senderId,
+    senderName: senderName ?? this.senderName,
+    senderAvatar: senderAvatar ?? this.senderAvatar,
+    content: content ?? this.content,
+    timestamp: timestamp ?? this.timestamp,
+    isRead: isRead ?? this.isRead,
+    readBy: readBy ?? this.readBy,
+    type: type ?? this.type,
+    audioUrl: audioUrl ?? this.audioUrl,
+    audioDuration: audioDuration ?? this.audioDuration,
+    audioWaveform: audioWaveform ?? this.audioWaveform,
+    reactions: reactions ?? this.reactions,
+    isEdited: isEdited ?? this.isEdited,
+    editedAt: editedAt ?? this.editedAt,
+    replyToMessageId: replyToMessageId ?? this.replyToMessageId,
+    attachments: attachments ?? this.attachments,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Получить количество реакций по типу
   int getReactionCount(String emoji) =>
       reactions.where((reaction) => reaction.emoji == emoji).length;
 
   /// Проверить, есть ли реакция от пользователя
-  bool hasReactionFromUser(String userId, String emoji) => reactions.any(
-        (reaction) => reaction.userId == userId && reaction.emoji == emoji,
-      );
+  bool hasReactionFromUser(String userId, String emoji) =>
+      reactions.any((reaction) => reaction.userId == userId && reaction.emoji == emoji);
 
   /// Получить все уникальные эмодзи реакций
   List<String> get uniqueReactionEmojis =>
@@ -181,13 +178,7 @@ class ChatMessageExtended {
 }
 
 /// Тип сообщения
-enum MessageType {
-  text,
-  voice,
-  image,
-  file,
-  system,
-}
+enum MessageType { text, voice, image, file, system }
 
 /// Реакция на сообщение
 class MessageReaction {
@@ -200,12 +191,12 @@ class MessageReaction {
   });
 
   factory MessageReaction.fromMap(Map<String, dynamic> map) => MessageReaction(
-        id: map['id'] as String? ?? '',
-        userId: map['userId'] as String? ?? '',
-        userName: map['userName'] as String? ?? '',
-        emoji: map['emoji'] as String? ?? '',
-        timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      );
+    id: map['id'] as String? ?? '',
+    userId: map['userId'] as String? ?? '',
+    userName: map['userName'] as String? ?? '',
+    emoji: map['emoji'] as String? ?? '',
+    timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+  );
   final String id;
   final String userId;
   final String userName;
@@ -213,12 +204,12 @@ class MessageReaction {
   final DateTime timestamp;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'userName': userName,
-        'emoji': emoji,
-        'timestamp': Timestamp.fromDate(timestamp),
-      };
+    'id': id,
+    'userId': userId,
+    'userName': userName,
+    'emoji': emoji,
+    'timestamp': Timestamp.fromDate(timestamp),
+  };
 
   MessageReaction copyWith({
     String? id,
@@ -226,31 +217,22 @@ class MessageReaction {
     String? userName,
     String? emoji,
     DateTime? timestamp,
-  }) =>
-      MessageReaction(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        userName: userName ?? this.userName,
-        emoji: emoji ?? this.emoji,
-        timestamp: timestamp ?? this.timestamp,
-      );
+  }) => MessageReaction(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    userName: userName ?? this.userName,
+    emoji: emoji ?? this.emoji,
+    timestamp: timestamp ?? this.timestamp,
+  );
 }
 
 /// Данные волны для аудио
 class AudioWaveform {
-  const AudioWaveform({
-    required this.samples,
-    required this.duration,
-    required this.sampleRate,
-  });
+  const AudioWaveform({required this.samples, required this.duration, required this.sampleRate});
 
   factory AudioWaveform.fromJson() {
     // TODO(developer): Реализовать парсинг JSON
-    return const AudioWaveform(
-      samples: [],
-      duration: 0,
-      sampleRate: 44100,
-    );
+    return const AudioWaveform(samples: [], duration: 0, sampleRate: 44100);
   }
   final List<double> samples;
   final int duration; // в миллисекундах
@@ -286,15 +268,15 @@ class MessageStats {
   });
 
   factory MessageStats.empty() => MessageStats(
-        totalMessages: 0,
-        textMessages: 0,
-        voiceMessages: 0,
-        imageMessages: 0,
-        fileMessages: 0,
-        totalReactions: 0,
-        reactionCounts: {},
-        lastActivity: DateTime.now(),
-      );
+    totalMessages: 0,
+    textMessages: 0,
+    voiceMessages: 0,
+    imageMessages: 0,
+    fileMessages: 0,
+    totalReactions: 0,
+    reactionCounts: {},
+    lastActivity: DateTime.now(),
+  );
   final int totalMessages;
   final int textMessages;
   final int voiceMessages;

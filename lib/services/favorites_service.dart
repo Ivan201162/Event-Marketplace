@@ -8,10 +8,7 @@ class FavoritesService {
   static const String _collectionName = 'favorites';
 
   /// Добавить специалиста в избранное
-  Future<void> addToFavorites({
-    required String userId,
-    required String specialistId,
-  }) async {
+  Future<void> addToFavorites({required String userId, required String specialistId}) async {
     try {
       await _firestore.collection(_collectionName).doc('${userId}_$specialistId').set({
         'userId': userId,
@@ -25,10 +22,7 @@ class FavoritesService {
   }
 
   /// Удалить специалиста из избранного
-  Future<void> removeFromFavorites({
-    required String userId,
-    required String specialistId,
-  }) async {
+  Future<void> removeFromFavorites({required String userId, required String specialistId}) async {
     try {
       await _firestore.collection(_collectionName).doc('${userId}_$specialistId').delete();
     } catch (e) {
@@ -38,10 +32,7 @@ class FavoritesService {
   }
 
   /// Проверить, находится ли специалист в избранном
-  Future<bool> isFavorite({
-    required String userId,
-    required String specialistId,
-  }) async {
+  Future<bool> isFavorite({required String userId, required String specialistId}) async {
     try {
       final doc = await _firestore.collection(_collectionName).doc('${userId}_$specialistId').get();
       return doc.exists;
@@ -54,15 +45,18 @@ class FavoritesService {
   /// Получить список избранных специалистов
   Future<List<Specialist>> getFavoriteSpecialists(String userId) async {
     try {
-      final favoritesSnapshot =
-          await _firestore.collection(_collectionName).where('userId', isEqualTo: userId).get();
+      final favoritesSnapshot = await _firestore
+          .collection(_collectionName)
+          .where('userId', isEqualTo: userId)
+          .get();
 
       if (favoritesSnapshot.docs.isEmpty) {
         return [];
       }
 
-      final specialistIds =
-          favoritesSnapshot.docs.map((doc) => doc.data()['specialistId'] as String).toList();
+      final specialistIds = favoritesSnapshot.docs
+          .map((doc) => doc.data()['specialistId'] as String)
+          .toList();
 
       final specialistsSnapshot = await _firestore
           .collection('specialists')
@@ -78,16 +72,17 @@ class FavoritesService {
 
   /// Получить поток избранных специалистов
   Stream<List<Specialist>> getFavoriteSpecialistsStream(String userId) => _firestore
-          .collection(_collectionName)
-          .where('userId', isEqualTo: userId)
-          .snapshots()
-          .asyncMap((favoritesSnapshot) async {
+      .collection(_collectionName)
+      .where('userId', isEqualTo: userId)
+      .snapshots()
+      .asyncMap((favoritesSnapshot) async {
         if (favoritesSnapshot.docs.isEmpty) {
           return <Specialist>[];
         }
 
-        final specialistIds =
-            favoritesSnapshot.docs.map((doc) => doc.data()['specialistId'] as String).toList();
+        final specialistIds = favoritesSnapshot.docs
+            .map((doc) => doc.data()['specialistId'] as String)
+            .toList();
 
         final specialistsSnapshot = await _firestore
             .collection('specialists')
@@ -100,8 +95,10 @@ class FavoritesService {
   /// Получить количество избранных специалистов
   Future<int> getFavoritesCount(String userId) async {
     try {
-      final snapshot =
-          await _firestore.collection(_collectionName).where('userId', isEqualTo: userId).get();
+      final snapshot = await _firestore
+          .collection(_collectionName)
+          .where('userId', isEqualTo: userId)
+          .get();
       return snapshot.docs.length;
     } catch (e) {
       debugPrint('Ошибка получения количества избранных: $e');
@@ -110,27 +107,15 @@ class FavoritesService {
   }
 
   /// Переключить статус избранного
-  Future<bool> toggleFavorite({
-    required String userId,
-    required String specialistId,
-  }) async {
+  Future<bool> toggleFavorite({required String userId, required String specialistId}) async {
     try {
-      final isCurrentlyFavorite = await isFavorite(
-        userId: userId,
-        specialistId: specialistId,
-      );
+      final isCurrentlyFavorite = await isFavorite(userId: userId, specialistId: specialistId);
 
       if (isCurrentlyFavorite) {
-        await removeFromFavorites(
-          userId: userId,
-          specialistId: specialistId,
-        );
+        await removeFromFavorites(userId: userId, specialistId: specialistId);
         return false;
       } else {
-        await addToFavorites(
-          userId: userId,
-          specialistId: specialistId,
-        );
+        await addToFavorites(userId: userId, specialistId: specialistId);
         return true;
       }
     } catch (e) {

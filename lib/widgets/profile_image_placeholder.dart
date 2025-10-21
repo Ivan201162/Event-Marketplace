@@ -39,10 +39,7 @@ class ProfileImagePlaceholder extends StatelessWidget {
         color: effectiveBackgroundColor,
         borderRadius: effectiveBorderRadius,
         border: showBorder
-            ? (border ??
-                Border.all(
-                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                ))
+            ? (border ?? Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)))
             : null,
       ),
       child: Center(
@@ -55,11 +52,7 @@ class ProfileImagePlaceholder extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               )
-            : Icon(
-                Icons.person,
-                color: effectiveTextColor,
-                size: size * 0.5,
-              ),
+            : Icon(Icons.person, color: effectiveTextColor, size: size * 0.5),
       ),
     );
   }
@@ -130,15 +123,9 @@ class ProfileAvatar extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: effectiveBorderRadius,
             border: showBorder
-                ? (border ??
-                    Border.all(
-                      color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                    ))
+                ? (border ?? Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)))
                 : null,
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
-            ),
+            image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
           ),
         ),
         placeholder: (context, url) => ProfileImagePlaceholder(
@@ -162,7 +149,8 @@ class ProfileAvatar extends StatelessWidget {
       );
     } else {
       // Показываем placeholder
-      avatarWidget = placeholder ??
+      avatarWidget =
+          placeholder ??
           ProfileImagePlaceholder(
             size: size,
             name: name,
@@ -175,10 +163,7 @@ class ProfileAvatar extends StatelessWidget {
     }
 
     if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        child: avatarWidget,
-      );
+      return GestureDetector(onTap: onTap, child: avatarWidget);
     }
 
     return avatarWidget;
@@ -256,10 +241,7 @@ class AvatarGroup extends StatelessWidget {
 
 /// Данные для аватара
 class AvatarData {
-  const AvatarData({
-    this.imageUrl,
-    this.name,
-  });
+  const AvatarData({this.imageUrl, this.name});
 
   final String? imageUrl;
   final String? name;
@@ -320,10 +302,7 @@ class StatusAvatar extends StatelessWidget {
             decoration: BoxDecoration(
               color: statusColor,
               shape: BoxShape.circle,
-              border: Border.all(
-                color: theme.colorScheme.surface,
-                width: 2,
-              ),
+              border: Border.all(color: theme.colorScheme.surface, width: 2),
             ),
           ),
         ),
@@ -346,9 +325,4 @@ class StatusAvatar extends StatelessWidget {
 }
 
 /// Статусы аватара
-enum AvatarStatus {
-  online,
-  away,
-  busy,
-  offline,
-}
+enum AvatarStatus { online, away, busy, offline }

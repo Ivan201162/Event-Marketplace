@@ -278,16 +278,10 @@ class AuditLoggingService {
         query = query.where('category', isEqualTo: category.value);
       }
       if (startDate != null) {
-        query = query.where(
-          'timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where(
-          'timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       query = query.orderBy('timestamp', descending: true).limit(limit);
@@ -327,16 +321,10 @@ class AuditLoggingService {
         query = query.where('category', isEqualTo: category.value);
       }
       if (startDate != null) {
-        query = query.where(
-          'timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where(
-          'timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       query = query.orderBy('timestamp', descending: true).limit(limit);
@@ -383,11 +371,7 @@ class AuditLoggingService {
       };
 
       if (includeAuditLogs) {
-        final auditLogs = await getAuditLogs(
-          startDate: startDate,
-          endDate: endDate,
-          limit: 10000,
-        );
+        final auditLogs = await getAuditLogs(startDate: startDate, endDate: endDate, limit: 10000);
         exportData['auditLogs'] = auditLogs.map((log) => log.toMap()).toList();
       }
 
@@ -491,10 +475,7 @@ class AuditLoggingService {
   }
 
   /// Получение статистики логов
-  Future<Map<String, dynamic>> getLogStatistics({
-    DateTime? startDate,
-    DateTime? endDate,
-  }) async {
+  Future<Map<String, dynamic>> getLogStatistics({DateTime? startDate, DateTime? endDate}) async {
     try {
       final now = DateTime.now();
       final start = startDate ?? now.subtract(const Duration(days: 30));
@@ -532,10 +513,7 @@ class AuditLoggingService {
           'byLevel': _groupBySystemLevel(systemLogs),
           'byCategory': _groupBySystemCategory(systemLogs),
         },
-        'period': {
-          'startDate': start.toIso8601String(),
-          'endDate': end.toIso8601String(),
-        },
+        'period': {'startDate': start.toIso8601String(), 'endDate': end.toIso8601String()},
       };
     } catch (e) {
       await _crashlytics.recordError(e, null);

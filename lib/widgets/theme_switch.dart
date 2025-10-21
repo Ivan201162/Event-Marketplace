@@ -35,10 +35,7 @@ class ThemeSwitch extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (showLabel) ...[
-          Text(
-            'Тема',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('Тема', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
         ],
         Container(
@@ -46,9 +43,7 @@ class ThemeSwitch extends ConsumerWidget {
           decoration: BoxDecoration(
             color: backgroundColor ?? Theme.of(context).cardColor,
             borderRadius: borderRadius ?? BorderRadius.circular(12),
-            border: Border.all(
-              color: Theme.of(context).dividerColor,
-            ),
+            border: Border.all(color: Theme.of(context).dividerColor),
           ),
           child: isExpanded
               ? DropdownButtonHideUnderline(
@@ -63,10 +58,7 @@ class ThemeSwitch extends ConsumerWidget {
                       }
                     },
                     style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
-                    icon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
+                    icon: Icon(Icons.arrow_drop_down, color: Theme.of(context).iconTheme.color),
                   ),
                 )
               : InkWell(
@@ -75,10 +67,7 @@ class ThemeSwitch extends ConsumerWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (showIcon) ...[
-                        _buildThemeIcon(themeMode),
-                        const SizedBox(width: 8),
-                      ],
+                      if (showIcon) ...[_buildThemeIcon(themeMode), const SizedBox(width: 8)],
                       Text(
                         _getThemeName(themeMode),
                         style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
@@ -98,30 +87,18 @@ class ThemeSwitch extends ConsumerWidget {
   }
 
   List<DropdownMenuItem<ThemeMode>> _buildThemeItems(BuildContext context) => [
-        DropdownMenuItem(
-          value: ThemeMode.light,
-          child: _buildThemeItem(ThemeMode.light),
-        ),
-        DropdownMenuItem(
-          value: ThemeMode.dark,
-          child: _buildThemeItem(ThemeMode.dark),
-        ),
-        DropdownMenuItem(
-          value: ThemeMode.system,
-          child: _buildThemeItem(ThemeMode.system),
-        ),
-      ];
+    DropdownMenuItem(value: ThemeMode.light, child: _buildThemeItem(ThemeMode.light)),
+    DropdownMenuItem(value: ThemeMode.dark, child: _buildThemeItem(ThemeMode.dark)),
+    DropdownMenuItem(value: ThemeMode.system, child: _buildThemeItem(ThemeMode.system)),
+  ];
 
   Widget _buildThemeItem(ThemeMode themeMode) => Row(
-        children: [
-          _buildThemeIcon(themeMode),
-          const SizedBox(width: 12),
-          Text(
-            _getThemeName(themeMode),
-            style: const TextStyle(fontSize: 16),
-          ),
-        ],
-      );
+    children: [
+      _buildThemeIcon(themeMode),
+      const SizedBox(width: 12),
+      Text(_getThemeName(themeMode), style: const TextStyle(fontSize: 16)),
+    ],
+  );
 
   Widget _buildThemeIcon(ThemeMode themeMode) {
     IconData icon;
@@ -137,11 +114,7 @@ class ThemeSwitch extends ConsumerWidget {
         break;
     }
 
-    return Icon(
-      icon,
-      size: 20,
-      color: Colors.grey[600],
-    );
+    return Icon(icon, size: 20, color: Colors.grey[600]);
   }
 
   String _getThemeName(ThemeMode themeMode) {
@@ -268,10 +241,7 @@ class CompactThemeSwitch extends ConsumerWidget {
       icon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (showIcon) ...[
-            _buildThemeIcon(themeMode),
-            if (showText) const SizedBox(width: 4),
-          ],
+          if (showIcon) ...[_buildThemeIcon(themeMode), if (showText) const SizedBox(width: 4)],
           if (showText) ...[
             Text(
               _getThemeCode(themeMode),
@@ -298,11 +268,7 @@ class CompactThemeSwitch extends ConsumerWidget {
         break;
     }
 
-    return Icon(
-      icon,
-      size: 20,
-      color: iconColor ?? Colors.grey[600],
-    );
+    return Icon(icon, size: 20, color: iconColor ?? Colors.grey[600]);
   }
 
   String _getThemeCode(ThemeMode themeMode) {
@@ -324,21 +290,9 @@ class CompactThemeSwitch extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildThemeOption(
-              dialogContext,
-              ref,
-              ThemeMode.light,
-              Icons.light_mode,
-              'Светлая',
-            ),
+            _buildThemeOption(dialogContext, ref, ThemeMode.light, Icons.light_mode, 'Светлая'),
             const SizedBox(height: 8),
-            _buildThemeOption(
-              dialogContext,
-              ref,
-              ThemeMode.dark,
-              Icons.dark_mode,
-              'Темная',
-            ),
+            _buildThemeOption(dialogContext, ref, ThemeMode.dark, Icons.dark_mode, 'Темная'),
             const SizedBox(height: 8),
             _buildThemeOption(
               dialogContext,
@@ -417,10 +371,7 @@ class CurrentThemeDisplay extends ConsumerWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showIcon) ...[
-          _buildThemeIcon(themeMode),
-          const SizedBox(width: 8),
-        ],
+        if (showIcon) ...[_buildThemeIcon(themeMode), const SizedBox(width: 8)],
         if (showName || showCode) ...[
           Text(
             _getThemeDisplay(themeMode),
@@ -445,11 +396,7 @@ class CurrentThemeDisplay extends ConsumerWidget {
         break;
     }
 
-    return Icon(
-      icon,
-      size: 20,
-      color: Colors.grey[600],
-    );
+    return Icon(icon, size: 20, color: Colors.grey[600]);
   }
 
   String _getThemeDisplay(ThemeMode themeMode) {
@@ -477,12 +424,7 @@ class CurrentThemeDisplay extends ConsumerWidget {
 
 /// Виджет для быстрого переключения между светлой и темной темой
 class QuickThemeToggle extends ConsumerWidget {
-  const QuickThemeToggle({
-    super.key,
-    this.showTooltip = true,
-    this.iconColor,
-    this.onChanged,
-  });
+  const QuickThemeToggle({super.key, this.showTooltip = true, this.iconColor, this.onChanged});
   final bool showTooltip;
   final Color? iconColor;
   final VoidCallback? onChanged;

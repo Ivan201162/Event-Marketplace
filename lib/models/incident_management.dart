@@ -34,40 +34,37 @@ class Incident {
   });
 
   factory Incident.fromMap(Map<String, dynamic> map) => Incident(
-        id: map['id'] as String? ?? '',
-        title: map['title'] as String? ?? '',
-        description: map['description'] as String? ?? '',
-        type: IncidentType.fromString(map['type'] as String? ?? 'technical'),
-        severity: IncidentSeverity.fromString(map['severity'] as String? ?? 'medium'),
-        status: IncidentStatus.fromString(map['status'] as String? ?? 'open'),
-        priority: IncidentPriority.fromString(map['priority'] as String? ?? 'medium'),
-        assignedTo: map['assignedTo'] as String?,
-        assignedToName: map['assignedToName'] as String?,
-        reporterId: map['reporterId'] as String?,
-        reporterName: map['reporterName'] as String?,
-        reporterEmail: map['reporterEmail'] as String?,
-        affectedServices: List<String>.from(
-          (map['affectedServices'] as List<dynamic>?) ?? [],
-        ),
-        affectedUsers: List<String>.from((map['affectedUsers'] as List<dynamic>?) ?? []),
-        rootCause: map['rootCause'] as String?,
-        resolution: map['resolution'] as String?,
-        tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
-        metadata: Map<String, dynamic>.from(
-          (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
-        ),
-        attachments: List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
-        detectedAt: map['detectedAt'] != null ? (map['detectedAt'] as Timestamp).toDate() : null,
-        reportedAt: map['reportedAt'] != null ? (map['reportedAt'] as Timestamp).toDate() : null,
-        acknowledgedAt:
-            map['acknowledgedAt'] != null ? (map['acknowledgedAt'] as Timestamp).toDate() : null,
-        resolvedAt: map['resolvedAt'] != null ? (map['resolvedAt'] as Timestamp).toDate() : null,
-        closedAt: map['closedAt'] != null ? (map['closedAt'] as Timestamp).toDate() : null,
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] as String? ?? '',
-        updatedBy: map['updatedBy'] as String? ?? '',
-      );
+    id: map['id'] as String? ?? '',
+    title: map['title'] as String? ?? '',
+    description: map['description'] as String? ?? '',
+    type: IncidentType.fromString(map['type'] as String? ?? 'technical'),
+    severity: IncidentSeverity.fromString(map['severity'] as String? ?? 'medium'),
+    status: IncidentStatus.fromString(map['status'] as String? ?? 'open'),
+    priority: IncidentPriority.fromString(map['priority'] as String? ?? 'medium'),
+    assignedTo: map['assignedTo'] as String?,
+    assignedToName: map['assignedToName'] as String?,
+    reporterId: map['reporterId'] as String?,
+    reporterName: map['reporterName'] as String?,
+    reporterEmail: map['reporterEmail'] as String?,
+    affectedServices: List<String>.from((map['affectedServices'] as List<dynamic>?) ?? []),
+    affectedUsers: List<String>.from((map['affectedUsers'] as List<dynamic>?) ?? []),
+    rootCause: map['rootCause'] as String?,
+    resolution: map['resolution'] as String?,
+    tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
+    metadata: Map<String, dynamic>.from((map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+    attachments: List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
+    detectedAt: map['detectedAt'] != null ? (map['detectedAt'] as Timestamp).toDate() : null,
+    reportedAt: map['reportedAt'] != null ? (map['reportedAt'] as Timestamp).toDate() : null,
+    acknowledgedAt: map['acknowledgedAt'] != null
+        ? (map['acknowledgedAt'] as Timestamp).toDate()
+        : null,
+    resolvedAt: map['resolvedAt'] != null ? (map['resolvedAt'] as Timestamp).toDate() : null,
+    closedAt: map['closedAt'] != null ? (map['closedAt'] as Timestamp).toDate() : null,
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+    createdBy: map['createdBy'] as String? ?? '',
+    updatedBy: map['updatedBy'] as String? ?? '',
+  );
   final String id;
   final String title;
   final String description;
@@ -98,35 +95,35 @@ class Incident {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'type': type.value,
-        'severity': severity.value,
-        'status': status.value,
-        'priority': priority.value,
-        'assignedTo': assignedTo,
-        'assignedToName': assignedToName,
-        'reporterId': reporterId,
-        'reporterName': reporterName,
-        'reporterEmail': reporterEmail,
-        'affectedServices': affectedServices,
-        'affectedUsers': affectedUsers,
-        'rootCause': rootCause,
-        'resolution': resolution,
-        'tags': tags,
-        'metadata': metadata,
-        'attachments': attachments,
-        'detectedAt': detectedAt != null ? Timestamp.fromDate(detectedAt!) : null,
-        'reportedAt': reportedAt != null ? Timestamp.fromDate(reportedAt!) : null,
-        'acknowledgedAt': acknowledgedAt != null ? Timestamp.fromDate(acknowledgedAt!) : null,
-        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-        'closedAt': closedAt != null ? Timestamp.fromDate(closedAt!) : null,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'createdBy': createdBy,
-        'updatedBy': updatedBy,
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'type': type.value,
+    'severity': severity.value,
+    'status': status.value,
+    'priority': priority.value,
+    'assignedTo': assignedTo,
+    'assignedToName': assignedToName,
+    'reporterId': reporterId,
+    'reporterName': reporterName,
+    'reporterEmail': reporterEmail,
+    'affectedServices': affectedServices,
+    'affectedUsers': affectedUsers,
+    'rootCause': rootCause,
+    'resolution': resolution,
+    'tags': tags,
+    'metadata': metadata,
+    'attachments': attachments,
+    'detectedAt': detectedAt != null ? Timestamp.fromDate(detectedAt!) : null,
+    'reportedAt': reportedAt != null ? Timestamp.fromDate(reportedAt!) : null,
+    'acknowledgedAt': acknowledgedAt != null ? Timestamp.fromDate(acknowledgedAt!) : null,
+    'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+    'closedAt': closedAt != null ? Timestamp.fromDate(closedAt!) : null,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'createdBy': createdBy,
+    'updatedBy': updatedBy,
+  };
 
   Incident copyWith({
     String? id,
@@ -157,37 +154,36 @@ class Incident {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) =>
-      Incident(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        type: type ?? this.type,
-        severity: severity ?? this.severity,
-        status: status ?? this.status,
-        priority: priority ?? this.priority,
-        assignedTo: assignedTo ?? this.assignedTo,
-        assignedToName: assignedToName ?? this.assignedToName,
-        reporterId: reporterId ?? this.reporterId,
-        reporterName: reporterName ?? this.reporterName,
-        reporterEmail: reporterEmail ?? this.reporterEmail,
-        affectedServices: affectedServices ?? this.affectedServices,
-        affectedUsers: affectedUsers ?? this.affectedUsers,
-        rootCause: rootCause ?? this.rootCause,
-        resolution: resolution ?? this.resolution,
-        tags: tags ?? this.tags,
-        metadata: metadata ?? this.metadata,
-        attachments: attachments ?? this.attachments,
-        detectedAt: detectedAt ?? this.detectedAt,
-        reportedAt: reportedAt ?? this.reportedAt,
-        acknowledgedAt: acknowledgedAt ?? this.acknowledgedAt,
-        resolvedAt: resolvedAt ?? this.resolvedAt,
-        closedAt: closedAt ?? this.closedAt,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        createdBy: createdBy ?? this.createdBy,
-        updatedBy: updatedBy ?? this.updatedBy,
-      );
+  }) => Incident(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    type: type ?? this.type,
+    severity: severity ?? this.severity,
+    status: status ?? this.status,
+    priority: priority ?? this.priority,
+    assignedTo: assignedTo ?? this.assignedTo,
+    assignedToName: assignedToName ?? this.assignedToName,
+    reporterId: reporterId ?? this.reporterId,
+    reporterName: reporterName ?? this.reporterName,
+    reporterEmail: reporterEmail ?? this.reporterEmail,
+    affectedServices: affectedServices ?? this.affectedServices,
+    affectedUsers: affectedUsers ?? this.affectedUsers,
+    rootCause: rootCause ?? this.rootCause,
+    resolution: resolution ?? this.resolution,
+    tags: tags ?? this.tags,
+    metadata: metadata ?? this.metadata,
+    attachments: attachments ?? this.attachments,
+    detectedAt: detectedAt ?? this.detectedAt,
+    reportedAt: reportedAt ?? this.reportedAt,
+    acknowledgedAt: acknowledgedAt ?? this.acknowledgedAt,
+    resolvedAt: resolvedAt ?? this.resolvedAt,
+    closedAt: closedAt ?? this.closedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdBy: createdBy ?? this.createdBy,
+    updatedBy: updatedBy ?? this.updatedBy,
+  );
 
   @override
   String toString() => 'Incident(id: $id, title: $title, severity: $severity, status: $status)';
@@ -219,9 +215,9 @@ enum IncidentType {
   final String displayName;
 
   static IncidentType fromString(String value) => IncidentType.values.firstWhere(
-        (type) => type.value == value,
-        orElse: () => IncidentType.technical,
-      );
+    (type) => type.value == value,
+    orElse: () => IncidentType.technical,
+  );
 
   String get icon {
     switch (this) {
@@ -280,9 +276,9 @@ enum IncidentSeverity {
   final String displayName;
 
   static IncidentSeverity fromString(String value) => IncidentSeverity.values.firstWhere(
-        (severity) => severity.value == value,
-        orElse: () => IncidentSeverity.medium,
-      );
+    (severity) => severity.value == value,
+    orElse: () => IncidentSeverity.medium,
+  );
 
   String get icon {
     switch (this) {
@@ -330,9 +326,9 @@ enum IncidentStatus {
   final String displayName;
 
   static IncidentStatus fromString(String value) => IncidentStatus.values.firstWhere(
-        (status) => status.value == value,
-        orElse: () => IncidentStatus.open,
-      );
+    (status) => status.value == value,
+    orElse: () => IncidentStatus.open,
+  );
 
   String get icon {
     switch (this) {
@@ -383,9 +379,9 @@ enum IncidentPriority {
   final String displayName;
 
   static IncidentPriority fromString(String value) => IncidentPriority.values.firstWhere(
-        (priority) => priority.value == value,
-        orElse: () => IncidentPriority.p3,
-      );
+    (priority) => priority.value == value,
+    orElse: () => IncidentPriority.p3,
+  );
 
   String get icon {
     switch (this) {
@@ -436,19 +432,19 @@ class IncidentComment {
   });
 
   factory IncidentComment.fromMap(Map<String, dynamic> map) => IncidentComment(
-        id: map['id'] as String? ?? '',
-        incidentId: map['incidentId'] as String? ?? '',
-        content: map['content'] as String? ?? '',
-        parentId: map['parentId'] as String?,
-        authorId: map['authorId'] as String? ?? '',
-        authorName: map['authorName'] as String? ?? '',
-        authorEmail: map['authorEmail'] as String?,
-        type: CommentType.fromString(map['type'] as String? ?? 'comment'),
-        isInternal: map['isInternal'] as bool? ?? false,
-        attachments: List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-      );
+    id: map['id'] as String? ?? '',
+    incidentId: map['incidentId'] as String? ?? '',
+    content: map['content'] as String? ?? '',
+    parentId: map['parentId'] as String?,
+    authorId: map['authorId'] as String? ?? '',
+    authorName: map['authorName'] as String? ?? '',
+    authorEmail: map['authorEmail'] as String?,
+    type: CommentType.fromString(map['type'] as String? ?? 'comment'),
+    isInternal: map['isInternal'] as bool? ?? false,
+    attachments: List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+  );
   final String id;
   final String incidentId;
   final String content;
@@ -463,19 +459,19 @@ class IncidentComment {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'incidentId': incidentId,
-        'content': content,
-        'parentId': parentId,
-        'authorId': authorId,
-        'authorName': authorName,
-        'authorEmail': authorEmail,
-        'type': type.value,
-        'isInternal': isInternal,
-        'attachments': attachments,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'incidentId': incidentId,
+    'content': content,
+    'parentId': parentId,
+    'authorId': authorId,
+    'authorName': authorName,
+    'authorEmail': authorEmail,
+    'type': type.value,
+    'isInternal': isInternal,
+    'attachments': attachments,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   IncidentComment copyWith({
     String? id,
@@ -490,21 +486,20 @@ class IncidentComment {
     List<String>? attachments,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      IncidentComment(
-        id: id ?? this.id,
-        incidentId: incidentId ?? this.incidentId,
-        content: content ?? this.content,
-        parentId: parentId ?? this.parentId,
-        authorId: authorId ?? this.authorId,
-        authorName: authorName ?? this.authorName,
-        authorEmail: authorEmail ?? this.authorEmail,
-        type: type ?? this.type,
-        isInternal: isInternal ?? this.isInternal,
-        attachments: attachments ?? this.attachments,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => IncidentComment(
+    id: id ?? this.id,
+    incidentId: incidentId ?? this.incidentId,
+    content: content ?? this.content,
+    parentId: parentId ?? this.parentId,
+    authorId: authorId ?? this.authorId,
+    authorName: authorName ?? this.authorName,
+    authorEmail: authorEmail ?? this.authorEmail,
+    type: type ?? this.type,
+    isInternal: isInternal ?? this.isInternal,
+    attachments: attachments ?? this.attachments,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   @override
   String toString() => 'IncidentComment(id: $id, incidentId: $incidentId, authorName: $authorName)';
@@ -534,9 +529,9 @@ enum CommentType {
   final String displayName;
 
   static CommentType fromString(String value) => CommentType.values.firstWhere(
-        (type) => type.value == value,
-        orElse: () => CommentType.comment,
-      );
+    (type) => type.value == value,
+    orElse: () => CommentType.comment,
+  );
 
   String get icon {
     switch (this) {
@@ -591,24 +586,25 @@ class IncidentSLA {
   });
 
   factory IncidentSLA.fromMap(Map<String, dynamic> map) => IncidentSLA(
-        id: map['id'] as String? ?? '',
-        incidentId: map['incidentId'] as String? ?? '',
-        status: SLAStatus.fromString(map['status'] as String? ?? 'active'),
-        acknowledgedDeadline: map['acknowledgedDeadline'] != null
-            ? (map['acknowledgedDeadline'] as Timestamp).toDate()
-            : null,
-        resolvedDeadline: map['resolvedDeadline'] != null
-            ? (map['resolvedDeadline'] as Timestamp).toDate()
-            : null,
-        acknowledgedAt:
-            map['acknowledgedAt'] != null ? (map['acknowledgedAt'] as Timestamp).toDate() : null,
-        resolvedAt: map['resolvedAt'] != null ? (map['resolvedAt'] as Timestamp).toDate() : null,
-        acknowledgedOnTime: map['acknowledgedOnTime'] as bool? ?? true,
-        resolvedOnTime: map['resolvedOnTime'] as bool? ?? true,
-        breachReason: map['breachReason'] as String?,
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-      );
+    id: map['id'] as String? ?? '',
+    incidentId: map['incidentId'] as String? ?? '',
+    status: SLAStatus.fromString(map['status'] as String? ?? 'active'),
+    acknowledgedDeadline: map['acknowledgedDeadline'] != null
+        ? (map['acknowledgedDeadline'] as Timestamp).toDate()
+        : null,
+    resolvedDeadline: map['resolvedDeadline'] != null
+        ? (map['resolvedDeadline'] as Timestamp).toDate()
+        : null,
+    acknowledgedAt: map['acknowledgedAt'] != null
+        ? (map['acknowledgedAt'] as Timestamp).toDate()
+        : null,
+    resolvedAt: map['resolvedAt'] != null ? (map['resolvedAt'] as Timestamp).toDate() : null,
+    acknowledgedOnTime: map['acknowledgedOnTime'] as bool? ?? true,
+    resolvedOnTime: map['resolvedOnTime'] as bool? ?? true,
+    breachReason: map['breachReason'] as String?,
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+  );
   final String id;
   final String incidentId;
   final SLAStatus status;
@@ -623,20 +619,21 @@ class IncidentSLA {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'incidentId': incidentId,
-        'status': status.value,
-        'acknowledgedDeadline':
-            acknowledgedDeadline != null ? Timestamp.fromDate(acknowledgedDeadline!) : null,
-        'resolvedDeadline': resolvedDeadline != null ? Timestamp.fromDate(resolvedDeadline!) : null,
-        'acknowledgedAt': acknowledgedAt != null ? Timestamp.fromDate(acknowledgedAt!) : null,
-        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-        'acknowledgedOnTime': acknowledgedOnTime,
-        'resolvedOnTime': resolvedOnTime,
-        'breachReason': breachReason,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'incidentId': incidentId,
+    'status': status.value,
+    'acknowledgedDeadline': acknowledgedDeadline != null
+        ? Timestamp.fromDate(acknowledgedDeadline!)
+        : null,
+    'resolvedDeadline': resolvedDeadline != null ? Timestamp.fromDate(resolvedDeadline!) : null,
+    'acknowledgedAt': acknowledgedAt != null ? Timestamp.fromDate(acknowledgedAt!) : null,
+    'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+    'acknowledgedOnTime': acknowledgedOnTime,
+    'resolvedOnTime': resolvedOnTime,
+    'breachReason': breachReason,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   IncidentSLA copyWith({
     String? id,
@@ -651,21 +648,20 @@ class IncidentSLA {
     String? breachReason,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      IncidentSLA(
-        id: id ?? this.id,
-        incidentId: incidentId ?? this.incidentId,
-        status: status ?? this.status,
-        acknowledgedDeadline: acknowledgedDeadline ?? this.acknowledgedDeadline,
-        resolvedDeadline: resolvedDeadline ?? this.resolvedDeadline,
-        acknowledgedAt: acknowledgedAt ?? this.acknowledgedAt,
-        resolvedAt: resolvedAt ?? this.resolvedAt,
-        acknowledgedOnTime: acknowledgedOnTime ?? this.acknowledgedOnTime,
-        resolvedOnTime: resolvedOnTime ?? this.resolvedOnTime,
-        breachReason: breachReason ?? this.breachReason,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => IncidentSLA(
+    id: id ?? this.id,
+    incidentId: incidentId ?? this.incidentId,
+    status: status ?? this.status,
+    acknowledgedDeadline: acknowledgedDeadline ?? this.acknowledgedDeadline,
+    resolvedDeadline: resolvedDeadline ?? this.resolvedDeadline,
+    acknowledgedAt: acknowledgedAt ?? this.acknowledgedAt,
+    resolvedAt: resolvedAt ?? this.resolvedAt,
+    acknowledgedOnTime: acknowledgedOnTime ?? this.acknowledgedOnTime,
+    resolvedOnTime: resolvedOnTime ?? this.resolvedOnTime,
+    breachReason: breachReason ?? this.breachReason,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   @override
   String toString() => 'IncidentSLA(id: $id, incidentId: $incidentId, status: $status)';
@@ -693,9 +689,9 @@ enum SLAStatus {
   final String displayName;
 
   static SLAStatus fromString(String value) => SLAStatus.values.firstWhere(
-        (status) => status.value == value,
-        orElse: () => SLAStatus.active,
-      );
+    (status) => status.value == value,
+    orElse: () => SLAStatus.active,
+  );
 
   String get icon {
     switch (this) {

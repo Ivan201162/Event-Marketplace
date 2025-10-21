@@ -49,9 +49,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки данных: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки данных: $e')));
       }
     }
   }
@@ -64,17 +64,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadDashboardData,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadDashboardData),
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AdminLogsScreen()),
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLogsScreen()));
             },
           ),
         ],
@@ -195,18 +189,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           const SizedBox(height: 8),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
           ),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -313,11 +300,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             const SizedBox(height: 8),
             Text(
               title,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
               textAlign: TextAlign.center,
             ),
           ],
@@ -460,12 +443,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               stream: _adminService.getAdminLogsStream(limit: 5).map((logs) {
                 // Convert logs to QuerySnapshot-like structure
                 return QuerySnapshot(
-                  docs: logs
-                      .map((log) => QueryDocumentSnapshot(
-                            log.id,
-                            log.toMap(),
-                          ))
-                      .toList(),
+                  docs: logs.map((log) => QueryDocumentSnapshot(log.id, log.toMap())).toList(),
                 );
               }),
               builder: (context, snapshot) {

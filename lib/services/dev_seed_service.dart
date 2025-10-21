@@ -535,10 +535,7 @@ class DevSeedService {
         'shares': 0,
         'createdAt': Timestamp.fromDate(DateTime.now().subtract(Duration(days: i))),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
-        'metadata': {
-          'createdBy': 'dev_seed_service',
-          'isTestData': true,
-        },
+        'metadata': {'createdBy': 'dev_seed_service', 'isTestData': true},
       });
     }
 
@@ -583,10 +580,7 @@ class DevSeedService {
         'views': 0,
         'createdAt': Timestamp.fromDate(DateTime.now().subtract(Duration(hours: i))),
         'expiresAt': Timestamp.fromDate(DateTime.now().add(const Duration(hours: 24))),
-        'metadata': {
-          'createdBy': 'dev_seed_service',
-          'isTestData': true,
-        },
+        'metadata': {'createdBy': 'dev_seed_service', 'isTestData': true},
       });
     }
 
@@ -633,10 +627,7 @@ class DevSeedService {
         'text': reviewData['text'],
         'createdAt': Timestamp.fromDate(DateTime.now().subtract(Duration(days: i + 1))),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
-        'metadata': {
-          'createdBy': 'dev_seed_service',
-          'isTestData': true,
-        },
+        'metadata': {'createdBy': 'dev_seed_service', 'isTestData': true},
       });
     }
 
@@ -685,10 +676,7 @@ class DevSeedService {
         'status': bookingData['status'],
         'createdAt': Timestamp.fromDate(DateTime.now().subtract(Duration(days: i + 2))),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
-        'metadata': {
-          'createdBy': 'dev_seed_service',
-          'isTestData': true,
-        },
+        'metadata': {'createdBy': 'dev_seed_service', 'isTestData': true},
       });
     }
 
@@ -716,8 +704,10 @@ class DevSeedService {
       }
 
       // Удаляем тестовые посты
-      final postsQuery =
-          await _firestore.collection('posts').where('metadata.isTestData', isEqualTo: true).get();
+      final postsQuery = await _firestore
+          .collection('posts')
+          .where('metadata.isTestData', isEqualTo: true)
+          .get();
 
       for (final doc in postsQuery.docs) {
         batch.delete(doc.reference);

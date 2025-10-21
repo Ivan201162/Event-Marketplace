@@ -37,10 +37,7 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showAddEventDialog(context),
-          ),
+          IconButton(icon: const Icon(Icons.add), onPressed: () => _showAddEventDialog(context)),
           IconButton(
             icon: const Icon(Icons.analytics),
             onPressed: () => _showAnalyticsDialog(context),
@@ -124,9 +121,7 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
           children: [
             Text(
               'Статистика',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             scheduleAsync.when(
@@ -136,37 +131,17 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
                     schedule?.events.where((e) => e.type == ScheduleEventType.booking).length ?? 0;
                 final unavailableEvents =
                     schedule?.events.where((e) => e.type == ScheduleEventType.unavailable).length ??
-                        0;
+                    0;
                 final vacationEvents =
                     schedule?.events.where((e) => e.type == ScheduleEventType.vacation).length ?? 0;
 
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatItem(
-                      context,
-                      'Всего событий',
-                      totalEvents,
-                      Colors.blue,
-                    ),
-                    _buildStatItem(
-                      context,
-                      'Бронирования',
-                      bookingEvents,
-                      Colors.green,
-                    ),
-                    _buildStatItem(
-                      context,
-                      'Недоступность',
-                      unavailableEvents,
-                      Colors.red,
-                    ),
-                    _buildStatItem(
-                      context,
-                      'Отпуск',
-                      vacationEvents,
-                      Colors.orange,
-                    ),
+                    _buildStatItem(context, 'Всего событий', totalEvents, Colors.blue),
+                    _buildStatItem(context, 'Бронирования', bookingEvents, Colors.green),
+                    _buildStatItem(context, 'Недоступность', unavailableEvents, Colors.red),
+                    _buildStatItem(context, 'Отпуск', vacationEvents, Colors.orange),
                   ],
                 );
               },
@@ -180,96 +155,81 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
   }
 
   /// Элемент статистики
-  Widget _buildStatItem(
-    BuildContext context,
-    String label,
-    int count,
-    Color color,
-  ) =>
-      Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              count.toString(),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
+  Widget _buildStatItem(BuildContext context, String label, int count, Color color) => Column(
+    children: [
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), shape: BoxShape.circle),
+        child: Text(
+          count.toString(),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+        ),
+        textAlign: TextAlign.center,
+      ),
+    ],
+  );
 
   /// Карточка быстрых действий
   Widget _buildQuickActionsCard(BuildContext context, String specialistId) => Card(
-        elevation: 4,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    elevation: 4,
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Быстрые действия',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          Row(
             children: [
-              Text(
-                'Быстрые действия',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _showAddUnavailableDialog(context, specialistId),
-                      icon: const Icon(Icons.block),
-                      label: const Text('Недоступность'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => _showAddUnavailableDialog(context, specialistId),
+                  icon: const Icon(Icons.block),
+                  label: const Text('Недоступность'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _showAddVacationDialog(context, specialistId),
-                      icon: const Icon(Icons.beach_access),
-                      label: const Text('Отпуск'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () => _showTestDataDialog(context),
-                  icon: const Icon(Icons.science),
-                  label: const Text('Добавить тестовые данные'),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => _showAddVacationDialog(context, specialistId),
+                  icon: const Icon(Icons.beach_access),
+                  label: const Text('Отпуск'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    foregroundColor: Colors.white,
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-      );
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _showTestDataDialog(context),
+              icon: const Icon(Icons.science),
+              label: const Text('Добавить тестовые данные'),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 
   /// Показать диалог добавления события
   void _showAddEventDialog(BuildContext context) {
@@ -279,10 +239,7 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
         title: const Text('Добавить событие'),
         content: const Text('Выберите тип события для добавления'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -321,9 +278,7 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
                 const SizedBox(height: 16),
                 TextField(
                   controller: descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Описание (необязательно)',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Описание (необязательно)'),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
@@ -369,23 +324,20 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена'),
-            ),
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
             ElevatedButton(
               onPressed: () async {
                 if (titleController.text.isEmpty || startDate == null || endDate == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Заполните все обязательные поля'),
-                    ),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('Заполните все обязательные поля')));
                   return;
                 }
 
                 try {
-                  await ref.read(calendarServiceProvider).createUnavailableEvent(
+                  await ref
+                      .read(calendarServiceProvider)
+                      .createUnavailableEvent(
                         specialistId: specialistId,
                         startDate: startDate!,
                         endDate: endDate!,
@@ -394,15 +346,15 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
 
                   if (context.mounted) {
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Недоступность добавлена')),
-                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(const SnackBar(content: Text('Недоступность добавлена')));
                   }
                 } on Exception catch (e) {
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Ошибка: $e')),
-                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                   }
                 }
               },
@@ -440,9 +392,7 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
                 const SizedBox(height: 16),
                 TextField(
                   controller: descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Описание (необязательно)',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Описание (необязательно)'),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),
@@ -488,23 +438,20 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена'),
-            ),
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
             ElevatedButton(
               onPressed: () async {
                 if (titleController.text.isEmpty || startDate == null || endDate == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Заполните все обязательные поля'),
-                    ),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('Заполните все обязательные поля')));
                   return;
                 }
 
                 try {
-                  await ref.read(calendarServiceProvider).createVacationEvent(
+                  await ref
+                      .read(calendarServiceProvider)
+                      .createVacationEvent(
                         specialistId: specialistId,
                         startDate: startDate!,
                         endDate: endDate!,
@@ -513,15 +460,15 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
 
                   if (context.mounted) {
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Отпуск добавлен')),
-                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(const SnackBar(content: Text('Отпуск добавлен')));
                   }
                 } on Exception catch (e) {
                   if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Ошибка: $e')),
-                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                   }
                 }
               },
@@ -541,25 +488,20 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
         title: const Text('Тестовые данные'),
         content: const Text('Добавить тестовые данные календаря для разработки?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               try {
                 await ref.read(calendarServiceProvider).addTestData('current_specialist');
                 if (context.mounted) {
                   Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Тестовые данные добавлены')),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('Тестовые данные добавлены')));
                 }
               } on Exception catch (e) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Ошибка: $e')),
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -579,14 +521,9 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Аналитика календаря'),
-        content: const Text(
-          'Здесь будет отображаться аналитика календаря специалиста',
-        ),
+        content: const Text('Здесь будет отображаться аналитика календаря специалиста'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
         ],
       ),
     );

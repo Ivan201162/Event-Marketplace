@@ -16,8 +16,9 @@ class OAuthProfileService {
   Future<AppUser?> handleOAuthUser(User firebaseUser) async {
     try {
       final userId = firebaseUser.uid;
-      final userMetadata =
-          firebaseUser.providerData.isNotEmpty ? firebaseUser.providerData.first : null;
+      final userMetadata = firebaseUser.providerData.isNotEmpty
+          ? firebaseUser.providerData.first
+          : null;
 
       // Получаем данные из метаданных
       final name = _extractName(firebaseUser, userMetadata);

@@ -126,10 +126,7 @@ class OptimizedFirestoreService {
   }
 
   /// Создание документа с оптимизацией
-  static Future<String?> createDocument(
-    String collection,
-    Map<String, dynamic> data,
-  ) async {
+  static Future<String?> createDocument(String collection, Map<String, dynamic> data) async {
     try {
       final docRef = await _firestore.collection(collection).add(data);
 
@@ -163,10 +160,7 @@ class OptimizedFirestoreService {
   }
 
   /// Удаление документа с оптимизацией
-  static Future<bool> deleteDocument(
-    String collection,
-    String documentId,
-  ) async {
+  static Future<bool> deleteDocument(String collection, String documentId) async {
     try {
       await _firestore.collection(collection).doc(documentId).delete();
 
@@ -232,17 +226,14 @@ class OptimizedFirestoreService {
 
   /// Получение статистики кэша
   static Map<String, dynamic> getCacheStats() => {
-        'cacheSize': _queryCache.length,
-        'cacheKeys': _queryCache.keys.toList(),
-      };
+    'cacheSize': _queryCache.length,
+    'cacheKeys': _queryCache.keys.toList(),
+  };
 }
 
 /// Класс для фильтров запросов
 class QueryFilter {
-  const QueryFilter({
-    required this.field,
-    required this.value,
-  });
+  const QueryFilter({required this.field, required this.value});
 
   final String field;
   final dynamic value;
@@ -250,15 +241,13 @@ class QueryFilter {
 
 /// Класс для сортировки запросов
 class QueryOrder {
-  const QueryOrder({
-    required this.field,
-    this.descending = false,
-  });
+  const QueryOrder({required this.field, this.descending = false});
 
   final String field;
   final bool descending;
 }
 
 /// Провайдер для оптимизированного сервиса Firestore
-final optimizedFirestoreServiceProvider =
-    Provider<OptimizedFirestoreService>((ref) => OptimizedFirestoreService());
+final optimizedFirestoreServiceProvider = Provider<OptimizedFirestoreService>(
+  (ref) => OptimizedFirestoreService(),
+);

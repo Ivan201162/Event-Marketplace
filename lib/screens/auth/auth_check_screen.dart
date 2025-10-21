@@ -90,10 +90,7 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF6C5CE7),
-              Color(0xFFA29BFE),
-            ],
+            colors: [Color(0xFF6C5CE7), Color(0xFFA29BFE)],
           ),
         ),
         child: const Center(
@@ -101,30 +98,19 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // App logo
-              Icon(
-                Icons.event,
-                size: 80,
-                color: Colors.white,
-              ),
+              Icon(Icons.event, size: 80, color: Colors.white),
               SizedBox(height: 24),
 
               // App name
               Text(
                 'Event Marketplace',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               SizedBox(height: 8),
 
               Text(
                 'Проверка авторизации...',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white70,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
               SizedBox(height: 32),
 

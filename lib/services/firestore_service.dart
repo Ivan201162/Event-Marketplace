@@ -99,9 +99,7 @@ class FirestoreService {
   }
 
   // Получить занятые даты с временными интервалами
-  Future<List<Map<String, dynamic>>> getBusyDateRanges(
-    String specialistId,
-  ) async {
+  Future<List<Map<String, dynamic>>> getBusyDateRanges(String specialistId) async {
     final qs = await _db
         .collection('bookings')
         .where('specialistId', isEqualTo: specialistId)
@@ -113,7 +111,8 @@ class FirestoreService {
       return {
         'bookingId': d.id,
         'startTime': (data['eventDate'] as Timestamp).toDate(),
-        'endTime': (data['endDate'] as Timestamp?)?.toDate() ??
+        'endTime':
+            (data['endDate'] as Timestamp?)?.toDate() ??
             (data['eventDate'] as Timestamp).toDate().add(const Duration(hours: 2)),
         'customerId': data['customerId'],
         'title': data['title'] ?? 'Бронирование',
@@ -259,9 +258,7 @@ class FirestoreService {
       );
 
       if (!isAvailable) {
-        throw Exception(
-          'Выбранная дата и время недоступны в расписании специалиста',
-        );
+        throw Exception('Выбранная дата и время недоступны в расписании специалиста');
       }
 
       // Сохраняем заявку
@@ -310,10 +307,7 @@ class FirestoreService {
   }
 
   // Обновить статус заявки с интеграцией календаря и уведомлений
-  Future<void> updateBookingStatusWithCalendar(
-    String bookingId,
-    String status,
-  ) async {
+  Future<void> updateBookingStatusWithCalendar(String bookingId, String status) async {
     try {
       // Получаем заявку
       final bookingDoc = await _db.collection('bookings').doc(bookingId).get();
@@ -365,10 +359,7 @@ class FirestoreService {
   }
 
   // Проверить доступность даты для специалиста
-  Future<bool> isSpecialistAvailable(
-    String specialistId,
-    DateTime dateTime,
-  ) async =>
+  Future<bool> isSpecialistAvailable(String specialistId, DateTime dateTime) async =>
       _calendarService.isDateTimeAvailable(specialistId, dateTime);
 
   // Получить доступные временные слоты для специалиста
@@ -376,18 +367,10 @@ class FirestoreService {
     String specialistId,
     DateTime date, {
     Duration slotDuration = const Duration(hours: 1),
-  }) async =>
-      _calendarService.getAvailableTimeSlots(
-        specialistId,
-        date,
-        slotDuration,
-      );
+  }) async => _calendarService.getAvailableTimeSlots(specialistId, date, slotDuration);
 
   // Получить события специалиста на дату
-  Future<List<ScheduleEvent>> getSpecialistEventsForDate(
-    String specialistId,
-    DateTime date,
-  ) async {
+  Future<List<ScheduleEvent>> getSpecialistEventsForDate(String specialistId, DateTime date) async {
     final calendarEvents = await _calendarService.getEventsForDate(specialistId, date);
     return calendarEvents
         .map(
@@ -403,10 +386,7 @@ class FirestoreService {
   }
 
   // Отправить уведомления о статусе заявки
-  Future<void> _sendBookingStatusNotifications(
-    Booking booking,
-    String status,
-  ) async {
+  Future<void> _sendBookingStatusNotifications(Booking booking, String status) async {
     try {
       NotificationType notificationType;
       String title;
@@ -449,19 +429,12 @@ class FirestoreService {
         userId: booking.customerId ?? '',
         title: title,
         body: body,
-        data: {
-          'type': 'booking_$status',
-          'bookingId': booking.id,
-        },
+        data: {'type': 'booking_$status', 'bookingId': booking.id},
       );
 
       // Отправляем уведомление специалисту (если статус изменил клиент)
       if (status == 'cancelled') {
-        await _notificationService.sendNotification(
-          booking.specialistId ?? '',
-          title,
-          body,
-        );
+        await _notificationService.sendNotification(booking.specialistId ?? '', title, body);
 
         // Отправляем push-уведомление специалисту
         await _sendPushNotification(
@@ -469,10 +442,7 @@ class FirestoreService {
           title: 'Заявка отменена клиентом',
           body:
               'Клиент отменил заявку на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
-          data: {
-            'type': 'booking_cancelled',
-            'bookingId': booking.id,
-          },
+          data: {'type': 'booking_cancelled', 'bookingId': booking.id},
         );
       }
     } on Exception catch (e) {
@@ -588,11 +558,7 @@ class FirestoreService {
         hasMore: snapshot.docs.length == limit,
       );
     } catch (e, stackTrace) {
-      SafeLog.error(
-        'Ошибка получения бронирований с пагинацией',
-        e,
-        stackTrace,
-      );
+      SafeLog.error('Ошибка получения бронирований с пагинацией', e, stackTrace);
       rethrow;
     }
   }
@@ -622,10 +588,9 @@ class FirestoreService {
 
           if (searchQuery != null && searchQuery.isNotEmpty) {
             // Простой поиск по названию события
-            query = query.where('eventName', isGreaterThanOrEqualTo: searchQuery).where(
-                  'eventName',
-                  isLessThanOrEqualTo: '$searchQuery\uf8ff',
-                );
+            query = query
+                .where('eventName', isGreaterThanOrEqualTo: searchQuery)
+                .where('eventName', isLessThanOrEqualTo: '$searchQuery\uf8ff');
           }
 
           query = query.orderBy('eventDate', descending: true).limit(50);
@@ -633,9 +598,7 @@ class FirestoreService {
           final snapshot = await query.get();
           final bookings = snapshot.docs.map(Booking.fromDocument).toList();
 
-          SafeLog.debug(
-            'Найдено ${bookings.length} бронирований по запросу "$searchQuery"',
-          );
+          SafeLog.debug('Найдено ${bookings.length} бронирований по запросу "$searchQuery"');
           controller.add(bookings);
         } catch (e, stackTrace) {
           SafeLog.error('Ошибка поиска бронирований', e, stackTrace);
@@ -670,9 +633,7 @@ class FirestoreService {
       final snapshot = await query.get();
       final notifications = snapshot.docs.map(model.AppNotification.fromDocument).toList();
 
-      SafeLog.debug(
-        'Получено ${notifications.length} уведомлений с пагинацией',
-      );
+      SafeLog.debug('Получено ${notifications.length} уведомлений с пагинацией');
 
       return PaginatedResult<model.AppNotification>(
         items: notifications,
@@ -714,9 +675,7 @@ class FirestoreService {
           query = query.orderBy('name').limit(50);
 
           final snapshot = await query.get();
-          SafeLog.debug(
-            'Найдено ${snapshot.docs.length} специалистов по запросу "$searchQuery"',
-          );
+          SafeLog.debug('Найдено ${snapshot.docs.length} специалистов по запросу "$searchQuery"');
           controller.add(snapshot.docs);
         } catch (e, stackTrace) {
           SafeLog.error('Ошибка поиска специалистов', e, stackTrace);
@@ -836,8 +795,10 @@ class FirestoreService {
   /// Получить статистику платежей пользователя
   Future<PaymentStats> getUserPaymentStats(String userId) async {
     try {
-      final querySnapshot =
-          await _db.collection('payments').where('customerId', isEqualTo: userId).get();
+      final querySnapshot = await _db
+          .collection('payments')
+          .where('customerId', isEqualTo: userId)
+          .get();
 
       final payments = querySnapshot.docs.map(Payment.fromDocument).toList();
 
@@ -865,8 +826,10 @@ class FirestoreService {
   /// Получить статистику платежей специалиста
   Future<PaymentStats> getSpecialistPaymentStats(String specialistId) async {
     try {
-      final querySnapshot =
-          await _db.collection('payments').where('specialistId', isEqualTo: specialistId).get();
+      final querySnapshot = await _db
+          .collection('payments')
+          .where('specialistId', isEqualTo: specialistId)
+          .get();
 
       final payments = querySnapshot.docs.map(Payment.fromDocument).toList();
 
@@ -897,11 +860,7 @@ class FirestoreService {
 
 /// Результат пагинированного запроса
 class PaginatedResult<T> {
-  const PaginatedResult({
-    required this.items,
-    this.lastDocument,
-    required this.hasMore,
-  });
+  const PaginatedResult({required this.items, this.lastDocument, required this.hasMore});
   final List<T> items;
   final DocumentSnapshot? lastDocument;
   final bool hasMore;

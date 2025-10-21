@@ -9,11 +9,7 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(
-              body: CreateTestSpecialistButton(
-                specialistType: 'photographer',
-              ),
-            ),
+            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -27,11 +23,7 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(
-              body: CreateTestSpecialistButton(
-                specialistType: 'photographer',
-              ),
-            ),
+            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -45,19 +37,16 @@ void main() {
       expect(find.text('Создание...'), findsOneWidget);
     });
 
-    testWidgets('CreateTestSpecialistButton should handle different specialist types',
-        (tester) async {
+    testWidgets('CreateTestSpecialistButton should handle different specialist types', (
+      tester,
+    ) async {
       final specialistTypes = ['photographer', 'videographer', 'dj', 'host'];
 
       for (final type in specialistTypes) {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              home: Scaffold(
-                body: CreateTestSpecialistButton(
-                  specialistType: type,
-                ),
-              ),
+              home: Scaffold(body: CreateTestSpecialistButton(specialistType: type)),
             ),
           ),
         );
@@ -67,8 +56,9 @@ void main() {
       }
     });
 
-    testWidgets('CreateTestSpecialistButton should call onSpecialistCreated callback',
-        (tester) async {
+    testWidgets('CreateTestSpecialistButton should call onSpecialistCreated callback', (
+      tester,
+    ) async {
       // var callbackCalled = false;
 
       await tester.pumpWidget(
@@ -99,11 +89,7 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(
-              body: CreateTestSpecialistButton(
-                specialistType: 'photographer',
-              ),
-            ),
+            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -121,11 +107,7 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(
-              body: CreateTestSpecialistButton(
-                specialistType: 'photographer',
-              ),
-            ),
+            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -139,11 +121,7 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(
-              body: CreateTestSpecialistButton(
-                specialistType: 'photographer',
-              ),
-            ),
+            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -157,11 +135,7 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(
-              body: CreateTestSpecialistButton(
-                specialistType: 'photographer',
-              ),
-            ),
+            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -175,11 +149,7 @@ void main() {
     testWidgets('CreateTestSpecialistButton should handle null specialistType', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: CreateTestSpecialistButton(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: CreateTestSpecialistButton())),
         ),
       );
 
@@ -191,11 +161,7 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(
-              body: CreateTestSpecialistButton(
-                specialistType: '',
-              ),
-            ),
+            home: Scaffold(body: CreateTestSpecialistButton(specialistType: '')),
           ),
         ),
       );

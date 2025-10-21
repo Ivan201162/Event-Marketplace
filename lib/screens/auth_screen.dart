@@ -49,7 +49,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> with TickerProviderStat
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height -
+              minHeight:
+                  MediaQuery.of(context).size.height -
                   MediaQuery.of(context).padding.top -
                   MediaQuery.of(context).padding.bottom,
             ),
@@ -77,11 +78,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> with TickerProviderStat
                               ),
                             ],
                           ),
-                          child: const Icon(
-                            Icons.event,
-                            size: 40,
-                            color: Colors.white,
-                          ),
+                          child: const Icon(Icons.event, size: 40, color: Colors.white),
                         ),
                         const SizedBox(height: 20),
 
@@ -186,18 +183,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> with TickerProviderStat
                                 fontSize: 14,
                               ),
                               tabs: const [
-                                Tab(
-                                  icon: Icon(Icons.email, size: 20),
-                                  text: 'Email',
-                                ),
-                                Tab(
-                                  icon: Icon(Icons.phone, size: 20),
-                                  text: 'Телефон',
-                                ),
-                                Tab(
-                                  icon: Icon(Icons.person, size: 20),
-                                  text: 'Гость',
-                                ),
+                                Tab(icon: Icon(Icons.email, size: 20), text: 'Email'),
+                                Tab(icon: Icon(Icons.phone, size: 20), text: 'Телефон'),
+                                Tab(icon: Icon(Icons.person, size: 20), text: 'Гость'),
                               ],
                             ),
                           ),
@@ -226,9 +214,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> with TickerProviderStat
                                     height: 20,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        theme.primaryColor,
-                                      ),
+                                      valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
                                     ),
                                   ),
                                   const SizedBox(width: 12),

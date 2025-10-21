@@ -19,154 +19,132 @@ class FAQItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок с индикатором публичности
+            Row(
               children: [
-                // Заголовок с индикатором публичности
-                Row(
-                  children: [
-                    if (faqItem.isPublished) ...[
-                      const Icon(Icons.public, color: Colors.green, size: 16),
-                      const SizedBox(width: 4),
-                    ] else ...[
-                      const Icon(Icons.lock, color: Colors.grey, size: 16),
-                      const SizedBox(width: 4),
-                    ],
-                    Expanded(
-                      child: Text(
-                        faqItem.question,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                if (faqItem.isPublished) ...[
+                  const Icon(Icons.public, color: Colors.green, size: 16),
+                  const SizedBox(width: 4),
+                ] else ...[
+                  const Icon(Icons.lock, color: Colors.grey, size: 16),
+                  const SizedBox(width: 4),
+                ],
+                Expanded(
+                  child: Text(
+                    faqItem.question,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'publish':
+                        onTogglePublish();
+                        break;
+                      case 'edit':
+                        onEdit();
+                        break;
+                      case 'delete':
+                        onDelete();
+                        break;
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 'publish',
+                      child: Row(
+                        children: [
+                          Icon(
+                            faqItem.isPublished ? Icons.lock : Icons.public,
+                            color: faqItem.isPublished ? Colors.grey : Colors.green,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(faqItem.isPublished ? 'Скрыть' : 'Опубликовать'),
+                        ],
                       ),
                     ),
-                    PopupMenuButton<String>(
-                      onSelected: (value) {
-                        switch (value) {
-                          case 'publish':
-                            onTogglePublish();
-                            break;
-                          case 'edit':
-                            onEdit();
-                            break;
-                          case 'delete':
-                            onDelete();
-                            break;
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        PopupMenuItem(
-                          value: 'publish',
-                          child: Row(
-                            children: [
-                              Icon(
-                                faqItem.isPublished ? Icons.lock : Icons.public,
-                                color: faqItem.isPublished ? Colors.grey : Colors.green,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                faqItem.isPublished ? 'Скрыть' : 'Опубликовать',
-                              ),
-                            ],
-                          ),
-                        ),
-                        const PopupMenuItem(
-                          value: 'edit',
-                          child: Row(
-                            children: [
-                              Icon(Icons.edit),
-                              SizedBox(width: 8),
-                              Text('Редактировать'),
-                            ],
-                          ),
-                        ),
-                        const PopupMenuItem(
-                          value: 'delete',
-                          child: Row(
-                            children: [
-                              Icon(Icons.delete, color: Colors.red),
-                              SizedBox(width: 8),
-                              Text(
-                                'Удалить',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 8),
-
-                // Ответ
-                Text(
-                  faqItem.answer,
-                  style: const TextStyle(fontSize: 14),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                const SizedBox(height: 8),
-
-                // Категория и порядок
-                Row(
-                  children: [
-                    Chip(
-                      label: Text(
-                        _getCategoryDisplayName(faqItem.category),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      backgroundColor: _getCategoryColor(faqItem.category),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      visualDensity: VisualDensity.compact,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Порядок: ${faqItem.order}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')],
                       ),
                     ),
-                  ],
-                ),
-
-                const SizedBox(height: 8),
-
-                // Информация о дате
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time,
-                      size: 14,
-                      color: Colors.grey[600],
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      _formatDate(faqItem.updatedAt),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.red),
+                          SizedBox(width: 8),
+                          Text('Удалить', style: TextStyle(color: Colors.red)),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ],
             ),
-          ),
+
+            const SizedBox(height: 8),
+
+            // Ответ
+            Text(
+              faqItem.answer,
+              style: const TextStyle(fontSize: 14),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+
+            const SizedBox(height: 8),
+
+            // Категория и порядок
+            Row(
+              children: [
+                Chip(
+                  label: Text(
+                    _getCategoryDisplayName(faqItem.category),
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                  backgroundColor: _getCategoryColor(faqItem.category),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Порядок: ${faqItem.order}',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            // Информация о дате
+            Row(
+              children: [
+                Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                const SizedBox(width: 4),
+                Text(
+                  _formatDate(faqItem.updatedAt),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                ),
+              ],
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   String _getCategoryDisplayName(String category) {
     switch (category) {

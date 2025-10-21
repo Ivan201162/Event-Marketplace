@@ -19,8 +19,9 @@ class ABTestingService {
           .get();
 
       if (existingVariant.docs.isNotEmpty) {
-        final ABTestAssignment assignment =
-            ABTestAssignment.fromMap(existingVariant.docs.first.data() as Map<String, dynamic>);
+        final ABTestAssignment assignment = ABTestAssignment.fromMap(
+          existingVariant.docs.first.data() as Map<String, dynamic>,
+        );
         return assignment.variant;
       }
 
@@ -52,7 +53,8 @@ class ABTestingService {
       await _firestore.collection('ab_test_assignments').doc(assignment.id).set(assignment.toMap());
 
       debugPrint(
-          'INFO: [ABTestingService] Variant $variant assigned to user $userId for test $testName');
+        'INFO: [ABTestingService] Variant $variant assigned to user $userId for test $testName',
+      );
       return variant;
     } catch (e) {
       debugPrint('ERROR: [ABTestingService] Failed to get variant for user: $e');
@@ -78,7 +80,11 @@ class ABTestingService {
 
   /// Логирование события для A/B теста
   Future<void> logEvent(
-      String userId, String testName, String eventName, Map<String, dynamic>? eventData) async {
+    String userId,
+    String testName,
+    String eventName,
+    Map<String, dynamic>? eventData,
+  ) async {
     try {
       // Получаем назначенный вариант
       final String variant = await getVariantForUser(userId, testName);
@@ -96,7 +102,8 @@ class ABTestingService {
       await _firestore.collection('ab_test_events').doc(event.id).set(event.toMap());
 
       debugPrint(
-          'INFO: [ABTestingService] Event logged: $eventName for test $testName, variant $variant');
+        'INFO: [ABTestingService] Event logged: $eventName for test $testName, variant $variant',
+      );
     } catch (e) {
       debugPrint('ERROR: [ABTestingService] Failed to log event: $e');
     }
@@ -197,8 +204,9 @@ class ABTestingService {
 
       // Подсчитываем пользователей по вариантам
       for (final doc in assignmentsSnapshot.docs) {
-        final ABTestAssignment assignment =
-            ABTestAssignment.fromMap(doc.data() as Map<String, dynamic>);
+        final ABTestAssignment assignment = ABTestAssignment.fromMap(
+          doc.data() as Map<String, dynamic>,
+        );
         variantUsers[assignment.variant] = (variantUsers[assignment.variant] ?? 0) + 1;
       }
 
@@ -218,12 +226,14 @@ class ABTestingService {
         final int userCount = variantUsers[variant.name] ?? 0;
         final Map<String, int> events = variantEvents[variant.name] ?? {};
 
-        variantResults.add(VariantResult(
-          variantName: variant.name,
-          userCount: userCount,
-          events: events,
-          conversionRate: userCount > 0 ? (events['conversion'] ?? 0) / userCount : 0.0,
-        ));
+        variantResults.add(
+          VariantResult(
+            variantName: variant.name,
+            userCount: userCount,
+            events: events,
+            conversionRate: userCount > 0 ? (events['conversion'] ?? 0) / userCount : 0.0,
+          ),
+        );
       }
 
       final ABTestResults results = ABTestResults(
@@ -247,8 +257,10 @@ class ABTestingService {
   /// Получение всех активных A/B тестов
   Future<List<ABTest>> getActiveABTests() async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('ab_tests').where('isActive', isEqualTo: true).get();
+      final QuerySnapshot snapshot = await _firestore
+          .collection('ab_tests')
+          .where('isActive', isEqualTo: true)
+          .get();
 
       return snapshot.docs
           .map((doc) => ABTest.fromMap(doc.data() as Map<String, dynamic>))
@@ -306,19 +318,13 @@ class ABTestingService {
             name: 'control',
             description: 'Текущие цены',
             trafficPercentage: 50,
-            config: {
-              'premium_price': 499.0,
-              'pro_price': 999.0,
-            },
+            config: {'premium_price': 499.0, 'pro_price': 999.0},
           ),
           ABTestVariant(
             name: 'discounted',
             description: 'Скидка 20%',
             trafficPercentage: 50,
-            config: {
-              'premium_price': 399.0,
-              'pro_price': 799.0,
-            },
+            config: {'premium_price': 399.0, 'pro_price': 799.0},
           ),
         ],
         startDate: DateTime.now(),
@@ -335,19 +341,13 @@ class ABTestingService {
             name: 'control',
             description: 'Стандартное размещение',
             trafficPercentage: 50,
-            config: {
-              'placement': 'top',
-              'frequency': 'normal',
-            },
+            config: {'placement': 'top', 'frequency': 'normal'},
           ),
           ABTestVariant(
             name: 'aggressive',
             description: 'Агрессивное размещение',
             trafficPercentage: 50,
-            config: {
-              'placement': 'multiple',
-              'frequency': 'high',
-            },
+            config: {'placement': 'multiple', 'frequency': 'high'},
           ),
         ],
         startDate: DateTime.now(),
@@ -364,19 +364,13 @@ class ABTestingService {
             name: 'control',
             description: 'Стандартные награды',
             trafficPercentage: 50,
-            config: {
-              'referrer_bonus': 5,
-              'referred_bonus': 3,
-            },
+            config: {'referrer_bonus': 5, 'referred_bonus': 3},
           ),
           ABTestVariant(
             name: 'enhanced',
             description: 'Увеличенные награды',
             trafficPercentage: 50,
-            config: {
-              'referrer_bonus': 7,
-              'referred_bonus': 5,
-            },
+            config: {'referrer_bonus': 7, 'referred_bonus': 5},
           ),
         ],
         startDate: DateTime.now(),

@@ -12,10 +12,7 @@ import '../providers/auth_providers.dart';
 class EditProfileScreen extends ConsumerStatefulWidget {
   final Profile? initialProfile;
 
-  const EditProfileScreen({
-    super.key,
-    this.initialProfile,
-  });
+  const EditProfileScreen({super.key, this.initialProfile});
 
   @override
   ConsumerState<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -199,14 +196,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 backgroundImage: _selectedAvatar != null
                     ? FileImage(_selectedAvatar!)
                     : (widget.initialProfile?.avatarUrl != null
-                        ? NetworkImage(widget.initialProfile!.avatarUrl!)
-                        : null) as ImageProvider?,
+                              ? NetworkImage(widget.initialProfile!.avatarUrl!)
+                              : null)
+                          as ImageProvider?,
                 child: _selectedAvatar == null && widget.initialProfile?.avatarUrl == null
-                    ? const Icon(
-                        Icons.person,
-                        size: 60,
-                        color: Colors.grey,
-                      )
+                    ? const Icon(Icons.person, size: 60, color: Colors.grey)
                     : null,
               ),
               Positioned(
@@ -216,28 +210,18 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      width: 2,
-                    ),
+                    border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2),
                   ),
                   child: IconButton(
                     onPressed: _pickAvatar,
-                    icon: const Icon(
-                      Icons.camera_alt,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+                    icon: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          TextButton(
-            onPressed: _pickAvatar,
-            child: const Text('Изменить фото'),
-          ),
+          TextButton(onPressed: _pickAvatar, child: const Text('Изменить фото')),
         ],
       ),
     );
@@ -261,9 +245,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка при выборе фото: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка при выборе фото: $e')));
       }
     }
   }
@@ -323,16 +307,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       // await SupabaseService.updateProfile(updatedProfile);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Профиль успешно обновлен!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Профиль успешно обновлен!')));
         context.pop();
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка при сохранении: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка при сохранении: $e')));
       }
     } finally {
       if (mounted) {

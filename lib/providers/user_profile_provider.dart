@@ -99,10 +99,7 @@ class UserProfileNotifier extends Notifier<AsyncValue<UserProfile?>> {
   }
 
   /// Обновить прайс-лист
-  Future<void> updateServices(
-    String userId,
-    List<ServicePrice> services,
-  ) async {
+  Future<void> updateServices(String userId, List<ServicePrice> services) async {
     try {
       final success = await UserProfileService.updateServices(userId, services);
       if (success && state.hasValue) {
@@ -243,9 +240,7 @@ class UserStoriesNotifier extends Notifier<AsyncValue<List<UserStory>>> {
 
 /// Провайдер для UserStoriesNotifier
 final userStoriesNotifierProvider =
-    NotifierProvider<UserStoriesNotifier, AsyncValue<List<UserStory>>>(
-  UserStoriesNotifier.new,
-);
+    NotifierProvider<UserStoriesNotifier, AsyncValue<List<UserStory>>>(UserStoriesNotifier.new);
 
 /// Провайдер для управления отзывами (мигрирован с StateNotifier)
 class ReviewsNotifier extends Notifier<AsyncValue<List<UserReview>>> {

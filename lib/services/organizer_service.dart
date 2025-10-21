@@ -124,10 +124,7 @@ class OrganizerService {
   }
 
   /// Поиск организаторов по названию
-  Future<List<OrganizerProfile>> searchOrganizers(
-    String searchQuery, {
-    int limit = 20,
-  }) async {
+  Future<List<OrganizerProfile>> searchOrganizers(String searchQuery, {int limit = 20}) async {
     try {
       // Firestore не поддерживает полнотекстовый поиск, поэтому используем простой фильтр
       final querySnapshot = await _firestore
@@ -158,9 +155,7 @@ class OrganizerService {
   }
 
   /// Получить топ организаторов по рейтингу
-  Future<List<OrganizerProfile>> getTopOrganizers({
-    int limit = 10,
-  }) async {
+  Future<List<OrganizerProfile>> getTopOrganizers({int limit = 10}) async {
     try {
       final querySnapshot = await _firestore
           .collection('organizer_profiles')
@@ -200,11 +195,7 @@ class OrganizerService {
   }
 
   /// Обновить рейтинг организатора
-  Future<void> updateOrganizerRating(
-    String organizerId,
-    double newRating,
-    int reviewCount,
-  ) async {
+  Future<void> updateOrganizerRating(String organizerId, double newRating, int reviewCount) async {
     try {
       await _firestore.collection('organizer_profiles').doc(organizerId).update({
         'rating': newRating,
@@ -218,10 +209,7 @@ class OrganizerService {
   }
 
   /// Добавить событие в портфолио
-  Future<void> addEventToPortfolio(
-    String organizerId,
-    String eventId,
-  ) async {
+  Future<void> addEventToPortfolio(String organizerId, String eventId) async {
     try {
       await _firestore.collection('organizer_profiles').doc(organizerId).update({
         'pastEvents': FieldValue.arrayUnion([eventId]),
@@ -234,10 +222,7 @@ class OrganizerService {
   }
 
   /// Добавить изображение в портфолио
-  Future<void> addPortfolioImage(
-    String organizerId,
-    String imageUrl,
-  ) async {
+  Future<void> addPortfolioImage(String organizerId, String imageUrl) async {
     try {
       await _firestore.collection('organizer_profiles').doc(organizerId).update({
         'portfolioImages': FieldValue.arrayUnion([imageUrl]),
@@ -250,10 +235,7 @@ class OrganizerService {
   }
 
   /// Добавить видео в портфолио
-  Future<void> addPortfolioVideo(
-    String organizerId,
-    String videoUrl,
-  ) async {
+  Future<void> addPortfolioVideo(String organizerId, String videoUrl) async {
     try {
       await _firestore.collection('organizer_profiles').doc(organizerId).update({
         'portfolioVideos': FieldValue.arrayUnion([videoUrl]),
@@ -266,10 +248,7 @@ class OrganizerService {
   }
 
   /// Добавить члена команды
-  Future<void> addTeamMember(
-    String organizerId,
-    String specialistId,
-  ) async {
+  Future<void> addTeamMember(String organizerId, String specialistId) async {
     try {
       await _firestore.collection('organizer_profiles').doc(organizerId).update({
         'teamMembers': FieldValue.arrayUnion([specialistId]),
@@ -282,10 +261,7 @@ class OrganizerService {
   }
 
   /// Удалить члена команды
-  Future<void> removeTeamMember(
-    String organizerId,
-    String specialistId,
-  ) async {
+  Future<void> removeTeamMember(String organizerId, String specialistId) async {
     try {
       await _firestore.collection('organizer_profiles').doc(organizerId).update({
         'teamMembers': FieldValue.arrayRemove([specialistId]),
@@ -316,10 +292,8 @@ class OrganizerService {
       final activeProjectsQuery = await _firestore
           .collection('bookings')
           .where('organizerId', isEqualTo: organizerId)
-          .where(
-        'status',
-        whereIn: ['pending', 'confirmed', 'in_progress'],
-      ).get();
+          .where('status', whereIn: ['pending', 'confirmed', 'in_progress'])
+          .get();
 
       return {
         'totalProjects': organizer.pastEvents.length,

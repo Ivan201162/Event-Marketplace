@@ -72,12 +72,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _showError(String message) {
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showCityPicker() {
@@ -90,10 +87,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           children: [
             const Text(
               'Выберите город',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -125,10 +119,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF6C5CE7),
-              Color(0xFFA29BFE),
-            ],
+            colors: [Color(0xFF6C5CE7), Color(0xFFA29BFE)],
           ),
         ),
         child: SafeArea(
@@ -141,19 +132,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 // Welcome text
                 const Text(
                   'Добро пожаловать!',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 const SizedBox(height: 8),
                 const Text(
                   'Расскажите немного о себе',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.white70),
                 ),
 
                 const Spacer(),
@@ -217,22 +201,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       // User type selection
                       const Text(
                         'Тип аккаунта',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
-                      ...UserType.values.map((type) => RadioListTile<UserType>(
-                            title: Text(type.displayName),
-                            value: type,
-                            groupValue: _selectedType,
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() => _selectedType = value);
-                              }
-                            },
-                          )),
+                      ...UserType.values.map(
+                        (type) => RadioListTile<UserType>(
+                          title: Text(type.displayName),
+                          value: type,
+                          groupValue: _selectedType,
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() => _selectedType = value);
+                            }
+                          },
+                        ),
+                      ),
 
                       const SizedBox(height: 24),
 

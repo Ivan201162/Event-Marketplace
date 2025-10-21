@@ -60,41 +60,41 @@ class PhotoStudio {
 
   /// Создать из Map
   factory PhotoStudio.fromMap(Map<String, dynamic> data) => PhotoStudio(
-        id: data['id']?.toString() ?? '',
-        name: data['name']?.toString() ?? '',
-        description: data['description']?.toString() ?? '',
-        address: data['address']?.toString() ?? '',
-        phone: data['phone']?.toString() ?? '',
-        email: data['email']?.toString() ?? '',
-        ownerId: data['ownerId']?.toString() ?? '',
-        createdAt:
-            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-        avatarUrl: data['avatarUrl']?.toString(),
-        coverImageUrl: data['coverImageUrl']?.toString(),
-        images: (data['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-        amenities: (data['amenities'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-        pricing: data['pricing'] != null ? Map<String, dynamic>.from(data['pricing'] as Map) : {},
-        workingHours: data['workingHours'] != null
-            ? Map<String, dynamic>.from(data['workingHours'] as Map)
-            : {},
-        rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
-        reviewCount: (data['reviewCount'] as num?)?.toInt() ?? 0,
-        isActive: data['isActive'] == true,
-        isVerified: data['isVerified'] == true,
-        location:
-            data['location'] != null ? Map<String, dynamic>.from(data['location'] as Map) : {},
-        metadata:
-            data['metadata'] != null ? Map<String, dynamic>.from(data['metadata'] as Map) : {},
-        priceRange: data['priceRange'] != null
-            ? PriceRange.fromMap(Map<String, dynamic>.from(data['priceRange']))
-            : null,
-        photosCount: (data['photosCount'] as num?)?.toInt() ?? 0,
-        studioOptions: (data['studioOptions'] as List<dynamic>?)
-                ?.map((e) => StudioOption.fromMap(Map<String, dynamic>.from(e)))
-                .toList() ??
-            [],
-        photos: (data['photos'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-      );
+    id: data['id']?.toString() ?? '',
+    name: data['name']?.toString() ?? '',
+    description: data['description']?.toString() ?? '',
+    address: data['address']?.toString() ?? '',
+    phone: data['phone']?.toString() ?? '',
+    email: data['email']?.toString() ?? '',
+    ownerId: data['ownerId']?.toString() ?? '',
+    createdAt: data['createdAt'] != null
+        ? (data['createdAt'] as Timestamp).toDate()
+        : DateTime.now(),
+    avatarUrl: data['avatarUrl']?.toString(),
+    coverImageUrl: data['coverImageUrl']?.toString(),
+    images: (data['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+    amenities: (data['amenities'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+    pricing: data['pricing'] != null ? Map<String, dynamic>.from(data['pricing'] as Map) : {},
+    workingHours: data['workingHours'] != null
+        ? Map<String, dynamic>.from(data['workingHours'] as Map)
+        : {},
+    rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
+    reviewCount: (data['reviewCount'] as num?)?.toInt() ?? 0,
+    isActive: data['isActive'] == true,
+    isVerified: data['isVerified'] == true,
+    location: data['location'] != null ? Map<String, dynamic>.from(data['location'] as Map) : {},
+    metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata'] as Map) : {},
+    priceRange: data['priceRange'] != null
+        ? PriceRange.fromMap(Map<String, dynamic>.from(data['priceRange']))
+        : null,
+    photosCount: (data['photosCount'] as num?)?.toInt() ?? 0,
+    studioOptions:
+        (data['studioOptions'] as List<dynamic>?)
+            ?.map((e) => StudioOption.fromMap(Map<String, dynamic>.from(e)))
+            .toList() ??
+        [],
+    photos: (data['photos'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+  );
 
   final String id;
   final String name;
@@ -123,30 +123,30 @@ class PhotoStudio {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'address': address,
-        'phone': phone,
-        'email': email,
-        'ownerId': ownerId,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'avatarUrl': avatarUrl,
-        'coverImageUrl': coverImageUrl,
-        'images': images,
-        'amenities': amenities,
-        'pricing': pricing,
-        'workingHours': workingHours,
-        'rating': rating,
-        'reviewCount': reviewCount,
-        'isActive': isActive,
-        'isVerified': isVerified,
-        'location': location,
-        'metadata': metadata,
-        'priceRange': priceRange?.toMap(),
-        'photosCount': photosCount,
-        'studioOptions': studioOptions.map((e) => e.toMap()).toList(),
-        'photos': photos,
-      };
+    'name': name,
+    'description': description,
+    'address': address,
+    'phone': phone,
+    'email': email,
+    'ownerId': ownerId,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'avatarUrl': avatarUrl,
+    'coverImageUrl': coverImageUrl,
+    'images': images,
+    'amenities': amenities,
+    'pricing': pricing,
+    'workingHours': workingHours,
+    'rating': rating,
+    'reviewCount': reviewCount,
+    'isActive': isActive,
+    'isVerified': isVerified,
+    'location': location,
+    'metadata': metadata,
+    'priceRange': priceRange?.toMap(),
+    'photosCount': photosCount,
+    'studioOptions': studioOptions.map((e) => e.toMap()).toList(),
+    'photos': photos,
+  };
 
   /// Создать копию с изменениями
   PhotoStudio copyWith({
@@ -174,33 +174,32 @@ class PhotoStudio {
     int? photosCount,
     List<StudioOption>? studioOptions,
     List<String>? photos,
-  }) =>
-      PhotoStudio(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        address: address ?? this.address,
-        phone: phone ?? this.phone,
-        email: email ?? this.email,
-        ownerId: ownerId ?? this.ownerId,
-        createdAt: createdAt ?? this.createdAt,
-        avatarUrl: avatarUrl ?? this.avatarUrl,
-        coverImageUrl: coverImageUrl ?? this.coverImageUrl,
-        images: images ?? this.images,
-        amenities: amenities ?? this.amenities,
-        pricing: pricing ?? this.pricing,
-        workingHours: workingHours ?? this.workingHours,
-        rating: rating ?? this.rating,
-        reviewCount: reviewCount ?? this.reviewCount,
-        isActive: isActive ?? this.isActive,
-        isVerified: isVerified ?? this.isVerified,
-        location: location ?? this.location,
-        metadata: metadata ?? this.metadata,
-        priceRange: priceRange ?? this.priceRange,
-        photosCount: photosCount ?? this.photosCount,
-        studioOptions: studioOptions ?? this.studioOptions,
-        photos: photos ?? this.photos,
-      );
+  }) => PhotoStudio(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    address: address ?? this.address,
+    phone: phone ?? this.phone,
+    email: email ?? this.email,
+    ownerId: ownerId ?? this.ownerId,
+    createdAt: createdAt ?? this.createdAt,
+    avatarUrl: avatarUrl ?? this.avatarUrl,
+    coverImageUrl: coverImageUrl ?? this.coverImageUrl,
+    images: images ?? this.images,
+    amenities: amenities ?? this.amenities,
+    pricing: pricing ?? this.pricing,
+    workingHours: workingHours ?? this.workingHours,
+    rating: rating ?? this.rating,
+    reviewCount: reviewCount ?? this.reviewCount,
+    isActive: isActive ?? this.isActive,
+    isVerified: isVerified ?? this.isVerified,
+    location: location ?? this.location,
+    metadata: metadata ?? this.metadata,
+    priceRange: priceRange ?? this.priceRange,
+    photosCount: photosCount ?? this.photosCount,
+    studioOptions: studioOptions ?? this.studioOptions,
+    photos: photos ?? this.photos,
+  );
 
   /// Получить цену за час
   double? get hourlyRate {
@@ -250,15 +249,7 @@ class PhotoStudio {
   }
 
   String _getDayName(int weekday) {
-    const days = [
-      'monday',
-      'tuesday',
-      'wednesday',
-      'thursday',
-      'friday',
-      'saturday',
-      'sunday',
-    ];
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     return days[weekday - 1];
   }
 
@@ -472,23 +463,22 @@ class PhotoStudioBooking {
     String? notes,
     String? packageName,
     Map<String, dynamic>? metadata,
-  }) =>
-      PhotoStudioBooking(
-        id: id ?? this.id,
-        studioId: studioId ?? this.studioId,
-        customerId: customerId ?? this.customerId,
-        startTime: startTime ?? this.startTime,
-        endTime: endTime ?? this.endTime,
-        totalPrice: totalPrice ?? this.totalPrice,
-        status: status ?? this.status,
-        createdAt: createdAt ?? this.createdAt,
-        customerName: customerName ?? this.customerName,
-        customerPhone: customerPhone ?? this.customerPhone,
-        customerEmail: customerEmail ?? this.customerEmail,
-        notes: notes ?? this.notes,
-        packageName: packageName ?? this.packageName,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => PhotoStudioBooking(
+    id: id ?? this.id,
+    studioId: studioId ?? this.studioId,
+    customerId: customerId ?? this.customerId,
+    startTime: startTime ?? this.startTime,
+    endTime: endTime ?? this.endTime,
+    totalPrice: totalPrice ?? this.totalPrice,
+    status: status ?? this.status,
+    createdAt: createdAt ?? this.createdAt,
+    customerName: customerName ?? this.customerName,
+    customerPhone: customerPhone ?? this.customerPhone,
+    customerEmail: customerEmail ?? this.customerEmail,
+    notes: notes ?? this.notes,
+    packageName: packageName ?? this.packageName,
+    metadata: metadata ?? this.metadata,
+  );
 
   @override
   bool operator ==(Object other) {
@@ -514,12 +504,12 @@ class StudioOption {
   });
 
   factory StudioOption.fromMap(Map<String, dynamic> data) => StudioOption(
-        id: data['id']?.toString() ?? '',
-        name: data['name']?.toString() ?? '',
-        description: data['description']?.toString() ?? '',
-        price: (data['price'] as num?)?.toDouble() ?? 0.0,
-        isAvailable: data['isAvailable'] == true,
-      );
+    id: data['id']?.toString() ?? '',
+    name: data['name']?.toString() ?? '',
+    description: data['description']?.toString() ?? '',
+    price: (data['price'] as num?)?.toDouble() ?? 0.0,
+    isAvailable: data['isAvailable'] == true,
+  );
 
   final String id;
   final String name;
@@ -528,12 +518,12 @@ class StudioOption {
   final bool isAvailable;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'name': name,
-        'description': description,
-        'price': price,
-        'isAvailable': isAvailable,
-      };
+    'id': id,
+    'name': name,
+    'description': description,
+    'price': price,
+    'isAvailable': isAvailable,
+  };
 
   @override
   String toString() => 'StudioOption(id: $id, name: $name, price: $price)';

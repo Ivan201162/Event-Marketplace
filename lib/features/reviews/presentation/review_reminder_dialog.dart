@@ -26,139 +26,114 @@ class _ReviewReminderDialogState extends State<ReviewReminderDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    title: Row(
+      children: [
+        const Icon(Icons.star, color: Colors.amber, size: 28),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            'Оцените специалиста',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
         ),
-        title: Row(
+      ],
+    ),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Информация о заказе
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.specialistName,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Заказ от ${_formatDate(widget.eventDate)}',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // Текст напоминания
+        Text(
+          'Ваш заказ завершен! Пожалуйста, оставьте отзыв о работе специалиста. Это поможет другим пользователям сделать правильный выбор.',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+
+        const SizedBox(height: 16),
+
+        // Преимущества отзыва
+        Row(
           children: [
-            const Icon(
-              Icons.star,
-              color: Colors.amber,
-              size: 28,
-            ),
-            const SizedBox(width: 12),
+            const Icon(Icons.thumb_up, color: Colors.green, size: 20),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Оцените специалиста',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                'Помогает другим пользователям',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
           ],
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(height: 8),
+        Row(
           children: [
-            // Информация о заказе
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
+            const Icon(Icons.verified, color: Colors.blue, size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Повышает качество сервиса',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.specialistName,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Заказ от ${_formatDate(widget.eventDate)}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Текст напоминания
-            Text(
-              'Ваш заказ завершен! Пожалуйста, оставьте отзыв о работе специалиста. Это поможет другим пользователям сделать правильный выбор.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Преимущества отзыва
-            Row(
-              children: [
-                const Icon(
-                  Icons.thumb_up,
-                  color: Colors.green,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Помогает другим пользователям',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(
-                  Icons.verified,
-                  color: Colors.blue,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Повышает качество сервиса',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ),
-              ],
             ),
           ],
         ),
-        actions: [
-          // Кнопка "Позже"
-          TextButton(
-            onPressed: _isLoading ? null : () => Navigator.pop(context),
-            child: Text(
-              'Позже',
-              style: TextStyle(
-                color: Colors.grey[600],
-              ),
-            ),
-          ),
+      ],
+    ),
+    actions: [
+      // Кнопка "Позже"
+      TextButton(
+        onPressed: _isLoading ? null : () => Navigator.pop(context),
+        child: Text('Позже', style: TextStyle(color: Colors.grey[600])),
+      ),
 
-          // Кнопка "Оставить отзыв"
-          ElevatedButton(
-            onPressed: _isLoading ? null : _leaveReview,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: _isLoading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                : const Text('Оставить отзыв'),
-          ),
-        ],
-      );
+      // Кнопка "Оставить отзыв"
+      ElevatedButton(
+        onPressed: _isLoading ? null : _leaveReview,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: _isLoading
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : const Text('Оставить отзыв'),
+      ),
+    ],
+  );
 
   /// Оставить отзыв
   void _leaveReview() {
@@ -243,11 +218,7 @@ class _ReviewReminderBannerState extends State<ReviewReminderBanner> {
                     color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
-                    Icons.star,
-                    color: Colors.white,
-                    size: 24,
-                  ),
+                  child: const Icon(Icons.star, color: Colors.white, size: 24),
                 ),
 
                 const SizedBox(width: 16),
@@ -260,16 +231,16 @@ class _ReviewReminderBannerState extends State<ReviewReminderBanner> {
                       Text(
                         'Оцените специалиста',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Оставьте отзыв о работе ${widget.specialistName}',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.9),
-                            ),
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
                       ),
                     ],
                   ),
@@ -278,10 +249,7 @@ class _ReviewReminderBannerState extends State<ReviewReminderBanner> {
                 // Кнопка закрытия
                 IconButton(
                   onPressed: _dismissBanner,
-                  icon: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  ),
+                  icon: const Icon(Icons.close, color: Colors.white),
                 ),
               ],
             ),
@@ -379,18 +347,13 @@ class _ReviewStatusWidgetState extends State<ReviewStatusWidget> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.star,
-              color: Colors.green,
-              size: 16,
-            ),
+            const Icon(Icons.star, color: Colors.green, size: 16),
             const SizedBox(width: 4),
             Text(
               'Отзыв оставлен',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.green,
-                    fontWeight: FontWeight.w500,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.green, fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -407,18 +370,13 @@ class _ReviewStatusWidgetState extends State<ReviewStatusWidget> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.star_border,
-            color: Colors.orange,
-            size: 16,
-          ),
+          const Icon(Icons.star_border, color: Colors.orange, size: 16),
           const SizedBox(width: 4),
           Text(
             'Оставить отзыв',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.orange,
-                  fontWeight: FontWeight.w500,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Colors.orange, fontWeight: FontWeight.w500),
           ),
         ],
       ),

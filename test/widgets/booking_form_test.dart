@@ -38,9 +38,7 @@ void main() {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -57,9 +55,7 @@ void main() {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -78,9 +74,7 @@ void main() {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -95,9 +89,7 @@ void main() {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -115,9 +107,7 @@ void main() {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -131,9 +121,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -151,9 +139,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -171,9 +157,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -192,9 +176,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -213,9 +195,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -234,9 +214,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -255,9 +233,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -276,9 +252,7 @@ void main() {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'specialist_1'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'specialist_1')),
         ),
       );
 
@@ -290,9 +264,7 @@ void main() {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: BookingFormScreen(specialistId: 'nonexistent_specialist'),
-          ),
+          child: MaterialApp(home: BookingFormScreen(specialistId: 'nonexistent_specialist')),
         ),
       );
 

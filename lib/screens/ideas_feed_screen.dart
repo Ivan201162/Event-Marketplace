@@ -49,10 +49,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         _offset = 0;
       });
 
-      final ideas = await SupabaseService.getIdeas(
-        limit: _limit,
-        offset: _offset,
-      );
+      final ideas = await SupabaseService.getIdeas(limit: _limit, offset: _offset);
 
       setState(() {
         _ideas = ideas;
@@ -75,10 +72,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         _isLoadingMore = true;
       });
 
-      final ideas = await SupabaseService.getIdeas(
-        limit: _limit,
-        offset: _offset,
-      );
+      final ideas = await SupabaseService.getIdeas(limit: _limit, offset: _offset);
 
       setState(() {
         _ideas.addAll(ideas);
@@ -106,24 +100,16 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => context.push('/ideas/create'),
-          ),
+          IconButton(icon: const Icon(Icons.add), onPressed: () => context.push('/ideas/create')),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: _refreshIdeas,
-        child: _buildBody(),
-      ),
+      body: RefreshIndicator(onRefresh: _refreshIdeas, child: _buildBody()),
     );
   }
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -131,32 +117,17 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки идей',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Ошибка загрузки идей', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               _error!,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadIdeas,
-              child: const Text('Повторить'),
-            ),
+            ElevatedButton(onPressed: _loadIdeas, child: const Text('Повторить')),
           ],
         ),
       );
@@ -167,25 +138,13 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.lightbulb_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Нет идей',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Нет идей', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Будьте первым, кто поделится идеей!',
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -204,10 +163,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
       itemBuilder: (context, index) {
         if (index == _ideas.length) {
           return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: CircularProgressIndicator(),
-            ),
+            child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
           );
         }
 
@@ -229,13 +185,11 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
           ListTile(
             leading: CircleAvatar(
               backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-              backgroundImage:
-                  idea.author?.avatarUrl != null ? NetworkImage(idea.author!.avatarUrl!) : null,
+              backgroundImage: idea.author?.avatarUrl != null
+                  ? NetworkImage(idea.author!.avatarUrl!)
+                  : null,
               child: idea.author?.avatarUrl == null
-                  ? Icon(
-                      Icons.person,
-                      color: theme.primaryColor,
-                    )
+                  ? Icon(Icons.person, color: theme.primaryColor)
                   : null,
             ),
             title: Text(
@@ -244,17 +198,11 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
             ),
             subtitle: Text(
               _formatTime(idea.createdAt),
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12,
-              ),
+              style: TextStyle(color: Colors.grey[600], fontSize: 12),
             ),
             trailing: PopupMenuButton(
               itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'report',
-                  child: Text('Пожаловаться'),
-                ),
+                const PopupMenuItem(value: 'report', child: Text('Пожаловаться')),
               ],
             ),
           ),
@@ -263,10 +211,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
           if (idea.content != null) ...[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                idea.content!,
-                style: const TextStyle(fontSize: 16),
-              ),
+              child: Text(idea.content!, style: const TextStyle(fontSize: 16)),
             ),
             const SizedBox(height: 12),
           ],
@@ -342,9 +287,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
       return Container(
         height: 200,
         margin: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.network(
@@ -353,9 +296,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
             errorBuilder: (context, error, stackTrace) {
               return Container(
                 color: Colors.grey[200],
-                child: const Center(
-                  child: Icon(Icons.broken_image, size: 48),
-                ),
+                child: const Center(child: Icon(Icons.broken_image, size: 48)),
               );
             },
           ),
@@ -372,9 +313,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
             return Container(
               width: 200,
               margin: const EdgeInsets.only(right: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.network(
@@ -383,9 +322,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       color: Colors.grey[200],
-                      child: const Center(
-                        child: Icon(Icons.broken_image, size: 48),
-                      ),
+                      child: const Center(child: Icon(Icons.broken_image, size: 48)),
                     );
                   },
                 ),
@@ -412,10 +349,7 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
           children: [
             Icon(icon, size: 20),
             const SizedBox(width: 4),
-            Text(
-              label,
-              style: const TextStyle(fontSize: 14),
-            ),
+            Text(label, style: const TextStyle(fontSize: 14)),
           ],
         ),
       ),
@@ -441,34 +375,31 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         }
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
   void _showComments(Idea idea) {
     // TODO: Показать экран комментариев
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Комментарии в разработке')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Комментарии в разработке')));
   }
 
   void _shareIdea(Idea idea) {
     // TODO: Реализовать шаринг
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Шаринг в разработке')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Шаринг в разработке')));
   }
 
   void _saveIdea(Idea idea) {
     // TODO: Реализовать сохранение
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Сохранение в разработке')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Сохранение в разработке')));
   }
 
   String _formatTime(DateTime time) {

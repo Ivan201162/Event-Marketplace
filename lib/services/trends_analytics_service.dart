@@ -64,7 +64,8 @@ class TrendsAnalyticsService {
           .collection('bookings')
           .where('eventDate', isGreaterThanOrEqualTo: startDate)
           .where('eventDate', isLessThanOrEqualTo: endDate)
-          .where('status', whereIn: ['confirmed', 'paid', 'completed']).get();
+          .where('status', whereIn: ['confirmed', 'paid', 'completed'])
+          .get();
 
       final bookings = bookingsSnapshot.docs.map((doc) => doc.data()).toList();
 
@@ -98,9 +99,7 @@ class TrendsAnalyticsService {
   }
 
   /// Получить тренды по сезонности
-  Future<SeasonalityTrends> getSeasonalityTrends({
-    required int year,
-  }) async {
+  Future<SeasonalityTrends> getSeasonalityTrends({required int year}) async {
     try {
       final startDate = DateTime(year);
       final endDate = DateTime(year, 12, 31);
@@ -198,7 +197,8 @@ class TrendsAnalyticsService {
           .collection('bookings')
           .where('eventDate', isGreaterThanOrEqualTo: startDate)
           .where('eventDate', isLessThanOrEqualTo: endDate)
-          .where('status', whereIn: ['confirmed', 'paid', 'completed']).get();
+          .where('status', whereIn: ['confirmed', 'paid', 'completed'])
+          .get();
 
       final bookings = bookingsSnapshot.docs.map((doc) => doc.data()).toList();
 
@@ -266,10 +266,7 @@ class TrendsAnalyticsService {
       final priceTrends = await getPriceTrends(startDate: startDate, endDate: endDate);
 
       return TrendsAnalytics(
-        period: AnalyticsPeriod(
-          startDate: startDate,
-          endDate: endDate,
-        ),
+        period: AnalyticsPeriod(startDate: startDate, endDate: endDate),
         categoryTrends: categoryTrends,
         serviceTrends: serviceTrends,
         geographicTrends: geographicTrends,
@@ -283,29 +280,17 @@ class TrendsAnalyticsService {
 
   // Приватные методы
 
-  double _calculateGrowth(
-    String category,
-    DateTime startDate,
-    DateTime endDate,
-  ) {
+  double _calculateGrowth(String category, DateTime startDate, DateTime endDate) {
     // TODO(developer): Реализовать расчет роста по сравнению с предыдущим периодом
     return 0;
   }
 
-  double _calculateServiceGrowth(
-    String service,
-    DateTime startDate,
-    DateTime endDate,
-  ) {
+  double _calculateServiceGrowth(String service, DateTime startDate, DateTime endDate) {
     // TODO(developer): Реализовать расчет роста услуги по сравнению с предыдущим периодом
     return 0;
   }
 
-  double _calculateAveragePrice(
-    String location,
-    DateTime startDate,
-    DateTime endDate,
-  ) {
+  double _calculateAveragePrice(String location, DateTime startDate, DateTime endDate) {
     // TODO(developer): Реализовать расчет средней цены для локации
     return 0;
   }
@@ -389,10 +374,7 @@ class PriceTrends {
 
 /// Период аналитики
 class AnalyticsPeriod {
-  const AnalyticsPeriod({
-    required this.startDate,
-    required this.endDate,
-  });
+  const AnalyticsPeriod({required this.startDate, required this.endDate});
   final DateTime startDate;
   final DateTime endDate;
 }

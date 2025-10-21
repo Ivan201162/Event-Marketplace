@@ -38,17 +38,11 @@ class AttachmentService {
     String? thumbnailPath,
   }) async {
     try {
-      AppLogger.logI(
-        'Начало загрузки файла: $originalFileName',
-        'attachment_service',
-      );
+      AppLogger.logI('Начало загрузки файла: $originalFileName', 'attachment_service');
 
       // Проверяем размер файла
       if (fileData.length > maxFileSize) {
-        AppLogger.logE(
-          'Файл слишком большой: ${fileData.length} байт',
-          'attachment_service',
-        );
+        AppLogger.logE('Файл слишком большой: ${fileData.length} байт', 'attachment_service');
         throw Exception(
           'Файл слишком большой. Максимальный размер: ${maxFileSize ~/ (1024 * 1024)} MB',
         );
@@ -103,12 +97,7 @@ class AttachmentService {
       AppLogger.logI('Файл успешно загружен: $fileName', 'attachment_service');
       return attachment;
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка загрузки файла',
-        'attachment_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка загрузки файла', 'attachment_service', e, stackTrace);
       return null;
     }
   }
@@ -147,12 +136,7 @@ class AttachmentService {
 
       return querySnapshot.docs.map((doc) => ChatAttachment.fromMap(doc.data(), doc.id)).toList();
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка получения вложений',
-        'attachment_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка получения вложений', 'attachment_service', e, stackTrace);
       return [];
     }
   }
@@ -172,8 +156,9 @@ class AttachmentService {
 
       // Удаляем миниатюру, если есть
       if (attachment.thumbnailUrl != null) {
-        final thumbnailRef =
-            _storage.ref().child('chat_attachments/thumbnails/thumb_${attachment.fileName}');
+        final thumbnailRef = _storage.ref().child(
+          'chat_attachments/thumbnails/thumb_${attachment.fileName}',
+        );
         await thumbnailRef.delete();
       }
 
@@ -183,12 +168,7 @@ class AttachmentService {
       AppLogger.logI('Вложение удалено: $attachmentId', 'attachment_service');
       return true;
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка удаления вложения',
-        'attachment_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка удаления вложения', 'attachment_service', e, stackTrace);
       return false;
     }
   }

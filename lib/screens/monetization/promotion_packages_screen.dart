@@ -34,9 +34,9 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки пакетов: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки пакетов: $e')));
       }
     }
   }
@@ -59,16 +59,14 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                   // Заголовок
                   Text(
                     'Повысьте видимость',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Выберите подходящий пакет продвижения для увеличения охвата',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 24),
 
@@ -108,10 +106,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                   children: [
                     if (isPopular)
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(12),
@@ -140,16 +135,16 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                             children: [
                               Text(
                                 package.name,
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               if (package.description != null)
                                 Text(
                                   package.description!,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        color: Colors.grey[600],
-                                      ),
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                                 ),
                             ],
                           ),
@@ -163,32 +158,29 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                         Text(
                           '${package.price.toInt()} ₽',
                           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                color: _getTypeColor(package.type),
-                                fontWeight: FontWeight.bold,
-                              ),
+                            color: _getTypeColor(package.type),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           '/ ${package.durationDays} дн.',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
                         ),
                         const Spacer(),
                         if (package.hasDiscount) ...[
                           Text(
                             '${package.originalPrice!.toInt()} ₽',
                             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: Colors.grey[500],
-                                  decoration: TextDecoration.lineThrough,
-                                ),
+                              color: Colors.grey[500],
+                              decoration: TextDecoration.lineThrough,
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(8),
@@ -217,31 +209,30 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                   children: [
                     Text(
                       'Включено в пакет:',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
                     if (package.features != null)
-                      ...package.features!.map((feature) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.check_circle,
-                                  color: _getTypeColor(package.type),
-                                  size: 20,
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    feature,
-                                    style: Theme.of(context).textTheme.bodyMedium,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
+                      ...package.features!.map(
+                        (feature) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.check_circle,
+                                color: _getTypeColor(package.type),
+                                size: 20,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(feature, style: Theme.of(context).textTheme.bodyMedium),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 20),
 
                     // Кнопка покупки
@@ -253,16 +244,11 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
                           backgroundColor: _getTypeColor(package.type),
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: const Text(
                           'Купить продвижение',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -307,10 +293,7 @@ class _PromotionPackagesScreenState extends State<PromotionPackagesScreen> {
     final result = await Navigator.push<bool>(
       context,
       MaterialPageRoute(
-        builder: (context) => PaymentScreen(
-          promotionPackage: package,
-          type: PaymentType.promotion,
-        ),
+        builder: (context) => PaymentScreen(promotionPackage: package, type: PaymentType.promotion),
       ),
     );
 

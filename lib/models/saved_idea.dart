@@ -28,14 +28,14 @@ class SavedIdea {
 
   /// Создать из Map
   factory SavedIdea.fromMap(Map<String, dynamic> map) => SavedIdea(
-        id: map['id'] ?? '',
-        userId: map['userId'] ?? '',
-        ideaId: map['ideaId'] ?? '',
-        savedAt: map['savedAt'] != null ? (map['savedAt'] as Timestamp).toDate() : DateTime.now(),
-        notes: map['notes'] as String?,
-        isFavorite: map['isFavorite'] ?? false,
-        tags: List<String>.from(map['tags'] ?? []),
-      );
+    id: map['id'] ?? '',
+    userId: map['userId'] ?? '',
+    ideaId: map['ideaId'] ?? '',
+    savedAt: map['savedAt'] != null ? (map['savedAt'] as Timestamp).toDate() : DateTime.now(),
+    notes: map['notes'] as String?,
+    isFavorite: map['isFavorite'] ?? false,
+    tags: List<String>.from(map['tags'] ?? []),
+  );
 
   final String id;
   final String userId;
@@ -47,13 +47,13 @@ class SavedIdea {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'ideaId': ideaId,
-        'savedAt': Timestamp.fromDate(savedAt),
-        'notes': notes,
-        'isFavorite': isFavorite,
-        'tags': tags,
-      };
+    'userId': userId,
+    'ideaId': ideaId,
+    'savedAt': Timestamp.fromDate(savedAt),
+    'notes': notes,
+    'isFavorite': isFavorite,
+    'tags': tags,
+  };
 
   /// Копировать с изменениями
   SavedIdea copyWith({
@@ -64,16 +64,15 @@ class SavedIdea {
     String? notes,
     bool? isFavorite,
     List<String>? tags,
-  }) =>
-      SavedIdea(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        ideaId: ideaId ?? this.ideaId,
-        savedAt: savedAt ?? this.savedAt,
-        notes: notes ?? this.notes,
-        isFavorite: isFavorite ?? this.isFavorite,
-        tags: tags ?? this.tags,
-      );
+  }) => SavedIdea(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    ideaId: ideaId ?? this.ideaId,
+    savedAt: savedAt ?? this.savedAt,
+    notes: notes ?? this.notes,
+    isFavorite: isFavorite ?? this.isFavorite,
+    tags: tags ?? this.tags,
+  );
 
   @override
   bool operator ==(Object other) {

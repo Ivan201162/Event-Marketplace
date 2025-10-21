@@ -23,10 +23,7 @@ class PaymentSummary extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.primary.withValues(alpha: 0.8),
-          ],
+          colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -45,11 +42,7 @@ class PaymentSummary extends StatelessWidget {
           // Header
           Row(
             children: [
-              Icon(
-                _getTypeIcon(),
-                color: theme.colorScheme.onPrimary,
-                size: 24,
-              ),
+              Icon(_getTypeIcon(), color: theme.colorScheme.onPrimary, size: 24),
               const SizedBox(width: 12),
               Text(
                 _getTypeDisplayName(),
@@ -64,29 +57,16 @@ class PaymentSummary extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Amount breakdown
-          _buildAmountRow(
-            theme,
-            'Сумма к оплате',
-            '${amount.toStringAsFixed(0)} ₽',
-            isTotal: true,
-          ),
+          _buildAmountRow(theme, 'Сумма к оплате', '${amount.toStringAsFixed(0)} ₽', isTotal: true),
 
           if (taxAmount > 0) ...[
             const SizedBox(height: 12),
-            _buildAmountRow(
-              theme,
-              'Налог (13%)',
-              '${taxAmount.toStringAsFixed(0)} ₽',
-            ),
+            _buildAmountRow(theme, 'Налог (13%)', '${taxAmount.toStringAsFixed(0)} ₽'),
           ],
 
           if (netAmount > 0) ...[
             const SizedBox(height: 12),
-            _buildAmountRow(
-              theme,
-              'К получению',
-              '${netAmount.toStringAsFixed(0)} ₽',
-            ),
+            _buildAmountRow(theme, 'К получению', '${netAmount.toStringAsFixed(0)} ₽'),
           ],
 
           const SizedBox(height: 16),
@@ -122,12 +102,7 @@ class PaymentSummary extends StatelessWidget {
     );
   }
 
-  Widget _buildAmountRow(
-    ThemeData theme,
-    String label,
-    String value, {
-    bool isTotal = false,
-  }) =>
+  Widget _buildAmountRow(ThemeData theme, String label, String value, {bool isTotal = false}) =>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

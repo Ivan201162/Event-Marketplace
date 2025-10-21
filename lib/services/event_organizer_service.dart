@@ -41,8 +41,10 @@ class EventOrganizerService {
   /// Получить организатора по ID
   Future<EventOrganizer?> getOrganizerById(String organizerId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('event_organizers').doc(organizerId).get();
+      final DocumentSnapshot doc = await _firestore
+          .collection('event_organizers')
+          .doc(organizerId)
+          .get();
 
       if (doc.exists) {
         return EventOrganizer.fromDoc(doc);
@@ -91,9 +93,7 @@ class EventOrganizerService {
       // Дополнительная фильтрация на клиенте
       if (eventTypes != null && eventTypes.isNotEmpty) {
         organizers = organizers
-            .where(
-              (organizer) => eventTypes.any((type) => organizer.eventTypes.contains(type)),
-            )
+            .where((organizer) => eventTypes.any((type) => organizer.eventTypes.contains(type)))
             .toList();
       }
 
@@ -195,10 +195,7 @@ class EventOrganizerService {
   }
 
   /// Обновить организатора
-  Future<bool> updateOrganizer(
-    String organizerId,
-    Map<String, dynamic> updates,
-  ) async {
+  Future<bool> updateOrganizer(String organizerId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = FieldValue.serverTimestamp();
 
@@ -284,8 +281,9 @@ class EventOrganizerService {
               (organizer) =>
                   organizer.companyName.toLowerCase().contains(lowerQuery) ||
                   (organizer.description?.toLowerCase().contains(lowerQuery) ?? false) ||
-                  organizer.specializations
-                      .any((spec) => spec.toLowerCase().contains(lowerQuery)) ||
+                  organizer.specializations.any(
+                    (spec) => spec.toLowerCase().contains(lowerQuery),
+                  ) ||
                   organizer.eventTypes.any((type) => type.toLowerCase().contains(lowerQuery)),
             )
             .toList();
@@ -293,9 +291,7 @@ class EventOrganizerService {
 
       if (eventTypes != null && eventTypes.isNotEmpty) {
         organizers = organizers
-            .where(
-              (organizer) => eventTypes.any((type) => organizer.eventTypes.contains(type)),
-            )
+            .where((organizer) => eventTypes.any((type) => organizer.eventTypes.contains(type)))
             .toList();
       }
 
@@ -310,9 +306,7 @@ class EventOrganizerService {
 
       if (maxRating != null) {
         organizers = organizers
-            .where(
-              (organizer) => organizer.rating == null || organizer.rating! <= maxRating,
-            )
+            .where((organizer) => organizer.rating == null || organizer.rating! <= maxRating)
             .toList();
       }
 
@@ -337,10 +331,7 @@ class EventOrganizerService {
   }
 
   /// Получить топ организаторов
-  Future<List<EventOrganizer>> getTopOrganizers({
-    int limit = 10,
-    String? city,
-  }) async {
+  Future<List<EventOrganizer>> getTopOrganizers({int limit = 10, String? city}) async {
     try {
       Query query = _firestore.collection('event_organizers');
 
@@ -368,10 +359,7 @@ class EventOrganizerService {
   }
 
   /// Обновить рейтинг организатора
-  Future<bool> updateOrganizerRating(
-    String organizerId,
-    double newRating,
-  ) async {
+  Future<bool> updateOrganizerRating(String organizerId, double newRating) async {
     try {
       await _firestore.collection('event_organizers').doc(organizerId).update({
         'rating': newRating,
@@ -391,10 +379,7 @@ class EventOrganizerService {
   }
 
   /// Увеличить счетчик мероприятий
-  Future<bool> incrementEventCount(
-    String organizerId, {
-    bool completed = false,
-  }) async {
+  Future<bool> incrementEventCount(String organizerId, {bool completed = false}) async {
     try {
       final updates = <String, dynamic>{
         'totalEvents': FieldValue.increment(1),
@@ -435,12 +420,14 @@ class EventOrganizerService {
       final totalReviews = reviews.length;
       final averageRating = totalReviews > 0
           ? reviews.map((doc) => doc.data()['rating'] as double).reduce((a, b) => a + b) /
-              totalReviews
+                totalReviews
           : 0.0;
 
       // Получаем мероприятия
-      final eventsSnapshot =
-          await _firestore.collection('events').where('organizerId', isEqualTo: organizerId).get();
+      final eventsSnapshot = await _firestore
+          .collection('events')
+          .where('organizerId', isEqualTo: organizerId)
+          .get();
 
       final events = eventsSnapshot.docs;
       final totalEvents = events.length;

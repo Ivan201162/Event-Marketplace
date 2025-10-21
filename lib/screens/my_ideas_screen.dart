@@ -8,10 +8,7 @@ import 'idea_detail_screen.dart';
 
 /// Экран моих сохраненных идей
 class MyIdeasScreen extends ConsumerStatefulWidget {
-  const MyIdeasScreen({
-    super.key,
-    required this.userId,
-  });
+  const MyIdeasScreen({super.key, required this.userId});
 
   final String userId;
 
@@ -67,50 +64,40 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> with SingleTicker
   }
 
   List<EventIdea> _getFilteredIdeas(List<EventIdea> ideas) => ideas.where((idea) {
-        final matchesSearch = _searchQuery.isEmpty ||
-            idea.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            idea.description.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            idea.tags.any(
-              (tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()),
-            );
+    final matchesSearch =
+        _searchQuery.isEmpty ||
+        idea.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+        idea.description.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+        idea.tags.any((tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()));
 
-        final matchesCategory = _selectedCategory == null || idea.category == _selectedCategory;
+    final matchesCategory = _selectedCategory == null || idea.category == _selectedCategory;
 
-        return matchesSearch && matchesCategory;
-      }).toList();
+    return matchesSearch && matchesCategory;
+  }).toList();
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Мои идеи'),
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          foregroundColor: Theme.of(context).colorScheme.onSurface,
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Сохраненные', icon: Icon(Icons.bookmark)),
-              Tab(text: 'Созданные', icon: Icon(Icons.create)),
-            ],
-          ),
-          actions: [
-            IconButton(
-              onPressed: _showSearchDialog,
-              icon: const Icon(Icons.search),
-            ),
-            IconButton(
-              onPressed: _showFilterDialog,
-              icon: const Icon(Icons.filter_list),
-            ),
-          ],
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            _buildSavedIdeasTab(),
-            _buildCreatedIdeasTab(),
-          ],
-        ),
-      );
+    appBar: AppBar(
+      title: const Text('Мои идеи'),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
+      bottom: TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(text: 'Сохраненные', icon: Icon(Icons.bookmark)),
+          Tab(text: 'Созданные', icon: Icon(Icons.create)),
+        ],
+      ),
+      actions: [
+        IconButton(onPressed: _showSearchDialog, icon: const Icon(Icons.search)),
+        IconButton(onPressed: _showFilterDialog, icon: const Icon(Icons.filter_list)),
+      ],
+    ),
+    body: TabBarView(
+      controller: _tabController,
+      children: [_buildSavedIdeasTab(), _buildCreatedIdeasTab()],
+    ),
+  );
 
   Widget _buildSavedIdeasTab() {
     if (_isLoading) {
@@ -183,85 +170,83 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> with SingleTicker
   }
 
   Widget _buildEmptySavedIdeasState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.bookmark_border,
-              size: 64,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Нет сохраненных идей',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Добавляйте понравившиеся идеи в избранное',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () {
-                // TODO(developer): Перейти к экрану идей
-                _showErrorSnackBar('Переход к экрану идей');
-              },
-              icon: const Icon(Icons.lightbulb),
-              label: const Text('Просмотреть идеи'),
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.bookmark_border,
+          size: 64,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
-      );
+        const SizedBox(height: 16),
+        Text(
+          'Нет сохраненных идей',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Добавляйте понравившиеся идеи в избранное',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton.icon(
+          onPressed: () {
+            // TODO(developer): Перейти к экрану идей
+            _showErrorSnackBar('Переход к экрану идей');
+          },
+          icon: const Icon(Icons.lightbulb),
+          label: const Text('Просмотреть идеи'),
+        ),
+      ],
+    ),
+  );
 
   Widget _buildEmptyCreatedIdeasState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.lightbulb_outline,
-              size: 64,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Нет созданных идей',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Создайте свою первую идею для мероприятия',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () {
-                // TODO(developer): Перейти к экрану создания идеи
-                _showErrorSnackBar('Переход к созданию идеи');
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Создать идею'),
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.lightbulb_outline,
+          size: 64,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
         ),
-      );
+        const SizedBox(height: 16),
+        Text(
+          'Нет созданных идей',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Создайте свою первую идею для мероприятия',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton.icon(
+          onPressed: () {
+            // TODO(developer): Перейти к экрану создания идеи
+            _showErrorSnackBar('Переход к созданию идеи');
+          },
+          icon: const Icon(Icons.add),
+          label: const Text('Создать идею'),
+        ),
+      ],
+    ),
+  );
 
   void _navigateToIdeaDetail(EventIdea idea) {
     Navigator.push(
       context,
-      MaterialPageRoute<void>(
-        builder: (context) => IdeaDetailScreen(idea: idea),
-      ),
+      MaterialPageRoute<void>(builder: (context) => IdeaDetailScreen(idea: idea)),
     ).then((_) {
       // Обновляем данные после возврата
       _loadData();
@@ -281,9 +266,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> with SingleTicker
       // Обновляем локальное состояние
       _updateIdeaInLists(
         idea.id,
-        (idea) => idea.copyWith(
-          likes: isLiked ? idea.likes - 1 : idea.likes + 1,
-        ),
+        (idea) => idea.copyWith(likes: isLiked ? idea.likes - 1 : idea.likes + 1),
       );
     } on Exception catch (e) {
       _showErrorSnackBar('Ошибка изменения лайка: $e');
@@ -308,10 +291,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> with SingleTicker
     }
   }
 
-  void _updateIdeaInLists(
-    String ideaId,
-    EventIdea Function(EventIdea) updater,
-  ) {
+  void _updateIdeaInLists(String ideaId, EventIdea Function(EventIdea) updater) {
     setState(() {
       // Обновляем в сохраненных
       final savedIndex = _savedIdeas.indexWhere((idea) => idea.id == ideaId);
@@ -353,10 +333,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> with SingleTicker
             },
             child: const Text('Очистить'),
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -407,10 +384,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> with SingleTicker
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
         ],
       ),
     );

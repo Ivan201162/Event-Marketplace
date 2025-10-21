@@ -5,11 +5,7 @@ import '../../models/host_profile.dart';
 
 /// Компонент блока с аватаром ведущего
 class AvatarBlock extends StatelessWidget {
-  const AvatarBlock({
-    super.key,
-    required this.host,
-    this.onPhotoTap,
-  });
+  const AvatarBlock({super.key, required this.host, this.onPhotoTap});
   final HostProfile host;
   final VoidCallback? onPhotoTap;
 
@@ -43,10 +39,7 @@ class AvatarBlock extends StatelessWidget {
               height: isMobile ? 120 : 150,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: theme.primaryColor,
-                  width: 3,
-                ),
+                border: Border.all(color: theme.primaryColor, width: 3),
                 boxShadow: [
                   BoxShadow(
                     color: theme.primaryColor.withValues(alpha: 0.3),
@@ -130,11 +123,7 @@ class AvatarBlock extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.verified,
-                        size: 12,
-                        color: Colors.white,
-                      ),
+                      const Icon(Icons.verified, size: 12, color: Colors.white),
                       const SizedBox(width: 2),
                       Text(
                         'Верифицирован',
@@ -162,11 +151,7 @@ class AvatarBlock extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                  size: 20,
-                ),
+                const Icon(Icons.star, color: Colors.amber, size: 20),
                 const SizedBox(width: 4),
                 Text(
                   host.rating.toStringAsFixed(1),

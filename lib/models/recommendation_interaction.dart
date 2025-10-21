@@ -1,12 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 /// Тип взаимодействия с рекомендацией
-enum RecommendationInteractionType {
-  viewed,
-  clicked,
-  saved,
-  dismissed,
-}
+enum RecommendationInteractionType { viewed, clicked, saved, dismissed }
 
 /// Модель взаимодействия с рекомендацией
 @immutable
@@ -21,16 +16,16 @@ class RecommendationInteraction {
   });
 
   factory RecommendationInteraction.fromMap(Map<String, dynamic> map) => RecommendationInteraction(
-        id: map['id'] as String,
-        userId: map['userId'] as String,
-        recommendationId: map['recommendationId'] as String,
-        specialistId: map['specialistId'] as String,
-        type: RecommendationInteractionType.values.firstWhere(
-          (e) => e.name == map['type'],
-          orElse: () => RecommendationInteractionType.viewed,
-        ),
-        timestamp: DateTime.parse(map['timestamp'] as String),
-      );
+    id: map['id'] as String,
+    userId: map['userId'] as String,
+    recommendationId: map['recommendationId'] as String,
+    specialistId: map['specialistId'] as String,
+    type: RecommendationInteractionType.values.firstWhere(
+      (e) => e.name == map['type'],
+      orElse: () => RecommendationInteractionType.viewed,
+    ),
+    timestamp: DateTime.parse(map['timestamp'] as String),
+  );
 
   final String id;
   final String userId;
@@ -40,13 +35,13 @@ class RecommendationInteraction {
   final DateTime timestamp;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'recommendationId': recommendationId,
-        'specialistId': specialistId,
-        'type': type.name,
-        'timestamp': timestamp.toIso8601String(),
-      };
+    'id': id,
+    'userId': userId,
+    'recommendationId': recommendationId,
+    'specialistId': specialistId,
+    'type': type.name,
+    'timestamp': timestamp.toIso8601String(),
+  };
 
   @override
   bool operator ==(Object other) {

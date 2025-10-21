@@ -50,9 +50,7 @@ class CityRegion {
       foundedYear: data['foundedYear'] as int?,
       description: data['description'] as String?,
       attractions: List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
-      neighboringCities: List<String>.from(
-        (data['neighboringCities'] as List<dynamic>?) ?? [],
-      ),
+      neighboringCities: List<String>.from((data['neighboringCities'] as List<dynamic>?) ?? []),
       transportHubs: List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
       economicSectors: List<String>.from((data['economicSectors'] as List<dynamic>?) ?? []),
       specialistCategories: List<String>.from(
@@ -61,49 +59,47 @@ class CityRegion {
       avgSpecialistRating: (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
       totalSpecialists: data['totalSpecialists'] as int? ?? 0,
       isActive: data['isActive'] as bool? ?? true,
-      createdAt:
-          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-      updatedAt:
-          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 
   /// Создать из Map
   factory CityRegion.fromMap(Map<String, dynamic> data) => CityRegion(
-        id: data['id'] as String? ?? '',
-        cityName: data['cityName'] as String? ?? '',
-        regionName: data['regionName'] as String? ?? '',
-        coordinates: data['coordinates'] != null
-            ? Coordinates.fromMap(data['coordinates'] as Map<String, dynamic>)
-            : const Coordinates(latitude: 0, longitude: 0),
-        population: data['population'] as int? ?? 0,
-        isCapital: data['isCapital'] as bool? ?? false,
-        isMajorCity: data['isMajorCity'] as bool? ?? false,
-        timeZone: data['timeZone'] as String? ?? 'Europe/Moscow',
-        postalCode: data['postalCode'] as String?,
-        area: (data['area'] as num?)?.toDouble(),
-        density: (data['density'] as num?)?.toDouble(),
-        foundedYear: data['foundedYear'] as int?,
-        description: data['description'] as String?,
-        attractions: List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
-        neighboringCities: List<String>.from(
-          (data['neighboringCities'] as List<dynamic>?) ?? [],
-        ),
-        transportHubs: List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
-        economicSectors: List<String>.from(
-          (data['economicSectors'] as List<dynamic>?) ?? [],
-        ),
-        specialistCategories: List<String>.from(
-          (data['specialistCategories'] as List<dynamic>?) ?? [],
-        ),
-        avgSpecialistRating: (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
-        totalSpecialists: data['totalSpecialists'] as int? ?? 0,
-        isActive: data['isActive'] as bool? ?? true,
-        createdAt:
-            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-        updatedAt:
-            data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
-      );
+    id: data['id'] as String? ?? '',
+    cityName: data['cityName'] as String? ?? '',
+    regionName: data['regionName'] as String? ?? '',
+    coordinates: data['coordinates'] != null
+        ? Coordinates.fromMap(data['coordinates'] as Map<String, dynamic>)
+        : const Coordinates(latitude: 0, longitude: 0),
+    population: data['population'] as int? ?? 0,
+    isCapital: data['isCapital'] as bool? ?? false,
+    isMajorCity: data['isMajorCity'] as bool? ?? false,
+    timeZone: data['timeZone'] as String? ?? 'Europe/Moscow',
+    postalCode: data['postalCode'] as String?,
+    area: (data['area'] as num?)?.toDouble(),
+    density: (data['density'] as num?)?.toDouble(),
+    foundedYear: data['foundedYear'] as int?,
+    description: data['description'] as String?,
+    attractions: List<String>.from((data['attractions'] as List<dynamic>?) ?? []),
+    neighboringCities: List<String>.from((data['neighboringCities'] as List<dynamic>?) ?? []),
+    transportHubs: List<String>.from((data['transportHubs'] as List<dynamic>?) ?? []),
+    economicSectors: List<String>.from((data['economicSectors'] as List<dynamic>?) ?? []),
+    specialistCategories: List<String>.from((data['specialistCategories'] as List<dynamic>?) ?? []),
+    avgSpecialistRating: (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
+    totalSpecialists: data['totalSpecialists'] as int? ?? 0,
+    isActive: data['isActive'] as bool? ?? true,
+    createdAt: data['createdAt'] != null
+        ? (data['createdAt'] as Timestamp).toDate()
+        : DateTime.now(),
+    updatedAt: data['updatedAt'] != null
+        ? (data['updatedAt'] as Timestamp).toDate()
+        : DateTime.now(),
+  );
 
   final String id;
   final String cityName;
@@ -131,29 +127,29 @@ class CityRegion {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'cityName': cityName,
-        'regionName': regionName,
-        'coordinates': coordinates.toMap(),
-        'population': population,
-        'isCapital': isCapital,
-        'isMajorCity': isMajorCity,
-        'timeZone': timeZone,
-        'postalCode': postalCode,
-        'area': area,
-        'density': density,
-        'foundedYear': foundedYear,
-        'description': description,
-        'attractions': attractions,
-        'neighboringCities': neighboringCities,
-        'transportHubs': transportHubs,
-        'economicSectors': economicSectors,
-        'specialistCategories': specialistCategories,
-        'avgSpecialistRating': avgSpecialistRating,
-        'totalSpecialists': totalSpecialists,
-        'isActive': isActive,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'cityName': cityName,
+    'regionName': regionName,
+    'coordinates': coordinates.toMap(),
+    'population': population,
+    'isCapital': isCapital,
+    'isMajorCity': isMajorCity,
+    'timeZone': timeZone,
+    'postalCode': postalCode,
+    'area': area,
+    'density': density,
+    'foundedYear': foundedYear,
+    'description': description,
+    'attractions': attractions,
+    'neighboringCities': neighboringCities,
+    'transportHubs': transportHubs,
+    'economicSectors': economicSectors,
+    'specialistCategories': specialistCategories,
+    'avgSpecialistRating': avgSpecialistRating,
+    'totalSpecialists': totalSpecialists,
+    'isActive': isActive,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   /// Копировать с изменениями
   CityRegion copyWith({
@@ -180,32 +176,31 @@ class CityRegion {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      CityRegion(
-        id: id ?? this.id,
-        cityName: cityName ?? this.cityName,
-        regionName: regionName ?? this.regionName,
-        coordinates: coordinates ?? this.coordinates,
-        population: population ?? this.population,
-        isCapital: isCapital ?? this.isCapital,
-        isMajorCity: isMajorCity ?? this.isMajorCity,
-        timeZone: timeZone ?? this.timeZone,
-        postalCode: postalCode ?? this.postalCode,
-        area: area ?? this.area,
-        density: density ?? this.density,
-        foundedYear: foundedYear ?? this.foundedYear,
-        description: description ?? this.description,
-        attractions: attractions ?? this.attractions,
-        neighboringCities: neighboringCities ?? this.neighboringCities,
-        transportHubs: transportHubs ?? this.transportHubs,
-        economicSectors: economicSectors ?? this.economicSectors,
-        specialistCategories: specialistCategories ?? this.specialistCategories,
-        avgSpecialistRating: avgSpecialistRating ?? this.avgSpecialistRating,
-        totalSpecialists: totalSpecialists ?? this.totalSpecialists,
-        isActive: isActive ?? this.isActive,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => CityRegion(
+    id: id ?? this.id,
+    cityName: cityName ?? this.cityName,
+    regionName: regionName ?? this.regionName,
+    coordinates: coordinates ?? this.coordinates,
+    population: population ?? this.population,
+    isCapital: isCapital ?? this.isCapital,
+    isMajorCity: isMajorCity ?? this.isMajorCity,
+    timeZone: timeZone ?? this.timeZone,
+    postalCode: postalCode ?? this.postalCode,
+    area: area ?? this.area,
+    density: density ?? this.density,
+    foundedYear: foundedYear ?? this.foundedYear,
+    description: description ?? this.description,
+    attractions: attractions ?? this.attractions,
+    neighboringCities: neighboringCities ?? this.neighboringCities,
+    transportHubs: transportHubs ?? this.transportHubs,
+    economicSectors: economicSectors ?? this.economicSectors,
+    specialistCategories: specialistCategories ?? this.specialistCategories,
+    avgSpecialistRating: avgSpecialistRating ?? this.avgSpecialistRating,
+    totalSpecialists: totalSpecialists ?? this.totalSpecialists,
+    isActive: isActive ?? this.isActive,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Получить отображаемое название города с регионом
   String get displayName => '$cityName, $regionName';
@@ -258,27 +253,23 @@ class CityRegion {
 
 /// Координаты города
 class Coordinates {
-  const Coordinates({
-    required this.latitude,
-    required this.longitude,
-    this.altitude,
-  });
+  const Coordinates({required this.latitude, required this.longitude, this.altitude});
 
   factory Coordinates.fromMap(Map<String, dynamic> map) => Coordinates(
-        latitude: (map['latitude'] as num).toDouble(),
-        longitude: (map['longitude'] as num).toDouble(),
-        altitude: (map['altitude'] as num?)?.toDouble(),
-      );
+    latitude: (map['latitude'] as num).toDouble(),
+    longitude: (map['longitude'] as num).toDouble(),
+    altitude: (map['altitude'] as num?)?.toDouble(),
+  );
 
   final double latitude;
   final double longitude;
   final double? altitude;
 
   Map<String, dynamic> toMap() => {
-        'latitude': latitude,
-        'longitude': longitude,
-        'altitude': altitude,
-      };
+    'latitude': latitude,
+    'longitude': longitude,
+    'altitude': altitude,
+  };
 
   /// Вычислить расстояние до другой точки (в километрах)
   double distanceTo(Coordinates other) {
@@ -289,7 +280,8 @@ class Coordinates {
     final deltaLatRad = (other.latitude - latitude) * (3.14159265359 / 180);
     final deltaLonRad = (other.longitude - longitude) * (3.14159265359 / 180);
 
-    final a = math.sin(deltaLatRad / 2) * math.sin(deltaLatRad / 2) +
+    final a =
+        math.sin(deltaLatRad / 2) * math.sin(deltaLatRad / 2) +
         math.cos(lat1Rad) *
             math.cos(lat2Rad) *
             math.sin(deltaLonRad / 2) *
@@ -389,21 +381,20 @@ class CitySearchFilters {
     String? specialistCategory,
     CitySortBy? sortBy,
     bool? sortAscending,
-  }) =>
-      CitySearchFilters(
-        searchQuery: searchQuery ?? this.searchQuery,
-        region: region ?? this.region,
-        minPopulation: minPopulation ?? this.minPopulation,
-        maxPopulation: maxPopulation ?? this.maxPopulation,
-        isCapital: isCapital ?? this.isCapital,
-        isMajorCity: isMajorCity ?? this.isMajorCity,
-        citySize: citySize ?? this.citySize,
-        hasSpecialists: hasSpecialists ?? this.hasSpecialists,
-        minSpecialistRating: minSpecialistRating ?? this.minSpecialistRating,
-        specialistCategory: specialistCategory ?? this.specialistCategory,
-        sortBy: sortBy ?? this.sortBy,
-        sortAscending: sortAscending ?? this.sortAscending,
-      );
+  }) => CitySearchFilters(
+    searchQuery: searchQuery ?? this.searchQuery,
+    region: region ?? this.region,
+    minPopulation: minPopulation ?? this.minPopulation,
+    maxPopulation: maxPopulation ?? this.maxPopulation,
+    isCapital: isCapital ?? this.isCapital,
+    isMajorCity: isMajorCity ?? this.isMajorCity,
+    citySize: citySize ?? this.citySize,
+    hasSpecialists: hasSpecialists ?? this.hasSpecialists,
+    minSpecialistRating: minSpecialistRating ?? this.minSpecialistRating,
+    specialistCategory: specialistCategory ?? this.specialistCategory,
+    sortBy: sortBy ?? this.sortBy,
+    sortAscending: sortAscending ?? this.sortAscending,
+  );
 
   /// Проверить, применены ли фильтры
   bool get hasFilters =>

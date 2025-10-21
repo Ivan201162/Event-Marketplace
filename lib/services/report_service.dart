@@ -148,22 +148,14 @@ class ReportService {
       final fileUrl = await _generateReportFile(reportId, reportData);
 
       // Обновляем статус на "завершено"
-      await _updateReportStatus(
-        reportId,
-        ReportStatus.completed,
-        fileUrl: fileUrl,
-      );
+      await _updateReportStatus(reportId, ReportStatus.completed, fileUrl: fileUrl);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Ошибка генерации отчета: $e');
       }
 
       // Обновляем статус на "ошибка"
-      await _updateReportStatus(
-        reportId,
-        ReportStatus.failed,
-        errorMessage: e.toString(),
-      );
+      await _updateReportStatus(reportId, ReportStatus.failed, errorMessage: e.toString());
     }
   }
 
@@ -197,9 +189,7 @@ class ReportService {
   }
 
   /// Генерировать отчет по бронированиям
-  Future<ReportData> _generateBookingsReport(
-    Map<String, dynamic> parameters,
-  ) async {
+  Future<ReportData> _generateBookingsReport(Map<String, dynamic> parameters) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -209,16 +199,10 @@ class ReportService {
       Query<Map<String, dynamic>> query = _firestore.collection('bookings');
 
       if (startDate != null) {
-        query = query.where(
-          'createdAt',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where(
-          'createdAt',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
       if (specialistId != null) {
         query = query.where('specialistId', isEqualTo: specialistId);
@@ -287,9 +271,7 @@ class ReportService {
   }
 
   /// Генерировать отчет по платежам
-  Future<ReportData> _generatePaymentsReport(
-    Map<String, dynamic> parameters,
-  ) async {
+  Future<ReportData> _generatePaymentsReport(Map<String, dynamic> parameters) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -298,16 +280,10 @@ class ReportService {
       Query<Map<String, dynamic>> query = _firestore.collection('payments');
 
       if (startDate != null) {
-        query = query.where(
-          'createdAt',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where(
-          'createdAt',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
       if (paymentMethod != null) {
         query = query.where('method', isEqualTo: paymentMethod);
@@ -358,9 +334,7 @@ class ReportService {
   }
 
   /// Генерировать отчет по пользователям
-  Future<ReportData> _generateUsersReport(
-    Map<String, dynamic> parameters,
-  ) async {
+  Future<ReportData> _generateUsersReport(Map<String, dynamic> parameters) async {
     try {
       final userType = parameters['userType'] as String?;
       final isActive = parameters['isActive'] as bool?;
@@ -401,15 +375,7 @@ class ReportService {
       return ReportData(
         reportId: '',
         rows: rows,
-        columns: [
-          'id',
-          'name',
-          'email',
-          'type',
-          'isActive',
-          'createdAt',
-          'lastLoginAt',
-        ],
+        columns: ['id', 'name', 'email', 'type', 'isActive', 'createdAt', 'lastLoginAt'],
         summary: {
           'totalUsers': rows.length,
           'activeUsers': activeUsers,
@@ -427,9 +393,7 @@ class ReportService {
   }
 
   /// Генерировать отчет по специалистам
-  Future<ReportData> _generateSpecialistsReport(
-    Map<String, dynamic> parameters,
-  ) async {
+  Future<ReportData> _generateSpecialistsReport(Map<String, dynamic> parameters) async {
     try {
       final category = parameters['category'] as String?;
       final isVerified = parameters['isVerified'] as bool?;
@@ -498,9 +462,7 @@ class ReportService {
   }
 
   /// Генерировать отчет по аналитике
-  Future<ReportData> _generateAnalyticsReport(
-    Map<String, dynamic> parameters,
-  ) async {
+  Future<ReportData> _generateAnalyticsReport(Map<String, dynamic> parameters) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -508,16 +470,10 @@ class ReportService {
       Query<Map<String, dynamic>> query = _firestore.collection('analyticsEvents');
 
       if (startDate != null) {
-        query = query.where(
-          'timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where(
-          'timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final snapshot = await query.get();
@@ -560,9 +516,7 @@ class ReportService {
   }
 
   /// Генерировать отчет по уведомлениям
-  Future<ReportData> _generateNotificationsReport(
-    Map<String, dynamic> parameters,
-  ) async {
+  Future<ReportData> _generateNotificationsReport(Map<String, dynamic> parameters) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -571,16 +525,10 @@ class ReportService {
       Query<Map<String, dynamic>> query = _firestore.collection('sentNotifications');
 
       if (startDate != null) {
-        query = query.where(
-          'sentAt',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('sentAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where(
-          'sentAt',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('sentAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
       if (type != null) {
         query = query.where('type', isEqualTo: type);
@@ -620,16 +568,7 @@ class ReportService {
       return ReportData(
         reportId: '',
         rows: rows,
-        columns: [
-          'id',
-          'title',
-          'type',
-          'channel',
-          'status',
-          'sentAt',
-          'deliveredAt',
-          'readAt',
-        ],
+        columns: ['id', 'title', 'type', 'channel', 'status', 'sentAt', 'deliveredAt', 'readAt'],
         summary: {
           'totalSent': rows.length,
           'deliveredCount': deliveredCount,
@@ -649,9 +588,7 @@ class ReportService {
   }
 
   /// Генерировать отчет по ошибкам
-  Future<ReportData> _generateErrorsReport(
-    Map<String, dynamic> parameters,
-  ) async {
+  Future<ReportData> _generateErrorsReport(Map<String, dynamic> parameters) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
@@ -660,16 +597,10 @@ class ReportService {
       Query<Map<String, dynamic>> query = _firestore.collection('appErrors');
 
       if (startDate != null) {
-        query = query.where(
-          'timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where(
-          'timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
       if (errorType != null) {
         query = query.where('errorType', isEqualTo: errorType);
@@ -703,14 +634,7 @@ class ReportService {
       return ReportData(
         reportId: '',
         rows: rows,
-        columns: [
-          'id',
-          'errorType',
-          'screen',
-          'errorMessage',
-          'resolved',
-          'timestamp',
-        ],
+        columns: ['id', 'errorType', 'screen', 'errorMessage', 'resolved', 'timestamp'],
         summary: {
           'totalErrors': rows.length,
           'resolvedCount': resolvedCount,
@@ -729,18 +653,14 @@ class ReportService {
   }
 
   /// Генерировать отчет по производительности
-  Future<ReportData> _generatePerformanceReport(
-    Map<String, dynamic> parameters,
-  ) async {
+  Future<ReportData> _generatePerformanceReport(Map<String, dynamic> parameters) async {
     try {
       // TODO(developer): Реализовать сбор метрик производительности
       return ReportData(
         reportId: '',
         rows: [],
         columns: ['metric', 'value', 'timestamp'],
-        summary: {
-          'totalMetrics': 0,
-        },
+        summary: {'totalMetrics': 0},
         generatedAt: DateTime.now(),
         totalRows: 0,
       );
@@ -753,9 +673,7 @@ class ReportService {
   }
 
   /// Генерировать пользовательский отчет
-  Future<ReportData> _generateCustomReport(
-    Map<String, dynamic> parameters,
-  ) async {
+  Future<ReportData> _generateCustomReport(Map<String, dynamic> parameters) async {
     try {
       // TODO(developer): Реализовать генерацию пользовательских отчетов
       return ReportData(
@@ -775,10 +693,7 @@ class ReportService {
   }
 
   /// Генерировать файл отчета
-  Future<String> _generateReportFile(
-    String reportId,
-    ReportData reportData,
-  ) async {
+  Future<String> _generateReportFile(String reportId, ReportData reportData) async {
     try {
       // Генерируем CSV файл
       final csv = StringBuffer();

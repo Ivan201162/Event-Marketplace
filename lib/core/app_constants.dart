@@ -62,34 +62,10 @@ class AppConstants {
   static const String fcmSenderId = 'your_fcm_sender_id';
 
   // Поддерживаемые форматы файлов
-  static const List<String> supportedImageFormats = [
-    'jpg',
-    'jpeg',
-    'png',
-    'gif',
-    'webp',
-  ];
-  static const List<String> supportedVideoFormats = [
-    'mp4',
-    'avi',
-    'mov',
-    'wmv',
-    'flv',
-  ];
-  static const List<String> supportedAudioFormats = [
-    'mp3',
-    'wav',
-    'aac',
-    'ogg',
-    'm4a',
-  ];
-  static const List<String> supportedDocumentFormats = [
-    'pdf',
-    'doc',
-    'docx',
-    'txt',
-    'rtf',
-  ];
+  static const List<String> supportedImageFormats = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+  static const List<String> supportedVideoFormats = ['mp4', 'avi', 'mov', 'wmv', 'flv'];
+  static const List<String> supportedAudioFormats = ['mp3', 'wav', 'aac', 'ogg', 'm4a'];
+  static const List<String> supportedDocumentFormats = ['pdf', 'doc', 'docx', 'txt', 'rtf'];
 
   // Лимиты загрузки файлов
   static const int maxImageUploadSizeMB = 5;

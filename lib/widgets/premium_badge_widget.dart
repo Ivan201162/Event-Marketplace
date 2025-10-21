@@ -36,21 +36,13 @@ class PremiumBadgeWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(
-            _getIcon(tier),
-            color: Colors.white,
-            size: size * 0.6,
-          ),
+          child: Icon(_getIcon(tier), color: Colors.white, size: size * 0.6),
         ),
         if (showText) ...[
           const SizedBox(width: 4),
           Text(
             _getText(tier),
-            style: TextStyle(
-              color: _getColor(tier),
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: _getColor(tier), fontWeight: FontWeight.bold, fontSize: 12),
           ),
         ],
       ],
@@ -60,9 +52,7 @@ class PremiumBadgeWidget extends StatelessWidget {
   LinearGradient _getGradient(SubscriptionTier tier) {
     switch (tier) {
       case SubscriptionTier.free:
-        return const LinearGradient(
-          colors: [Colors.grey, Colors.grey],
-        );
+        return const LinearGradient(colors: [Colors.grey, Colors.grey]);
       case SubscriptionTier.premium:
         return const LinearGradient(
           colors: [Colors.amber, Colors.orange],
@@ -133,10 +123,7 @@ class PremiumBorderWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: _getColor(tier),
-          width: borderWidth,
-        ),
+        border: Border.all(color: _getColor(tier), width: borderWidth),
         boxShadow: [
           BoxShadow(
             color: _getColor(tier).withValues(alpha: 0.2),
@@ -166,12 +153,7 @@ class PremiumCardWidget extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
 
-  const PremiumCardWidget({
-    super.key,
-    required this.tier,
-    required this.child,
-    this.padding,
-  });
+  const PremiumCardWidget({super.key, required this.tier, required this.child, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -192,14 +174,9 @@ class PremiumCardWidget extends StatelessWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          border: Border.all(
-            color: _getColor(tier).withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: _getColor(tier).withValues(alpha: 0.3)),
         ),
-        child: Padding(
-          padding: padding ?? const EdgeInsets.all(16),
-          child: child,
-        ),
+        child: Padding(padding: padding ?? const EdgeInsets.all(16), child: child),
       ),
     );
   }
@@ -221,12 +198,7 @@ class PremiumTextWidget extends StatelessWidget {
   final String text;
   final TextStyle? style;
 
-  const PremiumTextWidget({
-    super.key,
-    required this.tier,
-    required this.text,
-    this.style,
-  });
+  const PremiumTextWidget({super.key, required this.tier, required this.text, this.style});
 
   @override
   Widget build(BuildContext context) {

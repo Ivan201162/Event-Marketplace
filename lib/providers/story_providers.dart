@@ -41,8 +41,10 @@ final createStoryProvider = FutureProvider.family<String, CreateStory>((ref, cre
 });
 
 /// Провайдер для загрузки изображения сторис
-final uploadStoryImageProvider =
-    FutureProvider.family<String, UploadStoryImageParams>((ref, params) async {
+final uploadStoryImageProvider = FutureProvider.family<String, UploadStoryImageParams>((
+  ref,
+  params,
+) async {
   final storyService = ref.read(storyServiceProvider);
   return await storyService.uploadStoryImage(
     authorId: params.authorId,
@@ -51,8 +53,10 @@ final uploadStoryImageProvider =
 });
 
 /// Провайдер для загрузки видео сторис
-final uploadStoryVideoProvider =
-    FutureProvider.family<String, UploadStoryVideoParams>((ref, params) async {
+final uploadStoryVideoProvider = FutureProvider.family<String, UploadStoryVideoParams>((
+  ref,
+  params,
+) async {
   final storyService = ref.read(storyServiceProvider);
   return await storyService.uploadStoryVideo(
     authorId: params.authorId,
@@ -62,10 +66,7 @@ final uploadStoryVideoProvider =
 
 /// Параметры для загрузки изображения сторис
 class UploadStoryImageParams {
-  const UploadStoryImageParams({
-    required this.authorId,
-    required this.imageFile,
-  });
+  const UploadStoryImageParams({required this.authorId, required this.imageFile});
 
   final String authorId;
   final dynamic imageFile; // XFile
@@ -73,10 +74,7 @@ class UploadStoryImageParams {
 
 /// Параметры для загрузки видео сторис
 class UploadStoryVideoParams {
-  const UploadStoryVideoParams({
-    required this.authorId,
-    required this.videoFile,
-  });
+  const UploadStoryVideoParams({required this.authorId, required this.videoFile});
 
   final String authorId;
   final dynamic videoFile; // XFile

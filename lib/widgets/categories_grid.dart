@@ -3,11 +3,7 @@ import '../models/specialist_categories.dart';
 
 /// Сетка категорий специалистов
 class CategoriesGrid extends StatelessWidget {
-  const CategoriesGrid({
-    super.key,
-    required this.categories,
-    required this.onCategoryTap,
-  });
+  const CategoriesGrid({super.key, required this.categories, required this.onCategoryTap});
   final List<SpecialistCategoryInfo> categories;
   final Function(SpecialistCategoryInfo) onCategoryTap;
 
@@ -34,18 +30,12 @@ class CategoriesGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(
-    BuildContext context,
-    SpecialistCategoryInfo category,
-    bool isMobile,
-  ) {
+  Widget _buildCategoryCard(BuildContext context, SpecialistCategoryInfo category, bool isMobile) {
     final theme = Theme.of(context);
 
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () => onCategoryTap(category),
         borderRadius: BorderRadius.circular(12),
@@ -73,12 +63,7 @@ class CategoriesGrid extends StatelessWidget {
                     color: category.color.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Text(
-                    category.emoji,
-                    style: TextStyle(
-                      fontSize: isMobile ? 24 : 32,
-                    ),
-                  ),
+                  child: Text(category.emoji, style: TextStyle(fontSize: isMobile ? 24 : 32)),
                 ),
 
                 SizedBox(height: isMobile ? 8 : 12),
@@ -127,11 +112,7 @@ class CategoriesGrid extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          Icons.star,
-                          size: isMobile ? 12 : 14,
-                          color: Colors.amber[700],
-                        ),
+                        Icon(Icons.star, size: isMobile ? 12 : 14, color: Colors.amber[700]),
                         const SizedBox(width: 2),
                         Text(
                           'Популярно',

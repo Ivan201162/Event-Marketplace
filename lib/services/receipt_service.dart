@@ -96,8 +96,10 @@ class ReceiptService {
   /// Получение настроек пользователя
   Future<ReceiptSettings?> _getUserReceiptSettings(String userId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('receipt_settings').doc(userId).get();
+      final DocumentSnapshot doc = await _firestore
+          .collection('receipt_settings')
+          .doc(userId)
+          .get();
 
       if (doc.exists) {
         return ReceiptSettings.fromMap(doc.data() as Map<String, dynamic>);
@@ -171,8 +173,10 @@ class ReceiptService {
   /// Получение данных транзакции
   Future<Map<String, dynamic>> _getTransactionData(String transactionId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('transactions').doc(transactionId).get();
+      final DocumentSnapshot doc = await _firestore
+          .collection('transactions')
+          .doc(transactionId)
+          .get();
 
       if (doc.exists) {
         return doc.data() as Map<String, dynamic>;
@@ -228,7 +232,7 @@ class ReceiptService {
             'quantity': 1,
             'price': transactionData['amount'] ?? 0.0,
             'total': transactionData['amount'] ?? 0.0,
-          }
+          },
         ];
       case ReceiptType.subscription:
         return [
@@ -237,7 +241,7 @@ class ReceiptService {
             'quantity': 1,
             'price': transactionData['amount'] ?? 0.0,
             'total': transactionData['amount'] ?? 0.0,
-          }
+          },
         ];
       case ReceiptType.promotion:
         return [
@@ -246,7 +250,7 @@ class ReceiptService {
             'quantity': 1,
             'price': transactionData['amount'] ?? 0.0,
             'total': transactionData['amount'] ?? 0.0,
-          }
+          },
         ];
       case ReceiptType.advertisement:
         return [
@@ -255,7 +259,7 @@ class ReceiptService {
             'quantity': 1,
             'price': transactionData['amount'] ?? 0.0,
             'total': transactionData['amount'] ?? 0.0,
-          }
+          },
         ];
       case ReceiptType.refund:
         return [
@@ -264,7 +268,7 @@ class ReceiptService {
             'quantity': 1,
             'price': -(transactionData['amount'] ?? 0.0),
             'total': -(transactionData['amount'] ?? 0.0),
-          }
+          },
         ];
     }
   }
@@ -276,11 +280,7 @@ class ReceiptService {
     final double vatAmount = amount * vatRate;
     final double amountWithoutVat = amount - vatAmount;
 
-    return {
-      'vatRate': vatRate,
-      'vatAmount': vatAmount,
-      'amountWithoutVat': amountWithoutVat,
-    };
+    return {'vatRate': vatRate, 'vatAmount': vatAmount, 'amountWithoutVat': amountWithoutVat};
   }
 
   /// Создание фискального чека

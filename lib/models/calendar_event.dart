@@ -51,9 +51,7 @@ class CalendarEvent {
         orElse: () => EventType.booking,
       ),
       attendees: List<String>.from(data['attendees'] as List<dynamic>? ?? []),
-      metadata: Map<String, dynamic>.from(
-        data['metadata'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
       isAllDay: data['isAllDay'] as bool? ?? false,
       recurrenceRule: data['recurrenceRule'] as String?,
       reminderTime: data['reminderTime'] as String?,
@@ -85,28 +83,28 @@ class CalendarEvent {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'startTime': Timestamp.fromDate(startTime),
-        'endTime': Timestamp.fromDate(endTime),
-        'location': location,
-        'specialistId': specialistId,
-        'specialistName': specialistName,
-        'customerId': customerId,
-        'customerName': customerName,
-        'bookingId': bookingId,
-        'status': status.name,
-        'type': type.name,
-        'attendees': attendees,
-        'metadata': metadata,
-        'isAllDay': isAllDay,
-        'recurrenceRule': recurrenceRule,
-        'reminderTime': reminderTime,
-        'color': color,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'startTime': Timestamp.fromDate(startTime),
+    'endTime': Timestamp.fromDate(endTime),
+    'location': location,
+    'specialistId': specialistId,
+    'specialistName': specialistName,
+    'customerId': customerId,
+    'customerName': customerName,
+    'bookingId': bookingId,
+    'status': status.name,
+    'type': type.name,
+    'attendees': attendees,
+    'metadata': metadata,
+    'isAllDay': isAllDay,
+    'recurrenceRule': recurrenceRule,
+    'reminderTime': reminderTime,
+    'color': color,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   CalendarEvent copyWith({
     String? id,
@@ -130,30 +128,29 @@ class CalendarEvent {
     String? color,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      CalendarEvent(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        startTime: startTime ?? this.startTime,
-        endTime: endTime ?? this.endTime,
-        location: location ?? this.location,
-        specialistId: specialistId ?? this.specialistId,
-        specialistName: specialistName ?? this.specialistName,
-        customerId: customerId ?? this.customerId,
-        customerName: customerName ?? this.customerName,
-        bookingId: bookingId ?? this.bookingId,
-        status: status ?? this.status,
-        type: type ?? this.type,
-        attendees: attendees ?? this.attendees,
-        metadata: metadata ?? this.metadata,
-        isAllDay: isAllDay ?? this.isAllDay,
-        recurrenceRule: recurrenceRule ?? this.recurrenceRule,
-        reminderTime: reminderTime ?? this.reminderTime,
-        color: color ?? this.color,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => CalendarEvent(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    startTime: startTime ?? this.startTime,
+    endTime: endTime ?? this.endTime,
+    location: location ?? this.location,
+    specialistId: specialistId ?? this.specialistId,
+    specialistName: specialistName ?? this.specialistName,
+    customerId: customerId ?? this.customerId,
+    customerName: customerName ?? this.customerName,
+    bookingId: bookingId ?? this.bookingId,
+    status: status ?? this.status,
+    type: type ?? this.type,
+    attendees: attendees ?? this.attendees,
+    metadata: metadata ?? this.metadata,
+    isAllDay: isAllDay ?? this.isAllDay,
+    recurrenceRule: recurrenceRule ?? this.recurrenceRule,
+    reminderTime: reminderTime ?? this.reminderTime,
+    color: color ?? this.color,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Получить длительность события
   Duration get duration => endTime.difference(startTime);
@@ -232,22 +229,10 @@ class CalendarEvent {
 }
 
 /// Статус события
-enum EventStatus {
-  scheduled,
-  confirmed,
-  cancelled,
-  completed,
-  postponed,
-}
+enum EventStatus { scheduled, confirmed, cancelled, completed, postponed }
 
 /// Тип события
-enum EventType {
-  booking,
-  consultation,
-  meeting,
-  reminder,
-  deadline,
-}
+enum EventType { booking, consultation, meeting, reminder, deadline }
 
 /// Фильтр для календарных событий
 class CalendarFilter {
@@ -279,17 +264,16 @@ class CalendarFilter {
     String? customerId,
     bool? isAllDay,
     String? searchQuery,
-  }) =>
-      CalendarFilter(
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-        statuses: statuses ?? this.statuses,
-        types: types ?? this.types,
-        specialistId: specialistId ?? this.specialistId,
-        customerId: customerId ?? this.customerId,
-        isAllDay: isAllDay ?? this.isAllDay,
-        searchQuery: searchQuery ?? this.searchQuery,
-      );
+  }) => CalendarFilter(
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    statuses: statuses ?? this.statuses,
+    types: types ?? this.types,
+    specialistId: specialistId ?? this.specialistId,
+    customerId: customerId ?? this.customerId,
+    isAllDay: isAllDay ?? this.isAllDay,
+    searchQuery: searchQuery ?? this.searchQuery,
+  );
 }
 
 /// Настройки календаря
@@ -328,19 +312,18 @@ class CalendarSettings {
     bool? enableNotifications,
     String? defaultReminderTime,
     Map<String, String>? eventColors,
-  }) =>
-      CalendarSettings(
-        showWeekends: showWeekends ?? this.showWeekends,
-        showAllDayEvents: showAllDayEvents ?? this.showAllDayEvents,
-        showCompletedEvents: showCompletedEvents ?? this.showCompletedEvents,
-        showCancelledEvents: showCancelledEvents ?? this.showCancelledEvents,
-        defaultView: defaultView ?? this.defaultView,
-        weekStartDay: weekStartDay ?? this.weekStartDay,
-        timeFormat: timeFormat ?? this.timeFormat,
-        enableNotifications: enableNotifications ?? this.enableNotifications,
-        defaultReminderTime: defaultReminderTime ?? this.defaultReminderTime,
-        eventColors: eventColors ?? this.eventColors,
-      );
+  }) => CalendarSettings(
+    showWeekends: showWeekends ?? this.showWeekends,
+    showAllDayEvents: showAllDayEvents ?? this.showAllDayEvents,
+    showCompletedEvents: showCompletedEvents ?? this.showCompletedEvents,
+    showCancelledEvents: showCancelledEvents ?? this.showCancelledEvents,
+    defaultView: defaultView ?? this.defaultView,
+    weekStartDay: weekStartDay ?? this.weekStartDay,
+    timeFormat: timeFormat ?? this.timeFormat,
+    enableNotifications: enableNotifications ?? this.enableNotifications,
+    defaultReminderTime: defaultReminderTime ?? this.defaultReminderTime,
+    eventColors: eventColors ?? this.eventColors,
+  );
 }
 
 /// Синхронизация с внешними календарями
@@ -359,19 +342,17 @@ class CalendarSync {
   });
 
   factory CalendarSync.fromMap(Map<String, dynamic> map) => CalendarSync(
-        id: map['id'] as String? ?? '',
-        userId: map['userId'] as String? ?? '',
-        provider: map['provider'] as String? ?? '',
-        providerId: map['providerId'] as String? ?? '',
-        accessToken: map['accessToken'] as String? ?? '',
-        refreshToken: map['refreshToken'] as String? ?? '',
-        tokenExpiry: (map['tokenExpiry'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        isActive: map['isActive'] as bool? ?? false,
-        lastSync: (map['lastSync'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        settings: Map<String, dynamic>.from(
-          map['settings'] as Map<dynamic, dynamic>? ?? {},
-        ),
-      );
+    id: map['id'] as String? ?? '',
+    userId: map['userId'] as String? ?? '',
+    provider: map['provider'] as String? ?? '',
+    providerId: map['providerId'] as String? ?? '',
+    accessToken: map['accessToken'] as String? ?? '',
+    refreshToken: map['refreshToken'] as String? ?? '',
+    tokenExpiry: (map['tokenExpiry'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    isActive: map['isActive'] as bool? ?? false,
+    lastSync: (map['lastSync'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    settings: Map<String, dynamic>.from(map['settings'] as Map<dynamic, dynamic>? ?? {}),
+  );
   final String id;
   final String userId;
   final String provider;
@@ -384,26 +365,21 @@ class CalendarSync {
   final Map<String, dynamic> settings;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'provider': provider,
-        'providerId': providerId,
-        'accessToken': accessToken,
-        'refreshToken': refreshToken,
-        'tokenExpiry': Timestamp.fromDate(tokenExpiry),
-        'isActive': isActive,
-        'lastSync': Timestamp.fromDate(lastSync),
-        'settings': settings,
-      };
+    'id': id,
+    'userId': userId,
+    'provider': provider,
+    'providerId': providerId,
+    'accessToken': accessToken,
+    'refreshToken': refreshToken,
+    'tokenExpiry': Timestamp.fromDate(tokenExpiry),
+    'isActive': isActive,
+    'lastSync': Timestamp.fromDate(lastSync),
+    'settings': settings,
+  };
 }
 
 /// Провайдеры календаря
-enum CalendarProvider {
-  google,
-  outlook,
-  apple,
-  local,
-}
+enum CalendarProvider { google, outlook, apple, local }
 
 /// Статистика календаря
 class CalendarStats {
@@ -419,15 +395,15 @@ class CalendarStats {
   });
 
   factory CalendarStats.empty() => const CalendarStats(
-        totalEvents: 0,
-        completedEvents: 0,
-        cancelledEvents: 0,
-        upcomingEvents: 0,
-        averageEventDuration: 0,
-        eventsByType: {},
-        eventsByStatus: {},
-        busiestDays: [],
-      );
+    totalEvents: 0,
+    completedEvents: 0,
+    cancelledEvents: 0,
+    upcomingEvents: 0,
+    averageEventDuration: 0,
+    eventsByType: {},
+    eventsByStatus: {},
+    busiestDays: [],
+  );
   final int totalEvents;
   final int completedEvents;
   final int cancelledEvents;

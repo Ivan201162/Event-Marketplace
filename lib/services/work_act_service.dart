@@ -129,10 +129,7 @@ class WorkActService {
   }
 
   /// Отклонить акт выполненных работ
-  Future<void> rejectWorkAct({
-    required String workActId,
-    required String reason,
-  }) async {
+  Future<void> rejectWorkAct({required String workActId, required String reason}) async {
     try {
       await _firestore.collection('work_acts').doc(workActId).update({
         'status': WorkActStatus.rejected.name,
@@ -156,9 +153,7 @@ class WorkActService {
     String? notes,
   }) async {
     try {
-      final updateData = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
+      final updateData = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
 
       if (eventName != null) updateData['eventName'] = eventName;
       if (eventDate != null) updateData['eventDate'] = eventDate;
@@ -182,10 +177,7 @@ class WorkActService {
       final pdf = pw.Document();
 
       pdf.addPage(
-        pw.Page(
-          pageFormat: PdfPageFormat.a4,
-          build: (context) => _buildWorkActContent(workAct),
-        ),
+        pw.Page(pageFormat: PdfPageFormat.a4, build: (context) => _buildWorkActContent(workAct)),
       );
 
       return await pdf.save();
@@ -197,159 +189,133 @@ class WorkActService {
 
   /// Содержимое акта выполненных работ
   pw.Widget _buildWorkActContent(WorkAct workAct) => pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          pw.SizedBox(height: 20),
-          _buildTitle(),
-          pw.SizedBox(height: 20),
-          _buildEventInfo(workAct),
-          pw.SizedBox(height: 20),
-          _buildServicesTable(workAct),
-          pw.SizedBox(height: 20),
-          _buildTotalAmount(workAct),
-          pw.SizedBox(height: 20),
-          _buildNotes(workAct),
-          pw.SizedBox(height: 40),
-          _buildSignatures(workAct),
-        ],
-      );
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      _buildHeader(),
+      pw.SizedBox(height: 20),
+      _buildTitle(),
+      pw.SizedBox(height: 20),
+      _buildEventInfo(workAct),
+      pw.SizedBox(height: 20),
+      _buildServicesTable(workAct),
+      pw.SizedBox(height: 20),
+      _buildTotalAmount(workAct),
+      pw.SizedBox(height: 20),
+      _buildNotes(workAct),
+      pw.SizedBox(height: 40),
+      _buildSignatures(workAct),
+    ],
+  );
 
   pw.Widget _buildHeader() => pw.Row(
-        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-        children: [
-          pw.Text(
-            'АКТ ВЫПОЛНЕННЫХ РАБОТ',
-            style: pw.TextStyle(
-              fontSize: 18,
-              fontWeight: pw.FontWeight.bold,
-            ),
-          ),
-          pw.Text(
-            '№ ${DateTime.now().millisecondsSinceEpoch}',
-            style: const pw.TextStyle(fontSize: 12),
-          ),
-        ],
-      );
+    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    children: [
+      pw.Text(
+        'АКТ ВЫПОЛНЕННЫХ РАБОТ',
+        style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+      ),
+      pw.Text(
+        '№ ${DateTime.now().millisecondsSinceEpoch}',
+        style: const pw.TextStyle(fontSize: 12),
+      ),
+    ],
+  );
 
   pw.Widget _buildTitle() => pw.Center(
-        child: pw.Text(
-          'АКТ ВЫПОЛНЕННЫХ РАБОТ',
-          style: pw.TextStyle(
-            fontSize: 24,
-            fontWeight: pw.FontWeight.bold,
-          ),
-        ),
-      );
+    child: pw.Text(
+      'АКТ ВЫПОЛНЕННЫХ РАБОТ',
+      style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+    ),
+  );
 
   pw.Widget _buildEventInfo(WorkAct workAct) => pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.Text(
-            'Информация о мероприятии:',
-            style: pw.TextStyle(
-              fontSize: 14,
-              fontWeight: pw.FontWeight.bold,
-            ),
-          ),
-          pw.SizedBox(height: 8),
-          _buildInfoRow('Название:', workAct.eventName),
-          _buildInfoRow('Дата:', workAct.eventDate),
-          _buildInfoRow('Место проведения:', workAct.eventLocation),
-          _buildInfoRow('Дата составления:', _formatDate(workAct.createdAt)),
-        ],
-      );
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Text(
+        'Информация о мероприятии:',
+        style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+      ),
+      pw.SizedBox(height: 8),
+      _buildInfoRow('Название:', workAct.eventName),
+      _buildInfoRow('Дата:', workAct.eventDate),
+      _buildInfoRow('Место проведения:', workAct.eventLocation),
+      _buildInfoRow('Дата составления:', _formatDate(workAct.createdAt)),
+    ],
+  );
 
   pw.Widget _buildInfoRow(String label, String value) => pw.Padding(
-        padding: const pw.EdgeInsets.symmetric(vertical: 2),
-        child: pw.Row(
-          children: [
-            pw.SizedBox(
-              width: 120,
-              child: pw.Text(
-                label,
-                style: const pw.TextStyle(fontSize: 12),
-              ),
-            ),
-            pw.Expanded(
-              child: pw.Text(
-                value,
-                style: const pw.TextStyle(fontSize: 12),
-              ),
-            ),
-          ],
-        ),
-      );
+    padding: const pw.EdgeInsets.symmetric(vertical: 2),
+    child: pw.Row(
+      children: [
+        pw.SizedBox(width: 120, child: pw.Text(label, style: const pw.TextStyle(fontSize: 12))),
+        pw.Expanded(child: pw.Text(value, style: const pw.TextStyle(fontSize: 12))),
+      ],
+    ),
+  );
 
   pw.Widget _buildServicesTable(WorkAct workAct) => pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Text(
+        'Выполненные работы:',
+        style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+      ),
+      pw.SizedBox(height: 8),
+      pw.Table(
+        border: pw.TableBorder.all(),
+        columnWidths: {
+          0: const pw.FlexColumnWidth(),
+          1: const pw.FlexColumnWidth(3),
+          2: const pw.FlexColumnWidth(),
+          3: const pw.FlexColumnWidth(),
+        },
         children: [
-          pw.Text(
-            'Выполненные работы:',
-            style: pw.TextStyle(
-              fontSize: 14,
-              fontWeight: pw.FontWeight.bold,
-            ),
-          ),
-          pw.SizedBox(height: 8),
-          pw.Table(
-            border: pw.TableBorder.all(),
-            columnWidths: {
-              0: const pw.FlexColumnWidth(),
-              1: const pw.FlexColumnWidth(3),
-              2: const pw.FlexColumnWidth(),
-              3: const pw.FlexColumnWidth(),
-            },
+          pw.TableRow(
+            decoration: const pw.BoxDecoration(color: PdfColors.grey300),
             children: [
-              pw.TableRow(
-                decoration: const pw.BoxDecoration(color: PdfColors.grey300),
-                children: [
-                  _buildTableCell('№', isHeader: true),
-                  _buildTableCell('Наименование работы', isHeader: true),
-                  _buildTableCell('Количество', isHeader: true),
-                  _buildTableCell('Стоимость', isHeader: true),
-                ],
-              ),
-              ...workAct.services.asMap().entries.map((entry) {
-                final index = entry.key;
-                final service = entry.value;
-                return pw.TableRow(
-                  children: [
-                    _buildTableCell('${index + 1}'),
-                    _buildTableCell(service.name),
-                    _buildTableCell(service.quantity.toString()),
-                    _buildTableCell('${service.price.toStringAsFixed(2)} ₽'),
-                  ],
-                );
-              }),
+              _buildTableCell('№', isHeader: true),
+              _buildTableCell('Наименование работы', isHeader: true),
+              _buildTableCell('Количество', isHeader: true),
+              _buildTableCell('Стоимость', isHeader: true),
             ],
           ),
+          ...workAct.services.asMap().entries.map((entry) {
+            final index = entry.key;
+            final service = entry.value;
+            return pw.TableRow(
+              children: [
+                _buildTableCell('${index + 1}'),
+                _buildTableCell(service.name),
+                _buildTableCell(service.quantity.toString()),
+                _buildTableCell('${service.price.toStringAsFixed(2)} ₽'),
+              ],
+            );
+          }),
         ],
-      );
+      ),
+    ],
+  );
 
   pw.Widget _buildTableCell(String text, {bool isHeader = false}) => pw.Padding(
-        padding: const pw.EdgeInsets.all(4),
-        child: pw.Text(
-          text,
-          style: pw.TextStyle(
-            fontSize: isHeader ? 12 : 10,
-            fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
-          ),
-        ),
-      );
+    padding: const pw.EdgeInsets.all(4),
+    child: pw.Text(
+      text,
+      style: pw.TextStyle(
+        fontSize: isHeader ? 12 : 10,
+        fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
+      ),
+    ),
+  );
 
   pw.Widget _buildTotalAmount(WorkAct workAct) => pw.Row(
-        mainAxisAlignment: pw.MainAxisAlignment.end,
-        children: [
-          pw.Text(
-            'Итого: ${workAct.totalAmount.toStringAsFixed(2)} ₽',
-            style: pw.TextStyle(
-              fontSize: 16,
-              fontWeight: pw.FontWeight.bold,
-            ),
-          ),
-        ],
-      );
+    mainAxisAlignment: pw.MainAxisAlignment.end,
+    children: [
+      pw.Text(
+        'Итого: ${workAct.totalAmount.toStringAsFixed(2)} ₽',
+        style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
+      ),
+    ],
+  );
 
   pw.Widget _buildNotes(WorkAct workAct) {
     if (workAct.notes == null || workAct.notes!.isEmpty) {
@@ -359,63 +325,36 @@ class WorkActService {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.Text(
-          'Примечания:',
-          style: pw.TextStyle(
-            fontSize: 14,
-            fontWeight: pw.FontWeight.bold,
-          ),
-        ),
+        pw.Text('Примечания:', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
         pw.SizedBox(height: 8),
-        pw.Text(
-          workAct.notes!,
-          style: const pw.TextStyle(fontSize: 12),
-        ),
+        pw.Text(workAct.notes!, style: const pw.TextStyle(fontSize: 12)),
       ],
     );
   }
 
   pw.Widget _buildSignatures(WorkAct workAct) => pw.Row(
-        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    children: [
+      pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                'Исполнитель:',
-                style: const pw.TextStyle(fontSize: 12),
-              ),
-              pw.SizedBox(height: 40),
-              pw.Text(
-                '_________________',
-                style: const pw.TextStyle(fontSize: 12),
-              ),
-              pw.Text(
-                'Подпись',
-                style: const pw.TextStyle(fontSize: 10),
-              ),
-            ],
-          ),
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                'Заказчик:',
-                style: const pw.TextStyle(fontSize: 12),
-              ),
-              pw.SizedBox(height: 40),
-              pw.Text(
-                '_________________',
-                style: const pw.TextStyle(fontSize: 12),
-              ),
-              pw.Text(
-                'Подпись',
-                style: const pw.TextStyle(fontSize: 10),
-              ),
-            ],
-          ),
+          pw.Text('Исполнитель:', style: const pw.TextStyle(fontSize: 12)),
+          pw.SizedBox(height: 40),
+          pw.Text('_________________', style: const pw.TextStyle(fontSize: 12)),
+          pw.Text('Подпись', style: const pw.TextStyle(fontSize: 10)),
         ],
-      );
+      ),
+      pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text('Заказчик:', style: const pw.TextStyle(fontSize: 12)),
+          pw.SizedBox(height: 40),
+          pw.Text('_________________', style: const pw.TextStyle(fontSize: 12)),
+          pw.Text('Подпись', style: const pw.TextStyle(fontSize: 10)),
+        ],
+      ),
+    ],
+  );
 
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 
@@ -454,11 +393,7 @@ class WorkActService {
 }
 
 /// Статус акта выполненных работ
-enum WorkActStatus {
-  draft,
-  signed,
-  rejected,
-}
+enum WorkActStatus { draft, signed, rejected }
 
 /// Модель акта выполненных работ
 class WorkAct {
@@ -492,7 +427,8 @@ class WorkAct {
       eventName: data['eventName'] as String? ?? '',
       eventDate: data['eventDate'] as String? ?? '',
       eventLocation: data['eventLocation'] as String? ?? '',
-      services: (data['services'] as List<dynamic>?)
+      services:
+          (data['services'] as List<dynamic>?)
               ?.map((item) => ServiceItem.fromMap(item as Map<String, dynamic>))
               .toList() ??
           [],
@@ -502,10 +438,12 @@ class WorkAct {
         (status) => status.name == data['status'],
         orElse: () => WorkActStatus.draft,
       ),
-      createdAt:
-          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-      updatedAt:
-          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
       signedAt: data['signedAt'] != null ? (data['signedAt'] as Timestamp).toDate() : null,
       signedBy: data['signedBy'] as String?,
       signature: data['signature'] as String?,
@@ -549,45 +487,44 @@ class WorkAct {
     String? signedBy,
     String? signature,
     String? rejectionReason,
-  }) =>
-      WorkAct(
-        id: id ?? this.id,
-        bookingId: bookingId ?? this.bookingId,
-        specialistId: specialistId ?? this.specialistId,
-        customerId: customerId ?? this.customerId,
-        eventName: eventName ?? this.eventName,
-        eventDate: eventDate ?? this.eventDate,
-        eventLocation: eventLocation ?? this.eventLocation,
-        services: services ?? this.services,
-        totalAmount: totalAmount ?? this.totalAmount,
-        notes: notes ?? this.notes,
-        status: status ?? this.status,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        signedAt: signedAt ?? this.signedAt,
-        signedBy: signedBy ?? this.signedBy,
-        signature: signature ?? this.signature,
-        rejectionReason: rejectionReason ?? this.rejectionReason,
-      );
+  }) => WorkAct(
+    id: id ?? this.id,
+    bookingId: bookingId ?? this.bookingId,
+    specialistId: specialistId ?? this.specialistId,
+    customerId: customerId ?? this.customerId,
+    eventName: eventName ?? this.eventName,
+    eventDate: eventDate ?? this.eventDate,
+    eventLocation: eventLocation ?? this.eventLocation,
+    services: services ?? this.services,
+    totalAmount: totalAmount ?? this.totalAmount,
+    notes: notes ?? this.notes,
+    status: status ?? this.status,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    signedAt: signedAt ?? this.signedAt,
+    signedBy: signedBy ?? this.signedBy,
+    signature: signature ?? this.signature,
+    rejectionReason: rejectionReason ?? this.rejectionReason,
+  );
 
   Map<String, dynamic> toMap() => {
-        'bookingId': bookingId,
-        'specialistId': specialistId,
-        'customerId': customerId,
-        'eventName': eventName,
-        'eventDate': eventDate,
-        'eventLocation': eventLocation,
-        'services': services.map((s) => s.toMap()).toList(),
-        'totalAmount': totalAmount,
-        'notes': notes,
-        'status': status.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
-        'signedBy': signedBy,
-        'signature': signature,
-        'rejectionReason': rejectionReason,
-      };
+    'bookingId': bookingId,
+    'specialistId': specialistId,
+    'customerId': customerId,
+    'eventName': eventName,
+    'eventDate': eventDate,
+    'eventLocation': eventLocation,
+    'services': services.map((s) => s.toMap()).toList(),
+    'totalAmount': totalAmount,
+    'notes': notes,
+    'status': status.name,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
+    'signedBy': signedBy,
+    'signature': signature,
+    'rejectionReason': rejectionReason,
+  };
 
   bool get isSigned => status == WorkActStatus.signed;
   bool get isDraft => status == WorkActStatus.draft;
@@ -604,11 +541,11 @@ class ServiceItem {
   });
 
   factory ServiceItem.fromMap(Map<String, dynamic> map) => ServiceItem(
-        name: map['name'] as String? ?? '',
-        quantity: map['quantity'] as int? ?? 1,
-        price: (map['price'] as num?)?.toDouble() ?? 0.0,
-        description: map['description'] as String?,
-      );
+    name: map['name'] as String? ?? '',
+    quantity: map['quantity'] as int? ?? 1,
+    price: (map['price'] as num?)?.toDouble() ?? 0.0,
+    description: map['description'] as String?,
+  );
 
   final String name;
   final int quantity;
@@ -616,11 +553,11 @@ class ServiceItem {
   final String? description;
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'quantity': quantity,
-        'price': price,
-        'description': description,
-      };
+    'name': name,
+    'quantity': quantity,
+    'price': price,
+    'description': description,
+  };
 
   double get totalPrice => quantity * price;
 }
@@ -638,14 +575,14 @@ class WorkActStats {
   });
 
   factory WorkActStats.empty() => WorkActStats(
-        specialistId: '',
-        totalActs: 0,
-        signedActs: 0,
-        draftActs: 0,
-        rejectedActs: 0,
-        totalAmount: 0,
-        lastUpdated: DateTime.now(),
-      );
+    specialistId: '',
+    totalActs: 0,
+    signedActs: 0,
+    draftActs: 0,
+    rejectedActs: 0,
+    totalAmount: 0,
+    lastUpdated: DateTime.now(),
+  );
 
   final String specialistId;
   final int totalActs;

@@ -133,8 +133,9 @@ void main() {
 
       test('should handle error when getting reviews', () async {
         // Arrange
-        when(mockReviewsCollection.orderBy(any, descending: any))
-            .thenThrow(Exception('Database error'));
+        when(
+          mockReviewsCollection.orderBy(any, descending: any),
+        ).thenThrow(Exception('Database error'));
 
         // Act
         final reviews = await repository.getReviews();
@@ -173,8 +174,9 @@ void main() {
         when(mockQueryDocSnapshot.id).thenReturn('review_1');
         when(mockQueryDocSnapshot.data()).thenReturn(reviewData);
 
-        when(mockReviewsCollection.where('specialistId', isEqualTo: specialistId))
-            .thenReturn(mockQuery);
+        when(
+          mockReviewsCollection.where('specialistId', isEqualTo: specialistId),
+        ).thenReturn(mockQuery);
         when(mockQuery.orderBy('createdAt', descending: true)).thenReturn(mockQuery);
         when(mockQuery.limit(any)).thenReturn(mockQuery);
         when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
@@ -303,8 +305,9 @@ void main() {
         when(mockQueryDocSnapshot2.id).thenReturn('review_2');
         when(mockQueryDocSnapshot2.data()).thenReturn(reviewData2);
 
-        when(mockReviewsCollection.where('specialistId', isEqualTo: specialistId))
-            .thenReturn(mockQuery);
+        when(
+          mockReviewsCollection.where('specialistId', isEqualTo: specialistId),
+        ).thenReturn(mockQuery);
         when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([mockQueryDocSnapshot1, mockQueryDocSnapshot2]);
 

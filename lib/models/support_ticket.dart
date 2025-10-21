@@ -47,7 +47,7 @@ class SupportTicket {
       ),
       messages:
           (data['messages'] as List<dynamic>?)?.map((e) => SupportMessage.fromMap(e)).toList() ??
-              [],
+          [],
       attachments: List<String>.from(data['attachments'] ?? []),
       assignedTo: data['assignedTo'],
       assignedToName: data['assignedToName'],
@@ -76,24 +76,24 @@ class SupportTicket {
   final DateTime? resolvedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'userName': userName,
-        'userEmail': userEmail,
-        'subject': subject,
-        'description': description,
-        'category': category.name,
-        'priority': priority.name,
-        'status': status.name,
-        'messages': messages.map((e) => e.toMap()).toList(),
-        'attachments': attachments,
-        'assignedTo': assignedTo,
-        'assignedToName': assignedToName,
-        'metadata': metadata,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-      };
+    'id': id,
+    'userId': userId,
+    'userName': userName,
+    'userEmail': userEmail,
+    'subject': subject,
+    'description': description,
+    'category': category.name,
+    'priority': priority.name,
+    'status': status.name,
+    'messages': messages.map((e) => e.toMap()).toList(),
+    'attachments': attachments,
+    'assignedTo': assignedTo,
+    'assignedToName': assignedToName,
+    'metadata': metadata,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+  };
 
   SupportTicket copyWith({
     String? id,
@@ -113,26 +113,25 @@ class SupportTicket {
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? resolvedAt,
-  }) =>
-      SupportTicket(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        userName: userName ?? this.userName,
-        userEmail: userEmail ?? this.userEmail,
-        subject: subject ?? this.subject,
-        description: description ?? this.description,
-        category: category ?? this.category,
-        priority: priority ?? this.priority,
-        status: status ?? this.status,
-        messages: messages ?? this.messages,
-        attachments: attachments ?? this.attachments,
-        assignedTo: assignedTo ?? this.assignedTo,
-        assignedToName: assignedToName ?? this.assignedToName,
-        metadata: metadata ?? this.metadata,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        resolvedAt: resolvedAt ?? this.resolvedAt,
-      );
+  }) => SupportTicket(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    userName: userName ?? this.userName,
+    userEmail: userEmail ?? this.userEmail,
+    subject: subject ?? this.subject,
+    description: description ?? this.description,
+    category: category ?? this.category,
+    priority: priority ?? this.priority,
+    status: status ?? this.status,
+    messages: messages ?? this.messages,
+    attachments: attachments ?? this.attachments,
+    assignedTo: assignedTo ?? this.assignedTo,
+    assignedToName: assignedToName ?? this.assignedToName,
+    metadata: metadata ?? this.metadata,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    resolvedAt: resolvedAt ?? this.resolvedAt,
+  );
 
   /// Получить цвет статуса
   Color get statusColor {
@@ -240,16 +239,7 @@ class SupportTicket {
 }
 
 /// Категории поддержки
-enum SupportCategory {
-  general,
-  technical,
-  billing,
-  feature,
-  account,
-  booking,
-  payment,
-  other,
-}
+enum SupportCategory { general, technical, billing, feature, account, booking, payment, other }
 
 /// Расширение для SupportCategory
 extension SupportCategoryExtension on SupportCategory {
@@ -297,12 +287,7 @@ extension SupportCategoryExtension on SupportCategory {
 }
 
 /// Приоритеты поддержки
-enum SupportPriority {
-  low,
-  medium,
-  high,
-  critical,
-}
+enum SupportPriority { low, medium, high, critical }
 
 extension SupportPriorityExtension on SupportPriority {
   Color get priorityColor {
@@ -333,13 +318,7 @@ extension SupportPriorityExtension on SupportPriority {
 }
 
 /// Статусы поддержки
-enum SupportStatus {
-  open,
-  inProgress,
-  pending,
-  resolved,
-  closed,
-}
+enum SupportStatus { open, inProgress, pending, resolved, closed }
 
 extension SupportStatusExtension on SupportStatus {
   Color get statusColor {
@@ -389,17 +368,17 @@ class SupportMessage {
   });
 
   factory SupportMessage.fromMap(Map<String, dynamic> map) => SupportMessage(
-        id: map['id'] ?? '',
-        ticketId: map['ticketId'] ?? '',
-        authorId: map['authorId'] ?? '',
-        authorName: map['authorName'] ?? '',
-        authorEmail: map['authorEmail'] ?? '',
-        isFromSupport: map['isFromSupport'] ?? false,
-        content: map['content'] ?? '',
-        attachments: List<String>.from(map['attachments'] ?? []),
-        createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      );
+    id: map['id'] ?? '',
+    ticketId: map['ticketId'] ?? '',
+    authorId: map['authorId'] ?? '',
+    authorName: map['authorName'] ?? '',
+    authorEmail: map['authorEmail'] ?? '',
+    isFromSupport: map['isFromSupport'] ?? false,
+    content: map['content'] ?? '',
+    attachments: List<String>.from(map['attachments'] ?? []),
+    createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+  );
   final String id;
   final String ticketId;
   final String authorId;
@@ -412,17 +391,17 @@ class SupportMessage {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'ticketId': ticketId,
-        'authorId': authorId,
-        'authorName': authorName,
-        'authorEmail': authorEmail,
-        'isFromSupport': isFromSupport,
-        'content': content,
-        'attachments': attachments,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'ticketId': ticketId,
+    'authorId': authorId,
+    'authorName': authorName,
+    'authorEmail': authorEmail,
+    'isFromSupport': isFromSupport,
+    'content': content,
+    'attachments': attachments,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   SupportMessage copyWith({
     String? id,
@@ -435,19 +414,18 @@ class SupportMessage {
     List<String>? attachments,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      SupportMessage(
-        id: id ?? this.id,
-        ticketId: ticketId ?? this.ticketId,
-        authorId: authorId ?? this.authorId,
-        authorName: authorName ?? this.authorName,
-        authorEmail: authorEmail ?? this.authorEmail,
-        isFromSupport: isFromSupport ?? this.isFromSupport,
-        content: content ?? this.content,
-        attachments: attachments ?? this.attachments,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => SupportMessage(
+    id: id ?? this.id,
+    ticketId: ticketId ?? this.ticketId,
+    authorId: authorId ?? this.authorId,
+    authorName: authorName ?? this.authorName,
+    authorEmail: authorEmail ?? this.authorEmail,
+    isFromSupport: isFromSupport ?? this.isFromSupport,
+    content: content ?? this.content,
+    attachments: attachments ?? this.attachments,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 }
 
 /// FAQ элемент
@@ -493,16 +471,16 @@ class FAQItem {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'question': question,
-        'answer': answer,
-        'category': category.name,
-        'tags': tags,
-        'viewsCount': viewsCount,
-        'isPublished': isPublished,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'question': question,
+    'answer': answer,
+    'category': category.name,
+    'tags': tags,
+    'viewsCount': viewsCount,
+    'isPublished': isPublished,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   FAQItem copyWith({
     String? id,
@@ -514,18 +492,17 @@ class FAQItem {
     bool? isPublished,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      FAQItem(
-        id: id ?? this.id,
-        question: question ?? this.question,
-        answer: answer ?? this.answer,
-        category: category ?? this.category,
-        tags: tags ?? this.tags,
-        viewsCount: viewsCount ?? this.viewsCount,
-        isPublished: isPublished ?? this.isPublished,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => FAQItem(
+    id: id ?? this.id,
+    question: question ?? this.question,
+    answer: answer ?? this.answer,
+    category: category ?? this.category,
+    tags: tags ?? this.tags,
+    viewsCount: viewsCount ?? this.viewsCount,
+    isPublished: isPublished ?? this.isPublished,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 }
 
 /// Статистика поддержки
@@ -543,16 +520,16 @@ class SupportStats {
   });
 
   factory SupportStats.empty() => const SupportStats(
-        totalTickets: 0,
-        openTickets: 0,
-        inProgressTickets: 0,
-        resolvedTickets: 0,
-        closedTickets: 0,
-        averageResolutionTime: 0,
-        ticketsByCategory: {},
-        ticketsByPriority: {},
-        topIssues: [],
-      );
+    totalTickets: 0,
+    openTickets: 0,
+    inProgressTickets: 0,
+    resolvedTickets: 0,
+    closedTickets: 0,
+    averageResolutionTime: 0,
+    ticketsByCategory: {},
+    ticketsByPriority: {},
+    topIssues: [],
+  );
   final int totalTickets;
   final int openTickets;
   final int inProgressTickets;

@@ -21,8 +21,10 @@ final specialistProfileProvider = FutureProvider.family<SpecialistProfile?, Stri
 });
 
 /// Провайдер профиля текущего пользователя
-final currentUserProfileProvider =
-    FutureProvider.family<dynamic, (String, user_model.UserRole)>((ref, params) {
+final currentUserProfileProvider = FutureProvider.family<dynamic, (String, user_model.UserRole)>((
+  ref,
+  params,
+) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getUserProfile(params.$1, params.$2);
 });
@@ -30,9 +32,9 @@ final currentUserProfileProvider =
 /// Провайдер специалистов по категории
 final specialistsByCategoryProvider =
     FutureProvider.family<List<SpecialistProfile>, SpecialistCategory>((ref, category) {
-  final profileService = ref.watch(profileServiceProvider);
-  return profileService.getSpecialistsByCategory(category);
-});
+      final profileService = ref.watch(profileServiceProvider);
+      return profileService.getSpecialistsByCategory(category);
+    });
 
 /// Провайдер топ специалистов
 final topSpecialistsProvider = FutureProvider.family<List<SpecialistProfile>, int>((ref, limit) {
@@ -43,22 +45,22 @@ final topSpecialistsProvider = FutureProvider.family<List<SpecialistProfile>, in
 /// Провайдер поиска специалистов
 final searchSpecialistsProvider =
     FutureProvider.family<List<SpecialistProfile>, SearchSpecialistsParams>((ref, params) {
-  final profileService = ref.watch(profileServiceProvider);
-  return profileService.searchSpecialists(
-    query: params.query,
-    categories: params.categories,
-    minRating: params.minRating,
-    maxHourlyRate: params.maxHourlyRate,
-    location: params.location,
-  );
-});
+      final profileService = ref.watch(profileServiceProvider);
+      return profileService.searchSpecialists(
+        query: params.query,
+        categories: params.categories,
+        minRating: params.minRating,
+        maxHourlyRate: params.maxHourlyRate,
+        location: params.location,
+      );
+    });
 
 /// Провайдер статистики профиля
 final profileStatsProvider =
     FutureProvider.family<Map<String, dynamic>, (String, user_model.UserRole)>((ref, params) {
-  final profileService = ref.watch(profileServiceProvider);
-  return profileService.getProfileStats(params.$1, params.$2);
-});
+      final profileService = ref.watch(profileServiceProvider);
+      return profileService.getProfileStats(params.$1, params.$2);
+    });
 
 /// Параметры поиска специалистов
 class SearchSpecialistsParams {
@@ -93,8 +95,8 @@ class SearchSpecialistsParams {
 /// Провайдер для управления состоянием редактирования профиля заказчика
 final customerProfileEditProvider =
     NotifierProvider<CustomerProfileEditNotifier, CustomerProfileEditState>(
-  CustomerProfileEditNotifier.new,
-);
+      CustomerProfileEditNotifier.new,
+    );
 
 /// Состояние редактирования профиля заказчика
 class CustomerProfileEditState {
@@ -114,13 +116,12 @@ class CustomerProfileEditState {
     bool? isLoading,
     String? errorMessage,
     bool? isDirty,
-  }) =>
-      CustomerProfileEditState(
-        profile: profile ?? this.profile,
-        isLoading: isLoading ?? this.isLoading,
-        errorMessage: errorMessage,
-        isDirty: isDirty ?? this.isDirty,
-      );
+  }) => CustomerProfileEditState(
+    profile: profile ?? this.profile,
+    isLoading: isLoading ?? this.isLoading,
+    errorMessage: errorMessage,
+    isDirty: isDirty ?? this.isDirty,
+  );
 }
 
 /// Нотификатор для редактирования профиля заказчика
@@ -139,16 +140,9 @@ class CustomerProfileEditNotifier extends Notifier<CustomerProfileEditState> {
 
     try {
       final profile = await _profileService.getCustomerProfile(userId);
-      state = state.copyWith(
-        profile: profile,
-        isLoading: false,
-        isDirty: false,
-      );
+      state = state.copyWith(profile: profile, isLoading: false, isDirty: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }
 
@@ -179,10 +173,7 @@ class CustomerProfileEditNotifier extends Notifier<CustomerProfileEditState> {
       updatedAt: DateTime.now(),
     );
 
-    state = state.copyWith(
-      profile: updatedProfile,
-      isDirty: true,
-    );
+    state = state.copyWith(profile: updatedProfile, isDirty: true);
   }
 
   /// Сохранить профиль
@@ -193,15 +184,9 @@ class CustomerProfileEditNotifier extends Notifier<CustomerProfileEditState> {
 
     try {
       await _profileService.createOrUpdateCustomerProfile(state.profile!);
-      state = state.copyWith(
-        isLoading: false,
-        isDirty: false,
-      );
+      state = state.copyWith(isLoading: false, isDirty: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }
 
@@ -214,8 +199,8 @@ class CustomerProfileEditNotifier extends Notifier<CustomerProfileEditState> {
 /// Провайдер для управления состоянием редактирования профиля специалиста
 final specialistProfileEditProvider =
     NotifierProvider<SpecialistProfileEditNotifier, SpecialistProfileEditState>(
-  SpecialistProfileEditNotifier.new,
-);
+      SpecialistProfileEditNotifier.new,
+    );
 
 /// Состояние редактирования профиля специалиста
 class SpecialistProfileEditState {
@@ -235,13 +220,12 @@ class SpecialistProfileEditState {
     bool? isLoading,
     String? errorMessage,
     bool? isDirty,
-  }) =>
-      SpecialistProfileEditState(
-        profile: profile ?? this.profile,
-        isLoading: isLoading ?? this.isLoading,
-        errorMessage: errorMessage,
-        isDirty: isDirty ?? this.isDirty,
-      );
+  }) => SpecialistProfileEditState(
+    profile: profile ?? this.profile,
+    isLoading: isLoading ?? this.isLoading,
+    errorMessage: errorMessage,
+    isDirty: isDirty ?? this.isDirty,
+  );
 }
 
 /// Нотификатор для редактирования профиля специалиста
@@ -260,16 +244,9 @@ class SpecialistProfileEditNotifier extends Notifier<SpecialistProfileEditState>
 
     try {
       final profile = await _profileService.getSpecialistProfile(userId);
-      state = state.copyWith(
-        profile: profile,
-        isLoading: false,
-        isDirty: false,
-      );
+      state = state.copyWith(profile: profile, isLoading: false, isDirty: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }
 
@@ -338,10 +315,7 @@ class SpecialistProfileEditNotifier extends Notifier<SpecialistProfileEditState>
       updatedAt: DateTime.now(),
     );
 
-    state = state.copyWith(
-      profile: updatedProfile,
-      isDirty: true,
-    );
+    state = state.copyWith(profile: updatedProfile, isDirty: true);
   }
 
   /// Добавить элемент портфолио
@@ -354,10 +328,7 @@ class SpecialistProfileEditNotifier extends Notifier<SpecialistProfileEditState>
       updatedAt: DateTime.now(),
     );
 
-    state = state.copyWith(
-      profile: updatedProfile,
-      isDirty: true,
-    );
+    state = state.copyWith(profile: updatedProfile, isDirty: true);
   }
 
   /// Удалить элемент портфолио
@@ -370,10 +341,7 @@ class SpecialistProfileEditNotifier extends Notifier<SpecialistProfileEditState>
       updatedAt: DateTime.now(),
     );
 
-    state = state.copyWith(
-      profile: updatedProfile,
-      isDirty: true,
-    );
+    state = state.copyWith(profile: updatedProfile, isDirty: true);
   }
 
   /// Сохранить профиль
@@ -384,15 +352,9 @@ class SpecialistProfileEditNotifier extends Notifier<SpecialistProfileEditState>
 
     try {
       await _profileService.createOrUpdateSpecialistProfile(state.profile!);
-      state = state.copyWith(
-        isLoading: false,
-        isDirty: false,
-      );
+      state = state.copyWith(isLoading: false, isDirty: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }
 

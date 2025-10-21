@@ -39,14 +39,16 @@ class SmartAdvertisingService {
 
       // Рассчитываем релевантность для каждого объявления
       final List<MapEntry<SmartAdvertisement, double>> adsWithRelevance = ads
-          .map((ad) => MapEntry(
-                ad,
-                ad.calculateRelevanceForUser(
-                  userId: userId,
-                  userProfile: userProfile,
-                  userBehavior: userBehavior,
-                ),
-              ))
+          .map(
+            (ad) => MapEntry(
+              ad,
+              ad.calculateRelevanceForUser(
+                userId: userId,
+                userProfile: userProfile,
+                userBehavior: userBehavior,
+              ),
+            ),
+          )
           .toList();
 
       // Сортируем по релевантности
@@ -66,15 +68,13 @@ class SmartAdvertisingService {
           userId: userId,
           placement: placement,
           relevanceScore: adsWithRelevance.firstWhere((entry) => entry.key.id == ad.id).value,
-          userContext: {
-            'userProfile': userProfile,
-            'userBehavior': userBehavior,
-          },
+          userContext: {'userProfile': userProfile, 'userBehavior': userBehavior},
         );
       }
 
       debugPrint(
-          'INFO: [SmartAdvertisingService] Found ${relevantAds.length} relevant ads for user $userId');
+        'INFO: [SmartAdvertisingService] Found ${relevantAds.length} relevant ads for user $userId',
+      );
       return relevantAds;
     } catch (e) {
       debugPrint('ERROR: [SmartAdvertisingService] Failed to get relevant ads: $e');
@@ -134,9 +134,7 @@ class SmartAdvertisingService {
 
       if (impressionSnapshot.docs.isNotEmpty) {
         final String impressionId = impressionSnapshot.docs.first.id;
-        await _firestore.collection('ad_impressions').doc(impressionId).update({
-          'isClicked': true,
-        });
+        await _firestore.collection('ad_impressions').doc(impressionId).update({'isClicked': true});
       }
 
       // Обновляем счетчики в объявлении
@@ -198,13 +196,16 @@ class SmartAdvertisingService {
   /// Обновление метрик объявления
   Future<void> _updateAdMetrics(String adId) async {
     try {
-      final DocumentSnapshot adDoc =
-          await _firestore.collection('smart_advertisements').doc(adId).get();
+      final DocumentSnapshot adDoc = await _firestore
+          .collection('smart_advertisements')
+          .doc(adId)
+          .get();
 
       if (!adDoc.exists) return;
 
-      final SmartAdvertisement ad =
-          SmartAdvertisement.fromMap(adDoc.data() as Map<String, dynamic>);
+      final SmartAdvertisement ad = SmartAdvertisement.fromMap(
+        adDoc.data() as Map<String, dynamic>,
+      );
 
       // Рассчитываем CTR
       final double ctr = ad.impressions > 0 ? (ad.clicks / ad.impressions) * 100 : 0.0;
@@ -275,13 +276,16 @@ class SmartAdvertisingService {
   /// Автоматическая оптимизация объявления
   Future<void> optimizeAd(String adId) async {
     try {
-      final DocumentSnapshot adDoc =
-          await _firestore.collection('smart_advertisements').doc(adId).get();
+      final DocumentSnapshot adDoc = await _firestore
+          .collection('smart_advertisements')
+          .doc(adId)
+          .get();
 
       if (!adDoc.exists) return;
 
-      final SmartAdvertisement ad =
-          SmartAdvertisement.fromMap(adDoc.data() as Map<String, dynamic>);
+      final SmartAdvertisement ad = SmartAdvertisement.fromMap(
+        adDoc.data() as Map<String, dynamic>,
+      );
 
       if (!ad.isAutoOptimized) return;
 
@@ -321,8 +325,10 @@ class SmartAdvertisingService {
   /// Анализ производительности объявления
   Future<Map<String, dynamic>> _analyzeAdPerformance(String adId) async {
     try {
-      final QuerySnapshot impressionsSnapshot =
-          await _firestore.collection('ad_impressions').where('adId', isEqualTo: adId).get();
+      final QuerySnapshot impressionsSnapshot = await _firestore
+          .collection('ad_impressions')
+          .where('adId', isEqualTo: adId)
+          .get();
 
       if (impressionsSnapshot.docs.isEmpty) {
         return {'status': 'insufficient_data'};
@@ -357,14 +363,13 @@ class SmartAdvertisingService {
         'totalConversions': totalConversions,
         'ctr': ctr,
         'conversionRate': conversionRate,
-        'placementPerformance':
-            placementImpressions.map((placement, impressions) => MapEntry(placement, {
-                  'impressions': impressions,
-                  'clicks': placementClicks[placement] ?? 0,
-                  'ctr': impressions > 0
-                      ? ((placementClicks[placement] ?? 0) / impressions) * 100
-                      : 0.0,
-                })),
+        'placementPerformance': placementImpressions.map(
+          (placement, impressions) => MapEntry(placement, {
+            'impressions': impressions,
+            'clicks': placementClicks[placement] ?? 0,
+            'ctr': impressions > 0 ? ((placementClicks[placement] ?? 0) / impressions) * 100 : 0.0,
+          }),
+        ),
         'status': 'analyzed',
       };
     } catch (e) {
@@ -434,19 +439,24 @@ class SmartAdvertisingService {
   /// Получение статистики объявления
   Future<Map<String, dynamic>> getAdStats(String adId) async {
     try {
-      final DocumentSnapshot adDoc =
-          await _firestore.collection('smart_advertisements').doc(adId).get();
+      final DocumentSnapshot adDoc = await _firestore
+          .collection('smart_advertisements')
+          .doc(adId)
+          .get();
 
       if (!adDoc.exists) {
         return {};
       }
 
-      final SmartAdvertisement ad =
-          SmartAdvertisement.fromMap(adDoc.data() as Map<String, dynamic>);
+      final SmartAdvertisement ad = SmartAdvertisement.fromMap(
+        adDoc.data() as Map<String, dynamic>,
+      );
 
       // Получаем дополнительные метрики
-      final QuerySnapshot impressionsSnapshot =
-          await _firestore.collection('ad_impressions').where('adId', isEqualTo: adId).get();
+      final QuerySnapshot impressionsSnapshot = await _firestore
+          .collection('ad_impressions')
+          .where('adId', isEqualTo: adId)
+          .get();
 
       final List<AdImpression> impressions = impressionsSnapshot.docs
           .map((doc) => AdImpression.fromMap(doc.data() as Map<String, dynamic>))

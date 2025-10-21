@@ -40,9 +40,9 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки аналитики: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки аналитики: $e')));
       }
     }
   }
@@ -55,14 +55,8 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.download),
-            onPressed: _exportAnalytics,
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadAnalytics,
-          ),
+          IconButton(icon: const Icon(Icons.download), onPressed: _exportAnalytics),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadAnalytics),
         ],
       ),
       body: _isLoading
@@ -92,10 +86,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '🔍 Фильтры',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            const Text('🔍 Фильтры', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -142,10 +133,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                   ),
                 ),
                 const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: _loadAnalytics,
-                  child: const Text('Применить'),
-                ),
+                ElevatedButton(onPressed: _loadAnalytics, child: const Text('Применить')),
               ],
             ),
           ],
@@ -157,10 +145,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   Widget _buildSummaryCard() {
     if (_analytics.isEmpty) {
       return const Card(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text('Нет данных для отображения'),
-        ),
+        child: Padding(padding: EdgeInsets.all(16.0), child: Text('Нет данных для отображения')),
       );
     }
 
@@ -179,10 +164,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '📊 Сводка',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
+            const Text('📊 Сводка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -266,18 +248,11 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
           const SizedBox(height: 8),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
           ),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -288,10 +263,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   Widget _buildRevenueChart() {
     if (_analytics.isEmpty) {
       return const Card(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text('Нет данных для графика'),
-        ),
+        child: Padding(padding: EdgeInsets.all(16.0), child: Text('Нет данных для графика')),
       );
     }
 
@@ -306,10 +278,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            SizedBox(
-              height: 200,
-              child: _buildSimpleChart(),
-            ),
+            SizedBox(height: 200, child: _buildSimpleChart()),
           ],
         ),
       ),
@@ -340,10 +309,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                '${item.date.day}',
-                style: const TextStyle(fontSize: 10),
-              ),
+              Text('${item.date.day}', style: const TextStyle(fontSize: 10)),
             ],
           ),
         );
@@ -354,10 +320,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   Widget _buildDetailedAnalytics() {
     if (_analytics.isEmpty) {
       return const Card(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text('Нет детальных данных'),
-        ),
+        child: Padding(padding: EdgeInsets.all(16.0), child: Text('Нет детальных данных')),
       );
     }
 
@@ -385,10 +348,7 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                       backgroundColor: Colors.blue,
                       child: Text(
                         '${item.date.day}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                     title: Text('${item.date.day}.${item.date.month}.${item.date.year}'),
@@ -442,20 +402,18 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   Future<void> _exportAnalytics() async {
     try {
       // Mock export functionality
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Экспорт аналитики в CSV...')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Экспорт аналитики в CSV...')));
 
       // Simulate export delay
       await Future.delayed(const Duration(seconds: 2));
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Аналитика экспортирована успешно')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Аналитика экспортирована успешно')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка экспорта: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e')));
     }
   }
 }

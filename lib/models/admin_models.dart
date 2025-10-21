@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Роли пользователей в системе
-enum UserRole {
-  user,
-  admin,
-  superAdmin,
-}
+enum UserRole { user, admin, superAdmin }
 
 /// Действия администратора
 enum AdminAction {
@@ -37,12 +33,7 @@ enum AdminAction {
 }
 
 /// Статус админ-действия
-enum AdminActionStatus {
-  pending,
-  completed,
-  failed,
-  cancelled,
-}
+enum AdminActionStatus { pending, completed, failed, cancelled }
 
 /// Модель лога действий администратора
 class AdminLog {
@@ -163,10 +154,12 @@ class MarketingCampaign {
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
-      type:
-          MarketingCampaignType.values.byName(map['type'] ?? MarketingCampaignType.promotion.name),
-      status: MarketingCampaignStatus.values
-          .byName(map['status'] ?? MarketingCampaignStatus.draft.name),
+      type: MarketingCampaignType.values.byName(
+        map['type'] ?? MarketingCampaignType.promotion.name,
+      ),
+      status: MarketingCampaignStatus.values.byName(
+        map['status'] ?? MarketingCampaignStatus.draft.name,
+      ),
       startDate: (map['startDate'] as Timestamp).toDate(),
       endDate: (map['endDate'] as Timestamp).toDate(),
       targetAudience: map['targetAudience'],
@@ -194,15 +187,7 @@ enum MarketingCampaignType {
 }
 
 /// Статусы маркетинговых кампаний
-enum MarketingCampaignStatus {
-  draft,
-  scheduled,
-  active,
-  paused,
-  completed,
-  cancelled,
-  expired,
-}
+enum MarketingCampaignStatus { draft, scheduled, active, paused, completed, cancelled, expired }
 
 /// Модель рассылки
 class MarketingNewsletter {
@@ -290,22 +275,10 @@ class MarketingNewsletter {
 }
 
 /// Типы рассылок
-enum NewsletterType {
-  email,
-  push,
-  sms,
-  inApp,
-}
+enum NewsletterType { email, push, sms, inApp }
 
 /// Статусы рассылок
-enum NewsletterStatus {
-  draft,
-  scheduled,
-  sending,
-  sent,
-  failed,
-  cancelled,
-}
+enum NewsletterStatus { draft, scheduled, sending, sent, failed, cancelled }
 
 /// Модель сегмента пользователей
 class UserSegment {

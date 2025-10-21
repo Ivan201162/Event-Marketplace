@@ -9,10 +9,7 @@ import '../services/supabase_service.dart';
 class ChatScreen extends ConsumerStatefulWidget {
   final String chatId;
 
-  const ChatScreen({
-    super.key,
-    required this.chatId,
-  });
+  const ChatScreen({super.key, required this.chatId});
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -75,27 +72,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   void _setupRealtimeSubscription() {
-    _realtimeChannel = SupabaseService.subscribeToMessages(
-      widget.chatId,
-      (newMessageData) {
-        // Добавляем новое сообщение
-        final newMessage = Message.fromJson(newMessageData);
-        setState(() {
-          _messages.add(newMessage);
-        });
+    _realtimeChannel = SupabaseService.subscribeToMessages(widget.chatId, (newMessageData) {
+      // Добавляем новое сообщение
+      final newMessage = Message.fromJson(newMessageData);
+      setState(() {
+        _messages.add(newMessage);
+      });
 
-        // Прокручиваем вниз
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (_scrollController.hasClients) {
-            _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOut,
-            );
-          }
-        });
-      },
-    );
+      // Прокручиваем вниз
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    });
   }
 
   Future<void> _sendMessage() async {
@@ -109,19 +103,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       if (!success) {
         // Показываем ошибку
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Ошибка отправки сообщения'),
-            backgroundColor: Colors.red,
-          ),
+          const SnackBar(content: Text('Ошибка отправки сообщения'), backgroundColor: Colors.red),
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -138,14 +126,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   CircleAvatar(
                     radius: 16,
                     backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-                    backgroundImage:
-                        _otherUser!.avatarUrl != null ? NetworkImage(_otherUser!.avatarUrl!) : null,
+                    backgroundImage: _otherUser!.avatarUrl != null
+                        ? NetworkImage(_otherUser!.avatarUrl!)
+                        : null,
                     child: _otherUser!.avatarUrl == null
-                        ? Icon(
-                            Icons.person,
-                            size: 16,
-                            color: theme.primaryColor,
-                          )
+                        ? Icon(Icons.person, size: 16, color: theme.primaryColor)
                         : null,
                   ),
                   const SizedBox(width: 12),
@@ -167,9 +152,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       body: Column(
         children: [
           // Список сообщений
-          Expanded(
-            child: _buildMessagesList(currentUserId),
-          ),
+          Expanded(child: _buildMessagesList(currentUserId)),
 
           // Поле ввода
           _buildMessageInput(),
@@ -180,9 +163,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   Widget _buildMessagesList(String? currentUserId) {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -190,32 +171,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               'Ошибка загрузки сообщений',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               _error!,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadMessages,
-              child: const Text('Повторить'),
-            ),
+            ElevatedButton(onPressed: _loadMessages, child: const Text('Повторить')),
           ],
         ),
       );
@@ -226,26 +195,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.chat_bubble_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Начните общение',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Начните общение', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
-            Text(
-              'Отправьте первое сообщение',
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
-            ),
+            Text('Отправьте первое сообщение', style: TextStyle(color: Colors.grey[500])),
           ],
         ),
       );
@@ -277,31 +231,28 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             CircleAvatar(
               radius: 16,
               backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-              backgroundImage:
-                  message.senderAvatarUrl != null ? NetworkImage(message.senderAvatarUrl!) : null,
+              backgroundImage: message.senderAvatarUrl != null
+                  ? NetworkImage(message.senderAvatarUrl!)
+                  : null,
               child: message.senderAvatarUrl == null
-                  ? Icon(
-                      Icons.person,
-                      size: 16,
-                      color: theme.primaryColor,
-                    )
+                  ? Icon(Icons.person, size: 16, color: theme.primaryColor)
                   : null,
             ),
             const SizedBox(width: 8),
           ],
           Flexible(
             child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
-              ),
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: isFromCurrentUser ? theme.primaryColor : Colors.grey[200],
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft:
-                      isFromCurrentUser ? const Radius.circular(20) : const Radius.circular(4),
-                  bottomRight:
-                      isFromCurrentUser ? const Radius.circular(4) : const Radius.circular(20),
+                  bottomLeft: isFromCurrentUser
+                      ? const Radius.circular(20)
+                      : const Radius.circular(4),
+                  bottomRight: isFromCurrentUser
+                      ? const Radius.circular(4)
+                      : const Radius.circular(20),
                 ),
               ),
               child: Column(
@@ -337,11 +288,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   ? NetworkImage(SupabaseService.currentUser!.userMetadata!['avatar_url'])
                   : null,
               child: SupabaseService.currentUser?.userMetadata?['avatar_url'] == null
-                  ? Icon(
-                      Icons.person,
-                      size: 16,
-                      color: theme.primaryColor,
-                    )
+                  ? Icon(Icons.person, size: 16, color: theme.primaryColor)
                   : null,
             ),
           ],
@@ -376,10 +323,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   borderRadius: BorderRadius.circular(24),
                   borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
               maxLines: null,
               textInputAction: TextInputAction.send,
@@ -388,10 +332,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           const SizedBox(width: 8),
           Container(
-            decoration: BoxDecoration(
-              color: theme.primaryColor,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: theme.primaryColor, shape: BoxShape.circle),
             child: IconButton(
               icon: const Icon(Icons.send, color: Colors.white),
               onPressed: _sendMessage,

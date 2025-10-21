@@ -3,11 +3,7 @@ import '../providers/specialist_profile_extended_providers.dart';
 
 /// Виджет фильтрации FAQ
 class FAQFilterWidget extends StatefulWidget {
-  const FAQFilterWidget({
-    super.key,
-    required this.currentFilters,
-    required this.onFiltersChanged,
-  });
+  const FAQFilterWidget({super.key, required this.currentFilters, required this.onFiltersChanged});
   final FAQFilters currentFilters;
   final Function(FAQFilters) onFiltersChanged;
 
@@ -42,123 +38,110 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
 
   @override
   Widget build(BuildContext context) => Dialog(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
-          child: Column(
-            children: [
-              AppBar(
-                title: const Text('Фильтры FAQ'),
-                actions: [
-                  TextButton(
-                    onPressed: _clearFilters,
-                    child: const Text('Сбросить'),
-                  ),
-                  TextButton(
-                    onPressed: _applyFilters,
-                    child: const Text('Применить'),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Поиск
-                      TextField(
-                        controller: _searchController,
-                        decoration: const InputDecoration(
-                          labelText: 'Поиск',
-                          hintText: 'Поиск по вопросу, ответу или категории',
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Опубликованные вопросы
-                      SwitchListTile(
-                        title: const Text('Только опубликованные вопросы'),
-                        subtitle: const Text(
-                          'Показать только вопросы, доступные клиентам',
-                        ),
-                        value: _showPublishedOnly,
-                        onChanged: (value) {
-                          setState(() {
-                            _showPublishedOnly = value;
-                          });
-                        },
-                      ),
-
-                      const Divider(),
-
-                      // Фильтр по дате
-                      SwitchListTile(
-                        title: const Text('Фильтр по дате'),
-                        subtitle: const Text(
-                          'Показать вопросы за определённый период',
-                        ),
-                        value: _showByDate,
-                        onChanged: (value) {
-                          setState(() {
-                            _showByDate = value;
-                          });
-                        },
-                      ),
-
-                      if (_showByDate) ...[
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ListTile(
-                                title: const Text('От'),
-                                subtitle: Text(
-                                  _fromDate != null
-                                      ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
-                                      : 'Не выбрано',
-                                ),
-                                trailing: const Icon(Icons.calendar_today),
-                                onTap: _selectFromDate,
-                              ),
-                            ),
-                            Expanded(
-                              child: ListTile(
-                                title: const Text('До'),
-                                subtitle: Text(
-                                  _toDate != null
-                                      ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
-                                      : 'Не выбрано',
-                                ),
-                                trailing: const Icon(Icons.calendar_today),
-                                onTap: _selectToDate,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-
-                      const Divider(),
-
-                      // Категории
-                      const Text(
-                        'Категории',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildCategoryFilters(),
-                    ],
-                  ),
-                ),
-              ),
+    child: Container(
+      constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
+      child: Column(
+        children: [
+          AppBar(
+            title: const Text('Фильтры FAQ'),
+            actions: [
+              TextButton(onPressed: _clearFilters, child: const Text('Сбросить')),
+              TextButton(onPressed: _applyFilters, child: const Text('Применить')),
             ],
           ),
-        ),
-      );
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Поиск
+                  TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Поиск',
+                      hintText: 'Поиск по вопросу, ответу или категории',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Опубликованные вопросы
+                  SwitchListTile(
+                    title: const Text('Только опубликованные вопросы'),
+                    subtitle: const Text('Показать только вопросы, доступные клиентам'),
+                    value: _showPublishedOnly,
+                    onChanged: (value) {
+                      setState(() {
+                        _showPublishedOnly = value;
+                      });
+                    },
+                  ),
+
+                  const Divider(),
+
+                  // Фильтр по дате
+                  SwitchListTile(
+                    title: const Text('Фильтр по дате'),
+                    subtitle: const Text('Показать вопросы за определённый период'),
+                    value: _showByDate,
+                    onChanged: (value) {
+                      setState(() {
+                        _showByDate = value;
+                      });
+                    },
+                  ),
+
+                  if (_showByDate) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ListTile(
+                            title: const Text('От'),
+                            subtitle: Text(
+                              _fromDate != null
+                                  ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
+                                  : 'Не выбрано',
+                            ),
+                            trailing: const Icon(Icons.calendar_today),
+                            onTap: _selectFromDate,
+                          ),
+                        ),
+                        Expanded(
+                          child: ListTile(
+                            title: const Text('До'),
+                            subtitle: Text(
+                              _toDate != null
+                                  ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
+                                  : 'Не выбрано',
+                            ),
+                            trailing: const Icon(Icons.calendar_today),
+                            onTap: _selectToDate,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+
+                  const Divider(),
+
+                  // Категории
+                  const Text(
+                    'Категории',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildCategoryFilters(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildCategoryFilters() {
     final categories = [
@@ -211,10 +194,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
             runSpacing: 4,
             children: _selectedCategories.map((category) {
               final displayName = categories
-                  .firstWhere(
-                    (c) => c.$1 == category,
-                    orElse: () => (category, category),
-                  )
+                  .firstWhere((c) => c.$1 == category, orElse: () => (category, category))
                   .$2;
               return Chip(
                 label: Text(displayName),

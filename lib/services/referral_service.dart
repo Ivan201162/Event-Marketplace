@@ -81,8 +81,9 @@ class ReferralService {
         throw Exception('Реферальный код не найден или неактивен');
       }
 
-      final ReferralCode referralCode =
-          ReferralCode.fromMap(codeSnapshot.docs.first.data() as Map<String, dynamic>);
+      final ReferralCode referralCode = ReferralCode.fromMap(
+        codeSnapshot.docs.first.data() as Map<String, dynamic>,
+      );
 
       if (!referralCode.canBeUsed) {
         throw Exception('Реферальный код истек или достиг лимита использований');
@@ -209,11 +210,15 @@ class ReferralService {
   Future<void> _updateReferralStats(String userId) async {
     try {
       // Подсчитываем статистику
-      final QuerySnapshot referralsSnapshot =
-          await _firestore.collection('referrals').where('referrerId', isEqualTo: userId).get();
+      final QuerySnapshot referralsSnapshot = await _firestore
+          .collection('referrals')
+          .where('referrerId', isEqualTo: userId)
+          .get();
 
-      final QuerySnapshot rewardsSnapshot =
-          await _firestore.collection('referral_rewards').where('userId', isEqualTo: userId).get();
+      final QuerySnapshot rewardsSnapshot = await _firestore
+          .collection('referral_rewards')
+          .where('userId', isEqualTo: userId)
+          .get();
 
       final int totalReferrals = referralsSnapshot.docs.length;
       final int completedReferrals = referralsSnapshot.docs

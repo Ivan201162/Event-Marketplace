@@ -8,8 +8,10 @@ import '../services/advertising_service.dart';
 final advertisingServiceProvider = Provider<AdvertisingService>((ref) => AdvertisingService());
 
 /// Провайдер рекламных объявлений
-final advertisementsProvider =
-    FutureProvider.family<List<Advertisement>, AdvertisementFilters>((ref, filters) async {
+final advertisementsProvider = FutureProvider.family<List<Advertisement>, AdvertisementFilters>((
+  ref,
+  filters,
+) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getAdvertisements(
     status: filters.status,
@@ -20,8 +22,10 @@ final advertisementsProvider =
 });
 
 /// Провайдер рекламы для показа
-final displayAdvertisementsProvider =
-    FutureProvider.family<List<Advertisement>, DisplayAdParams>((ref, params) async {
+final displayAdvertisementsProvider = FutureProvider.family<List<Advertisement>, DisplayAdParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getAdvertisementsForDisplay(
     userId: params.userId,
@@ -31,8 +35,10 @@ final displayAdvertisementsProvider =
 });
 
 /// Провайдер статистики рекламы
-final advertisementStatsProvider =
-    FutureProvider.family<Map<String, dynamic>, String>((ref, adId) async {
+final advertisementStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((
+  ref,
+  adId,
+) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getAdvertisementStats(adId);
 });
@@ -45,12 +51,7 @@ final overallAdStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async 
 
 /// Параметры для фильтрации рекламы
 class AdvertisementFilters {
-  const AdvertisementFilters({
-    this.status,
-    this.type,
-    this.advertiserId,
-    this.limit = 20,
-  });
+  const AdvertisementFilters({this.status, this.type, this.advertiserId, this.limit = 20});
 
   final AdvertisementStatus? status;
   final AdvertisementType? type;
@@ -73,11 +74,7 @@ class AdvertisementFilters {
 
 /// Параметры для показа рекламы
 class DisplayAdParams {
-  const DisplayAdParams({
-    required this.userId,
-    required this.context,
-    this.limit = 5,
-  });
+  const DisplayAdParams({required this.userId, required this.context, this.limit = 5});
 
   final String userId;
   final String context;
@@ -115,13 +112,12 @@ class AdvertisingState {
     bool? isLoading,
     String? error,
     Map<String, dynamic>? stats,
-  }) =>
-      AdvertisingState(
-        advertisements: advertisements ?? this.advertisements,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-        stats: stats ?? this.stats,
-      );
+  }) => AdvertisingState(
+    advertisements: advertisements ?? this.advertisements,
+    isLoading: isLoading ?? this.isLoading,
+    error: error ?? this.error,
+    stats: stats ?? this.stats,
+  );
 }
 
 /// Notifier для состояния рекламы (мигрирован с StateNotifier)
@@ -172,10 +168,7 @@ class AdvertisingNotifier extends Notifier<AdvertisingState> {
         isLoading: false,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -229,15 +222,9 @@ class AdvertisingNotifier extends Notifier<AdvertisingState> {
         return ad;
       }).toList();
 
-      state = state.copyWith(
-        advertisements: updatedAdvertisements,
-        isLoading: false,
-      );
+      state = state.copyWith(advertisements: updatedAdvertisements, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -253,10 +240,7 @@ class AdvertisingNotifier extends Notifier<AdvertisingState> {
         isLoading: false,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 

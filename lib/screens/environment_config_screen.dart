@@ -30,48 +30,38 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        appBar: AppBar(title: const Text('Управление конфигурацией окружения')),
-        body: Column(
-          children: [
-            // Вкладки
-            _buildTabs(),
+    appBar: AppBar(title: const Text('Управление конфигурацией окружения')),
+    body: Column(
+      children: [
+        // Вкладки
+        _buildTabs(),
 
-            // Статистика
-            _buildStatistics(),
+        // Статистика
+        _buildStatistics(),
 
-            // Контент
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _selectedTab == 'environments'
-                      ? _buildEnvironmentsTab()
-                      : _selectedTab == 'variables'
-                          ? _buildVariablesTab()
-                          : _buildDeploymentsTab(),
-            ),
-          ],
+        // Контент
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _selectedTab == 'environments'
+              ? _buildEnvironmentsTab()
+              : _selectedTab == 'variables'
+              ? _buildVariablesTab()
+              : _buildDeploymentsTab(),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildTabs() => ResponsiveCard(
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildTabButton('environments', 'Окружения', Icons.cloud),
-            ),
-            Expanded(
-              child: _buildTabButton('variables', 'Переменные', Icons.settings),
-            ),
-            Expanded(
-              child: _buildTabButton(
-                'deployments',
-                'Развертывания',
-                Icons.rocket_launch,
-              ),
-            ),
-          ],
-        ),
-      );
+    child: Row(
+      children: [
+        Expanded(child: _buildTabButton('environments', 'Окружения', Icons.cloud)),
+        Expanded(child: _buildTabButton('variables', 'Переменные', Icons.settings)),
+        Expanded(child: _buildTabButton('deployments', 'Развертывания', Icons.rocket_launch)),
+      ],
+    ),
+  );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -86,17 +76,11 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.blue : Colors.grey,
-              size: 24,
-            ),
+            Icon(icon, color: isSelected ? Colors.blue : Colors.grey, size: 24),
             const SizedBox(height: 8),
             Text(
               title,
@@ -118,10 +102,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Статистика конфигураций',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('Статистика конфигураций', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -158,81 +139,64 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
     );
   }
 
-  Widget _buildStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) =>
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color),
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: color),
+    ),
+    child: Column(
+      children: [
+        Icon(icon, color: color, size: 32),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
         ),
-        child: Column(
+        const SizedBox(height: 4),
+        Text(title, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+      ],
+    ),
+  );
+
+  Widget _buildEnvironmentsTab() => Column(
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
           children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+            Text('Конфигурации окружений', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _showCreateEnvironmentDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать'),
             ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 12),
-              textAlign: TextAlign.center,
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
           ],
         ),
-      );
+      ),
 
-  Widget _buildEnvironmentsTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'Конфигурации окружений',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _showCreateEnvironmentDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Создать'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
-            ),
-          ),
-
-          // Список окружений
-          Expanded(
-            child: _environments.isEmpty
-                ? const Center(child: Text('Окружения не найдены'))
-                : ListView.builder(
-                    itemCount: _environments.length,
-                    itemBuilder: (context, index) {
-                      final environment = _environments[index];
-                      return _buildEnvironmentCard(environment);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список окружений
+      Expanded(
+        child: _environments.isEmpty
+            ? const Center(child: Text('Окружения не найдены'))
+            : ListView.builder(
+                itemCount: _environments.length,
+                itemBuilder: (context, index) {
+                  final environment = _environments[index];
+                  return _buildEnvironmentCard(environment);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildEnvironmentCard(EnvironmentConfig environment) {
     final typeColor = _getTypeColor(environment.type);
@@ -244,10 +208,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
           // Заголовок
           Row(
             children: [
-              Text(
-                environment.type.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
+              Text(environment.type.icon, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -255,16 +216,10 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                   children: [
                     Text(
                       environment.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     if (environment.description != null)
-                      Text(
-                        environment.description!,
-                        style: const TextStyle(fontSize: 14),
-                      ),
+                      Text(environment.description!, style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -277,11 +232,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                 ),
                 child: Text(
                   environment.type.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: typeColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: typeColor, fontWeight: FontWeight.bold),
                 ),
               ),
               if (environment.isActive)
@@ -307,39 +258,24 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Редактировать'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
                   ),
                   if (!environment.isActive)
                     const PopupMenuItem(
                       value: 'activate',
-                      child: ListTile(
-                        leading: Icon(Icons.play_arrow),
-                        title: Text('Активировать'),
-                      ),
+                      child: ListTile(leading: Icon(Icons.play_arrow), title: Text('Активировать')),
                     ),
                   const PopupMenuItem(
                     value: 'export',
-                    child: ListTile(
-                      leading: Icon(Icons.download),
-                      title: Text('Экспорт'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.download), title: Text('Экспорт')),
                   ),
                   const PopupMenuItem(
                     value: 'validate',
-                    child: ListTile(
-                      leading: Icon(Icons.check_circle),
-                      title: Text('Валидация'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.check_circle), title: Text('Валидация')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -357,18 +293,12 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
               children: environment.tags
                   .map(
                     (tag) => Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Text(
-                        tag,
-                        style: const TextStyle(fontSize: 10),
-                      ),
+                      child: Text(tag, style: const TextStyle(fontSize: 10)),
                     ),
                   )
                   .toList(),
@@ -385,11 +315,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                 Colors.blue,
               ),
               const SizedBox(width: 8),
-              _buildInfoChip(
-                'Секреты',
-                '${environment.secrets.length} секретов',
-                Colors.red,
-              ),
+              _buildInfoChip('Секреты', '${environment.secrets.length} секретов', Colors.red),
             ],
           ),
 
@@ -417,45 +343,42 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
   }
 
   Widget _buildVariablesTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'Переменные окружения',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _showCreateVariableDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Создать'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
+          children: [
+            Text('Переменные окружения', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _showCreateVariableDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать'),
             ),
-          ),
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
+            ),
+          ],
+        ),
+      ),
 
-          // Список переменных
-          Expanded(
-            child: _variables.isEmpty
-                ? const Center(child: Text('Переменные не найдены'))
-                : ListView.builder(
-                    itemCount: _variables.length,
-                    itemBuilder: (context, index) {
-                      final variable = _variables[index];
-                      return _buildVariableCard(variable);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список переменных
+      Expanded(
+        child: _variables.isEmpty
+            ? const Center(child: Text('Переменные не найдены'))
+            : ListView.builder(
+                itemCount: _variables.length,
+                itemBuilder: (context, index) {
+                  final variable = _variables[index];
+                  return _buildVariableCard(variable);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildVariableCard(EnvironmentVariable variable) {
     final typeColor = _getVariableTypeColor(variable.type);
@@ -467,10 +390,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
           // Заголовок
           Row(
             children: [
-              Text(
-                variable.type.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
+              Text(variable.type.icon, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -478,16 +398,10 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                   children: [
                     Text(
                       variable.key,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     if (variable.description != null)
-                      Text(
-                        variable.description!,
-                        style: const TextStyle(fontSize: 14),
-                      ),
+                      Text(variable.description!, style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -500,11 +414,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                 ),
                 child: Text(
                   variable.type.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: typeColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: typeColor, fontWeight: FontWeight.bold),
                 ),
               ),
               if (variable.isSecret)
@@ -518,11 +428,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                   ),
                   child: const Text(
                     'Секрет',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.red, fontWeight: FontWeight.bold),
                   ),
                 ),
               if (variable.isRequired)
@@ -548,17 +454,11 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Редактировать'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -579,10 +479,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
             ),
             child: Text(
               variable.isSecret ? '••••••••' : variable.value,
-              style: const TextStyle(
-                fontFamily: 'monospace',
-                fontSize: 14,
-              ),
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 14),
             ),
           ),
 
@@ -592,11 +489,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
           Row(
             children: [
               if (variable.defaultValue != null)
-                _buildInfoChip(
-                  'По умолчанию',
-                  variable.defaultValue!,
-                  Colors.green,
-                ),
+                _buildInfoChip('По умолчанию', variable.defaultValue!, Colors.green),
               const SizedBox(width: 8),
               if (variable.allowedValues.isNotEmpty)
                 _buildInfoChip(
@@ -626,45 +519,42 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
   }
 
   Widget _buildDeploymentsTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'Конфигурации развертывания',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _showCreateDeploymentDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Создать'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
+          children: [
+            Text('Конфигурации развертывания', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _showCreateDeploymentDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать'),
             ),
-          ),
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
+            ),
+          ],
+        ),
+      ),
 
-          // Список развертываний
-          Expanded(
-            child: _deployments.isEmpty
-                ? const Center(child: Text('Развертывания не найдены'))
-                : ListView.builder(
-                    itemCount: _deployments.length,
-                    itemBuilder: (context, index) {
-                      final deployment = _deployments[index];
-                      return _buildDeploymentCard(deployment);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список развертываний
+      Expanded(
+        child: _deployments.isEmpty
+            ? const Center(child: Text('Развертывания не найдены'))
+            : ListView.builder(
+                itemCount: _deployments.length,
+                itemBuilder: (context, index) {
+                  final deployment = _deployments[index];
+                  return _buildDeploymentCard(deployment);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildDeploymentCard(DeploymentConfig deployment) {
     final statusColor = _getStatusColor(deployment.status);
@@ -700,10 +590,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
           // Заголовок
           Row(
             children: [
-              Text(
-                deployment.status.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
+              Text(deployment.status.icon, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -711,16 +598,10 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                   children: [
                     Text(
                       '${environment.name} v${deployment.version}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     if (deployment.description != null)
-                      Text(
-                        deployment.description!,
-                        style: const TextStyle(fontSize: 14),
-                      ),
+                      Text(deployment.description!, style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -733,11 +614,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                 ),
                 child: Text(
                   deployment.status.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: statusColor, fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -745,17 +622,11 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Редактировать'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -768,11 +639,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
           // Метаданные
           Row(
             children: [
-              _buildInfoChip(
-                'Зависимости',
-                '${deployment.dependencies.length}',
-                Colors.blue,
-              ),
+              _buildInfoChip('Зависимости', '${deployment.dependencies.length}', Colors.blue),
               const SizedBox(width: 8),
               _buildInfoChip(
                 'Проверки здоровья',
@@ -801,21 +668,17 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
   }
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color),
-        ),
-        child: Text(
-          '$label: $value',
-          style: TextStyle(
-            fontSize: 12,
-            color: color,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color),
+    ),
+    child: Text(
+      '$label: $value',
+      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+    ),
+  );
 
   Color _getTypeColor(EnvironmentType type) {
     switch (type) {
@@ -893,10 +756,7 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
       _statistics = await _configService.getConfigStatistics();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка загрузки данных: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка загрузки данных: $e'), backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -985,20 +845,14 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
   void _viewEnvironment(EnvironmentConfig environment) {
     // TODO(developer): Реализовать просмотр окружения
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Просмотр окружения "${environment.name}" будет реализован'),
-      ),
+      SnackBar(content: Text('Просмотр окружения "${environment.name}" будет реализован')),
     );
   }
 
   void _editEnvironment(EnvironmentConfig environment) {
     // TODO(developer): Реализовать редактирование окружения
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Редактирование окружения "${environment.name}" будет реализовано',
-        ),
-      ),
+      SnackBar(content: Text('Редактирование окружения "${environment.name}" будет реализовано')),
     );
   }
 
@@ -1013,12 +867,9 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
       );
       _loadData();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка активации: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка активации: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -1026,18 +877,13 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
     try {
       final exportData = await _configService.exportEnvironmentConfig(environment.id);
       // TODO(developer): Реализовать сохранение файла
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Экспорт окружения "${environment.name}" завершен'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Экспорт окружения "${environment.name}" завершен')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка экспорта: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -1063,52 +909,36 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
               ),
             ),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Закрыть'),
-              ),
+              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
             ],
           ),
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка валидации: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка валидации: $e'), backgroundColor: Colors.red));
     }
   }
 
   void _viewVariable(EnvironmentVariable variable) {
     // TODO(developer): Реализовать просмотр переменной
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Просмотр переменной "${variable.key}" будет реализован'),
-      ),
+      SnackBar(content: Text('Просмотр переменной "${variable.key}" будет реализован')),
     );
   }
 
   void _editVariable(EnvironmentVariable variable) {
     // TODO(developer): Реализовать редактирование переменной
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Редактирование переменной "${variable.key}" будет реализовано',
-        ),
-      ),
+      SnackBar(content: Text('Редактирование переменной "${variable.key}" будет реализовано')),
     );
   }
 
   void _viewDeployment(DeploymentConfig deployment) {
     // TODO(developer): Реализовать просмотр развертывания
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Просмотр развертывания "${deployment.version}" будет реализован',
-        ),
-      ),
+      SnackBar(content: Text('Просмотр развертывания "${deployment.version}" будет реализован')),
     );
   }
 
@@ -1116,37 +946,29 @@ class _EnvironmentConfigScreenState extends ConsumerState<EnvironmentConfigScree
     // TODO(developer): Реализовать редактирование развертывания
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          'Редактирование развертывания "${deployment.version}" будет реализовано',
-        ),
+        content: Text('Редактирование развертывания "${deployment.version}" будет реализовано'),
       ),
     );
   }
 
   void _showCreateEnvironmentDialog() {
     // TODO(developer): Реализовать диалог создания окружения
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Создание окружения будет реализовано'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Создание окружения будет реализовано')));
   }
 
   void _showCreateVariableDialog() {
     // TODO(developer): Реализовать диалог создания переменной
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Создание переменной будет реализовано'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Создание переменной будет реализовано')));
   }
 
   void _showCreateDeploymentDialog() {
     // TODO(developer): Реализовать диалог создания развертывания
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Создание развертывания будет реализовано'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Создание развертывания будет реализовано')));
   }
 }

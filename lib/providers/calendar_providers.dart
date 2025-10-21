@@ -6,8 +6,10 @@ import '../services/calendar_service.dart';
 final calendarServiceProvider = Provider<CalendarService>((ref) => CalendarService());
 
 /// Провайдер для получения занятых дат специалиста
-final specialistBusyDatesProvider =
-    FutureProvider.family<List<DateTime>, String>((ref, specialistId) async {
+final specialistBusyDatesProvider = FutureProvider.family<List<DateTime>, String>((
+  ref,
+  specialistId,
+) async {
   final calendarService = ref.watch(calendarServiceProvider);
   return calendarService.getBusyDates(specialistId);
 });
@@ -15,17 +17,19 @@ final specialistBusyDatesProvider =
 /// Провайдер для получения свободных дат специалиста в диапазоне
 final specialistAvailableDatesProvider =
     FutureProvider.family<List<DateTime>, Map<String, dynamic>>((ref, params) async {
-  final calendarService = ref.watch(calendarServiceProvider);
-  final specialistId = params['specialistId'] as String;
-  final startDate = params['startDate'] as DateTime;
-  final endDate = params['endDate'] as DateTime;
+      final calendarService = ref.watch(calendarServiceProvider);
+      final specialistId = params['specialistId'] as String;
+      final startDate = params['startDate'] as DateTime;
+      final endDate = params['endDate'] as DateTime;
 
-  return calendarService.getAvailableDates(specialistId, 30);
-});
+      return calendarService.getAvailableDates(specialistId, 30);
+    });
 
 /// Провайдер для проверки доступности даты
-final dateAvailabilityProvider =
-    FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
+final dateAvailabilityProvider = FutureProvider.family<bool, Map<String, dynamic>>((
+  ref,
+  params,
+) async {
   final calendarService = ref.watch(calendarServiceProvider);
   final specialistId = params['specialistId'] as String;
   final date = params['date'] as DateTime;
@@ -34,8 +38,10 @@ final dateAvailabilityProvider =
 });
 
 /// Провайдер для проверки доступности даты и времени
-final dateTimeAvailabilityProvider =
-    FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
+final dateTimeAvailabilityProvider = FutureProvider.family<bool, Map<String, dynamic>>((
+  ref,
+  params,
+) async {
   final calendarService = ref.watch(calendarServiceProvider);
   final specialistId = params['specialistId'] as String;
   final dateTime = params['dateTime'] as DateTime;
@@ -44,18 +50,16 @@ final dateTimeAvailabilityProvider =
 });
 
 /// Провайдер для получения доступных временных слотов
-final availableTimeSlotsProvider =
-    FutureProvider.family<List<DateTime>, Map<String, dynamic>>((ref, params) async {
+final availableTimeSlotsProvider = FutureProvider.family<List<DateTime>, Map<String, dynamic>>((
+  ref,
+  params,
+) async {
   final calendarService = ref.watch(calendarServiceProvider);
   final specialistId = params['specialistId'] as String;
   final date = params['date'] as DateTime;
   final slotDuration = params['slotDuration'] as Duration;
 
-  return calendarService.getAvailableTimeSlots(
-    specialistId,
-    date,
-    slotDuration,
-  );
+  return calendarService.getAvailableTimeSlots(specialistId, date, slotDuration);
 });
 
 /// Провайдер для управления занятыми датами (мигрирован с StateNotifierProvider)
@@ -81,10 +85,7 @@ class BusyDatesManager extends Notifier<AsyncValue<void>> {
       if (success) {
         state = const AsyncValue.data(null);
       } else {
-        state = const AsyncValue.error(
-          'Не удалось пометить дату как занятую',
-          StackTrace.current,
-        );
+        state = const AsyncValue.error('Не удалось пометить дату как занятую', StackTrace.current);
       }
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -124,8 +125,10 @@ class BusyDatesManager extends Notifier<AsyncValue<void>> {
 }
 
 /// Провайдер для получения календарных данных специалиста
-final specialistCalendarDataProvider =
-    FutureProvider.family<SpecialistCalendarData, String>((ref, specialistId) async {
+final specialistCalendarDataProvider = FutureProvider.family<SpecialistCalendarData, String>((
+  ref,
+  specialistId,
+) async {
   final calendarService = ref.watch(calendarServiceProvider);
 
   // Получаем занятые даты
@@ -135,10 +138,7 @@ final specialistCalendarDataProvider =
   final now = DateTime.now();
   final nextMonth = DateTime(now.year, now.month + 1);
   final endOfNextMonth = DateTime(now.year, now.month + 2, 0);
-  final availableDates = await calendarService.getAvailableDates(
-    specialistId,
-    30,
-  );
+  final availableDates = await calendarService.getAvailableDates(specialistId, 30);
 
   return SpecialistCalendarData(
     specialistId: specialistId,

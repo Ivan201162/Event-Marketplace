@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/chat.dart';
-import '../models/chat_message.dart' as chat_message;
 
 /// Виджет для отображения медиафайлов в сообщениях чата
 class MediaMessageWidget extends StatelessWidget {
@@ -12,7 +11,7 @@ class MediaMessageWidget extends StatelessWidget {
     required this.isOwnMessage,
     this.onTap,
   });
-  final ChatMessage message;
+  final Message message;
   final bool isOwnMessage;
   final VoidCallback? onTap;
 
@@ -44,12 +43,11 @@ class MediaMessageWidget extends StatelessWidget {
           ],
           Flexible(
             child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
-              ),
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
               child: Column(
-                crossAxisAlignment:
-                    isOwnMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                crossAxisAlignment: isOwnMessage
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
                 children: [
                   if (!isOwnMessage) ...[
                     Text(
@@ -62,13 +60,10 @@ class MediaMessageWidget extends StatelessWidget {
                     const SizedBox(height: 4),
                   ],
                   _buildMediaContent(context),
-                  if (message.content.isNotEmpty) ...[
+                  if ((message.text ?? '').isNotEmpty) ...[
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         color: isOwnMessage
                             ? theme.colorScheme.primary
@@ -76,7 +71,7 @@ class MediaMessageWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
-                        message.content,
+                        message.text ?? '',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: isOwnMessage
                               ? theme.colorScheme.onPrimary
@@ -149,10 +144,7 @@ class MediaMessageWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        constraints: const BoxConstraints(
-          maxWidth: 250,
-          maxHeight: 300,
-        ),
+        constraints: const BoxConstraints(maxWidth: 250, maxHeight: 300),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
@@ -166,16 +158,12 @@ class MediaMessageWidget extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: CachedNetworkImage(
-            imageUrl: message.fileUrl!,
+            imageUrl: message.mediaUrl!,
             fit: BoxFit.cover,
             placeholder: (context, url) => Container(
               height: 200,
               color: theme.colorScheme.surfaceContainerHighest,
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: theme.colorScheme.primary,
-                ),
-              ),
+              child: Center(child: CircularProgressIndicator(color: theme.colorScheme.primary)),
             ),
             errorWidget: (context, url, error) => Container(
               height: 200,
@@ -210,10 +198,7 @@ class MediaMessageWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        constraints: const BoxConstraints(
-          maxWidth: 250,
-          maxHeight: 200,
-        ),
+        constraints: const BoxConstraints(maxWidth: 250, maxHeight: 200),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
@@ -229,30 +214,11 @@ class MediaMessageWidget extends StatelessWidget {
           child: Stack(
             children: [
               // Превью видео (если есть)
-              if (message.thumbnailUrl != null)
-                CachedNetworkImage(
-                  imageUrl: message.thumbnailUrl!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                  placeholder: (context, url) => Container(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: theme.colorScheme.surfaceContainerHighest,
-                    child: const Icon(Icons.video_library),
-                  ),
-                )
-              else
-                Container(
-                  color: theme.colorScheme.surfaceContainerHighest,
-                  child: const Icon(Icons.video_library),
-                ),
+              // TODO: Add thumbnail support if needed
+              Container(
+                color: theme.colorScheme.surfaceContainerHighest,
+                child: const Icon(Icons.video_library),
+              ),
 
               // Кнопка воспроизведения
               Center(
@@ -262,11 +228,7 @@ class MediaMessageWidget extends StatelessWidget {
                     color: Colors.black.withValues(alpha: 0.6),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                    size: 32,
-                  ),
+                  child: const Icon(Icons.play_arrow, color: Colors.white, size: 32),
                 ),
               ),
 
@@ -276,38 +238,25 @@ class MediaMessageWidget extends StatelessWidget {
                 left: 8,
                 right: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
-                        Icons.video_file,
-                        color: Colors.white,
-                        size: 16,
-                      ),
+                      const Icon(Icons.video_file, color: Colors.white, size: 16),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           message.fileName ?? 'Видео',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Text(
-                        message.formattedFileSize,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
+                        _formatFileSize(message.fileSize ?? 0),
+                        style: const TextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ],
                   ),
@@ -330,23 +279,14 @@ class MediaMessageWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.2),
-          ),
+          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.play_arrow,
-                color: Colors.white,
-                size: 20,
-              ),
+              decoration: BoxDecoration(color: theme.colorScheme.primary, shape: BoxShape.circle),
+              child: const Icon(Icons.play_arrow, color: Colors.white, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -355,14 +295,12 @@ class MediaMessageWidget extends StatelessWidget {
                 children: [
                   Text(
                     message.fileName ?? 'Аудиофайл',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    message.formattedFileSize,
+                    _formatFileSize(message.fileSize ?? 0),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
@@ -370,10 +308,7 @@ class MediaMessageWidget extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(
-              Icons.audiotrack,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.audiotrack, color: Colors.grey),
           ],
         ),
       ),
@@ -390,9 +325,7 @@ class MediaMessageWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: theme.colorScheme.outline.withValues(alpha: 0.2),
-          ),
+          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
@@ -415,14 +348,12 @@ class MediaMessageWidget extends StatelessWidget {
                 children: [
                   Text(
                     message.fileName ?? 'Файл',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${message.formattedFileSize} • ${(message as dynamic).fileType?.toUpperCase() ?? 'ФАЙЛ'}',
+                    '${_formatFileSize(message.fileSize ?? 0)} • ФАЙЛ',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
@@ -430,10 +361,7 @@ class MediaMessageWidget extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(
-              Icons.download,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.download, color: Colors.grey),
           ],
         ),
       ),
@@ -446,34 +374,18 @@ class MediaMessageWidget extends StatelessWidget {
     IconData iconData;
     Color iconColor;
 
-    switch (message.status) {
-      case chat_message.MessageStatus.sending:
-        iconData = Icons.access_time;
-        iconColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
-        break;
-      case chat_message.MessageStatus.sent:
-        iconData = Icons.check;
-        iconColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
-        break;
-      case chat_message.MessageStatus.delivered:
-        iconData = Icons.done_all;
-        iconColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
-        break;
-      case chat_message.MessageStatus.read:
-        iconData = Icons.done_all;
-        iconColor = theme.colorScheme.primary;
-        break;
-      case chat_message.MessageStatus.failed:
-        iconData = Icons.error;
-        iconColor = theme.colorScheme.error;
-        break;
-    }
+    // TODO: Implement message status logic
+    iconData = Icons.done;
+    iconColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
 
-    return Icon(
-      iconData,
-      size: 16,
-      color: iconColor,
-    );
+    return Icon(iconData, size: 16, color: iconColor);
+  }
+
+  String _formatFileSize(int bytes) {
+    if (bytes < 1024) return '$bytes B';
+    if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
+    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 
   IconData _getFileIcon(String fileType) {

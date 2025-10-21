@@ -97,27 +97,26 @@ class SpecialistFilters {
     ExperienceLevel? minExperienceLevel,
     List<String>? serviceAreas,
     List<String>? languages,
-  }) =>
-      SpecialistFilters(
-        minPrice: minPrice ?? this.minPrice,
-        maxPrice: maxPrice ?? this.maxPrice,
-        minRating: minRating ?? this.minRating,
-        maxRating: maxRating ?? this.maxRating,
-        availableDate: availableDate ?? this.availableDate,
-        city: city ?? this.city,
-        location: location ?? this.location,
-        searchQuery: searchQuery ?? this.searchQuery,
-        subcategories: subcategories ?? this.subcategories,
-        isVerified: isVerified ?? this.isVerified,
-        isAvailable: isAvailable ?? this.isAvailable,
-        maxHourlyRate: maxHourlyRate ?? this.maxHourlyRate,
-        category: category ?? this.category,
-        minExperienceLevel: minExperienceLevel ?? this.minExperienceLevel,
-        serviceAreas: serviceAreas ?? this.serviceAreas,
-        languages: languages ?? this.languages,
-        sortBy: sortBy ?? this.sortBy,
-        sortAscending: sortAscending ?? this.sortAscending,
-      );
+  }) => SpecialistFilters(
+    minPrice: minPrice ?? this.minPrice,
+    maxPrice: maxPrice ?? this.maxPrice,
+    minRating: minRating ?? this.minRating,
+    maxRating: maxRating ?? this.maxRating,
+    availableDate: availableDate ?? this.availableDate,
+    city: city ?? this.city,
+    location: location ?? this.location,
+    searchQuery: searchQuery ?? this.searchQuery,
+    subcategories: subcategories ?? this.subcategories,
+    isVerified: isVerified ?? this.isVerified,
+    isAvailable: isAvailable ?? this.isAvailable,
+    maxHourlyRate: maxHourlyRate ?? this.maxHourlyRate,
+    category: category ?? this.category,
+    minExperienceLevel: minExperienceLevel ?? this.minExperienceLevel,
+    serviceAreas: serviceAreas ?? this.serviceAreas,
+    languages: languages ?? this.languages,
+    sortBy: sortBy ?? this.sortBy,
+    sortAscending: sortAscending ?? this.sortAscending,
+  );
 
   @override
   bool operator ==(Object other) {
@@ -139,19 +138,19 @@ class SpecialistFilters {
 
   @override
   int get hashCode => Object.hash(
-        minPrice,
-        maxPrice,
-        minRating,
-        maxRating,
-        availableDate,
-        city,
-        searchQuery,
-        subcategories,
-        isVerified,
-        isAvailable,
-        sortBy,
-        sortAscending,
-      );
+    minPrice,
+    maxPrice,
+    minRating,
+    maxRating,
+    availableDate,
+    city,
+    searchQuery,
+    subcategories,
+    isVerified,
+    isAvailable,
+    sortBy,
+    sortAscending,
+  );
 
   /// Сравнение списков
   bool _listEquals<T>(List<T>? a, List<T>? b) {
@@ -249,26 +248,10 @@ class RatingFilterOption {
   final String description;
 
   static const List<RatingFilterOption> options = [
-    RatingFilterOption(
-      minRating: 4.5,
-      label: '4.5+',
-      description: 'Отлично',
-    ),
-    RatingFilterOption(
-      minRating: 4,
-      label: '4.0+',
-      description: 'Очень хорошо',
-    ),
-    RatingFilterOption(
-      minRating: 3.5,
-      label: '3.5+',
-      description: 'Хорошо',
-    ),
-    RatingFilterOption(
-      minRating: 3,
-      label: '3.0+',
-      description: 'Удовлетворительно',
-    ),
+    RatingFilterOption(minRating: 4.5, label: '4.5+', description: 'Отлично'),
+    RatingFilterOption(minRating: 4, label: '4.0+', description: 'Очень хорошо'),
+    RatingFilterOption(minRating: 3.5, label: '3.5+', description: 'Хорошо'),
+    RatingFilterOption(minRating: 3, label: '3.0+', description: 'Удовлетворительно'),
   ];
 }
 
@@ -286,11 +269,7 @@ class PriceFilterOption {
   final String description;
 
   static const List<PriceFilterOption> options = [
-    PriceFilterOption(
-      maxPrice: 10000,
-      label: 'До 10 000 ₽',
-      description: 'Бюджетный вариант',
-    ),
+    PriceFilterOption(maxPrice: 10000, label: 'До 10 000 ₽', description: 'Бюджетный вариант'),
     PriceFilterOption(
       minPrice: 10000,
       maxPrice: 25000,
@@ -303,10 +282,6 @@ class PriceFilterOption {
       label: '25 000 - 50 000 ₽',
       description: 'Премиум сегмент',
     ),
-    PriceFilterOption(
-      minPrice: 50000,
-      label: 'От 50 000 ₽',
-      description: 'Люкс сегмент',
-    ),
+    PriceFilterOption(minPrice: 50000, label: 'От 50 000 ₽', description: 'Люкс сегмент'),
   ];
 }

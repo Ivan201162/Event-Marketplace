@@ -34,10 +34,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Восстановление пароля'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -57,11 +54,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     color: theme.primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Icon(
-                    Icons.lock_reset,
-                    size: 40,
-                    color: theme.primaryColor,
-                  ),
+                  child: Icon(Icons.lock_reset, size: 40, color: theme.primaryColor),
                 ),
 
                 const SizedBox(height: 24),
@@ -69,9 +62,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 // Заголовок
                 Text(
                   'Забыли пароль?',
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
 
@@ -79,9 +70,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
                 Text(
                   _emailSent ? 'Проверьте вашу почту' : 'Введите email для восстановления пароля',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+                  style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
 
@@ -136,11 +125,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     ),
                     child: Column(
                       children: [
-                        const Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                          size: 48,
-                        ),
+                        const Icon(Icons.check_circle, color: Colors.green, size: 48),
                         const SizedBox(height: 16),
                         Text(
                           'Письмо отправлено!',
@@ -152,9 +137,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         const SizedBox(height: 8),
                         Text(
                           'Проверьте вашу почту и следуйте инструкциям для восстановления пароля',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: Colors.green[700],
-                          ),
+                          style: theme.textTheme.bodyMedium?.copyWith(color: Colors.green[700]),
                           textAlign: TextAlign.center,
                         ),
                       ],

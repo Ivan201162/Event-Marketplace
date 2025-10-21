@@ -47,10 +47,7 @@ class DiscountService {
   }
 
   /// Принять скидку
-  Future<void> acceptDiscount({
-    required String bookingId,
-    required String customerId,
-  }) async {
+  Future<void> acceptDiscount({required String bookingId, required String customerId}) async {
     try {
       final now = DateTime.now();
 
@@ -81,10 +78,7 @@ class DiscountService {
       });
 
       // Отправляем уведомление специалисту
-      await _sendDiscountAcceptedNotification(
-        bookingData['specialistId'],
-        updatedDiscount,
-      );
+      await _sendDiscountAcceptedNotification(bookingData['specialistId'], updatedDiscount);
 
       // Логируем принятие скидки
       await _logDiscountAcceptance(bookingId, customerId, updatedDiscount);
@@ -115,10 +109,7 @@ class DiscountService {
       if (!discount.isActive) throw Exception('Скидка неактивна');
 
       // Обновляем скидку как отклоненную (истекает)
-      final updatedDiscount = discount.copyWith(
-        expiresAt: now,
-        reason: reason,
-      );
+      final updatedDiscount = discount.copyWith(expiresAt: now, reason: reason);
 
       await _firestore.collection('bookings').doc(bookingId).update({
         'discount': updatedDiscount.toMap(),
@@ -126,10 +117,7 @@ class DiscountService {
       });
 
       // Отправляем уведомление специалисту
-      await _sendDiscountRejectedNotification(
-        bookingData['specialistId'],
-        reason,
-      );
+      await _sendDiscountRejectedNotification(bookingData['specialistId'], reason);
 
       // Логируем отклонение скидки
       await _logDiscountRejection(bookingId, customerId, reason);
@@ -169,9 +157,7 @@ class DiscountService {
   }
 
   /// Получить статистику скидок для специалиста
-  Future<Map<String, dynamic>> getSpecialistDiscountStats(
-    String specialistId,
-  ) async {
+  Future<Map<String, dynamic>> getSpecialistDiscountStats(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('bookings')
@@ -231,10 +217,7 @@ class DiscountService {
   }
 
   /// Отправить уведомление о предложении скидки
-  Future<void> _sendDiscountNotification(
-    String customerId,
-    BookingDiscount discount,
-  ) async {
+  Future<void> _sendDiscountNotification(String customerId, BookingDiscount discount) async {
     try {
       // Получаем FCM токены клиента
       final customerDoc = await _firestore.collection('users').doc(customerId).get();
@@ -320,10 +303,7 @@ class DiscountService {
   }
 
   /// Отправить уведомление об отклонении скидки
-  Future<void> _sendDiscountRejectedNotification(
-    String specialistId,
-    String? reason,
-  ) async {
+  Future<void> _sendDiscountRejectedNotification(String specialistId, String? reason) async {
     try {
       // Получаем FCM токены специалиста
       final specialistDoc = await _firestore.collection('specialists').doc(specialistId).get();
@@ -337,10 +317,7 @@ class DiscountService {
       final notification = {
         'title': 'Скидка отклонена',
         'body': 'Клиент отклонил ваше предложение скидки',
-        'data': {
-          'type': 'discount_rejected',
-          'reason': reason,
-        },
+        'data': {'type': 'discount_rejected', 'reason': reason},
       };
 
       for (final token in fcmTokens) {
@@ -403,11 +380,7 @@ class DiscountService {
   }
 
   /// Логировать отклонение скидки
-  Future<void> _logDiscountRejection(
-    String bookingId,
-    String customerId,
-    String? reason,
-  ) async {
+  Future<void> _logDiscountRejection(String bookingId, String customerId, String? reason) async {
     try {
       await _firestore.collection('discountLogs').add({
         'bookingId': bookingId,

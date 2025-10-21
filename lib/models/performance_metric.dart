@@ -36,18 +36,18 @@ class PerformanceMetric {
 
   /// Создать из Map
   factory PerformanceMetric.fromMap(Map<String, dynamic> data) => PerformanceMetric(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        category: data['category'] ?? '',
-        value: (data['value'] as num).toDouble(),
-        unit: data['unit'] ?? '',
-        description: data['description'],
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-        timestamp: (data['timestamp'] as Timestamp).toDate(),
-        sessionId: data['sessionId'],
-        userId: data['userId'],
-        deviceId: data['deviceId'],
-      );
+    id: data['id'] ?? '',
+    name: data['name'] ?? '',
+    category: data['category'] ?? '',
+    value: (data['value'] as num).toDouble(),
+    unit: data['unit'] ?? '',
+    description: data['description'],
+    metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+    timestamp: (data['timestamp'] as Timestamp).toDate(),
+    sessionId: data['sessionId'],
+    userId: data['userId'],
+    deviceId: data['deviceId'],
+  );
   final String id;
   final String name;
   final String category;
@@ -62,17 +62,17 @@ class PerformanceMetric {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'category': category,
-        'value': value,
-        'unit': unit,
-        'description': description,
-        'metadata': metadata,
-        'timestamp': Timestamp.fromDate(timestamp),
-        'sessionId': sessionId,
-        'userId': userId,
-        'deviceId': deviceId,
-      };
+    'name': name,
+    'category': category,
+    'value': value,
+    'unit': unit,
+    'description': description,
+    'metadata': metadata,
+    'timestamp': Timestamp.fromDate(timestamp),
+    'sessionId': sessionId,
+    'userId': userId,
+    'deviceId': deviceId,
+  };
 
   /// Создать копию с изменениями
   PerformanceMetric copyWith({
@@ -87,20 +87,19 @@ class PerformanceMetric {
     String? sessionId,
     String? userId,
     String? deviceId,
-  }) =>
-      PerformanceMetric(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        category: category ?? this.category,
-        value: value ?? this.value,
-        unit: unit ?? this.unit,
-        description: description ?? this.description,
-        metadata: metadata ?? this.metadata,
-        timestamp: timestamp ?? this.timestamp,
-        sessionId: sessionId ?? this.sessionId,
-        userId: userId ?? this.userId,
-        deviceId: deviceId ?? this.deviceId,
-      );
+  }) => PerformanceMetric(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    category: category ?? this.category,
+    value: value ?? this.value,
+    unit: unit ?? this.unit,
+    description: description ?? this.description,
+    metadata: metadata ?? this.metadata,
+    timestamp: timestamp ?? this.timestamp,
+    sessionId: sessionId ?? this.sessionId,
+    userId: userId ?? this.userId,
+    deviceId: deviceId ?? this.deviceId,
+  );
 
   /// Получить значение в читаемом формате
   String get formattedValue {
@@ -190,18 +189,18 @@ class PerformanceMetric {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        name,
-        category,
-        value,
-        unit,
-        description,
-        metadata,
-        timestamp,
-        sessionId,
-        userId,
-        deviceId,
-      );
+    id,
+    name,
+    category,
+    value,
+    unit,
+    description,
+    metadata,
+    timestamp,
+    sessionId,
+    userId,
+    deviceId,
+  );
 
   @override
   String toString() => 'PerformanceMetric(id: $id, name: $name, value: $formattedValue)';
@@ -376,21 +375,21 @@ class PerformanceAlert {
 
   /// Создать из Map
   factory PerformanceAlert.fromMap(Map<String, dynamic> data) => PerformanceAlert(
-        id: data['id'] ?? '',
-        metricName: data['metricName'] ?? '',
-        category: data['category'] ?? '',
-        threshold: (data['threshold'] as num).toDouble(),
-        currentValue: (data['currentValue'] as num).toDouble(),
-        severity: AlertSeverity.values.firstWhere(
-          (e) => e.toString().split('.').last == data['severity'],
-          orElse: () => AlertSeverity.warning,
-        ),
-        message: data['message'] ?? '',
-        triggeredAt: (data['triggeredAt'] as Timestamp).toDate(),
-        resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
-        isActive: data['isActive'] as bool? ?? true,
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      );
+    id: data['id'] ?? '',
+    metricName: data['metricName'] ?? '',
+    category: data['category'] ?? '',
+    threshold: (data['threshold'] as num).toDouble(),
+    currentValue: (data['currentValue'] as num).toDouble(),
+    severity: AlertSeverity.values.firstWhere(
+      (e) => e.toString().split('.').last == data['severity'],
+      orElse: () => AlertSeverity.warning,
+    ),
+    message: data['message'] ?? '',
+    triggeredAt: (data['triggeredAt'] as Timestamp).toDate(),
+    resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
+    isActive: data['isActive'] as bool? ?? true,
+    metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+  );
   final String id;
   final String metricName;
   final String category;
@@ -405,17 +404,17 @@ class PerformanceAlert {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'metricName': metricName,
-        'category': category,
-        'threshold': threshold,
-        'currentValue': currentValue,
-        'severity': severity.toString().split('.').last,
-        'message': message,
-        'triggeredAt': Timestamp.fromDate(triggeredAt),
-        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-        'isActive': isActive,
-        'metadata': metadata,
-      };
+    'metricName': metricName,
+    'category': category,
+    'threshold': threshold,
+    'currentValue': currentValue,
+    'severity': severity.toString().split('.').last,
+    'message': message,
+    'triggeredAt': Timestamp.fromDate(triggeredAt),
+    'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+    'isActive': isActive,
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   PerformanceAlert copyWith({
@@ -430,20 +429,19 @@ class PerformanceAlert {
     DateTime? resolvedAt,
     bool? isActive,
     Map<String, dynamic>? metadata,
-  }) =>
-      PerformanceAlert(
-        id: id ?? this.id,
-        metricName: metricName ?? this.metricName,
-        category: category ?? this.category,
-        threshold: threshold ?? this.threshold,
-        currentValue: currentValue ?? this.currentValue,
-        severity: severity ?? this.severity,
-        message: message ?? this.message,
-        triggeredAt: triggeredAt ?? this.triggeredAt,
-        resolvedAt: resolvedAt ?? this.resolvedAt,
-        isActive: isActive ?? this.isActive,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => PerformanceAlert(
+    id: id ?? this.id,
+    metricName: metricName ?? this.metricName,
+    category: category ?? this.category,
+    threshold: threshold ?? this.threshold,
+    currentValue: currentValue ?? this.currentValue,
+    severity: severity ?? this.severity,
+    message: message ?? this.message,
+    triggeredAt: triggeredAt ?? this.triggeredAt,
+    resolvedAt: resolvedAt ?? this.resolvedAt,
+    isActive: isActive ?? this.isActive,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, решен ли алерт
   bool get isResolved => resolvedAt != null;
@@ -473,30 +471,25 @@ class PerformanceAlert {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        metricName,
-        category,
-        threshold,
-        currentValue,
-        severity,
-        message,
-        triggeredAt,
-        resolvedAt,
-        isActive,
-        metadata,
-      );
+    id,
+    metricName,
+    category,
+    threshold,
+    currentValue,
+    severity,
+    message,
+    triggeredAt,
+    resolvedAt,
+    isActive,
+    metadata,
+  );
 
   @override
   String toString() => 'PerformanceAlert(id: $id, metricName: $metricName, severity: $severity)';
 }
 
 /// Уровни серьезности алертов
-enum AlertSeverity {
-  info,
-  warning,
-  error,
-  critical,
-}
+enum AlertSeverity { info, warning, error, critical }
 
 /// Расширение для уровней серьезности
 extension AlertSeverityExtension on AlertSeverity {

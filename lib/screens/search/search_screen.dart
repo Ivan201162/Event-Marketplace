@@ -66,12 +66,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Поиск специалистов'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilters,
-          ),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilters)],
       ),
       body: Column(
         children: [
@@ -92,10 +87,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: _performSearch,
-                  child: const Text('Найти'),
-                ),
+                ElevatedButton(onPressed: _performSearch, child: const Text('Найти')),
               ],
             ),
           ),
@@ -114,10 +106,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       const Spacer(),
-                      TextButton(
-                        onPressed: _clearSearch,
-                        child: const Text('Очистить'),
-                      ),
+                      TextButton(onPressed: _clearSearch, child: const Text('Очистить')),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -186,23 +175,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   },
                 );
               },
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: Colors.red,
-                    ),
+                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
                     const SizedBox(height: 16),
-                    Text(
-                      'Ошибка поиска',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
+                    Text('Ошибка поиска', style: Theme.of(context).textTheme.titleLarge),
                     const SizedBox(height: 8),
                     Text(
                       error.toString(),
@@ -237,26 +217,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.search_off,
-            size: 64,
-            color: Colors.grey,
-          ),
+          const Icon(Icons.search_off, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text(
-            'Специалисты не найдены',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Специалисты не найдены', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
           Text(
             'Попробуйте изменить параметры поиска',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _clearSearch,
-            child: const Text('Очистить фильтры'),
-          ),
+          ElevatedButton(onPressed: _clearSearch, child: const Text('Очистить фильтры')),
         ],
       ),
     );

@@ -17,13 +17,7 @@ enum EventIdeaCategory {
   entertainment('entertainment', 'Развлечения', 'Развлекательные мероприятия', 0xFFEC4899, '🎪'),
   other('other', 'Другое', 'Прочие мероприятия', 0xFF9CA3AF, '📋');
 
-  const EventIdeaCategory(
-    this.id,
-    this.name,
-    this.description,
-    this.color,
-    this.icon,
-  );
+  const EventIdeaCategory(this.id, this.name, this.description, this.color, this.icon);
 
   final String id;
   final String name;
@@ -40,13 +34,7 @@ enum EventIdeaCategory {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'color': color.value,
-      'icon': icon,
-    };
+    return {'id': id, 'name': name, 'description': description, 'color': color.value, 'icon': icon};
   }
 
   String get displayName => name;

@@ -37,11 +37,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
   @override
   Widget build(BuildContext context) {
     if (_currentUserId == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('Пользователь не авторизован'),
-        ),
-      );
+      return const Scaffold(body: Center(child: Text('Пользователь не авторизован')));
     }
 
     return Scaffold(
@@ -68,36 +64,29 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
   }
 
   Widget _buildProposalsList(String status) => StreamBuilder<List<SpecialistProposal>>(
-        stream: ProposalService.getProposalsByStatus(
-          _currentUserId!,
-          status,
-          isCustomer: false,
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LoadingWidget();
-          }
+    stream: ProposalService.getProposalsByStatus(_currentUserId!, status, isCustomer: false),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const LoadingWidget();
+      }
 
-          if (snapshot.hasError) {
-            return CustomErrorWidget(
-              error: snapshot.error.toString(),
-              onRetry: () => setState(() {}),
-            );
-          }
+      if (snapshot.hasError) {
+        return CustomErrorWidget(error: snapshot.error.toString(), onRetry: () => setState(() {}));
+      }
 
-          final proposals = snapshot.data ?? [];
+      final proposals = snapshot.data ?? [];
 
-          if (proposals.isEmpty) {
-            return _buildEmptyState(status);
-          }
+      if (proposals.isEmpty) {
+        return _buildEmptyState(status);
+      }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: proposals.length,
-            itemBuilder: (context, index) => _buildProposalCard(proposals[index]),
-          );
-        },
+      return ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: proposals.length,
+        itemBuilder: (context, index) => _buildProposalCard(proposals[index]),
       );
+    },
+  );
 
   Widget _buildEmptyState(String status) {
     String message;
@@ -129,9 +118,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
           const SizedBox(height: 16),
           Text(
             message,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -140,142 +127,132 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
   }
 
   Widget _buildProposalCard(SpecialistProposal proposal) => Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    margin: const EdgeInsets.only(bottom: 16),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: _getStatusColor(proposal.status),
-                    child: Icon(
-                      _getStatusIcon(proposal.status),
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Предложение для заказчика',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          'Событие: ${proposal.eventId}',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        Text(
-                          'Создано: ${_formatDate(proposal.createdAt)}',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        if (proposal.updatedAt != null)
-                          Text(
-                            'Обновлено: ${_formatDate(proposal.updatedAt!)}',
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                      ],
-                    ),
-                  ),
-                  Chip(
-                    label: Text(proposal.statusDisplayName),
-                    backgroundColor: _getStatusColor(proposal.status).withValues(alpha: 0.2),
-                  ),
-                ],
+              CircleAvatar(
+                backgroundColor: _getStatusColor(proposal.status),
+                child: Icon(_getStatusIcon(proposal.status), color: Colors.white),
               ),
-              if (proposal.message != null) ...[
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    proposal.message!,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-              ],
-              const SizedBox(height: 12),
-              Text(
-                'Специалисты (${proposal.specialistIds.length}):',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              const SizedBox(height: 8),
-              _buildSpecialistsList(proposal.specialistIds),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _viewProposalDetails(proposal),
-                      icon: const Icon(Icons.visibility),
-                      label: const Text('Подробнее'),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Предложение для заказчика',
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
-                  ),
-                  if (proposal.isPending) ...[
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _editProposal(proposal),
-                        icon: const Icon(Icons.edit),
-                        label: const Text('Изменить'),
+                    Text(
+                      'Событие: ${proposal.eventId}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    Text(
+                      'Создано: ${_formatDate(proposal.createdAt)}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    if (proposal.updatedAt != null)
+                      Text(
+                        'Обновлено: ${_formatDate(proposal.updatedAt!)}',
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
-                    ),
                   ],
-                ],
+                ),
+              ),
+              Chip(
+                label: Text(proposal.statusDisplayName),
+                backgroundColor: _getStatusColor(proposal.status).withValues(alpha: 0.2),
               ),
             ],
           ),
-        ),
-      );
+          if (proposal.message != null) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(proposal.message!, style: Theme.of(context).textTheme.bodyMedium),
+            ),
+          ],
+          const SizedBox(height: 12),
+          Text(
+            'Специалисты (${proposal.specialistIds.length}):',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          const SizedBox(height: 8),
+          _buildSpecialistsList(proposal.specialistIds),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _viewProposalDetails(proposal),
+                  icon: const Icon(Icons.visibility),
+                  label: const Text('Подробнее'),
+                ),
+              ),
+              if (proposal.isPending) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () => _editProposal(proposal),
+                    icon: const Icon(Icons.edit),
+                    label: const Text('Изменить'),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildSpecialistsList(List<String> specialistIds) => FutureBuilder<List<Specialist>>(
-        future: _getSpecialists(specialistIds),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox(
-              height: 60,
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
+    future: _getSpecialists(specialistIds),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const SizedBox(height: 60, child: Center(child: CircularProgressIndicator()));
+      }
 
-          if (snapshot.hasError) {
-            return Text(
-              'Ошибка загрузки специалистов: ${snapshot.error}',
-              style: TextStyle(color: Colors.red[600]),
-            );
-          }
+      if (snapshot.hasError) {
+        return Text(
+          'Ошибка загрузки специалистов: ${snapshot.error}',
+          style: TextStyle(color: Colors.red[600]),
+        );
+      }
 
-          final specialists = snapshot.data ?? [];
+      final specialists = snapshot.data ?? [];
 
-          return Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: specialists
-                .map(
-                  (specialist) => Chip(
-                    avatar: CircleAvatar(
-                      backgroundImage:
-                          specialist.photoUrl != null ? NetworkImage(specialist.photoUrl!) : null,
-                      child: specialist.photoUrl == null
-                          ? Text(
-                              specialist.name.isNotEmpty ? specialist.name[0] : '?',
-                            )
-                          : null,
-                    ),
-                    label: Text(specialist.name),
-                    backgroundColor: Colors.blue[50],
-                  ),
-                )
-                .toList(),
-          );
-        },
+      return Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: specialists
+            .map(
+              (specialist) => Chip(
+                avatar: CircleAvatar(
+                  backgroundImage: specialist.photoUrl != null
+                      ? NetworkImage(specialist.photoUrl!)
+                      : null,
+                  child: specialist.photoUrl == null
+                      ? Text(specialist.name.isNotEmpty ? specialist.name[0] : '?')
+                      : null,
+                ),
+                label: Text(specialist.name),
+                backgroundColor: Colors.blue[50],
+              ),
+            )
+            .toList(),
       );
+    },
+  );
 
   Future<List<Specialist>> _getSpecialists(List<String> specialistIds) async {
     final specialists = <Specialist>[];
@@ -340,50 +317,35 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
                 _buildDetailRow('Обновлено', _formatDate(proposal.updatedAt!)),
               if (proposal.message != null) _buildDetailRow('Сообщение', proposal.message!),
               const SizedBox(height: 8),
-              Text(
-                'Специалисты:',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
+              Text('Специалисты:', style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 4),
               ...proposal.specialistIds.map((id) => Text('• $id')),
             ],
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
         ],
       ),
     );
   }
 
   Widget _buildDetailRow(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 80,
-              child: Text(
-                '$label:',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-            Expanded(
-              child: Text(value),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 80,
+          child: Text('$label:', style: const TextStyle(fontWeight: FontWeight.bold)),
         ),
-      );
+        Expanded(child: Text(value)),
+      ],
+    ),
+  );
 
   void _editProposal(SpecialistProposal proposal) {
     // Навигация к экрану редактирования предложения
-    Navigator.pushNamed(
-      context,
-      '/edit-proposal',
-      arguments: proposal,
-    );
+    Navigator.pushNamed(context, '/edit-proposal', arguments: proposal);
   }
 }

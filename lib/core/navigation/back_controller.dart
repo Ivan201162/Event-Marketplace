@@ -16,9 +16,9 @@ class BackController {
     if (_lastBackPressTime == null ||
         currentTime.difference(_lastBackPressTime!) > const Duration(seconds: 2)) {
       _lastBackPressTime = currentTime;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Нажмите «Назад» ещё раз, чтобы выйти')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Нажмите «Назад» ещё раз, чтобы выйти')));
       return false;
     }
 

@@ -3,103 +3,94 @@ import 'package:flutter/material.dart';
 import '../models/contract.dart';
 
 class ContractContentWidget extends StatelessWidget {
-  const ContractContentWidget({
-    super.key,
-    required this.contract,
-  });
+  const ContractContentWidget({super.key, required this.contract});
   final Contract contract;
 
   @override
   Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Содержимое договора',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.fullscreen),
-                    onPressed: () => _showFullContent(context),
-                    tooltip: 'Открыть полный текст',
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(maxHeight: 300),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: SingleChildScrollView(
-                  child: Text(
-                    contract.content,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          height: 1.5,
-                        ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              if (contract.terms.isNotEmpty) _buildTermsSection(context),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildTermsSection(BuildContext context) => Column(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Условия договора',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 8),
-          ...contract.terms.entries.map(
-            (entry) => Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: Colors.blue.shade200),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Содержимое договора',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _getTermTitle(entry.key),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue.shade700,
-                        ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _formatTermValue(entry.value),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.blue.shade600,
-                        ),
-                  ),
-                ],
+              IconButton(
+                icon: const Icon(Icons.fullscreen),
+                onPressed: () => _showFullContent(context),
+                tooltip: 'Открыть полный текст',
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            constraints: const BoxConstraints(maxHeight: 300),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: SingleChildScrollView(
+              child: Text(
+                contract.content,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.5),
               ),
             ),
           ),
+          const SizedBox(height: 12),
+          if (contract.terms.isNotEmpty) _buildTermsSection(context),
         ],
-      );
+      ),
+    ),
+  );
+
+  Widget _buildTermsSection(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Условия договора',
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 8),
+      ...contract.terms.entries.map(
+        (entry) => Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade50,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: Colors.blue.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _getTermTitle(entry.key),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade700,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                _formatTermValue(entry.value),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.blue.shade600),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
 
   String _getTermTitle(String key) {
     switch (key) {
@@ -141,9 +132,9 @@ class ContractContentWidget extends StatelessWidget {
                 children: [
                   Text(
                     'Договор ${contract.contractNumber}',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -156,9 +147,7 @@ class ContractContentWidget extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Text(
                     contract.content,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          height: 1.5,
-                        ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                 ),
               ),

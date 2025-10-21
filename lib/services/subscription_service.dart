@@ -23,10 +23,7 @@ class SubscriptionService {
           .get();
 
       return snapshot.docs
-          .map((doc) => SubscriptionPlan.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
+          .map((doc) => SubscriptionPlan.fromMap({'id': doc.id, ...doc.data()}))
           .toList();
     } catch (e) {
       debugPrint('ERROR: [subscription_service] Ошибка получения планов: $e');
@@ -40,10 +37,7 @@ class SubscriptionService {
       final doc = await _firestore.collection('subscription_plans').doc(planId).get();
 
       if (doc.exists) {
-        return SubscriptionPlan.fromMap({
-          'id': doc.id,
-          ...doc.data()!,
-        });
+        return SubscriptionPlan.fromMap({'id': doc.id, ...doc.data()!});
       }
       return null;
     } catch (e) {
@@ -56,7 +50,8 @@ class SubscriptionService {
   Future<UserSubscription?> getActiveSubscription(String userId) async {
     try {
       debugPrint(
-          'INFO: [subscription_service] Получение активной подписки для пользователя $userId');
+        'INFO: [subscription_service] Получение активной подписки для пользователя $userId',
+      );
 
       final snapshot = await _firestore
           .collection('user_subscriptions')
@@ -68,10 +63,7 @@ class SubscriptionService {
 
       if (snapshot.docs.isNotEmpty) {
         final doc = snapshot.docs.first;
-        return UserSubscription.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
+        return UserSubscription.fromMap({'id': doc.id, ...doc.data()});
       }
       return null;
     } catch (e) {
@@ -90,10 +82,7 @@ class SubscriptionService {
           .get();
 
       return snapshot.docs
-          .map((doc) => UserSubscription.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
+          .map((doc) => UserSubscription.fromMap({'id': doc.id, ...doc.data()}))
           .toList();
     } catch (e) {
       debugPrint('ERROR: [subscription_service] Ошибка получения подписок пользователя: $e');
@@ -114,10 +103,7 @@ class SubscriptionService {
       // Получаем план подписки
       final plan = await getPlanById(planId);
       if (plan == null) {
-        return PaymentResult(
-          success: false,
-          errorMessage: 'План подписки не найден',
-        );
+        return PaymentResult(success: false, errorMessage: 'План подписки не найден');
       }
 
       // Создаем платеж
@@ -160,10 +146,7 @@ class SubscriptionService {
       return paymentResult;
     } catch (e) {
       debugPrint('ERROR: [subscription_service] Ошибка покупки подписки: $e');
-      return PaymentResult(
-        success: false,
-        errorMessage: e.toString(),
-      );
+      return PaymentResult(success: false, errorMessage: e.toString());
     }
   }
 
@@ -276,10 +259,7 @@ class SubscriptionService {
         return false;
       }
 
-      final subscription = UserSubscription.fromMap({
-        'id': doc.id,
-        ...doc.data()!,
-      });
+      final subscription = UserSubscription.fromMap({'id': doc.id, ...doc.data()!});
 
       final plan = await getPlanById(subscription.planId);
       if (plan == null) {
@@ -326,7 +306,8 @@ class SubscriptionService {
       await batch.commit();
 
       debugPrint(
-          'INFO: [subscription_service] Обработано ${snapshot.docs.length} истекших подписок');
+        'INFO: [subscription_service] Обработано ${snapshot.docs.length} истекших подписок',
+      );
     } catch (e) {
       debugPrint('ERROR: [subscription_service] Ошибка проверки истекших подписок: $e');
     }
@@ -439,10 +420,7 @@ class SubscriptionService {
   }
 
   /// Отписка от специалиста
-  Future<void> unsubscribeFromSpecialist(
-    String userId,
-    String specialistId,
-  ) async {
+  Future<void> unsubscribeFromSpecialist(String userId, String specialistId) async {
     try {
       debugPrint('INFO: [subscription_service] Отписка от специалиста $specialistId');
 

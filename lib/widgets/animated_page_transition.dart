@@ -8,132 +8,108 @@ class AnimatedPageTransitions {
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => child,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(1, 0);
-          const end = Offset.zero;
-          const curve = Curves.easeInOut;
-          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-        transitionDuration: duration,
-        reverseTransitionDuration: duration,
-      );
+  }) => PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(1, 0);
+      const end = Offset.zero;
+      const curve = Curves.easeInOut;
+      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(position: animation.drive(tween), child: child);
+    },
+    transitionDuration: duration,
+    reverseTransitionDuration: duration,
+  );
 
   /// Переход с анимацией скольжения вправо
   static PageRouteBuilder slideRightTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => child,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(-1, 0);
-          const end = Offset.zero;
-          const curve = Curves.easeInOut;
-          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-        transitionDuration: duration,
-        reverseTransitionDuration: duration,
-      );
+  }) => PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(-1, 0);
+      const end = Offset.zero;
+      const curve = Curves.easeInOut;
+      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(position: animation.drive(tween), child: child);
+    },
+    transitionDuration: duration,
+    reverseTransitionDuration: duration,
+  );
 
   /// Переход с анимацией появления снизу
   static PageRouteBuilder slideUpTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => child,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0, 1);
-          const end = Offset.zero;
-          const curve = Curves.easeInOut;
-          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
-        transitionDuration: duration,
-        reverseTransitionDuration: duration,
-      );
+  }) => PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0, 1);
+      const end = Offset.zero;
+      const curve = Curves.easeInOut;
+      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(position: animation.drive(tween), child: child);
+    },
+    transitionDuration: duration,
+    reverseTransitionDuration: duration,
+  );
 
   /// Переход с анимацией масштабирования
   static PageRouteBuilder scaleTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => child,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = 0.0;
-          const end = 1.0;
-          const curve = Curves.easeInOut;
-          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          return ScaleTransition(
-            scale: animation.drive(tween),
-            child: child,
-          );
-        },
-        transitionDuration: duration,
-        reverseTransitionDuration: duration,
-      );
+  }) => PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = 0.0;
+      const end = 1.0;
+      const curve = Curves.easeInOut;
+      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return ScaleTransition(scale: animation.drive(tween), child: child);
+    },
+    transitionDuration: duration,
+    reverseTransitionDuration: duration,
+  );
 
   /// Переход с анимацией поворота
   static PageRouteBuilder rotateTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => child,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = 0.0;
-          const end = 1.0;
-          const curve = Curves.easeInOut;
-          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          return RotationTransition(
-            turns: animation.drive(tween),
-            child: child,
-          );
-        },
-        transitionDuration: duration,
-        reverseTransitionDuration: duration,
-      );
+  }) => PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = 0.0;
+      const end = 1.0;
+      const curve = Curves.easeInOut;
+      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return RotationTransition(turns: animation.drive(tween), child: child);
+    },
+    transitionDuration: duration,
+    reverseTransitionDuration: duration,
+  );
 
   /// Переход с анимацией затухания
   static PageRouteBuilder fadeTransition({
     required Widget child,
     required BuildContext context,
     Duration duration = const Duration(milliseconds: 300),
-  }) =>
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => child,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = 0.0;
-          const end = 1.0;
-          const curve = Curves.easeInOut;
-          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          return FadeTransition(
-            opacity: animation.drive(tween),
-            child: child,
-          );
-        },
-        transitionDuration: duration,
-        reverseTransitionDuration: duration,
-      );
+  }) => PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = 0.0;
+      const end = 1.0;
+      const curve = Curves.easeInOut;
+      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return FadeTransition(opacity: animation.drive(tween), child: child);
+    },
+    transitionDuration: duration,
+    reverseTransitionDuration: duration,
+  );
 }
 
 /// Анимированный виджет для появления элементов
@@ -155,21 +131,9 @@ class AnimatedAppearance extends StatelessWidget {
   @override
   Widget build(BuildContext context) => child
       .animate()
-      .fadeIn(
-        duration: duration,
-        delay: delay,
-        begin: opacity,
-      )
-      .slideY(
-        duration: duration,
-        delay: delay,
-        begin: offset.dy / 100,
-      )
-      .slideX(
-        duration: duration,
-        delay: delay,
-        begin: offset.dx / 100,
-      );
+      .fadeIn(duration: duration, delay: delay, begin: opacity)
+      .slideY(duration: duration, delay: delay, begin: offset.dy / 100)
+      .slideX(duration: duration, delay: delay, begin: offset.dx / 100);
 }
 
 /// Анимированная кнопка с эффектом нажатия
@@ -197,19 +161,11 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: widget.scale,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -220,20 +176,18 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTapDown: (_) => _controller.forward(),
-        onTapUp: (_) {
-          _controller.reverse();
-          widget.onPressed?.call();
-        },
-        onTapCancel: () => _controller.reverse(),
-        child: AnimatedBuilder(
-          animation: _scaleAnimation,
-          builder: (context, child) => Transform.scale(
-            scale: _scaleAnimation.value,
-            child: widget.child,
-          ),
-        ),
-      );
+    onTapDown: (_) => _controller.forward(),
+    onTapUp: (_) {
+      _controller.reverse();
+      widget.onPressed?.call();
+    },
+    onTapCancel: () => _controller.reverse(),
+    child: AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) =>
+          Transform.scale(scale: _scaleAnimation.value, child: widget.child),
+    ),
+  );
 }
 
 /// Анимированная карточка с эффектом наведения
@@ -267,19 +221,11 @@ class _AnimatedCardState extends State<AnimatedCard> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
+    _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     _elevationAnimation = Tween<double>(
       begin: widget.elevation,
       end: widget.elevation + 4.0,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -290,27 +236,22 @@ class _AnimatedCardState extends State<AnimatedCard> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _elevationAnimation,
-        builder: (context, child) => Card(
-          margin: widget.margin,
-          elevation: _elevationAnimation.value,
-          color: widget.color,
-          shape: RoundedRectangleBorder(
-            borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
-          ),
-          child: InkWell(
-            onTap: widget.onTap,
-            onTapDown: (_) => _controller.forward(),
-            onTapUp: (_) => _controller.reverse(),
-            onTapCancel: () => _controller.reverse(),
-            borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
-            child: Padding(
-              padding: widget.padding ?? const EdgeInsets.all(16),
-              child: widget.child,
-            ),
-          ),
-        ),
-      );
+    animation: _elevationAnimation,
+    builder: (context, child) => Card(
+      margin: widget.margin,
+      elevation: _elevationAnimation.value,
+      color: widget.color,
+      shape: RoundedRectangleBorder(borderRadius: widget.borderRadius ?? BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: widget.onTap,
+        onTapDown: (_) => _controller.forward(),
+        onTapUp: (_) => _controller.reverse(),
+        onTapCancel: () => _controller.reverse(),
+        borderRadius: widget.borderRadius ?? BorderRadius.circular(12),
+        child: Padding(padding: widget.padding ?? const EdgeInsets.all(16), child: widget.child),
+      ),
+    ),
+  );
 }
 
 /// Анимированный список с эффектом появления элементов
@@ -331,13 +272,13 @@ class AnimatedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.builder(
-        controller: controller,
-        padding: padding,
-        itemCount: children.length,
-        itemBuilder: (context, index) => AnimatedAppearance(
-          delay: Duration(milliseconds: delay.inMilliseconds * index),
-          duration: duration,
-          child: children[index],
-        ),
-      );
+    controller: controller,
+    padding: padding,
+    itemCount: children.length,
+    itemBuilder: (context, index) => AnimatedAppearance(
+      delay: Duration(milliseconds: delay.inMilliseconds * index),
+      duration: duration,
+      child: children[index],
+    ),
+  );
 }

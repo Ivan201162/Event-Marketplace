@@ -28,44 +28,36 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        body: Column(
-          children: [
-            // Вкладки
-            _buildTabs(),
+    body: Column(
+      children: [
+        // Вкладки
+        _buildTabs(),
 
-            // Контент
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _selectedTab == 'integrations'
-                      ? _buildIntegrationsTab()
-                      : _selectedTab == 'create'
-                          ? _buildCreateTab()
-                          : _buildSyncHistoryTab(),
-            ),
-          ],
+        // Контент
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _selectedTab == 'integrations'
+              ? _buildIntegrationsTab()
+              : _selectedTab == 'create'
+              ? _buildCreateTab()
+              : _buildSyncHistoryTab(),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildTabs() => ResponsiveCard(
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildTabButton(
-                'integrations',
-                'Интеграции',
-                Icons.integration_instructions,
-              ),
-            ),
-            Expanded(
-              child: _buildTabButton('create', 'Создать', Icons.add),
-            ),
-            Expanded(
-              child: _buildTabButton('history', 'История', Icons.history),
-            ),
-          ],
+    child: Row(
+      children: [
+        Expanded(
+          child: _buildTabButton('integrations', 'Интеграции', Icons.integration_instructions),
         ),
-      );
+        Expanded(child: _buildTabButton('create', 'Создать', Icons.add)),
+        Expanded(child: _buildTabButton('history', 'История', Icons.history)),
+      ],
+    ),
+  );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -80,17 +72,11 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.blue : Colors.grey,
-              size: 24,
-            ),
+            Icon(icon, color: isSelected ? Colors.blue : Colors.grey, size: 24),
             const SizedBox(height: 8),
             Text(
               title,
@@ -106,49 +92,46 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
   }
 
   Widget _buildIntegrationsTab() => Column(
-        children: [
-          // Заголовок с кнопками
-          ResponsiveCard(
-            child: Row(
-              children: [
-                const ResponsiveText(
-                  'Внешние интеграции',
-                  isTitle: true,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _loadIntegrations,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    setState(() {
-                      _selectedTab = 'create';
-                    });
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Создать интеграцию'),
-                ),
-              ],
+    children: [
+      // Заголовок с кнопками
+      ResponsiveCard(
+        child: Row(
+          children: [
+            const ResponsiveText('Внешние интеграции', isTitle: true),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _loadIntegrations,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
-          ),
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: () {
+                setState(() {
+                  _selectedTab = 'create';
+                });
+              },
+              icon: const Icon(Icons.add),
+              label: const Text('Создать интеграцию'),
+            ),
+          ],
+        ),
+      ),
 
-          // Список интеграций
-          Expanded(
-            child: _integrations.isEmpty
-                ? const Center(child: Text('Интеграции не найдены'))
-                : ListView.builder(
-                    itemCount: _integrations.length,
-                    itemBuilder: (context, index) {
-                      final integration = _integrations[index];
-                      return _buildIntegrationCard(integration);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список интеграций
+      Expanded(
+        child: _integrations.isEmpty
+            ? const Center(child: Text('Интеграции не найдены'))
+            : ListView.builder(
+                itemCount: _integrations.length,
+                itemBuilder: (context, index) {
+                  final integration = _integrations[index];
+                  return _buildIntegrationCard(integration);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildIntegrationCard(ExternalIntegration integration) {
     final statusColor = _getStatusColor(integration.status);
@@ -160,10 +143,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
           // Заголовок
           Row(
             children: [
-              Text(
-                integration.type.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
+              Text(integration.type.icon, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -171,15 +151,9 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
                   children: [
                     Text(
                       integration.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                    Text(
-                      integration.description,
-                      style: const TextStyle(fontSize: 14),
-                    ),
+                    Text(integration.description, style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -190,47 +164,29 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
                   if (integration.isActive) ...[
                     const PopupMenuItem(
                       value: 'deactivate',
-                      child: ListTile(
-                        leading: Icon(Icons.pause),
-                        title: Text('Деактивировать'),
-                      ),
+                      child: ListTile(leading: Icon(Icons.pause), title: Text('Деактивировать')),
                     ),
                     const PopupMenuItem(
                       value: 'sync',
-                      child: ListTile(
-                        leading: Icon(Icons.sync),
-                        title: Text('Синхронизировать'),
-                      ),
+                      child: ListTile(leading: Icon(Icons.sync), title: Text('Синхронизировать')),
                     ),
                   ] else ...[
                     const PopupMenuItem(
                       value: 'activate',
-                      child: ListTile(
-                        leading: Icon(Icons.play_arrow),
-                        title: Text('Активировать'),
-                      ),
+                      child: ListTile(leading: Icon(Icons.play_arrow), title: Text('Активировать')),
                     ),
                   ],
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Редактировать'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
                   ),
                   const PopupMenuItem(
                     value: 'test',
-                    child: ListTile(
-                      leading: Icon(Icons.bug_report),
-                      title: Text('Тестировать'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.bug_report), title: Text('Тестировать')),
                   ),
                   const PopupMenuItem(
                     value: 'delete',
-                    child: ListTile(
-                      leading: Icon(Icons.delete),
-                      title: Text('Удалить'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.delete), title: Text('Удалить')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -245,11 +201,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
             children: [
               _buildInfoChip('Тип', integration.type.displayName, Colors.blue),
               const SizedBox(width: 8),
-              _buildInfoChip(
-                'Аутентификация',
-                integration.authType.displayName,
-                Colors.green,
-              ),
+              _buildInfoChip('Аутентификация', integration.authType.displayName, Colors.green),
             ],
           ),
 
@@ -321,23 +273,20 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
   }
 
   Widget _buildCreateTab() => SingleChildScrollView(
-        child: ResponsiveCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ResponsiveText(
-                'Создать интеграцию',
-                isTitle: true,
-              ),
+    child: ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const ResponsiveText('Создать интеграцию', isTitle: true),
 
-              const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-              // Форма создания интеграции
-              _buildCreateIntegrationForm(),
-            ],
-          ),
-        ),
-      );
+          // Форма создания интеграции
+          _buildCreateIntegrationForm(),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildCreateIntegrationForm() {
     final nameController = TextEditingController();
@@ -362,10 +311,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
 
           TextField(
             controller: descriptionController,
-            decoration: const InputDecoration(
-              labelText: 'Описание',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Описание', border: OutlineInputBorder()),
             maxLines: 3,
           ),
 
@@ -394,11 +340,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
                   (type) => DropdownMenuItem(
                     value: type,
                     child: Row(
-                      children: [
-                        Text(type.icon),
-                        const SizedBox(width: 8),
-                        Text(type.displayName),
-                      ],
+                      children: [Text(type.icon), const SizedBox(width: 8), Text(type.displayName)],
                     ),
                   ),
                 )
@@ -420,12 +362,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
               border: OutlineInputBorder(),
             ),
             items: AuthenticationType.values
-                .map(
-                  (type) => DropdownMenuItem(
-                    value: type,
-                    child: Text(type.displayName),
-                  ),
-                )
+                .map((type) => DropdownMenuItem(value: type, child: Text(type.displayName)))
                 .toList(),
             onChanged: (value) {
               setState(() {
@@ -457,89 +394,78 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
   }
 
   Widget _buildSyncHistoryTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                const ResponsiveText(
-                  'История синхронизации',
-                  isTitle: true,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _loadIntegrations,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
-            ),
-          ),
-
-          // Список истории синхронизации
-          Expanded(
-            child: _integrations.isEmpty
-                ? const Center(child: Text('Интеграции не найдены'))
-                : ListView.builder(
-                    itemCount: _integrations.length,
-                    itemBuilder: (context, index) {
-                      final integration = _integrations[index];
-                      return _buildSyncHistoryCard(integration);
-                    },
-                  ),
-          ),
-        ],
-      );
-
-  Widget _buildSyncHistoryCard(ExternalIntegration integration) => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
           children: [
-            // Заголовок
-            Row(
-              children: [
-                Text(
-                  integration.type.icon,
-                  style: const TextStyle(fontSize: 24),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    integration.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                _buildStatusChip(integration.status),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // История синхронизации
-            FutureBuilder<List<DataSync>>(
-              future: _integrationService.getSyncHistory(integration.id, limit: 5),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                final syncHistory = snapshot.data!;
-
-                if (syncHistory.isEmpty) {
-                  return const Text('История синхронизации пуста');
-                }
-
-                return Column(
-                  children: syncHistory.map(_buildSyncItem).toList(),
-                );
-              },
+            const ResponsiveText('История синхронизации', isTitle: true),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _loadIntegrations,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
           ],
         ),
-      );
+      ),
+
+      // Список истории синхронизации
+      Expanded(
+        child: _integrations.isEmpty
+            ? const Center(child: Text('Интеграции не найдены'))
+            : ListView.builder(
+                itemCount: _integrations.length,
+                itemBuilder: (context, index) {
+                  final integration = _integrations[index];
+                  return _buildSyncHistoryCard(integration);
+                },
+              ),
+      ),
+    ],
+  );
+
+  Widget _buildSyncHistoryCard(ExternalIntegration integration) => ResponsiveCard(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Заголовок
+        Row(
+          children: [
+            Text(integration.type.icon, style: const TextStyle(fontSize: 24)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                integration.name,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ),
+            _buildStatusChip(integration.status),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        // История синхронизации
+        FutureBuilder<List<DataSync>>(
+          future: _integrationService.getSyncHistory(integration.id, limit: 5),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final syncHistory = snapshot.data!;
+
+            if (syncHistory.isEmpty) {
+              return const Text('История синхронизации пуста');
+            }
+
+            return Column(children: syncHistory.map(_buildSyncItem).toList());
+          },
+        ),
+      ],
+    ),
+  );
 
   Widget _buildSyncItem(DataSync sync) {
     final statusColor = _getSyncStatusColor(sync.status);
@@ -557,27 +483,17 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
         children: [
           Row(
             children: [
-              Icon(
-                _getSyncStatusIcon(sync.status),
-                color: statusColor,
-                size: 16,
-              ),
+              Icon(_getSyncStatusIcon(sync.status), color: statusColor, size: 16),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   '${sync.dataType} - ${sync.direction.displayName}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: statusColor,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: statusColor),
                 ),
               ),
               Text(
                 '${sync.syncedRecords}/${sync.totalRecords}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: statusColor,
-                ),
+                style: TextStyle(fontSize: 12, color: statusColor),
               ),
             ],
           ),
@@ -638,31 +554,23 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
       ),
       child: Text(
         status.displayName,
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
       ),
     );
   }
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color),
-        ),
-        child: Text(
-          '$label: $value',
-          style: TextStyle(
-            fontSize: 12,
-            color: color,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color),
+    ),
+    child: Text(
+      '$label: $value',
+      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+    ),
+  );
 
   Color _getStatusColor(IntegrationStatus status) {
     switch (status) {
@@ -725,10 +633,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка загрузки интеграций: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка загрузки интеграций: $e'), backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -737,10 +642,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
     }
   }
 
-  void _handleIntegrationAction(
-    String action,
-    ExternalIntegration integration,
-  ) {
+  void _handleIntegrationAction(String action, ExternalIntegration integration) {
     switch (action) {
       case 'activate':
         _activateIntegration(integration);
@@ -775,10 +677,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка активации интеграции: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка активации интеграции: $e'), backgroundColor: Colors.red),
       );
     }
   }
@@ -795,10 +694,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка деактивации интеграции: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка деактивации интеграции: $e'), backgroundColor: Colors.red),
       );
     }
   }
@@ -814,10 +710,7 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка синхронизации: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка синхронизации: $e'), backgroundColor: Colors.red),
       );
     }
   }
@@ -825,22 +718,14 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
   void _editIntegration(ExternalIntegration integration) {
     // TODO(developer): Реализовать редактирование интеграции
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Редактирование интеграции "${integration.name}" будет реализовано',
-        ),
-      ),
+      SnackBar(content: Text('Редактирование интеграции "${integration.name}" будет реализовано')),
     );
   }
 
   void _testIntegration(ExternalIntegration integration) {
     // TODO(developer): Реализовать тестирование интеграции
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Тестирование интеграции "${integration.name}" будет реализовано',
-        ),
-      ),
+      SnackBar(content: Text('Тестирование интеграции "${integration.name}" будет реализовано')),
     );
   }
 
@@ -849,14 +734,9 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить интеграцию'),
-        content: Text(
-          'Вы уверены, что хотите удалить интеграцию "${integration.name}"?',
-        ),
+        content: Text('Вы уверены, что хотите удалить интеграцию "${integration.name}"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -921,17 +801,11 @@ class _IntegrationManagementScreenState extends ConsumerState<IntegrationManagem
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Интеграция "$name" создана'),
-          backgroundColor: Colors.green,
-        ),
+        SnackBar(content: Text('Интеграция "$name" создана'), backgroundColor: Colors.green),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка создания интеграции: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка создания интеграции: $e'), backgroundColor: Colors.red),
       );
     }
   }

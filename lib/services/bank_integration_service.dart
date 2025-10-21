@@ -358,11 +358,4 @@ class QRCodeResult {
 }
 
 /// Статусы платежа
-enum PaymentStatus {
-  pending,
-  processing,
-  completed,
-  failed,
-  cancelled,
-  refunded,
-}
+enum PaymentStatus { pending, processing, completed, failed, cancelled, refunded }

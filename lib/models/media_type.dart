@@ -1,10 +1,5 @@
 /// Тип медиа-контента
-enum MediaType {
-  image,
-  video,
-  audio,
-  document,
-}
+enum MediaType { image, video, audio, document }
 
 /// Расширение для MediaType
 extension MediaTypeExtension on MediaType {

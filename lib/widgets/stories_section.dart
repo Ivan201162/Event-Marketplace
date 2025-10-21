@@ -49,10 +49,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка загрузки сторисов: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка загрузки сторисов: $e'), backgroundColor: Colors.red),
         );
       }
     }
@@ -81,10 +78,7 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
               children: [
                 const Text(
                   'Сторисы специалистов',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 TextButton(
                   onPressed: () => context.push(AppRoutes.storiesView),
@@ -112,26 +106,18 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
   }
 
   Widget _buildLoadingWidget() => Container(
-        height: 100,
-        margin: const EdgeInsets.symmetric(vertical: 16),
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+    height: 100,
+    margin: const EdgeInsets.symmetric(vertical: 16),
+    child: const Center(child: CircularProgressIndicator()),
+  );
 
   Widget _buildEmptyWidget() => Container(
-        height: 100,
-        margin: const EdgeInsets.symmetric(vertical: 16),
-        child: const Center(
-          child: Text(
-            'Пока нет активных сторисов',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 16,
-            ),
-          ),
-        ),
-      );
+    height: 100,
+    margin: const EdgeInsets.symmetric(vertical: 16),
+    child: const Center(
+      child: Text('Пока нет активных сторисов', style: TextStyle(color: Colors.grey, fontSize: 16)),
+    ),
+  );
 
   Widget _buildStoryCircle(String userId, List<Story> stories) {
     final hasUnviewedStories = stories.any((story) => !story.isViewedBy(userId));
@@ -157,21 +143,14 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
               child: CircleAvatar(
                 radius: 27,
                 backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                child: Icon(
-                  Icons.person,
-                  color: Theme.of(context).primaryColor,
-                  size: 30,
-                ),
+                child: Icon(Icons.person, color: Theme.of(context).primaryColor, size: 30),
               ),
             ),
             const SizedBox(height: 4),
             // Имя пользователя
             Text(
               'Специалист',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade600,
-              ),
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -201,23 +180,13 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
   }
 
   void _openStoriesView(String userId, List<Story> stories) {
-    context.push(
-      AppRoutes.storiesView,
-      extra: {
-        'userId': userId,
-        'stories': stories,
-      },
-    );
+    context.push(AppRoutes.storiesView, extra: {'userId': userId, 'stories': stories});
   }
 }
 
 /// Экран просмотра сторисов
 class StoriesViewScreen extends ConsumerStatefulWidget {
-  const StoriesViewScreen({
-    super.key,
-    required this.userId,
-    required this.stories,
-  });
+  const StoriesViewScreen({super.key, required this.userId, required this.stories});
   final String userId;
   final List<Story> stories;
 
@@ -297,10 +266,7 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
           foregroundColor: Colors.white,
         ),
         body: const Center(
-          child: Text(
-            'Нет активных сторисов',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
+          child: Text('Нет активных сторисов', style: TextStyle(color: Colors.white, fontSize: 18)),
         ),
       );
     }
@@ -338,30 +304,23 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   }
 
   Widget _buildStoryContent(Story story) => SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
-            ? _buildVideoContent(story)
-            : _buildImageContent(story),
-      );
+    width: double.infinity,
+    height: double.infinity,
+    child: (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
+        ? _buildVideoContent(story)
+        : _buildImageContent(story),
+  );
 
   Widget _buildImageContent(Story story) => Image.network(
-        story.mediaUrl ?? '',
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return const Center(
-            child: CircularProgressIndicator(color: Colors.white),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) => const Center(
-          child: Icon(
-            Icons.error,
-            color: Colors.white,
-            size: 50,
-          ),
-        ),
-      );
+    story.mediaUrl ?? '',
+    fit: BoxFit.cover,
+    loadingBuilder: (context, child, loadingProgress) {
+      if (loadingProgress == null) return child;
+      return const Center(child: CircularProgressIndicator(color: Colors.white));
+    },
+    errorBuilder: (context, error, stackTrace) =>
+        const Center(child: Icon(Icons.error, color: Colors.white, size: 50)),
+  );
 
   Widget _buildVideoContent(Story story) {
     // В реальном приложении здесь бы использовался video_player
@@ -371,19 +330,9 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.play_circle_outline,
-              color: Colors.white,
-              size: 80,
-            ),
+            Icon(Icons.play_circle_outline, color: Colors.white, size: 80),
             SizedBox(height: 16),
-            Text(
-              'Видео контент',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
+            Text('Видео контент', style: TextStyle(color: Colors.white, fontSize: 18)),
           ],
         ),
       ),
@@ -391,68 +340,62 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   }
 
   Widget _buildTopBar() => Positioned(
-        top: 0,
-        left: 0,
-        right: 0,
-        child: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // Прогресс-бары
-                Row(
-                  children: List.generate(
-                    widget.stories.length,
-                    (index) => Expanded(
-                      child: Container(
-                        height: 3,
-                        margin: EdgeInsets.only(
-                          right: index < widget.stories.length - 1 ? 4 : 0,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                        child: index <= _currentIndex
-                            ? Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              )
-                            : null,
-                      ),
+    top: 0,
+    left: 0,
+    right: 0,
+    child: SafeArea(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Прогресс-бары
+            Row(
+              children: List.generate(
+                widget.stories.length,
+                (index) => Expanded(
+                  child: Container(
+                    height: 3,
+                    margin: EdgeInsets.only(right: index < widget.stories.length - 1 ? 4 : 0),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(2),
                     ),
+                    child: index <= _currentIndex
+                        ? Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          )
+                        : null,
                   ),
                 ),
-                const SizedBox(height: 16),
-                // Кнопка закрытия
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 28,
-                      ),
-                    ),
-                    Text(
-                      '${_currentIndex + 1}/${widget.stories.length}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Кнопка закрытия
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                ),
+                Text(
+                  '${_currentIndex + 1}/${widget.stories.length}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
-          ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _buildBottomBar() {
     if (_currentIndex >= widget.stories.length) return const SizedBox.shrink();
@@ -470,10 +413,7 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
-              colors: [
-                Colors.black.withValues(alpha: 0.8),
-                Colors.transparent,
-              ],
+              colors: [Colors.black.withValues(alpha: 0.8), Colors.transparent],
             ),
           ),
           child: Column(
@@ -481,28 +421,15 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (story.caption.isNotEmpty)
-                Text(
-                  story.caption,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
+                Text(story.caption, style: const TextStyle(color: Colors.white, fontSize: 16)),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(
-                    Icons.visibility,
-                    color: Colors.white.withValues(alpha: 0.7),
-                    size: 16,
-                  ),
+                  Icon(Icons.visibility, color: Colors.white.withValues(alpha: 0.7), size: 16),
                   const SizedBox(width: 4),
                   Text(
                     '${story.viewCount}',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.7),
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14),
                   ),
                 ],
               ),
@@ -514,31 +441,27 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   }
 
   Widget _buildNavigationButtons() => Positioned(
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        child: Row(
-          children: [
-            // Левая область для перехода к предыдущему сторису
-            Expanded(
-              child: GestureDetector(
-                onTap: _previousStory,
-                child: Container(
-                  color: Colors.transparent,
-                ),
-              ),
-            ),
-            // Правая область для перехода к следующему сторису
-            Expanded(
-              child: GestureDetector(
-                onTap: _nextStory,
-                child: Container(
-                  color: Colors.transparent,
-                ),
-              ),
-            ),
-          ],
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    child: Row(
+      children: [
+        // Левая область для перехода к предыдущему сторису
+        Expanded(
+          child: GestureDetector(
+            onTap: _previousStory,
+            child: Container(color: Colors.transparent),
+          ),
         ),
-      );
+        // Правая область для перехода к следующему сторису
+        Expanded(
+          child: GestureDetector(
+            onTap: _nextStory,
+            child: Container(color: Colors.transparent),
+          ),
+        ),
+      ],
+    ),
+  );
 }

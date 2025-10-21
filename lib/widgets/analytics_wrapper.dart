@@ -44,10 +44,7 @@ class AnalyticsWrapper extends ConsumerWidget {
 
     final analyticsService = ref.read(analyticsServiceProvider);
 
-    analyticsService.logScreenView(
-      screenName,
-      parameters: parameters,
-    );
+    analyticsService.logScreenView(screenName, parameters: parameters);
   }
 }
 
@@ -56,10 +53,7 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
   AnalyticsService get analytics => ref.read(analyticsServiceProvider);
 
   /// Отправить событие
-  Future<void> trackEvent(
-    AnalyticsEventType type, {
-    Map<String, dynamic>? parameters,
-  }) async {
+  Future<void> trackEvent(AnalyticsEventType type, {Map<String, dynamic>? parameters}) async {
     await analytics.logEventWithParams(type, parameters ?? {});
   }
 
@@ -74,11 +68,7 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
     String description, {
     Map<String, dynamic>? parameters,
   }) async {
-    await analytics.logError(
-      error: error,
-      description: description,
-      parameters: parameters,
-    );
+    await analytics.logError(error: error, description: description, parameters: parameters);
   }
 
   /// Отправить событие производительности
@@ -110,14 +100,8 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
   }
 
   /// Отправить пользовательское событие
-  Future<void> trackCustomEvent(
-    String eventName, {
-    Map<String, dynamic>? parameters,
-  }) async {
-    await analytics.logCustomEvent(
-      eventName: eventName,
-      parameters: parameters,
-    );
+  Future<void> trackCustomEvent(String eventName, {Map<String, dynamic>? parameters}) async {
+    await analytics.logCustomEvent(eventName: eventName, parameters: parameters);
   }
 }
 
@@ -139,48 +123,39 @@ class AnalyticsButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => ElevatedButton(
-        onPressed: () {
-          _trackButtonClick(ref);
-          onPressed?.call();
-        },
-        child: child,
-      );
+    onPressed: () {
+      _trackButtonClick(ref);
+      onPressed?.call();
+    },
+    child: child,
+  );
 
   void _trackButtonClick(WidgetRef ref) {
     if (!FeatureFlags.analyticsEnabled) return;
 
     final analyticsService = ref.read(analyticsServiceProvider);
 
-    analyticsService.logEventWithParams(
-      AnalyticsEventType.buttonClicked,
-      {
-        'button_name': buttonName,
-        'screen_name': screenName ?? 'unknown',
-        'timestamp': DateTime.now().millisecondsSinceEpoch,
-        ...?parameters,
-      },
-    );
+    analyticsService.logEventWithParams(AnalyticsEventType.buttonClicked, {
+      'button_name': buttonName,
+      'screen_name': screenName ?? 'unknown',
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      ...?parameters,
+    });
   }
 }
 
 /// Виджет для отслеживания навигации
 class AnalyticsNavigator extends ConsumerWidget {
-  const AnalyticsNavigator({
-    super.key,
-    required this.child,
-  });
+  const AnalyticsNavigator({super.key, required this.child});
   final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Navigator(
-        onGenerateRoute: (settings) {
-          _trackNavigation(ref, settings.name ?? 'unknown');
-          return MaterialPageRoute<void>(
-            builder: (context) => child,
-            settings: settings,
-          );
-        },
-      );
+    onGenerateRoute: (settings) {
+      _trackNavigation(ref, settings.name ?? 'unknown');
+      return MaterialPageRoute<void>(builder: (context) => child, settings: settings);
+    },
+  );
 
   void _trackNavigation(WidgetRef ref, String routeName) {
     if (!FeatureFlags.analyticsEnabled) return;
@@ -197,30 +172,26 @@ class AnalyticsNavigator extends ConsumerWidget {
 
 /// Виджет для отслеживания ошибок
 class AnalyticsErrorBoundary extends ConsumerWidget {
-  const AnalyticsErrorBoundary({
-    super.key,
-    required this.child,
-    this.errorBuilder,
-  });
+  const AnalyticsErrorBoundary({super.key, required this.child, this.errorBuilder});
   final Widget child;
   final Widget Function(Object error, StackTrace stackTrace)? errorBuilder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Builder(
-        builder: (context) {
-          try {
-            return child;
-          } catch (error, stackTrace) {
-            _trackError(ref, error, stackTrace);
+    builder: (context) {
+      try {
+        return child;
+      } catch (error, stackTrace) {
+        _trackError(ref, error, stackTrace);
 
-            if (errorBuilder != null) {
-              return errorBuilder!(error, stackTrace);
-            }
+        if (errorBuilder != null) {
+          return errorBuilder!(error, stackTrace);
+        }
 
-            return ErrorWidget(error);
-          }
-        },
-      );
+        return ErrorWidget(error);
+      }
+    },
+  );
 
   void _trackError(WidgetRef ref, Object error, StackTrace stackTrace) {
     if (!FeatureFlags.analyticsEnabled) return;

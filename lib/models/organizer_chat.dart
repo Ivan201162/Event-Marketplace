@@ -58,14 +58,16 @@ class OrganizerChat {
         (e) => e.name == data['status'],
         orElse: () => OrganizerChatStatus.active,
       ),
-      messages: (data['messages'] as List<dynamic>?)
+      messages:
+          (data['messages'] as List<dynamic>?)
               ?.map((msg) => OrganizerMessage.fromMap(msg))
               .toList() ??
           [],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      lastMessageAt:
-          data['lastMessageAt'] != null ? (data['lastMessageAt'] as Timestamp).toDate() : null,
+      lastMessageAt: data['lastMessageAt'] != null
+          ? (data['lastMessageAt'] as Timestamp).toDate()
+          : null,
       lastMessageText: data['lastMessageText'],
       hasUnreadMessages: data['hasUnreadMessages'] as bool? ?? false,
       unreadCount: data['unreadCount'] as int? ?? 0,
@@ -90,22 +92,22 @@ class OrganizerChat {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'customerId': customerId,
-        'customerName': customerName,
-        'organizerId': organizerId,
-        'organizerName': organizerName,
-        'eventTitle': eventTitle,
-        'eventDescription': eventDescription,
-        'eventDate': Timestamp.fromDate(eventDate),
-        'status': status.name,
-        'messages': messages.map((msg) => msg.toMap()).toList(),
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'lastMessageAt': lastMessageAt != null ? Timestamp.fromDate(lastMessageAt!) : null,
-        'lastMessageText': lastMessageText,
-        'hasUnreadMessages': hasUnreadMessages,
-        'unreadCount': unreadCount,
-      };
+    'customerId': customerId,
+    'customerName': customerName,
+    'organizerId': organizerId,
+    'organizerName': organizerName,
+    'eventTitle': eventTitle,
+    'eventDescription': eventDescription,
+    'eventDate': Timestamp.fromDate(eventDate),
+    'status': status.name,
+    'messages': messages.map((msg) => msg.toMap()).toList(),
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'lastMessageAt': lastMessageAt != null ? Timestamp.fromDate(lastMessageAt!) : null,
+    'lastMessageText': lastMessageText,
+    'hasUnreadMessages': hasUnreadMessages,
+    'unreadCount': unreadCount,
+  };
 
   /// Создать копию с изменениями
   OrganizerChat copyWith({
@@ -125,25 +127,24 @@ class OrganizerChat {
     String? lastMessageText,
     bool? hasUnreadMessages,
     int? unreadCount,
-  }) =>
-      OrganizerChat(
-        id: id ?? this.id,
-        customerId: customerId ?? this.customerId,
-        customerName: customerName ?? this.customerName,
-        organizerId: organizerId ?? this.organizerId,
-        organizerName: organizerName ?? this.organizerName,
-        eventTitle: eventTitle ?? this.eventTitle,
-        eventDescription: eventDescription ?? this.eventDescription,
-        eventDate: eventDate ?? this.eventDate,
-        status: status ?? this.status,
-        messages: messages ?? this.messages,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        lastMessageAt: lastMessageAt ?? this.lastMessageAt,
-        lastMessageText: lastMessageText ?? this.lastMessageText,
-        hasUnreadMessages: hasUnreadMessages ?? this.hasUnreadMessages,
-        unreadCount: unreadCount ?? this.unreadCount,
-      );
+  }) => OrganizerChat(
+    id: id ?? this.id,
+    customerId: customerId ?? this.customerId,
+    customerName: customerName ?? this.customerName,
+    organizerId: organizerId ?? this.organizerId,
+    organizerName: organizerName ?? this.organizerName,
+    eventTitle: eventTitle ?? this.eventTitle,
+    eventDescription: eventDescription ?? this.eventDescription,
+    eventDate: eventDate ?? this.eventDate,
+    status: status ?? this.status,
+    messages: messages ?? this.messages,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+    lastMessageText: lastMessageText ?? this.lastMessageText,
+    hasUnreadMessages: hasUnreadMessages ?? this.hasUnreadMessages,
+    unreadCount: unreadCount ?? this.unreadCount,
+  );
 
   /// Добавить сообщение
   OrganizerChat addMessage(OrganizerMessage message) {
@@ -157,16 +158,11 @@ class OrganizerChat {
   }
 
   /// Отметить сообщения как прочитанные
-  OrganizerChat markAsRead() => copyWith(
-        hasUnreadMessages: false,
-        unreadCount: 0,
-      );
+  OrganizerChat markAsRead() => copyWith(hasUnreadMessages: false, unreadCount: 0);
 
   /// Обновить статус чата
-  OrganizerChat updateStatus(OrganizerChatStatus newStatus) => copyWith(
-        status: newStatus,
-        updatedAt: DateTime.now(),
-      );
+  OrganizerChat updateStatus(OrganizerChatStatus newStatus) =>
+      copyWith(status: newStatus, updatedAt: DateTime.now());
 }
 
 /// Модель сообщения в чате с организатором
@@ -187,21 +183,21 @@ class OrganizerMessage {
 
   /// Создать из Map
   factory OrganizerMessage.fromMap(Map<String, dynamic> map) => OrganizerMessage(
-        id: map['id'] ?? '',
-        chatId: map['chatId'] ?? '',
-        senderId: map['senderId'] ?? '',
-        senderName: map['senderName'] ?? '',
-        senderType: map['senderType'] ?? '',
-        type: OrganizerMessageType.values.firstWhere(
-          (e) => e.name == map['type'],
-          orElse: () => OrganizerMessageType.text,
-        ),
-        text: map['text'] ?? '',
-        metadata: map['metadata'],
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        isRead: map['isRead'] ?? false,
-        readAt: map['readAt'] != null ? (map['readAt'] as Timestamp).toDate() : null,
-      );
+    id: map['id'] ?? '',
+    chatId: map['chatId'] ?? '',
+    senderId: map['senderId'] ?? '',
+    senderName: map['senderName'] ?? '',
+    senderType: map['senderType'] ?? '',
+    type: OrganizerMessageType.values.firstWhere(
+      (e) => e.name == map['type'],
+      orElse: () => OrganizerMessageType.text,
+    ),
+    text: map['text'] ?? '',
+    metadata: map['metadata'],
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    isRead: map['isRead'] ?? false,
+    readAt: map['readAt'] != null ? (map['readAt'] as Timestamp).toDate() : null,
+  );
   final String id;
   final String chatId;
   final String senderId;
@@ -216,18 +212,18 @@ class OrganizerMessage {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'chatId': chatId,
-        'senderId': senderId,
-        'senderName': senderName,
-        'senderType': senderType,
-        'type': type.name,
-        'text': text,
-        'metadata': metadata,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'isRead': isRead,
-        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-      };
+    'id': id,
+    'chatId': chatId,
+    'senderId': senderId,
+    'senderName': senderName,
+    'senderType': senderType,
+    'type': type.name,
+    'text': text,
+    'metadata': metadata,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'isRead': isRead,
+    'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+  };
 
   /// Создать копию с изменениями
   OrganizerMessage copyWith({
@@ -242,26 +238,22 @@ class OrganizerMessage {
     DateTime? createdAt,
     bool? isRead,
     DateTime? readAt,
-  }) =>
-      OrganizerMessage(
-        id: id ?? this.id,
-        chatId: chatId ?? this.chatId,
-        senderId: senderId ?? this.senderId,
-        senderName: senderName ?? this.senderName,
-        senderType: senderType ?? this.senderType,
-        type: type ?? this.type,
-        text: text ?? this.text,
-        metadata: metadata ?? this.metadata,
-        createdAt: createdAt ?? this.createdAt,
-        isRead: isRead ?? this.isRead,
-        readAt: readAt ?? this.readAt,
-      );
+  }) => OrganizerMessage(
+    id: id ?? this.id,
+    chatId: chatId ?? this.chatId,
+    senderId: senderId ?? this.senderId,
+    senderName: senderName ?? this.senderName,
+    senderType: senderType ?? this.senderType,
+    type: type ?? this.type,
+    text: text ?? this.text,
+    metadata: metadata ?? this.metadata,
+    createdAt: createdAt ?? this.createdAt,
+    isRead: isRead ?? this.isRead,
+    readAt: readAt ?? this.readAt,
+  );
 
   /// Отметить как прочитанное
-  OrganizerMessage markAsRead() => copyWith(
-        isRead: true,
-        readAt: DateTime.now(),
-      );
+  OrganizerMessage markAsRead() => copyWith(isRead: true, readAt: DateTime.now());
 
   /// Проверить, является ли отправитель заказчиком
   bool get isFromCustomer => senderType == 'customer';
@@ -311,17 +303,17 @@ class SpecialistProposal {
 
   /// Создать из Map
   factory SpecialistProposal.fromMap(Map<String, dynamic> map) => SpecialistProposal(
-        specialistId: map['specialistId'] ?? '',
-        specialistName: map['specialistName'] ?? '',
-        specialistCategory: map['specialistCategory'] ?? '',
-        hourlyRate: (map['hourlyRate'] ?? 0.0).toDouble(),
-        specialistPhoto: map['specialistPhoto'],
-        description: map['description'],
-        services: List<String>.from(map['services'] ?? []),
-        rating: (map['rating'] ?? 0.0).toDouble(),
-        reviewCount: map['reviewCount'] ?? 0,
-        isAvailable: map['isAvailable'] ?? false,
-      );
+    specialistId: map['specialistId'] ?? '',
+    specialistName: map['specialistName'] ?? '',
+    specialistCategory: map['specialistCategory'] ?? '',
+    hourlyRate: (map['hourlyRate'] ?? 0.0).toDouble(),
+    specialistPhoto: map['specialistPhoto'],
+    description: map['description'],
+    services: List<String>.from(map['services'] ?? []),
+    rating: (map['rating'] ?? 0.0).toDouble(),
+    reviewCount: map['reviewCount'] ?? 0,
+    isAvailable: map['isAvailable'] ?? false,
+  );
   final String specialistId;
   final String specialistName;
   final String specialistCategory;
@@ -335,15 +327,15 @@ class SpecialistProposal {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'specialistName': specialistName,
-        'specialistCategory': specialistCategory,
-        'hourlyRate': hourlyRate,
-        'specialistPhoto': specialistPhoto,
-        'description': description,
-        'services': services,
-        'rating': rating,
-        'reviewCount': reviewCount,
-        'isAvailable': isAvailable,
-      };
+    'specialistId': specialistId,
+    'specialistName': specialistName,
+    'specialistCategory': specialistCategory,
+    'hourlyRate': hourlyRate,
+    'specialistPhoto': specialistPhoto,
+    'description': description,
+    'services': services,
+    'rating': rating,
+    'reviewCount': reviewCount,
+    'isAvailable': isAvailable,
+  };
 }

@@ -64,49 +64,38 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Статистика'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          bottom: TabBar(
+    appBar: AppBar(
+      title: const Text('Статистика'),
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      bottom: TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(icon: Icon(Icons.analytics), text: 'Общая'),
+          Tab(icon: Icon(Icons.trending_up), text: 'Графики'),
+          Tab(icon: Icon(Icons.insights), text: 'Аналитика'),
+        ],
+      ),
+    ),
+    body: _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _error != null
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+                const SizedBox(height: 16),
+                Text(_error!, style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 16),
+                ElevatedButton(onPressed: _loadUserStats, child: const Text('Повторить')),
+              ],
+            ),
+          )
+        : TabBarView(
             controller: _tabController,
-            tabs: const [
-              Tab(icon: Icon(Icons.analytics), text: 'Общая'),
-              Tab(icon: Icon(Icons.trending_up), text: 'Графики'),
-              Tab(icon: Icon(Icons.insights), text: 'Аналитика'),
-            ],
+            children: [_buildGeneralStatsTab(), _buildChartsTab(), _buildAnalyticsTab()],
           ),
-        ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _error != null
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          size: 64,
-                          color: Colors.red[300],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(_error!, style: const TextStyle(fontSize: 16)),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _loadUserStats,
-                          child: const Text('Повторить'),
-                        ),
-                      ],
-                    ),
-                  )
-                : TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildGeneralStatsTab(),
-                      _buildChartsTab(),
-                      _buildAnalyticsTab(),
-                    ],
-                  ),
-      );
+  );
 
   Widget _buildGeneralStatsTab() {
     final stats = _userStats ?? {};
@@ -227,12 +216,8 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
               child: LineChart(
                 LineChartData(
                   titlesData: const FlTitlesData(
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: true),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: true),
-                    ),
+                    leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
+                    bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true)),
                     topTitles: AxisTitles(),
                     rightTitles: AxisTitles(),
                   ),
@@ -297,19 +282,12 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
-                          const titles = [
-                            'Просмотры',
-                            'Заявки',
-                            'Сообщения',
-                            'Лайки',
-                          ];
+                          const titles = ['Просмотры', 'Заявки', 'Сообщения', 'Лайки'];
                           return Text(titles[value.toInt() % titles.length]);
                         },
                       ),
                     ),
-                    leftTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: true),
-                    ),
+                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: true)),
                     topTitles: const AxisTitles(),
                     rightTitles: const AxisTitles(),
                   ),
@@ -410,182 +388,148 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
     );
   }
 
-  Widget _buildStatsCard({
-    required String title,
-    required List<Widget> children,
-  }) =>
-      Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              ...children,
-            ],
+  Widget _buildStatsCard({required String title, required List<Widget> children}) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
-        ),
-      );
+          const SizedBox(height: 16),
+          ...children,
+        ],
+      ),
+    ),
+  );
 
   Widget _buildStatItem({
     required IconData icon,
     required String title,
     required String value,
     required Color color,
-  }) =>
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, color: color, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildChartCard({
-    required String title,
-    required Widget child,
-  }) =>
-      Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              child,
-            ],
+  }) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
           ),
+          child: Icon(icon, color: color, size: 20),
         ),
-      );
+        const SizedBox(width: 12),
+        Expanded(child: Text(title, style: Theme.of(context).textTheme.bodyMedium)),
+        Text(
+          value,
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: color),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildChartCard({required String title, required Widget child}) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          child,
+        ],
+      ),
+    ),
+  );
 
   Widget _buildAnalyticsCard({
     required String title,
     required IconData icon,
     required Color color,
     required List<Widget> children,
-  }) =>
-      Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+  }) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: color, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ...children,
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildAnalyticsItem(String title, String value, IconData icon) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Row(
+      children: [
+        Icon(icon, size: 16, color: Colors.grey[600]),
+        const SizedBox(width: 8),
+        Expanded(child: Text(title, style: Theme.of(context).textTheme.bodyMedium)),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildRecommendationItem(String title, String description, IconData icon) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 16, color: Colors.amber[600]),
+        const SizedBox(width: 8),
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(icon, color: color, size: 20),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ],
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
-              const SizedBox(height: 16),
-              ...children,
+              Text(
+                description,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              ),
             ],
           ),
         ),
-      );
-
-  Widget _buildAnalyticsItem(String title, String value, IconData icon) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            Icon(icon, size: 16, color: Colors.grey[600]),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildRecommendationItem(
-    String title,
-    String description,
-    IconData icon,
-  ) =>
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, size: 16, color: Colors.amber[600]),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                  Text(
-                    description,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 
   List<FlSpot> _generateViewsData() {
     // Генерируем тестовые данные для графика просмотров
@@ -602,21 +546,13 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
       BarChartGroupData(
         x: 0,
         barRods: [
-          BarChartRodData(
-            toY: (stats['views'] ?? 0).toDouble(),
-            color: Colors.blue,
-            width: 20,
-          ),
+          BarChartRodData(toY: (stats['views'] ?? 0).toDouble(), color: Colors.blue, width: 20),
         ],
       ),
       BarChartGroupData(
         x: 1,
         barRods: [
-          BarChartRodData(
-            toY: (stats['requests'] ?? 0).toDouble(),
-            color: Colors.green,
-            width: 20,
-          ),
+          BarChartRodData(toY: (stats['requests'] ?? 0).toDouble(), color: Colors.green, width: 20),
         ],
       ),
       BarChartGroupData(
@@ -632,11 +568,7 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
       BarChartGroupData(
         x: 3,
         barRods: [
-          BarChartRodData(
-            toY: (stats['likes'] ?? 0).toDouble(),
-            color: Colors.pink,
-            width: 20,
-          ),
+          BarChartRodData(toY: (stats['likes'] ?? 0).toDouble(), color: Colors.pink, width: 20),
         ],
       ),
     ];
@@ -660,7 +592,8 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
   }
 
   double _calculateDailyActivity(Map<String, dynamic> stats) {
-    final totalActivity = ((stats['views'] as int?) ?? 0) +
+    final totalActivity =
+        ((stats['views'] as int?) ?? 0) +
         ((stats['requests'] as int?) ?? 0) +
         ((stats['messages'] as int?) ?? 0) +
         ((stats['likes'] as int?) ?? 0);
@@ -677,7 +610,8 @@ class _SpecialistStatsScreenState extends ConsumerState<SpecialistStatsScreen>
   }
 
   double _calculateActivityScore(Map<String, dynamic> stats) {
-    final totalActivity = ((stats['views'] as int?) ?? 0) +
+    final totalActivity =
+        ((stats['views'] as int?) ?? 0) +
         ((stats['requests'] as int?) ?? 0) +
         ((stats['messages'] as int?) ?? 0) +
         ((stats['likes'] as int?) ?? 0);

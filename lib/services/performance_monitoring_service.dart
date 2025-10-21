@@ -126,10 +126,7 @@ class PerformanceMonitoringService {
           unit: 'bytes',
           description: 'Доступная память',
           timestamp: timestamp,
-          metadata: {
-            'platform': 'ios',
-            'model': iosInfo.model,
-          },
+          metadata: {'platform': 'ios', 'model': iosInfo.model},
         );
       }
     } catch (e) {
@@ -152,9 +149,7 @@ class PerformanceMonitoringService {
         unit: 'percentage',
         description: 'Использование CPU',
         timestamp: timestamp,
-        metadata: {
-          'platform': defaultTargetPlatform.name,
-        },
+        metadata: {'platform': defaultTargetPlatform.name},
       );
     } catch (e) {
       if (kDebugMode) {
@@ -200,9 +195,7 @@ class PerformanceMonitoringService {
         unit: 'ms',
         description: 'Время выполнения запроса к БД',
         timestamp: timestamp,
-        metadata: {
-          'queryType': 'read',
-        },
+        metadata: {'queryType': 'read'},
       );
     } catch (e) {
       if (kDebugMode) {
@@ -224,9 +217,7 @@ class PerformanceMonitoringService {
         unit: 'ms',
         description: 'Время отрисовки кадра',
         timestamp: timestamp,
-        metadata: {
-          'fps': 1000 / frameTime,
-        },
+        metadata: {'fps': 1000 / frameTime},
       );
     } catch (e) {
       if (kDebugMode) {
@@ -297,11 +288,7 @@ class PerformanceMonitoringService {
   }
 
   /// Создать алерт
-  Future<void> _createAlert(
-    String metricName,
-    double value,
-    double threshold,
-  ) async {
+  Future<void> _createAlert(String metricName, double value, double threshold) async {
     try {
       // Проверяем, не создан ли уже алерт для этой метрики
       final existingAlert = _activeAlerts.firstWhere(
@@ -332,11 +319,7 @@ class PerformanceMonitoringService {
         severity: severity,
         message: message,
         triggeredAt: DateTime.now(),
-        metadata: {
-          'sessionId': _currentSessionId,
-          'userId': _currentUserId,
-          'deviceId': _deviceId,
-        },
+        metadata: {'sessionId': _currentSessionId, 'userId': _currentUserId, 'deviceId': _deviceId},
       );
 
       // Сохраняем алерт
@@ -374,11 +357,7 @@ class PerformanceMonitoringService {
   }
 
   /// Получить серьезность алерта
-  AlertSeverity _getAlertSeverity(
-    String metricName,
-    double value,
-    double threshold,
-  ) {
+  AlertSeverity _getAlertSeverity(String metricName, double value, double threshold) {
     final ratio = value / threshold;
 
     if (ratio > 2) return AlertSeverity.critical;
@@ -388,11 +367,7 @@ class PerformanceMonitoringService {
   }
 
   /// Сгенерировать сообщение алерта
-  String _generateAlertMessage(
-    String metricName,
-    double value,
-    double threshold,
-  ) {
+  String _generateAlertMessage(String metricName, double value, double threshold) {
     final metric = PerformanceMetric(
       id: '',
       name: metricName,
@@ -484,16 +459,10 @@ class PerformanceMonitoringService {
         query = query.where('category', isEqualTo: category);
       }
       if (startDate != null) {
-        query = query.where(
-          'timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where(
-          'timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final snapshot = await query.orderBy('timestamp', descending: true).limit(limit).get();
@@ -521,11 +490,7 @@ class PerformanceMonitoringService {
         limit: 1000,
       );
 
-      return PerformanceStatistics.fromMetrics(
-        metricName,
-        _getMetricCategory(metricName),
-        metrics,
-      );
+      return PerformanceStatistics.fromMetrics(metricName, _getMetricCategory(metricName), metrics);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Ошибка получения статистики метрики: $e');

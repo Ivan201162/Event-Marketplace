@@ -18,14 +18,11 @@ class PhotoStudioCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -47,17 +44,12 @@ class PhotoStudioCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           photoStudio.name,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                       if (photoStudio.isVerified)
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.blue.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -65,11 +57,7 @@ class PhotoStudioCard extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(
-                                Icons.verified,
-                                size: 14,
-                                color: Colors.blue,
-                              ),
+                              const Icon(Icons.verified, size: 14, color: Colors.blue),
                               const SizedBox(width: 4),
                               Text(
                                 'Проверено',
@@ -93,9 +81,7 @@ class PhotoStudioCard extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           photoStudio.rating.toStringAsFixed(1),
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -119,11 +105,7 @@ class PhotoStudioCard extends StatelessWidget {
                   // Адрес
                   Row(
                     children: [
-                      const Icon(
-                        Icons.location_on,
-                        size: 16,
-                        color: Colors.grey,
-                      ),
+                      const Icon(Icons.location_on, size: 16, color: Colors.grey),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -157,10 +139,7 @@ class PhotoStudioCard extends StatelessWidget {
                           .take(3)
                           .map(
                             (amenity) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: theme.colorScheme.surface,
                                 borderRadius: BorderRadius.circular(12),
@@ -170,9 +149,7 @@ class PhotoStudioCard extends StatelessWidget {
                               ),
                               child: Text(
                                 amenity,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  fontSize: 11,
-                                ),
+                                style: theme.textTheme.bodySmall?.copyWith(fontSize: 11),
                               ),
                             ),
                           )
@@ -195,10 +172,7 @@ class PhotoStudioCard extends StatelessWidget {
                     children: [
                       if (photoStudio.hourlyRate != null) ...[
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: Colors.green.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
@@ -215,10 +189,7 @@ class PhotoStudioCard extends StatelessWidget {
                       ],
                       if (photoStudio.dailyRate != null) ...[
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: Colors.blue.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
@@ -282,10 +253,7 @@ class PhotoStudioCard extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.7),
-                  ],
+                  colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
                 ),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
               ),
@@ -306,11 +274,7 @@ class PhotoStudioCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
-                      Icons.photo_library,
-                      size: 14,
-                      color: Colors.white,
-                    ),
+                    const Icon(Icons.photo_library, size: 14, color: Colors.white),
                     const SizedBox(width: 4),
                     Text(
                       '${photoStudio.imageCount}',
@@ -351,28 +315,22 @@ class PhotoStudioCard extends StatelessWidget {
   }
 
   Widget _buildPlaceholderImage(ThemeData theme) => Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+    width: double.infinity,
+    height: double.infinity,
+    decoration: BoxDecoration(
+      color: theme.colorScheme.surface,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.photo_camera, size: 48, color: theme.colorScheme.outline),
+        const SizedBox(height: 8),
+        Text(
+          'Фотостудия',
+          style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.outline),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.photo_camera,
-              size: 48,
-              color: theme.colorScheme.outline,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Фотостудия',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.outline,
-              ),
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 }

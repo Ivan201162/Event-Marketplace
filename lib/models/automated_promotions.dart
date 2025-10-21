@@ -11,12 +11,7 @@ enum PromotionTrigger {
   custom,
 }
 
-enum PromotionStatus {
-  draft,
-  active,
-  completed,
-  paused,
-}
+enum PromotionStatus { draft, active, completed, paused }
 
 class AutomatedPromotion {
   final String id;

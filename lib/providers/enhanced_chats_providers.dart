@@ -4,8 +4,9 @@ import '../models/enhanced_message.dart';
 import '../services/enhanced_chats_service.dart';
 
 /// Провайдер сервиса чатов
-final enhancedChatsServiceProvider =
-    Provider<EnhancedChatsService>((ref) => EnhancedChatsService());
+final enhancedChatsServiceProvider = Provider<EnhancedChatsService>(
+  (ref) => EnhancedChatsService(),
+);
 
 /// Провайдер чатов пользователя
 final userChatsProvider = FutureProvider.family<List<EnhancedChat>, String>((ref, userId) async {
@@ -14,14 +15,12 @@ final userChatsProvider = FutureProvider.family<List<EnhancedChat>, String>((ref
 });
 
 /// Провайдер сообщений чата
-final chatMessagesProvider =
-    FutureProvider.family<List<EnhancedMessage>, ChatMessagesParams>((ref, params) async {
+final chatMessagesProvider = FutureProvider.family<List<EnhancedMessage>, ChatMessagesParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
-  return service.getChatMessages(
-    params.chatId,
-    limit: params.limit,
-    startAfter: params.startAfter,
-  );
+  return service.getChatMessages(params.chatId, limit: params.limit, startAfter: params.startAfter);
 });
 
 /// Провайдер для отправки сообщения
@@ -31,8 +30,10 @@ final sendMessageProvider = FutureProvider.family<String, SendMessageParams>((re
 });
 
 /// Провайдер для отправки текстового сообщения
-final sendTextMessageProvider =
-    FutureProvider.family<String, SendTextMessageParams>((ref, params) async {
+final sendTextMessageProvider = FutureProvider.family<String, SendTextMessageParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
   return service.sendTextMessage(
     params.chatId,
@@ -43,8 +44,10 @@ final sendTextMessageProvider =
 });
 
 /// Провайдер для отправки медиа сообщения
-final sendMediaMessageProvider =
-    FutureProvider.family<String, SendMediaMessageParams>((ref, params) async {
+final sendMediaMessageProvider = FutureProvider.family<String, SendMediaMessageParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
   return service.sendMediaMessage(
     params.chatId,
@@ -56,8 +59,10 @@ final sendMediaMessageProvider =
 });
 
 /// Провайдер для отправки голосового сообщения
-final sendVoiceMessageProvider =
-    FutureProvider.family<String, SendVoiceMessageParams>((ref, params) async {
+final sendVoiceMessageProvider = FutureProvider.family<String, SendVoiceMessageParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
   return service.sendVoiceMessage(
     params.chatId,
@@ -68,8 +73,10 @@ final sendVoiceMessageProvider =
 });
 
 /// Провайдер для пересылки сообщения
-final forwardMessageProvider =
-    FutureProvider.family<String, ForwardMessageParams>((ref, params) async {
+final forwardMessageProvider = FutureProvider.family<String, ForwardMessageParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
   return service.forwardMessage(
     params.originalMessageId,
@@ -82,11 +89,7 @@ final forwardMessageProvider =
 /// Провайдер для редактирования сообщения
 final editMessageProvider = FutureProvider.family<void, EditMessageParams>((ref, params) async {
   final service = ref.read(enhancedChatsServiceProvider);
-  await service.editMessage(
-    params.chatId,
-    params.messageId,
-    params.newText,
-  );
+  await service.editMessage(params.chatId, params.messageId, params.newText);
 });
 
 /// Провайдер для удаления сообщения
@@ -98,35 +101,25 @@ final deleteMessageProvider = FutureProvider.family<void, DeleteMessageParams>((
 /// Провайдер для добавления реакции
 final addReactionProvider = FutureProvider.family<void, AddReactionParams>((ref, params) async {
   final service = ref.read(enhancedChatsServiceProvider);
-  await service.addReaction(
-    params.chatId,
-    params.messageId,
-    params.userId,
-    params.emoji,
-  );
+  await service.addReaction(params.chatId, params.messageId, params.userId, params.emoji);
 });
 
 /// Провайдер для удаления реакции
-final removeReactionProvider =
-    FutureProvider.family<void, RemoveReactionParams>((ref, params) async {
+final removeReactionProvider = FutureProvider.family<void, RemoveReactionParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
-  await service.removeReaction(
-    params.chatId,
-    params.messageId,
-    params.userId,
-    params.emoji,
-  );
+  await service.removeReaction(params.chatId, params.messageId, params.userId, params.emoji);
 });
 
 /// Провайдер для отметки сообщений как прочитанных
-final markMessagesAsReadProvider =
-    FutureProvider.family<void, MarkMessagesAsReadParams>((ref, params) async {
+final markMessagesAsReadProvider = FutureProvider.family<void, MarkMessagesAsReadParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
-  await service.markMessagesAsRead(
-    params.chatId,
-    params.userId,
-    params.messageIds,
-  );
+  await service.markMessagesAsRead(params.chatId, params.userId, params.messageIds);
 });
 
 /// Провайдер для создания чата
@@ -136,15 +129,19 @@ final createChatProvider = FutureProvider.family<String, EnhancedChat>((ref, cha
 });
 
 /// Провайдер для создания личного чата
-final createDirectChatProvider =
-    FutureProvider.family<String, CreateDirectChatParams>((ref, params) async {
+final createDirectChatProvider = FutureProvider.family<String, CreateDirectChatParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
   return service.createDirectChat(params.userId1, params.userId2);
 });
 
 /// Провайдер для создания группового чата
-final createGroupChatProvider =
-    FutureProvider.family<String, CreateGroupChatParams>((ref, params) async {
+final createGroupChatProvider = FutureProvider.family<String, CreateGroupChatParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
   return service.createGroupChat(
     params.creatorId,
@@ -192,26 +189,26 @@ final unarchiveChatProvider = FutureProvider.family<void, UnarchiveChatParams>((
 });
 
 /// Провайдер для поиска по чатам
-final searchChatsProvider =
-    FutureProvider.family<List<EnhancedChat>, SearchChatsParams>((ref, params) async {
+final searchChatsProvider = FutureProvider.family<List<EnhancedChat>, SearchChatsParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
   return service.searchChats(params.userId, params.query);
 });
 
 /// Провайдер для поиска по сообщениям
-final searchMessagesProvider =
-    FutureProvider.family<List<EnhancedMessage>, SearchMessagesParams>((ref, params) async {
+final searchMessagesProvider = FutureProvider.family<List<EnhancedMessage>, SearchMessagesParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(enhancedChatsServiceProvider);
   return service.searchMessages(params.chatId, params.query);
 });
 
 /// Параметры для получения сообщений чата
 class ChatMessagesParams {
-  const ChatMessagesParams({
-    required this.chatId,
-    this.limit = 50,
-    this.startAfter,
-  });
+  const ChatMessagesParams({required this.chatId, this.limit = 50, this.startAfter});
   final String chatId;
   final int limit;
   final DocumentSnapshot? startAfter;
@@ -283,11 +280,7 @@ class ForwardMessageParams {
 
 /// Параметры для редактирования сообщения
 class EditMessageParams {
-  const EditMessageParams({
-    required this.chatId,
-    required this.messageId,
-    required this.newText,
-  });
+  const EditMessageParams({required this.chatId, required this.messageId, required this.newText});
   final String chatId;
   final String messageId;
   final String newText;
@@ -295,10 +288,7 @@ class EditMessageParams {
 
 /// Параметры для удаления сообщения
 class DeleteMessageParams {
-  const DeleteMessageParams({
-    required this.chatId,
-    required this.messageId,
-  });
+  const DeleteMessageParams({required this.chatId, required this.messageId});
   final String chatId;
   final String messageId;
 }
@@ -345,10 +335,7 @@ class MarkMessagesAsReadParams {
 
 /// Параметры для создания личного чата
 class CreateDirectChatParams {
-  const CreateDirectChatParams({
-    required this.userId1,
-    required this.userId2,
-  });
+  const CreateDirectChatParams({required this.userId1, required this.userId2});
   final String userId1;
   final String userId2;
 }
@@ -371,80 +358,56 @@ class CreateGroupChatParams {
 
 /// Параметры для закрепления чата
 class PinChatParams {
-  const PinChatParams({
-    required this.chatId,
-    required this.userId,
-  });
+  const PinChatParams({required this.chatId, required this.userId});
   final String chatId;
   final String userId;
 }
 
 /// Параметры для открепления чата
 class UnpinChatParams {
-  const UnpinChatParams({
-    required this.chatId,
-    required this.userId,
-  });
+  const UnpinChatParams({required this.chatId, required this.userId});
   final String chatId;
   final String userId;
 }
 
 /// Параметры для заглушения чата
 class MuteChatParams {
-  const MuteChatParams({
-    required this.chatId,
-    required this.userId,
-  });
+  const MuteChatParams({required this.chatId, required this.userId});
   final String chatId;
   final String userId;
 }
 
 /// Параметры для разглушения чата
 class UnmuteChatParams {
-  const UnmuteChatParams({
-    required this.chatId,
-    required this.userId,
-  });
+  const UnmuteChatParams({required this.chatId, required this.userId});
   final String chatId;
   final String userId;
 }
 
 /// Параметры для архивирования чата
 class ArchiveChatParams {
-  const ArchiveChatParams({
-    required this.chatId,
-    required this.userId,
-  });
+  const ArchiveChatParams({required this.chatId, required this.userId});
   final String chatId;
   final String userId;
 }
 
 /// Параметры для разархивирования чата
 class UnarchiveChatParams {
-  const UnarchiveChatParams({
-    required this.chatId,
-    required this.userId,
-  });
+  const UnarchiveChatParams({required this.chatId, required this.userId});
   final String chatId;
   final String userId;
 }
 
 /// Параметры для поиска по чатам
 class SearchChatsParams {
-  const SearchChatsParams({
-    required this.userId,
-    required this.query,
-  });
+  const SearchChatsParams({required this.userId, required this.query});
   final String userId;
   final String query;
 }
 
 /// Параметры для поиска по сообщениям
 class SearchMessagesParams {
-  const SearchMessagesParams({
-    required this.chatId,
-    required this.query,
-  });
+  const SearchMessagesParams({required this.chatId, required this.query});
   final String chatId;
   final String query;
 }

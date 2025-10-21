@@ -11,49 +11,47 @@ final specialistProfileServiceProvider = Provider<SpecialistProfileService>(
 );
 
 /// Провайдер статистики профиля
-final profileStatisticsProvider = FutureProvider.family<ProfileStatistics, String>(
-  (ref, specialistId) async {
-    final service = ref.read(specialistProfileServiceProvider);
-    return service.getProfileStatistics(specialistId);
-  },
-);
+final profileStatisticsProvider = FutureProvider.family<ProfileStatistics, String>((
+  ref,
+  specialistId,
+) async {
+  final service = ref.read(specialistProfileServiceProvider);
+  return service.getProfileStatistics(specialistId);
+});
 
 /// Провайдер портфолио
-final portfolioProvider = FutureProvider.family<List<PortfolioItem>, String>(
-  (ref, specialistId) async {
-    final service = ref.read(specialistProfileServiceProvider);
-    return service.getPortfolio(specialistId);
-  },
-);
+final portfolioProvider = FutureProvider.family<List<PortfolioItem>, String>((
+  ref,
+  specialistId,
+) async {
+  final service = ref.read(specialistProfileServiceProvider);
+  return service.getPortfolio(specialistId);
+});
 
 /// Провайдер социальных ссылок
-final socialLinksProvider = FutureProvider.family<List<SocialLink>, String>(
-  (ref, specialistId) async {
-    final service = ref.read(specialistProfileServiceProvider);
-    return service.getSocialLinks(specialistId);
-  },
-);
+final socialLinksProvider = FutureProvider.family<List<SocialLink>, String>((
+  ref,
+  specialistId,
+) async {
+  final service = ref.read(specialistProfileServiceProvider);
+  return service.getSocialLinks(specialistId);
+});
 
 /// Провайдер закреплённых постов
-final pinnedPostsProvider = FutureProvider.family<List<Map<String, dynamic>>, String>(
-  (ref, specialistId) async {
-    final service = ref.read(specialistProfileServiceProvider);
-    return service.getPinnedPosts(specialistId);
-  },
-);
+final pinnedPostsProvider = FutureProvider.family<List<Map<String, dynamic>>, String>((
+  ref,
+  specialistId,
+) async {
+  final service = ref.read(specialistProfileServiceProvider);
+  return service.getPinnedPosts(specialistId);
+});
 
 /// Провайдер календаря занятости
 final availabilityCalendarProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, AvailabilityParams>(
-  (ref, params) async {
-    final service = ref.read(specialistProfileServiceProvider);
-    return service.getAvailabilityCalendar(
-      params.specialistId,
-      params.startDate,
-      params.endDate,
-    );
-  },
-);
+    FutureProvider.family<List<Map<String, dynamic>>, AvailabilityParams>((ref, params) async {
+      final service = ref.read(specialistProfileServiceProvider);
+      return service.getAvailabilityCalendar(params.specialistId, params.startDate, params.endDate);
+    });
 
 /// Параметры для получения календаря занятости
 class AvailabilityParams {

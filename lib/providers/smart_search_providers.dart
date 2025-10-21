@@ -5,15 +5,19 @@ import '../services/smart_search_service.dart';
 final smartSearchServiceProvider = Provider<SmartSearchService>((ref) => SmartSearchService());
 
 /// Провайдер подсказок поиска
-final searchSuggestionsProvider =
-    FutureProvider.family<List<SearchSuggestion>, String>((ref, query) async {
+final searchSuggestionsProvider = FutureProvider.family<List<SearchSuggestion>, String>((
+  ref,
+  query,
+) async {
   final service = ref.read(smartSearchServiceProvider);
   return service.getSearchSuggestions(query);
 });
 
 /// Провайдер результатов поиска специалистов
-final searchResultsProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, SearchParams>((ref, params) async {
+final searchResultsProvider = FutureProvider.family<List<Map<String, dynamic>>, SearchParams>((
+  ref,
+  params,
+) async {
   final service = ref.read(smartSearchServiceProvider);
   return service.searchSpecialists(
     query: params.query,
@@ -75,17 +79,16 @@ class SearchParams {
     double? minRating,
     DateTime? availableDate,
     SpecialistSortOption? sortBy,
-  }) =>
-      SearchParams(
-        query: query ?? this.query,
-        category: category ?? this.category,
-        city: city ?? this.city,
-        minPrice: minPrice ?? this.minPrice,
-        maxPrice: maxPrice ?? this.maxPrice,
-        minRating: minRating ?? this.minRating,
-        availableDate: availableDate ?? this.availableDate,
-        sortBy: sortBy ?? this.sortBy,
-      );
+  }) => SearchParams(
+    query: query ?? this.query,
+    category: category ?? this.category,
+    city: city ?? this.city,
+    minPrice: minPrice ?? this.minPrice,
+    maxPrice: maxPrice ?? this.maxPrice,
+    minRating: minRating ?? this.minRating,
+    availableDate: availableDate ?? this.availableDate,
+    sortBy: sortBy ?? this.sortBy,
+  );
 
   @override
   bool operator ==(Object other) {
@@ -102,14 +105,6 @@ class SearchParams {
   }
 
   @override
-  int get hashCode => Object.hash(
-        query,
-        category,
-        city,
-        minPrice,
-        maxPrice,
-        minRating,
-        availableDate,
-        sortBy,
-      );
+  int get hashCode =>
+      Object.hash(query, category, city, minPrice, maxPrice, minRating, availableDate, sortBy);
 }

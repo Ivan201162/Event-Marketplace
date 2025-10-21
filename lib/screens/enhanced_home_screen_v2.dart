@@ -40,10 +40,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
     _appBarOpacityAnimation = Tween<double>(
       begin: 1.0,
       end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _appBarAnimationController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _appBarAnimationController, curve: Curves.easeInOut));
 
     _scrollController.addListener(_onScroll);
   }
@@ -106,9 +103,9 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                             Text(
                               'Event',
                               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                             // Действия
                             Row(
@@ -136,25 +133,14 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
           // Плашка пользователя с анимацией
           SliverToBoxAdapter(
             child: currentUserAsync.when(
-              data: (user) => AnimatedUserHeader(
-                user: user,
-                isVisible: _isUserHeaderVisible,
-              ),
-              loading: () => AnimatedUserHeader(
-                user: null,
-                isVisible: _isUserHeaderVisible,
-              ),
-              error: (_, __) => AnimatedUserHeader(
-                user: null,
-                isVisible: _isUserHeaderVisible,
-              ),
+              data: (user) => AnimatedUserHeader(user: user, isVisible: _isUserHeaderVisible),
+              loading: () => AnimatedUserHeader(user: null, isVisible: _isUserHeaderVisible),
+              error: (_, __) => AnimatedUserHeader(user: null, isVisible: _isUserHeaderVisible),
             ),
           ),
 
           // Поиск специалистов
-          SliverToBoxAdapter(
-            child: _buildSearchWithFilters(),
-          ),
+          SliverToBoxAdapter(child: _buildSearchWithFilters()),
 
           // Категории специалистов
           SliverToBoxAdapter(
@@ -166,19 +152,13 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
           ),
 
           // Карусель лучших специалистов недели
-          const SliverToBoxAdapter(
-            child: AnimatedSpecialistsCarousel(),
-          ),
+          const SliverToBoxAdapter(child: AnimatedSpecialistsCarousel()),
 
           // Блок "Интересное"
-          const SliverToBoxAdapter(
-            child: AnimatedInterestingSection(),
-          ),
+          const SliverToBoxAdapter(child: AnimatedInterestingSection()),
 
           // Отступ внизу
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
     );
@@ -186,31 +166,31 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
 
   /// Поиск с фильтрами
   Widget _buildSearchWithFilters() => Container(
-        margin: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Expanded(
-              child: AnimatedSearchBar(
-                onSearch: (query) {
-                  _performSearch(query);
-                },
-              ),
-            ),
-            const SizedBox(width: 12),
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.tune, color: Colors.white),
-                onPressed: _showFiltersDialog,
-                tooltip: 'Фильтры',
-              ),
-            ),
-          ],
+    margin: const EdgeInsets.all(16),
+    child: Row(
+      children: [
+        Expanded(
+          child: AnimatedSearchBar(
+            onSearch: (query) {
+              _performSearch(query);
+            },
+          ),
         ),
-      );
+        const SizedBox(width: 12),
+        Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.tune, color: Colors.white),
+            onPressed: _showFiltersDialog,
+            tooltip: 'Фильтры',
+          ),
+        ),
+      ],
+    ),
+  );
 
   /// Показать диалог фильтров
   void _showFiltersDialog() {
@@ -252,8 +232,9 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
       searchParams['type'] = _currentFilters['specialistType'];
     }
 
-    final queryString =
-        searchParams.entries.map((e) => '${e.key}=${Uri.encodeComponent(e.value)}').join('&');
+    final queryString = searchParams.entries
+        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
+        .join('&');
 
     context.push('/search?$queryString');
   }

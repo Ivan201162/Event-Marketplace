@@ -17,47 +17,24 @@ class FirestoreSeederService {
       // Users (2 клиента, 2 специалиста)
       debugPrint('👥 Создание пользователей...');
       final users = [
-        {
-          'id': 'u_customer_1',
-          'name': 'Иван Петров',
-          'city': 'Москва',
-          'role': 'customer',
-        },
-        {
-          'id': 'u_customer_2',
-          'name': 'Елена Смирнова',
-          'city': 'СПб',
-          'role': 'customer',
-        },
-        {
-          'id': 'u_spec_1',
-          'name': 'Ведущий Артём',
-          'city': 'Москва',
-          'role': 'specialist',
-        },
-        {
-          'id': 'u_spec_2',
-          'name': 'Фотограф Анна',
-          'city': 'СПб',
-          'role': 'specialist',
-        },
+        {'id': 'u_customer_1', 'name': 'Иван Петров', 'city': 'Москва', 'role': 'customer'},
+        {'id': 'u_customer_2', 'name': 'Елена Смирнова', 'city': 'СПб', 'role': 'customer'},
+        {'id': 'u_spec_1', 'name': 'Ведущий Артём', 'city': 'Москва', 'role': 'specialist'},
+        {'id': 'u_spec_2', 'name': 'Фотограф Анна', 'city': 'СПб', 'role': 'specialist'},
       ];
 
       for (final u in users) {
-        await _firestore.collection('users').doc(u['id']).set(
-          {
-            'name': u['name'],
-            'city': u['city'],
-            'role': u['role'],
-            'about': 'Тестовый пользователь',
-            'email': '${u['id']}@example.com',
-            'phone': '+7 (999) 123-45-67',
-            'avatar': 'https://picsum.photos/seed/${u['id']}/200/200',
-            'createdAt': FieldValue.serverTimestamp(),
-            'updatedAt': FieldValue.serverTimestamp(),
-          },
-          SetOptions(merge: true),
-        );
+        await _firestore.collection('users').doc(u['id']).set({
+          'name': u['name'],
+          'city': u['city'],
+          'role': u['role'],
+          'about': 'Тестовый пользователь',
+          'email': '${u['id']}@example.com',
+          'phone': '+7 (999) 123-45-67',
+          'avatar': 'https://picsum.photos/seed/${u['id']}/200/200',
+          'createdAt': FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
         debugPrint('  ✅ Пользователь ${u['name']} создан');
       }
 
@@ -177,57 +154,47 @@ class FirestoreSeederService {
 
       // Specialists (дополнительные данные для специалистов)
       debugPrint('👨‍💼 Создание профилей специалистов...');
-      await _firestore.collection('specialists').doc('u_spec_1').set(
-        {
-          'userId': 'u_spec_1',
-          'name': 'Ведущий Артём',
-          'category': 'Ведущий',
-          'city': 'Москва',
-          'rating': 4.8,
-          'reviewsCount': 25,
-          'pricePerHour': 5000.0,
-          'description':
-              'Опытный ведущий с 5-летним стажем. Провожу свадьбы, корпоративы, дни рождения.',
-          'skills': ['Свадьбы', 'Корпоративы', 'Дни рождения'],
-          'portfolio': [
-            'https://picsum.photos/seed/portfolio1/300/200',
-            'https://picsum.photos/seed/portfolio2/300/200',
-            'https://picsum.photos/seed/portfolio3/300/200',
-          ],
-          'isAvailable': true,
-          'createdAt': FieldValue.serverTimestamp(),
-          'updatedAt': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true),
-      );
+      await _firestore.collection('specialists').doc('u_spec_1').set({
+        'userId': 'u_spec_1',
+        'name': 'Ведущий Артём',
+        'category': 'Ведущий',
+        'city': 'Москва',
+        'rating': 4.8,
+        'reviewsCount': 25,
+        'pricePerHour': 5000.0,
+        'description':
+            'Опытный ведущий с 5-летним стажем. Провожу свадьбы, корпоративы, дни рождения.',
+        'skills': ['Свадьбы', 'Корпоративы', 'Дни рождения'],
+        'portfolio': [
+          'https://picsum.photos/seed/portfolio1/300/200',
+          'https://picsum.photos/seed/portfolio2/300/200',
+          'https://picsum.photos/seed/portfolio3/300/200',
+        ],
+        'isAvailable': true,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
 
-      await _firestore.collection('specialists').doc('u_spec_2').set(
-        {
-          'userId': 'u_spec_2',
-          'name': 'Фотограф Анна',
-          'category': 'Фотограф',
-          'city': 'СПб',
-          'rating': 4.9,
-          'reviewsCount': 40,
-          'pricePerHour': 3000.0,
-          'description':
-              'Профессиональный фотограф. Специализируюсь на свадебной и семейной фотографии.',
-          'skills': [
-            'Свадебная фотосъемка',
-            'Семейная фотосъемка',
-            'Детская фотосъемка',
-          ],
-          'portfolio': [
-            'https://picsum.photos/seed/photo1/300/200',
-            'https://picsum.photos/seed/photo2/300/200',
-            'https://picsum.photos/seed/photo3/300/200',
-          ],
-          'isAvailable': true,
-          'createdAt': FieldValue.serverTimestamp(),
-          'updatedAt': FieldValue.serverTimestamp(),
-        },
-        SetOptions(merge: true),
-      );
+      await _firestore.collection('specialists').doc('u_spec_2').set({
+        'userId': 'u_spec_2',
+        'name': 'Фотограф Анна',
+        'category': 'Фотограф',
+        'city': 'СПб',
+        'rating': 4.9,
+        'reviewsCount': 40,
+        'pricePerHour': 3000.0,
+        'description':
+            'Профессиональный фотограф. Специализируюсь на свадебной и семейной фотографии.',
+        'skills': ['Свадебная фотосъемка', 'Семейная фотосъемка', 'Детская фотосъемка'],
+        'portfolio': [
+          'https://picsum.photos/seed/photo1/300/200',
+          'https://picsum.photos/seed/photo2/300/200',
+          'https://picsum.photos/seed/photo3/300/200',
+        ],
+        'isAvailable': true,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
       debugPrint('  ✅ Профили специалистов созданы');
 
       debugPrint('✅ Seeder: тестовые данные успешно созданы');

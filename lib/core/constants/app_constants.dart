@@ -90,36 +90,10 @@ class AppConstants {
   static const int settingsHistoryRetentionDays = 90;
 
   // Форматы файлов
-  static const List<String> supportedImageFormats = [
-    'jpg',
-    'jpeg',
-    'png',
-    'gif',
-    'webp',
-    'bmp',
-  ];
-  static const List<String> supportedVideoFormats = [
-    'mp4',
-    'avi',
-    'mov',
-    'wmv',
-    'flv',
-    'webm',
-  ];
-  static const List<String> supportedAudioFormats = [
-    'mp3',
-    'wav',
-    'ogg',
-    'aac',
-    'm4a',
-  ];
-  static const List<String> supportedDocumentFormats = [
-    'pdf',
-    'doc',
-    'docx',
-    'txt',
-    'rtf',
-  ];
+  static const List<String> supportedImageFormats = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'];
+  static const List<String> supportedVideoFormats = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm'];
+  static const List<String> supportedAudioFormats = ['mp3', 'wav', 'ogg', 'aac', 'm4a'];
+  static const List<String> supportedDocumentFormats = ['pdf', 'doc', 'docx', 'txt', 'rtf'];
 
   // Размеры изображений
   static const int thumbnailSize = 150;
@@ -228,12 +202,7 @@ class AppConstants {
   ];
 
   // Каналы уведомлений
-  static const List<String> notificationChannels = [
-    'in_app',
-    'push',
-    'email',
-    'sms',
-  ];
+  static const List<String> notificationChannels = ['in_app', 'push', 'email', 'sms'];
 
   // Типы отчетов
   static const List<String> reportTypes = [
@@ -284,11 +253,7 @@ class AppConstants {
   ];
 
   // Направления синхронизации
-  static const List<String> syncDirections = [
-    'inbound',
-    'outbound',
-    'bidirectional',
-  ];
+  static const List<String> syncDirections = ['inbound', 'outbound', 'bidirectional'];
 
   // Статусы синхронизации
   static const List<String> syncStatuses = [
@@ -300,13 +265,7 @@ class AppConstants {
   ];
 
   // Типы медиа
-  static const List<String> mediaTypes = [
-    'image',
-    'video',
-    'audio',
-    'document',
-    'other',
-  ];
+  static const List<String> mediaTypes = ['image', 'video', 'audio', 'document', 'other'];
 
   // Статусы контента
   static const List<String> contentStatuses = [
@@ -395,30 +354,13 @@ class AppConstants {
   ];
 
   // Уровни логирования
-  static const List<String> logLevels = [
-    'debug',
-    'info',
-    'warning',
-    'error',
-    'critical',
-  ];
+  static const List<String> logLevels = ['debug', 'info', 'warning', 'error', 'critical'];
 
   // Типы разрешений
-  static const List<String> permissionTypes = [
-    'read',
-    'write',
-    'delete',
-    'manage',
-    'moderate',
-  ];
+  static const List<String> permissionTypes = ['read', 'write', 'delete', 'manage', 'moderate'];
 
   // Окружения
-  static const List<String> environments = [
-    'development',
-    'staging',
-    'production',
-    'testing',
-  ];
+  static const List<String> environments = ['development', 'staging', 'production', 'testing'];
 
   // Режимы темы
   static const List<String> themeModes = ['light', 'dark', 'system'];

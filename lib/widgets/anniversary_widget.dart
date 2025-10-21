@@ -33,9 +33,7 @@ class AnniversaryWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: isToday ? Colors.blue.shade50 : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isToday ? Colors.blue.shade200 : Colors.grey.shade300,
-        ),
+        border: Border.all(color: isToday ? Colors.blue.shade200 : Colors.grey.shade300),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withValues(alpha: 0.1),
@@ -66,10 +64,7 @@ class AnniversaryWidget extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       _formatDate(date),
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade600,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                     ),
                   ],
                 ),
@@ -114,10 +109,7 @@ class AnniversaryWidget extends StatelessWidget {
           // Описание
           if (description != null && description!.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text(
-              description!,
-              style: const TextStyle(fontSize: 14),
-            ),
+            Text(description!, style: const TextStyle(fontSize: 14)),
           ],
 
           // Информация о партнере
@@ -175,9 +167,7 @@ class AnniversaryWidget extends StatelessWidget {
                     onPressed: onDelete,
                     icon: const Icon(Icons.delete, size: 16),
                     label: const Text('Удалить'),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.red,
-                    ),
+                    style: TextButton.styleFrom(foregroundColor: Colors.red),
                   ),
               ],
             ),

@@ -37,124 +37,115 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Создать сторис'),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Выбор типа контента
-                _buildContentTypeSelector(),
-                const SizedBox(height: 16),
+    title: const Text('Создать сторис'),
+    content: SizedBox(
+      width: double.maxFinite,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Выбор типа контента
+            _buildContentTypeSelector(),
+            const SizedBox(height: 16),
 
-                // Выбор файла или ввод текста
-                _buildContentInput(),
-                const SizedBox(height: 16),
+            // Выбор файла или ввод текста
+            _buildContentInput(),
+            const SizedBox(height: 16),
 
-                // Настройки для текстовых сторис
-                if (_selectedType == StoryContentType.text) ...[
-                  _buildTextSettings(),
-                  const SizedBox(height: 16),
-                ],
+            // Настройки для текстовых сторис
+            if (_selectedType == StoryContentType.text) ...[
+              _buildTextSettings(),
+              const SizedBox(height: 16),
+            ],
 
-                // Ошибка
-                if (_error != null) ...[
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.red[50],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.red[200]!),
+            // Ошибка
+            if (_error != null) ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.error_outline, color: Colors.red[600]),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(_error!, style: TextStyle(color: Colors.red[600])),
                     ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.error_outline, color: Colors.red[600]),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            _error!,
-                            style: TextStyle(color: Colors.red[600]),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              ],
-            ),
-          ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: _isUploading ? null : () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: _isUploading ? null : _createStory,
-            child: _isUploading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text('Создать'),
-          ),
-        ],
-      );
+      ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: _isUploading ? null : () => Navigator.of(context).pop(),
+        child: const Text('Отмена'),
+      ),
+      ElevatedButton(
+        onPressed: _isUploading ? null : _createStory,
+        child: _isUploading
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Text('Создать'),
+      ),
+    ],
+  );
 
   Widget _buildContentTypeSelector() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Тип контента', style: TextStyle(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      RadioGroup<StoryContentType>(
+        value: _selectedType,
+        onChanged: (value) {
+          setState(() {
+            _selectedType = value;
+            _selectedFile = null;
+          });
+        },
         children: [
-          const Text(
-            'Тип контента',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Expanded(
+            child: RadioListTile<StoryContentType>(
+              title: const Text('Изображение'),
+              value: StoryContentType.image,
+            ),
           ),
-          const SizedBox(height: 8),
-          RadioGroup<StoryContentType>(
-            value: _selectedType,
-            onChanged: (value) {
-              setState(() {
-                _selectedType = value;
-                _selectedFile = null;
-              });
-            },
-            children: [
-              Expanded(
-                child: RadioListTile<StoryContentType>(
-                  title: const Text('Изображение'),
-                  value: StoryContentType.image,
-                ),
-              ),
-              Expanded(
-                child: RadioListTile<StoryContentType>(
-                  title: const Text('Видео'),
-                  value: StoryContentType.video,
-                ),
-              ),
-              Expanded(
-                child: RadioListTile<StoryContentType>(
-                  title: const Text('Текст'),
-                  value: StoryContentType.text,
-                ),
-              ),
-            ],
+          Expanded(
+            child: RadioListTile<StoryContentType>(
+              title: const Text('Видео'),
+              value: StoryContentType.video,
+            ),
+          ),
+          Expanded(
+            child: RadioListTile<StoryContentType>(
+              title: const Text('Текст'),
+              value: StoryContentType.text,
+            ),
           ),
         ],
-      );
+      ),
+    ],
+  );
 
   Widget _buildContentInput() {
     if (_selectedType == StoryContentType.text) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Текст сторис',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          const Text('Текст сторис', style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           TextFormField(
             controller: _textController,
@@ -176,10 +167,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Выберите файл',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          const Text('Выберите файл', style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           if (_selectedFile == null) ...[
             Row(
@@ -226,13 +214,8 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          _formatFileSize(
-                            File(_selectedFile!.path).lengthSync(),
-                          ),
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 12,
-                          ),
+                          _formatFileSize(File(_selectedFile!.path).lengthSync()),
+                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
                         ),
                       ],
                     ),
@@ -255,30 +238,28 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
   }
 
   Widget _buildTextSettings() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Настройки текста',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Настройки текста', style: TextStyle(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
 
-          // Цвет фона
-          Row(
-            children: [
-              const Text('Цвет фона: '),
-              Expanded(
-                child: Wrap(
-                  spacing: 8,
-                  children: [
-                    Colors.black,
-                    Colors.white,
-                    Colors.red,
-                    Colors.blue,
-                    Colors.green,
-                    Colors.orange,
-                    Colors.purple,
-                  ]
+      // Цвет фона
+      Row(
+        children: [
+          const Text('Цвет фона: '),
+          Expanded(
+            child: Wrap(
+              spacing: 8,
+              children:
+                  [
+                        Colors.black,
+                        Colors.white,
+                        Colors.red,
+                        Colors.blue,
+                        Colors.green,
+                        Colors.orange,
+                        Colors.purple,
+                      ]
                       .map(
                         (color) => GestureDetector(
                           onTap: () {
@@ -301,28 +282,29 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                         ),
                       )
                       .toList(),
-                ),
-              ),
-            ],
+            ),
           ),
-          const SizedBox(height: 8),
+        ],
+      ),
+      const SizedBox(height: 8),
 
-          // Цвет текста
-          Row(
-            children: [
-              const Text('Цвет текста: '),
-              Expanded(
-                child: Wrap(
-                  spacing: 8,
-                  children: [
-                    Colors.white,
-                    Colors.black,
-                    Colors.red,
-                    Colors.blue,
-                    Colors.green,
-                    Colors.orange,
-                    Colors.purple,
-                  ]
+      // Цвет текста
+      Row(
+        children: [
+          const Text('Цвет текста: '),
+          Expanded(
+            child: Wrap(
+              spacing: 8,
+              children:
+                  [
+                        Colors.white,
+                        Colors.black,
+                        Colors.red,
+                        Colors.blue,
+                        Colors.green,
+                        Colors.orange,
+                        Colors.purple,
+                      ]
                       .map(
                         (color) => GestureDetector(
                           onTap: () {
@@ -345,34 +327,34 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                         ),
                       )
                       .toList(),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          // Размер шрифта
-          Row(
-            children: [
-              const Text('Размер шрифта: '),
-              Expanded(
-                child: Slider(
-                  value: _fontSize,
-                  min: 16,
-                  max: 48,
-                  divisions: 16,
-                  label: _fontSize.round().toString(),
-                  onChanged: (value) {
-                    setState(() {
-                      _fontSize = value;
-                    });
-                  },
-                ),
-              ),
-            ],
+            ),
           ),
         ],
-      );
+      ),
+      const SizedBox(height: 8),
+
+      // Размер шрифта
+      Row(
+        children: [
+          const Text('Размер шрифта: '),
+          Expanded(
+            child: Slider(
+              value: _fontSize,
+              min: 16,
+              max: 48,
+              divisions: 16,
+              label: _fontSize.round().toString(),
+              onChanged: (value) {
+                setState(() {
+                  _fontSize = value;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
 
   Future<void> _pickFromGallery() async {
     try {
@@ -479,10 +461,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
       if (mounted) {
         Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Сторис создана'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Сторис создана'), backgroundColor: Colors.green),
         );
       }
     } catch (e) {

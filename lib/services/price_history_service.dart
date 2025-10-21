@@ -52,9 +52,7 @@ class PriceHistoryService {
   }
 
   /// Получить историю цен для специалиста
-  Future<List<PriceHistory>> getSpecialistPriceHistory(
-    String specialistId,
-  ) async {
+  Future<List<PriceHistory>> getSpecialistPriceHistory(String specialistId) async {
     try {
       // Получаем все бронирования специалиста
       final bookingsSnapshot = await _firestore
@@ -88,14 +86,15 @@ class PriceHistoryService {
       final discountOffers = priceHistory.where((p) => p.isDiscount).length;
       final priceIncreases = priceHistory.where((p) => !p.isDiscount).length;
 
-      final totalSavings =
-          priceHistory.where((p) => p.isDiscount).fold(0, (sum, p) => sum + p.savings);
+      final totalSavings = priceHistory
+          .where((p) => p.isDiscount)
+          .fold(0, (sum, p) => sum + p.savings);
 
       final averageDiscount = discountOffers > 0
           ? priceHistory
-                  .where((p) => p.isDiscount)
-                  .fold(0, (sum, p) => sum + (p.discountPercent ?? 0)) /
-              discountOffers
+                    .where((p) => p.isDiscount)
+                    .fold(0, (sum, p) => sum + (p.discountPercent ?? 0)) /
+                discountOffers
           : 0;
 
       return {
@@ -135,10 +134,7 @@ class PriceHistoryService {
     try {
       var query = _firestore
           .collection('priceHistory')
-          .where(
-            'changedAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-          )
+          .where('changedAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
           .where('changedAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
 
       if (specialistId != null) {

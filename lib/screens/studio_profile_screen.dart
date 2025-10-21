@@ -7,10 +7,7 @@ import '../services/photo_studio_service.dart';
 
 /// Экран профиля фотостудии
 class StudioProfileScreen extends ConsumerStatefulWidget {
-  const StudioProfileScreen({
-    super.key,
-    required this.studioId,
-  });
+  const StudioProfileScreen({super.key, required this.studioId});
 
   final String studioId;
 
@@ -80,9 +77,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Colors.white,
         ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -97,11 +92,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.grey[400],
-              ),
+              Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
               const SizedBox(height: 16),
               Text(
                 _error ?? 'Фотостудия не найдена',
@@ -109,10 +100,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _loadPhotoStudio,
-                child: const Text('Повторить'),
-              ),
+              ElevatedButton(onPressed: _loadPhotoStudio, child: const Text('Повторить')),
             ],
           ),
         ),
@@ -124,13 +112,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
         slivers: [
           _buildSliverAppBar(),
           SliverToBoxAdapter(
-            child: Column(
-              children: [
-                _buildHeader(),
-                _buildTabBar(),
-                _buildTabContent(),
-              ],
-            ),
+            child: Column(children: [_buildHeader(), _buildTabBar(), _buildTabContent()]),
           ),
         ],
       ),
@@ -139,68 +121,52 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
   }
 
   Widget _buildSliverAppBar() => SliverAppBar(
-        expandedHeight: 300,
-        pinned: true,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Colors.white,
-        flexibleSpace: FlexibleSpaceBar(
-          title: Text(
-            _photoStudio!.name,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+    expandedHeight: 300,
+    pinned: true,
+    backgroundColor: Theme.of(context).colorScheme.primary,
+    foregroundColor: Colors.white,
+    flexibleSpace: FlexibleSpaceBar(
+      title: Text(
+        _photoStudio!.name,
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+      background: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (_photoStudio!.coverImageUrl != null)
+            Image.network(
+              _photoStudio!.coverImageUrl!,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
+            )
+          else
+            _buildPlaceholderImage(),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+              ),
             ),
           ),
-          background: Stack(
-            fit: StackFit.expand,
-            children: [
-              if (_photoStudio!.coverImageUrl != null)
-                Image.network(
-                  _photoStudio!.coverImageUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => _buildPlaceholderImage(),
-                )
-              else
-                _buildPlaceholderImage(),
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withValues(alpha: 0.7),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: _shareStudio,
-            tooltip: 'Поделиться',
-          ),
-          IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: _toggleFavorite,
-            tooltip: 'В избранное',
-          ),
         ],
-      );
+      ),
+    ),
+    actions: [
+      IconButton(icon: const Icon(Icons.share), onPressed: _shareStudio, tooltip: 'Поделиться'),
+      IconButton(
+        icon: const Icon(Icons.favorite_border),
+        onPressed: _toggleFavorite,
+        tooltip: 'В избранное',
+      ),
+    ],
+  );
 
   Widget _buildPlaceholderImage() => Container(
-        color: Theme.of(context).colorScheme.primary,
-        child: const Center(
-          child: Icon(
-            Icons.photo_camera,
-            size: 64,
-            color: Colors.white,
-          ),
-        ),
-      );
+    color: Theme.of(context).colorScheme.primary,
+    child: const Center(child: Icon(Icons.photo_camera, size: 64, color: Colors.white)),
+  );
 
   Widget _buildHeader() {
     final theme = Theme.of(context);
@@ -216,9 +182,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
               Expanded(
                 child: Text(
                   _photoStudio!.name,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
               if (_photoStudio!.isVerified)
@@ -255,9 +219,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                 const SizedBox(width: 4),
                 Text(
                   _photoStudio!.rating.toStringAsFixed(1),
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -283,12 +245,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
             children: [
               const Icon(Icons.location_on, size: 20, color: Colors.grey),
               const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  _photoStudio!.address,
-                  style: theme.textTheme.bodyLarge,
-                ),
-              ),
+              Expanded(child: Text(_photoStudio!.address, style: theme.textTheme.bodyLarge)),
             ],
           ),
           const SizedBox(height: 8),
@@ -306,33 +263,28 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
   }
 
   Widget _buildTabBar() => Container(
-        color: Theme.of(context).colorScheme.surface,
-        child: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Галерея'),
-            Tab(text: 'Цены'),
-            Tab(text: 'Расписание'),
-            Tab(text: 'Отзывы'),
-          ],
-          labelColor: Theme.of(context).colorScheme.primary,
-          unselectedLabelColor: Colors.grey,
-          indicatorColor: Theme.of(context).colorScheme.primary,
-        ),
-      );
+    color: Theme.of(context).colorScheme.surface,
+    child: TabBar(
+      controller: _tabController,
+      tabs: const [
+        Tab(text: 'Галерея'),
+        Tab(text: 'Цены'),
+        Tab(text: 'Расписание'),
+        Tab(text: 'Отзывы'),
+      ],
+      labelColor: Theme.of(context).colorScheme.primary,
+      unselectedLabelColor: Colors.grey,
+      indicatorColor: Theme.of(context).colorScheme.primary,
+    ),
+  );
 
   Widget _buildTabContent() => SizedBox(
-        height: 400,
-        child: TabBarView(
-          controller: _tabController,
-          children: [
-            _buildGalleryTab(),
-            _buildPricingTab(),
-            _buildScheduleTab(),
-            _buildReviewsTab(),
-          ],
-        ),
-      );
+    height: 400,
+    child: TabBarView(
+      controller: _tabController,
+      children: [_buildGalleryTab(), _buildPricingTab(), _buildScheduleTab(), _buildReviewsTab()],
+    ),
+  );
 
   Widget _buildGalleryTab() {
     if (!_photoStudio!.hasImages) {
@@ -342,10 +294,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           children: [
             Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text(
-              'Галерея пуста',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
+            Text('Галерея пуста', style: TextStyle(fontSize: 18, color: Colors.grey)),
           ],
         ),
       );
@@ -364,10 +313,8 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
         child: Image.network(
           _photoStudio!.images[index],
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => Container(
-            color: Colors.grey[300],
-            child: const Icon(Icons.image, size: 48),
-          ),
+          errorBuilder: (context, error, stackTrace) =>
+              Container(color: Colors.grey[300], child: const Icon(Icons.image, size: 48)),
         ),
       ),
     );
@@ -381,12 +328,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Цены',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text('Цены', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
 
           if (_photoStudio!.hourlyRate != null) ...[
@@ -413,9 +355,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
           if (_photoStudio!.pricing.containsKey('packages')) ...[
             Text(
               'Пакеты',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             ..._photoStudio!.pricing['packages'].keys.map((packageName) {
@@ -433,12 +373,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
     );
   }
 
-  Widget _buildPricingCard(
-    String title,
-    String price,
-    IconData icon,
-    Color color,
-  ) {
+  Widget _buildPricingCard(String title, String price, IconData icon, Color color) {
     final theme = Theme.of(context);
 
     return Container(
@@ -446,26 +381,16 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Icon(icon, color: color, size: 24),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              title,
-              style: theme.textTheme.titleMedium,
-            ),
-          ),
+          Expanded(child: Text(title, style: theme.textTheme.titleMedium)),
           Text(
             price,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: color),
           ),
         ],
       ),
@@ -482,9 +407,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
         children: [
           Text(
             'Рабочие часы',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           ..._photoStudio!.workingHours.keys.map((day) {
@@ -500,17 +423,12 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                  ),
+                  border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      _getDayDisplayName(day),
-                      style: theme.textTheme.bodyLarge,
-                    ),
+                    Text(_getDayDisplayName(day), style: theme.textTheme.bodyLarge),
                     Text(
                       isOpen ? '$open - $close' : 'Закрыто',
                       style: theme.textTheme.bodyMedium?.copyWith(
@@ -558,10 +476,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
         children: [
           Icon(Icons.reviews_outlined, size: 64, color: Colors.grey),
           SizedBox(height: 16),
-          Text(
-            'Отзывы будут добавлены позже',
-            style: TextStyle(fontSize: 18, color: Colors.grey),
-          ),
+          Text('Отзывы будут добавлены позже', style: TextStyle(fontSize: 18, color: Colors.grey)),
         ],
       ),
     );
@@ -617,9 +532,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
                 backgroundColor: theme.colorScheme.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               child: const Text('Забронировать'),
             ),
@@ -631,20 +544,16 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
 
   void _shareStudio() {
     // TODO(developer): Реализовать поделиться
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Функция поделиться будет реализована позже'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Функция поделиться будет реализована позже')));
   }
 
   void _toggleFavorite() {
     // TODO(developer): Реализовать избранное
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Функция избранного будет реализована позже'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Функция избранного будет реализована позже')));
   }
 
   void _showBookingDialog() {
@@ -654,10 +563,7 @@ class _StudioProfileScreenState extends ConsumerState<StudioProfileScreen>
         title: Text('Бронирование ${_photoStudio!.name}'),
         content: const Text('Функция бронирования будет реализована позже'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK')),
         ],
       ),
     );

@@ -101,10 +101,7 @@ class AppReviewService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_lastFeatureUsedKey, featureName);
-      await prefs.setInt(
-        '${_lastFeatureUsedKey}_time',
-        DateTime.now().millisecondsSinceEpoch,
-      );
+      await prefs.setInt('${_lastFeatureUsedKey}_time', DateTime.now().millisecondsSinceEpoch);
     } catch (e) {
       debugPrint('Ошибка отметки использования функции: $e');
     }
@@ -146,20 +143,18 @@ class AppReviewService {
       return ReviewStats(
         appLaunchCount: launchCount,
         reviewRequestCount: reviewCount,
-        lastReviewRequest:
-            lastRequest != null ? DateTime.fromMillisecondsSinceEpoch(lastRequest) : null,
+        lastReviewRequest: lastRequest != null
+            ? DateTime.fromMillisecondsSinceEpoch(lastRequest)
+            : null,
         isDismissed: isDismissed,
         lastFeatureUsed: lastFeatureUsed,
-        lastFeatureUsedTime:
-            lastFeatureTime != null ? DateTime.fromMillisecondsSinceEpoch(lastFeatureTime) : null,
+        lastFeatureUsedTime: lastFeatureTime != null
+            ? DateTime.fromMillisecondsSinceEpoch(lastFeatureTime)
+            : null,
       );
     } catch (e) {
       debugPrint('Ошибка получения статистики отзывов: $e');
-      return const ReviewStats(
-        appLaunchCount: 0,
-        reviewRequestCount: 0,
-        isDismissed: false,
-      );
+      return const ReviewStats(appLaunchCount: 0, reviewRequestCount: 0, isDismissed: false);
     }
   }
 
@@ -179,10 +174,7 @@ class AppReviewService {
   static Future<void> _updateLastReviewRequest() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(
-        _lastReviewRequestKey,
-        DateTime.now().millisecondsSinceEpoch,
-      );
+      await prefs.setInt(_lastReviewRequestKey, DateTime.now().millisecondsSinceEpoch);
     } catch (e) {
       debugPrint('Ошибка обновления времени запроса: $e');
     }
@@ -347,20 +339,7 @@ class ReviewStats {
 }
 
 /// Время для запроса отзыва
-enum ReviewTiming {
-  now,
-  soon,
-  notYet,
-}
+enum ReviewTiming { now, soon, notYet }
 
 /// Типы функций для отслеживания
-enum FeatureType {
-  booking,
-  search,
-  chat,
-  profile,
-  payment,
-  review,
-  share,
-  favorite,
-}
+enum FeatureType { booking, search, chat, profile, payment, review, share, favorite }

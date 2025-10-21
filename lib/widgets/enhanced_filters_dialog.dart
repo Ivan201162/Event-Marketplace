@@ -41,12 +41,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
     'Организатор мероприятий',
   ];
 
-  final List<String> _specialistTypes = [
-    'Все',
-    'В студии/агентстве',
-    'Самозанятый',
-    'ИП',
-  ];
+  final List<String> _specialistTypes = ['Все', 'В студии/агентстве', 'Самозанятый', 'ИП'];
 
   @override
   void initState() {
@@ -74,9 +69,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         constraints: const BoxConstraints(maxHeight: 600),
         child: Column(
@@ -91,11 +84,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.filter_list,
-                    color: Colors.white,
-                    size: 24,
-                  ),
+                  const Icon(Icons.filter_list, color: Colors.white, size: 24),
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Text(
@@ -109,10 +98,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
+                    icon: const Icon(Icons.close, color: Colors.white),
                   ),
                 ],
               ),
@@ -143,9 +129,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
               decoration: BoxDecoration(
                 color: Colors.grey[50],
                 borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
-                border: Border(
-                  top: BorderSide(color: Colors.grey[200]!),
-                ),
+                border: Border(top: BorderSide(color: Colors.grey[200]!)),
               ),
               child: Row(
                 children: [
@@ -154,9 +138,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                       onPressed: _resetFilters,
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       child: const Text('Сбросить'),
                     ),
@@ -168,9 +150,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                       onPressed: _applyFilters,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       child: const Text('Применить фильтры'),
                     ),
@@ -188,22 +168,14 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Город',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Город', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         TextField(
           controller: _cityController,
           decoration: InputDecoration(
             hintText: 'Введите город',
             prefixIcon: const Icon(Icons.location_on),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
             fillColor: Colors.grey[50],
           ),
@@ -214,9 +186,12 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
-          children: ['Москва', 'Санкт-Петербург', 'Казань', 'Екатеринбург']
-              .map((city) => _buildCityChip(city))
-              .toList(),
+          children: [
+            'Москва',
+            'Санкт-Петербург',
+            'Казань',
+            'Екатеринбург',
+          ].map((city) => _buildCityChip(city)).toList(),
         ),
       ],
     );
@@ -242,22 +217,14 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Категория',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Категория', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _selectedCategory,
           decoration: InputDecoration(
             hintText: 'Выберите категорию',
             prefixIcon: const Icon(Icons.category),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
             fillColor: Colors.grey[50],
           ),
@@ -282,13 +249,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Цена (₽)',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Цена (₽)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Row(
           children: [
@@ -299,9 +260,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                 decoration: InputDecoration(
                   hintText: 'От',
                   prefixIcon: const Icon(Icons.attach_money),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   filled: true,
                   fillColor: Colors.grey[50],
                 ),
@@ -319,9 +278,7 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
                 decoration: InputDecoration(
                   hintText: 'До',
                   prefixIcon: const Icon(Icons.attach_money),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   filled: true,
                   fillColor: Colors.grey[50],
                 ),
@@ -341,30 +298,19 @@ class _EnhancedFiltersDialogState extends ConsumerState<EnhancedFiltersDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Тип специалиста',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Тип специалиста', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _selectedSpecialistType,
           decoration: InputDecoration(
             hintText: 'Выберите тип',
             prefixIcon: const Icon(Icons.business),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
             fillColor: Colors.grey[50],
           ),
           items: _specialistTypes.map((type) {
-            return DropdownMenuItem(
-              value: type == 'Все' ? null : type,
-              child: Text(type),
-            );
+            return DropdownMenuItem(value: type == 'Все' ? null : type, child: Text(type));
           }).toList(),
           onChanged: (value) {
             setState(() {

@@ -4,10 +4,7 @@ import '../models/event.dart';
 /// Координаты на карте
 @immutable
 class MapCoordinates {
-  const MapCoordinates({
-    required this.latitude,
-    required this.longitude,
-  });
+  const MapCoordinates({required this.latitude, required this.longitude});
   final double latitude;
   final double longitude;
 
@@ -119,10 +116,7 @@ abstract class MapService {
   });
 
   /// Получить расстояние между двумя точками
-  Future<double?> getDistance(
-    MapCoordinates start,
-    MapCoordinates end,
-  );
+  Future<double?> getDistance(MapCoordinates start, MapCoordinates end);
 
   /// Получить текущее местоположение пользователя
   Future<MapCoordinates?> getCurrentLocation();

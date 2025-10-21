@@ -72,47 +72,37 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Мои отчёты'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          bottom: TabBar(
+    appBar: AppBar(
+      title: const Text('Мои отчёты'),
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      bottom: TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(icon: Icon(Icons.analytics), text: 'Текущий период'),
+          Tab(icon: Icon(Icons.history), text: 'История'),
+        ],
+      ),
+    ),
+    body: _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _error != null
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
+                const SizedBox(height: 16),
+                Text(_error!, style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 16),
+                ElevatedButton(onPressed: _loadReports, child: const Text('Повторить')),
+              ],
+            ),
+          )
+        : TabBarView(
             controller: _tabController,
-            tabs: const [
-              Tab(icon: Icon(Icons.analytics), text: 'Текущий период'),
-              Tab(icon: Icon(Icons.history), text: 'История'),
-            ],
+            children: [_buildCurrentPeriodTab(), _buildHistoryTab()],
           ),
-        ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _error != null
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          size: 64,
-                          color: Colors.red[300],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(_error!, style: const TextStyle(fontSize: 16)),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _loadReports,
-                          child: const Text('Повторить'),
-                        ),
-                      ],
-                    ),
-                  )
-                : TabBarView(
-                    controller: _tabController,
-                    children: [
-                      _buildCurrentPeriodTab(),
-                      _buildHistoryTab(),
-                    ],
-                  ),
-      );
+  );
 
   Widget _buildCurrentPeriodTab() {
     if (_miniReport == null) {
@@ -148,27 +138,21 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
                           color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(
-                          Icons.analytics,
-                          color: Colors.blue,
-                          size: 20,
-                        ),
+                        child: const Icon(Icons.analytics, color: Colors.blue, size: 20),
                       ),
                       const SizedBox(width: 12),
                       Text(
                         'Статистика за ${_miniReport!['period']}',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Обновлено: ${_formatDate(_miniReport!['generatedAt'])}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -214,153 +198,136 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
   }
 
   Widget _buildMetricsGrid() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Основные показатели',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          GridView.count(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 2,
+            childAspectRatio: 2.5,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
             children: [
-              Text(
-                'Основные показатели',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+              _buildMetricCard(
+                title: 'Просмотры',
+                value: '${_miniReport!['views']}',
+                icon: Icons.visibility,
+                color: Colors.blue,
               ),
-              const SizedBox(height: 16),
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                childAspectRatio: 2.5,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                children: [
-                  _buildMetricCard(
-                    title: 'Просмотры',
-                    value: '${_miniReport!['views']}',
-                    icon: Icons.visibility,
-                    color: Colors.blue,
-                  ),
-                  _buildMetricCard(
-                    title: 'Заявки',
-                    value: '${_miniReport!['requests']}',
-                    icon: Icons.request_page,
-                    color: Colors.green,
-                  ),
-                  _buildMetricCard(
-                    title: 'Сообщения',
-                    value: '${_miniReport!['messages']}',
-                    icon: Icons.message,
-                    color: Colors.orange,
-                  ),
-                  _buildMetricCard(
-                    title: 'Лайки',
-                    value: '${_miniReport!['likes']}',
-                    icon: Icons.favorite,
-                    color: Colors.pink,
-                  ),
-                ],
+              _buildMetricCard(
+                title: 'Заявки',
+                value: '${_miniReport!['requests']}',
+                icon: Icons.request_page,
+                color: Colors.green,
+              ),
+              _buildMetricCard(
+                title: 'Сообщения',
+                value: '${_miniReport!['messages']}',
+                icon: Icons.message,
+                color: Colors.orange,
+              ),
+              _buildMetricCard(
+                title: 'Лайки',
+                value: '${_miniReport!['likes']}',
+                icon: Icons.favorite,
+                color: Colors.pink,
               ),
             ],
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   Widget _buildMetricCard({
     required String title,
     required String value,
     required IconData icon,
     required Color color,
-  }) =>
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withValues(alpha: 0.3)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  }) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color.withValues(alpha: 0.3)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                Icon(icon, color: color, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodySmall,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildAdditionalInfo() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Дополнительная информация',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              _buildInfoItem(
-                'Средняя активность в день',
-                '${_calculateDailyActivity()}',
-                Icons.calendar_today,
-              ),
-              _buildInfoItem(
-                'Конверсия просмотров',
-                '${_calculateConversionRate()}%',
-                Icons.trending_up,
-              ),
-              _buildInfoItem(
-                'Рейтинг активности',
-                '${_calculateActivityRating()}/10',
-                Icons.star,
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildInfoItem(String title, String value, IconData icon) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          children: [
-            Icon(icon, size: 16, color: Colors.grey[600]),
+            Icon(icon, color: color, size: 20),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 title,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodySmall,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
             ),
           ],
         ),
-      );
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold, color: color),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildAdditionalInfo() => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Дополнительная информация',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          _buildInfoItem(
+            'Средняя активность в день',
+            '${_calculateDailyActivity()}',
+            Icons.calendar_today,
+          ),
+          _buildInfoItem(
+            'Конверсия просмотров',
+            '${_calculateConversionRate()}%',
+            Icons.trending_up,
+          ),
+          _buildInfoItem('Рейтинг активности', '${_calculateActivityRating()}/10', Icons.star),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildInfoItem(String title, String value, IconData icon) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: Row(
+      children: [
+        Icon(icon, size: 16, color: Colors.grey[600]),
+        const SizedBox(width: 8),
+        Expanded(child: Text(title, style: Theme.of(context).textTheme.bodyMedium)),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
 
   Widget _buildHistoryReportCard(Map<String, dynamic> report) {
     final reportType = report['type'] as String?;
@@ -394,15 +361,15 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
                     children: [
                       Text(
                         isSpecialist ? 'Отчёт специалиста' : 'Отчёт заказчика',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         _formatDate(report['createdAt']),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -411,25 +378,13 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
             ),
             const SizedBox(height: 16),
             if (isSpecialist) ...[
-              _buildHistoryMetric(
-                'Просмотры профиля',
-                '${report['views'] ?? 0}',
-              ),
-              _buildHistoryMetric(
-                'Получено заявок',
-                '${report['requests'] ?? 0}',
-              ),
+              _buildHistoryMetric('Просмотры профиля', '${report['views'] ?? 0}'),
+              _buildHistoryMetric('Получено заявок', '${report['requests'] ?? 0}'),
               _buildHistoryMetric('Сообщений', '${report['messages'] ?? 0}'),
               _buildHistoryMetric('Лайков', '${report['likes'] ?? 0}'),
             ] else ...[
-              _buildHistoryMetric(
-                'Создано заявок',
-                '${report['totalRequests'] ?? 0}',
-              ),
-              _buildHistoryMetric(
-                'Просмотрено специалистами',
-                '${report['viewedRequests'] ?? 0}',
-              ),
+              _buildHistoryMetric('Создано заявок', '${report['totalRequests'] ?? 0}'),
+              _buildHistoryMetric('Просмотрено специалистами', '${report['viewedRequests'] ?? 0}'),
             ],
           ],
         ),
@@ -438,24 +393,17 @@ class _UserReportsScreenState extends ConsumerState<UserReportsScreen>
   }
 
   Widget _buildHistoryMetric(String title, String value) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      children: [
+        Expanded(child: Text(title, style: Theme.of(context).textTheme.bodyMedium)),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
-      );
+      ],
+    ),
+  );
 
   String _formatDate(date) {
     if (date == null) return 'Неизвестно';

@@ -34,10 +34,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
   Widget build(BuildContext context) {
     final isSubscribedAsync = ref.watch(
       isSubscribedProvider(
-        IsSubscribedParams(
-          userId: widget.userId,
-          specialistId: widget.specialistId,
-        ),
+        IsSubscribedParams(userId: widget.userId, specialistId: widget.specialistId),
       ),
     );
 
@@ -58,10 +55,8 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
         ),
       ),
       loading: () => const CircularProgressIndicator(),
-      error: (error, stack) => TextButton(
-        onPressed: () => _toggleSubscription(false),
-        child: const Text('Подписаться'),
-      ),
+      error: (error, stack) =>
+          TextButton(onPressed: () => _toggleSubscription(false), child: const Text('Подписаться')),
     );
   }
 
@@ -74,10 +69,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
       final service = ref.read(subscriptionServiceProvider);
 
       if (isSubscribed) {
-        await service.unsubscribeFromSpecialist(
-          widget.userId,
-          widget.specialistId,
-        );
+        await service.unsubscribeFromSpecialist(widget.userId, widget.specialistId);
       } else {
         await service.subscribeToSpecialist(
           userId: widget.userId,
@@ -90,10 +82,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
       // Обновляем состояние
       ref.invalidate(
         isSubscribedProvider(
-          IsSubscribedParams(
-            userId: widget.userId,
-            specialistId: widget.specialistId,
-          ),
+          IsSubscribedParams(userId: widget.userId, specialistId: widget.specialistId),
         ),
       );
 
@@ -111,12 +100,9 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {
@@ -130,10 +116,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
 
 /// Виджет списка подписок
 class SubscriptionsListWidget extends ConsumerWidget {
-  const SubscriptionsListWidget({
-    super.key,
-    required this.userId,
-  });
+  const SubscriptionsListWidget({super.key, required this.userId});
   final String userId;
 
   @override
@@ -147,26 +130,14 @@ class SubscriptionsListWidget extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.person_add,
-                  size: 64,
-                  color: Colors.grey,
-                ),
+                Icon(Icons.person_add, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
-                Text(
-                  'Нет подписок',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey,
-                  ),
-                ),
+                Text('Нет подписок', style: TextStyle(fontSize: 18, color: Colors.grey)),
                 SizedBox(height: 8),
                 Text(
                   'Подпишитесь на специалистов, чтобы видеть их посты',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
+                  style: TextStyle(color: Colors.grey),
                 ),
               ],
             ),
@@ -184,23 +155,14 @@ class SubscriptionsListWidget extends ConsumerWidget {
           },
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки подписок',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
+            Text('Ошибка загрузки подписок', style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -237,66 +199,47 @@ class SubscriptionsListWidget extends ConsumerWidget {
 
 /// Виджет элемента подписки
 class SubscriptionTile extends StatelessWidget {
-  const SubscriptionTile({
-    super.key,
-    required this.subscription,
-    this.onUnsubscribe,
-  });
+  const SubscriptionTile({super.key, required this.subscription, this.onUnsubscribe});
   final Subscription subscription;
   final VoidCallback? onUnsubscribe;
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: const CircleAvatar(
-          child: Icon(Icons.person),
+    leading: const CircleAvatar(child: Icon(Icons.person)),
+    title: Text('Подписка ${subscription.plan.toString().split('.').last}'),
+    subtitle: Text('Подписан с ${_formatDate(subscription.startedAt)}'),
+    trailing: PopupMenuButton<String>(
+      onSelected: (value) {
+        switch (value) {
+          case 'unsubscribe':
+            onUnsubscribe?.call();
+            break;
+          case 'view_profile':
+            // TODO(developer): Перейти к профилю специалиста
+            break;
+        }
+      },
+      itemBuilder: (context) => [
+        const PopupMenuItem(
+          value: 'view_profile',
+          child: Row(children: [Icon(Icons.person, size: 20), SizedBox(width: 8), Text('Профиль')]),
         ),
-        title: Text('Подписка ${subscription.plan.toString().split('.').last}'),
-        subtitle: Text('Подписан с ${_formatDate(subscription.startedAt)}'),
-        trailing: PopupMenuButton<String>(
-          onSelected: (value) {
-            switch (value) {
-              case 'unsubscribe':
-                onUnsubscribe?.call();
-                break;
-              case 'view_profile':
-                // TODO(developer): Перейти к профилю специалиста
-                break;
-            }
-          },
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: 'view_profile',
-              child: Row(
-                children: [
-                  Icon(Icons.person, size: 20),
-                  SizedBox(width: 8),
-                  Text('Профиль'),
-                ],
-              ),
-            ),
-            const PopupMenuItem(
-              value: 'unsubscribe',
-              child: Row(
-                children: [
-                  Icon(Icons.person_remove, size: 20),
-                  SizedBox(width: 8),
-                  Text('Отписаться'),
-                ],
-              ),
-            ),
-          ],
+        const PopupMenuItem(
+          value: 'unsubscribe',
+          child: Row(
+            children: [Icon(Icons.person_remove, size: 20), SizedBox(width: 8), Text('Отписаться')],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
 
 /// Виджет уведомлений о подписках
 class SubscriptionNotificationsWidget extends ConsumerWidget {
-  const SubscriptionNotificationsWidget({
-    super.key,
-    required this.userId,
-  });
+  const SubscriptionNotificationsWidget({super.key, required this.userId});
   final String userId;
 
   @override
@@ -310,19 +253,9 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.notifications_none,
-                  size: 64,
-                  color: Colors.grey,
-                ),
+                Icon(Icons.notifications_none, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
-                Text(
-                  'Нет уведомлений',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey,
-                  ),
-                ),
+                Text('Нет уведомлений', style: TextStyle(fontSize: 18, color: Colors.grey)),
               ],
             ),
           );
@@ -339,12 +272,8 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
           },
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
-      error: (error, stack) => Center(
-        child: Text('Ошибка: $error'),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('Ошибка: $error')),
     );
   }
 
@@ -398,44 +327,37 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
 
 /// Виджет элемента уведомления
 class NotificationTile extends StatelessWidget {
-  const NotificationTile({
-    super.key,
-    required this.notification,
-    this.onTap,
-  });
+  const NotificationTile({super.key, required this.notification, this.onTap});
   final SubscriptionNotification notification;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: CircleAvatar(
-          backgroundImage: notification.specialistPhotoUrl != null
-              ? CachedNetworkImageProvider(notification.specialistPhotoUrl!)
-              : null,
-          child: notification.specialistPhotoUrl == null ? const Icon(Icons.person) : null,
+    leading: CircleAvatar(
+      backgroundImage: notification.specialistPhotoUrl != null
+          ? CachedNetworkImageProvider(notification.specialistPhotoUrl!)
+          : null,
+      child: notification.specialistPhotoUrl == null ? const Icon(Icons.person) : null,
+    ),
+    title: Text(notification.title),
+    subtitle: Text(notification.body),
+    trailing: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          _formatTimeAgo(notification.createdAt),
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
         ),
-        title: Text(notification.title),
-        subtitle: Text(notification.body),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              _formatTimeAgo(notification.createdAt),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-            if (!notification.isRead)
-              Container(
-                width: 8,
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-              ),
-          ],
-        ),
-        onTap: onTap,
-      );
+        if (!notification.isRead)
+          Container(
+            width: 8,
+            height: 8,
+            decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+          ),
+      ],
+    ),
+    onTap: onTap,
+  );
 
   String _formatTimeAgo(DateTime dateTime) {
     final now = DateTime.now();

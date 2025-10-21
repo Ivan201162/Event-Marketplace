@@ -14,18 +14,18 @@ class SocialLink {
 
   /// Создать из Map
   factory SocialLink.fromMap(Map<String, dynamic> map) => SocialLink(
-        id: map['id'] as String,
-        specialistId: map['specialistId'] as String,
-        platform: SocialPlatform.fromString(map['platform'] as String),
-        url: map['url'] as String,
-        username: map['username'] as String,
-        isVerified: (map['isVerified'] as bool?) ?? false,
-        isPublic: (map['isPublic'] as bool?) ?? true,
-        followersCount: map['followersCount'] as int?,
-        createdAt: map['createdAt'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int)
-            : null,
-      );
+    id: map['id'] as String,
+    specialistId: map['specialistId'] as String,
+    platform: SocialPlatform.fromString(map['platform'] as String),
+    url: map['url'] as String,
+    username: map['username'] as String,
+    isVerified: (map['isVerified'] as bool?) ?? false,
+    isPublic: (map['isPublic'] as bool?) ?? true,
+    followersCount: map['followersCount'] as int?,
+    createdAt: map['createdAt'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int)
+        : null,
+  );
 
   /// Уникальный идентификатор
   final String id;
@@ -56,16 +56,16 @@ class SocialLink {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'specialistId': specialistId,
-        'platform': platform.value,
-        'url': url,
-        'username': username,
-        'isVerified': isVerified,
-        'isPublic': isPublic,
-        'followersCount': followersCount,
-        'createdAt': createdAt?.millisecondsSinceEpoch,
-      };
+    'id': id,
+    'specialistId': specialistId,
+    'platform': platform.value,
+    'url': url,
+    'username': username,
+    'isVerified': isVerified,
+    'isPublic': isPublic,
+    'followersCount': followersCount,
+    'createdAt': createdAt?.millisecondsSinceEpoch,
+  };
 
   /// Создать копию с изменениями
   SocialLink copyWith({
@@ -78,18 +78,17 @@ class SocialLink {
     bool? isPublic,
     int? followersCount,
     DateTime? createdAt,
-  }) =>
-      SocialLink(
-        id: id ?? this.id,
-        specialistId: specialistId ?? this.specialistId,
-        platform: platform ?? this.platform,
-        url: url ?? this.url,
-        username: username ?? this.username,
-        isVerified: isVerified ?? this.isVerified,
-        isPublic: isPublic ?? this.isPublic,
-        followersCount: followersCount ?? this.followersCount,
-        createdAt: createdAt ?? this.createdAt,
-      );
+  }) => SocialLink(
+    id: id ?? this.id,
+    specialistId: specialistId ?? this.specialistId,
+    platform: platform ?? this.platform,
+    url: url ?? this.url,
+    username: username ?? this.username,
+    isVerified: isVerified ?? this.isVerified,
+    isPublic: isPublic ?? this.isPublic,
+    followersCount: followersCount ?? this.followersCount,
+    createdAt: createdAt ?? this.createdAt,
+  );
 }
 
 /// Платформы социальных сетей

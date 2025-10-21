@@ -15,13 +15,13 @@ class UpUser {
   });
 
   factory UpUser.fromMap(Map<String, dynamic> map) => UpUser(
-        uid: (map['uid'] ?? map['id'] ?? '') as String,
-        name: (map['name'] ?? map['displayName'] ?? '') as String,
-        email: (map['email'] ?? '') as String,
-        phone: map['phone'] as String?,
-        avatarUrl: map['avatarUrl'] ?? map['photoURL'] as String?,
-        role: (map['role'] ?? 'customer') as String,
-      );
+    uid: (map['uid'] ?? map['id'] ?? '') as String,
+    name: (map['name'] ?? map['displayName'] ?? '') as String,
+    email: (map['email'] ?? '') as String,
+    phone: map['phone'] as String?,
+    avatarUrl: map['avatarUrl'] ?? map['photoURL'] as String?,
+    role: (map['role'] ?? 'customer') as String,
+  );
 
   /// Создать из Firebase User
   factory UpUser.fromFirebaseUser(
@@ -30,14 +30,13 @@ class UpUser {
     String? displayName,
     String? photoURL,
     String role = 'customer',
-  }) =>
-      UpUser(
-        uid: uid,
-        name: displayName ?? email.split('@').first,
-        email: email,
-        avatarUrl: photoURL,
-        role: role,
-      );
+  }) => UpUser(
+    uid: uid,
+    name: displayName ?? email.split('@').first,
+    email: email,
+    avatarUrl: photoURL,
+    role: role,
+  );
   final String uid;
   final String name;
   final String email;
@@ -46,13 +45,13 @@ class UpUser {
   final String role;
 
   Map<String, dynamic> toMap() => {
-        'uid': uid,
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'avatarUrl': avatarUrl,
-        'role': role,
-      };
+    'uid': uid,
+    'name': name,
+    'email': email,
+    'phone': phone,
+    'avatarUrl': avatarUrl,
+    'role': role,
+  };
 
   /// Копировать с изменениями
   UpUser copyWith({
@@ -62,15 +61,14 @@ class UpUser {
     String? phone,
     String? avatarUrl,
     String? role,
-  }) =>
-      UpUser(
-        uid: uid ?? this.uid,
-        name: name ?? this.name,
-        email: email ?? this.email,
-        phone: phone ?? this.phone,
-        avatarUrl: avatarUrl ?? this.avatarUrl,
-        role: role ?? this.role,
-      );
+  }) => UpUser(
+    uid: uid ?? this.uid,
+    name: name ?? this.name,
+    email: email ?? this.email,
+    phone: phone ?? this.phone,
+    avatarUrl: avatarUrl ?? this.avatarUrl,
+    role: role ?? this.role,
+  );
 
   @override
   bool operator ==(Object other) {

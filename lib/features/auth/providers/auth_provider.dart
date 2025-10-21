@@ -27,10 +27,7 @@ class AuthService {
   /// Войти с email и паролем
   Future<UserCredential?> signInWithEmailAndPassword(String email, String password) async {
     try {
-      final credential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
       return credential;
     } catch (e) {
       debugPrint('Error signing in: $e');

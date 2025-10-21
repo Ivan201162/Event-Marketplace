@@ -36,10 +36,7 @@ class ReminderService {
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings();
 
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
+    const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
 
     await _localNotifications.initialize(
       initSettings,
@@ -120,10 +117,7 @@ class ReminderService {
       sound: 'notification_sound.aiff',
     );
 
-    const details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
+    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     await _localNotifications.zonedSchedule(
       id,
@@ -180,8 +174,10 @@ class ReminderService {
       if (user == null) return;
 
       // Получаем все напоминания пользователя
-      final remindersSnapshot =
-          await _firestore.collection('reminders').where('customerId', isEqualTo: user.uid).get();
+      final remindersSnapshot = await _firestore
+          .collection('reminders')
+          .where('customerId', isEqualTo: user.uid)
+          .get();
 
       // Отменяем все напоминания
       for (final doc in remindersSnapshot.docs) {
@@ -209,15 +205,14 @@ class ReminderService {
       final user = _auth.currentUser;
       if (user == null) return [];
 
-      final remindersSnapshot =
-          await _firestore.collection('reminders').where('customerId', isEqualTo: user.uid).get();
+      final remindersSnapshot = await _firestore
+          .collection('reminders')
+          .where('customerId', isEqualTo: user.uid)
+          .get();
 
       return remindersSnapshot.docs.map((doc) {
         final data = doc.data();
-        return {
-          'id': doc.id,
-          ...data,
-        };
+        return {'id': doc.id, ...data};
       }).toList();
     } on Exception catch (e) {
       debugPrint('Error getting active reminders: $e');

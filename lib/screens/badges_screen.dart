@@ -66,101 +66,73 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen> with SingleTickerPr
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Ошибка загрузки: $error'),
-        ),
+        error: (error, stack) => Center(child: Text('Ошибка загрузки: $error')),
       ),
     );
   }
 
   /// Вкладка со всеми бейджами
   Widget _buildAllBadgesTab(String userId) => custom.AnimatedList(
-        children: [
-          // Статистика
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: BadgeStatsWidget(userId: userId),
-          ),
+    children: [
+      // Статистика
+      Padding(
+        padding: const EdgeInsets.all(16),
+        child: BadgeStatsWidget(userId: userId),
+      ),
 
-          // Последние бейджи
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Последние бейджи',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: 16),
-                BadgeCollectionWidget(
-                  userId: userId,
-                  limit: 6,
-                  showTitle: false,
-                ),
-              ],
+      // Последние бейджи
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Последние бейджи',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-          ),
+            const SizedBox(height: 16),
+            BadgeCollectionWidget(userId: userId, limit: 6, showTitle: false),
+          ],
+        ),
+      ),
 
-          // Все бейджи
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Все бейджи',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: 16),
-                BadgeCollectionWidget(
-                  userId: userId,
-                  showTitle: false,
-                ),
-              ],
+      // Все бейджи
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Все бейджи',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
-          ),
-        ],
-      );
+            const SizedBox(height: 16),
+            BadgeCollectionWidget(userId: userId, showTitle: false),
+          ],
+        ),
+      ),
+    ],
+  );
 
   /// Вкладка с бейджами по категории
-  Widget _buildCategoryBadgesTab(
-    String userId,
-    models.BadgeCategory category,
-  ) =>
+  Widget _buildCategoryBadgesTab(String userId, models.BadgeCategory category) =>
       custom.AnimatedList(
         children: [
           // Информация о категории
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: _buildCategoryInfo(category),
-          ),
+          Padding(padding: const EdgeInsets.all(16), child: _buildCategoryInfo(category)),
 
           // Бейджи категории
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: BadgeCollectionWidget(
-              userId: userId,
-              category: category,
-              showTitle: false,
-            ),
+            child: BadgeCollectionWidget(userId: userId, category: category, showTitle: false),
           ),
         ],
       );
 
   /// Вкладка с таблицей лидеров
   Widget _buildLeaderboardTab() => const custom.AnimatedList(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: BadgeLeaderboardWidget(limit: 20),
-          ),
-        ],
-      );
+    children: [Padding(padding: EdgeInsets.all(16), child: BadgeLeaderboardWidget(limit: 20))],
+  );
 
   /// Информация о категории бейджей
   Widget _buildCategoryInfo(models.BadgeCategory category) {
@@ -169,25 +141,19 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen> with SingleTickerPr
     return custom.AnimatedCard(
       child: Column(
         children: [
-          Icon(
-            info.icon,
-            size: 48,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          Icon(info.icon, size: 48, color: Theme.of(context).colorScheme.primary),
           const SizedBox(height: 16),
           Text(
             info.title,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             info.description,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -222,11 +188,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen> with SingleTickerPr
 
 /// Информация о категории
 class CategoryInfo {
-  const CategoryInfo({
-    required this.title,
-    required this.description,
-    required this.icon,
-  });
+  const CategoryInfo({required this.title, required this.description, required this.icon});
   final String title;
   final String description;
   final IconData icon;
@@ -234,107 +196,82 @@ class CategoryInfo {
 
 /// Экран детального просмотра бейджа
 class BadgeDetailScreen extends StatelessWidget {
-  const BadgeDetailScreen({
-    super.key,
-    required this.badge,
-  });
+  const BadgeDetailScreen({super.key, required this.badge});
   final models.Badge badge;
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Детали бейджа'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          elevation: 0,
+    appBar: AppBar(
+      title: const Text('Детали бейджа'),
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      elevation: 0,
+    ),
+    body: ListView(
+      children: [
+        // Основная информация
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: BadgeInfoWidget(badge: badge),
         ),
-        body: ListView(
-          children: [
-            // Основная информация
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: BadgeInfoWidget(badge: badge),
-            ),
 
-            // Дополнительная информация
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: _buildAdditionalInfo(context),
-            ),
-          ],
+        // Дополнительная информация
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: _buildAdditionalInfo(context),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildAdditionalInfo(BuildContext context) => custom.AnimatedCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Дополнительная информация',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfoRow(
-              context,
-              'Тип бейджа',
-              badge.type.info.category.name,
-              Icons.category,
-            ),
-            _buildInfoRow(
-              context,
-              'Дата получения',
-              _formatDate(badge.earnedAt),
-              Icons.calendar_today,
-            ),
-            _buildInfoRow(
-              context,
-              'Видимость',
-              badge.isVisible ? 'Видимый' : 'Скрытый',
-              Icons.visibility,
-            ),
-          ],
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Дополнительная информация',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
-      );
+        const SizedBox(height: 16),
+        _buildInfoRow(context, 'Тип бейджа', badge.type.info.category.name, Icons.category),
+        _buildInfoRow(context, 'Дата получения', _formatDate(badge.earnedAt), Icons.calendar_today),
+        _buildInfoRow(
+          context,
+          'Видимость',
+          badge.isVisible ? 'Видимый' : 'Скрытый',
+          Icons.visibility,
+        ),
+      ],
+    ),
+  );
 
-  Widget _buildInfoRow(
-    BuildContext context,
-    String label,
-    String value,
-    IconData icon,
-  ) =>
-      Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
-                  ),
-                  Text(
-                    value,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                ],
+  Widget _buildInfoRow(BuildContext context, String label, String value, IconData icon) => Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Row(
+      children: [
+        Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
               ),
-            ),
-          ],
+              Text(
+                value,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }

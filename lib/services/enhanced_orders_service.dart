@@ -6,10 +6,7 @@ class EnhancedOrdersService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить заявки пользователя
-  Future<List<EnhancedOrder>> getUserOrders(
-    String userId, {
-    OrderStatus? status,
-  }) async {
+  Future<List<EnhancedOrder>> getUserOrders(String userId, {OrderStatus? status}) async {
     try {
       Query query = _firestore.collection('orders').where('customerId', isEqualTo: userId);
 
@@ -21,10 +18,8 @@ class EnhancedOrdersService {
 
       return snapshot.docs
           .map(
-            (doc) => EnhancedOrder.fromMap({
-              'id': doc.id,
-              ...(doc.data()! as Map<String, dynamic>),
-            }),
+            (doc) =>
+                EnhancedOrder.fromMap({'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
           )
           .toList();
     } on Exception catch (e) {
@@ -49,10 +44,8 @@ class EnhancedOrdersService {
 
       return snapshot.docs
           .map(
-            (doc) => EnhancedOrder.fromMap({
-              'id': doc.id,
-              ...(doc.data()! as Map<String, dynamic>),
-            }),
+            (doc) =>
+                EnhancedOrder.fromMap({'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
           )
           .toList();
     } on Exception catch (e) {
@@ -221,8 +214,9 @@ class EnhancedOrdersService {
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           type: OrderTimelineEventType.comment,
           title: 'Добавлен комментарий',
-          description:
-              comment.text.length > 50 ? '${comment.text.substring(0, 50)}...' : comment.text,
+          description: comment.text.length > 50
+              ? '${comment.text.substring(0, 50)}...'
+              : comment.text,
           createdAt: DateTime.now(),
           authorId: comment.authorId,
         ),
@@ -247,10 +241,7 @@ class EnhancedOrdersService {
   }
 
   /// Добавить событие в таймлайн
-  Future<void> _addTimelineEvent(
-    String orderId,
-    OrderTimelineEvent event,
-  ) async {
+  Future<void> _addTimelineEvent(String orderId, OrderTimelineEvent event) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
         'timeline': FieldValue.arrayUnion([event.toMap()]),
@@ -265,14 +256,7 @@ class EnhancedOrdersService {
     try {
       final snapshot = await _firestore.collection('orderTemplates').get();
 
-      return snapshot.docs
-          .map(
-            (doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            },
-          )
-          .toList();
+      return snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения шаблонов заявок: $e');
       return [];
@@ -306,9 +290,7 @@ class EnhancedOrdersService {
         createdAt: DateTime.now(),
         budget: (customizations['budget'] as double?) ?? (template['budget'] as double?),
         deadline: customizations['deadline'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                customizations['deadline'] as int,
-              )
+            ? DateTime.fromMillisecondsSinceEpoch(customizations['deadline'] as int)
             : null,
         location: (customizations['location'] as String?) ?? (template['location'] as String?),
         category: (customizations['category'] as String?) ?? (template['category'] as String?),

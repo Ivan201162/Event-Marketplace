@@ -102,9 +102,7 @@ class UserManagementService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      _usersCache[userId] = updatedUser.copyWith(
-        updatedAt: DateTime.now(),
-      );
+      _usersCache[userId] = updatedUser.copyWith(updatedAt: DateTime.now());
 
       // Логируем действие
       await _logUserAction(
@@ -112,9 +110,7 @@ class UserManagementService {
         action: 'user_updated',
         targetId: userId,
         targetType: 'user',
-        details: {
-          'changes': _getUserChanges(oldUser, updatedUser),
-        },
+        details: {'changes': _getUserChanges(oldUser, updatedUser)},
       );
 
       if (kDebugMode) {
@@ -129,11 +125,7 @@ class UserManagementService {
   }
 
   /// Изменить роль пользователя
-  Future<void> changeUserRole(
-    String userId,
-    UserRole newRole,
-    String changedBy,
-  ) async {
+  Future<void> changeUserRole(String userId, UserRole newRole, String changedBy) async {
     try {
       final user = _usersCache[userId];
       if (user == null) {
@@ -160,11 +152,7 @@ class UserManagementService {
   }
 
   /// Изменить статус пользователя
-  Future<void> changeUserStatus(
-    String userId,
-    UserStatus newStatus,
-    String changedBy,
-  ) async {
+  Future<void> changeUserStatus(String userId, UserStatus newStatus, String changedBy) async {
     try {
       final user = _usersCache[userId];
       if (user == null) {
@@ -259,11 +247,7 @@ class UserManagementService {
   }
 
   /// Добавить разрешение пользователю
-  Future<void> addUserPermission(
-    String userId,
-    String permission,
-    String addedBy,
-  ) async {
+  Future<void> addUserPermission(String userId, String permission, String addedBy) async {
     try {
       final user = _usersCache[userId];
       if (user == null) {
@@ -295,11 +279,7 @@ class UserManagementService {
   }
 
   /// Удалить разрешение у пользователя
-  Future<void> removeUserPermission(
-    String userId,
-    String permission,
-    String removedBy,
-  ) async {
+  Future<void> removeUserPermission(String userId, String permission, String removedBy) async {
     try {
       final user = _usersCache[userId];
       if (user == null) {
@@ -389,9 +369,7 @@ class UserManagementService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      _rolesCache[roleId] = updatedRole.copyWith(
-        updatedAt: DateTime.now(),
-      );
+      _rolesCache[roleId] = updatedRole.copyWith(updatedAt: DateTime.now());
 
       // Логируем действие
       await _logUserAction(
@@ -399,9 +377,7 @@ class UserManagementService {
         action: 'role_updated',
         targetId: roleId,
         targetType: 'role',
-        details: {
-          'changes': _getRoleChanges(oldRole, updatedRole),
-        },
+        details: {'changes': _getRoleChanges(oldRole, updatedRole)},
       );
 
       if (kDebugMode) {
@@ -428,12 +404,11 @@ class UserManagementService {
       }
 
       // Проверяем, используется ли роль
-      final usersWithRole =
-          _usersCache.values.where((user) => user.role.toString() == role.name).toList();
+      final usersWithRole = _usersCache.values
+          .where((user) => user.role.toString() == role.name)
+          .toList();
       if (usersWithRole.isNotEmpty) {
-        throw Exception(
-          'Роль используется ${usersWithRole.length} пользователями',
-        );
+        throw Exception('Роль используется ${usersWithRole.length} пользователями');
       }
 
       await _firestore.collection('userRoles').doc(roleId).delete();
@@ -543,10 +518,7 @@ class UserManagementService {
   }
 
   /// Получить действия пользователя
-  Future<List<UserAction>> getUserActions(
-    String userId, {
-    int limit = 50,
-  }) async {
+  Future<List<UserAction>> getUserActions(String userId, {int limit = 50}) async {
     try {
       final snapshot = await _firestore
           .collection('userActions')
@@ -618,64 +590,40 @@ class UserManagementService {
   }
 
   /// Получить изменения пользователя
-  Map<String, dynamic> _getUserChanges(
-    ManagedUser oldUser,
-    ManagedUser newUser,
-  ) {
+  Map<String, dynamic> _getUserChanges(ManagedUser oldUser, ManagedUser newUser) {
     final changes = <String, dynamic>{};
 
     if (oldUser.email != newUser.email) {
       changes['email'] = {'old': oldUser.email, 'new': newUser.email};
     }
     if (oldUser.displayName != newUser.displayName) {
-      changes['displayName'] = {
-        'old': oldUser.displayName,
-        'new': newUser.displayName,
-      };
+      changes['displayName'] = {'old': oldUser.displayName, 'new': newUser.displayName};
     }
     if (oldUser.role != newUser.role) {
-      changes['role'] = {
-        'old': oldUser.role.toString(),
-        'new': newUser.role.toString(),
-      };
+      changes['role'] = {'old': oldUser.role.toString(), 'new': newUser.role.toString()};
     }
     if (oldUser.status != newUser.status) {
-      changes['status'] = {
-        'old': oldUser.status.toString(),
-        'new': newUser.status.toString(),
-      };
+      changes['status'] = {'old': oldUser.status.toString(), 'new': newUser.status.toString()};
     }
     if (oldUser.permissions != newUser.permissions) {
-      changes['permissions'] = {
-        'old': oldUser.permissions,
-        'new': newUser.permissions,
-      };
+      changes['permissions'] = {'old': oldUser.permissions, 'new': newUser.permissions};
     }
 
     return changes;
   }
 
   /// Получить изменения роли
-  Map<String, dynamic> _getRoleChanges(
-    UserRoleDefinition oldRole,
-    UserRoleDefinition newRole,
-  ) {
+  Map<String, dynamic> _getRoleChanges(UserRoleDefinition oldRole, UserRoleDefinition newRole) {
     final changes = <String, dynamic>{};
 
     if (oldRole.name != newRole.name) {
       changes['name'] = {'old': oldRole.name, 'new': newRole.name};
     }
     if (oldRole.description != newRole.description) {
-      changes['description'] = {
-        'old': oldRole.description,
-        'new': newRole.description,
-      };
+      changes['description'] = {'old': oldRole.description, 'new': newRole.description};
     }
     if (oldRole.permissions != newRole.permissions) {
-      changes['permissions'] = {
-        'old': oldRole.permissions,
-        'new': newRole.permissions,
-      };
+      changes['permissions'] = {'old': oldRole.permissions, 'new': newRole.permissions};
     }
 
     return changes;

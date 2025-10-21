@@ -59,10 +59,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final credential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
 
       if (credential.user != null) {
         // Обновляем FCM токен после успешного входа
@@ -133,10 +130,7 @@ class AuthService {
 
       // Дополнительная проверка валидности email
       if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-        throw FirebaseAuthException(
-          code: 'invalid-email',
-          message: 'Неверный формат email',
-        );
+        throw FirebaseAuthException(code: 'invalid-email', message: 'Неверный формат email');
       }
 
       // Проверка силы пароля
@@ -173,7 +167,7 @@ class AuthService {
   Future<void> sendPhoneVerificationCode(String phoneNumber) async {
     try {
       debugPrint('📱 Отправка SMS кода на номер: $phoneNumber');
-      
+
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
@@ -183,15 +177,16 @@ class AuthService {
         },
         verificationFailed: (FirebaseAuthException e) {
           debugPrint('❌ Ошибка верификации: ${e.code} - ${e.message}');
-          
+
           // Обработка специфических ошибок Phone Auth
           if (e.code == 'unknown' && e.message?.contains('BILLING_NOT_ENABLED') == true) {
             throw FirebaseAuthException(
               code: 'billing-not-enabled',
-              message: 'Phone Authentication не настроена в Firebase Console. Обратитесь к администратору.',
+              message:
+                  'Phone Authentication не настроена в Firebase Console. Обратитесь к администратору.',
             );
           }
-          
+
           throw e;
         },
         codeSent: (String verificationId, int? resendToken) {
@@ -219,15 +214,15 @@ class AuthService {
   }) async {
     try {
       debugPrint('🔐 Проверка SMS кода: $smsCode');
-      
+
       final credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: smsCode,
       );
-      
+
       final userCredential = await _auth.signInWithCredential(credential);
       final user = userCredential.user;
-      
+
       if (user == null) {
         throw FirebaseAuthException(
           code: 'user-not-found',
@@ -240,7 +235,7 @@ class AuthService {
       // Ensure profile exists
       final docRef = _firestore.collection('users').doc(user.uid);
       final snapshot = await docRef.get();
-      
+
       if (!snapshot.exists) {
         // Create new user profile
         await docRef.set({
@@ -256,10 +251,7 @@ class AuthService {
         debugPrint('👤 Создан новый профиль пользователя');
       } else {
         // Update existing profile with phone number
-        await docRef.update({
-          'phone': user.phoneNumber ?? '',
-          'updatedAt': Timestamp.now(),
-        });
+        await docRef.update({'phone': user.phoneNumber ?? '', 'updatedAt': Timestamp.now()});
         debugPrint('👤 Обновлен профиль пользователя с номером телефона');
       }
 
@@ -324,7 +316,6 @@ class AuthService {
     }
   }
 
-
   /// Sign in with Google
   Future<AppUser?> signInWithGoogle() async {
     try {
@@ -338,23 +329,21 @@ class AuthService {
         userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
         // Configure Google Sign-In with proper client ID
-        final GoogleSignIn googleSignIn = GoogleSignIn(
-          scopes: ['email', 'profile'],
-        );
-        
+        final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+
         final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
         if (googleUser == null) {
           throw FirebaseAuthException(code: 'canceled', message: 'Google sign-in canceled');
         }
-        
+
         final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
         if (googleAuth.accessToken == null || googleAuth.idToken == null) {
           throw FirebaseAuthException(
-            code: 'invalid-credential', 
-            message: 'Failed to get Google authentication tokens'
+            code: 'invalid-credential',
+            message: 'Failed to get Google authentication tokens',
           );
         }
-        
+
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
@@ -408,9 +397,7 @@ class AuthService {
     if (user == null) throw Exception('No authenticated user');
 
     try {
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.now(),
-      };
+      final updateData = <String, dynamic>{'updatedAt': Timestamp.now()};
 
       if (name != null) updateData['name'] = name;
       if (city != null) updateData['city'] = city;
@@ -450,10 +437,7 @@ class AuthService {
     try {
       // Проверяем валидность email
       if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-        throw FirebaseAuthException(
-          code: 'invalid-email',
-          message: 'Неверный формат email',
-        );
+        throw FirebaseAuthException(code: 'invalid-email', message: 'Неверный формат email');
       }
 
       // Проверяем, существует ли email
@@ -499,10 +483,10 @@ class AuthService {
   Future<void> signOut() async {
     try {
       await setUserOnlineStatus(false);
-      
+
       // Очищаем FCM токен перед выходом
       await clearFCMToken();
-      
+
       if (!kIsWeb) {
         try {
           await GoogleSignIn().signOut();

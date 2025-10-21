@@ -8,10 +8,7 @@ import '../services/photographer_studio_link_service.dart';
 
 /// Диалог предложения фотостудии
 class SuggestStudioDialog extends ConsumerStatefulWidget {
-  const SuggestStudioDialog({
-    super.key,
-    required this.bookingId,
-  });
+  const SuggestStudioDialog({super.key, required this.bookingId});
 
   final String bookingId;
 
@@ -72,10 +69,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка загрузки фотостудий: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка загрузки фотостудий: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -93,9 +87,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
     // final currentUser = ref.watch(currentUserProvider); // Unused variable removed
 
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         height: MediaQuery.of(context).size.height * 0.8,
@@ -109,9 +101,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                 Expanded(
                   child: Text(
                     'Предложить фотостудию',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 IconButton(
@@ -133,9 +123,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                       // Выбор фотостудии
                       Text(
                         'Выберите фотостудию',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 8),
 
@@ -153,24 +141,16 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
                           ),
                           child: Column(
                             children: [
-                              const Icon(
-                                Icons.photo_camera,
-                                size: 48,
-                                color: Colors.grey,
-                              ),
+                              const Icon(Icons.photo_camera, size: 48, color: Colors.grey),
                               const SizedBox(height: 8),
                               Text(
                                 'Нет доступных фотостудий',
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey,
-                                ),
+                                style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 'Сначала создайте связку с фотостудией',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey,
-                                ),
+                                style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
                               ),
                             ],
                           ),
@@ -318,10 +298,7 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
 
     if (_selectedStudio == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Выберите фотостудию'),
-          backgroundColor: Colors.orange,
-        ),
+        const SnackBar(content: Text('Выберите фотостудию'), backgroundColor: Colors.orange),
       );
       return;
     }
@@ -342,8 +319,9 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
     });
 
     try {
-      final suggestedPrice =
-          _priceController.text.isNotEmpty ? double.tryParse(_priceController.text) : null;
+      final suggestedPrice = _priceController.text.isNotEmpty
+          ? double.tryParse(_priceController.text)
+          : null;
 
       await _linkService.createStudioSuggestion(
         bookingId: widget.bookingId,
@@ -364,12 +342,9 @@ class _SuggestStudioDialogState extends ConsumerState<SuggestStudioDialog> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {

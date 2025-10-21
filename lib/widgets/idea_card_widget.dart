@@ -54,13 +54,12 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
 
   void _initializeVideoPlayer() {
     if (widget.idea.media.isNotEmpty) {
-      final firstVideo =
-          widget.idea.media.where((media) => media.type == IdeaMediaType.video).firstOrNull;
+      final firstVideo = widget.idea.media
+          .where((media) => media.type == IdeaMediaType.video)
+          .firstOrNull;
 
       if (firstVideo != null) {
-        _videoController = VideoPlayerController.networkUrl(
-          Uri.parse(firstVideo.url),
-        );
+        _videoController = VideoPlayerController.networkUrl(Uri.parse(firstVideo.url));
         _videoController?.initialize().then((_) {
           setState(() {});
         });
@@ -70,210 +69,166 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
 
   @override
   Widget build(BuildContext context) => Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: InkWell(
-          onTap: widget.onTap,
-          borderRadius: BorderRadius.circular(12),
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    child: InkWell(
+      onTap: widget.onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildIdeaHeader(),
+          _buildIdeaContent(),
+          _buildIdeaMedia(),
+          _buildIdeaActions(),
+          _buildIdeaStats(),
+          if (widget.idea.comments.isNotEmpty) _buildCommentsPreview(),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildIdeaHeader() => Padding(
+    padding: const EdgeInsets.all(16),
+    child: Row(
+      children: [
+        GestureDetector(
+          onTap: widget.onUserTap,
+          child: CircleAvatar(
+            radius: 20,
+            backgroundImage: widget.idea.authorId.isNotEmpty
+                ? CachedNetworkImageProvider(
+                    'https://ui-avatars.com/api/?name=${widget.idea.authorId}&size=40',
+                  )
+                : null,
+            child: widget.idea.authorId.isEmpty ? const Icon(Icons.person) : null,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildIdeaHeader(),
-              _buildIdeaContent(),
-              _buildIdeaMedia(),
-              _buildIdeaActions(),
-              _buildIdeaStats(),
-              if (widget.idea.comments.isNotEmpty) _buildCommentsPreview(),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildIdeaHeader() => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: widget.onUserTap,
-              child: CircleAvatar(
-                radius: 20,
-                backgroundImage: widget.idea.authorId.isNotEmpty
-                    ? CachedNetworkImageProvider(
-                        'https://ui-avatars.com/api/?name=${widget.idea.authorId}&size=40',
-                      )
-                    : null,
-                child: widget.idea.authorId.isEmpty ? const Icon(Icons.person) : null,
+              Text(
+                'Пользователь ${widget.idea.authorId}',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
+                  Text(widget.idea.type.icon, style: const TextStyle(fontSize: 14)),
+                  const SizedBox(width: 4),
                   Text(
-                    'Пользователь ${widget.idea.authorId}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                    widget.idea.type.displayName,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
-                  Row(
-                    children: [
-                      Text(
-                        widget.idea.type.icon,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        widget.idea.type.displayName,
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        _formatDate(widget.idea.createdAt),
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(width: 8),
+                  Text(
+                    _formatDate(widget.idea.createdAt),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                 ],
               ),
-            ),
-            if (widget.idea.isFeatured) const Icon(Icons.star, color: Colors.amber, size: 16),
-            IconButton(
-              onPressed: widget.onMore,
-              icon: const Icon(Icons.more_vert),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildIdeaContent() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.idea.title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              widget.idea.description,
-              style: const TextStyle(fontSize: 16),
-              maxLines: _isExpanded ? null : 3,
-              overflow: _isExpanded ? null : TextOverflow.ellipsis,
-            ),
-            if (widget.idea.description.length > 100)
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _isExpanded = !_isExpanded;
-                  });
-                },
-                child: Text(_isExpanded ? 'Свернуть' : 'Показать полностью'),
-              ),
-            if (widget.idea.tags.isNotEmpty) _buildTags(),
-            if (widget.idea.budget != null ||
-                widget.idea.timeline != null ||
-                widget.idea.location != null)
-              _buildIdeaDetails(),
-          ],
-        ),
-      );
-
-  Widget _buildTags() => Padding(
-        padding: const EdgeInsets.only(top: 8),
-        child: Wrap(
-          spacing: 8,
-          children: widget.idea.tags
-              .map(
-                (tag) => GestureDetector(
-                  onTap: () {
-                    // TODO: Переход к поиску по тегу
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.blue[100],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '#$tag',
-                      style: TextStyle(
-                        color: Colors.blue[800],
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
-        ),
-      );
-
-  Widget _buildIdeaDetails() => Padding(
-        padding: const EdgeInsets.only(top: 12),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            children: [
-              if (widget.idea.budget != null)
-                _buildDetailRow(
-                  Icons.attach_money,
-                  'Бюджет',
-                  '${widget.idea.budget!.toStringAsFixed(0)} ₽',
-                ),
-              if (widget.idea.timeline != null)
-                _buildDetailRow(
-                  Icons.schedule,
-                  'Сроки',
-                  widget.idea.timeline!,
-                ),
-              if (widget.idea.location != null)
-                _buildDetailRow(
-                  Icons.location_on,
-                  'Место',
-                  widget.idea.location!,
-                ),
             ],
           ),
         ),
-      );
+        if (widget.idea.isFeatured) const Icon(Icons.star, color: Colors.amber, size: 16),
+        IconButton(onPressed: widget.onMore, icon: const Icon(Icons.more_vert)),
+      ],
+    ),
+  );
+
+  Widget _buildIdeaContent() => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.idea.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Text(
+          widget.idea.description,
+          style: const TextStyle(fontSize: 16),
+          maxLines: _isExpanded ? null : 3,
+          overflow: _isExpanded ? null : TextOverflow.ellipsis,
+        ),
+        if (widget.idea.description.length > 100)
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            },
+            child: Text(_isExpanded ? 'Свернуть' : 'Показать полностью'),
+          ),
+        if (widget.idea.tags.isNotEmpty) _buildTags(),
+        if (widget.idea.budget != null ||
+            widget.idea.timeline != null ||
+            widget.idea.location != null)
+          _buildIdeaDetails(),
+      ],
+    ),
+  );
+
+  Widget _buildTags() => Padding(
+    padding: const EdgeInsets.only(top: 8),
+    child: Wrap(
+      spacing: 8,
+      children: widget.idea.tags
+          .map(
+            (tag) => GestureDetector(
+              onTap: () {
+                // TODO: Переход к поиску по тегу
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.blue[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text('#$tag', style: TextStyle(color: Colors.blue[800], fontSize: 12)),
+              ),
+            ),
+          )
+          .toList(),
+    ),
+  );
+
+  Widget _buildIdeaDetails() => Padding(
+    padding: const EdgeInsets.only(top: 12),
+    child: Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+      child: Column(
+        children: [
+          if (widget.idea.budget != null)
+            _buildDetailRow(
+              Icons.attach_money,
+              'Бюджет',
+              '${widget.idea.budget!.toStringAsFixed(0)} ₽',
+            ),
+          if (widget.idea.timeline != null)
+            _buildDetailRow(Icons.schedule, 'Сроки', widget.idea.timeline!),
+          if (widget.idea.location != null)
+            _buildDetailRow(Icons.location_on, 'Место', widget.idea.location!),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildDetailRow(IconData icon, String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 4),
-        child: Row(
-          children: [
-            Icon(icon, size: 16, color: Colors.grey[600]),
-            const SizedBox(width: 8),
-            Text(
-              '$label: ',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[700],
-              ),
-            ),
-            Expanded(
-              child: Text(
-                value,
-                style: TextStyle(color: Colors.grey[600]),
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 4),
+    child: Row(
+      children: [
+        Icon(icon, size: 16, color: Colors.grey[600]),
+        const SizedBox(width: 8),
+        Text(
+          '$label: ',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[700]),
         ),
-      );
+        Expanded(
+          child: Text(value, style: TextStyle(color: Colors.grey[600])),
+        ),
+      ],
+    ),
+  );
 
   Widget _buildIdeaMedia() {
     if (widget.idea.media.isEmpty) return const SizedBox.shrink();
@@ -307,11 +262,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                 color: Colors.grey[300],
                 child: const Center(child: CircularProgressIndicator()),
               ),
-              errorWidget: (context, url, error) => Container(
-                height: 200,
-                color: Colors.grey[300],
-                child: const Icon(Icons.error),
-              ),
+              errorWidget: (context, url, error) =>
+                  Container(height: 200, color: Colors.grey[300], child: const Icon(Icons.error)),
             ),
           ),
         );
@@ -320,10 +272,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
       case IdeaMediaType.gif:
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: CachedNetworkImage(
-            imageUrl: media.url,
-            fit: BoxFit.cover,
-          ),
+          child: CachedNetworkImage(imageUrl: media.url, fit: BoxFit.cover),
         );
       case IdeaMediaType.audio:
         return Container(
@@ -332,9 +281,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Center(
-            child: Icon(Icons.audiotrack, size: 32),
-          ),
+          child: const Center(child: Icon(Icons.audiotrack, size: 32)),
         );
     }
   }
@@ -368,11 +315,7 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
               child: VideoPlayer(_videoController!),
             ),
             if (!_videoController!.value.isPlaying)
-              const Icon(
-                Icons.play_circle_fill,
-                size: 64,
-                color: Colors.white70,
-              ),
+              const Icon(Icons.play_circle_fill, size: 64, color: Colors.white70),
           ],
         ),
       ),
@@ -380,146 +323,129 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
   }
 
   Widget _buildMediaCarousel() => Column(
-        children: [
-          SizedBox(
-            height: 200,
-            child: PageView.builder(
-              onPageChanged: (index) {
-                setState(() {
-                  _currentMediaIndex = index;
-                });
-              },
-              itemCount: widget.idea.media.length,
-              itemBuilder: (context, index) => _buildSingleMedia(widget.idea.media[index]),
-            ),
-          ),
-          if (widget.idea.media.length > 1)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  widget.idea.media.length,
-                  (index) => Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentMediaIndex == index ? Colors.blue : Colors.grey[300],
-                    ),
-                  ),
+    children: [
+      SizedBox(
+        height: 200,
+        child: PageView.builder(
+          onPageChanged: (index) {
+            setState(() {
+              _currentMediaIndex = index;
+            });
+          },
+          itemCount: widget.idea.media.length,
+          itemBuilder: (context, index) => _buildSingleMedia(widget.idea.media[index]),
+        ),
+      ),
+      if (widget.idea.media.length > 1)
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              widget.idea.media.length,
+              (index) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 2),
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _currentMediaIndex == index ? Colors.blue : Colors.grey[300],
                 ),
               ),
             ),
-        ],
-      );
+          ),
+        ),
+    ],
+  );
 
   Widget _buildIdeaActions() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            _buildActionButton(
-              icon: _isLiked ? Icons.favorite : Icons.favorite_border,
-              color: _isLiked ? Colors.red : Colors.grey,
-              onTap: () {
-                setState(() {
-                  _isLiked = !_isLiked;
-                });
-                widget.onLike?.call();
-              },
-            ),
-            const SizedBox(width: 16),
-            _buildActionButton(
-              icon: Icons.chat_bubble_outline,
-              onTap: widget.onComment,
-            ),
-            const SizedBox(width: 16),
-            _buildActionButton(
-              icon: Icons.share_outlined,
-              onTap: widget.onShare,
-            ),
-            const Spacer(),
-            _buildActionButton(
-              icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
-              color: _isSaved ? Colors.blue : Colors.grey,
-              onTap: () {
-                setState(() {
-                  _isSaved = !_isSaved;
-                });
-                widget.onSave?.call();
-              },
-            ),
-          ],
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    child: Row(
+      children: [
+        _buildActionButton(
+          icon: _isLiked ? Icons.favorite : Icons.favorite_border,
+          color: _isLiked ? Colors.red : Colors.grey,
+          onTap: () {
+            setState(() {
+              _isLiked = !_isLiked;
+            });
+            widget.onLike?.call();
+          },
         ),
-      );
+        const SizedBox(width: 16),
+        _buildActionButton(icon: Icons.chat_bubble_outline, onTap: widget.onComment),
+        const SizedBox(width: 16),
+        _buildActionButton(icon: Icons.share_outlined, onTap: widget.onShare),
+        const Spacer(),
+        _buildActionButton(
+          icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
+          color: _isSaved ? Colors.blue : Colors.grey,
+          onTap: () {
+            setState(() {
+              _isSaved = !_isSaved;
+            });
+            widget.onSave?.call();
+          },
+        ),
+      ],
+    ),
+  );
 
-  Widget _buildActionButton({
-    required IconData icon,
-    Color? color,
-    VoidCallback? onTap,
-  }) =>
+  Widget _buildActionButton({required IconData icon, Color? color, VoidCallback? onTap}) =>
       GestureDetector(
         onTap: onTap,
-        child: Icon(
-          icon,
-          color: color ?? Colors.grey[600],
-          size: 24,
-        ),
+        child: Icon(icon, color: color ?? Colors.grey[600], size: 24),
       );
 
   Widget _buildIdeaStats() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (widget.idea.likesCount > 0)
-              Text(
-                '${widget.idea.likesCount} ${_getLikesText(widget.idea.likesCount)}',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            if (widget.idea.commentsCount > 0)
-              TextButton(
-                onPressed: widget.onComment,
-                child: Text(
-                  'Показать все ${widget.idea.commentsCount} ${_getCommentsText(widget.idea.commentsCount)}',
-                  style: const TextStyle(fontSize: 14),
-                ),
-              ),
-          ],
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.idea.likesCount > 0)
+          Text(
+            '${widget.idea.likesCount} ${_getLikesText(widget.idea.likesCount)}',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        if (widget.idea.commentsCount > 0)
+          TextButton(
+            onPressed: widget.onComment,
+            child: Text(
+              'Показать все ${widget.idea.commentsCount} ${_getCommentsText(widget.idea.commentsCount)}',
+              style: const TextStyle(fontSize: 14),
+            ),
+          ),
+      ],
+    ),
+  );
 
   Widget _buildCommentsPreview() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: widget.idea.comments
-              .take(2)
-              .map(
-                (comment) => Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Пользователь ${comment.authorId} ',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: comment.text,
-                          style: const TextStyle(color: Colors.black),
-                        ),
-                      ],
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Column(
+      children: widget.idea.comments
+          .take(2)
+          .map(
+            (comment) => Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Пользователь ${comment.authorId} ',
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
                     ),
-                  ),
+                    TextSpan(
+                      text: comment.text,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ],
                 ),
-              )
-              .toList(),
-        ),
-      );
+              ),
+            ),
+          )
+          .toList(),
+    ),
+  );
 
   void _showImageFullscreen(String imageUrl) {
     Navigator.of(context).push(

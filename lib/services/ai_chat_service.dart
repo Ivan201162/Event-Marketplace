@@ -65,11 +65,7 @@ class AiChatService {
   }
 
   /// Отправить сообщение пользователя
-  Future<ChatMessage?> sendUserMessage(
-    String sessionId,
-    String userId,
-    String content,
-  ) async {
+  Future<ChatMessage?> sendUserMessage(String sessionId, String userId, String content) async {
     try {
       final message = ChatMessage(
         id: '${sessionId}_${DateTime.now().millisecondsSinceEpoch}',
@@ -98,11 +94,7 @@ class AiChatService {
   }
 
   /// Получить ответ от AI
-  Future<ChatMessage?> getAiResponse(
-    String sessionId,
-    String userId,
-    String userMessage,
-  ) async {
+  Future<ChatMessage?> getAiResponse(String sessionId, String userId, String userMessage) async {
     try {
       // Получаем контекст сессии
       final sessionDoc = await _firestore.collection(_sessionsCollection).doc(sessionId).get();
@@ -144,10 +136,7 @@ class AiChatService {
   }
 
   /// Обработка сообщения пользователя
-  Future<Map<String, dynamic>> _processUserMessage(
-    String message,
-    UserContext context,
-  ) async {
+  Future<Map<String, dynamic>> _processUserMessage(String message, UserContext context) async {
     final lowerMessage = message.toLowerCase();
 
     // Приветствие
@@ -158,21 +147,9 @@ class AiChatService {
         'type': MessageType.greeting.value,
         'metadata': {
           'quickReplies': [
-            const QuickReply(
-              text: 'Свадьба',
-              value: 'wedding',
-              icon: Icons.favorite,
-            ).toJson(),
-            const QuickReply(
-              text: 'Корпоратив',
-              value: 'corporate',
-              icon: Icons.business,
-            ).toJson(),
-            const QuickReply(
-              text: 'День рождения',
-              value: 'birthday',
-              icon: Icons.cake,
-            ).toJson(),
+            const QuickReply(text: 'Свадьба', value: 'wedding', icon: Icons.favorite).toJson(),
+            const QuickReply(text: 'Корпоратив', value: 'corporate', icon: Icons.business).toJson(),
+            const QuickReply(text: 'День рождения', value: 'birthday', icon: Icons.cake).toJson(),
             const QuickReply(text: 'Другое', value: 'other', icon: Icons.event).toJson(),
           ],
         },
@@ -311,10 +288,7 @@ class AiChatService {
           'type': MessageType.text.value,
           'metadata': {
             'quickReplies': [
-              const QuickReply(
-                text: 'Изменить критерии',
-                value: 'change_criteria',
-              ).toJson(),
+              const QuickReply(text: 'Изменить критерии', value: 'change_criteria').toJson(),
               const QuickReply(text: 'Показать всех', value: 'show_all').toJson(),
             ],
           },
@@ -358,10 +332,7 @@ class AiChatService {
   }
 
   /// Обновить контекст сессии
-  Future<void> _updateSessionContext(
-    String sessionId,
-    UserContext? newContext,
-  ) async {
+  Future<void> _updateSessionContext(String sessionId, UserContext? newContext) async {
     if (newContext == null) return;
 
     try {
@@ -426,13 +397,7 @@ class AiChatService {
   }
 
   bool _isCity(String message) {
-    final cities = [
-      'москва',
-      'санкт-петербург',
-      'спб',
-      'екатеринбург',
-      'новосибирск',
-    ];
+    final cities = ['москва', 'санкт-петербург', 'спб', 'екатеринбург', 'новосибирск'];
     return cities.any((city) => message.contains(city));
   }
 

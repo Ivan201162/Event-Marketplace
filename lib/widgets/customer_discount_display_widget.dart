@@ -31,18 +31,9 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
           // Заголовок с иконкой и статусом
           Row(
             children: [
-              Icon(
-                _getDiscountIcon(),
-                color: _getDiscountColor(),
-                size: 24,
-              ),
+              Icon(_getDiscountIcon(), color: _getDiscountColor(), size: 24),
               const SizedBox(width: 8),
-              const Expanded(
-                child: ResponsiveText(
-                  'Предложение скидки',
-                  isTitle: true,
-                ),
-              ),
+              const Expanded(child: ResponsiveText('Предложение скидки', isTitle: true)),
               _buildStatusChip(),
             ],
           ),
@@ -62,10 +53,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: _getDiscountColor(),
-                width: 2,
-              ),
+              border: Border.all(color: _getDiscountColor(), width: 2),
             ),
             child: Column(
               children: [
@@ -76,10 +64,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const ResponsiveText(
-                          'Было:',
-                          isSubtitle: true,
-                        ),
+                        const ResponsiveText('Было:', isSubtitle: true),
                         ResponsiveText(
                           '${discount!.oldPrice?.toStringAsFixed(0)} ₽',
                           style: const TextStyle(
@@ -94,10 +79,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        const ResponsiveText(
-                          'Стало:',
-                          isSubtitle: true,
-                        ),
+                        const ResponsiveText('Стало:', isSubtitle: true),
                         ResponsiveText(
                           '${discount!.newPrice?.toStringAsFixed(0)} ₽',
                           style: TextStyle(
@@ -128,10 +110,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                       const SizedBox(width: 8),
                       ResponsiveText(
                         'Экономия: ${discount!.savings?.toStringAsFixed(0)} ₽ (${discount!.discountPercent?.toStringAsFixed(0)}%)',
-                        style: const TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -154,12 +133,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                 children: [
                   const Icon(Icons.info_outline, color: Colors.blue, size: 20),
                   const SizedBox(width: 8),
-                  Expanded(
-                    child: ResponsiveText(
-                      'Причина: ${discount!.reason}',
-                      isSubtitle: true,
-                    ),
-                  ),
+                  Expanded(child: ResponsiveText('Причина: ${discount!.reason}', isSubtitle: true)),
                 ],
               ),
             ),
@@ -179,12 +153,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                 children: [
                   const Icon(Icons.access_time, color: Colors.orange, size: 20),
                   const SizedBox(width: 8),
-                  Expanded(
-                    child: ResponsiveText(
-                      _getTimeRemaining(),
-                      isSubtitle: true,
-                    ),
-                  ),
+                  Expanded(child: ResponsiveText(_getTimeRemaining(), isSubtitle: true)),
                 ],
               ),
             ),
@@ -264,96 +233,82 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
       ),
       child: Text(
         chipText,
-        style: TextStyle(
-          color: chipColor,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(color: chipColor, fontSize: 12, fontWeight: FontWeight.bold),
       ),
     );
   }
 
   Widget _buildPriceHistorySection(BuildContext context, WidgetRef ref) => Consumer(
-        builder: (context, ref, child) => ref.watch(priceHistoryProvider(bookingId)).when(
-              data: (priceHistory) {
-                if (priceHistory.isEmpty) {
-                  return const SizedBox.shrink();
-                }
+    builder: (context, ref, child) => ref
+        .watch(priceHistoryProvider(bookingId))
+        .when(
+          data: (priceHistory) {
+            if (priceHistory.isEmpty) {
+              return const SizedBox.shrink();
+            }
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
                   children: [
-                    const Row(
-                      children: [
-                        Icon(Icons.history, size: 20),
-                        SizedBox(width: 8),
-                        ResponsiveText(
-                          'История изменений цены',
-                          isTitle: true,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    ...priceHistory.take(3).map(_buildPriceHistoryItem),
-                    if (priceHistory.length > 3) ...[
-                      const SizedBox(height: 8),
-                      TextButton(
-                        onPressed: () => _showFullPriceHistory(context, priceHistory),
-                        child: const Text('Показать всю историю'),
-                      ),
-                    ],
+                    Icon(Icons.history, size: 20),
+                    SizedBox(width: 8),
+                    ResponsiveText('История изменений цены', isTitle: true),
                   ],
-                );
-              },
-              loading: () => const SizedBox.shrink(),
-              error: (error, stack) => const SizedBox.shrink(),
-            ),
-      );
-
-  Widget _buildPriceHistoryItem(PriceHistory history) => Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              history.isDiscount ? Icons.trending_down : Icons.trending_up,
-              color: history.isDiscount ? Colors.green : Colors.red,
-              size: 16,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${history.oldPrice.toStringAsFixed(0)} ₽ → ${history.newPrice.toStringAsFixed(0)} ₽',
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    history.reason,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+                ),
+                const SizedBox(height: 8),
+                ...priceHistory.take(3).map(_buildPriceHistoryItem),
+                if (priceHistory.length > 3) ...[
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () => _showFullPriceHistory(context, priceHistory),
+                    child: const Text('Показать всю историю'),
                   ),
                 ],
-              ),
-            ),
-            Text(
-              _formatDate(history.changedAt),
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
-          ],
+              ],
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (error, stack) => const SizedBox.shrink(),
         ),
-      );
+  );
+
+  Widget _buildPriceHistoryItem(PriceHistory history) => Container(
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.grey.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+    ),
+    child: Row(
+      children: [
+        Icon(
+          history.isDiscount ? Icons.trending_down : Icons.trending_up,
+          color: history.isDiscount ? Colors.green : Colors.red,
+          size: 16,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${history.oldPrice.toStringAsFixed(0)} ₽ → ${history.newPrice.toStringAsFixed(0)} ₽',
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
+              Text(history.reason, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            ],
+          ),
+        ),
+        Text(
+          _formatDate(history.changedAt),
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+      ],
+    ),
+  );
 
   IconData _getDiscountIcon() {
     switch (discount!.status) {
@@ -431,12 +386,9 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
 
       onDiscountChanged?.call();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -452,10 +404,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
     );
   }
 
-  void _showFullPriceHistory(
-    BuildContext context,
-    List<PriceHistory> priceHistory,
-  ) {
+  void _showFullPriceHistory(BuildContext context, List<PriceHistory> priceHistory) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -472,10 +421,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -484,10 +430,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
 
 /// Диалог для отклонения скидки
 class _RejectDiscountDialog extends StatefulWidget {
-  const _RejectDiscountDialog({
-    required this.bookingId,
-    required this.onRejected,
-  });
+  const _RejectDiscountDialog({required this.bookingId, required this.onRejected});
   final String bookingId;
   final VoidCallback onRejected;
 
@@ -507,43 +450,40 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Отклонить скидку'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Вы уверены, что хотите отклонить предложение скидки?'),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _reasonController,
-              decoration: const InputDecoration(
-                labelText: 'Причина отклонения (необязательно)',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-          ],
+    title: const Text('Отклонить скидку'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text('Вы уверены, что хотите отклонить предложение скидки?'),
+        const SizedBox(height: 16),
+        TextField(
+          controller: _reasonController,
+          decoration: const InputDecoration(
+            labelText: 'Причина отклонения (необязательно)',
+            border: OutlineInputBorder(),
+          ),
+          maxLines: 3,
         ),
-        actions: [
-          TextButton(
-            onPressed: _isLoading ? null : () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: _isLoading ? null : _rejectDiscount,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: _isLoading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text('Отклонить'),
-          ),
-        ],
-      );
+      ],
+    ),
+    actions: [
+      TextButton(
+        onPressed: _isLoading ? null : () => Navigator.pop(context),
+        child: const Text('Отмена'),
+      ),
+      ElevatedButton(
+        onPressed: _isLoading ? null : _rejectDiscount,
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+        child: _isLoading
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Text('Отклонить'),
+      ),
+    ],
+  );
 
   Future<void> _rejectDiscount() async {
     setState(() {
@@ -560,20 +500,14 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Скидка отклонена'),
-          backgroundColor: Colors.orange,
-        ),
+        const SnackBar(content: Text('Скидка отклонена'), backgroundColor: Colors.orange),
       );
 
       widget.onRejected();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     } finally {
       setState(() {
         _isLoading = false;
@@ -583,8 +517,10 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
 }
 
 /// Провайдер для истории цен
-final priceHistoryProvider =
-    FutureProvider.family<List<PriceHistory>, String>((ref, bookingId) async {
+final priceHistoryProvider = FutureProvider.family<List<PriceHistory>, String>((
+  ref,
+  bookingId,
+) async {
   final service = ref.read(priceHistoryServiceProvider);
   return service.getBookingPriceHistory(bookingId);
 });

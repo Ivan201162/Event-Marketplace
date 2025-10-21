@@ -1,12 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Приоритет уведомления
-enum NotificationPriority {
-  low,
-  normal,
-  high,
-  urgent,
-}
+enum NotificationPriority { low, normal, high, urgent }
 
 /// Модель уведомления приложения
 class AppNotification {
@@ -58,18 +53,18 @@ class AppNotification {
       actionUrl: data['actionUrl'] as String?,
       expiresAt: data['expiresAt'] != null
           ? (data['expiresAt'] is Timestamp
-              ? (data['expiresAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['expiresAt'].toString()))
+                ? (data['expiresAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['expiresAt'].toString()))
           : null,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       readAt: data['readAt'] != null
           ? (data['readAt'] is Timestamp
-              ? (data['readAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['readAt'].toString()))
+                ? (data['readAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['readAt'].toString()))
           : null,
     );
   }
@@ -81,28 +76,25 @@ class AppNotification {
       throw Exception('Document data is null');
     }
 
-    return AppNotification.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return AppNotification.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'title': title,
-        'body': body,
-        'imageUrl': imageUrl,
-        'data': data,
-        'priority': priority.name,
-        'isRead': isRead,
-        'isPinned': isPinned,
-        'type': type,
-        'actionUrl': actionUrl,
-        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-      };
+    'userId': userId,
+    'title': title,
+    'body': body,
+    'imageUrl': imageUrl,
+    'data': data,
+    'priority': priority.name,
+    'isRead': isRead,
+    'isPinned': isPinned,
+    'type': type,
+    'actionUrl': actionUrl,
+    'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+  };
 
   /// Копировать с изменениями
   AppNotification copyWith({
@@ -120,23 +112,22 @@ class AppNotification {
     DateTime? expiresAt,
     DateTime? createdAt,
     DateTime? readAt,
-  }) =>
-      AppNotification(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        title: title ?? this.title,
-        body: body ?? this.body,
-        imageUrl: imageUrl ?? this.imageUrl,
-        data: data ?? this.data,
-        priority: priority ?? this.priority,
-        isRead: isRead ?? this.isRead,
-        isPinned: isPinned ?? this.isPinned,
-        type: type ?? this.type,
-        actionUrl: actionUrl ?? this.actionUrl,
-        expiresAt: expiresAt ?? this.expiresAt,
-        createdAt: createdAt ?? this.createdAt,
-        readAt: readAt ?? this.readAt,
-      );
+  }) => AppNotification(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    title: title ?? this.title,
+    body: body ?? this.body,
+    imageUrl: imageUrl ?? this.imageUrl,
+    data: data ?? this.data,
+    priority: priority ?? this.priority,
+    isRead: isRead ?? this.isRead,
+    isPinned: isPinned ?? this.isPinned,
+    type: type ?? this.type,
+    actionUrl: actionUrl ?? this.actionUrl,
+    expiresAt: expiresAt ?? this.expiresAt,
+    createdAt: createdAt ?? this.createdAt,
+    readAt: readAt ?? this.readAt,
+  );
 
   /// Парсинг приоритета из строки
   static NotificationPriority _parsePriority(String? priority) {

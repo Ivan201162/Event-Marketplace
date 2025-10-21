@@ -211,14 +211,8 @@ class GrowthPackIntegrationService {
         type: 'referral',
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 30)),
-        conditions: {
-          'referral_count': 5,
-        },
-        rewards: {
-          'experience': 500,
-          'premium_days': 30,
-          'badge': 'referral_champion',
-        },
+        conditions: {'referral_count': 5},
+        rewards: {'experience': 500, 'premium_days': 30, 'badge': 'referral_champion'},
         icon: 'people',
         category: 'social',
       );
@@ -230,13 +224,8 @@ class GrowthPackIntegrationService {
         type: 'purchase',
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 60)),
-        conditions: {
-          'total_spent': 5000.0,
-        },
-        rewards: {
-          'experience': 300,
-          'discount': 0.20,
-        },
+        conditions: {'total_spent': 5000.0},
+        rewards: {'experience': 300, 'discount': 0.20},
         icon: 'shopping_cart',
         category: 'monetization',
       );
@@ -248,13 +237,8 @@ class GrowthPackIntegrationService {
         type: 'level',
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 90)),
-        conditions: {
-          'level': 5,
-        },
-        rewards: {
-          'experience': 200,
-          'badge': 'level_master',
-        },
+        conditions: {'level': 5},
+        rewards: {'experience': 200, 'badge': 'level_master'},
         icon: 'star',
         category: 'progress',
       );
@@ -279,15 +263,8 @@ class GrowthPackIntegrationService {
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
         'metadata': {
-          'regionFactors': {
-            'Moscow': 1.2,
-            'SPb': 1.1,
-            'other': 1.0,
-          },
-          'timeFactors': {
-            'peak_hours': 1.1,
-            'off_peak': 0.9,
-          },
+          'regionFactors': {'Moscow': 1.2, 'SPb': 1.1, 'other': 1.0},
+          'timeFactors': {'peak_hours': 1.1, 'off_peak': 0.9},
         },
       });
 
@@ -302,18 +279,15 @@ class GrowthPackIntegrationService {
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
         'metadata': {
-          'regionFactors': {
-            'Moscow': 1.3,
-            'SPb': 1.2,
-            'other': 1.0,
-          },
+          'regionFactors': {'Moscow': 1.3, 'SPb': 1.2, 'other': 1.0},
         },
       });
 
       debugPrint('INFO: [GrowthPackIntegrationService] Default pricing rules created');
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to create default pricing rules: $e');
+        'ERROR: [GrowthPackIntegrationService] Failed to create default pricing rules: $e',
+      );
     }
   }
 
@@ -330,10 +304,7 @@ class GrowthPackIntegrationService {
         'maxImpressionsPerUser': 3,
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
-        'metadata': {
-          'category': 'music',
-          'targetAudience': 'music_lovers',
-        },
+        'metadata': {'category': 'music', 'targetAudience': 'music_lovers'},
       });
 
       // Правило для показа рекламы по истории просмотров
@@ -346,10 +317,7 @@ class GrowthPackIntegrationService {
         'maxImpressionsPerUser': 5,
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
-        'metadata': {
-          'category': 'specialists',
-          'targetAudience': 'active_browsers',
-        },
+        'metadata': {'category': 'specialists', 'targetAudience': 'active_browsers'},
       });
 
       // Правило для показа рекламы по локации
@@ -362,25 +330,27 @@ class GrowthPackIntegrationService {
         'maxImpressionsPerUser': 4,
         'createdAt': DateTime.now(),
         'updatedAt': DateTime.now(),
-        'metadata': {
-          'region': 'Moscow',
-          'targetAudience': 'moscow_users',
-        },
+        'metadata': {'region': 'Moscow', 'targetAudience': 'moscow_users'},
       });
 
       debugPrint('INFO: [GrowthPackIntegrationService] Default smart ad rules created');
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthPackIntegrationService] Failed to create default smart ad rules: $e');
+        'ERROR: [GrowthPackIntegrationService] Failed to create default smart ad rules: $e',
+      );
     }
   }
 
   /// Обработка события пользователя (интеграция всех сервисов)
   Future<void> handleUserEvent(
-      String userId, String eventType, Map<String, dynamic> eventData) async {
+    String userId,
+    String eventType,
+    Map<String, dynamic> eventData,
+  ) async {
     try {
       debugPrint(
-          'INFO: [GrowthPackIntegrationService] Handling user event: $eventType for user $userId');
+        'INFO: [GrowthPackIntegrationService] Handling user event: $eventType for user $userId',
+      );
 
       // Обработка в сервисе геймификации
       await _growthMechanicsService.checkAndAwardAchievements(userId, eventType, eventData);
@@ -402,7 +372,10 @@ class GrowthPackIntegrationService {
 
   /// Добавление опыта за событие
   Future<void> _addExperienceForEvent(
-      String userId, String eventType, Map<String, dynamic> eventData) async {
+    String userId,
+    String eventType,
+    Map<String, dynamic> eventData,
+  ) async {
     try {
       int experience = 0;
       String reason = '';
@@ -462,30 +435,41 @@ class GrowthPackIntegrationService {
   Future<Map<String, dynamic>> getUserGrowthStats(String userId) async {
     try {
       // Получаем уровень пользователя
-      final DocumentSnapshot levelDoc =
-          await _firestore.collection('user_levels').doc(userId).get();
+      final DocumentSnapshot levelDoc = await _firestore
+          .collection('user_levels')
+          .doc(userId)
+          .get();
 
       // Получаем достижения
-      final QuerySnapshot achievementsSnapshot =
-          await _firestore.collection('user_achievements').where('userId', isEqualTo: userId).get();
+      final QuerySnapshot achievementsSnapshot = await _firestore
+          .collection('user_achievements')
+          .where('userId', isEqualTo: userId)
+          .get();
 
       // Получаем значки
-      final QuerySnapshot badgesSnapshot =
-          await _firestore.collection('user_badges').where('userId', isEqualTo: userId).get();
+      final QuerySnapshot badgesSnapshot = await _firestore
+          .collection('user_badges')
+          .where('userId', isEqualTo: userId)
+          .get();
 
       // Получаем челленджи
-      final QuerySnapshot challengesSnapshot =
-          await _firestore.collection('user_challenges').where('userId', isEqualTo: userId).get();
+      final QuerySnapshot challengesSnapshot = await _firestore
+          .collection('user_challenges')
+          .where('userId', isEqualTo: userId)
+          .get();
 
       // Получаем рефералов
-      final QuerySnapshot referralsSnapshot =
-          await _firestore.collection('referrals').where('referrerId', isEqualTo: userId).get();
+      final QuerySnapshot referralsSnapshot = await _firestore
+          .collection('referrals')
+          .where('referrerId', isEqualTo: userId)
+          .get();
 
       return {
         'level': levelDoc.exists ? (levelDoc.data() as Map<String, dynamic>)['level'] : 1,
         'experience': levelDoc.exists ? (levelDoc.data() as Map<String, dynamic>)['experience'] : 0,
-        'totalExperience':
-            levelDoc.exists ? (levelDoc.data() as Map<String, dynamic>)['totalExperience'] : 0,
+        'totalExperience': levelDoc.exists
+            ? (levelDoc.data() as Map<String, dynamic>)['totalExperience']
+            : 0,
         'achievementsCount': achievementsSnapshot.docs.length,
         'badgesCount': badgesSnapshot.docs.length,
         'challengesCount': challengesSnapshot.docs.length,
@@ -520,8 +504,9 @@ class GrowthPackIntegrationService {
       final QuerySnapshot transactionsSnapshot = await _firestore.collection('transactions').get();
 
       // Получаем статистику достижений
-      final QuerySnapshot achievementsSnapshot =
-          await _firestore.collection('user_achievements').get();
+      final QuerySnapshot achievementsSnapshot = await _firestore
+          .collection('user_achievements')
+          .get();
 
       // Получаем статистику челленджей
       final QuerySnapshot challengesSnapshot = await _firestore.collection('user_challenges').get();

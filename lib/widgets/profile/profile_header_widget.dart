@@ -5,11 +5,7 @@ import '../../models/user.dart';
 
 /// Виджет заголовка профиля
 class ProfileHeaderWidget extends StatelessWidget {
-  const ProfileHeaderWidget({
-    super.key,
-    required this.user,
-    required this.isCurrentUser,
-  });
+  const ProfileHeaderWidget({super.key, required this.user, required this.isCurrentUser});
 
   final AppUser user;
   final bool isCurrentUser;
@@ -51,29 +47,17 @@ class ProfileHeaderWidget extends StatelessWidget {
                             width: 100,
                             height: 100,
                             color: theme.primaryColor.withValues(alpha: 0.1),
-                            child: Icon(
-                              Icons.person,
-                              size: 50,
-                              color: theme.primaryColor,
-                            ),
+                            child: Icon(Icons.person, size: 50, color: theme.primaryColor),
                           ),
                           errorWidget: (context, url, error) => Container(
                             width: 100,
                             height: 100,
                             color: theme.primaryColor.withValues(alpha: 0.1),
-                            child: Icon(
-                              Icons.person,
-                              size: 50,
-                              color: theme.primaryColor,
-                            ),
+                            child: Icon(Icons.person, size: 50, color: theme.primaryColor),
                           ),
                         ),
                       )
-                    : Icon(
-                        Icons.person,
-                        size: 50,
-                        color: theme.primaryColor,
-                      ),
+                    : Icon(Icons.person, size: 50, color: theme.primaryColor),
               ),
               if (user.isVerified)
                 Positioned(
@@ -85,16 +69,9 @@ class ProfileHeaderWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.blue,
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: theme.cardColor,
-                        width: 2,
-                      ),
+                      border: Border.all(color: theme.cardColor, width: 2),
                     ),
-                    child: const Icon(
-                      Icons.verified,
-                      color: Colors.white,
-                      size: 14,
-                    ),
+                    child: const Icon(Icons.verified, color: Colors.white, size: 14),
                   ),
                 ),
             ],
@@ -105,9 +82,7 @@ class ProfileHeaderWidget extends StatelessWidget {
           // Имя пользователя
           Text(
             user.displayName ?? user.email.split('@').first,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
 
@@ -163,11 +138,7 @@ class ProfileHeaderWidget extends StatelessWidget {
 
           if (user.bio != null && user.bio!.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Text(
-              user.bio!,
-              style: theme.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
+            Text(user.bio!, style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
           ],
 
           // Специализации (для специалистов)

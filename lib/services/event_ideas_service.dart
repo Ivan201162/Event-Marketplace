@@ -55,10 +55,7 @@ class EventIdeasService {
               idea.tags.any((tag) => tag.toLowerCase().contains(query));
         }).toList();
 
-        AppLogger.logI(
-          'Получено идей: ${filteredIdeas.length}',
-          'event_ideas_service',
-        );
+        AppLogger.logI('Получено идей: ${filteredIdeas.length}', 'event_ideas_service');
         return filteredIdeas;
       }
 
@@ -81,17 +78,10 @@ class EventIdeasService {
 
       final ideas = snapshot.docs.map((doc) => EventIdea.fromMap(doc.data())).toList();
 
-      AppLogger.logI(
-        'Получено идей пользователя $userId: ${ideas.length}',
-        'event_ideas_service',
-      );
+      AppLogger.logI('Получено идей пользователя $userId: ${ideas.length}', 'event_ideas_service');
       return ideas;
     } on Exception catch (e) {
-      AppLogger.logE(
-        'Ошибка получения идей пользователя',
-        'event_ideas_service',
-        e,
-      );
+      AppLogger.logE('Ошибка получения идей пользователя', 'event_ideas_service', e);
       rethrow;
     }
   }
@@ -212,9 +202,7 @@ class EventIdeasService {
 
       // Увеличиваем счетчик лайков
       final ideaRef = _firestore.collection('event_ideas').doc(ideaId);
-      batch.update(ideaRef, {
-        'likes': FieldValue.increment(1),
-      });
+      batch.update(ideaRef, {'likes': FieldValue.increment(1)});
 
       await batch.commit();
 
@@ -237,9 +225,7 @@ class EventIdeasService {
 
       // Уменьшаем счетчик лайков
       final ideaRef = _firestore.collection('event_ideas').doc(ideaId);
-      batch.update(ideaRef, {
-        'likes': FieldValue.increment(-1),
-      });
+      batch.update(ideaRef, {'likes': FieldValue.increment(-1)});
 
       await batch.commit();
 
@@ -283,10 +269,7 @@ class EventIdeasService {
 
       await _firestore.collection('favorite_ideas').doc(favoriteId).set(favorite.toMap());
 
-      AppLogger.logI(
-        'Добавлена в избранное идея: $ideaId',
-        'event_ideas_service',
-      );
+      AppLogger.logI('Добавлена в избранное идея: $ideaId', 'event_ideas_service');
     } on Exception catch (e) {
       AppLogger.logE('Ошибка добавления в избранное', 'event_ideas_service', e);
       rethrow;
@@ -309,10 +292,7 @@ class EventIdeasService {
 
       await batch.commit();
 
-      AppLogger.logI(
-        'Убрана из избранного идея: $ideaId',
-        'event_ideas_service',
-      );
+      AppLogger.logI('Убрана из избранного идея: $ideaId', 'event_ideas_service');
     } on Exception catch (e) {
       AppLogger.logE('Ошибка убирания из избранного', 'event_ideas_service', e);
       rethrow;
@@ -348,17 +328,10 @@ class EventIdeasService {
         return aIndex.compareTo(bIndex);
       });
 
-      AppLogger.logI(
-        'Получено избранных идей: ${ideas.length}',
-        'event_ideas_service',
-      );
+      AppLogger.logI('Получено избранных идей: ${ideas.length}', 'event_ideas_service');
       return ideas;
     } on Exception catch (e) {
-      AppLogger.logE(
-        'Ошибка получения избранных идей',
-        'event_ideas_service',
-        e,
-      );
+      AppLogger.logE('Ошибка получения избранных идей', 'event_ideas_service', e);
       rethrow;
     }
   }
@@ -430,23 +403,16 @@ class EventIdeasService {
       final batch = _firestore.batch();
 
       // Добавляем комментарий
-      batch.set(
-        _firestore.collection('idea_comments').doc(commentId),
-        comment.toMap(),
-      );
+      batch.set(_firestore.collection('idea_comments').doc(commentId), comment.toMap());
 
       // Увеличиваем счетчик комментариев
-      batch.update(
-        _firestore.collection('event_ideas').doc(ideaId),
-        {'commentsCount': FieldValue.increment(1)},
-      );
+      batch.update(_firestore.collection('event_ideas').doc(ideaId), {
+        'commentsCount': FieldValue.increment(1),
+      });
 
       await batch.commit();
 
-      AppLogger.logI(
-        'Добавлен комментарий к идее: $ideaId',
-        'event_ideas_service',
-      );
+      AppLogger.logI('Добавлен комментарий к идее: $ideaId', 'event_ideas_service');
       return commentId;
     } on Exception catch (e) {
       AppLogger.logE('Ошибка добавления комментария', 'event_ideas_service', e);
@@ -457,20 +423,16 @@ class EventIdeasService {
   /// Увеличить счетчик просмотров
   Future<void> _incrementViews(String ideaId) async {
     try {
-      await _firestore
-          .collection('event_ideas')
-          .doc(ideaId)
-          .update({'views': FieldValue.increment(1)});
+      await _firestore.collection('event_ideas').doc(ideaId).update({
+        'views': FieldValue.increment(1),
+      });
     } on Exception catch (e) {
       AppLogger.logE('Ошибка увеличения просмотров', 'event_ideas_service', e);
     }
   }
 
   /// Получить похожие идеи
-  Future<List<EventIdea>> getSimilarIdeas(
-    String ideaId, {
-    int limit = 5,
-  }) async {
+  Future<List<EventIdea>> getSimilarIdeas(String ideaId, {int limit = 5}) async {
     try {
       final idea = await getIdeaById(ideaId);
       if (idea == null) return [];
@@ -487,10 +449,7 @@ class EventIdeasService {
 
       final similarIdeas = snapshot.docs.map((doc) => EventIdea.fromMap(doc.data())).toList();
 
-      AppLogger.logI(
-        'Получено похожих идей: ${similarIdeas.length}',
-        'event_ideas_service',
-      );
+      AppLogger.logI('Получено похожих идей: ${similarIdeas.length}', 'event_ideas_service');
       return similarIdeas;
     } on Exception catch (e) {
       AppLogger.logE('Ошибка получения похожих идей', 'event_ideas_service', e);
@@ -499,10 +458,7 @@ class EventIdeasService {
   }
 
   /// Получить рекомендуемые идеи для пользователя
-  Future<List<EventIdea>> getRecommendedIdeas(
-    String userId, {
-    int limit = 10,
-  }) async {
+  Future<List<EventIdea>> getRecommendedIdeas(String userId, {int limit = 10}) async {
     try {
       // Получаем избранные идеи пользователя для анализа предпочтений
       final favoriteIdeas = await getFavoriteIdeas(userId);
@@ -523,9 +479,7 @@ class EventIdeasService {
       final topCategory = categoryCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key;
 
       // Получаем идеи из этой категории
-      final recommendedIdeas = await getPublishedIdeas(
-        limit: limit,
-      );
+      final recommendedIdeas = await getPublishedIdeas(limit: limit);
 
       AppLogger.logI(
         'Получено рекомендуемых идей: ${recommendedIdeas.length}',
@@ -533,11 +487,7 @@ class EventIdeasService {
       );
       return recommendedIdeas;
     } on Exception catch (e) {
-      AppLogger.logE(
-        'Ошибка получения рекомендуемых идей',
-        'event_ideas_service',
-        e,
-      );
+      AppLogger.logE('Ошибка получения рекомендуемых идей', 'event_ideas_service', e);
       return [];
     }
   }

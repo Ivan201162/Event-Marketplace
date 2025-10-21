@@ -164,8 +164,10 @@ final pickVideoProvider = FutureProvider<File?>((ref) async {
 });
 
 /// Провайдер для загрузки медиа
-final uploadMediaProvider =
-    FutureProvider.family<String, Map<String, dynamic>>((ref, params) async {
+final uploadMediaProvider = FutureProvider.family<String, Map<String, dynamic>>((
+  ref,
+  params,
+) async {
   final feedService = ref.watch(feedServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
   final file = params['file'] as File;
@@ -255,8 +257,10 @@ final isFollowingProvider = FutureProvider.family<bool, String>((ref, targetUser
 });
 
 /// Провайдер статистики подписок
-final subscriptionStatsProvider =
-    FutureProvider.family<SubscriptionStats, String>((ref, userId) async {
+final subscriptionStatsProvider = FutureProvider.family<SubscriptionStats, String>((
+  ref,
+  userId,
+) async {
   final subscriptionService = ref.watch(subscriptionServiceProvider);
   return subscriptionService.getSubscriptionStats(userId);
 });
@@ -290,15 +294,14 @@ class CreatePostState {
     File? selectedFile,
     bool? isUploading,
     String? error,
-  }) =>
-      CreatePostState(
-        description: description ?? this.description,
-        taggedCategories: taggedCategories ?? this.taggedCategories,
-        selectedType: selectedType ?? this.selectedType,
-        selectedFile: selectedFile ?? this.selectedFile,
-        isUploading: isUploading ?? this.isUploading,
-        error: error ?? this.error,
-      );
+  }) => CreatePostState(
+    description: description ?? this.description,
+    taggedCategories: taggedCategories ?? this.taggedCategories,
+    selectedType: selectedType ?? this.selectedType,
+    selectedFile: selectedFile ?? this.selectedFile,
+    isUploading: isUploading ?? this.isUploading,
+    error: error ?? this.error,
+  );
 }
 
 /// Notifier для управления состоянием создания поста

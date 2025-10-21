@@ -40,9 +40,7 @@ class SpecialistPriceStatsService {
   }
 
   /// Получить статистику цен специалиста
-  Future<SpecialistPriceAggregate?> getSpecialistPriceStats(
-    String specialistId,
-  ) async {
+  Future<SpecialistPriceAggregate?> getSpecialistPriceStats(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('specialistPriceStats')
@@ -83,10 +81,7 @@ class SpecialistPriceStatsService {
   }
 
   /// Получить статистику по категории
-  Future<SpecialistPriceStats?> getCategoryStats(
-    String specialistId,
-    String categoryId,
-  ) async {
+  Future<SpecialistPriceStats?> getCategoryStats(String specialistId, String categoryId) async {
     try {
       final snapshot = await _firestore
           .collection('specialistPriceStats')
@@ -145,10 +140,12 @@ class SpecialistPriceStatsService {
         }
 
         final current = categoryStats[categoryId]!;
-        current['minPrice'] =
-            (current['minPrice'] as double) < stats.minPrice ? current['minPrice'] : stats.minPrice;
-        current['maxPrice'] =
-            (current['maxPrice'] as double) > stats.maxPrice ? current['maxPrice'] : stats.maxPrice;
+        current['minPrice'] = (current['minPrice'] as double) < stats.minPrice
+            ? current['minPrice']
+            : stats.minPrice;
+        current['maxPrice'] = (current['maxPrice'] as double) > stats.maxPrice
+            ? current['maxPrice']
+            : stats.maxPrice;
         current['totalRevenue'] = (current['totalRevenue'] as double) + stats.totalRevenue;
         current['totalBookings'] = (current['totalBookings'] as int) + stats.completedBookings;
         current['specialistCount'] = (current['specialistCount'] as int) + 1;
@@ -158,8 +155,9 @@ class SpecialistPriceStatsService {
       for (final entry in categoryStats.entries) {
         final stats = entry.value;
         final totalBookings = stats['totalBookings'] as int;
-        stats['averagePrice'] =
-            totalBookings > 0 ? (stats['totalRevenue'] as double) / totalBookings : 0.0;
+        stats['averagePrice'] = totalBookings > 0
+            ? (stats['totalRevenue'] as double) / totalBookings
+            : 0.0;
       }
 
       return categoryStats;
@@ -197,8 +195,11 @@ class SpecialistPriceStatsService {
       final categoryName = categoryDoc.data()?['name'] ?? 'Неизвестная категория';
 
       // Вычисляем статистику
-      final prices =
-          bookings.map((b) => b.totalPrice).where((p) => p != null).cast<double>().toList();
+      final prices = bookings
+          .map((b) => b.totalPrice)
+          .where((p) => p != null)
+          .cast<double>()
+          .toList();
 
       if (prices.isEmpty) return;
 
@@ -224,8 +225,9 @@ class SpecialistPriceStatsService {
       );
 
       // Сохраняем или обновляем статистику
-      final docRef =
-          _firestore.collection('specialistPriceStats').doc('${specialistId}_$categoryId');
+      final docRef = _firestore
+          .collection('specialistPriceStats')
+          .doc('${specialistId}_$categoryId');
 
       await docRef.set(stats.toMap(), SetOptions(merge: true));
     } catch (e) {
@@ -306,10 +308,7 @@ class SpecialistPriceStatsService {
   }
 
   /// Вычислить месячный тренд
-  Future<Map<String, double>> _calculateMonthlyTrend(
-    String specialistId,
-    String categoryId,
-  ) async {
+  Future<Map<String, double>> _calculateMonthlyTrend(String specialistId, String categoryId) async {
     try {
       final now = DateTime.now();
       final sixMonthsAgo = DateTime(now.year, now.month - 6, now.day);

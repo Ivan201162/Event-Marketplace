@@ -7,8 +7,9 @@ import '../models/app_notification.dart' as app_notification;
 import '../services/notification_service.dart';
 
 /// Провайдер для получения текущего пользователя
-final currentUserProvider =
-    StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
+final currentUserProvider = StreamProvider<User?>(
+  (ref) => FirebaseAuth.instance.authStateChanges(),
+);
 
 /// Провайдер для управления уведомлениями пользователя
 final userNotificationsProvider = StreamProvider<List<app_notification.AppNotification>>((ref) {
@@ -73,8 +74,8 @@ class NotificationNotifier extends Notifier<AsyncValue<List<app_notification.App
           (snapshot) => snapshot.docs.map(app_notification.AppNotification.fromFirestore).toList(),
         )
         .listen((notifications) {
-      state = AsyncValue.data(notifications);
-    });
+          state = AsyncValue.data(notifications);
+        });
   }
 
   /// Отметить уведомление как прочитанное
@@ -137,8 +138,8 @@ class NotificationNotifier extends Notifier<AsyncValue<List<app_notification.App
 
 final notificationNotifierProvider =
     NotifierProvider<NotificationNotifier, AsyncValue<List<app_notification.AppNotification>>>(
-  () => NotificationNotifier(),
-);
+      () => NotificationNotifier(),
+    );
 
 /// Временный класс для совместимости с DocumentSnapshot
 class MockDocumentSnapshot implements DocumentSnapshot {

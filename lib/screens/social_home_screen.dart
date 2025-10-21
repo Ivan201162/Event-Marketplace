@@ -68,9 +68,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
             ),
 
             // Блок поиска и фильтров
-            SliverToBoxAdapter(
-              child: _buildSearchSection(theme),
-            ),
+            SliverToBoxAdapter(child: _buildSearchSection(theme)),
 
             // Лучшие специалисты недели
             SliverToBoxAdapter(
@@ -83,9 +81,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
             ),
 
             // Дополнительный контент
-            SliverToBoxAdapter(
-              child: _buildAdditionalContent(theme),
-            ),
+            SliverToBoxAdapter(child: _buildAdditionalContent(theme)),
           ],
         ),
       ),
@@ -117,11 +113,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
               color: theme.primaryColor,
               borderRadius: BorderRadius.circular(30),
             ),
-            child: const Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 30,
-            ),
+            child: const Icon(Icons.person, color: Colors.white, size: 30),
           ),
           const SizedBox(width: 16),
 
@@ -132,23 +124,14 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
               children: [
                 Text(
                   'Александр Иванов',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 16,
-                      color: theme.textTheme.bodySmall?.color,
-                    ),
+                    Icon(Icons.location_on, size: 16, color: theme.textTheme.bodySmall?.color),
                     const SizedBox(width: 4),
-                    Text(
-                      'Москва',
-                      style: theme.textTheme.bodySmall,
-                    ),
+                    Text('Москва', style: theme.textTheme.bodySmall),
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -180,10 +163,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                   color: theme.primaryColor,
                 ),
               ),
-              Text(
-                'подписчиков',
-                style: theme.textTheme.bodySmall,
-              ),
+              Text('подписчиков', style: theme.textTheme.bodySmall),
             ],
           ),
         ],
@@ -198,18 +178,14 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: theme.dividerColor.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Найти специалиста',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
 
@@ -218,9 +194,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
             decoration: InputDecoration(
               hintText: 'Поиск по имени, специализации...',
               prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
               fillColor: theme.scaffoldBackgroundColor,
             ),
@@ -247,11 +221,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
     return FilterChip(
       label: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16),
-          const SizedBox(width: 4),
-          Text(label),
-        ],
+        children: [Icon(icon, size: 16), const SizedBox(width: 4), Text(label)],
       ),
       onSelected: (selected) {
         // Обработка выбора фильтра
@@ -273,18 +243,13 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
             children: [
               Text(
                 title,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               TextButton(
                 onPressed: () {
                   // Переход к полному списку
                 },
-                child: Text(
-                  'Все',
-                  style: TextStyle(color: theme.primaryColor),
-                ),
+                child: Text('Все', style: TextStyle(color: theme.primaryColor)),
               ),
             ],
           ),
@@ -323,9 +288,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.dividerColor.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,13 +303,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                 topRight: Radius.circular(12),
               ),
             ),
-            child: Center(
-              child: Icon(
-                Icons.person,
-                size: 40,
-                color: theme.primaryColor,
-              ),
-            ),
+            child: Center(child: Icon(Icons.person, size: 40, color: theme.primaryColor)),
           ),
 
           // Информация о специалисте
@@ -357,9 +314,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
               children: [
                 Text(
                   specialist['name'] as String,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -373,17 +328,11 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(
-                      Icons.star,
-                      size: 14,
-                      color: Colors.amber,
-                    ),
+                    const Icon(Icons.star, size: 14, color: Colors.amber),
                     const SizedBox(width: 2),
                     Text(
                       specialist['rating'] as String,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -407,18 +356,13 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-      ),
+      decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Популярные категории',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           GridView.count(
@@ -445,9 +389,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
       decoration: BoxDecoration(
         color: theme.primaryColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.primaryColor.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: theme.primaryColor.withValues(alpha: 0.3)),
       ),
       child: InkWell(
         onTap: () {
@@ -458,11 +400,7 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              Icon(
-                icon,
-                color: theme.primaryColor,
-                size: 24,
-              ),
+              Icon(icon, color: theme.primaryColor, size: 24),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(

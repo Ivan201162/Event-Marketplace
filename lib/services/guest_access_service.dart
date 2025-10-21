@@ -21,10 +21,7 @@ class GuestAccessService {
     Duration? expirationDuration,
   }) async {
     try {
-      AppLogger.logI(
-        'Создание гостевого доступа для мероприятия $eventId',
-        'guest_access_service',
-      );
+      AppLogger.logI('Создание гостевого доступа для мероприятия $eventId', 'guest_access_service');
 
       final accessCode = _generateAccessCode();
       final now = DateTime.now();
@@ -53,18 +50,10 @@ class GuestAccessService {
 
       await _firestore.collection('guest_access').doc(guestAccessId).set(guestAccess.toMap());
 
-      AppLogger.logI(
-        'Гостевой доступ создан: $accessCode',
-        'guest_access_service',
-      );
+      AppLogger.logI('Гостевой доступ создан: $accessCode', 'guest_access_service');
       return guestAccess;
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка создания гостевого доступа',
-        'guest_access_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка создания гостевого доступа', 'guest_access_service', e, stackTrace);
       return null;
     }
   }
@@ -95,22 +84,13 @@ class GuestAccessService {
 
       return guestAccess;
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка получения гостевого доступа',
-        'guest_access_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка получения гостевого доступа', 'guest_access_service', e, stackTrace);
       return null;
     }
   }
 
   /// Использовать гостевой доступ
-  Future<bool> useGuestAccess(
-    String accessCode, {
-    String? guestName,
-    String? guestEmail,
-  }) async {
+  Future<bool> useGuestAccess(String accessCode, {String? guestName, String? guestEmail}) async {
     try {
       final guestAccess = await getGuestAccessByCode(accessCode);
       if (guestAccess == null) {
@@ -125,10 +105,7 @@ class GuestAccessService {
         if (guestEmail != null) 'guestEmail': guestEmail,
       });
 
-      AppLogger.logI(
-        'Гостевой доступ использован: $accessCode',
-        'guest_access_service',
-      );
+      AppLogger.logI('Гостевой доступ использован: $accessCode', 'guest_access_service');
       return true;
     } catch (e, stackTrace) {
       AppLogger.logE(
@@ -163,9 +140,7 @@ class GuestAccessService {
   }
 
   /// Получить все гостевые доступы организатора
-  Future<List<GuestAccess>> getOrganizerGuestAccesses(
-    String organizerId,
-  ) async {
+  Future<List<GuestAccess>> getOrganizerGuestAccesses(String organizerId) async {
     try {
       final querySnapshot = await _firestore
           .collection('guest_access')
@@ -186,10 +161,7 @@ class GuestAccessService {
   }
 
   /// Обновить статус гостевого доступа
-  Future<bool> updateGuestAccessStatus(
-    String guestAccessId,
-    GuestAccessStatus status,
-  ) async {
+  Future<bool> updateGuestAccessStatus(String guestAccessId, GuestAccessStatus status) async {
     try {
       await _firestore.collection('guest_access').doc(guestAccessId).update({
         'status': status.toString().split('.').last,
@@ -216,27 +188,16 @@ class GuestAccessService {
   Future<bool> deleteGuestAccess(String guestAccessId) async {
     try {
       await _firestore.collection('guest_access').doc(guestAccessId).delete();
-      AppLogger.logI(
-        'Гостевой доступ удален: $guestAccessId',
-        'guest_access_service',
-      );
+      AppLogger.logI('Гостевой доступ удален: $guestAccessId', 'guest_access_service');
       return true;
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка удаления гостевого доступа',
-        'guest_access_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка удаления гостевого доступа', 'guest_access_service', e, stackTrace);
       return false;
     }
   }
 
   /// Продлить срок действия гостевого доступа
-  Future<bool> extendGuestAccess(
-    String guestAccessId,
-    Duration extension,
-  ) async {
+  Future<bool> extendGuestAccess(String guestAccessId, Duration extension) async {
     try {
       final doc = await _firestore.collection('guest_access').doc(guestAccessId).get();
       if (!doc.exists) return false;
@@ -255,12 +216,7 @@ class GuestAccessService {
       );
       return true;
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка продления гостевого доступа',
-        'guest_access_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка продления гостевого доступа', 'guest_access_service', e, stackTrace);
       return false;
     }
   }
@@ -270,10 +226,7 @@ class GuestAccessService {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();
     return String.fromCharCodes(
-      Iterable.generate(
-        8,
-        (_) => chars.codeUnitAt(random.nextInt(chars.length)),
-      ),
+      Iterable.generate(8, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
     );
   }
 

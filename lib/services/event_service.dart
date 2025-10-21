@@ -13,9 +13,7 @@ class EventService {
       .where('status', isEqualTo: 'active')
       .orderBy('date')
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
 
   /// Получить все события (Future)
   Future<List<Event>> getEvents() async {
@@ -34,9 +32,7 @@ class EventService {
       .where('organizerId', isEqualTo: userId)
       .orderBy('date')
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
 
   /// Получить событие по ID
   Future<Event?> getEvent(String eventId) async {
@@ -97,9 +93,7 @@ class EventService {
       .startAt([query])
       .endAt(['$query\uf8ff'])
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
 
   /// Получить события по категории
   Stream<List<Event>> getEventsByCategory(EventCategory category) => _firestore
@@ -109,9 +103,7 @@ class EventService {
       .where('category', isEqualTo: category.name)
       .orderBy('date')
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
 
   /// Получить события по дате
   Stream<List<Event>> getEventsByDate(DateTime date) {
@@ -126,27 +118,19 @@ class EventService {
         .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
         .orderBy('date')
         .snapshots()
-        .map(
-          (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
-        );
+        .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
   }
 
   /// Получить события в диапазоне дат
-  Stream<List<Event>> getEventsByDateRange(
-    DateTime startDate,
-    DateTime endDate,
-  ) =>
-      _firestore
-          .collection('events')
-          .where('isPublic', isEqualTo: true)
-          .where('status', isEqualTo: 'active')
-          .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
-          .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
-          .orderBy('date')
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
-          );
+  Stream<List<Event>> getEventsByDateRange(DateTime startDate, DateTime endDate) => _firestore
+      .collection('events')
+      .where('isPublic', isEqualTo: true)
+      .where('status', isEqualTo: 'active')
+      .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+      .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
+      .orderBy('date')
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
 
   /// Получить популярные события
   Stream<List<Event>> getPopularEvents({int limit = 10}) => _firestore
@@ -156,9 +140,7 @@ class EventService {
       .orderBy('currentParticipants', descending: true)
       .limit(limit)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
 
   /// Получить ближайшие события
   Stream<List<Event>> getUpcomingEvents({int limit = 10}) {
@@ -172,9 +154,7 @@ class EventService {
         .orderBy('date')
         .limit(limit)
         .snapshots()
-        .map(
-          (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
-        );
+        .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
   }
 
   /// Обновить количество участников
@@ -204,8 +184,10 @@ class EventService {
   /// Получить статистику событий пользователя
   Future<Map<String, int>> getUserEventStats(String userId) async {
     try {
-      final snapshot =
-          await _firestore.collection('events').where('organizerId', isEqualTo: userId).get();
+      final snapshot = await _firestore
+          .collection('events')
+          .where('organizerId', isEqualTo: userId)
+          .get();
 
       var total = 0;
       var active = 0;
@@ -231,12 +213,7 @@ class EventService {
         }
       }
 
-      return {
-        'total': total,
-        'active': active,
-        'completed': completed,
-        'cancelled': cancelled,
-      };
+      return {'total': total, 'active': active, 'completed': completed, 'cancelled': cancelled};
     } on Exception catch (e) {
       throw Exception('Ошибка получения статистики: $e');
     }
@@ -251,24 +228,15 @@ class EventService {
 
     // Фильтр по дате
     if (filter.startDate != null) {
-      query = query.where(
-        'date',
-        isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!),
-      );
+      query = query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
     }
     if (filter.endDate != null) {
-      query = query.where(
-        'date',
-        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
-      );
+      query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
     }
 
     // Фильтр по категории
     if (filter.categories != null && filter.categories!.isNotEmpty) {
-      query = query.where(
-        'category',
-        whereIn: filter.categories!.map((c) => c.name).toList(),
-      );
+      query = query.where('category', whereIn: filter.categories!.map((c) => c.name).toList());
     }
 
     // Фильтр по цене
@@ -287,8 +255,9 @@ class EventService {
     // Добавляем лимит для оптимизации
     query = query.limit(20);
 
-    return query.orderBy('date').snapshots().map(
-          (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
-        );
+    return query
+        .orderBy('date')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
   }
 }

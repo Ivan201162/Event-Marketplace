@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Анимированные категории специалистов
 class AnimatedCategories extends StatefulWidget {
-  const AnimatedCategories({
-    super.key,
-    required this.onCategorySelected,
-  });
+  const AnimatedCategories({super.key, required this.onCategorySelected});
 
   final ValueChanged<String> onCategorySelected;
 
@@ -56,10 +53,7 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
       return Tween<double>(
         begin: 0.0,
         end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.elasticOut,
-      ));
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut));
     }).toList();
 
     // Запускаем анимации с задержкой
@@ -95,9 +89,7 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
         children: [
           Text(
             'Категории',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           SizedBox(
@@ -143,9 +135,7 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
               : (category['color'] as Color).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: (category['color'] as Color).withValues(
-              alpha: isSelected ? 0.5 : 0.3,
-            ),
+            color: (category['color'] as Color).withValues(alpha: isSelected ? 0.5 : 0.3),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
@@ -164,10 +154,7 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
             AnimatedScale(
               scale: isSelected ? 1.2 : 1.0,
               duration: const Duration(milliseconds: 200),
-              child: Text(
-                category['icon'] as String,
-                style: const TextStyle(fontSize: 24),
-              ),
+              child: Text(category['icon'] as String, style: const TextStyle(fontSize: 24)),
             ),
             const SizedBox(height: 4),
             Text(

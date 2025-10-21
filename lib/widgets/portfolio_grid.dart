@@ -6,11 +6,7 @@ class PortfolioGrid extends StatelessWidget {
   final List<String> portfolio;
   final Function(String) onImageTap;
 
-  const PortfolioGrid({
-    super.key,
-    required this.portfolio,
-    required this.onImageTap,
-  });
+  const PortfolioGrid({super.key, required this.portfolio, required this.onImageTap});
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +19,10 @@ class PortfolioGrid extends StatelessWidget {
             SizedBox(height: 16),
             Text(
               'Портфолио пусто',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
             ),
             SizedBox(height: 8),
-            Text(
-              'Специалист еще не добавил работы',
-              style: TextStyle(color: Colors.grey),
-            ),
+            Text('Специалист еще не добавил работы', style: TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -80,17 +69,11 @@ class PortfolioGrid extends StatelessWidget {
                 fit: BoxFit.cover,
                 placeholder: (context, url) => Container(
                   color: Colors.grey[300],
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  child: const Center(child: CircularProgressIndicator()),
                 ),
                 errorWidget: (context, url, error) => Container(
                   color: Colors.grey[300],
-                  child: const Icon(
-                    Icons.broken_image,
-                    color: Colors.grey,
-                    size: 40,
-                  ),
+                  child: const Icon(Icons.broken_image, color: Colors.grey, size: 40),
                 ),
               ),
 

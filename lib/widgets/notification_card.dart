@@ -36,10 +36,7 @@ class NotificationCard extends StatelessWidget {
                   color: _getTypeColor(notification.type).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(
-                  notification.typeIcon,
-                  style: const TextStyle(fontSize: 20),
-                ),
+                child: Text(notification.typeIcon, style: const TextStyle(fontSize: 20)),
               ),
               const SizedBox(width: 12),
               // Content
@@ -53,8 +50,8 @@ class NotificationCard extends StatelessWidget {
                           child: Text(
                             notification.title,
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: notification.read ? FontWeight.w500 : FontWeight.w600,
-                                ),
+                              fontWeight: notification.read ? FontWeight.w500 : FontWeight.w600,
+                            ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -73,9 +70,9 @@ class NotificationCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       notification.body,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -118,24 +115,20 @@ class NotificationCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(
-                          Icons.access_time,
-                          size: 14,
-                          color: Colors.grey[600],
-                        ),
+                        Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Text(
                           notification.formattedDate,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                         ),
                         const Spacer(),
                         Text(
                           notification.formattedTime,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -144,17 +137,13 @@ class NotificationCard extends StatelessWidget {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          Icon(
-                            Icons.person,
-                            size: 14,
-                            color: Colors.grey[600],
-                          ),
+                          Icon(Icons.person, size: 14, color: Colors.grey[600]),
                           const SizedBox(width: 4),
                           Text(
                             'От: ${notification.senderName}',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                           ),
                         ],
                       ),

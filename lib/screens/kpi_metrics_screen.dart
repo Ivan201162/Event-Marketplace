@@ -35,47 +35,41 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        appBar: AppBar(title: const Text('KPI метрики и аналитика')),
-        body: Column(
-          children: [
-            // Вкладки
-            _buildTabs(),
+    appBar: AppBar(title: const Text('KPI метрики и аналитика')),
+    body: Column(
+      children: [
+        // Вкладки
+        _buildTabs(),
 
-            // Фильтры
-            _buildFilters(),
+        // Фильтры
+        _buildFilters(),
 
-            // Анализ
-            _buildAnalysis(),
+        // Анализ
+        _buildAnalysis(),
 
-            // Контент
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _selectedTab == 'metrics'
-                      ? _buildMetricsTab()
-                      : _selectedTab == 'dashboards'
-                          ? _buildDashboardsTab()
-                          : _buildReportsTab(),
-            ),
-          ],
+        // Контент
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _selectedTab == 'metrics'
+              ? _buildMetricsTab()
+              : _selectedTab == 'dashboards'
+              ? _buildDashboardsTab()
+              : _buildReportsTab(),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildTabs() => ResponsiveCard(
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildTabButton('metrics', 'Метрики', Icons.analytics),
-            ),
-            Expanded(
-              child: _buildTabButton('dashboards', 'Дашборды', Icons.dashboard),
-            ),
-            Expanded(
-              child: _buildTabButton('reports', 'Отчеты', Icons.assessment),
-            ),
-          ],
-        ),
-      );
+    child: Row(
+      children: [
+        Expanded(child: _buildTabButton('metrics', 'Метрики', Icons.analytics)),
+        Expanded(child: _buildTabButton('dashboards', 'Дашборды', Icons.dashboard)),
+        Expanded(child: _buildTabButton('reports', 'Отчеты', Icons.assessment)),
+      ],
+    ),
+  );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -90,17 +84,11 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.blue : Colors.grey,
-              size: 24,
-            ),
+            Icon(icon, color: isSelected ? Colors.blue : Colors.grey, size: 24),
             const SizedBox(height: 8),
             Text(
               title,
@@ -116,95 +104,86 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   Widget _buildFilters() => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Фильтры', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
           children: [
-            Text(
-              'Фильтры',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                // Фильтр по категории
-                DropdownButton<MetricCategory?>(
-                  value: _selectedCategory,
-                  hint: const Text('Все категории'),
-                  items: [
-                    const DropdownMenuItem<MetricCategory?>(
-                      child: Text('Все категории'),
-                    ),
-                    ...MetricCategory.values.map(
-                      (category) => DropdownMenuItem<MetricCategory?>(
-                        value: category,
-                        child: Text('${category.icon} ${category.displayName}'),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  },
-                ),
-
-                // Фильтр по типу
-                DropdownButton<MetricType?>(
-                  value: _selectedType,
-                  hint: const Text('Все типы'),
-                  items: [
-                    const DropdownMenuItem<MetricType?>(
-                      child: Text('Все типы'),
-                    ),
-                    ...MetricType.values.map(
-                      (type) => DropdownMenuItem<MetricType?>(
-                        value: type,
-                        child: Text('${type.icon} ${type.displayName}'),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedType = value;
-                    });
-                  },
-                ),
-
-                // Фильтр по статусу
-                DropdownButton<MetricStatus?>(
-                  value: _selectedStatus,
-                  hint: const Text('Все статусы'),
-                  items: [
-                    const DropdownMenuItem<MetricStatus?>(
-                      child: Text('Все статусы'),
-                    ),
-                    ...MetricStatus.values.map(
-                      (status) => DropdownMenuItem<MetricStatus?>(
-                        value: status,
-                        child: Text('${status.icon} ${status.displayName}'),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedStatus = value;
-                    });
-                  },
-                ),
-
-                // Кнопка сброса фильтров
-                ElevatedButton.icon(
-                  onPressed: _resetFilters,
-                  icon: const Icon(Icons.clear),
-                  label: const Text('Сбросить'),
+            // Фильтр по категории
+            DropdownButton<MetricCategory?>(
+              value: _selectedCategory,
+              hint: const Text('Все категории'),
+              items: [
+                const DropdownMenuItem<MetricCategory?>(child: Text('Все категории')),
+                ...MetricCategory.values.map(
+                  (category) => DropdownMenuItem<MetricCategory?>(
+                    value: category,
+                    child: Text('${category.icon} ${category.displayName}'),
+                  ),
                 ),
               ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedCategory = value;
+                });
+              },
+            ),
+
+            // Фильтр по типу
+            DropdownButton<MetricType?>(
+              value: _selectedType,
+              hint: const Text('Все типы'),
+              items: [
+                const DropdownMenuItem<MetricType?>(child: Text('Все типы')),
+                ...MetricType.values.map(
+                  (type) => DropdownMenuItem<MetricType?>(
+                    value: type,
+                    child: Text('${type.icon} ${type.displayName}'),
+                  ),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedType = value;
+                });
+              },
+            ),
+
+            // Фильтр по статусу
+            DropdownButton<MetricStatus?>(
+              value: _selectedStatus,
+              hint: const Text('Все статусы'),
+              items: [
+                const DropdownMenuItem<MetricStatus?>(child: Text('Все статусы')),
+                ...MetricStatus.values.map(
+                  (status) => DropdownMenuItem<MetricStatus?>(
+                    value: status,
+                    child: Text('${status.icon} ${status.displayName}'),
+                  ),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedStatus = value;
+                });
+              },
+            ),
+
+            // Кнопка сброса фильтров
+            ElevatedButton.icon(
+              onPressed: _resetFilters,
+              icon: const Icon(Icons.clear),
+              label: const Text('Сбросить'),
             ),
           ],
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildAnalysis() {
     if (_analysis.isEmpty) return const SizedBox.shrink();
@@ -213,10 +192,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Анализ KPI',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('Анализ KPI', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -262,81 +238,64 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
     );
   }
 
-  Widget _buildAnalysisCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) =>
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color),
+  Widget _buildAnalysisCard(String title, String value, IconData icon, Color color) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: color),
+    ),
+    child: Column(
+      children: [
+        Icon(icon, color: color, size: 32),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
         ),
-        child: Column(
+        const SizedBox(height: 4),
+        Text(title, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+      ],
+    ),
+  );
+
+  Widget _buildMetricsTab() => Column(
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
           children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+            Text('KPI метрики', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _showAddMetricDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Добавить'),
             ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 12),
-              textAlign: TextAlign.center,
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
           ],
         ),
-      );
+      ),
 
-  Widget _buildMetricsTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'KPI метрики',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _showAddMetricDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Добавить'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
-            ),
-          ),
-
-          // Список метрик
-          Expanded(
-            child: _getFilteredMetrics().isEmpty
-                ? const Center(child: Text('Метрики не найдены'))
-                : ListView.builder(
-                    itemCount: _getFilteredMetrics().length,
-                    itemBuilder: (context, index) {
-                      final metric = _getFilteredMetrics()[index];
-                      return _buildMetricCard(metric);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список метрик
+      Expanded(
+        child: _getFilteredMetrics().isEmpty
+            ? const Center(child: Text('Метрики не найдены'))
+            : ListView.builder(
+                itemCount: _getFilteredMetrics().length,
+                itemBuilder: (context, index) {
+                  final metric = _getFilteredMetrics()[index];
+                  return _buildMetricCard(metric);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildMetricCard(KPIMetric metric) {
     final typeColor = _getTypeColor(metric.type);
@@ -350,10 +309,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
           // Заголовок
           Row(
             children: [
-              Text(
-                metric.type.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
+              Text(metric.type.icon, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -361,15 +317,9 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   children: [
                     Text(
                       metric.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                    Text(
-                      metric.description,
-                      style: const TextStyle(fontSize: 14),
-                    ),
+                    Text(metric.description, style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -382,11 +332,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                 ),
                 child: Text(
                   metric.type.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: typeColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: typeColor, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 8),
@@ -399,11 +345,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                 ),
                 child: Text(
                   metric.category.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: categoryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: categoryColor, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 8),
@@ -416,11 +358,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                 ),
                 child: Text(
                   metric.status.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: statusColor, fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -428,17 +366,11 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Редактировать'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -510,18 +442,12 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
               children: metric.tags
                   .map(
                     (tag) => Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Text(
-                        tag,
-                        style: const TextStyle(fontSize: 10),
-                      ),
+                      child: Text(tag, style: const TextStyle(fontSize: 10)),
                     ),
                   )
                   .toList(),
@@ -546,227 +472,190 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   Widget _buildDashboardsTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'KPI дашборды',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _showCreateDashboardDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Создать'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
-            ),
-          ),
-
-          // Список дашбордов
-          Expanded(
-            child: _dashboards.isEmpty
-                ? const Center(child: Text('Дашборды не найдены'))
-                : ListView.builder(
-                    itemCount: _dashboards.length,
-                    itemBuilder: (context, index) {
-                      final dashboard = _dashboards[index];
-                      return _buildDashboardCard(dashboard);
-                    },
-                  ),
-          ),
-        ],
-      );
-
-  Widget _buildDashboardCard(KPIDashboard dashboard) => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
           children: [
-            // Заголовок
-            Row(
-              children: [
-                Text(
-                  dashboard.layout.icon,
-                  style: const TextStyle(fontSize: 24),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        dashboard.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Text(
-                        dashboard.description,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.blue),
-                  ),
-                  child: Text(
-                    dashboard.layout.displayName,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                if (dashboard.isPublic)
-                  Container(
-                    margin: const EdgeInsets.only(left: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.green),
-                    ),
-                    child: const Text(
-                      'Публичный',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                if (dashboard.isDefault)
-                  Container(
-                    margin: const EdgeInsets.only(left: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.orange),
-                    ),
-                    child: const Text(
-                      'По умолчанию',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.orange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                PopupMenuButton<String>(
-                  onSelected: (value) => _handleDashboardAction(value, dashboard),
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: 'view',
-                      child: ListTile(
-                        leading: Icon(Icons.visibility),
-                        title: Text('Просмотр'),
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'edit',
-                      child: ListTile(
-                        leading: Icon(Icons.edit),
-                        title: Text('Редактировать'),
-                      ),
-                    ),
-                  ],
-                  child: const Icon(Icons.more_vert),
-                ),
-              ],
+            Text('KPI дашборды', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _showCreateDashboardDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать'),
             ),
-
-            const SizedBox(height: 12),
-
-            // Метаданные
-            Row(
-              children: [
-                _buildInfoChip(
-                  'Метрики',
-                  '${dashboard.metricIds.length}',
-                  Colors.blue,
-                ),
-                const SizedBox(width: 8),
-                _buildInfoChip(
-                  'Теги',
-                  '${dashboard.tags.length}',
-                  Colors.green,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            // Время
-            Row(
-              children: [
-                const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  'Создан: ${_formatDateTime(dashboard.createdAt)}',
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ],
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
           ],
         ),
-      );
+      ),
 
-  Widget _buildReportsTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'KPI отчеты',
-                  style: Theme.of(context).textTheme.titleMedium,
+      // Список дашбордов
+      Expanded(
+        child: _dashboards.isEmpty
+            ? const Center(child: Text('Дашборды не найдены'))
+            : ListView.builder(
+                itemCount: _dashboards.length,
+                itemBuilder: (context, index) {
+                  final dashboard = _dashboards[index];
+                  return _buildDashboardCard(dashboard);
+                },
+              ),
+      ),
+    ],
+  );
+
+  Widget _buildDashboardCard(KPIDashboard dashboard) => ResponsiveCard(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Заголовок
+        Row(
+          children: [
+            Text(dashboard.layout.icon, style: const TextStyle(fontSize: 24)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    dashboard.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  Text(dashboard.description, style: const TextStyle(fontSize: 14)),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.blue.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.blue),
+              ),
+              child: Text(
+                dashboard.layout.displayName,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
                 ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _showCreateReportDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Создать'),
+              ),
+            ),
+            if (dashboard.isPublic)
+              Container(
+                margin: const EdgeInsets.only(left: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.green.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.green),
                 ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
+                child: const Text(
+                  'Публичный',
+                  style: TextStyle(fontSize: 12, color: Colors.green, fontWeight: FontWeight.bold),
+                ),
+              ),
+            if (dashboard.isDefault)
+              Container(
+                margin: const EdgeInsets.only(left: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.orange),
+                ),
+                child: const Text(
+                  'По умолчанию',
+                  style: TextStyle(fontSize: 12, color: Colors.orange, fontWeight: FontWeight.bold),
+                ),
+              ),
+            PopupMenuButton<String>(
+              onSelected: (value) => _handleDashboardAction(value, dashboard),
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'view',
+                  child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
+                ),
+                const PopupMenuItem(
+                  value: 'edit',
+                  child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
                 ),
               ],
+              child: const Icon(Icons.more_vert),
             ),
-          ),
+          ],
+        ),
 
-          // Список отчетов
-          Expanded(
-            child: _reports.isEmpty
-                ? const Center(child: Text('Отчеты не найдены'))
-                : ListView.builder(
-                    itemCount: _reports.length,
-                    itemBuilder: (context, index) {
-                      final report = _reports[index];
-                      return _buildReportCard(report);
-                    },
-                  ),
-          ),
-        ],
-      );
+        const SizedBox(height: 12),
+
+        // Метаданные
+        Row(
+          children: [
+            _buildInfoChip('Метрики', '${dashboard.metricIds.length}', Colors.blue),
+            const SizedBox(width: 8),
+            _buildInfoChip('Теги', '${dashboard.tags.length}', Colors.green),
+          ],
+        ),
+
+        const SizedBox(height: 8),
+
+        // Время
+        Row(
+          children: [
+            const Icon(Icons.access_time, size: 16, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(
+              'Создан: ${_formatDateTime(dashboard.createdAt)}',
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildReportsTab() => Column(
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
+          children: [
+            Text('KPI отчеты', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _showCreateReportDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать'),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
+            ),
+          ],
+        ),
+      ),
+
+      // Список отчетов
+      Expanded(
+        child: _reports.isEmpty
+            ? const Center(child: Text('Отчеты не найдены'))
+            : ListView.builder(
+                itemCount: _reports.length,
+                itemBuilder: (context, index) {
+                  final report = _reports[index];
+                  return _buildReportCard(report);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildReportCard(KPIReport report) {
     final statusColor = _getReportStatusColor(report.status);
@@ -778,10 +667,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
           // Заголовок
           Row(
             children: [
-              Text(
-                report.type.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
+              Text(report.type.icon, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -789,15 +675,9 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                   children: [
                     Text(
                       report.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                    Text(
-                      report.description,
-                      style: const TextStyle(fontSize: 14),
-                    ),
+                    Text(report.description, style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -810,11 +690,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                 ),
                 child: Text(
                   report.status.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: statusColor, fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -822,26 +698,17 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
                   ),
                   if (report.status == ReportStatus.draft)
                     const PopupMenuItem(
                       value: 'generate',
-                      child: ListTile(
-                        leading: Icon(Icons.play_arrow),
-                        title: Text('Генерировать'),
-                      ),
+                      child: ListTile(leading: Icon(Icons.play_arrow), title: Text('Генерировать')),
                     ),
                   if (report.status == ReportStatus.ready && report.fileUrl != null)
                     const PopupMenuItem(
                       value: 'download',
-                      child: ListTile(
-                        leading: Icon(Icons.download),
-                        title: Text('Скачать'),
-                      ),
+                      child: ListTile(leading: Icon(Icons.download), title: Text('Скачать')),
                     ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -854,17 +721,9 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
           // Метаданные
           Row(
             children: [
-              _buildInfoChip(
-                'Метрики',
-                '${report.metricIds.length}',
-                Colors.blue,
-              ),
+              _buildInfoChip('Метрики', '${report.metricIds.length}', Colors.blue),
               const SizedBox(width: 8),
-              _buildInfoChip(
-                'Дашборды',
-                '${report.dashboardIds.length}',
-                Colors.green,
-              ),
+              _buildInfoChip('Дашборды', '${report.dashboardIds.length}', Colors.green),
               const SizedBox(width: 8),
               _buildInfoChip(
                 'Период',
@@ -893,21 +752,17 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
   }
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color),
-        ),
-        child: Text(
-          '$label: $value',
-          style: TextStyle(
-            fontSize: 12,
-            color: color,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color),
+    ),
+    child: Text(
+      '$label: $value',
+      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+    ),
+  );
 
   Color _getTypeColor(MetricType type) {
     switch (type) {
@@ -1031,10 +886,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
       _analysis = await _kpiService.analyzeMetrics();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка загрузки данных: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка загрузки данных: $e'), backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -1124,49 +976,37 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
 
   void _viewMetric(KPIMetric metric) {
     // TODO(developer): Реализовать просмотр метрики
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Просмотр метрики "${metric.name}" будет реализован'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Просмотр метрики "${metric.name}" будет реализован')));
   }
 
   void _editMetric(KPIMetric metric) {
     // TODO(developer): Реализовать редактирование метрики
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Редактирование метрики "${metric.name}" будет реализовано'),
-      ),
+      SnackBar(content: Text('Редактирование метрики "${metric.name}" будет реализовано')),
     );
   }
 
   void _viewDashboard(KPIDashboard dashboard) {
     // TODO(developer): Реализовать просмотр дашборда
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Просмотр дашборда "${dashboard.name}" будет реализован'),
-      ),
+      SnackBar(content: Text('Просмотр дашборда "${dashboard.name}" будет реализован')),
     );
   }
 
   void _editDashboard(KPIDashboard dashboard) {
     // TODO(developer): Реализовать редактирование дашборда
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Редактирование дашборда "${dashboard.name}" будет реализовано',
-        ),
-      ),
+      SnackBar(content: Text('Редактирование дашборда "${dashboard.name}" будет реализовано')),
     );
   }
 
   void _viewReport(KPIReport report) {
     // TODO(developer): Реализовать просмотр отчета
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Просмотр отчета "${report.name}" будет реализован'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Просмотр отчета "${report.name}" будет реализован')));
   }
 
   Future<void> _generateReport(KPIReport report) async {
@@ -1181,47 +1021,36 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
       _loadData();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка генерации отчета: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка генерации отчета: $e'), backgroundColor: Colors.red),
       );
     }
   }
 
   void _downloadReport(KPIReport report) {
     // TODO(developer): Реализовать скачивание отчета
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Скачивание отчета "${report.name}" будет реализовано'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Скачивание отчета "${report.name}" будет реализовано')));
   }
 
   void _showAddMetricDialog() {
     // TODO(developer): Реализовать диалог добавления метрики
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Добавление метрики будет реализовано'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Добавление метрики будет реализовано')));
   }
 
   void _showCreateDashboardDialog() {
     // TODO(developer): Реализовать диалог создания дашборда
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Создание дашборда будет реализовано'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Создание дашборда будет реализовано')));
   }
 
   void _showCreateReportDialog() {
     // TODO(developer): Реализовать диалог создания отчета
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Создание отчета будет реализовано'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Создание отчета будет реализовано')));
   }
 }

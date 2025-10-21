@@ -5,11 +5,7 @@ import '../services/booking_service.dart';
 
 /// Виджет таймера подтверждения бронирования
 class BookingConfirmationTimer extends StatefulWidget {
-  const BookingConfirmationTimer({
-    super.key,
-    required this.booking,
-    required this.bookingService,
-  });
+  const BookingConfirmationTimer({super.key, required this.booking, required this.bookingService});
   final Booking booking;
   final BookingService bookingService;
 
@@ -73,11 +69,7 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.access_time,
-            color: Colors.orange[600],
-            size: 20,
-          ),
+          Icon(Icons.access_time, color: Colors.orange[600], size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -85,18 +77,12 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
               children: [
                 Text(
                   'Ожидает подтверждения',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.orange[800],
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.orange[800]),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Время на подтверждение: ${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.orange[700],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.orange[700]),
                 ),
               ],
             ),
@@ -110,11 +96,7 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
               ),
               child: Text(
                 'СРОЧНО!',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red[700],
-                ),
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.red[700]),
               ),
             ),
         ],
@@ -125,11 +107,7 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
 
 /// Виджет для отображения статуса подтверждения
 class BookingConfirmationStatus extends StatelessWidget {
-  const BookingConfirmationStatus({
-    super.key,
-    required this.booking,
-    required this.bookingService,
-  });
+  const BookingConfirmationStatus({super.key, required this.booking, required this.bookingService});
   final Booking booking;
   final BookingService bookingService;
 
@@ -137,10 +115,7 @@ class BookingConfirmationStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (booking.status) {
       case BookingStatus.pending:
-        return BookingConfirmationTimer(
-          booking: booking,
-          bookingService: bookingService,
-        );
+        return BookingConfirmationTimer(booking: booking, bookingService: bookingService);
       case BookingStatus.confirmed:
         return Container(
           padding: const EdgeInsets.all(12),
@@ -152,18 +127,11 @@ class BookingConfirmationStatus extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                Icons.check_circle,
-                color: Colors.green[600],
-                size: 20,
-              ),
+              Icon(Icons.check_circle, color: Colors.green[600], size: 20),
               const SizedBox(width: 8),
               Text(
                 'Бронирование подтверждено',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.green[800],
-                ),
+                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green[800]),
               ),
             ],
           ),
@@ -179,18 +147,11 @@ class BookingConfirmationStatus extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                Icons.cancel,
-                color: Colors.red[600],
-                size: 20,
-              ),
+              Icon(Icons.cancel, color: Colors.red[600], size: 20),
               const SizedBox(width: 8),
               Text(
                 'Бронирование отменено',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.red[800],
-                ),
+                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red[800]),
               ),
             ],
           ),
@@ -206,18 +167,11 @@ class BookingConfirmationStatus extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                Icons.close,
-                color: Colors.red[600],
-                size: 20,
-              ),
+              Icon(Icons.close, color: Colors.red[600], size: 20),
               const SizedBox(width: 8),
               Text(
                 'Бронирование отклонено',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.red[800],
-                ),
+                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red[800]),
               ),
             ],
           ),
@@ -233,18 +187,11 @@ class BookingConfirmationStatus extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                Icons.event_available,
-                color: Colors.blue[600],
-                size: 20,
-              ),
+              Icon(Icons.event_available, color: Colors.blue[600], size: 20),
               const SizedBox(width: 8),
               Text(
                 'Мероприятие завершено',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.blue[800],
-                ),
+                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blue[800]),
               ),
             ],
           ),

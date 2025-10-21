@@ -36,7 +36,7 @@ class GroupChatService {
             'isActive': true,
             'canSendMessages': true,
             'canUploadFiles': true,
-          }
+          },
         ],
         'lastActivityAt': FieldValue.serverTimestamp(),
         'unreadCount': 0,
@@ -65,10 +65,7 @@ class GroupChatService {
   }
 
   /// Добавить участника в групповой чат
-  Future<void> addParticipantToChat(
-    String chatId,
-    GroupChatParticipant participant,
-  ) async {
+  Future<void> addParticipantToChat(String chatId, GroupChatParticipant participant) async {
     try {
       await _firestore.collection('group_chats').doc(chatId).update({
         'participants': FieldValue.arrayUnion([participant.toMap()]),
@@ -109,10 +106,7 @@ class GroupChatService {
   }
 
   /// Отправить сообщение в групповой чат
-  Future<String> sendMessage(
-    String chatId,
-    GroupChatMessage message,
-  ) async {
+  Future<String> sendMessage(String chatId, GroupChatMessage message) async {
     try {
       // Добавляем сообщение в коллекцию сообщений
       final messageRef = await _firestore
@@ -146,12 +140,7 @@ class GroupChatService {
       .snapshots()
       .map(
         (snapshot) => snapshot.docs
-            .map(
-              (doc) => GroupChatMessage.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }),
-            )
+            .map((doc) => GroupChatMessage.fromMap({'id': doc.id, ...doc.data()}))
             .toList(),
       );
 
@@ -163,10 +152,7 @@ class GroupChatService {
         return null;
       }
 
-      return GroupChat.fromMap({
-        'id': doc.id,
-        ...doc.data()!,
-      });
+      return GroupChat.fromMap({'id': doc.id, ...doc.data()!});
     } catch (e) {
       debugPrint('Error getting group chat: $e');
       return null;
@@ -187,10 +173,7 @@ class GroupChatService {
       }
 
       final doc = query.docs.first;
-      return GroupChat.fromMap({
-        'id': doc.id,
-        ...doc.data(),
-      });
+      return GroupChat.fromMap({'id': doc.id, ...doc.data()});
     } catch (e) {
       debugPrint('Error getting group chat by event ID: $e');
       return null;
@@ -200,32 +183,16 @@ class GroupChatService {
   /// Получить все групповые чаты пользователя
   Stream<List<GroupChat>> getUserGroupChats(String userId) => _firestore
       .collection('group_chats')
-      .where(
-        'participants',
-        arrayContains: {
-          'userId': userId,
-          'isActive': true,
-        },
-      )
+      .where('participants', arrayContains: {'userId': userId, 'isActive': true})
       .orderBy('lastActivityAt', descending: true)
       .snapshots()
       .map(
-        (snapshot) => snapshot.docs
-            .map(
-              (doc) => GroupChat.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }),
-            )
-            .toList(),
+        (snapshot) =>
+            snapshot.docs.map((doc) => GroupChat.fromMap({'id': doc.id, ...doc.data()})).toList(),
       );
 
   /// Добавить гостя в чат по ссылке
-  Future<void> addGuestToChat(
-    String chatId,
-    String guestName,
-    String? guestPhoto,
-  ) async {
+  Future<void> addGuestToChat(String chatId, String guestName, String? guestPhoto) async {
     try {
       final guestId = 'guest_${DateTime.now().millisecondsSinceEpoch}';
       final guest = GroupChatParticipant(
@@ -303,10 +270,7 @@ class GroupChatService {
   }
 
   /// Обновить настройки чата
-  Future<void> updateChatSettings(
-    String chatId,
-    Map<String, dynamic> settings,
-  ) async {
+  Future<void> updateChatSettings(String chatId, Map<String, dynamic> settings) async {
     try {
       await _firestore.collection('group_chats').doc(chatId).update({
         'settings': settings,
@@ -338,8 +302,11 @@ class GroupChatService {
   /// Получить статистику чата
   Future<Map<String, dynamic>> getChatStats(String chatId) async {
     try {
-      final messagesQuery =
-          await _firestore.collection('group_chats').doc(chatId).collection('messages').get();
+      final messagesQuery = await _firestore
+          .collection('group_chats')
+          .doc(chatId)
+          .collection('messages')
+          .get();
 
       final messages = messagesQuery.docs;
       final totalMessages = messages.length;

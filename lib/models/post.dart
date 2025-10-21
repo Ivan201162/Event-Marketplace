@@ -2,11 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 /// Media type for posts
-enum MediaType {
-  image,
-  video,
-  text,
-}
+enum MediaType { image, video, text }
 
 /// Post model for feed
 class Post extends Equatable {
@@ -204,28 +200,28 @@ class Post extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        authorId,
-        text,
-        mediaUrl,
-        mediaType,
-        createdAt,
-        updatedAt,
-        likesCount,
-        commentsCount,
-        likedBy,
-        authorName,
-        authorAvatarUrl,
-        tags,
-        isPinned,
-        location,
-        mediaUrls,
-        specialistPhotoUrl,
-        specialistName,
-        content,
-        shares,
-        comments,
-      ];
+    id,
+    authorId,
+    text,
+    mediaUrl,
+    mediaType,
+    createdAt,
+    updatedAt,
+    likesCount,
+    commentsCount,
+    likedBy,
+    authorName,
+    authorAvatarUrl,
+    tags,
+    isPinned,
+    location,
+    mediaUrls,
+    specialistPhotoUrl,
+    specialistName,
+    content,
+    shares,
+    comments,
+  ];
 
   @override
   String toString() {

@@ -53,15 +53,9 @@ class EncryptionService {
   static EncryptedData encrypt(String plaintext, Uint8List key) {
     try {
       final iv = generateIV();
-      final cipher = PaddedBlockCipherImpl(
-        PKCS7Padding(),
-        CBCBlockCipher(AESEngine()),
-      );
+      final cipher = PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()));
 
-      final params = PaddedBlockCipherParameters(
-        ParametersWithIV(KeyParameter(key), iv),
-        null,
-      );
+      final params = PaddedBlockCipherParameters(ParametersWithIV(KeyParameter(key), iv), null);
 
       cipher.init(true, params);
 
@@ -82,10 +76,7 @@ class EncryptionService {
   /// Расшифровать данные с использованием AES-256-CBC
   static String decrypt(EncryptedData encryptedData, Uint8List key) {
     try {
-      final cipher = PaddedBlockCipherImpl(
-        PKCS7Padding(),
-        CBCBlockCipher(AESEngine()),
-      );
+      final cipher = PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()));
 
       final params = PaddedBlockCipherParameters(
         ParametersWithIV(KeyParameter(key), encryptedData.iv),
@@ -103,10 +94,7 @@ class EncryptionService {
   }
 
   /// Шифровать данные с паролем
-  static EncryptedDataWithPassword encryptWithPassword(
-    String plaintext,
-    String password,
-  ) {
+  static EncryptedDataWithPassword encryptWithPassword(String plaintext, String password) {
     try {
       final salt = generateSalt();
       final key = deriveKeyFromPassword(password, salt);
@@ -124,10 +112,7 @@ class EncryptionService {
   }
 
   /// Расшифровать данные с паролем
-  static String decryptWithPassword(
-    EncryptedDataWithPassword encryptedData,
-    String password,
-  ) {
+  static String decryptWithPassword(EncryptedDataWithPassword encryptedData, String password) {
     try {
       final key = deriveKeyFromPassword(password, encryptedData.salt);
       final data = EncryptedData(
@@ -165,10 +150,7 @@ class EncryptionService {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     final random = Random.secure();
     return String.fromCharCodes(
-      Iterable.generate(
-        length,
-        (_) => chars.codeUnitAt(random.nextInt(chars.length)),
-      ),
+      Iterable.generate(length, (_) => chars.codeUnitAt(random.nextInt(chars.length))),
     );
   }
 
@@ -245,11 +227,7 @@ class EncryptionService {
       level = PasswordStrengthLevel.veryStrong;
     }
 
-    return PasswordStrength(
-      level: level,
-      score: score,
-      requirements: requirements,
-    );
+    return PasswordStrength(level: level, score: score, requirements: requirements);
   }
 
   /// Валидировать пароль
@@ -273,47 +251,35 @@ class EncryptionService {
       errors.add('Пароль должен содержать специальные символы');
     }
 
-    return PasswordValidation(
-      isValid: errors.isEmpty,
-      errors: errors,
-      strength: strength,
-    );
+    return PasswordValidation(isValid: errors.isEmpty, errors: errors, strength: strength);
   }
 }
 
 /// Зашифрованные данные
 class EncryptedData {
-  const EncryptedData({
-    required this.ciphertext,
-    required this.iv,
-    required this.salt,
-  });
+  const EncryptedData({required this.ciphertext, required this.iv, required this.salt});
 
   /// Создать из JSON
   factory EncryptedData.fromJson(Map<String, dynamic> json) => EncryptedData(
-        ciphertext: base64Decode(json['ciphertext']),
-        iv: base64Decode(json['iv']),
-        salt: base64Decode(json['salt']),
-      );
+    ciphertext: base64Decode(json['ciphertext']),
+    iv: base64Decode(json['iv']),
+    salt: base64Decode(json['salt']),
+  );
   final Uint8List ciphertext;
   final Uint8List iv;
   final Uint8List salt;
 
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {
-        'ciphertext': base64Encode(ciphertext),
-        'iv': base64Encode(iv),
-        'salt': base64Encode(salt),
-      };
+    'ciphertext': base64Encode(ciphertext),
+    'iv': base64Encode(iv),
+    'salt': base64Encode(salt),
+  };
 }
 
 /// Зашифрованные данные с паролем
 class EncryptedDataWithPassword {
-  const EncryptedDataWithPassword({
-    required this.ciphertext,
-    required this.iv,
-    required this.salt,
-  });
+  const EncryptedDataWithPassword({required this.ciphertext, required this.iv, required this.salt});
 
   /// Создать из JSON
   factory EncryptedDataWithPassword.fromJson(Map<String, dynamic> json) =>
@@ -328,27 +294,18 @@ class EncryptedDataWithPassword {
 
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {
-        'ciphertext': base64Encode(ciphertext),
-        'iv': base64Encode(iv),
-        'salt': base64Encode(salt),
-      };
+    'ciphertext': base64Encode(ciphertext),
+    'iv': base64Encode(iv),
+    'salt': base64Encode(salt),
+  };
 }
 
 /// Уровень силы пароля
-enum PasswordStrengthLevel {
-  weak,
-  medium,
-  strong,
-  veryStrong,
-}
+enum PasswordStrengthLevel { weak, medium, strong, veryStrong }
 
 /// Сила пароля
 class PasswordStrength {
-  const PasswordStrength({
-    required this.level,
-    required this.score,
-    required this.requirements,
-  });
+  const PasswordStrength({required this.level, required this.score, required this.requirements});
   final PasswordStrengthLevel level;
   final int score;
   final Map<String, bool> requirements;
@@ -384,11 +341,7 @@ class PasswordStrength {
 
 /// Валидация пароля
 class PasswordValidation {
-  const PasswordValidation({
-    required this.isValid,
-    required this.errors,
-    required this.strength,
-  });
+  const PasswordValidation({required this.isValid, required this.errors, required this.strength});
   final bool isValid;
   final List<String> errors;
   final PasswordStrength strength;

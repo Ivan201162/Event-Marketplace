@@ -1,13 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Статус заявки
-enum BookingStatus {
-  pending,
-  confirmed,
-  inProgress,
-  completed,
-  cancelled,
-}
+enum BookingStatus { pending, confirmed, inProgress, completed, cancelled }
 
 /// Модель заявки
 class Booking {
@@ -54,8 +48,9 @@ class Booking {
         (e) => e.name == data['status'],
         orElse: () => BookingStatus.pending,
       ),
-      requirements:
-          data['requirements'] != null ? Map<String, dynamic>.from(data['requirements']) : null,
+      requirements: data['requirements'] != null
+          ? Map<String, dynamic>.from(data['requirements'])
+          : null,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );

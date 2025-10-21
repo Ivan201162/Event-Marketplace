@@ -10,14 +10,7 @@ import '../widgets/smart_search_filters.dart';
 import '../widgets/specialist_card.dart';
 
 // Временное определение для совместимости
-enum SpecialistSortOption {
-  rating,
-  price,
-  experience,
-  reviews,
-  name,
-  dateAdded,
-}
+enum SpecialistSortOption { rating, price, experience, reviews, name, dateAdded }
 
 /// Экран умного поиска специалистов
 class SmartSearchScreen extends ConsumerStatefulWidget {
@@ -177,202 +170,190 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
   /// Показать ошибку
   void _showErrorSnackBar(String message) {
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
     }
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Умный поиск'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.tune),
-              onPressed: () {
-                setState(() => _showFilters = !_showFilters);
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.smart_toy),
-              onPressed: _openAIAssistant,
-              tooltip: 'AI-помощник',
-            ),
-          ],
+    appBar: AppBar(
+      title: const Text('Умный поиск'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.tune),
+          onPressed: () {
+            setState(() => _showFilters = !_showFilters);
+          },
         ),
-        body: Column(
-          children: [
-            // Поисковая строка
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Поиск специалистов...',
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _searchController.clear();
-                      _performSearch();
-                    },
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onSubmitted: (_) => _performSearch(),
-              ),
-            ),
-
-            // Фильтры
-            if (_showFilters)
-              SmartSearchFilters(
-                selectedCategory: _selectedCategory,
-                selectedCity: _selectedCity,
-                minPrice: _minPrice,
-                maxPrice: _maxPrice,
-                selectedDate: _selectedDate,
-                selectedStyles: _selectedStyles,
-                selectedSort: _selectedSort,
-                onCategoryChanged: (category) {
-                  setState(() => _selectedCategory = category);
-                  _performSearch();
-                },
-                onCityChanged: (city) {
-                  setState(() => _selectedCity = city);
-                  _performSearch();
-                },
-                onPriceChanged: (min, max) {
-                  setState(() {
-                    _minPrice = min;
-                    _maxPrice = max;
-                  });
-                  _performSearch();
-                },
-                onDateChanged: (date) {
-                  setState(() => _selectedDate = date);
-                  _performSearch();
-                },
-                onStylesChanged: (styles) {
-                  setState(() => _selectedStyles = styles);
-                  _performSearch();
-                },
-                onSortChanged: (sort) {
-                  setState(() => _selectedSort = sort);
-                  _performSearch();
-                },
-              ),
-
-            // Персональные рекомендации
-            if (_recommendations.isNotEmpty)
-              Container(
-                height: 200,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        '🔮 Вам подойдут эти специалисты',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: _recommendations.length,
-                        itemBuilder: (context, index) {
-                          final specialist = _recommendations[index];
-                          return Container(
-                            width: 280,
-                            margin: const EdgeInsets.only(right: 12),
-                            child: SpecialistCard(
-                              specialist: specialist,
-                              showCompatibility: true,
-                              onTap: () => _onSpecialistTap(specialist),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-            // Результаты поиска
-            Expanded(
-              child: _isLoading && _specialists.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : _specialists.isEmpty
-                      ? const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.search_off,
-                                size: 64,
-                                color: Colors.grey,
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                'Специалисты не найдены',
-                                style: TextStyle(fontSize: 18, color: Colors.grey),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Попробуйте изменить параметры поиска',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        )
-                      : RefreshIndicator(
-                          onRefresh: _loadInitialData,
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            padding: const EdgeInsets.all(16),
-                            itemCount: _specialists.length + (_isLoading ? 1 : 0),
-                            itemBuilder: (context, index) {
-                              if (index == _specialists.length) {
-                                return const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              }
-
-                              final specialist = _specialists[index];
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: SpecialistCard(
-                                  specialist: specialist,
-                                  onTap: () => _onSpecialistTap(specialist),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
+        IconButton(
+          icon: const Icon(Icons.smart_toy),
           onPressed: _openAIAssistant,
           tooltip: 'AI-помощник',
-          child: const Icon(Icons.smart_toy),
         ),
-      );
+      ],
+    ),
+    body: Column(
+      children: [
+        // Поисковая строка
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: TextField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              hintText: 'Поиск специалистов...',
+              prefixIcon: const Icon(Icons.search),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  _searchController.clear();
+                  _performSearch();
+                },
+              ),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            onSubmitted: (_) => _performSearch(),
+          ),
+        ),
+
+        // Фильтры
+        if (_showFilters)
+          SmartSearchFilters(
+            selectedCategory: _selectedCategory,
+            selectedCity: _selectedCity,
+            minPrice: _minPrice,
+            maxPrice: _maxPrice,
+            selectedDate: _selectedDate,
+            selectedStyles: _selectedStyles,
+            selectedSort: _selectedSort,
+            onCategoryChanged: (category) {
+              setState(() => _selectedCategory = category);
+              _performSearch();
+            },
+            onCityChanged: (city) {
+              setState(() => _selectedCity = city);
+              _performSearch();
+            },
+            onPriceChanged: (min, max) {
+              setState(() {
+                _minPrice = min;
+                _maxPrice = max;
+              });
+              _performSearch();
+            },
+            onDateChanged: (date) {
+              setState(() => _selectedDate = date);
+              _performSearch();
+            },
+            onStylesChanged: (styles) {
+              setState(() => _selectedStyles = styles);
+              _performSearch();
+            },
+            onSortChanged: (sort) {
+              setState(() => _selectedSort = sort);
+              _performSearch();
+            },
+          ),
+
+        // Персональные рекомендации
+        if (_recommendations.isNotEmpty)
+          Container(
+            height: 200,
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    '🔮 Вам подойдут эти специалисты',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: _recommendations.length,
+                    itemBuilder: (context, index) {
+                      final specialist = _recommendations[index];
+                      return Container(
+                        width: 280,
+                        margin: const EdgeInsets.only(right: 12),
+                        child: SpecialistCard(
+                          specialist: specialist,
+                          showCompatibility: true,
+                          onTap: () => _onSpecialistTap(specialist),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        // Результаты поиска
+        Expanded(
+          child: _isLoading && _specialists.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : _specialists.isEmpty
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.search_off, size: 64, color: Colors.grey),
+                      SizedBox(height: 16),
+                      Text(
+                        'Специалисты не найдены',
+                        style: TextStyle(fontSize: 18, color: Colors.grey),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Попробуйте изменить параметры поиска',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: _loadInitialData,
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _specialists.length + (_isLoading ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == _specialists.length) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(16),
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+
+                      final specialist = _specialists[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: SpecialistCard(
+                          specialist: specialist,
+                          onTap: () => _onSpecialistTap(specialist),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+        ),
+      ],
+    ),
+    floatingActionButton: FloatingActionButton(
+      onPressed: _openAIAssistant,
+      tooltip: 'AI-помощник',
+      child: const Icon(Icons.smart_toy),
+    ),
+  );
 
   /// Обработка нажатия на специалиста
   void _onSpecialistTap(SmartSpecialist specialist) {
@@ -386,10 +367,6 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
     }
 
     // Переходим к профилю специалиста
-    Navigator.pushNamed(
-      context,
-      '/specialist_profile',
-      arguments: specialist.id,
-    );
+    Navigator.pushNamed(context, '/specialist_profile', arguments: specialist.id);
   }
 }

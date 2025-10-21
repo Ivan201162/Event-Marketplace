@@ -9,10 +9,7 @@ import '../widgets/host_profile/reviews_block.dart';
 
 /// Страница профиля ведущего мероприятия
 class HostProfileScreen extends StatefulWidget {
-  const HostProfileScreen({
-    super.key,
-    required this.hostId,
-  });
+  const HostProfileScreen({super.key, required this.hostId});
   final String hostId;
 
   @override
@@ -37,10 +34,7 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
   }
 
   void _initializeAnimations() {
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
+    _fadeController = AnimationController(duration: const Duration(milliseconds: 800), vsync: this);
 
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 600),
@@ -50,22 +44,12 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _fadeController,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeInOut));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _slideController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic));
   }
 
   Future<void> _loadHostData() async {
@@ -103,8 +87,9 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
         elevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness:
-              theme.brightness == Brightness.dark ? Brightness.light : Brightness.dark,
+          statusBarIconBrightness: theme.brightness == Brightness.dark
+              ? Brightness.light
+              : Brightness.dark,
         ),
         actions: [
           IconButton(
@@ -122,8 +107,8 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
       body: _isLoading
           ? _buildLoadingState()
           : _host == null
-              ? _buildErrorState()
-              : _buildContent(),
+          ? _buildErrorState()
+          : _buildContent(),
       bottomNavigationBar: _host != null ? _buildBottomBar() : null,
     );
   }
@@ -135,9 +120,7 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
-          ),
+          CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor)),
           const SizedBox(height: 16),
           Text(
             'Загрузка профиля...',
@@ -157,17 +140,11 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: theme.colorScheme.error,
-          ),
+          Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
           const SizedBox(height: 16),
           Text(
             'Ошибка загрузки',
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: theme.colorScheme.error,
-            ),
+            style: theme.textTheme.headlineSmall?.copyWith(color: theme.colorScheme.error),
           ),
           const SizedBox(height: 8),
           Text(
@@ -204,10 +181,7 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
           child: Column(
             children: [
               // Блок с аватаром
-              AvatarBlock(
-                host: _host!,
-                onPhotoTap: _showPhotoDialog,
-              ),
+              AvatarBlock(host: _host!, onPhotoTap: _showPhotoDialog),
 
               const SizedBox(height: 16),
 
@@ -217,10 +191,7 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
               const SizedBox(height: 16),
 
               // Блок с отзывами
-              ReviewsBlock(
-                reviews: _host!.reviews,
-                onViewAllReviews: _viewAllReviews,
-              ),
+              ReviewsBlock(reviews: _host!.reviews, onViewAllReviews: _viewAllReviews),
 
               const SizedBox(height: 16),
 
@@ -266,9 +237,7 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
                 icon: const Icon(Icons.message),
                 label: const Text('Связаться'),
                 style: OutlinedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                    vertical: isMobile ? 12 : 16,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: isMobile ? 12 : 16),
                 ),
               ),
             ),
@@ -283,9 +252,7 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
                 icon: const Icon(Icons.handshake),
                 label: const Text('Откликнуться'),
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                    vertical: isMobile ? 12 : 16,
-                  ),
+                  padding: EdgeInsets.symmetric(vertical: isMobile ? 12 : 16),
                 ),
               ),
             ),
@@ -298,20 +265,16 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
   // Методы для обработки действий
   void _shareProfile() {
     // TODO(developer): Реализовать функционал шаринга
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Функция "Поделиться" будет реализована'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Функция "Поделиться" будет реализована')));
   }
 
   void _toggleFavorite() {
     // TODO(developer): Реализовать добавление в избранное
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Функция "Избранное" будет реализована'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Функция "Избранное" будет реализована')));
   }
 
   void _showPhotoDialog() {
@@ -328,11 +291,8 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
                 child: Image.network(
                   _host!.photoUrl!,
                   fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.error,
-                    size: 64,
-                    color: Colors.red,
-                  ),
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.error, size: 64, color: Colors.red),
                 ),
               ),
             ),
@@ -341,14 +301,8 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
               right: 20,
               child: IconButton(
                 onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 32,
-                ),
-                style: IconButton.styleFrom(
-                  backgroundColor: Colors.black54,
-                ),
+                icon: const Icon(Icons.close, color: Colors.white, size: 32),
+                style: IconButton.styleFrom(backgroundColor: Colors.black54),
               ),
             ),
           ],
@@ -359,11 +313,9 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
 
   void _viewAllReviews() {
     // TODO(developer): Переход на страницу всех отзывов
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Переход к полному списку отзывов'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Переход к полному списку отзывов')));
   }
 
   void _selectDate(DateTime date) {
@@ -372,20 +324,16 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
     });
 
     // TODO(developer): Сохранить выбранную дату для дальнейшего использования
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Выбрана дата: ${_formatDate(date)}'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Выбрана дата: ${_formatDate(date)}')));
   }
 
   void _contactHost() {
     // TODO(developer): Переход к чату с ведущим
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Переход к чату с ведущим'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Переход к чату с ведущим')));
   }
 
   void _respondToHost() {
@@ -400,11 +348,9 @@ class _HostProfileScreenState extends State<HostProfileScreen> with TickerProvid
     }
 
     // TODO(developer): Переход к форме отклика
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Отклик на дату: ${_formatDate(_selectedDate!)}'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Отклик на дату: ${_formatDate(_selectedDate!)}')));
   }
 
   String _formatDate(DateTime date) {

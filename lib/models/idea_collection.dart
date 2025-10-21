@@ -131,21 +131,21 @@ class IdeaCollection extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        description,
-        authorId,
-        authorName,
-        authorAvatarUrl,
-        ideaIds,
-        createdAt,
-        updatedAt,
-        likesCount,
-        likedBy,
-        isPublic,
-        tags,
-        coverImageUrl,
-      ];
+    id,
+    name,
+    description,
+    authorId,
+    authorName,
+    authorAvatarUrl,
+    ideaIds,
+    createdAt,
+    updatedAt,
+    likesCount,
+    likedBy,
+    isPublic,
+    tags,
+    coverImageUrl,
+  ];
 
   @override
   String toString() {

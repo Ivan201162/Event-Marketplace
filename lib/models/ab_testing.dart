@@ -1,11 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum ABTestStatus {
-  draft,
-  active,
-  completed,
-  paused,
-}
+enum ABTestStatus { draft, active, completed, paused }
 
 class ABTest {
   final String id;

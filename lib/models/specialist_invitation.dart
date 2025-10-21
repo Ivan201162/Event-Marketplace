@@ -18,22 +18,22 @@ class SpecialistInvitation {
   });
 
   factory SpecialistInvitation.fromMap(Map<String, dynamic> map) => SpecialistInvitation(
-        id: map['id'] as String,
-        orderId: map['orderId'] as String,
-        specialistId: map['specialistId'] as String,
-        customerId: map['customerId'] as String,
-        message: map['message'] as String,
-        status: InvitationStatus.values.firstWhere(
-          (s) => s.name == map['status'],
-          orElse: () => InvitationStatus.pending,
-        ),
-        createdAt: _parseTimestamp(map['createdAt']),
-        updatedAt: _parseTimestamp(map['updatedAt']),
-        expiresAt: map['expiresAt'] != null ? _parseTimestamp(map['expiresAt']) : null,
-        responseMessage: map['responseMessage'] as String?,
-        respondedAt: map['respondedAt'] != null ? _parseTimestamp(map['respondedAt']) : null,
-        metadata: map['metadata'] as Map<String, dynamic>?,
-      );
+    id: map['id'] as String,
+    orderId: map['orderId'] as String,
+    specialistId: map['specialistId'] as String,
+    customerId: map['customerId'] as String,
+    message: map['message'] as String,
+    status: InvitationStatus.values.firstWhere(
+      (s) => s.name == map['status'],
+      orElse: () => InvitationStatus.pending,
+    ),
+    createdAt: _parseTimestamp(map['createdAt']),
+    updatedAt: _parseTimestamp(map['updatedAt']),
+    expiresAt: map['expiresAt'] != null ? _parseTimestamp(map['expiresAt']) : null,
+    responseMessage: map['responseMessage'] as String?,
+    respondedAt: map['respondedAt'] != null ? _parseTimestamp(map['respondedAt']) : null,
+    metadata: map['metadata'] as Map<String, dynamic>?,
+  );
 
   factory SpecialistInvitation.fromDoc(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
@@ -53,19 +53,19 @@ class SpecialistInvitation {
   final Map<String, dynamic>? metadata;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'orderId': orderId,
-        'specialistId': specialistId,
-        'customerId': customerId,
-        'message': message,
-        'status': status.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        if (expiresAt != null) 'expiresAt': Timestamp.fromDate(expiresAt!),
-        if (responseMessage != null) 'responseMessage': responseMessage,
-        if (respondedAt != null) 'respondedAt': Timestamp.fromDate(respondedAt!),
-        if (metadata != null) 'metadata': metadata,
-      };
+    'id': id,
+    'orderId': orderId,
+    'specialistId': specialistId,
+    'customerId': customerId,
+    'message': message,
+    'status': status.name,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    if (expiresAt != null) 'expiresAt': Timestamp.fromDate(expiresAt!),
+    if (responseMessage != null) 'responseMessage': responseMessage,
+    if (respondedAt != null) 'respondedAt': Timestamp.fromDate(respondedAt!),
+    if (metadata != null) 'metadata': metadata,
+  };
 
   SpecialistInvitation copyWith({
     String? id,
@@ -80,21 +80,20 @@ class SpecialistInvitation {
     String? responseMessage,
     DateTime? respondedAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      SpecialistInvitation(
-        id: id ?? this.id,
-        orderId: orderId ?? this.orderId,
-        specialistId: specialistId ?? this.specialistId,
-        customerId: customerId ?? this.customerId,
-        message: message ?? this.message,
-        status: status ?? this.status,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        expiresAt: expiresAt ?? this.expiresAt,
-        responseMessage: responseMessage ?? this.responseMessage,
-        respondedAt: respondedAt ?? this.respondedAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => SpecialistInvitation(
+    id: id ?? this.id,
+    orderId: orderId ?? this.orderId,
+    specialistId: specialistId ?? this.specialistId,
+    customerId: customerId ?? this.customerId,
+    message: message ?? this.message,
+    status: status ?? this.status,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    expiresAt: expiresAt ?? this.expiresAt,
+    responseMessage: responseMessage ?? this.responseMessage,
+    respondedAt: respondedAt ?? this.respondedAt,
+    metadata: metadata ?? this.metadata,
+  );
 
   static DateTime _parseTimestamp(timestamp) {
     if (timestamp == null) return DateTime.now();
@@ -153,15 +152,15 @@ class InvitationTemplate {
   });
 
   factory InvitationTemplate.fromMap(Map<String, dynamic> map) => InvitationTemplate(
-        id: map['id'] as String,
-        userId: map['userId'] as String,
-        name: map['name'] as String,
-        message: map['message'] as String,
-        tags: List<String>.from(map['tags'] ?? []),
-        isDefault: map['isDefault'] as bool? ?? false,
-        createdAt: _parseTimestamp(map['createdAt']),
-        updatedAt: _parseTimestamp(map['updatedAt']),
-      );
+    id: map['id'] as String,
+    userId: map['userId'] as String,
+    name: map['name'] as String,
+    message: map['message'] as String,
+    tags: List<String>.from(map['tags'] ?? []),
+    isDefault: map['isDefault'] as bool? ?? false,
+    createdAt: _parseTimestamp(map['createdAt']),
+    updatedAt: _parseTimestamp(map['updatedAt']),
+  );
 
   factory InvitationTemplate.fromDoc(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
@@ -177,15 +176,15 @@ class InvitationTemplate {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'name': name,
-        'message': message,
-        'tags': tags,
-        'isDefault': isDefault,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'userId': userId,
+    'name': name,
+    'message': message,
+    'tags': tags,
+    'isDefault': isDefault,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   static DateTime _parseTimestamp(timestamp) {
     if (timestamp == null) return DateTime.now();
@@ -211,16 +210,16 @@ class InvitationStats {
   });
 
   factory InvitationStats.fromMap(Map<String, dynamic> map) => InvitationStats(
-        specialistId: map['specialistId'] as String,
-        totalInvitations: map['totalInvitations'] as int,
-        acceptedInvitations: map['acceptedInvitations'] as int,
-        declinedInvitations: map['declinedInvitations'] as int,
-        pendingInvitations: map['pendingInvitations'] as int,
-        expiredInvitations: map['expiredInvitations'] as int,
-        acceptanceRate: (map['acceptanceRate'] as num).toDouble(),
-        responseRate: (map['responseRate'] as num).toDouble(),
-        lastUpdated: _parseTimestamp(map['lastUpdated']),
-      );
+    specialistId: map['specialistId'] as String,
+    totalInvitations: map['totalInvitations'] as int,
+    acceptedInvitations: map['acceptedInvitations'] as int,
+    declinedInvitations: map['declinedInvitations'] as int,
+    pendingInvitations: map['pendingInvitations'] as int,
+    expiredInvitations: map['expiredInvitations'] as int,
+    acceptanceRate: (map['acceptanceRate'] as num).toDouble(),
+    responseRate: (map['responseRate'] as num).toDouble(),
+    lastUpdated: _parseTimestamp(map['lastUpdated']),
+  );
   final String specialistId;
   final int totalInvitations;
   final int acceptedInvitations;
@@ -232,16 +231,16 @@ class InvitationStats {
   final DateTime lastUpdated;
 
   Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'totalInvitations': totalInvitations,
-        'acceptedInvitations': acceptedInvitations,
-        'declinedInvitations': declinedInvitations,
-        'pendingInvitations': pendingInvitations,
-        'expiredInvitations': expiredInvitations,
-        'acceptanceRate': acceptanceRate,
-        'responseRate': responseRate,
-        'lastUpdated': Timestamp.fromDate(lastUpdated),
-      };
+    'specialistId': specialistId,
+    'totalInvitations': totalInvitations,
+    'acceptedInvitations': acceptedInvitations,
+    'declinedInvitations': declinedInvitations,
+    'pendingInvitations': pendingInvitations,
+    'expiredInvitations': expiredInvitations,
+    'acceptanceRate': acceptanceRate,
+    'responseRate': responseRate,
+    'lastUpdated': Timestamp.fromDate(lastUpdated),
+  };
 
   static DateTime _parseTimestamp(timestamp) {
     if (timestamp == null) return DateTime.now();

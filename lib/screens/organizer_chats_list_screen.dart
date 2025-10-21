@@ -7,11 +7,7 @@ import '../services/organizer_chat_service.dart';
 class OrganizerChatsListScreen extends ConsumerStatefulWidget {
   // 'customer' или 'organizer'
 
-  const OrganizerChatsListScreen({
-    super.key,
-    required this.userId,
-    required this.userType,
-  });
+  const OrganizerChatsListScreen({super.key, required this.userId, required this.userType});
   final String userId;
   final String userType;
 
@@ -52,78 +48,65 @@ class _OrganizerChatsListScreenState extends ConsumerState<OrganizerChatsListScr
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки чатов: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки чатов: $e')));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text(
-            widget.userType == 'customer' ? 'Чаты с организаторами' : 'Чаты с заказчиками',
-          ),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: _loadChats,
-              tooltip: 'Обновить',
-            ),
-          ],
-        ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _chats.isEmpty
-                ? _buildEmptyState()
-                : _buildChatsList(),
-      );
+    appBar: AppBar(
+      title: Text(widget.userType == 'customer' ? 'Чаты с организаторами' : 'Чаты с заказчиками'),
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      actions: [
+        IconButton(icon: const Icon(Icons.refresh), onPressed: _loadChats, tooltip: 'Обновить'),
+      ],
+    ),
+    body: _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _chats.isEmpty
+        ? _buildEmptyState()
+        : _buildChatsList(),
+  );
 
   Widget _buildEmptyState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.chat_bubble_outline,
-              size: 64,
-              color: Theme.of(context).colorScheme.outline,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Нет чатов',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              widget.userType == 'customer'
-                  ? 'Начните общение с организатором'
-                  : 'Заказчики пока не обращались к вам',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            if (widget.userType == 'customer')
-              ElevatedButton.icon(
-                onPressed: _createNewChat,
-                icon: const Icon(Icons.add),
-                label: const Text('Найти организатора'),
-              ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.chat_bubble_outline, size: 64, color: Theme.of(context).colorScheme.outline),
+        const SizedBox(height: 16),
+        Text('Нет чатов', style: Theme.of(context).textTheme.headlineSmall),
+        const SizedBox(height: 8),
+        Text(
+          widget.userType == 'customer'
+              ? 'Начните общение с организатором'
+              : 'Заказчики пока не обращались к вам',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
+          textAlign: TextAlign.center,
         ),
-      );
+        const SizedBox(height: 24),
+        if (widget.userType == 'customer')
+          ElevatedButton.icon(
+            onPressed: _createNewChat,
+            icon: const Icon(Icons.add),
+            label: const Text('Найти организатора'),
+          ),
+      ],
+    ),
+  );
 
   Widget _buildChatsList() => ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: _chats.length,
-        itemBuilder: (context, index) {
-          final chat = _chats[index];
-          return _buildChatCard(chat);
-        },
-      );
+    padding: const EdgeInsets.all(16),
+    itemCount: _chats.length,
+    itemBuilder: (context, index) {
+      final chat = _chats[index];
+      return _buildChatCard(chat);
+    },
+  );
 
   Widget _buildChatCard(OrganizerChat chat) {
     final isUnread = chat.hasUnreadMessages;
@@ -146,12 +129,9 @@ class _OrganizerChatsListScreenState extends ConsumerState<OrganizerChatsListScr
                   (widget.userType == 'customer' ? chat.organizerName : chat.customerName)
                           .isNotEmpty
                       ? (widget.userType == 'customer' ? chat.organizerName : chat.customerName)[0]
-                          .toUpperCase()
+                            .toUpperCase()
                       : '?',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
 
@@ -222,10 +202,7 @@ class _OrganizerChatsListScreenState extends ConsumerState<OrganizerChatsListScr
                               color: Theme.of(context).colorScheme.primary,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            constraints: const BoxConstraints(
-                              minWidth: 20,
-                              minHeight: 20,
-                            ),
+                            constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                             child: Text(
                               '${chat.unreadCount}',
                               style: const TextStyle(
@@ -251,10 +228,7 @@ class _OrganizerChatsListScreenState extends ConsumerState<OrganizerChatsListScr
                   if (chat.eventDate.isAfter(DateTime.now()))
                     Text(
                       _formatDate(chat.eventDate),
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.outline,
-                        fontSize: 10,
-                      ),
+                      style: TextStyle(color: Theme.of(context).colorScheme.outline, fontSize: 10),
                     ),
                 ],
               ),
@@ -297,28 +271,20 @@ class _OrganizerChatsListScreenState extends ConsumerState<OrganizerChatsListScr
       ),
       child: Text(
         text,
-        style: TextStyle(
-          color: color,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
       ),
     );
   }
 
   void _openChat(OrganizerChat chat) {
-    Navigator.pushNamed(
-      context,
-      '/organizer-chat',
-      arguments: chat.id,
-    );
+    Navigator.pushNamed(context, '/organizer-chat', arguments: chat.id);
   }
 
   void _createNewChat() {
     // TODO(developer): Реализовать создание нового чата
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Функция создания чата будет реализована')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Функция создания чата будет реализована')));
   }
 
   String _formatTime(DateTime dateTime) {

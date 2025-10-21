@@ -28,14 +28,8 @@ void main() {
         imageUrl: 'https://example.com/image.jpg',
         isVerified: true,
         reviewCount: 100,
-        contacts: const {
-          'phone': '+7 (999) 123-45-67',
-          'email': 'test@example.com',
-        },
-        servicesWithPrices: const {
-          'Service 1': 5000.0,
-          'Service 2': 10000.0,
-        },
+        contacts: const {'phone': '+7 (999) 123-45-67', 'email': 'test@example.com'},
+        servicesWithPrices: const {'Service 1': 5000.0, 'Service 2': 10000.0},
       );
 
       final map = specialist.toMap();
@@ -82,14 +76,8 @@ void main() {
         'reviewCount': 100,
         'createdAt': Timestamp.fromDate(now),
         'updatedAt': Timestamp.fromDate(now),
-        'contacts': {
-          'phone': '+7 (999) 123-45-67',
-          'email': 'test@example.com',
-        },
-        'servicesWithPrices': {
-          'Service 1': 5000.0,
-          'Service 2': 10000.0,
-        },
+        'contacts': {'phone': '+7 (999) 123-45-67', 'email': 'test@example.com'},
+        'servicesWithPrices': {'Service 1': 5000.0, 'Service 2': 10000.0},
       };
 
       final specialist = Specialist.fromMap(map);
@@ -137,14 +125,8 @@ void main() {
         imageUrl: 'https://example.com/image.jpg',
         isVerified: true,
         reviewCount: 100,
-        contacts: const {
-          'phone': '+7 (999) 123-45-67',
-          'email': 'test@example.com',
-        },
-        servicesWithPrices: const {
-          'Service 1': 5000.0,
-          'Service 2': 10000.0,
-        },
+        contacts: const {'phone': '+7 (999) 123-45-67', 'email': 'test@example.com'},
+        servicesWithPrices: const {'Service 1': 5000.0, 'Service 2': 10000.0},
       );
 
       final map = originalSpecialist.toMap();
@@ -153,45 +135,21 @@ void main() {
       expect(restoredSpecialist.id, equals(originalSpecialist.id));
       expect(restoredSpecialist.userId, equals(originalSpecialist.userId));
       expect(restoredSpecialist.name, equals(originalSpecialist.name));
-      expect(
-        restoredSpecialist.description,
-        equals(originalSpecialist.description),
-      );
+      expect(restoredSpecialist.description, equals(originalSpecialist.description));
       expect(restoredSpecialist.bio, equals(originalSpecialist.bio));
       expect(restoredSpecialist.category, equals(originalSpecialist.category));
-      expect(
-        restoredSpecialist.experienceLevel,
-        equals(originalSpecialist.experienceLevel),
-      );
-      expect(
-        restoredSpecialist.yearsOfExperience,
-        equals(originalSpecialist.yearsOfExperience),
-      );
-      expect(
-        restoredSpecialist.hourlyRate,
-        equals(originalSpecialist.hourlyRate),
-      );
+      expect(restoredSpecialist.experienceLevel, equals(originalSpecialist.experienceLevel));
+      expect(restoredSpecialist.yearsOfExperience, equals(originalSpecialist.yearsOfExperience));
+      expect(restoredSpecialist.hourlyRate, equals(originalSpecialist.hourlyRate));
       expect(restoredSpecialist.price, equals(originalSpecialist.price));
       expect(restoredSpecialist.location, equals(originalSpecialist.location));
       expect(restoredSpecialist.imageUrl, equals(originalSpecialist.imageUrl));
-      expect(
-        restoredSpecialist.isAvailable,
-        equals(originalSpecialist.isAvailable),
-      );
-      expect(
-        restoredSpecialist.isVerified,
-        equals(originalSpecialist.isVerified),
-      );
+      expect(restoredSpecialist.isAvailable, equals(originalSpecialist.isAvailable));
+      expect(restoredSpecialist.isVerified, equals(originalSpecialist.isVerified));
       expect(restoredSpecialist.rating, equals(originalSpecialist.rating));
-      expect(
-        restoredSpecialist.reviewCount,
-        equals(originalSpecialist.reviewCount),
-      );
+      expect(restoredSpecialist.reviewCount, equals(originalSpecialist.reviewCount));
       expect(restoredSpecialist.contacts, equals(originalSpecialist.contacts));
-      expect(
-        restoredSpecialist.servicesWithPrices,
-        equals(originalSpecialist.servicesWithPrices),
-      );
+      expect(restoredSpecialist.servicesWithPrices, equals(originalSpecialist.servicesWithPrices));
     });
 
     test('SpecialistCategory enum should have correct display names', () {

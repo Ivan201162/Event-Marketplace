@@ -6,15 +6,19 @@ import '../services/gallery_service.dart';
 final galleryServiceProvider = Provider<GalleryService>((ref) => GalleryService());
 
 /// Провайдер галереи специалиста
-final specialistGalleryProvider =
-    FutureProvider.family<List<GalleryItem>, String>((ref, specialistId) async {
+final specialistGalleryProvider = FutureProvider.family<List<GalleryItem>, String>((
+  ref,
+  specialistId,
+) async {
   final galleryService = ref.read(galleryServiceProvider);
   return galleryService.getSpecialistGallery(specialistId);
 });
 
 /// Провайдер избранной галереи специалиста
-final specialistFeaturedGalleryProvider =
-    FutureProvider.family<List<GalleryItem>, String>((ref, specialistId) async {
+final specialistFeaturedGalleryProvider = FutureProvider.family<List<GalleryItem>, String>((
+  ref,
+  specialistId,
+) async {
   final galleryService = ref.read(galleryServiceProvider);
   return galleryService.getFeaturedGallery(specialistId);
 });

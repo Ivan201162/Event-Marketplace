@@ -40,10 +40,7 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
         backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showCreateNewsletterDialog(),
-          ),
+          IconButton(icon: const Icon(Icons.add), onPressed: () => _showCreateNewsletterDialog()),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -62,9 +59,7 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
 
           final newsletters = snapshot.data?.docs ?? [];
           if (newsletters.isEmpty) {
-            return const Center(
-              child: Text('Нет рассылок'),
-            );
+            return const Center(child: Text('Нет рассылок'));
           }
 
           return ListView.builder(
@@ -79,10 +74,7 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundColor: _getNewsletterColor(newsletter.status),
-                    child: Icon(
-                      _getNewsletterIcon(newsletter.type),
-                      color: Colors.white,
-                    ),
+                    child: Icon(_getNewsletterIcon(newsletter.type), color: Colors.white),
                   ),
                   title: Text(
                     newsletter.title,
@@ -206,10 +198,7 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
                   border: OutlineInputBorder(),
                 ),
                 items: NewsletterType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(_getNewsletterTypeName(type)),
-                  );
+                  return DropdownMenuItem(value: type, child: Text(_getNewsletterTypeName(type)));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -239,9 +228,11 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
               const SizedBox(height: 16),
               ListTile(
                 title: const Text('Запланировать отправку'),
-                subtitle: Text(_scheduledAt != null
-                    ? '${_scheduledAt!.day}.${_scheduledAt!.month}.${_scheduledAt!.year} ${_scheduledAt!.hour}:${_scheduledAt!.minute.toString().padLeft(2, '0')}'
-                    : 'Немедленно'),
+                subtitle: Text(
+                  _scheduledAt != null
+                      ? '${_scheduledAt!.day}.${_scheduledAt!.month}.${_scheduledAt!.year} ${_scheduledAt!.hour}:${_scheduledAt!.minute.toString().padLeft(2, '0')}'
+                      : 'Немедленно',
+                ),
                 trailing: const Icon(Icons.schedule),
                 onTap: () => _selectScheduleTime(),
               ),
@@ -249,14 +240,8 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: _createNewsletter,
-            child: const Text('Создать'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          ElevatedButton(onPressed: _createNewsletter, child: const Text('Создать')),
         ],
       ),
     );
@@ -271,20 +256,11 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
     );
 
     if (date != null) {
-      final time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
+      final time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
       if (time != null) {
         setState(() {
-          _scheduledAt = DateTime(
-            date.year,
-            date.month,
-            date.day,
-            time.hour,
-            time.minute,
-          );
+          _scheduledAt = DateTime(date.year, date.month, date.day, time.hour, time.minute);
         });
       }
     }
@@ -294,9 +270,9 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
     if (_titleController.text.isEmpty ||
         _subjectController.text.isEmpty ||
         _contentController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Заполните все обязательные поля')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Заполните все обязательные поля')));
       return;
     }
 
@@ -327,18 +303,16 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
 
       if (success) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Рассылка создана успешно')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Рассылка создана успешно')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка создания рассылки')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка создания рассылки')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -411,10 +385,7 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
                   border: OutlineInputBorder(),
                 ),
                 items: NewsletterType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(_getNewsletterTypeName(type)),
-                  );
+                  return DropdownMenuItem(value: type, child: Text(_getNewsletterTypeName(type)));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -445,10 +416,7 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => _updateNewsletter(newsletter),
             child: const Text('Сохранить'),
@@ -477,13 +445,11 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
           .update(updates);
 
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Рассылка обновлена успешно')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Рассылка обновлена успешно')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -500,18 +466,16 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
       );
 
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Рассылка отправлена')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Рассылка отправлена')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка отправки рассылки')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка отправки рассылки')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -524,39 +488,30 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
     );
 
     if (date != null) {
-      final time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
+      final time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
       if (time != null) {
         try {
-          final scheduledAt = DateTime(
-            date.year,
-            date.month,
-            date.day,
-            time.hour,
-            time.minute,
-          );
+          final scheduledAt = DateTime(date.year, date.month, date.day, time.hour, time.minute);
 
           await FirebaseFirestore.instance
               .collection('marketing_newsletters')
               .doc(newsletter.id)
               .update({
-            'scheduledAt': scheduledAt,
-            'status': NewsletterStatus.scheduled.name,
-            'updatedAt': DateTime.now(),
-          });
+                'scheduledAt': scheduledAt,
+                'status': NewsletterStatus.scheduled.name,
+                'updatedAt': DateTime.now(),
+              });
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text(
-                    'Рассылка запланирована на ${scheduledAt.day}.${scheduledAt.month}.${scheduledAt.year} ${scheduledAt.hour}:${scheduledAt.minute.toString().padLeft(2, '0')}')),
+              content: Text(
+                'Рассылка запланирована на ${scheduledAt.day}.${scheduledAt.month}.${scheduledAt.year} ${scheduledAt.hour}:${scheduledAt.minute.toString().padLeft(2, '0')}',
+              ),
+            ),
           );
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Ошибка: $e')),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
         }
       }
     }
@@ -567,18 +522,13 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
       await FirebaseFirestore.instance
           .collection('marketing_newsletters')
           .doc(newsletter.id)
-          .update({
-        'status': NewsletterStatus.cancelled.name,
-        'updatedAt': DateTime.now(),
-      });
+          .update({'status': NewsletterStatus.cancelled.name, 'updatedAt': DateTime.now()});
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Рассылка отменена')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Рассылка отменена')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -589,10 +539,7 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
         title: const Text('Удалить рассылку'),
         content: Text('Вы уверены, что хотите удалить рассылку "${newsletter.title}"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -608,13 +555,11 @@ class _AdminNewsletterManagementScreenState extends State<AdminNewsletterManagem
             .collection('marketing_newsletters')
             .doc(newsletter.id)
             .delete();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Рассылка удалена')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Рассылка удалена')));
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка удаления: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка удаления: $e')));
       }
     }
   }

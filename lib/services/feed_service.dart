@@ -60,10 +60,7 @@ class FeedService {
         likedBy.add(userId);
       }
 
-      transaction.update(postRef, {
-        'likedBy': likedBy,
-        'likesCount': likedBy.length,
-      });
+      transaction.update(postRef, {'likedBy': likedBy, 'likesCount': likedBy.length});
     });
   }
 
@@ -85,8 +82,11 @@ class FeedService {
 
   /// Like/unlike a comment
   Future<void> toggleCommentLike(String postId, String commentId, String userId) async {
-    final commentRef =
-        _firestore.collection('posts').doc(postId).collection('comments').doc(commentId);
+    final commentRef = _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId);
 
     await _firestore.runTransaction((transaction) async {
       final commentDoc = await transaction.get(commentRef);
@@ -101,10 +101,7 @@ class FeedService {
         likedBy.add(userId);
       }
 
-      transaction.update(commentRef, {
-        'likedBy': likedBy,
-        'likesCount': likedBy.length,
-      });
+      transaction.update(commentRef, {'likedBy': likedBy, 'likesCount': likedBy.length});
     });
   }
 

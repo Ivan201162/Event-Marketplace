@@ -40,10 +40,7 @@ final isFavoriteProvider = FutureProvider.family<bool, String>((ref, specialistI
     return Future.value(false);
   }
 
-  return favoritesService.isFavorite(
-    userId: currentUser.value!.uid,
-    specialistId: specialistId,
-  );
+  return favoritesService.isFavorite(userId: currentUser.value!.uid, specialistId: specialistId);
 });
 
 /// Провайдер для переключения статуса избранного

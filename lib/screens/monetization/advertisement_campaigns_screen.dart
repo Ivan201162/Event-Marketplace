@@ -44,9 +44,9 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки кампаний: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки кампаний: $e')));
       }
     }
   }
@@ -63,9 +63,7 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const CreateAdvertisementScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const CreateAdvertisementScreen()),
               );
             },
             icon: const Icon(Icons.add),
@@ -75,15 +73,15 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _campaigns.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _campaigns.length,
-                  itemBuilder: (context, index) {
-                    final campaign = _campaigns[index];
-                    return _buildCampaignCard(campaign);
-                  },
-                ),
+          ? _buildEmptyState()
+          : ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _campaigns.length,
+              itemBuilder: (context, index) {
+                final campaign = _campaigns[index];
+                return _buildCampaignCard(campaign);
+              },
+            ),
     );
   }
 
@@ -92,24 +90,16 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.campaign_outlined,
-            size: 80,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.campaign_outlined, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
             'У вас нет рекламных кампаний',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.grey[600],
-                ),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(
             'Создайте рекламную кампанию для продвижения ваших услуг',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Colors.grey[500],
-                ),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[500]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -117,18 +107,13 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const CreateAdvertisementScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const CreateAdvertisementScreen()),
               );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 32,
-                vertical: 16,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
             child: const Text('Создать кампанию'),
           ),
@@ -168,16 +153,16 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
                     children: [
                       Text(
                         campaign.name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         campaign.isActive ? 'Активна' : 'Приостановлена',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: campaign.isActive ? Colors.green : Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          color: campaign.isActive ? Colors.green : Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -238,15 +223,11 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
           ),
           Text(
             value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -264,15 +245,11 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
           children: [
             Text(
               'Использование бюджета',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             ),
             Text(
               '${(progress * 100).toInt()}%',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
             ),
           ],
         ),
@@ -315,11 +292,7 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
       ),
       child: Text(
         text,
-        style: TextStyle(
-          color: color,
-          fontWeight: FontWeight.w500,
-          fontSize: 12,
-        ),
+        style: TextStyle(color: color, fontWeight: FontWeight.w500, fontSize: 12),
       ),
     );
   }
@@ -347,10 +320,7 @@ class _AdvertisementCampaignsScreenState extends State<AdvertisementCampaignsScr
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
         ],
       ),
     );

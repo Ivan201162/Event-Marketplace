@@ -108,10 +108,7 @@ class ContractService {
   }
 
   /// Подписать договор
-  Future<void> signContract({
-    required String contractId,
-    required String userId,
-  }) async {
+  Future<void> signContract({required String contractId, required String userId}) async {
     try {
       final contract = await _getContract(contractId);
       if (contract == null) {
@@ -134,9 +131,7 @@ class ContractService {
       }
 
       // Обновляем статус подписи
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      };
+      final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
 
       if (isCustomer) {
         updateData['signedByCustomer'] = true;
@@ -146,7 +141,8 @@ class ContractService {
       }
 
       // Если обе стороны подписали, обновляем статус договора
-      final willBeFullySigned = (isCustomer ? true : contract.signedByCustomer) &&
+      final willBeFullySigned =
+          (isCustomer ? true : contract.signedByCustomer) &&
           (isSpecialist ? true : contract.signedBySpecialist);
 
       if (willBeFullySigned) {
@@ -301,10 +297,7 @@ Email: ${customer.email ?? 'Не указан'}
 Заказчик: _________________ ${customer.name}
 ''';
 
-  Map<String, dynamic> _generateDefaultTerms(
-    Booking booking,
-    Map<String, dynamic>? customTerms,
-  ) {
+  Map<String, dynamic> _generateDefaultTerms(Booking booking, Map<String, dynamic>? customTerms) {
     final defaultTerms = {
       'paymentTerms': {
         'advanceRequired': true,
@@ -313,22 +306,14 @@ Email: ${customer.email ?? 'Не указан'}
       },
       'cancellationPolicy': {
         'customerCanCancel': true,
-        'refundPercentage': {
-          'more_than_7_days': 100,
-          '3_to_7_days': 50,
-          'less_than_3_days': 0,
-        },
+        'refundPercentage': {'more_than_7_days': 100, '3_to_7_days': 50, 'less_than_3_days': 0},
       },
       'liability': {
         'specialistLiability': 'limited_to_service_cost',
         'customerLiability': 'damage_to_equipment',
       },
       'forceMajeure': {
-        'includes': [
-          'natural_disasters',
-          'government_restrictions',
-          'pandemics',
-        ],
+        'includes': ['natural_disasters', 'government_restrictions', 'pandemics'],
         'resolution': 'reschedule_or_refund',
       },
     };

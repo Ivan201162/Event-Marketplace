@@ -129,10 +129,7 @@ class OrganizerProposalService {
   }
 
   /// Принять предложение
-  Future<void> acceptProposal(
-    String proposalId,
-    String customerResponse,
-  ) async {
+  Future<void> acceptProposal(String proposalId, String customerResponse) async {
     try {
       await _firestore.collection('organizer_proposals').doc(proposalId).update({
         'status': ProposalStatus.accepted.name,
@@ -147,10 +144,7 @@ class OrganizerProposalService {
   }
 
   /// Отклонить предложение
-  Future<void> rejectProposal(
-    String proposalId,
-    String customerResponse,
-  ) async {
+  Future<void> rejectProposal(String proposalId, String customerResponse) async {
     try {
       await _firestore.collection('organizer_proposals').doc(proposalId).update({
         'status': ProposalStatus.rejected.name,

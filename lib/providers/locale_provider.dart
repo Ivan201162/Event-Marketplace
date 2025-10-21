@@ -62,11 +62,7 @@ class LocaleNotifier extends Notifier<Locale> {
   }
 
   /// Получить список доступных языков
-  List<Locale> get availableLocales => const [
-        Locale('ru'),
-        Locale('en'),
-        Locale('kk'),
-      ];
+  List<Locale> get availableLocales => const [Locale('ru'), Locale('en'), Locale('kk')];
 
   /// Получить название языка по коду
   String getLanguageName(String languageCode) {
@@ -120,11 +116,7 @@ class LocaleNotifier extends Notifier<Locale> {
   }
 
   /// Получить список поддерживаемых локалей
-  List<Locale> get supportedLocales => const [
-        Locale('ru'),
-        Locale('en'),
-        Locale('kk'),
-      ];
+  List<Locale> get supportedLocales => const [Locale('ru'), Locale('en'), Locale('kk')];
 
   /// Переключить локаль
   Locale get toggleLocale {

@@ -40,8 +40,10 @@ final unreadNotificationsCountProvider = StreamProvider<int>((ref) {
 });
 
 /// Провайдер для отправки уведомлений
-final sendNotificationProvider =
-    FutureProvider.family<void, SendNotificationParams>((ref, params) async {
+final sendNotificationProvider = FutureProvider.family<void, SendNotificationParams>((
+  ref,
+  params,
+) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.sendNotification(
     params.userId,
@@ -69,8 +71,10 @@ class SendNotificationParams {
 }
 
 /// Провайдер для отметки уведомления как прочитанного
-final markNotificationAsReadProvider =
-    FutureProvider.family<void, String>((ref, notificationId) async {
+final markNotificationAsReadProvider = FutureProvider.family<void, String>((
+  ref,
+  notificationId,
+) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.markAsRead(notificationId);
 });
@@ -90,12 +94,12 @@ final deleteNotificationProvider = FutureProvider.family<void, String>((ref, not
 /// Провайдер для отправки уведомления о новой заявке
 final sendNewBookingNotificationProvider =
     FutureProvider.family<void, NewBookingNotificationParams>((ref, params) async {
-  final notificationService = ref.read(notificationServiceProvider);
-  await notificationService.sendNewBookingNotification(
-    params.specialistId,
-    params.customerName,
-  );
-});
+      final notificationService = ref.read(notificationServiceProvider);
+      await notificationService.sendNewBookingNotification(
+        params.specialistId,
+        params.customerName,
+      );
+    });
 
 /// Параметры для уведомления о новой заявке
 class NewBookingNotificationParams {
@@ -115,14 +119,14 @@ class NewBookingNotificationParams {
 /// Провайдер для отправки уведомления о принятии заявки
 final sendBookingAcceptedNotificationProvider =
     FutureProvider.family<void, BookingAcceptedNotificationParams>((ref, params) async {
-  final notificationService = ref.read(notificationServiceProvider);
-  await notificationService.sendBookingAcceptedNotification(
-    customerId: params.customerId,
-    specialistName: params.specialistName,
-    eventTitle: params.eventTitle,
-    bookingId: params.bookingId,
-  );
-});
+      final notificationService = ref.read(notificationServiceProvider);
+      await notificationService.sendBookingAcceptedNotification(
+        customerId: params.customerId,
+        specialistName: params.specialistName,
+        eventTitle: params.eventTitle,
+        bookingId: params.bookingId,
+      );
+    });
 
 /// Параметры для уведомления о принятии заявки
 class BookingAcceptedNotificationParams {
@@ -142,12 +146,12 @@ class BookingAcceptedNotificationParams {
 /// Провайдер для отправки уведомления об отклонении заявки
 final sendBookingRejectedNotificationProvider =
     FutureProvider.family<void, BookingRejectedNotificationParams>((ref, params) async {
-  final notificationService = ref.read(notificationServiceProvider);
-  await notificationService.sendBookingRejectedNotification(
-    params.customerId,
-    params.specialistName,
-  );
-});
+      final notificationService = ref.read(notificationServiceProvider);
+      await notificationService.sendBookingRejectedNotification(
+        params.customerId,
+        params.specialistName,
+      );
+    });
 
 /// Параметры для уведомления об отклонении заявки
 class BookingRejectedNotificationParams {
@@ -167,8 +171,10 @@ class BookingRejectedNotificationParams {
 }
 
 /// Провайдер для отправки уведомления о новом отзыве
-final sendNewReviewNotificationProvider =
-    FutureProvider.family<void, NewReviewNotificationParams>((ref, params) async {
+final sendNewReviewNotificationProvider = FutureProvider.family<void, NewReviewNotificationParams>((
+  ref,
+  params,
+) async {
   final notificationService = ref.read(notificationServiceProvider);
   await notificationService.sendNewReviewNotification(
     specialistId: params.specialistId,
@@ -196,14 +202,14 @@ class NewReviewNotificationParams {
 /// Провайдер для отправки уведомления о получении платежа
 final sendPaymentReceivedNotificationProvider =
     FutureProvider.family<void, PaymentReceivedNotificationParams>((ref, params) async {
-  final notificationService = ref.read(notificationServiceProvider);
-  await notificationService.sendPaymentReceivedNotification(
-    specialistId: params.specialistId,
-    amount: params.amount,
-    eventTitle: params.eventTitle,
-    paymentId: params.paymentId,
-  );
-});
+      final notificationService = ref.read(notificationServiceProvider);
+      await notificationService.sendPaymentReceivedNotification(
+        specialistId: params.specialistId,
+        amount: params.amount,
+        eventTitle: params.eventTitle,
+        paymentId: params.paymentId,
+      );
+    });
 
 /// Параметры для уведомления о получении платежа
 class PaymentReceivedNotificationParams {

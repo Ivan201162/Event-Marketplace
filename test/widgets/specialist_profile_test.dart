@@ -7,11 +7,7 @@ void main() {
       // Arrange & Act
       await tester.pumpWidget(
         const MaterialApp(
-          home: Scaffold(
-            body: Center(
-              child: Text('Test Widget'),
-            ),
-          ),
+          home: Scaffold(body: Center(child: Text('Test Widget'))),
         ),
       );
 

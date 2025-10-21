@@ -17,12 +17,12 @@ final canResendCodeProvider = StateProvider<bool>((ref) => false);
 
 /// Состояния phone auth
 enum PhoneAuthState {
-  idle,           // Начальное состояние
-  sending,        // Отправка SMS
-  codeSent,       // SMS отправлен
-  verifying,      // Проверка кода
-  verified,        // Код подтвержден
-  error,          // Ошибка
+  idle, // Начальное состояние
+  sending, // Отправка SMS
+  codeSent, // SMS отправлен
+  verifying, // Проверка кода
+  verified, // Код подтвержден
+  error, // Ошибка
 }
 
 /// Провайдер для получения текущего состояния

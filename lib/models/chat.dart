@@ -2,13 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 /// Message type
-enum MessageType {
-  text,
-  image,
-  video,
-  file,
-  system,
-}
+enum MessageType { text, image, video, file, system }
 
 /// Chat model
 class Chat extends Equatable {
@@ -51,8 +45,9 @@ class Chat extends Equatable {
       id: doc.id,
       members: List<String>.from(data['members'] ?? []),
       lastMessage: data['lastMessage'],
-      lastMessageTime:
-          data['lastMessageTime'] != null ? (data['lastMessageTime'] as Timestamp).toDate() : null,
+      lastMessageTime: data['lastMessageTime'] != null
+          ? (data['lastMessageTime'] as Timestamp).toDate()
+          : null,
       lastMessageSenderId: data['lastMessageSenderId'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -180,21 +175,21 @@ class Chat extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        members,
-        lastMessage,
-        lastMessageTime,
-        lastMessageSenderId,
-        createdAt,
-        updatedAt,
-        name,
-        imageUrl,
-        unreadCounts,
-        memberNames,
-        memberAvatars,
-        isGroup,
-        createdBy,
-      ];
+    id,
+    members,
+    lastMessage,
+    lastMessageTime,
+    lastMessageSenderId,
+    createdAt,
+    updatedAt,
+    name,
+    imageUrl,
+    unreadCounts,
+    memberNames,
+    memberAvatars,
+    isGroup,
+    createdBy,
+  ];
 
   @override
   String toString() {
@@ -369,22 +364,22 @@ class Message extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        chatId,
-        senderId,
-        text,
-        mediaUrl,
-        type,
-        createdAt,
-        updatedAt,
-        readBy,
-        senderName,
-        senderAvatarUrl,
-        fileName,
-        fileSize,
-        replyToMessageId,
-        replyToMessageText,
-      ];
+    id,
+    chatId,
+    senderId,
+    text,
+    mediaUrl,
+    type,
+    createdAt,
+    updatedAt,
+    readBy,
+    senderName,
+    senderAvatarUrl,
+    fileName,
+    fileSize,
+    replyToMessageId,
+    replyToMessageText,
+  ];
 
   @override
   String toString() {

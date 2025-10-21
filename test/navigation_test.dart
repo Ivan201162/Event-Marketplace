@@ -7,20 +7,13 @@ void main() {
   group('Тестирование навигации', () {
     testWidgets('Проверка кнопки Назад на главной странице', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: app.EventMarketplaceApp(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: app.EventMarketplaceApp())),
       );
 
       await tester.pumpAndSettle();
 
       // Проверяем, что мы на главной странице
-      expect(
-        find.text('Найди специалиста для своего праздника 🎉'),
-        findsOneWidget,
-      );
+      expect(find.text('Найди специалиста для своего праздника 🎉'), findsOneWidget);
 
       // Симулируем нажатие кнопки "Назад"
       await tester.pageBack();
@@ -33,11 +26,7 @@ void main() {
 
     testWidgets('Проверка навигации между вкладками', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: app.EventMarketplaceApp(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: app.EventMarketplaceApp())),
       );
 
       await tester.pumpAndSettle();
@@ -52,11 +41,7 @@ void main() {
 
     testWidgets('Проверка перехода на экран поиска', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: app.EventMarketplaceApp(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: app.EventMarketplaceApp())),
       );
 
       await tester.pumpAndSettle();

@@ -8,11 +8,7 @@ import '../widgets/responsive_layout.dart';
 
 /// Виджет для отображения уведомления об обновлении
 class AppUpdateNotificationWidget extends ConsumerWidget {
-  const AppUpdateNotificationWidget({
-    super.key,
-    this.onDismiss,
-    this.onUpdate,
-  });
+  const AppUpdateNotificationWidget({super.key, this.onDismiss, this.onUpdate});
   final VoidCallback? onDismiss;
   final VoidCallback? onUpdate;
 
@@ -33,9 +29,7 @@ class AppUpdateNotificationWidget extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Color(updateInfo.updateTypeColor).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Color(updateInfo.updateTypeColor),
-        ),
+        border: Border.all(color: Color(updateInfo.updateTypeColor)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,11 +37,7 @@ class AppUpdateNotificationWidget extends ConsumerWidget {
           // Заголовок
           Row(
             children: [
-              Icon(
-                Icons.system_update,
-                color: Color(updateInfo.updateTypeColor),
-                size: 24,
-              ),
+              Icon(Icons.system_update, color: Color(updateInfo.updateTypeColor), size: 24),
               const SizedBox(width: 12),
               Expanded(
                 child: ResponsiveText(
@@ -75,9 +65,7 @@ class AppUpdateNotificationWidget extends ConsumerWidget {
           ResponsiveText(
             '${updateInfo.updateTypeDescription}: v${updateInfo.latestVersion}',
             isSubtitle: true,
-            style: TextStyle(
-              color: Color(updateInfo.updateTypeColor),
-            ),
+            style: TextStyle(color: Color(updateInfo.updateTypeColor)),
           ),
 
           const SizedBox(height: 12),
@@ -133,12 +121,7 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
             children: [
               const Icon(Icons.system_update),
               const SizedBox(width: 12),
-              const Expanded(
-                child: ResponsiveText(
-                  'Обновления приложения',
-                  isTitle: true,
-                ),
-              ),
+              const Expanded(child: ResponsiveText('Обновления приложения', isTitle: true)),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
@@ -149,21 +132,9 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
 
           // Текущая версия
           if (versionDetails != null) ...[
-            _buildInfoRow(
-              'Текущая версия',
-              'v${versionDetails.currentVersion}',
-              Icons.info,
-            ),
-            _buildInfoRow(
-              'Номер сборки',
-              versionDetails.buildNumber,
-              Icons.build,
-            ),
-            _buildInfoRow(
-              'Имя приложения',
-              versionDetails.appName,
-              Icons.apps,
-            ),
+            _buildInfoRow('Текущая версия', 'v${versionDetails.currentVersion}', Icons.info),
+            _buildInfoRow('Номер сборки', versionDetails.buildNumber, Icons.build),
+            _buildInfoRow('Имя приложения', versionDetails.appName, Icons.apps),
           ],
 
           // Статус обновления
@@ -209,9 +180,7 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.refresh),
-                  label: Text(
-                    updateState.isChecking ? 'Проверка...' : 'Проверить обновления',
-                  ),
+                  label: Text(updateState.isChecking ? 'Проверка...' : 'Проверить обновления'),
                 ),
               ),
               const SizedBox(width: 8),
@@ -257,55 +226,31 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
   }
 
   Widget _buildInfoRow(String label, String value, IconData icon) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: Colors.grey[600],
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ResponsiveText(
-                label,
-                isSubtitle: true,
-              ),
-            ),
-            ResponsiveText(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      children: [
+        Icon(icon, size: 20, color: Colors.grey[600]),
+        const SizedBox(width: 12),
+        Expanded(child: ResponsiveText(label, isSubtitle: true)),
+        ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+      ],
+    ),
+  );
 
   Widget _buildStatusRow(String label, String value, Color color) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          children: [
-            Icon(
-              Icons.info,
-              size: 20,
-              color: color,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ResponsiveText(
-                label,
-                isSubtitle: true,
-              ),
-            ),
-            ResponsiveText(
-              value,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      children: [
+        Icon(Icons.info, size: 20, color: color),
+        const SizedBox(width: 12),
+        Expanded(child: ResponsiveText(label, isSubtitle: true)),
+        ResponsiveText(
+          value,
+          style: TextStyle(color: color, fontWeight: FontWeight.w500),
         ),
-      );
+      ],
+    ),
+  );
 }
 
 /// Виджет для отображения информации о версии
@@ -328,20 +273,13 @@ class VersionInfoWidget extends ConsumerWidget {
             children: [
               Icon(Icons.info_outline),
               SizedBox(width: 12),
-              ResponsiveText(
-                'Информация о версии',
-                isTitle: true,
-              ),
+              ResponsiveText('Информация о версии', isTitle: true),
             ],
           ),
           const SizedBox(height: 16),
 
           // Полная информация о версии
-          _buildInfoRow(
-            'Версия приложения',
-            versionDetails.fullVersionInfo,
-            Icons.apps,
-          ),
+          _buildInfoRow('Версия приложения', versionDetails.fullVersionInfo, Icons.apps),
 
           // Статус обновления
           if (versionDetails.hasUpdateAvailable) ...[
@@ -357,11 +295,7 @@ class VersionInfoWidget extends ConsumerWidget {
                 Icons.category,
               ),
           ] else ...[
-            _buildInfoRow(
-              'Статус обновления',
-              'Приложение актуально',
-              Icons.check_circle,
-            ),
+            _buildInfoRow('Статус обновления', 'Приложение актуально', Icons.check_circle),
           ],
 
           const SizedBox(height: 16),
@@ -381,35 +315,25 @@ class VersionInfoWidget extends ConsumerWidget {
   }
 
   Widget _buildInfoRow(String label, String value, IconData icon) => Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: Colors.grey[600],
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ResponsiveText(
-                    label,
-                    isSubtitle: true,
-                  ),
-                  const SizedBox(height: 4),
-                  ResponsiveText(
-                    value,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: Colors.grey[600]),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ResponsiveText(label, isSubtitle: true),
+              const SizedBox(height: 4),
+              ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 
   String _getUpdateTypeDescription(UpdateType type) {
     switch (type) {
@@ -443,10 +367,7 @@ class ReleaseNotesWidget extends ConsumerWidget {
             children: [
               Icon(Icons.notes),
               SizedBox(width: 12),
-              ResponsiveText(
-                'Заметки о релизе',
-                isTitle: true,
-              ),
+              ResponsiveText('Заметки о релизе', isTitle: true),
             ],
           ),
           const SizedBox(height: 16),

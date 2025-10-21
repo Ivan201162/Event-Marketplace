@@ -39,18 +39,14 @@ class IdeasRepository {
       query = query.limit(limit);
 
       return query.snapshots().map((snapshot) {
-        debugPrint(
-          'IdeasRepository.streamList: получено ${snapshot.docs.length} документов',
-        );
+        debugPrint('IdeasRepository.streamList: получено ${snapshot.docs.length} документов');
 
         var ideas = snapshot.docs
             .map((doc) {
               try {
                 return Idea.fromFirestore(doc);
               } catch (e) {
-                debugPrint(
-                  'IdeasRepository.streamList: ошибка парсинга документа ${doc.id}: $e',
-                );
+                debugPrint('IdeasRepository.streamList: ошибка парсинга документа ${doc.id}: $e');
                 return null;
               }
             })
@@ -90,25 +86,23 @@ class IdeasRepository {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) {
-        debugPrint(
-          'IdeasRepository.getUserIdeas: получено ${snapshot.docs.length} документов',
-        );
+            debugPrint('IdeasRepository.getUserIdeas: получено ${snapshot.docs.length} документов');
 
-        return snapshot.docs
-            .map((doc) {
-              try {
-                return Idea.fromFirestore(doc);
-              } catch (e) {
-                debugPrint(
-                  'IdeasRepository.getUserIdeas: ошибка парсинга документа ${doc.id}: $e',
-                );
-                return null;
-              }
-            })
-            .where((idea) => idea != null)
-            .cast<Idea>()
-            .toList();
-      });
+            return snapshot.docs
+                .map((doc) {
+                  try {
+                    return Idea.fromFirestore(doc);
+                  } catch (e) {
+                    debugPrint(
+                      'IdeasRepository.getUserIdeas: ошибка парсинга документа ${doc.id}: $e',
+                    );
+                    return null;
+                  }
+                })
+                .where((idea) => idea != null)
+                .cast<Idea>()
+                .toList();
+          });
     } catch (e) {
       debugPrint('IdeasRepository.getUserIdeas: ошибка запроса: $e');
       return Stream.value([]);
@@ -126,25 +120,25 @@ class IdeasRepository {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) {
-        debugPrint(
-          'IdeasRepository.getSavedIdeas: получено ${snapshot.docs.length} документов',
-        );
+            debugPrint(
+              'IdeasRepository.getSavedIdeas: получено ${snapshot.docs.length} документов',
+            );
 
-        return snapshot.docs
-            .map((doc) {
-              try {
-                return Idea.fromFirestore(doc);
-              } catch (e) {
-                debugPrint(
-                  'IdeasRepository.getSavedIdeas: ошибка парсинга документа ${doc.id}: $e',
-                );
-                return null;
-              }
-            })
-            .where((idea) => idea != null)
-            .cast<Idea>()
-            .toList();
-      });
+            return snapshot.docs
+                .map((doc) {
+                  try {
+                    return Idea.fromFirestore(doc);
+                  } catch (e) {
+                    debugPrint(
+                      'IdeasRepository.getSavedIdeas: ошибка парсинга документа ${doc.id}: $e',
+                    );
+                    return null;
+                  }
+                })
+                .where((idea) => idea != null)
+                .cast<Idea>()
+                .toList();
+          });
     } catch (e) {
       debugPrint('IdeasRepository.getSavedIdeas: ошибка запроса: $e');
       return Stream.value([]);
@@ -159,9 +153,7 @@ class IdeasRepository {
       final doc = await _firestore.collection('ideas').doc(ideaId).get();
       if (doc.exists) {
         final data = doc.data() ?? {};
-        debugPrint(
-          'IdeasRepository.getById: документ найден, поля: ${data.keys.toList()}',
-        );
+        debugPrint('IdeasRepository.getById: документ найден, поля: ${data.keys.toList()}');
         return Idea.fromFirestore(doc);
       }
       debugPrint('IdeasRepository.getById: документ не найден');
@@ -175,9 +167,7 @@ class IdeasRepository {
   /// Создание новой идеи
   Future<String?> create(Map<String, dynamic> ideaData) async {
     try {
-      debugPrint(
-        'IdeasRepository.create: создание идеи с данными: ${ideaData.keys.toList()}',
-      );
+      debugPrint('IdeasRepository.create: создание идеи с данными: ${ideaData.keys.toList()}');
 
       final docRef = await _firestore.collection('ideas').add(ideaData);
       debugPrint('IdeasRepository.create: идея создана с ID: ${docRef.id}');
@@ -230,43 +220,31 @@ class IdeasRepository {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) {
-        debugPrint(
-          'IdeasRepository.getComments: получено ${snapshot.docs.length} комментариев',
-        );
+            debugPrint(
+              'IdeasRepository.getComments: получено ${snapshot.docs.length} комментариев',
+            );
 
-        return snapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>? ?? {};
-          return {
-            'id': doc.id,
-            ...data,
-          };
-        }).toList();
-      });
+            return snapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>? ?? {};
+              return {'id': doc.id, ...data};
+            }).toList();
+          });
     } catch (e) {
-      debugPrint(
-        'IdeasRepository.getComments: ошибка получения комментариев: $e',
-      );
+      debugPrint('IdeasRepository.getComments: ошибка получения комментариев: $e');
       return Stream.value([]);
     }
   }
 
   /// Добавление комментария к идее
-  Future<bool> addComment(
-    String ideaId,
-    Map<String, dynamic> commentData,
-  ) async {
+  Future<bool> addComment(String ideaId, Map<String, dynamic> commentData) async {
     try {
-      debugPrint(
-        'IdeasRepository.addComment: добавление комментария к идее $ideaId',
-      );
+      debugPrint('IdeasRepository.addComment: добавление комментария к идее $ideaId');
 
       await _firestore.collection('ideas').doc(ideaId).collection('comments').add(commentData);
       debugPrint('IdeasRepository.addComment: комментарий добавлен успешно');
       return true;
     } catch (e) {
-      debugPrint(
-        'IdeasRepository.addComment: ошибка добавления комментария: $e',
-      );
+      debugPrint('IdeasRepository.addComment: ошибка добавления комментария: $e');
       return false;
     }
   }

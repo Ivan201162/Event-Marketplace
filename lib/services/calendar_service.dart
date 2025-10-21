@@ -31,10 +31,7 @@ class CalendarService {
   }
 
   /// Получить события пользователя
-  Stream<List<CalendarEvent>> getUserEvents(
-    String userId,
-    CalendarFilter filter,
-  ) {
+  Stream<List<CalendarEvent>> getUserEvents(String userId, CalendarFilter filter) {
     Query<Map<String, dynamic>> query = _firestore.collection('calendar_events');
 
     // Фильтр по пользователю
@@ -49,24 +46,15 @@ class CalendarService {
     }
 
     if (filter.endDate != null) {
-      query = query.where(
-        'startTime',
-        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
-      );
+      query = query.where('startTime', isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
     }
 
     if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where(
-        'status',
-        whereIn: filter.statuses!.map((s) => s.name).toList(),
-      );
+      query = query.where('status', whereIn: filter.statuses!.map((s) => s.name).toList());
     }
 
     if (filter.types != null && filter.types!.isNotEmpty) {
-      query = query.where(
-        'type',
-        whereIn: filter.types!.map((t) => t.name).toList(),
-      );
+      query = query.where('type', whereIn: filter.types!.map((t) => t.name).toList());
     }
 
     if (filter.specialistId != null) {
@@ -104,10 +92,7 @@ class CalendarService {
   }
 
   /// Получить события специалиста
-  Stream<List<CalendarEvent>> getSpecialistEvents(
-    String specialistId,
-    CalendarFilter filter,
-  ) {
+  Stream<List<CalendarEvent>> getSpecialistEvents(String specialistId, CalendarFilter filter) {
     Query<Map<String, dynamic>> query = _firestore.collection('calendar_events');
 
     // Фильтр по специалисту
@@ -122,24 +107,15 @@ class CalendarService {
     }
 
     if (filter.endDate != null) {
-      query = query.where(
-        'startTime',
-        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
-      );
+      query = query.where('startTime', isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
     }
 
     if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where(
-        'status',
-        whereIn: filter.statuses!.map((s) => s.name).toList(),
-      );
+      query = query.where('status', whereIn: filter.statuses!.map((s) => s.name).toList());
     }
 
     if (filter.types != null && filter.types!.isNotEmpty) {
-      query = query.where(
-        'type',
-        whereIn: filter.types!.map((t) => t.name).toList(),
-      );
+      query = query.where('type', whereIn: filter.types!.map((t) => t.name).toList());
     }
 
     if (filter.customerId != null) {
@@ -239,10 +215,7 @@ class CalendarService {
         await file.writeAsString(icsContent);
 
         // Делимся файлом
-        await Share.shareXFiles(
-          [XFile(file.path)],
-          text: 'Календарные события',
-        );
+        await Share.shareXFiles([XFile(file.path)], text: 'Календарные события');
       }
     } on Exception catch (e) {
       debugPrint('Ошибка шаринга событий: $e');
@@ -257,11 +230,13 @@ class CalendarService {
       final endTime =
           '${event.endTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
 
-      final url = Uri.parse('https://calendar.google.com/calendar/render?action=TEMPLATE'
-          '&text=${Uri.encodeComponent(event.title)}'
-          '&dates=$startTime/$endTime'
-          '&details=${Uri.encodeComponent(event.description)}'
-          '&location=${Uri.encodeComponent(event.location)}');
+      final url = Uri.parse(
+        'https://calendar.google.com/calendar/render?action=TEMPLATE'
+        '&text=${Uri.encodeComponent(event.title)}'
+        '&dates=$startTime/$endTime'
+        '&details=${Uri.encodeComponent(event.description)}'
+        '&location=${Uri.encodeComponent(event.location)}',
+      );
 
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
@@ -277,12 +252,14 @@ class CalendarService {
       final startTime = event.startTime.toUtc().toIso8601String();
       final endTime = event.endTime.toUtc().toIso8601String();
 
-      final url = Uri.parse('https://outlook.live.com/calendar/0/deeplink/compose?'
-          'subject=${Uri.encodeComponent(event.title)}'
-          '&startdt=$startTime'
-          '&enddt=$endTime'
-          '&body=${Uri.encodeComponent(event.description)}'
-          '&location=${Uri.encodeComponent(event.location)}');
+      final url = Uri.parse(
+        'https://outlook.live.com/calendar/0/deeplink/compose?'
+        'subject=${Uri.encodeComponent(event.title)}'
+        '&startdt=$startTime'
+        '&enddt=$endTime'
+        '&body=${Uri.encodeComponent(event.description)}'
+        '&location=${Uri.encodeComponent(event.location)}',
+      );
 
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
@@ -305,10 +282,7 @@ class CalendarService {
   }
 
   /// Синхронизировать с Outlook Calendar
-  Future<bool> syncWithOutlookCalendar(
-    String userId,
-    String accessToken,
-  ) async {
+  Future<bool> syncWithOutlookCalendar(String userId, String accessToken) async {
     try {
       // TODO(developer): Реализовать синхронизацию с Outlook Calendar API
       debugPrint('Синхронизация с Outlook Calendar для пользователя: $userId');
@@ -395,10 +369,7 @@ class CalendarService {
     final startOfDay = DateTime(now.year, now.month, now.day);
     final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
 
-    final filter = CalendarFilter(
-      startDate: startOfDay,
-      endDate: endOfDay,
-    );
+    final filter = CalendarFilter(startDate: startOfDay, endDate: endOfDay);
 
     return getUserEvents(userId, filter);
   }
@@ -409,10 +380,7 @@ class CalendarService {
     final startOfDay = DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
     final endOfDay = DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59);
 
-    final filter = CalendarFilter(
-      startDate: startOfDay,
-      endDate: endOfDay,
-    );
+    final filter = CalendarFilter(startDate: startOfDay, endDate: endOfDay);
 
     return getUserEvents(userId, filter);
   }
@@ -423,10 +391,7 @@ class CalendarService {
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
     final endOfWeek = startOfWeek.add(const Duration(days: 6));
 
-    final filter = CalendarFilter(
-      startDate: startOfWeek,
-      endDate: endOfWeek,
-    );
+    final filter = CalendarFilter(startDate: startOfWeek, endDate: endOfWeek);
 
     return getUserEvents(userId, filter);
   }
@@ -437,10 +402,7 @@ class CalendarService {
     final startOfMonth = DateTime(now.year, now.month);
     final endOfMonth = DateTime(now.year, now.month + 1, 0);
 
-    final filter = CalendarFilter(
-      startDate: startOfMonth,
-      endDate: endOfMonth,
-    );
+    final filter = CalendarFilter(startDate: startOfMonth, endDate: endOfMonth);
 
     return getUserEvents(userId, filter);
   }
@@ -477,11 +439,7 @@ class CalendarService {
       eventsByType[event.type] = (eventsByType[event.type] ?? 0) + 1;
       eventsByStatus[event.status] = (eventsByStatus[event.status] ?? 0) + 1;
 
-      final day = DateTime(
-        event.startTime.year,
-        event.startTime.month,
-        event.startTime.day,
-      );
+      final day = DateTime(event.startTime.year, event.startTime.month, event.startTime.day);
       dayEventCounts[day] = (dayEventCounts[day] ?? 0) + 1;
     }
 
@@ -511,10 +469,7 @@ class CalendarService {
       final querySnapshot = await _firestore
           .collection('calendar_events')
           .where('specialistId', isEqualTo: specialistId)
-          .where(
-            'startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-          )
+          .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
@@ -526,10 +481,7 @@ class CalendarService {
   }
 
   /// Проверить доступность даты и времени
-  Future<bool> isDateTimeAvailable(
-    String specialistId,
-    DateTime dateTime,
-  ) async {
+  Future<bool> isDateTimeAvailable(String specialistId, DateTime dateTime) async {
     try {
       final startOfDay = DateTime(dateTime.year, dateTime.month, dateTime.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
@@ -537,10 +489,7 @@ class CalendarService {
       final querySnapshot = await _firestore
           .collection('calendar_events')
           .where('specialistId', isEqualTo: specialistId)
-          .where(
-            'startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-          )
+          .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
@@ -572,10 +521,7 @@ class CalendarService {
       final querySnapshot = await _firestore
           .collection('calendar_events')
           .where('specialistId', isEqualTo: specialistId)
-          .where(
-            'startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-          )
+          .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
@@ -614,10 +560,7 @@ class CalendarService {
   }
 
   /// Получить доступные даты
-  Future<List<DateTime>> getAvailableDates(
-    String specialistId,
-    int daysAhead,
-  ) async {
+  Future<List<DateTime>> getAvailableDates(String specialistId, int daysAhead) async {
     try {
       final availableDates = <DateTime>[];
       final today = DateTime.now();
@@ -648,10 +591,7 @@ class CalendarService {
   }
 
   /// Получить события на дату
-  Future<List<CalendarEvent>> getEventsForDate(
-    String specialistId,
-    DateTime date,
-  ) async {
+  Future<List<CalendarEvent>> getEventsForDate(String specialistId, DateTime date) async {
     try {
       final startOfDay = DateTime(date.year, date.month, date.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
@@ -659,10 +599,7 @@ class CalendarService {
       final events = await _firestore
           .collection('calendar_events')
           .where('specialistId', isEqualTo: specialistId)
-          .where(
-            'startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-          )
+          .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
@@ -689,11 +626,12 @@ class CalendarService {
       });
 
   /// Получить все расписания
-  Stream<List<SpecialistSchedule>> getAllSchedules() =>
-      _firestore.collection('specialist_schedules').snapshots().map(
-            (snapshot) =>
-                snapshot.docs.map((doc) => SpecialistSchedule.fromMap(doc.data())).toList(),
-          );
+  Stream<List<SpecialistSchedule>> getAllSchedules() => _firestore
+      .collection('specialist_schedules')
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map((doc) => SpecialistSchedule.fromMap(doc.data())).toList(),
+      );
 
   /// Создать событие недоступности
   Future<String?> createUnavailableEvent({
@@ -796,7 +734,7 @@ class CalendarService {
       final data = doc.data()!;
       final busyDates =
           (data['busyDates'] as List<dynamic>?)?.map((e) => (e as Timestamp).toDate()).toList() ??
-              [];
+          [];
 
       // Проверяем, не занята ли уже эта дата
       final isAlreadyBusy = busyDates.any(
@@ -836,7 +774,7 @@ class CalendarService {
       final data = doc.data()!;
       final busyDates =
           (data['busyDates'] as List<dynamic>?)?.map((e) => (e as Timestamp).toDate()).toList() ??
-              [];
+          [];
 
       // Удаляем дату из списка занятых
       busyDates.removeWhere(
@@ -869,7 +807,7 @@ class CalendarService {
       final data = doc.data()!;
       final busyDates =
           (data['busyDates'] as List<dynamic>?)?.map((e) => (e as Timestamp).toDate()).toList() ??
-              [];
+          [];
 
       return busyDates;
     } on Exception catch (e) {

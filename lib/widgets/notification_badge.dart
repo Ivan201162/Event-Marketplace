@@ -4,11 +4,7 @@ import 'package:flutter/material.dart';
 import '../services/notification_service.dart';
 
 class NotificationBadge extends StatelessWidget {
-  const NotificationBadge({
-    super.key,
-    required this.child,
-    this.userId,
-  });
+  const NotificationBadge({super.key, required this.child, this.userId});
   final Widget child;
   final String? userId;
 
@@ -41,10 +37,7 @@ class NotificationBadge extends StatelessWidget {
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                constraints: const BoxConstraints(
-                  minWidth: 16,
-                  minHeight: 16,
-                ),
+                constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
                 child: Text(
                   unreadCount > 99 ? '99+' : unreadCount.toString(),
                   style: const TextStyle(

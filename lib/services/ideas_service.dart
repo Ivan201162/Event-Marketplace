@@ -24,13 +24,12 @@ class IdeasService {
     String? searchQuery,
     int limit = 20,
     DocumentSnapshot? startAfter,
-  }) =>
-      _repository.streamList(
-        category: category,
-        searchQuery: searchQuery,
-        limit: limit,
-        startAfter: startAfter,
-      );
+  }) => _repository.streamList(
+    category: category,
+    searchQuery: searchQuery,
+    limit: limit,
+    startAfter: startAfter,
+  );
 
   /// Получение идей пользователя
   Stream<List<Idea>> getUserIdeas(String userId) => _repository.getUserIdeas(userId);

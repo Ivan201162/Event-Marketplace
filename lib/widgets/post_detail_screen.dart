@@ -7,10 +7,7 @@ import '../models/user_profile.dart';
 
 /// Экран детального просмотра поста
 class PostDetailScreen extends ConsumerStatefulWidget {
-  const PostDetailScreen({
-    super.key,
-    required this.post,
-  });
+  const PostDetailScreen({super.key, required this.post});
   final UserPost post;
 
   @override
@@ -36,9 +33,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   }
 
   void _initializeVideo() {
-    _videoController = VideoPlayerController.networkUrl(
-      Uri.parse(widget.post.videoUrl!),
-    );
+    _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.post.videoUrl!));
     _videoController!.initialize().then((_) {
       setState(() {
         _isVideoInitialized = true;
@@ -48,40 +43,34 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.share, color: Colors.white),
-              onPressed: _sharePost,
-            ),
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.white),
-              onPressed: _showPostMenu,
-            ),
-          ],
+    backgroundColor: Colors.black,
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.share, color: Colors.white),
+          onPressed: _sharePost,
         ),
-        body: Column(
-          children: [
-            // Медиа контент
-            Expanded(
-              flex: 3,
-              child: _buildMediaContent(),
-            ),
-            // Информация о посте
-            Expanded(
-              flex: 2,
-              child: _buildPostInfo(),
-            ),
-          ],
+        IconButton(
+          icon: const Icon(Icons.more_vert, color: Colors.white),
+          onPressed: _showPostMenu,
         ),
-      );
+      ],
+    ),
+    body: Column(
+      children: [
+        // Медиа контент
+        Expanded(flex: 3, child: _buildMediaContent()),
+        // Информация о посте
+        Expanded(flex: 2, child: _buildPostInfo()),
+      ],
+    ),
+  );
 
   Widget _buildMediaContent() {
     if (widget.post.isVideo && widget.post.videoUrl != null) {
@@ -91,13 +80,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     } else {
       return Container(
         color: Colors.grey[800],
-        child: const Center(
-          child: Icon(
-            Icons.image,
-            color: Colors.white,
-            size: 64,
-          ),
-        ),
+        child: const Center(child: Icon(Icons.image, color: Colors.white, size: 64)),
       );
     }
   }
@@ -106,9 +89,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     if (!_isVideoInitialized || _videoController == null) {
       return Container(
         color: Colors.black,
-        child: const Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
+        child: const Center(child: CircularProgressIndicator(color: Colors.white)),
       );
     }
 
@@ -143,89 +124,72 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   }
 
   Widget _buildImageViewer() => InteractiveViewer(
-        child: CachedNetworkImage(
-          imageUrl: widget.post.imageUrl!,
-          fit: BoxFit.contain,
-          placeholder: (context, url) => Container(
-            color: Colors.grey[800],
-            child: const Center(
-              child: CircularProgressIndicator(color: Colors.white),
-            ),
-          ),
-          errorWidget: (context, url, error) => Container(
-            color: Colors.grey[800],
-            child: const Center(
-              child: Icon(
-                Icons.error,
-                color: Colors.white,
-                size: 64,
-              ),
-            ),
-          ),
-        ),
-      );
+    child: CachedNetworkImage(
+      imageUrl: widget.post.imageUrl!,
+      fit: BoxFit.contain,
+      placeholder: (context, url) => Container(
+        color: Colors.grey[800],
+        child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+      ),
+      errorWidget: (context, url, error) => Container(
+        color: Colors.grey[800],
+        child: const Center(child: Icon(Icons.error, color: Colors.white, size: 64)),
+      ),
+    ),
+  );
 
   Widget _buildPostInfo() => Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            // Действия с постом
-            _buildPostActions(),
-            // Лайки
-            _buildLikesSection(),
-            // Описание
-            _buildCaption(),
-            // Комментарии
-            _buildCommentsSection(),
-            // Время публикации
-            _buildTimestamp(),
-          ],
-        ),
-      );
+    color: Colors.white,
+    child: Column(
+      children: [
+        // Действия с постом
+        _buildPostActions(),
+        // Лайки
+        _buildLikesSection(),
+        // Описание
+        _buildCaption(),
+        // Комментарии
+        _buildCommentsSection(),
+        // Время публикации
+        _buildTimestamp(),
+      ],
+    ),
+  );
 
   Widget _buildPostActions() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            IconButton(
-              icon: Icon(
-                widget.post.likedBy.contains(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    child: Row(
+      children: [
+        IconButton(
+          icon: Icon(
+            widget.post.likedBy.contains(
                   'current_user_id',
                 ) // TODO(developer): Получить ID текущего пользователя
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                color: widget.post.likedBy.contains('current_user_id') ? Colors.red : Colors.black,
-              ),
-              onPressed: _toggleLike,
-            ),
-            IconButton(
-              icon: const Icon(Icons.comment_outlined),
-              onPressed: _showComments,
-            ),
-            IconButton(
-              icon: const Icon(Icons.share_outlined),
-              onPressed: _sharePost,
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.bookmark_border),
-              onPressed: _savePost,
-            ),
-          ],
+                ? Icons.favorite
+                : Icons.favorite_border,
+            color: widget.post.likedBy.contains('current_user_id') ? Colors.red : Colors.black,
+          ),
+          onPressed: _toggleLike,
         ),
-      );
+        IconButton(icon: const Icon(Icons.comment_outlined), onPressed: _showComments),
+        IconButton(icon: const Icon(Icons.share_outlined), onPressed: _sharePost),
+        const Spacer(),
+        IconButton(icon: const Icon(Icons.bookmark_border), onPressed: _savePost),
+      ],
+    ),
+  );
 
   Widget _buildLikesSection() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: [
-            Text(
-              '${widget.post.likes} отметок "Нравится"',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Row(
+      children: [
+        Text(
+          '${widget.post.likes} отметок "Нравится"',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildCaption() {
     if (widget.post.caption.isEmpty) {
@@ -242,45 +206,40 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(width: 8),
-          Expanded(
-            child: Text(widget.post.caption),
-          ),
+          Expanded(child: Text(widget.post.caption)),
         ],
       ),
     );
   }
 
   Widget _buildCommentsSection() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            if (widget.post.comments > 0)
-              TextButton(
-                onPressed: _showComments,
-                child: Text(
-                  'Посмотреть все ${widget.post.comments} комментариев',
-                  style: TextStyle(color: Colors.grey[600]),
-                ),
-              ),
-            // TODO(developer): Добавить список комментариев
-          ],
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Column(
+      children: [
+        if (widget.post.comments > 0)
+          TextButton(
+            onPressed: _showComments,
+            child: Text(
+              'Посмотреть все ${widget.post.comments} комментариев',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+          ),
+        // TODO(developer): Добавить список комментариев
+      ],
+    ),
+  );
 
   Widget _buildTimestamp() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            Text(
-              _formatTimestamp(widget.post.timestamp),
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12,
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    child: Row(
+      children: [
+        Text(
+          _formatTimestamp(widget.post.timestamp),
+          style: TextStyle(color: Colors.grey[600], fontSize: 12),
         ),
-      );
+      ],
+    ),
+  );
 
   String _formatTimestamp(DateTime timestamp) {
     final now = DateTime.now();
@@ -301,30 +260,22 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
 
   void _toggleLike() {
     // TODO(developer): Реализовать лайк/дизлайк
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Лайк/дизлайк')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Лайк/дизлайк')));
   }
 
   void _showComments() {
     // TODO(developer): Показать экран комментариев
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Комментарии')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Комментарии')));
   }
 
   void _sharePost() {
     // TODO(developer): Реализовать шаринг поста
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Поделиться постом')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Поделиться постом')));
   }
 
   void _savePost() {
     // TODO(developer): Реализовать сохранение поста
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Сохранить пост')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Сохранить пост')));
   }
 
   void _showPostMenu() {

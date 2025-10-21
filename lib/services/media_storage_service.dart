@@ -282,8 +282,9 @@ class MediaFile {
       fileSize: data['fileSize'] as int? ?? 0,
       mimeType: data['mimeType'] as String? ?? '',
       description: data['description'] as String?,
-      uploadedAt:
-          data['uploadedAt'] != null ? (data['uploadedAt'] as Timestamp).toDate() : DateTime.now(),
+      uploadedAt: data['uploadedAt'] != null
+          ? (data['uploadedAt'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 
@@ -309,31 +310,30 @@ class MediaFile {
     String? mimeType,
     String? description,
     DateTime? uploadedAt,
-  }) =>
-      MediaFile(
-        id: id ?? this.id,
-        bookingId: bookingId ?? this.bookingId,
-        specialistId: specialistId ?? this.specialistId,
-        fileName: fileName ?? this.fileName,
-        filePath: filePath ?? this.filePath,
-        downloadUrl: downloadUrl ?? this.downloadUrl,
-        fileSize: fileSize ?? this.fileSize,
-        mimeType: mimeType ?? this.mimeType,
-        description: description ?? this.description,
-        uploadedAt: uploadedAt ?? this.uploadedAt,
-      );
+  }) => MediaFile(
+    id: id ?? this.id,
+    bookingId: bookingId ?? this.bookingId,
+    specialistId: specialistId ?? this.specialistId,
+    fileName: fileName ?? this.fileName,
+    filePath: filePath ?? this.filePath,
+    downloadUrl: downloadUrl ?? this.downloadUrl,
+    fileSize: fileSize ?? this.fileSize,
+    mimeType: mimeType ?? this.mimeType,
+    description: description ?? this.description,
+    uploadedAt: uploadedAt ?? this.uploadedAt,
+  );
 
   Map<String, dynamic> toMap() => {
-        'bookingId': bookingId,
-        'specialistId': specialistId,
-        'fileName': fileName,
-        'filePath': filePath,
-        'downloadUrl': downloadUrl,
-        'fileSize': fileSize,
-        'mimeType': mimeType,
-        'description': description,
-        'uploadedAt': Timestamp.fromDate(uploadedAt),
-      };
+    'bookingId': bookingId,
+    'specialistId': specialistId,
+    'fileName': fileName,
+    'filePath': filePath,
+    'downloadUrl': downloadUrl,
+    'fileSize': fileSize,
+    'mimeType': mimeType,
+    'description': description,
+    'uploadedAt': Timestamp.fromDate(uploadedAt),
+  };
 
   bool get isImage => mimeType.startsWith('image/');
   bool get isVideo => mimeType.startsWith('video/');
@@ -363,13 +363,13 @@ class MediaStats {
   });
 
   factory MediaStats.empty() => MediaStats(
-        specialistId: '',
-        totalFiles: 0,
-        totalSize: 0,
-        photoCount: 0,
-        videoCount: 0,
-        lastUpdated: DateTime.now(),
-      );
+    specialistId: '',
+    totalFiles: 0,
+    totalSize: 0,
+    photoCount: 0,
+    videoCount: 0,
+    lastUpdated: DateTime.now(),
+  );
 
   final String specialistId;
   final int totalFiles;

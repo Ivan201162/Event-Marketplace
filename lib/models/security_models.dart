@@ -42,8 +42,8 @@ class SecurityAudit {
       riskLevel: data['riskLevel'] as String?,
       timestamp: data['timestamp'] != null
           ? (data['timestamp'] is Timestamp
-              ? (data['timestamp'] as Timestamp).toDate()
-              : DateTime.parse(data['timestamp'].toString()))
+                ? (data['timestamp'] as Timestamp).toDate()
+                : DateTime.parse(data['timestamp'].toString()))
           : DateTime.now(),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
@@ -56,25 +56,22 @@ class SecurityAudit {
       throw Exception('Document data is null');
     }
 
-    return SecurityAudit.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return SecurityAudit.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'action': action,
-        'resource': resource,
-        'details': details,
-        'ipAddress': ipAddress,
-        'userAgent': userAgent,
-        'location': location,
-        'riskLevel': riskLevel,
-        'timestamp': Timestamp.fromDate(timestamp),
-        'metadata': metadata,
-      };
+    'userId': userId,
+    'action': action,
+    'resource': resource,
+    'details': details,
+    'ipAddress': ipAddress,
+    'userAgent': userAgent,
+    'location': location,
+    'riskLevel': riskLevel,
+    'timestamp': Timestamp.fromDate(timestamp),
+    'metadata': metadata,
+  };
 
   /// Копировать с изменениями
   SecurityAudit copyWith({
@@ -89,20 +86,19 @@ class SecurityAudit {
     String? riskLevel,
     DateTime? timestamp,
     Map<String, dynamic>? metadata,
-  }) =>
-      SecurityAudit(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        action: action ?? this.action,
-        resource: resource ?? this.resource,
-        details: details ?? this.details,
-        ipAddress: ipAddress ?? this.ipAddress,
-        userAgent: userAgent ?? this.userAgent,
-        location: location ?? this.location,
-        riskLevel: riskLevel ?? this.riskLevel,
-        timestamp: timestamp ?? this.timestamp,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => SecurityAudit(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    action: action ?? this.action,
+    resource: resource ?? this.resource,
+    details: details ?? this.details,
+    ipAddress: ipAddress ?? this.ipAddress,
+    userAgent: userAgent ?? this.userAgent,
+    location: location ?? this.location,
+    riskLevel: riskLevel ?? this.riskLevel,
+    timestamp: timestamp ?? this.timestamp,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, является ли действие высокорисковым
   bool get isHighRisk {
@@ -167,13 +163,13 @@ class SecurityDevice {
       isTrusted: data['isTrusted'] as bool? ?? false,
       lastSeen: data['lastSeen'] != null
           ? (data['lastSeen'] is Timestamp
-              ? (data['lastSeen'] as Timestamp).toDate()
-              : DateTime.tryParse(data['lastSeen'].toString()))
+                ? (data['lastSeen'] as Timestamp).toDate()
+                : DateTime.tryParse(data['lastSeen'].toString()))
           : null,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
@@ -186,25 +182,22 @@ class SecurityDevice {
       throw Exception('Document data is null');
     }
 
-    return SecurityDevice.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return SecurityDevice.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'deviceId': deviceId,
-        'deviceName': deviceName,
-        'deviceType': deviceType,
-        'os': os,
-        'browser': browser,
-        'isTrusted': isTrusted,
-        'lastSeen': lastSeen != null ? Timestamp.fromDate(lastSeen!) : null,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'metadata': metadata,
-      };
+    'userId': userId,
+    'deviceId': deviceId,
+    'deviceName': deviceName,
+    'deviceType': deviceType,
+    'os': os,
+    'browser': browser,
+    'isTrusted': isTrusted,
+    'lastSeen': lastSeen != null ? Timestamp.fromDate(lastSeen!) : null,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'metadata': metadata,
+  };
 
   /// Копировать с изменениями
   SecurityDevice copyWith({
@@ -219,20 +212,19 @@ class SecurityDevice {
     DateTime? lastSeen,
     DateTime? createdAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      SecurityDevice(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        deviceId: deviceId ?? this.deviceId,
-        deviceName: deviceName ?? this.deviceName,
-        deviceType: deviceType ?? this.deviceType,
-        os: os ?? this.os,
-        browser: browser ?? this.browser,
-        isTrusted: isTrusted ?? this.isTrusted,
-        lastSeen: lastSeen ?? this.lastSeen,
-        createdAt: createdAt ?? this.createdAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => SecurityDevice(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    deviceId: deviceId ?? this.deviceId,
+    deviceName: deviceName ?? this.deviceName,
+    deviceType: deviceType ?? this.deviceType,
+    os: os ?? this.os,
+    browser: browser ?? this.browser,
+    isTrusted: isTrusted ?? this.isTrusted,
+    lastSeen: lastSeen ?? this.lastSeen,
+    createdAt: createdAt ?? this.createdAt,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Получить отображаемое название устройства
   String get displayName {
@@ -299,17 +291,17 @@ class SecuritySettings {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'twoFactorEnabled': twoFactorEnabled,
-        'loginNotifications': loginNotifications,
-        'deviceNotifications': deviceNotifications,
-        'suspiciousActivityAlerts': suspiciousActivityAlerts,
-        'dataEncryption': dataEncryption,
-        'sessionTimeout': sessionTimeout,
-        'maxFailedAttempts': maxFailedAttempts,
-        'lockoutDuration': lockoutDuration,
-        'requireStrongPassword': requireStrongPassword,
-        'allowRememberDevice': allowRememberDevice,
-      };
+    'twoFactorEnabled': twoFactorEnabled,
+    'loginNotifications': loginNotifications,
+    'deviceNotifications': deviceNotifications,
+    'suspiciousActivityAlerts': suspiciousActivityAlerts,
+    'dataEncryption': dataEncryption,
+    'sessionTimeout': sessionTimeout,
+    'maxFailedAttempts': maxFailedAttempts,
+    'lockoutDuration': lockoutDuration,
+    'requireStrongPassword': requireStrongPassword,
+    'allowRememberDevice': allowRememberDevice,
+  };
 
   /// Копировать с изменениями
   SecuritySettings copyWith({
@@ -323,19 +315,18 @@ class SecuritySettings {
     int? lockoutDuration,
     bool? requireStrongPassword,
     bool? allowRememberDevice,
-  }) =>
-      SecuritySettings(
-        twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
-        loginNotifications: loginNotifications ?? this.loginNotifications,
-        deviceNotifications: deviceNotifications ?? this.deviceNotifications,
-        suspiciousActivityAlerts: suspiciousActivityAlerts ?? this.suspiciousActivityAlerts,
-        dataEncryption: dataEncryption ?? this.dataEncryption,
-        sessionTimeout: sessionTimeout ?? this.sessionTimeout,
-        maxFailedAttempts: maxFailedAttempts ?? this.maxFailedAttempts,
-        lockoutDuration: lockoutDuration ?? this.lockoutDuration,
-        requireStrongPassword: requireStrongPassword ?? this.requireStrongPassword,
-        allowRememberDevice: allowRememberDevice ?? this.allowRememberDevice,
-      );
+  }) => SecuritySettings(
+    twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
+    loginNotifications: loginNotifications ?? this.loginNotifications,
+    deviceNotifications: deviceNotifications ?? this.deviceNotifications,
+    suspiciousActivityAlerts: suspiciousActivityAlerts ?? this.suspiciousActivityAlerts,
+    dataEncryption: dataEncryption ?? this.dataEncryption,
+    sessionTimeout: sessionTimeout ?? this.sessionTimeout,
+    maxFailedAttempts: maxFailedAttempts ?? this.maxFailedAttempts,
+    lockoutDuration: lockoutDuration ?? this.lockoutDuration,
+    requireStrongPassword: requireStrongPassword ?? this.requireStrongPassword,
+    allowRememberDevice: allowRememberDevice ?? this.allowRememberDevice,
+  );
 
   /// Проверить, включена ли двухфакторная аутентификация
   bool get isTwoFactorEnabled => twoFactorEnabled;

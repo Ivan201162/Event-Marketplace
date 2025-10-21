@@ -21,7 +21,6 @@ class UsernameEditor extends ConsumerStatefulWidget {
 
 class _UsernameEditorState extends ConsumerState<UsernameEditor> {
   late TextEditingController _controller;
-  String _currentUsername = '';
   bool _isValid = true;
   String? _errorText;
 
@@ -29,7 +28,6 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.initialUsername);
-    _currentUsername = widget.initialUsername;
   }
 
   @override
@@ -40,7 +38,6 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
 
   void _validateUsername(String username) {
     setState(() {
-      _currentUsername = username;
 
       if (username.isEmpty) {
         _isValid = false;
@@ -75,50 +72,47 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Username', style: Theme.of(context).textTheme.titleMedium),
+      const SizedBox(height: 8),
+      Row(
         children: [
-          Text(
-            'Username',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _controller,
-                  enabled: widget.enabled,
-                  onChanged: _validateUsername,
-                  decoration: InputDecoration(
-                    hintText: 'username',
-                    prefixText: '@',
-                    errorText: _errorText,
-                    border: const OutlineInputBorder(),
-                    helperText: 'Только строчные буквы, цифры и подчеркивания',
-                  ),
-                  textInputAction: TextInputAction.done,
-                ),
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              enabled: widget.enabled,
+              onChanged: _validateUsername,
+              decoration: InputDecoration(
+                hintText: 'username',
+                prefixText: '@',
+                errorText: _errorText,
+                border: const OutlineInputBorder(),
+                helperText: 'Только строчные буквы, цифры и подчеркивания',
               ),
-              const SizedBox(width: 8),
-              if (widget.enabled)
-                IconButton(
-                  onPressed: _showNameInputDialog,
-                  icon: const Icon(Icons.auto_fix_high),
-                  tooltip: 'Сгенерировать из имени',
-                ),
-            ],
-          ),
-          if (widget.enabled) ...[
-            const SizedBox(height: 8),
-            Text(
-              '💡 Совет: Нажмите на кнопку генерации, чтобы создать username из вашего имени',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+              textInputAction: TextInputAction.done,
             ),
-          ],
+          ),
+          const SizedBox(width: 8),
+          if (widget.enabled)
+            IconButton(
+              onPressed: _showNameInputDialog,
+              icon: const Icon(Icons.auto_fix_high),
+              tooltip: 'Сгенерировать из имени',
+            ),
         ],
-      );
+      ),
+      if (widget.enabled) ...[
+        const SizedBox(height: 8),
+        Text(
+          '💡 Совет: Нажмите на кнопку генерации, чтобы создать username из вашего имени',
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+        ),
+      ],
+    ],
+  );
 
   void _showNameInputDialog() {
     final nameController = TextEditingController();
@@ -144,10 +138,7 @@ class _UsernameEditorState extends ConsumerState<UsernameEditor> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               final name = nameController.text.trim();

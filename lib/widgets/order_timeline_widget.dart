@@ -5,18 +5,13 @@ import '../models/enhanced_order.dart';
 
 /// Виджет таймлайна заявки
 class OrderTimelineWidget extends StatelessWidget {
-  const OrderTimelineWidget({
-    super.key,
-    required this.timeline,
-  });
+  const OrderTimelineWidget({super.key, required this.timeline});
   final List<OrderTimelineEvent> timeline;
 
   @override
   Widget build(BuildContext context) {
     if (timeline.isEmpty) {
-      return const Center(
-        child: Text('История заявки пуста'),
-      );
+      return const Center(child: Text('История заявки пуста'));
     }
 
     return ListView.builder(
@@ -31,65 +26,42 @@ class OrderTimelineWidget extends StatelessWidget {
   }
 
   Widget _buildTimelineItem(OrderTimelineEvent event, bool isLast) => Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Индикатор
+      Column(
         children: [
-          // Индикатор
-          Column(
-            children: [
-              Container(
-                width: 12,
-                height: 12,
-                decoration: BoxDecoration(
-                  color: _getTypeColor(event.type),
-                  shape: BoxShape.circle,
-                ),
-              ),
-              if (!isLast)
-                Container(
-                  width: 2,
-                  height: 40,
-                  color: Colors.grey[300],
-                ),
-            ],
+          Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(color: _getTypeColor(event.type), shape: BoxShape.circle),
           ),
-
-          const SizedBox(width: 16),
-
-          // Содержимое
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  event.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                if (event.description.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    event.description,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 4),
-                Text(
-                  _formatDate(event.createdAt),
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 11,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          if (!isLast) Container(width: 2, height: 40, color: Colors.grey[300]),
         ],
-      );
+      ),
+
+      const SizedBox(width: 16),
+
+      // Содержимое
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(event.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            if (event.description.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(event.description, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+            ],
+            const SizedBox(height: 4),
+            Text(
+              _formatDate(event.createdAt),
+              style: TextStyle(color: Colors.grey[500], fontSize: 11),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 
   Color _getTypeColor(OrderTimelineEventType type) {
     switch (type) {

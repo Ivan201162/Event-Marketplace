@@ -25,20 +25,19 @@ class PortfolioUploadState {
     double? uploadProgress,
     String? errorMessage,
     List<PortfolioItem>? uploadedItems,
-  }) =>
-      PortfolioUploadState(
-        isUploading: isUploading ?? this.isUploading,
-        uploadProgress: uploadProgress ?? this.uploadProgress,
-        errorMessage: errorMessage,
-        uploadedItems: uploadedItems ?? this.uploadedItems,
-      );
+  }) => PortfolioUploadState(
+    isUploading: isUploading ?? this.isUploading,
+    uploadProgress: uploadProgress ?? this.uploadProgress,
+    errorMessage: errorMessage,
+    uploadedItems: uploadedItems ?? this.uploadedItems,
+  );
 }
 
 /// Провайдер состояния загрузки портфолио (мигрирован с StateNotifierProvider)
 final portfolioUploadStateProvider =
     NotifierProvider<PortfolioUploadNotifier, PortfolioUploadState>(
-  () => PortfolioUploadNotifier(),
-);
+      () => PortfolioUploadNotifier(),
+    );
 
 /// Нотификатор для загрузки портфолио (мигрирован с StateNotifier)
 class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
@@ -78,18 +77,12 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
 
       if (portfolioItem != null) {
         final newItems = List<PortfolioItem>.from(state.uploadedItems)..add(portfolioItem);
-        state = state.copyWith(
-          isUploading: false,
-          uploadedItems: newItems,
-        );
+        state = state.copyWith(isUploading: false, uploadedItems: newItems);
       } else {
         throw Exception('Не удалось загрузить изображение');
       }
     } on Exception catch (e) {
-      state = state.copyWith(
-        isUploading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isUploading: false, errorMessage: e.toString());
     }
   }
 
@@ -122,18 +115,12 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
 
       if (portfolioItem != null) {
         final newItems = List<PortfolioItem>.from(state.uploadedItems)..add(portfolioItem);
-        state = state.copyWith(
-          isUploading: false,
-          uploadedItems: newItems,
-        );
+        state = state.copyWith(isUploading: false, uploadedItems: newItems);
       } else {
         throw Exception('Не удалось загрузить видео');
       }
     } on Exception catch (e) {
-      state = state.copyWith(
-        isUploading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isUploading: false, errorMessage: e.toString());
     }
   }
 
@@ -166,18 +153,12 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
 
       if (portfolioItem != null) {
         final newItems = List<PortfolioItem>.from(state.uploadedItems)..add(portfolioItem);
-        state = state.copyWith(
-          isUploading: false,
-          uploadedItems: newItems,
-        );
+        state = state.copyWith(isUploading: false, uploadedItems: newItems);
       } else {
         throw Exception('Не удалось загрузить документ');
       }
     } on Exception catch (e) {
-      state = state.copyWith(
-        isUploading: false,
-        errorMessage: e.toString(),
-      );
+      state = state.copyWith(isUploading: false, errorMessage: e.toString());
     }
   }
 
@@ -195,10 +176,7 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
   }
 
   /// Обновить элемент портфолио
-  Future<void> updatePortfolioItem(
-    String userId,
-    PortfolioItem updatedItem,
-  ) async {
+  Future<void> updatePortfolioItem(String userId, PortfolioItem updatedItem) async {
     try {
       await _portfolioService.updatePortfolioItem(userId, updatedItem);
 
@@ -224,8 +202,10 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
 }
 
 /// Провайдер для получения портфолио специалиста
-final specialistPortfolioProvider =
-    FutureProvider.family<List<PortfolioItem>, String>((ref, userId) async {
+final specialistPortfolioProvider = FutureProvider.family<List<PortfolioItem>, String>((
+  ref,
+  userId,
+) async {
   final portfolioService = ref.read(portfolioServiceProvider);
   return portfolioService.getPortfolio(userId);
 });

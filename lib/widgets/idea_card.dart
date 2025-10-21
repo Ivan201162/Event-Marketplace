@@ -39,10 +39,7 @@ class IdeaCard extends StatelessWidget {
               // Title
               Text(
                 idea.title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -51,36 +48,24 @@ class IdeaCard extends StatelessWidget {
               // Description
               Text(
                 idea.shortDesc,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 12),
 
               // Media content
-              if (idea.hasMedia) ...[
-                _buildMediaContent(context),
-                const SizedBox(height: 12),
-              ],
+              if (idea.hasMedia) ...[_buildMediaContent(context), const SizedBox(height: 12)],
 
               // Tags
-              if (idea.tags.isNotEmpty) ...[
-                _buildTags(),
-                const SizedBox(height: 12),
-              ],
+              if (idea.tags.isNotEmpty) ...[_buildTags(), const SizedBox(height: 12)],
 
               // Meta info
               _buildMetaInfo(),
               const SizedBox(height: 12),
 
               // Actions
-              if (showActions) ...[
-                _buildActions(context),
-                const SizedBox(height: 8),
-              ],
+              if (showActions) ...[_buildActions(context), const SizedBox(height: 8)],
 
               // Stats
               _buildStats(),
@@ -96,19 +81,12 @@ class IdeaCard extends StatelessWidget {
       children: [
         // Category icon
         if (idea.category != null) ...[
-          Text(
-            idea.categoryIcon,
-            style: const TextStyle(fontSize: 20),
-          ),
+          Text(idea.categoryIcon, style: const TextStyle(fontSize: 20)),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               idea.category!,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600], fontWeight: FontWeight.w500),
             ),
           ),
         ],
@@ -148,16 +126,12 @@ class IdeaCard extends StatelessWidget {
         placeholder: (context, url) => Container(
           height: 150,
           color: Colors.grey[200],
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
+          child: const Center(child: CircularProgressIndicator()),
         ),
         errorWidget: (context, url, error) => Container(
           height: 150,
           color: Colors.grey[200],
-          child: const Center(
-            child: Icon(Icons.error, color: Colors.grey),
-          ),
+          child: const Center(child: Icon(Icons.error, color: Colors.grey)),
         ),
       ),
     );
@@ -177,11 +151,7 @@ class IdeaCard extends StatelessWidget {
           ),
           child: Text(
             '#$tag',
-            style: TextStyle(
-              color: Colors.orange[700],
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(color: Colors.orange[700], fontSize: 12, fontWeight: FontWeight.w500),
           ),
         );
       }).toList(),
@@ -193,52 +163,22 @@ class IdeaCard extends StatelessWidget {
       children: [
         // Duration
         if (idea.estimatedDuration != null) ...[
-          Icon(
-            Icons.access_time,
-            size: 16,
-            color: Colors.grey[600],
-          ),
+          Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
           const SizedBox(width: 4),
-          Text(
-            idea.formattedDuration,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 12,
-            ),
-          ),
+          Text(idea.formattedDuration, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
           const SizedBox(width: 16),
         ],
         // Author
         if (idea.authorName != null) ...[
-          Icon(
-            Icons.person,
-            size: 16,
-            color: Colors.grey[600],
-          ),
+          Icon(Icons.person, size: 16, color: Colors.grey[600]),
           const SizedBox(width: 4),
-          Text(
-            idea.authorName!,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 12,
-            ),
-          ),
+          Text(idea.authorName!, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
           const SizedBox(width: 16),
         ],
         // Time ago
-        Icon(
-          Icons.schedule,
-          size: 16,
-          color: Colors.grey[600],
-        ),
+        Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
         const SizedBox(width: 4),
-        Text(
-          idea.timeAgo,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 12,
-          ),
-        ),
+        Text(idea.timeAgo, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
       ],
     );
   }
@@ -287,11 +227,7 @@ class IdeaCard extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               label,
-              style: TextStyle(
-                color: color,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -305,20 +241,14 @@ class IdeaCard extends StatelessWidget {
         if (idea.likesCount > 0) ...[
           Text(
             '${idea.likesCount} ${_getLikesText(idea.likesCount)}',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 12,
-            ),
+            style: TextStyle(color: Colors.grey[600], fontSize: 12),
           ),
           const SizedBox(width: 16),
         ],
         if (idea.viewsCount > 0) ...[
           Text(
             '${idea.viewsCount} ${_getViewsText(idea.viewsCount)}',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 12,
-            ),
+            style: TextStyle(color: Colors.grey[600], fontSize: 12),
           ),
         ],
       ],

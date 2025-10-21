@@ -65,8 +65,10 @@ class ImprovementSuggestionsService {
       query = query.orderBy('createdAt', descending: true).limit(limit);
 
       if (lastDocumentId != null) {
-        final lastDoc =
-            await _firestore.collection('improvement_suggestions').doc(lastDocumentId).get();
+        final lastDoc = await _firestore
+            .collection('improvement_suggestions')
+            .doc(lastDocumentId)
+            .get();
         query = query.startAfterDocument(lastDoc);
       }
 
@@ -130,10 +132,7 @@ class ImprovementSuggestionsService {
     String? adminComment,
   }) async {
     try {
-      final updateData = {
-        'status': status.name,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      };
+      final updateData = {'status': status.name, 'updatedAt': Timestamp.fromDate(DateTime.now())};
 
       if (status == SuggestionStatus.reviewed) {
         updateData['reviewedAt'] = Timestamp.fromDate(DateTime.now());
@@ -167,9 +166,7 @@ class ImprovementSuggestionsService {
   }
 
   /// Получить популярные предложения
-  Future<List<ImprovementSuggestion>> getPopularSuggestions({
-    int limit = 10,
-  }) async {
+  Future<List<ImprovementSuggestion>> getPopularSuggestions({int limit = 10}) async {
     try {
       final snapshot = await _firestore
           .collection('improvement_suggestions')
@@ -191,12 +188,15 @@ class ImprovementSuggestionsService {
       final suggestions = snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
 
       final totalSuggestions = suggestions.length;
-      final implementedSuggestions =
-          suggestions.where((s) => s.status == SuggestionStatus.implemented).length;
-      final pendingSuggestions =
-          suggestions.where((s) => s.status == SuggestionStatus.submitted).length;
-      final reviewedSuggestions =
-          suggestions.where((s) => s.status == SuggestionStatus.reviewed).length;
+      final implementedSuggestions = suggestions
+          .where((s) => s.status == SuggestionStatus.implemented)
+          .length;
+      final pendingSuggestions = suggestions
+          .where((s) => s.status == SuggestionStatus.submitted)
+          .length;
+      final reviewedSuggestions = suggestions
+          .where((s) => s.status == SuggestionStatus.reviewed)
+          .length;
 
       final categoryStats = <SuggestionCategory, int>{};
       for (final category in SuggestionCategory.values) {
@@ -276,8 +276,9 @@ class ImprovementSuggestion {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       reviewedAt: data['reviewedAt'] != null ? (data['reviewedAt'] as Timestamp).toDate() : null,
-      implementedAt:
-          data['implementedAt'] != null ? (data['implementedAt'] as Timestamp).toDate() : null,
+      implementedAt: data['implementedAt'] != null
+          ? (data['implementedAt'] as Timestamp).toDate()
+          : null,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
@@ -299,21 +300,21 @@ class ImprovementSuggestion {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'title': title,
-        'description': description,
-        'category': category.name,
-        'priority': priority.name,
-        'status': status.name,
-        'tags': tags,
-        'contactEmail': contactEmail,
-        'votes': votes,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'reviewedAt': reviewedAt != null ? Timestamp.fromDate(reviewedAt!) : null,
-        'implementedAt': implementedAt != null ? Timestamp.fromDate(implementedAt!) : null,
-        'metadata': metadata,
-      };
+    'userId': userId,
+    'title': title,
+    'description': description,
+    'category': category.name,
+    'priority': priority.name,
+    'status': status.name,
+    'tags': tags,
+    'contactEmail': contactEmail,
+    'votes': votes,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'reviewedAt': reviewedAt != null ? Timestamp.fromDate(reviewedAt!) : null,
+    'implementedAt': implementedAt != null ? Timestamp.fromDate(implementedAt!) : null,
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   ImprovementSuggestion copyWith({
@@ -332,24 +333,23 @@ class ImprovementSuggestion {
     DateTime? reviewedAt,
     DateTime? implementedAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      ImprovementSuggestion(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        category: category ?? this.category,
-        priority: priority ?? this.priority,
-        status: status ?? this.status,
-        tags: tags ?? this.tags,
-        contactEmail: contactEmail ?? this.contactEmail,
-        votes: votes ?? this.votes,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        reviewedAt: reviewedAt ?? this.reviewedAt,
-        implementedAt: implementedAt ?? this.implementedAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => ImprovementSuggestion(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    category: category ?? this.category,
+    priority: priority ?? this.priority,
+    status: status ?? this.status,
+    tags: tags ?? this.tags,
+    contactEmail: contactEmail ?? this.contactEmail,
+    votes: votes ?? this.votes,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    reviewedAt: reviewedAt ?? this.reviewedAt,
+    implementedAt: implementedAt ?? this.implementedAt,
+    metadata: metadata ?? this.metadata,
+  );
 }
 
 /// Статистика предложений

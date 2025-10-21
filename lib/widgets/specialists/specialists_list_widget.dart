@@ -151,9 +151,7 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
     final theme = Theme.of(context);
 
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_specialists.isEmpty) {
@@ -167,10 +165,7 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
               color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Специалисты не найдены',
-              style: theme.textTheme.titleMedium,
-            ),
+            Text('Специалисты не найдены', style: theme.textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
               'Попробуйте изменить параметры поиска',
@@ -209,9 +204,7 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () => widget.onSpecialistTap(specialist['id'] as String? ?? ''),
         borderRadius: BorderRadius.circular(12),
@@ -234,29 +227,17 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                             width: 60,
                             height: 60,
                             color: theme.primaryColor.withValues(alpha: 0.1),
-                            child: Icon(
-                              Icons.person,
-                              size: 30,
-                              color: theme.primaryColor,
-                            ),
+                            child: Icon(Icons.person, size: 30, color: theme.primaryColor),
                           ),
                           errorWidget: (context, url, error) => Container(
                             width: 60,
                             height: 60,
                             color: theme.primaryColor.withValues(alpha: 0.1),
-                            child: Icon(
-                              Icons.person,
-                              size: 30,
-                              color: theme.primaryColor,
-                            ),
+                            child: Icon(Icons.person, size: 30, color: theme.primaryColor),
                           ),
                         ),
                       )
-                    : Icon(
-                        Icons.person,
-                        size: 30,
-                        color: theme.primaryColor,
-                      ),
+                    : Icon(Icons.person, size: 30, color: theme.primaryColor),
               ),
 
               const SizedBox(width: 16),
@@ -269,9 +250,7 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                     // Имя
                     Text(
                       name,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                     ),
 
                     const SizedBox(height: 4),
@@ -319,17 +298,11 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                     Row(
                       children: [
                         // Рейтинг
-                        const Icon(
-                          Icons.star,
-                          size: 16,
-                          color: Colors.amber,
-                        ),
+                        const Icon(Icons.star, size: 16, color: Colors.amber),
                         const SizedBox(width: 4),
                         Text(
                           rating.toStringAsFixed(1),
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(width: 4),
                         Text(

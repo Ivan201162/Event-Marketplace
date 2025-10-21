@@ -5,11 +5,7 @@ import '../models/specialist.dart';
 
 /// Карточка ведущего для отображения в списке
 class HostCard extends StatelessWidget {
-  const HostCard({
-    super.key,
-    required this.specialist,
-    this.onTap,
-  });
+  const HostCard({super.key, required this.specialist, this.onTap});
   final Specialist specialist;
   final VoidCallback? onTap;
 
@@ -21,9 +17,7 @@ class HostCard extends StatelessWidget {
 
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -36,15 +30,11 @@ class HostCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
-                  ),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                   color: theme.colorScheme.surface,
                 ),
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
-                  ),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                   child: specialist.avatarUrl != null
                       ? CachedNetworkImage(
                           imageUrl: specialist.avatarUrl!,
@@ -54,9 +44,7 @@ class HostCard extends StatelessWidget {
                             child: Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  theme.primaryColor,
-                                ),
+                                valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
                               ),
                             ),
                           ),
@@ -104,11 +92,7 @@ class HostCard extends StatelessWidget {
                           ),
                         ),
                         if (specialist.isVerified)
-                          Icon(
-                            Icons.verified,
-                            size: isMobile ? 14 : 16,
-                            color: Colors.green,
-                          ),
+                          Icon(Icons.verified, size: isMobile ? 14 : 16, color: Colors.green),
                       ],
                     ),
 
@@ -142,11 +126,7 @@ class HostCard extends StatelessWidget {
                     // Рейтинг
                     Row(
                       children: [
-                        Icon(
-                          Icons.star,
-                          size: isMobile ? 12 : 14,
-                          color: Colors.amber,
-                        ),
+                        Icon(Icons.star, size: isMobile ? 12 : 14, color: Colors.amber),
                         const SizedBox(width: 2),
                         Text(
                           specialist.rating.toStringAsFixed(1),

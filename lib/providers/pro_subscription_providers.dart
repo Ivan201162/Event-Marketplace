@@ -4,12 +4,15 @@ import '../models/pro_subscription.dart';
 import '../services/pro_subscription_service.dart';
 
 /// Провайдер сервиса PRO подписок
-final proSubscriptionServiceProvider =
-    Provider<ProSubscriptionService>((ref) => ProSubscriptionService());
+final proSubscriptionServiceProvider = Provider<ProSubscriptionService>(
+  (ref) => ProSubscriptionService(),
+);
 
 /// Провайдер подписки пользователя
-final userSubscriptionProvider =
-    FutureProvider.family<ProSubscription?, String>((ref, userId) async {
+final userSubscriptionProvider = FutureProvider.family<ProSubscription?, String>((
+  ref,
+  userId,
+) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.getUserSubscription(userId);
 });
@@ -21,8 +24,10 @@ final availablePlansProvider = Provider<List<SubscriptionPlan>>((ref) {
 });
 
 /// Провайдер истории платежей
-final paymentHistoryProvider =
-    FutureProvider.family<List<Payment>, String>((ref, subscriptionId) async {
+final paymentHistoryProvider = FutureProvider.family<List<Payment>, String>((
+  ref,
+  subscriptionId,
+) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.getPaymentHistory(subscriptionId: subscriptionId);
 });
@@ -36,18 +41,12 @@ final subscriptionStatsProvider = FutureProvider<Map<String, dynamic>>((ref) asy
 /// Провайдер проверки доступности функции
 final featureAccessProvider = FutureProvider.family<bool, FeatureAccessParams>((ref, params) async {
   final service = ref.read(proSubscriptionServiceProvider);
-  return service.hasFeature(
-    userId: params.userId,
-    feature: params.feature,
-  );
+  return service.hasFeature(userId: params.userId, feature: params.feature);
 });
 
 /// Параметры для проверки доступа к функции
 class FeatureAccessParams {
-  const FeatureAccessParams({
-    required this.userId,
-    required this.feature,
-  });
+  const FeatureAccessParams({required this.userId, required this.feature});
 
   final String userId;
   final String feature;
@@ -84,14 +83,13 @@ class SubscriptionState {
     bool? isPaymentInProgress,
     String? error,
     List<dynamic>? paymentHistory,
-  }) =>
-      SubscriptionState(
-        subscription: subscription ?? this.subscription,
-        isLoading: isLoading ?? this.isLoading,
-        isPaymentInProgress: isPaymentInProgress ?? this.isPaymentInProgress,
-        error: error ?? this.error,
-        paymentHistory: paymentHistory ?? this.paymentHistory,
-      );
+  }) => SubscriptionState(
+    subscription: subscription ?? this.subscription,
+    isLoading: isLoading ?? this.isLoading,
+    isPaymentInProgress: isPaymentInProgress ?? this.isPaymentInProgress,
+    error: error ?? this.error,
+    paymentHistory: paymentHistory ?? this.paymentHistory,
+  );
 }
 
 /// Notifier для состояния подписки (мигрирован с StateNotifier)
@@ -110,15 +108,9 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
 
     try {
       final subscription = await _service.getUserSubscription(userId);
-      state = state.copyWith(
-        subscription: subscription,
-        isLoading: false,
-      );
+      state = state.copyWith(subscription: subscription, isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -139,15 +131,9 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
         isTrial: isTrial,
       );
 
-      state = state.copyWith(
-        subscription: subscription,
-        isPaymentInProgress: false,
-      );
+      state = state.copyWith(subscription: subscription, isPaymentInProgress: false);
     } catch (e) {
-      state = state.copyWith(
-        isPaymentInProgress: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isPaymentInProgress: false, error: e.toString());
     }
   }
 
@@ -159,24 +145,16 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _service.updateSubscription(
-        subscriptionId: subscriptionId,
-        plan: plan,
-      );
+      await _service.updateSubscription(subscriptionId: subscriptionId, plan: plan);
 
       // Перезагружаем подписку после обновления
       if (state.subscription != null) {
         await loadUserSubscription(state.subscription!.userId);
       }
 
-      state = state.copyWith(
-        isLoading: false,
-      );
+      state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -194,14 +172,9 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
         }
       }
 
-      state = state.copyWith(
-        isLoading: false,
-      );
+      state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -218,16 +191,10 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
           await loadUserSubscription(state.subscription!.userId);
         }
 
-        state = state.copyWith(
-          subscription: subscription,
-          isPaymentInProgress: false,
-        );
+        state = state.copyWith(subscription: subscription, isPaymentInProgress: false);
       }
     } catch (e) {
-      state = state.copyWith(
-        isPaymentInProgress: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isPaymentInProgress: false, error: e.toString());
     }
   }
 
@@ -240,9 +207,7 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
         subscriptionId: state.subscription!.id,
       );
 
-      state = state.copyWith(
-        paymentHistory: paymentHistory,
-      );
+      state = state.copyWith(paymentHistory: paymentHistory);
     } catch (e) {
       state = state.copyWith(error: e.toString());
     }

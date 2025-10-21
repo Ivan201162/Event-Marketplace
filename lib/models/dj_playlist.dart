@@ -1,21 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Тип медиафайла
-enum MediaType {
-  audio,
-  video,
-  image,
-  playlist,
-}
+enum MediaType { audio, video, image, playlist }
 
 /// Статус медиафайла
-enum MediaStatus {
-  pending,
-  processing,
-  ready,
-  error,
-  deleted,
-}
+enum MediaStatus { pending, processing, ready, error, deleted }
 
 /// Модель медиафайла для диджея
 class MediaFile {
@@ -38,29 +27,24 @@ class MediaFile {
 
   /// Создать из Map
   factory MediaFile.fromMap(Map<String, dynamic> data) => MediaFile(
-        id: data['id'] as String? ?? '',
-        djId: data['djId'] as String? ?? '',
-        fileName: data['fileName'] as String? ?? '',
-        originalName: data['originalName'] as String? ?? '',
-        filePath: data['filePath'] as String? ?? '',
-        thumbnailPath: data['thumbnailPath'] as String?,
-        type: MediaType.values.firstWhere(
-          (e) => e.name == data['type'],
-          orElse: () => MediaType.audio,
-        ),
-        status: MediaStatus.values.firstWhere(
-          (e) => e.name == data['status'],
-          orElse: () => MediaStatus.pending,
-        ),
-        fileSize: data['fileSize'] as int? ?? 0,
-        duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
-        mimeType: data['mimeType'] as String?,
-        metadata: Map<String, dynamic>.from(
-          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
-        ),
-        uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      );
+    id: data['id'] as String? ?? '',
+    djId: data['djId'] as String? ?? '',
+    fileName: data['fileName'] as String? ?? '',
+    originalName: data['originalName'] as String? ?? '',
+    filePath: data['filePath'] as String? ?? '',
+    thumbnailPath: data['thumbnailPath'] as String?,
+    type: MediaType.values.firstWhere((e) => e.name == data['type'], orElse: () => MediaType.audio),
+    status: MediaStatus.values.firstWhere(
+      (e) => e.name == data['status'],
+      orElse: () => MediaStatus.pending,
+    ),
+    fileSize: data['fileSize'] as int? ?? 0,
+    duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
+    mimeType: data['mimeType'] as String?,
+    metadata: Map<String, dynamic>.from((data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+    uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
+    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+  );
   final String id;
   final String djId;
   final String fileName;
@@ -78,21 +62,21 @@ class MediaFile {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'djId': djId,
-        'fileName': fileName,
-        'originalName': originalName,
-        'filePath': filePath,
-        'thumbnailPath': thumbnailPath,
-        'type': type.name,
-        'status': status.name,
-        'fileSize': fileSize,
-        'duration': duration?.inMilliseconds,
-        'mimeType': mimeType,
-        'metadata': metadata,
-        'uploadedAt': Timestamp.fromDate(uploadedAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'djId': djId,
+    'fileName': fileName,
+    'originalName': originalName,
+    'filePath': filePath,
+    'thumbnailPath': thumbnailPath,
+    'type': type.name,
+    'status': status.name,
+    'fileSize': fileSize,
+    'duration': duration?.inMilliseconds,
+    'mimeType': mimeType,
+    'metadata': metadata,
+    'uploadedAt': Timestamp.fromDate(uploadedAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   /// Копировать с изменениями
   MediaFile copyWith({
@@ -110,23 +94,22 @@ class MediaFile {
     Map<String, dynamic>? metadata,
     DateTime? uploadedAt,
     DateTime? updatedAt,
-  }) =>
-      MediaFile(
-        id: id ?? this.id,
-        djId: djId ?? this.djId,
-        fileName: fileName ?? this.fileName,
-        originalName: originalName ?? this.originalName,
-        filePath: filePath ?? this.filePath,
-        thumbnailPath: thumbnailPath ?? this.thumbnailPath,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        fileSize: fileSize ?? this.fileSize,
-        duration: duration ?? this.duration,
-        mimeType: mimeType ?? this.mimeType,
-        metadata: metadata ?? this.metadata,
-        uploadedAt: uploadedAt ?? this.uploadedAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => MediaFile(
+    id: id ?? this.id,
+    djId: djId ?? this.djId,
+    fileName: fileName ?? this.fileName,
+    originalName: originalName ?? this.originalName,
+    filePath: filePath ?? this.filePath,
+    thumbnailPath: thumbnailPath ?? this.thumbnailPath,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    fileSize: fileSize ?? this.fileSize,
+    duration: duration ?? this.duration,
+    mimeType: mimeType ?? this.mimeType,
+    metadata: metadata ?? this.metadata,
+    uploadedAt: uploadedAt ?? this.uploadedAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Получить размер файла в читаемом формате
   String get formattedFileSize {
@@ -185,24 +168,22 @@ class DJPlaylist {
 
   /// Создать из Map
   factory DJPlaylist.fromMap(Map<String, dynamic> data) => DJPlaylist(
-        id: data['id'] as String? ?? '',
-        djId: data['djId'] as String? ?? '',
-        name: data['name'] as String? ?? '',
-        description: data['description'] as String?,
-        coverImagePath: data['coverImagePath'] as String?,
-        mediaFileIds: List<String>.from((data['mediaFileIds'] as List<dynamic>?) ?? []),
-        mediaFiles: [], // Будет заполнено отдельно
-        settings: Map<String, dynamic>.from(
-          (data['settings'] as Map<dynamic, dynamic>?) ?? {},
-        ),
-        isPublic: data['isPublic'] as bool? ?? false,
-        isDefault: data['isDefault'] as bool? ?? false,
-        playCount: data['playCount'] as int? ?? 0,
-        averageRating: (data['averageRating'] as num?)?.toDouble(),
-        ratingCount: data['ratingCount'] as int? ?? 0,
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      );
+    id: data['id'] as String? ?? '',
+    djId: data['djId'] as String? ?? '',
+    name: data['name'] as String? ?? '',
+    description: data['description'] as String?,
+    coverImagePath: data['coverImagePath'] as String?,
+    mediaFileIds: List<String>.from((data['mediaFileIds'] as List<dynamic>?) ?? []),
+    mediaFiles: [], // Будет заполнено отдельно
+    settings: Map<String, dynamic>.from((data['settings'] as Map<dynamic, dynamic>?) ?? {}),
+    isPublic: data['isPublic'] as bool? ?? false,
+    isDefault: data['isDefault'] as bool? ?? false,
+    playCount: data['playCount'] as int? ?? 0,
+    averageRating: (data['averageRating'] as num?)?.toDouble(),
+    ratingCount: data['ratingCount'] as int? ?? 0,
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+  );
   final String id;
   final String djId;
   final String name;
@@ -221,21 +202,21 @@ class DJPlaylist {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'djId': djId,
-        'name': name,
-        'description': description,
-        'coverImagePath': coverImagePath,
-        'mediaFileIds': mediaFileIds,
-        'settings': settings,
-        'isPublic': isPublic,
-        'isDefault': isDefault,
-        'playCount': playCount,
-        'averageRating': averageRating,
-        'ratingCount': ratingCount,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'djId': djId,
+    'name': name,
+    'description': description,
+    'coverImagePath': coverImagePath,
+    'mediaFileIds': mediaFileIds,
+    'settings': settings,
+    'isPublic': isPublic,
+    'isDefault': isDefault,
+    'playCount': playCount,
+    'averageRating': averageRating,
+    'ratingCount': ratingCount,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   /// Копировать с изменениями
   DJPlaylist copyWith({
@@ -254,30 +235,27 @@ class DJPlaylist {
     int? ratingCount,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      DJPlaylist(
-        id: id ?? this.id,
-        djId: djId ?? this.djId,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        coverImagePath: coverImagePath ?? this.coverImagePath,
-        mediaFileIds: mediaFileIds ?? this.mediaFileIds,
-        mediaFiles: mediaFiles ?? this.mediaFiles,
-        settings: settings ?? this.settings,
-        isPublic: isPublic ?? this.isPublic,
-        isDefault: isDefault ?? this.isDefault,
-        playCount: playCount ?? this.playCount,
-        averageRating: averageRating ?? this.averageRating,
-        ratingCount: ratingCount ?? this.ratingCount,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => DJPlaylist(
+    id: id ?? this.id,
+    djId: djId ?? this.djId,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    coverImagePath: coverImagePath ?? this.coverImagePath,
+    mediaFileIds: mediaFileIds ?? this.mediaFileIds,
+    mediaFiles: mediaFiles ?? this.mediaFiles,
+    settings: settings ?? this.settings,
+    isPublic: isPublic ?? this.isPublic,
+    isDefault: isDefault ?? this.isDefault,
+    playCount: playCount ?? this.playCount,
+    averageRating: averageRating ?? this.averageRating,
+    ratingCount: ratingCount ?? this.ratingCount,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Получить общую длительность плейлиста
-  Duration get totalDuration => mediaFiles.fold(
-        Duration.zero,
-        (total, file) => total + (file.duration ?? Duration.zero),
-      );
+  Duration get totalDuration =>
+      mediaFiles.fold(Duration.zero, (total, file) => total + (file.duration ?? Duration.zero));
 
   /// Получить общий размер плейлиста
   int get totalSize => mediaFiles.fold(0, (total, file) => total + file.fileSize);
@@ -335,23 +313,22 @@ class VKPlaylist {
 
   /// Создать из Map
   factory VKPlaylist.fromMap(Map<String, dynamic> data) => VKPlaylist(
-        id: data['id']?.toString() ?? '',
-        title: data['title'] as String? ?? '',
-        description: data['description'] as String?,
-        coverImageUrl: data['cover_image']?[0]?['url'] as String?,
-        trackCount: data['count'] as int? ?? 0,
-        ownerId: data['owner_id']?.toString(),
-        ownerName: data['owner_name'] as String?,
-        createdAt: data['create_time'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                (data['create_time'] as int) * 1000,
-              )
-            : null,
-        tracks: (data['tracks'] as List<dynamic>?)
-                ?.map((track) => VKTrack.fromMap(track as Map<String, dynamic>))
-                .toList() ??
-            [],
-      );
+    id: data['id']?.toString() ?? '',
+    title: data['title'] as String? ?? '',
+    description: data['description'] as String?,
+    coverImageUrl: data['cover_image']?[0]?['url'] as String?,
+    trackCount: data['count'] as int? ?? 0,
+    ownerId: data['owner_id']?.toString(),
+    ownerName: data['owner_name'] as String?,
+    createdAt: data['create_time'] != null
+        ? DateTime.fromMillisecondsSinceEpoch((data['create_time'] as int) * 1000)
+        : null,
+    tracks:
+        (data['tracks'] as List<dynamic>?)
+            ?.map((track) => VKTrack.fromMap(track as Map<String, dynamic>))
+            .toList() ??
+        [],
+  );
   final String id;
   final String title;
   final String? description;
@@ -364,22 +341,22 @@ class VKPlaylist {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'cover_image': coverImageUrl != null
-            ? [
-                {'url': coverImageUrl},
-              ]
-            : null,
-        'count': trackCount,
-        'owner_id': ownerId,
-        'owner_name': ownerName,
-        'create_time': createdAt?.millisecondsSinceEpoch != null
-            ? createdAt!.millisecondsSinceEpoch ~/ 1000
-            : null,
-        'tracks': tracks.map((track) => track.toMap()).toList(),
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'cover_image': coverImageUrl != null
+        ? [
+            {'url': coverImageUrl},
+          ]
+        : null,
+    'count': trackCount,
+    'owner_id': ownerId,
+    'owner_name': ownerName,
+    'create_time': createdAt?.millisecondsSinceEpoch != null
+        ? createdAt!.millisecondsSinceEpoch ~/ 1000
+        : null,
+    'tracks': tracks.map((track) => track.toMap()).toList(),
+  };
 }
 
 /// Модель VK трека
@@ -396,14 +373,14 @@ class VKTrack {
 
   /// Создать из Map
   factory VKTrack.fromMap(Map<String, dynamic> data) => VKTrack(
-        id: data['id']?.toString() ?? '',
-        title: data['title'] as String? ?? '',
-        artist: data['artist'] as String? ?? '',
-        duration: Duration(seconds: data['duration'] as int? ?? 0),
-        url: data['url'] as String?,
-        albumTitle: data['album']?['title'] as String?,
-        albumCoverUrl: data['album']?['thumb']?['photo_300'] as String?,
-      );
+    id: data['id']?.toString() ?? '',
+    title: data['title'] as String? ?? '',
+    artist: data['artist'] as String? ?? '',
+    duration: Duration(seconds: data['duration'] as int? ?? 0),
+    url: data['url'] as String?,
+    albumTitle: data['album']?['title'] as String?,
+    albumCoverUrl: data['album']?['thumb']?['photo_300'] as String?,
+  );
   final String id;
   final String title;
   final String artist;
@@ -414,18 +391,18 @@ class VKTrack {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'artist': artist,
-        'duration': duration.inSeconds,
-        'url': url,
-        'album': albumTitle != null
-            ? {
-                'title': albumTitle,
-                'thumb': albumCoverUrl != null ? {'photo_300': albumCoverUrl} : null,
-              }
-            : null,
-      };
+    'id': id,
+    'title': title,
+    'artist': artist,
+    'duration': duration.inSeconds,
+    'url': url,
+    'album': albumTitle != null
+        ? {
+            'title': albumTitle,
+            'thumb': albumCoverUrl != null ? {'photo_300': albumCoverUrl} : null,
+          }
+        : null,
+  };
 
   /// Получить длительность в читаемом формате
   String get formattedDuration {

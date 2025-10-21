@@ -79,21 +79,21 @@ class SpecialistStory {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'specialistName': specialistName,
-        'specialistAvatar': specialistAvatar,
-        'contentType': contentType.name,
-        'contentUrl': contentUrl,
-        'thumbnailUrl': thumbnailUrl,
-        'text': text,
-        'caption': caption,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'expiresAt': Timestamp.fromDate(expiresAt),
-        'status': status.name,
-        'viewCount': viewCount,
-        'viewers': viewers,
-        'metadata': metadata,
-      };
+    'specialistId': specialistId,
+    'specialistName': specialistName,
+    'specialistAvatar': specialistAvatar,
+    'contentType': contentType.name,
+    'contentUrl': contentUrl,
+    'thumbnailUrl': thumbnailUrl,
+    'text': text,
+    'caption': caption,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'expiresAt': Timestamp.fromDate(expiresAt),
+    'status': status.name,
+    'viewCount': viewCount,
+    'viewers': viewers,
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   SpecialistStory copyWith({
@@ -112,24 +112,23 @@ class SpecialistStory {
     int? viewCount,
     List<String>? viewers,
     Map<String, dynamic>? metadata,
-  }) =>
-      SpecialistStory(
-        id: id ?? this.id,
-        specialistId: specialistId ?? this.specialistId,
-        specialistName: specialistName ?? this.specialistName,
-        specialistAvatar: specialistAvatar ?? this.specialistAvatar,
-        contentType: contentType ?? this.contentType,
-        contentUrl: contentUrl ?? this.contentUrl,
-        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-        text: text ?? this.text,
-        caption: caption ?? this.caption,
-        createdAt: createdAt ?? this.createdAt,
-        expiresAt: expiresAt ?? this.expiresAt,
-        status: status ?? this.status,
-        viewCount: viewCount ?? this.viewCount,
-        viewers: viewers ?? this.viewers,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => SpecialistStory(
+    id: id ?? this.id,
+    specialistId: specialistId ?? this.specialistId,
+    specialistName: specialistName ?? this.specialistName,
+    specialistAvatar: specialistAvatar ?? this.specialistAvatar,
+    contentType: contentType ?? this.contentType,
+    contentUrl: contentUrl ?? this.contentUrl,
+    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+    text: text ?? this.text,
+    caption: caption ?? this.caption,
+    createdAt: createdAt ?? this.createdAt,
+    expiresAt: expiresAt ?? this.expiresAt,
+    status: status ?? this.status,
+    viewCount: viewCount ?? this.viewCount,
+    viewers: viewers ?? this.viewers,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, истекла ли сторис
   bool get isExpired => DateTime.now().isAfter(expiresAt);
@@ -147,10 +146,7 @@ class SpecialistStory {
   SpecialistStory addView(String userId) {
     if (viewers.contains(userId)) return this;
 
-    return copyWith(
-      viewCount: viewCount + 1,
-      viewers: [...viewers, userId],
-    );
+    return copyWith(viewCount: viewCount + 1, viewers: [...viewers, userId]);
   }
 
   /// Получить тип контента для отображения
@@ -190,10 +186,7 @@ class SpecialistStoryGroup {
   });
 
   /// Создать из списка сторис
-  factory SpecialistStoryGroup.fromStories(
-    List<SpecialistStory> stories,
-    String userId,
-  ) {
+  factory SpecialistStoryGroup.fromStories(List<SpecialistStory> stories, String userId) {
     if (stories.isEmpty) {
       throw ArgumentError('Список сторис не может быть пустым');
     }

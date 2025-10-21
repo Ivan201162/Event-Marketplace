@@ -5,20 +5,12 @@ import '../models/enhanced_idea.dart';
 
 /// Состояние идей
 class EnhancedIdeasState {
-  const EnhancedIdeasState({
-    this.ideas = const [],
-    this.isLoading = false,
-    this.error,
-  });
+  const EnhancedIdeasState({this.ideas = const [], this.isLoading = false, this.error});
   final List<EnhancedIdea> ideas;
   final bool isLoading;
   final String? error;
 
-  EnhancedIdeasState copyWith({
-    List<EnhancedIdea>? ideas,
-    bool? isLoading,
-    String? error,
-  }) =>
+  EnhancedIdeasState copyWith({List<EnhancedIdea>? ideas, bool? isLoading, String? error}) =>
       EnhancedIdeasState(
         ideas: ideas ?? this.ideas,
         isLoading: isLoading ?? this.isLoading,

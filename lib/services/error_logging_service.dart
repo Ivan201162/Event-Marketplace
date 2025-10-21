@@ -108,10 +108,7 @@ class ErrorLoggingService {
   }) async {
     try {
       if (kDebugMode) {
-        developer.log(
-          'WARNING: $warning',
-          name: 'ErrorLogging',
-        );
+        developer.log('WARNING: $warning', name: 'ErrorLogging');
       }
 
       // Добавляем в кэш для батчевой отправки
@@ -173,10 +170,7 @@ class ErrorLoggingService {
   }) async {
     try {
       if (kDebugMode) {
-        developer.log(
-          'INFO: $message',
-          name: 'ErrorLogging',
-        );
+        developer.log('INFO: $message', name: 'ErrorLogging');
       }
 
       await _firestore.collection('info_logs').add({
@@ -260,10 +254,7 @@ class ErrorLoggingService {
   }
 
   /// Получить статистику ошибок
-  Future<Map<String, dynamic>> getErrorStats({
-    DateTime? startDate,
-    DateTime? endDate,
-  }) async {
+  Future<Map<String, dynamic>> getErrorStats({DateTime? startDate, DateTime? endDate}) async {
     try {
       Query query = _firestore.collection('error_logs');
 
@@ -328,11 +319,7 @@ class ErrorLoggingService {
 
   /// Принудительно отправить все накопленные логи
   Future<void> flushAllLogs() async {
-    await Future.wait([
-      _flushErrorLogs(),
-      _flushWarningLogs(),
-      _flushPerformanceLogs(),
-    ]);
+    await Future.wait([_flushErrorLogs(), _flushWarningLogs(), _flushPerformanceLogs()]);
   }
 
   /// Очистить старые логи с батчевыми операциями
@@ -340,12 +327,7 @@ class ErrorLoggingService {
     try {
       final cutoffDate = DateTime.now().subtract(Duration(days: daysToKeep));
 
-      final collections = [
-        'error_logs',
-        'warning_logs',
-        'info_logs',
-        'performance_logs',
-      ];
+      final collections = ['error_logs', 'warning_logs', 'info_logs', 'performance_logs'];
 
       for (final collection in collections) {
         final QuerySnapshot snapshot = await _firestore
@@ -379,9 +361,7 @@ class ErrorLoggingService {
             await batch.commit();
           }
 
-          developer.log(
-            'Cleaned up ${snapshot.docs.length} old logs from $collection',
-          );
+          developer.log('Cleaned up ${snapshot.docs.length} old logs from $collection');
         }
       }
     } catch (e) {
@@ -392,12 +372,7 @@ class ErrorLoggingService {
   /// Получить статистику логов
   Future<Map<String, int>> getLogStats() async {
     try {
-      final collections = [
-        'error_logs',
-        'warning_logs',
-        'info_logs',
-        'performance_logs',
-      ];
+      final collections = ['error_logs', 'warning_logs', 'info_logs', 'performance_logs'];
 
       final stats = <String, int>{};
 

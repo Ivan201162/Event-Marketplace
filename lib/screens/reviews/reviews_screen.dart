@@ -11,11 +11,7 @@ class ReviewsScreen extends ConsumerStatefulWidget {
   final String specialistId;
   final String specialistName;
 
-  const ReviewsScreen({
-    super.key,
-    required this.specialistId,
-    required this.specialistName,
-  });
+  const ReviewsScreen({super.key, required this.specialistId, required this.specialistName});
 
   @override
   ConsumerState<ReviewsScreen> createState() => _ReviewsScreenState();
@@ -52,23 +48,13 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.sort),
-            onPressed: _showSortDialog,
-          ),
+          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
+          IconButton(icon: const Icon(Icons.sort), onPressed: _showSortDialog),
         ],
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildAllReviewsTab(),
-          _buildReviewsWithPhotosTab(),
-          _buildStatisticsTab(),
-        ],
+        children: [_buildAllReviewsTab(), _buildReviewsWithPhotosTab(), _buildStatisticsTab()],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _writeReview,
@@ -107,19 +93,14 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           ),
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.error_outline, size: 80, color: Colors.red),
             const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки отзывов',
-              style: TextStyle(fontSize: 18, color: Colors.red[700]),
-            ),
+            Text('Ошибка загрузки отзывов', style: TextStyle(fontSize: 18, color: Colors.red[700])),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -153,11 +134,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
                 SizedBox(height: 16),
                 Text(
                   'Нет отзывов с фото',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 8),
                 Text(
@@ -188,19 +165,14 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           ),
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.error_outline, size: 80, color: Colors.red),
             const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки отзывов',
-              style: TextStyle(fontSize: 18, color: Colors.red[700]),
-            ),
+            Text('Ошибка загрузки отзывов', style: TextStyle(fontSize: 18, color: Colors.red[700])),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -261,10 +233,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
                       const SizedBox(height: 8),
                       Text(
                         'На основе $totalReviews отзывов',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                     ],
                   ),
@@ -282,10 +251,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
                     children: [
                       const Text(
                         'Распределение оценок',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       ...List.generate(5, (index) {
@@ -336,9 +302,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           ),
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -377,17 +341,10 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           SizedBox(height: 16),
           Text(
             'Пока нет отзывов',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 8),
-          Text(
-            'Будьте первым, кто оставит отзыв!',
-            style: TextStyle(color: Colors.grey),
-          ),
+          Text('Будьте первым, кто оставит отзыв!', style: TextStyle(color: Colors.grey)),
         ],
       ),
     );
@@ -545,24 +502,22 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
 
   void _writeReview() {
     // TODO: Navigate to write review screen
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Написание отзыва пока не реализовано')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Написание отзыва пока не реализовано')));
   }
 
   void _showReviewDetails(Review review) {
     // TODO: Show review details
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Отзыв: ${review.text}')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Отзыв: ${review.text}')));
   }
 
   void _toggleLike(Review review) {
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Войдите в аккаунт для лайков')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Войдите в аккаунт для лайков')));
       return;
     }
 
@@ -572,9 +527,9 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
 
   void _replyToReview(Review review) {
     // TODO: Reply to review
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Ответ на отзыв пока не реализован')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Ответ на отзыв пока не реализован')));
   }
 
   Color _getRatingColor(int rating) {

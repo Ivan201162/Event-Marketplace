@@ -58,9 +58,7 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
       body: currentUser.when(
         data: (user) {
           if (user == null) {
-            return const Center(
-              child: Text('Пользователь не найден'),
-            );
+            return const Center(child: Text('Пользователь не найден'));
           }
 
           return TabBarView(
@@ -116,10 +114,7 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
             itemCount: payments.length,
             itemBuilder: (context, index) {
               final payment = payments[index];
-              return PaymentCard(
-                payment: payment,
-                onTap: () => _showPaymentDetails(payment),
-              );
+              return PaymentCard(payment: payment, onTap: () => _showPaymentDetails(payment));
             },
           ),
         );
@@ -151,10 +146,7 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
             itemCount: payments.length,
             itemBuilder: (context, index) {
               final payment = payments[index];
-              return PaymentCard(
-                payment: payment,
-                onTap: () => _showPaymentDetails(payment),
-              );
+              return PaymentCard(payment: payment, onTap: () => _showPaymentDetails(payment));
             },
           ),
         );
@@ -186,10 +178,7 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
             itemCount: payments.length,
             itemBuilder: (context, index) {
               final payment = payments[index];
-              return PaymentCard(
-                payment: payment,
-                onTap: () => _showPaymentDetails(payment),
-              );
+              return PaymentCard(payment: payment, onTap: () => _showPaymentDetails(payment));
             },
           ),
         );
@@ -210,16 +199,11 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
         children: [
           Icon(icon, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+          Text(title, style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
             textAlign: TextAlign.center,
           ),
         ],
@@ -238,9 +222,7 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
           const SizedBox(height: 8),
           Text(
             error.toString(),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -268,10 +250,7 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
 class PaymentDetailsSheet extends StatelessWidget {
   final Payment payment;
 
-  const PaymentDetailsSheet({
-    super.key,
-    required this.payment,
-  });
+  const PaymentDetailsSheet({super.key, required this.payment});
 
   @override
   Widget build(BuildContext context) {
@@ -312,16 +291,13 @@ class PaymentDetailsSheet extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            payment.description,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
+                          Text(payment.description, style: Theme.of(context).textTheme.titleLarge),
                           Text(
                             payment.formattedAmount,
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  color: _getStatusColor(payment.status),
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              color: _getStatusColor(payment.status),
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -407,17 +383,11 @@ class PaymentDetailsSheet extends StatelessWidget {
             width: 120,
             child: Text(
               label,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
+            child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
           ),
         ],
       ),

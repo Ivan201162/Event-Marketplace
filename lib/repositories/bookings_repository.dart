@@ -12,9 +12,7 @@ class BookingsRepository {
   /// Получение заявок клиента
   Stream<List<Map<String, dynamic>>> getCustomerBookings(String customerId) {
     try {
-      debugPrint(
-        'BookingsRepository.getCustomerBookings: customerId=$customerId',
-      );
+      debugPrint('BookingsRepository.getCustomerBookings: customerId=$customerId');
 
       return _firestore
           .collection('bookings')
@@ -22,18 +20,15 @@ class BookingsRepository {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) {
-        debugPrint(
-          'BookingsRepository.getCustomerBookings: получено ${snapshot.docs.length} заявок',
-        );
+            debugPrint(
+              'BookingsRepository.getCustomerBookings: получено ${snapshot.docs.length} заявок',
+            );
 
-        return snapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>? ?? {};
-          return {
-            'id': doc.id,
-            ...data,
-          };
-        }).toList();
-      });
+            return snapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>? ?? {};
+              return {'id': doc.id, ...data};
+            }).toList();
+          });
     } catch (e) {
       debugPrint('BookingsRepository.getCustomerBookings: ошибка запроса: $e');
       return Stream.value([]);
@@ -41,13 +36,9 @@ class BookingsRepository {
   }
 
   /// Получение заявок специалиста
-  Stream<List<Map<String, dynamic>>> getSpecialistBookings(
-    String specialistId,
-  ) {
+  Stream<List<Map<String, dynamic>>> getSpecialistBookings(String specialistId) {
     try {
-      debugPrint(
-        'BookingsRepository.getSpecialistBookings: specialistId=$specialistId',
-      );
+      debugPrint('BookingsRepository.getSpecialistBookings: specialistId=$specialistId');
 
       return _firestore
           .collection('bookings')
@@ -55,22 +46,17 @@ class BookingsRepository {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) {
-        debugPrint(
-          'BookingsRepository.getSpecialistBookings: получено ${snapshot.docs.length} заявок',
-        );
+            debugPrint(
+              'BookingsRepository.getSpecialistBookings: получено ${snapshot.docs.length} заявок',
+            );
 
-        return snapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>? ?? {};
-          return {
-            'id': doc.id,
-            ...data,
-          };
-        }).toList();
-      });
+            return snapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>? ?? {};
+              return {'id': doc.id, ...data};
+            }).toList();
+          });
     } catch (e) {
-      debugPrint(
-        'BookingsRepository.getSpecialistBookings: ошибка запроса: $e',
-      );
+      debugPrint('BookingsRepository.getSpecialistBookings: ошибка запроса: $e');
       return Stream.value([]);
     }
   }
@@ -85,18 +71,15 @@ class BookingsRepository {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) {
-        debugPrint(
-          'BookingsRepository.getAllBookings: получено ${snapshot.docs.length} заявок',
-        );
+            debugPrint(
+              'BookingsRepository.getAllBookings: получено ${snapshot.docs.length} заявок',
+            );
 
-        return snapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>? ?? {};
-          return {
-            'id': doc.id,
-            ...data,
-          };
-        }).toList();
-      });
+            return snapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>? ?? {};
+              return {'id': doc.id, ...data};
+            }).toList();
+          });
     } catch (e) {
       debugPrint('BookingsRepository.getAllBookings: ошибка запроса: $e');
       return Stream.value([]);
@@ -111,13 +94,8 @@ class BookingsRepository {
       final doc = await _firestore.collection('bookings').doc(bookingId).get();
       if (doc.exists) {
         final data = doc.data() ?? {};
-        debugPrint(
-          'BookingsRepository.getById: заявка найдена, поля: ${data.keys.toList()}',
-        );
-        return {
-          'id': doc.id,
-          ...data,
-        };
+        debugPrint('BookingsRepository.getById: заявка найдена, поля: ${data.keys.toList()}');
+        return {'id': doc.id, ...data};
       }
       debugPrint('BookingsRepository.getById: заявка не найдена');
       return null;
@@ -135,9 +113,7 @@ class BookingsRepository {
       );
 
       final docRef = await _firestore.collection('bookings').add(bookingData);
-      debugPrint(
-        'BookingsRepository.create: заявка создана с ID: ${docRef.id}',
-      );
+      debugPrint('BookingsRepository.create: заявка создана с ID: ${docRef.id}');
       return docRef.id;
     } catch (e) {
       debugPrint('BookingsRepository.create: ошибка создания заявки: $e');
@@ -176,11 +152,7 @@ class BookingsRepository {
   }
 
   /// Обновление статуса заявки
-  Future<bool> updateStatus(
-    String bookingId,
-    String status, {
-    String? notes,
-  }) async {
+  Future<bool> updateStatus(String bookingId, String status, {String? notes}) async {
     try {
       debugPrint(
         'BookingsRepository.updateStatus: обновление статуса заявки $bookingId на $status',
@@ -196,14 +168,10 @@ class BookingsRepository {
       }
 
       await _firestore.collection('bookings').doc(bookingId).update(updates);
-      debugPrint(
-        'BookingsRepository.updateStatus: статус заявки обновлен успешно',
-      );
+      debugPrint('BookingsRepository.updateStatus: статус заявки обновлен успешно');
       return true;
     } catch (e) {
-      debugPrint(
-        'BookingsRepository.updateStatus: ошибка обновления статуса: $e',
-      );
+      debugPrint('BookingsRepository.updateStatus: ошибка обновления статуса: $e');
       return false;
     }
   }
@@ -219,18 +187,15 @@ class BookingsRepository {
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map((snapshot) {
-        debugPrint(
-          'BookingsRepository.getBookingsByStatus: получено ${snapshot.docs.length} заявок',
-        );
+            debugPrint(
+              'BookingsRepository.getBookingsByStatus: получено ${snapshot.docs.length} заявок',
+            );
 
-        return snapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>? ?? {};
-          return {
-            'id': doc.id,
-            ...data,
-          };
-        }).toList();
-      });
+            return snapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>? ?? {};
+              return {'id': doc.id, ...data};
+            }).toList();
+          });
     } catch (e) {
       debugPrint('BookingsRepository.getBookingsByStatus: ошибка запроса: $e');
       return Stream.value([]);
@@ -238,43 +203,31 @@ class BookingsRepository {
   }
 
   /// Получение заявок по дате события
-  Stream<List<Map<String, dynamic>>> getBookingsByEventDate(
-    DateTime eventDate,
-  ) {
+  Stream<List<Map<String, dynamic>>> getBookingsByEventDate(DateTime eventDate) {
     try {
-      debugPrint(
-        'BookingsRepository.getBookingsByEventDate: eventDate=$eventDate',
-      );
+      debugPrint('BookingsRepository.getBookingsByEventDate: eventDate=$eventDate');
 
       final startOfDay = DateTime(eventDate.year, eventDate.month, eventDate.day);
       final endOfDay = DateTime(eventDate.year, eventDate.month, eventDate.day, 23, 59, 59);
 
       return _firestore
           .collection('bookings')
-          .where(
-            'eventDate',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-          )
+          .where('eventDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
           .where('eventDate', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
           .orderBy('eventDate', descending: false)
           .snapshots()
           .map((snapshot) {
-        debugPrint(
-          'BookingsRepository.getBookingsByEventDate: получено ${snapshot.docs.length} заявок',
-        );
+            debugPrint(
+              'BookingsRepository.getBookingsByEventDate: получено ${snapshot.docs.length} заявок',
+            );
 
-        return snapshot.docs.map((doc) {
-          final data = doc.data() as Map<String, dynamic>? ?? {};
-          return {
-            'id': doc.id,
-            ...data,
-          };
-        }).toList();
-      });
+            return snapshot.docs.map((doc) {
+              final data = doc.data() as Map<String, dynamic>? ?? {};
+              return {'id': doc.id, ...data};
+            }).toList();
+          });
     } catch (e) {
-      debugPrint(
-        'BookingsRepository.getBookingsByEventDate: ошибка запроса: $e',
-      );
+      debugPrint('BookingsRepository.getBookingsByEventDate: ошибка запроса: $e');
       return Stream.value([]);
     }
   }

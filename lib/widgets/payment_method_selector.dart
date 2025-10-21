@@ -85,11 +85,7 @@ class PaymentMethodSelector extends StatelessWidget {
 
                       // Selection indicator
                       if (selectedMethod == method)
-                        Icon(
-                          Icons.check_circle,
-                          color: theme.colorScheme.primary,
-                          size: 24,
-                        )
+                        Icon(Icons.check_circle, color: theme.colorScheme.primary, size: 24)
                       else
                         Icon(
                           Icons.radio_button_unchecked,

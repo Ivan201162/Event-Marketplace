@@ -24,12 +24,12 @@ class SpecialistRecommendation {
 
   /// Получить объект Recommendation
   Recommendation get recommendation => Recommendation(
-        id: id,
-        type: RecommendationType.basedOnHistory,
-        score: score,
-        reason: reason,
-        createdAt: timestamp,
-      );
+    id: id,
+    type: RecommendationType.basedOnHistory,
+    score: score,
+    reason: reason,
+    createdAt: timestamp,
+  );
 
   SpecialistRecommendation copyWith({
     String? id,
@@ -38,15 +38,14 @@ class SpecialistRecommendation {
     double? score,
     DateTime? timestamp,
     Specialist? specialist,
-  }) =>
-      SpecialistRecommendation(
-        id: id ?? this.id,
-        specialistId: specialistId ?? this.specialistId,
-        reason: reason ?? this.reason,
-        score: score ?? this.score,
-        timestamp: timestamp ?? this.timestamp,
-        specialist: specialist ?? this.specialist,
-      );
+  }) => SpecialistRecommendation(
+    id: id ?? this.id,
+    specialistId: specialistId ?? this.specialistId,
+    reason: reason ?? this.reason,
+    score: score ?? this.score,
+    timestamp: timestamp ?? this.timestamp,
+    specialist: specialist ?? this.specialist,
+  );
 
   @override
   bool operator ==(Object other) {

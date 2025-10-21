@@ -83,9 +83,7 @@ class StoryService {
         if (!snapshot.exists) return;
 
         final story = Story.fromDocument(snapshot);
-        transaction.update(storyRef, {
-          'viewsCount': story.viewsCount + 1,
-        });
+        transaction.update(storyRef, {'viewsCount': story.viewsCount + 1});
       });
     } on Exception catch (e) {
       throw Exception('Ошибка отметки просмотра: $e');

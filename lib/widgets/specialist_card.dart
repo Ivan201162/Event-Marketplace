@@ -20,9 +20,7 @@ class SpecialistCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -51,34 +49,21 @@ class SpecialistCard extends StatelessWidget {
                       children: [
                         Text(
                           specialist.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           specialist.specialization,
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
-                          ),
+                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
                         ),
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 16,
-                              color: Colors.grey[600],
-                            ),
+                            Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
                             const SizedBox(width: 4),
                             Text(
                               specialist.city,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 14,
-                              ),
+                              style: TextStyle(color: Colors.grey[600], fontSize: 14),
                             ),
                           ],
                         ),
@@ -92,18 +77,11 @@ class SpecialistCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                            size: 16,
-                          ),
+                          const Icon(Icons.star, color: Colors.amber, size: 16),
                           const SizedBox(width: 4),
                           Text(
                             specialist.rating.toStringAsFixed(1),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                         ],
                       ),
@@ -126,10 +104,7 @@ class SpecialistCard extends StatelessWidget {
                 const SizedBox(height: 12),
                 Text(
                   specialist.description!,
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(color: Colors.grey[700], fontSize: 14),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -143,14 +118,13 @@ class SpecialistCard extends StatelessWidget {
                   runSpacing: 4,
                   children: specialist.services
                       .take(3)
-                      .map((service) => Chip(
-                            label: Text(
-                              service,
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            backgroundColor: Colors.blue.withValues(alpha: 0.1),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ))
+                      .map(
+                        (service) => Chip(
+                          label: Text(service, style: const TextStyle(fontSize: 12)),
+                          backgroundColor: Colors.blue.withValues(alpha: 0.1),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      )
                       .toList(),
                 ),
               ],
@@ -176,10 +150,8 @@ class SpecialistCard extends StatelessWidget {
                           child: CachedNetworkImage(
                             imageUrl: specialist.portfolio[index],
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              color: Colors.grey[200],
-                              child: const Icon(Icons.image),
-                            ),
+                            placeholder: (context, url) =>
+                                Container(color: Colors.grey[200], child: const Icon(Icons.image)),
                             errorWidget: (context, url, error) => Container(
                               color: Colors.grey[200],
                               child: const Icon(Icons.broken_image),
@@ -196,26 +168,16 @@ class SpecialistCard extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Icon(
-                    Icons.event,
-                    size: 16,
-                    color: Colors.grey[600],
-                  ),
+                  Icon(Icons.event, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text(
                     '${specialist.completedEvents} мероприятий',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                   const Spacer(),
                   if (specialist.isAvailable)
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -231,10 +193,7 @@ class SpecialistCard extends StatelessWidget {
                     )
                   else
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.red.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),

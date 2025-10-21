@@ -37,35 +37,36 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
   }
 
   @override
-  _i3.Future<List<_i4.Chat>> getUserChats(String userId, {int limit = 20}) => (super.noSuchMethod(
-        Invocation.method(
-          #getUserChats,
-          [userId],
-          {#limit: limit},
-        ),
-        returnValue: _i3.Future<List<_i4.Chat>>.value(<_i4.Chat>[]),
-      ) as _i3.Future<List<_i4.Chat>>);
-
-  @override
-  _i3.Future<_i4.Chat?> getChatById(String chatId) => (super.noSuchMethod(
-        Invocation.method(
-          #getChatById,
-          [chatId],
-        ),
-        returnValue: _i3.Future<_i4.Chat?>.value(null),
-      ) as _i3.Future<_i4.Chat?>);
-
-  @override
-  _i3.Future<List<_i4.Message>> getChatMessages(String chatId,
-          {int limit = 50, DocumentSnapshot? lastDocument}) =>
+  _i3.Future<List<_i4.Chat>> getUserChats(String userId, {int limit = 20}) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getChatMessages,
-          [chatId],
-          {#limit: limit, #lastDocument: lastDocument},
-        ),
-        returnValue: _i3.Future<List<_i4.Message>>.value(<_i4.Message>[]),
-      ) as _i3.Future<List<_i4.Message>>);
+            Invocation.method(#getUserChats, [userId], {#limit: limit}),
+            returnValue: _i3.Future<List<_i4.Chat>>.value(<_i4.Chat>[]),
+          )
+          as _i3.Future<List<_i4.Chat>>);
+
+  @override
+  _i3.Future<_i4.Chat?> getChatById(String chatId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getChatById, [chatId]),
+            returnValue: _i3.Future<_i4.Chat?>.value(null),
+          )
+          as _i3.Future<_i4.Chat?>);
+
+  @override
+  _i3.Future<List<_i4.Message>> getChatMessages(
+    String chatId, {
+    int limit = 50,
+    DocumentSnapshot? lastDocument,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #getChatMessages,
+              [chatId],
+              {#limit: limit, #lastDocument: lastDocument},
+            ),
+            returnValue: _i3.Future<List<_i4.Message>>.value(<_i4.Message>[]),
+          )
+          as _i3.Future<List<_i4.Message>>);
 
   @override
   _i3.Future<String> uploadFile({
@@ -76,32 +77,27 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
     required String? fileType,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #uploadFile,
-          [],
-          {
-            #chatId: chatId,
-            #senderId: senderId,
-            #fileData: fileData,
-            #fileName: fileName,
-            #fileType: fileType,
-          },
-        ),
-        returnValue: _i3.Future<String>.value(_i7.dummyValue<String>(
-          this,
-          Invocation.method(
-            #uploadFile,
-            [],
-            {
+            Invocation.method(#uploadFile, [], {
               #chatId: chatId,
               #senderId: senderId,
               #fileData: fileData,
               #fileName: fileName,
               #fileType: fileType,
-            },
-          ),
-        )),
-      ) as _i3.Future<String>);
+            }),
+            returnValue: _i3.Future<String>.value(
+              _i7.dummyValue<String>(
+                this,
+                Invocation.method(#uploadFile, [], {
+                  #chatId: chatId,
+                  #senderId: senderId,
+                  #fileData: fileData,
+                  #fileName: fileName,
+                  #fileType: fileType,
+                }),
+              ),
+            ),
+          )
+          as _i3.Future<String>);
 
   @override
   _i3.Future<void> sendMessageWithFile({
@@ -116,24 +112,21 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
     String? thumbnailUrl,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #sendMessageWithFile,
-          [],
-          {
-            #chatId: chatId,
-            #senderId: senderId,
-            #senderName: senderName,
-            #content: content,
-            #fileUrl: fileUrl,
-            #fileType: fileType,
-            #fileName: fileName,
-            #fileSize: fileSize,
-            #thumbnailUrl: thumbnailUrl,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#sendMessageWithFile, [], {
+              #chatId: chatId,
+              #senderId: senderId,
+              #senderName: senderName,
+              #content: content,
+              #fileUrl: fileUrl,
+              #fileType: fileType,
+              #fileName: fileName,
+              #fileSize: fileSize,
+              #thumbnailUrl: thumbnailUrl,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
   _i3.Future<void> sendMessageWithMedia({
@@ -144,89 +137,61 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
     required _i8.MediaUploadResult? mediaResult,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #sendMessageWithMedia,
-          [],
-          {
-            #chatId: chatId,
-            #senderId: senderId,
-            #senderName: senderName,
-            #content: content,
-            #mediaResult: mediaResult,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#sendMessageWithMedia, [], {
+              #chatId: chatId,
+              #senderId: senderId,
+              #senderName: senderName,
+              #content: content,
+              #mediaResult: mediaResult,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<String> createChat(Map<String, dynamic>? chatData) => (super.noSuchMethod(
-        Invocation.method(
-          #createChat,
-          [chatData],
-        ),
-        returnValue: _i3.Future<String>.value(_i7.dummyValue<String>(
-          this,
-          Invocation.method(
-            #createChat,
-            [chatData],
-          ),
-        )),
-      ) as _i3.Future<String>);
-
-  @override
-  _i3.Future<void> updateMessageStatus(
-    String? chatId,
-    String? messageId,
-    String? status,
-  ) =>
+  _i3.Future<String> createChat(Map<String, dynamic>? chatData) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateMessageStatus,
-          [
-            chatId,
-            messageId,
-            status,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#createChat, [chatData]),
+            returnValue: _i3.Future<String>.value(
+              _i7.dummyValue<String>(this, Invocation.method(#createChat, [chatData])),
+            ),
+          )
+          as _i3.Future<String>);
 
   @override
-  _i3.Future<void> markMessagesAsRead(
-    String? chatId,
-    String? userId,
-  ) =>
+  _i3.Future<void> updateMessageStatus(String? chatId, String? messageId, String? status) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #markMessagesAsRead,
-          [
-            chatId,
-            userId,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#updateMessageStatus, [chatId, messageId, status]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<bool> deleteMessage(String messageId) => (super.noSuchMethod(
-        Invocation.method(
-          #deleteMessage,
-          [messageId],
-        ),
-        returnValue: _i3.Future<bool>.value(true),
-      ) as _i3.Future<bool>);
+  _i3.Future<void> markMessagesAsRead(String? chatId, String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#markMessagesAsRead, [chatId, userId]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<int> getUnreadMessagesCount(String? userId) => (super.noSuchMethod(
-        Invocation.method(
-          #getUnreadMessagesCount,
-          [userId],
-        ),
-        returnValue: _i3.Future<int>.value(0),
-      ) as _i3.Future<int>);
+  _i3.Future<bool> deleteMessage(String messageId) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteMessage, [messageId]),
+            returnValue: _i3.Future<bool>.value(true),
+          )
+          as _i3.Future<bool>);
+
+  @override
+  _i3.Future<int> getUnreadMessagesCount(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getUnreadMessagesCount, [userId]),
+            returnValue: _i3.Future<int>.value(0),
+          )
+          as _i3.Future<int>);
 
   @override
   _i3.Future<void> sendMessageWithAttachment({
@@ -241,50 +206,38 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
     String? thumbnailUrl,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #sendMessageWithAttachment,
-          [],
-          {
-            #chatId: chatId,
-            #senderId: senderId,
-            #senderName: senderName,
-            #content: content,
-            #filePath: filePath,
-            #fileName: fileName,
-            #fileType: fileType,
-            #fileSize: fileSize,
-            #thumbnailUrl: thumbnailUrl,
-          },
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#sendMessageWithAttachment, [], {
+              #chatId: chatId,
+              #senderId: senderId,
+              #senderName: senderName,
+              #content: content,
+              #filePath: filePath,
+              #fileName: fileName,
+              #fileType: fileType,
+              #fileSize: fileSize,
+              #thumbnailUrl: thumbnailUrl,
+            }),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Future<void> clearChat(String? chatId) => (super.noSuchMethod(
-        Invocation.method(
-          #clearChat,
-          [chatId],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-
-  @override
-  _i3.Future<List<_i4.Chat>> getChatsByCategory(
-    String? userId,
-    String? category,
-  ) =>
+  _i3.Future<void> clearChat(String? chatId) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getChatsByCategory,
-          [
-            userId,
-            category,
-          ],
-        ),
-        returnValue: _i3.Future<List<_i4.Chat>>.value(<_i4.Chat>[]),
-      ) as _i3.Future<List<_i4.Chat>>);
+            Invocation.method(#clearChat, [chatId]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
+
+  @override
+  _i3.Future<List<_i4.Chat>> getChatsByCategory(String? userId, String? category) =>
+      (super.noSuchMethod(
+            Invocation.method(#getChatsByCategory, [userId, category]),
+            returnValue: _i3.Future<List<_i4.Chat>>.value(<_i4.Chat>[]),
+          )
+          as _i3.Future<List<_i4.Chat>>);
 
   @override
   _i3.Future<String> createChatWithCategory({
@@ -298,26 +251,7 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
     String? createdBy,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #createChatWithCategory,
-          [],
-          {
-            #name: name,
-            #participants: participants,
-            #participantNames: participantNames,
-            #participantAvatars: participantAvatars,
-            #category: category,
-            #description: description,
-            #avatar: avatar,
-            #createdBy: createdBy,
-          },
-        ),
-        returnValue: _i3.Future<String>.value(_i7.dummyValue<String>(
-          this,
-          Invocation.method(
-            #createChatWithCategory,
-            [],
-            {
+            Invocation.method(#createChatWithCategory, [], {
               #name: name,
               #participants: participants,
               #participantNames: participantNames,
@@ -326,36 +260,39 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
               #description: description,
               #avatar: avatar,
               #createdBy: createdBy,
-            },
-          ),
-        )),
-      ) as _i3.Future<String>);
+            }),
+            returnValue: _i3.Future<String>.value(
+              _i7.dummyValue<String>(
+                this,
+                Invocation.method(#createChatWithCategory, [], {
+                  #name: name,
+                  #participants: participants,
+                  #participantNames: participantNames,
+                  #participantAvatars: participantAvatars,
+                  #category: category,
+                  #description: description,
+                  #avatar: avatar,
+                  #createdBy: createdBy,
+                }),
+              ),
+            ),
+          )
+          as _i3.Future<String>);
 
   @override
-  _i3.Future<void> markMessageAsReadByUser(
-    String? chatId,
-    String? messageId,
-    String? userId,
-  ) =>
+  _i3.Future<void> markMessageAsReadByUser(String? chatId, String? messageId, String? userId) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #markMessageAsReadByUser,
-          [
-            chatId,
-            messageId,
-            userId,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+            Invocation.method(#markMessageAsReadByUser, [chatId, messageId, userId]),
+            returnValue: _i3.Future<void>.value(),
+            returnValueForMissingStub: _i3.Future<void>.value(),
+          )
+          as _i3.Future<void>);
 
   @override
-  _i3.Stream<int> getUnreadMessagesCountStream(String? userId) => (super.noSuchMethod(
-        Invocation.method(
-          #getUnreadMessagesCountStream,
-          [userId],
-        ),
-        returnValue: _i3.Stream<int>.empty(),
-      ) as _i3.Stream<int>);
+  _i3.Stream<int> getUnreadMessagesCountStream(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getUnreadMessagesCountStream, [userId]),
+            returnValue: _i3.Stream<int>.empty(),
+          )
+          as _i3.Stream<int>);
 }

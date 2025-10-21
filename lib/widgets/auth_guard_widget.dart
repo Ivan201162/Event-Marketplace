@@ -52,156 +52,140 @@ class AuthGuard extends ConsumerWidget {
 
   /// Виджет загрузки
   Widget _buildLoadingWidget(BuildContext context) => const Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text('Проверка авторизации...'),
-            ],
-          ),
-        ),
-      );
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          Text('Проверка авторизации...'),
+        ],
+      ),
+    ),
+  );
 
   /// Виджет для неавторизованных пользователей
   Widget _buildUnauthenticatedWidget(BuildContext context) => Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.lock_outline,
-                  size: 64,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Требуется авторизация',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Для доступа к этому разделу необходимо войти в систему',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // TODO(developer): Навигация к экрану авторизации
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Переход к экрану авторизации'),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.login),
-                  label: const Text('Войти'),
-                ),
-              ],
+    body: Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.lock_outline, size: 64, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(height: 24),
+            Text(
+              'Требуется авторизация',
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+              textAlign: TextAlign.center,
             ),
-          ),
+            const SizedBox(height: 16),
+            Text(
+              'Для доступа к этому разделу необходимо войти в систему',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () {
+                // TODO(developer): Навигация к экрану авторизации
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Переход к экрану авторизации')));
+              },
+              icon: const Icon(Icons.login),
+              label: const Text('Войти'),
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   /// Виджет для пользователей без нужных прав
   Widget _buildUnauthorizedWidget(BuildContext context, UserRole userRole) => Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.block,
-                  size: 64,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Недостаточно прав',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Ваша роль: ${userRole.roleDisplayName}\n\nДля доступа к этому разделу требуется другая роль',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text('Назад'),
-                ),
-              ],
+    body: Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.block, size: 64, color: Theme.of(context).colorScheme.error),
+            const SizedBox(height: 24),
+            Text(
+              'Недостаточно прав',
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.error),
+              textAlign: TextAlign.center,
             ),
-          ),
+            const SizedBox(height: 16),
+            Text(
+              'Ваша роль: ${userRole.roleDisplayName}\n\nДля доступа к этому разделу требуется другая роль',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Назад'),
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   /// Виджет ошибки
   Widget _buildErrorWidget(BuildContext context, Object error) => Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Ошибка авторизации',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Произошла ошибка при проверке авторизации: ${error.toString()}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 32),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // TODO(developer): Попытка повторной авторизации
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Попытка повторной авторизации'),
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Повторить'),
-                ),
-              ],
+    body: Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
+            const SizedBox(height: 24),
+            Text(
+              'Ошибка авторизации',
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.error),
+              textAlign: TextAlign.center,
             ),
-          ),
+            const SizedBox(height: 16),
+            Text(
+              'Произошла ошибка при проверке авторизации: ${error.toString()}',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () {
+                // TODO(developer): Попытка повторной авторизации
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Попытка повторной авторизации')));
+              },
+              icon: const Icon(Icons.refresh),
+              label: const Text('Повторить'),
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }
 
 /// Виджет для условного отображения контента в зависимости от роли
@@ -253,11 +237,7 @@ class RoleBasedWidget extends ConsumerWidget {
 
 /// Виджет для отображения информации о пользователе с fallback
 class UserInfoWidget extends ConsumerWidget {
-  const UserInfoWidget({
-    super.key,
-    required this.builder,
-    this.fallbackWidget,
-  });
+  const UserInfoWidget({super.key, required this.builder, this.fallbackWidget});
   final Widget Function(AppUser user) builder;
   final Widget? fallbackWidget;
 

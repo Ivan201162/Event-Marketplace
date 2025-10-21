@@ -53,10 +53,7 @@ class SpecialistProfileService {
 
       return query.docs.map((doc) {
         final data = doc.data();
-        return PortfolioItem.fromMap({
-          'id': doc.id,
-          ...data,
-        });
+        return PortfolioItem.fromMap({'id': doc.id, ...data});
       }).toList();
     } catch (e) {
       debugPrint('Ошибка получения портфолио: $e');
@@ -79,11 +76,7 @@ class SpecialistProfileService {
   }
 
   /// Обновить элемент портфолио
-  Future<void> updatePortfolioItem(
-    String specialistId,
-    String itemId,
-    PortfolioItem item,
-  ) async {
+  Future<void> updatePortfolioItem(String specialistId, String itemId, PortfolioItem item) async {
     try {
       await _firestore
           .collection('specialists')
@@ -123,10 +116,7 @@ class SpecialistProfileService {
 
       return query.docs.map((doc) {
         final data = doc.data();
-        return SocialLink.fromMap({
-          'id': doc.id,
-          ...data,
-        });
+        return SocialLink.fromMap({'id': doc.id, ...data});
       }).toList();
     } catch (e) {
       debugPrint('Ошибка получения социальных ссылок: $e');
@@ -149,11 +139,7 @@ class SpecialistProfileService {
   }
 
   /// Обновить социальную ссылку
-  Future<void> updateSocialLink(
-    String specialistId,
-    String linkId,
-    SocialLink link,
-  ) async {
+  Future<void> updateSocialLink(String specialistId, String linkId, SocialLink link) async {
     try {
       await _firestore
           .collection('specialists')
@@ -205,14 +191,7 @@ class SpecialistProfileService {
           .orderBy('pinnedAt', descending: true)
           .get();
 
-      return query.docs
-          .map(
-            (doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            },
-          )
-          .toList();
+      return query.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
     } catch (e) {
       debugPrint('Ошибка получения закреплённых постов: $e');
       return [];
@@ -266,14 +245,7 @@ class SpecialistProfileService {
           .where('date', isLessThanOrEqualTo: endDate)
           .get();
 
-      return query.docs
-          .map(
-            (doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            },
-          )
-          .toList();
+      return query.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
     } catch (e) {
       debugPrint('Ошибка получения календаря занятости: $e');
       return [];
@@ -294,11 +266,11 @@ class SpecialistProfileService {
           .collection('availability')
           .doc(date.toIso8601String().split('T')[0])
           .set({
-        'date': date,
-        'isAvailable': isAvailable,
-        'timeSlots': timeSlots,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+            'date': date,
+            'isAvailable': isAvailable,
+            'timeSlots': timeSlots,
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
     } catch (e) {
       debugPrint('Ошибка обновления доступности: $e');
       rethrow;
@@ -307,105 +279,105 @@ class SpecialistProfileService {
 
   /// Тестовые данные для статистики
   ProfileStatistics _getDefaultStatistics() => const ProfileStatistics(
-        views: 0,
-        likes: 0,
-        rating: 0,
-        reviewsCount: 0,
-        averagePrice: 0,
-        completedOrders: 0,
-        responseTime: 0,
-        onlineStatus: false,
-        portfolioItems: 0,
-        socialLinks: 0,
-        pinnedPosts: 0,
-      );
+    views: 0,
+    likes: 0,
+    rating: 0,
+    reviewsCount: 0,
+    averagePrice: 0,
+    completedOrders: 0,
+    responseTime: 0,
+    onlineStatus: false,
+    portfolioItems: 0,
+    socialLinks: 0,
+    pinnedPosts: 0,
+  );
 
   /// Тестовые данные для портфолио
   List<PortfolioItem> _getTestPortfolio() => [
-        PortfolioItem(
-          id: '1',
-          specialistId: 'test',
-          title: 'Свадебная фотосессия в парке',
-          description: 'Романтическая свадебная съёмка в парке с красивыми кадрами',
-          mediaUrl: 'https://picsum.photos/400/300?random=1',
-          mediaType: PortfolioMediaType.image,
-          category: 'Свадебная съёмка',
-          createdAt: DateTime.now().subtract(const Duration(days: 1)),
-          views: 45,
-          likes: 12,
-          tags: ['свадьба', 'фото', 'парк'],
-          location: 'Москва',
-          eventDate: DateTime.now().subtract(const Duration(days: 1)),
-          clientName: 'Анна и Дмитрий',
-        ),
-        PortfolioItem(
-          id: '2',
-          specialistId: 'test',
-          title: 'Портретная съёмка в студии',
-          description: 'Профессиональная портретная съёмка в студии',
-          mediaUrl: 'https://picsum.photos/400/300?random=2',
-          mediaType: PortfolioMediaType.image,
-          category: 'Портретная съёмка',
-          createdAt: DateTime.now().subtract(const Duration(days: 3)),
-          views: 32,
-          likes: 8,
-          tags: ['портрет', 'студия', 'профессиональная'],
-          location: 'Студия в Москве',
-          eventDate: DateTime.now().subtract(const Duration(days: 3)),
-          clientName: 'Елена К.',
-        ),
-        PortfolioItem(
-          id: '3',
-          specialistId: 'test',
-          title: 'Корпоративное мероприятие',
-          description: 'Видеосъёмка корпоративного мероприятия',
-          mediaUrl: 'https://picsum.photos/400/300?random=3',
-          mediaType: PortfolioMediaType.video,
-          category: 'Корпоративное мероприятие',
-          createdAt: DateTime.now().subtract(const Duration(days: 7)),
-          views: 78,
-          likes: 15,
-          tags: ['корпоратив', 'видео', 'мероприятие'],
-          location: 'Офис компании',
-          eventDate: DateTime.now().subtract(const Duration(days: 7)),
-          clientName: 'ООО "Технологии"',
-        ),
-      ];
+    PortfolioItem(
+      id: '1',
+      specialistId: 'test',
+      title: 'Свадебная фотосессия в парке',
+      description: 'Романтическая свадебная съёмка в парке с красивыми кадрами',
+      mediaUrl: 'https://picsum.photos/400/300?random=1',
+      mediaType: PortfolioMediaType.image,
+      category: 'Свадебная съёмка',
+      createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      views: 45,
+      likes: 12,
+      tags: ['свадьба', 'фото', 'парк'],
+      location: 'Москва',
+      eventDate: DateTime.now().subtract(const Duration(days: 1)),
+      clientName: 'Анна и Дмитрий',
+    ),
+    PortfolioItem(
+      id: '2',
+      specialistId: 'test',
+      title: 'Портретная съёмка в студии',
+      description: 'Профессиональная портретная съёмка в студии',
+      mediaUrl: 'https://picsum.photos/400/300?random=2',
+      mediaType: PortfolioMediaType.image,
+      category: 'Портретная съёмка',
+      createdAt: DateTime.now().subtract(const Duration(days: 3)),
+      views: 32,
+      likes: 8,
+      tags: ['портрет', 'студия', 'профессиональная'],
+      location: 'Студия в Москве',
+      eventDate: DateTime.now().subtract(const Duration(days: 3)),
+      clientName: 'Елена К.',
+    ),
+    PortfolioItem(
+      id: '3',
+      specialistId: 'test',
+      title: 'Корпоративное мероприятие',
+      description: 'Видеосъёмка корпоративного мероприятия',
+      mediaUrl: 'https://picsum.photos/400/300?random=3',
+      mediaType: PortfolioMediaType.video,
+      category: 'Корпоративное мероприятие',
+      createdAt: DateTime.now().subtract(const Duration(days: 7)),
+      views: 78,
+      likes: 15,
+      tags: ['корпоратив', 'видео', 'мероприятие'],
+      location: 'Офис компании',
+      eventDate: DateTime.now().subtract(const Duration(days: 7)),
+      clientName: 'ООО "Технологии"',
+    ),
+  ];
 
   /// Тестовые данные для социальных ссылок
   List<SocialLink> _getTestSocialLinks() => [
-        SocialLink(
-          id: '1',
-          specialistId: 'test',
-          platform: SocialPlatform.instagram,
-          url: 'https://instagram.com/photographer',
-          username: 'photographer',
-          isVerified: true,
-          isPublic: true,
-          followersCount: 1250,
-          createdAt: DateTime.now().subtract(const Duration(days: 30)),
-        ),
-        SocialLink(
-          id: '2',
-          specialistId: 'test',
-          platform: SocialPlatform.vk,
-          url: 'https://vk.com/photographer',
-          username: 'photographer',
-          isVerified: false,
-          isPublic: true,
-          followersCount: 890,
-          createdAt: DateTime.now().subtract(const Duration(days: 60)),
-        ),
-        SocialLink(
-          id: '3',
-          specialistId: 'test',
-          platform: SocialPlatform.telegram,
-          url: 'https://t.me/photographer',
-          username: 'photographer',
-          isVerified: true,
-          isPublic: true,
-          followersCount: 450,
-          createdAt: DateTime.now().subtract(const Duration(days: 15)),
-        ),
-      ];
+    SocialLink(
+      id: '1',
+      specialistId: 'test',
+      platform: SocialPlatform.instagram,
+      url: 'https://instagram.com/photographer',
+      username: 'photographer',
+      isVerified: true,
+      isPublic: true,
+      followersCount: 1250,
+      createdAt: DateTime.now().subtract(const Duration(days: 30)),
+    ),
+    SocialLink(
+      id: '2',
+      specialistId: 'test',
+      platform: SocialPlatform.vk,
+      url: 'https://vk.com/photographer',
+      username: 'photographer',
+      isVerified: false,
+      isPublic: true,
+      followersCount: 890,
+      createdAt: DateTime.now().subtract(const Duration(days: 60)),
+    ),
+    SocialLink(
+      id: '3',
+      specialistId: 'test',
+      platform: SocialPlatform.telegram,
+      url: 'https://t.me/photographer',
+      username: 'photographer',
+      isVerified: true,
+      isPublic: true,
+      followersCount: 450,
+      createdAt: DateTime.now().subtract(const Duration(days: 15)),
+    ),
+  ];
 }

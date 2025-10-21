@@ -31,16 +31,15 @@ class HostFilters {
     String? city,
     DateTime? availableDate,
     String? searchQuery,
-  }) =>
-      HostFilters(
-        minPrice: minPrice ?? this.minPrice,
-        maxPrice: maxPrice ?? this.maxPrice,
-        minRating: minRating ?? this.minRating,
-        maxRating: maxRating ?? this.maxRating,
-        city: city ?? this.city,
-        availableDate: availableDate ?? this.availableDate,
-        searchQuery: searchQuery ?? this.searchQuery,
-      );
+  }) => HostFilters(
+    minPrice: minPrice ?? this.minPrice,
+    maxPrice: maxPrice ?? this.maxPrice,
+    minRating: minRating ?? this.minRating,
+    maxRating: maxRating ?? this.maxRating,
+    city: city ?? this.city,
+    availableDate: availableDate ?? this.availableDate,
+    searchQuery: searchQuery ?? this.searchQuery,
+  );
 
   bool get hasActiveFilters =>
       minPrice != null ||
@@ -65,15 +64,8 @@ class HostFilters {
   }
 
   @override
-  int get hashCode => Object.hash(
-        minPrice,
-        maxPrice,
-        minRating,
-        maxRating,
-        city,
-        availableDate,
-        searchQuery,
-      );
+  int get hashCode =>
+      Object.hash(minPrice, maxPrice, minRating, maxRating, city, availableDate, searchQuery);
 }
 
 /// Провайдер фильтров для ведущих
@@ -87,13 +79,14 @@ final hostsProvider = FutureProvider.family<List<Specialist>, HostFilters>(
 /// Провайдер для пагинированной загрузки ведущих (мигрирован с StateNotifierProvider)
 final paginatedHostsProvider =
     NotifierProvider<PaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
-  () => PaginatedHostsNotifier(),
-);
+      () => PaginatedHostsNotifier(),
+    );
 
 /// Провайдер для получения mock-данных ведущих (для тестирования) (мигрирован с StateNotifierProvider)
 final mockPaginatedHostsProvider =
     NotifierProvider<MockPaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
-        () => MockPaginatedHostsNotifier());
+      () => MockPaginatedHostsNotifier(),
+    );
 
 /// Провайдер для получения уникальных городов ведущих
 final hostCitiesProvider = FutureProvider<List<String>>((ref) async {
@@ -121,10 +114,7 @@ final hostPriceRangeProvider = FutureProvider<Map<String, double>>((ref) async {
     }
   }
 
-  return {
-    'min': minPrice == double.infinity ? 0 : minPrice,
-    'max': maxPrice,
-  };
+  return {'min': minPrice == double.infinity ? 0 : minPrice, 'max': maxPrice};
 });
 
 /// Загрузка ведущих с применением фильтров
@@ -245,10 +235,7 @@ class PaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
       }
 
       if (_currentFilters.minRating != null) {
-        query = query.where(
-          'rating',
-          isGreaterThanOrEqualTo: _currentFilters.minRating,
-        );
+        query = query.where('rating', isGreaterThanOrEqualTo: _currentFilters.minRating);
       }
 
       if (_lastDocument != null) {
@@ -303,13 +290,7 @@ final mockHostsProvider = Provider<List<Specialist>>((ref) => _generateMockHosts
 
 /// Генерация mock-данных для ведущих
 List<Specialist> _generateMockHosts() {
-  final cities = [
-    'Москва',
-    'Санкт-Петербург',
-    'Новосибирск',
-    'Екатеринбург',
-    'Казань',
-  ];
+  final cities = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань'];
   final names = [
     ('Алексей', 'Смирнов'),
     ('Анна', 'Петрова'),
@@ -344,13 +325,11 @@ List<Specialist> _generateMockHosts() {
       city: city,
       category: 'Ведущие',
       subcategories: const ['Свадьбы', 'Корпоративы', 'Дни рождения'],
-      priceRange: PriceRange(
-        minPrice: minPrice.toDouble(),
-        maxPrice: maxPrice.toDouble(),
-      ),
+      priceRange: PriceRange(minPrice: minPrice.toDouble(), maxPrice: maxPrice.toDouble()),
       rating: rating,
       totalReviews: 10 + (index % 50),
-      description: 'Профессиональный ведущий с ${5 + (index % 10)}-летним опытом работы. '
+      description:
+          'Профессиональный ведущий с ${5 + (index % 10)}-летним опытом работы. '
           'Специализируюсь на ${index % 2 == 0 ? 'свадебных церемониях' : 'корпоративных мероприятиях'}. '
           'Создаю незабываемую атмосферу для вашего праздника.',
       photoUrl:
@@ -392,8 +371,9 @@ class MockPaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> 
       }
 
       // Применяем фильтры
-      final filteredHosts =
-          _allHosts.where((host) => _matchesFilters(host, _currentFilters)).toList();
+      final filteredHosts = _allHosts
+          .where((host) => _matchesFilters(host, _currentFilters))
+          .toList();
 
       // Пагинация
       final startIndex = _currentPage * _pageSize;

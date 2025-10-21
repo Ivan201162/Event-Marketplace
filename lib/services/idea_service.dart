@@ -13,8 +13,10 @@ class IdeaService {
   /// Get all ideas with pagination
   Future<List<Idea>> getIdeas({int limit = 20, DocumentSnapshot? lastDocument}) async {
     try {
-      Query query =
-          _firestore.collection(_collection).orderBy('createdAt', descending: true).limit(limit);
+      Query query = _firestore
+          .collection(_collection)
+          .orderBy('createdAt', descending: true)
+          .limit(limit);
 
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
@@ -377,10 +379,7 @@ class IdeaService {
       final doc = await _firestore.collection(_collection).doc(ideaId).get();
       if (doc.exists) {
         final data = doc.data()!;
-        return {
-          'likes': data['likesCount'] ?? 0,
-          'views': data['viewsCount'] ?? 0,
-        };
+        return {'likes': data['likesCount'] ?? 0, 'views': data['viewsCount'] ?? 0};
       }
       return {'likes': 0, 'views': 0};
     } catch (e) {

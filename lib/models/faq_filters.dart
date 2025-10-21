@@ -82,15 +82,7 @@ class FAQFilters extends Equatable {
   bool get isNotEmpty => !isEmpty;
 
   @override
-  List<Object?> get props => [
-        category,
-        searchQuery,
-        isPublished,
-        dateFrom,
-        dateTo,
-        tags,
-        language,
-      ];
+  List<Object?> get props => [category, searchQuery, isPublished, dateFrom, dateTo, tags, language];
 
   @override
   String toString() {

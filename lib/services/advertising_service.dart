@@ -77,9 +77,7 @@ class AdvertisingService {
       final advertisements = <Advertisement>[];
 
       for (final doc in snapshot.docs) {
-        final advertisement = Advertisement.fromMap(
-          doc.data()! as Map<String, dynamic>,
-        );
+        final advertisement = Advertisement.fromMap(doc.data()! as Map<String, dynamic>);
         advertisements.add(advertisement);
       }
 
@@ -111,9 +109,7 @@ class AdvertisingService {
       final availableAds = <Advertisement>[];
 
       for (final doc in snapshot.docs) {
-        final advertisement = Advertisement.fromMap(
-          doc.data()! as Map<String, dynamic>,
-        );
+        final advertisement = Advertisement.fromMap(doc.data()! as Map<String, dynamic>);
 
         // Проверяем, подходит ли реклама для контекста
         if (_isAdSuitableForContext(advertisement, context)) {
@@ -148,9 +144,7 @@ class AdvertisingService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
+      final updates = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
 
       if (title != null) updates['title'] = title;
       if (description != null) updates['description'] = description;

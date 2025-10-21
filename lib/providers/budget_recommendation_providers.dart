@@ -10,8 +10,8 @@ final budgetRecommendationServiceProvider = Provider<BudgetRecommendationService
 /// Провайдер состояния рекомендаций по бюджету (мигрирован с StateNotifierProvider)
 final budgetRecommendationsProvider =
     NotifierProvider<BudgetRecommendationsNotifier, BudgetRecommendationsState>(() {
-  return BudgetRecommendationsNotifier();
-});
+      return BudgetRecommendationsNotifier();
+    });
 
 /// Состояние рекомендаций по бюджету
 class BudgetRecommendationsState {
@@ -32,13 +32,12 @@ class BudgetRecommendationsState {
     bool? isLoading,
     String? error,
     DateTime? lastUpdated,
-  }) =>
-      BudgetRecommendationsState(
-        recommendations: recommendations ?? this.recommendations,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-        lastUpdated: lastUpdated ?? this.lastUpdated,
-      );
+  }) => BudgetRecommendationsState(
+    recommendations: recommendations ?? this.recommendations,
+    isLoading: isLoading ?? this.isLoading,
+    error: error ?? this.error,
+    lastUpdated: lastUpdated ?? this.lastUpdated,
+  );
 }
 
 /// Notifier для управления рекомендациями по бюджету (мигрирован с StateNotifier)
@@ -57,10 +56,7 @@ class BudgetRecommendationsNotifier extends Notifier<BudgetRecommendationsState>
     required String userId,
   }) async {
     if (selectedSpecialistIds.isEmpty) {
-      state = state.copyWith(
-        recommendations: [],
-        isLoading: false,
-      );
+      state = state.copyWith(recommendations: [], isLoading: false);
       return;
     }
 
@@ -79,10 +75,7 @@ class BudgetRecommendationsNotifier extends Notifier<BudgetRecommendationsState>
         lastUpdated: DateTime.now(),
       );
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -142,28 +135,28 @@ class BudgetRecommendationsNotifier extends Notifier<BudgetRecommendationsState>
 
   /// Очистить рекомендации
   void clearRecommendations() {
-    state = state.copyWith(
-      recommendations: [],
-    );
+    state = state.copyWith(recommendations: []);
   }
 }
 
 /// Провайдер для получения рекомендаций по бюджету
 final budgetRecommendationsForParamsProvider =
-    FutureProvider.family<List<BudgetRecommendation>, BudgetRecommendationsParams>(
-        (ref, params) async {
-  final service = ref.watch(budgetRecommendationServiceProvider);
+    FutureProvider.family<List<BudgetRecommendation>, BudgetRecommendationsParams>((
+      ref,
+      params,
+    ) async {
+      final service = ref.watch(budgetRecommendationServiceProvider);
 
-  if (params.selectedSpecialistIds.isEmpty) {
-    return [];
-  }
+      if (params.selectedSpecialistIds.isEmpty) {
+        return [];
+      }
 
-  return service.getBudgetRecommendations(
-    currentBudget: params.currentBudget,
-    selectedSpecialistIds: params.selectedSpecialistIds,
-    userId: params.userId,
-  );
-});
+      return service.getBudgetRecommendations(
+        currentBudget: params.currentBudget,
+        selectedSpecialistIds: params.selectedSpecialistIds,
+        userId: params.userId,
+      );
+    });
 
 /// Параметры для получения рекомендаций по бюджету
 class BudgetRecommendationsParams {
@@ -191,15 +184,19 @@ class BudgetRecommendationsParams {
 }
 
 /// Провайдер для получения минимальной цены категории
-final minimumPriceForCategoryProvider =
-    FutureProvider.family<double, SpecialistCategory>((ref, category) async {
+final minimumPriceForCategoryProvider = FutureProvider.family<double, SpecialistCategory>((
+  ref,
+  category,
+) async {
   final service = ref.watch(budgetRecommendationServiceProvider);
   return service.getMinimumPriceForCategory(category);
 });
 
 /// Провайдер для получения средней цены категории
-final averagePriceForCategoryProvider =
-    FutureProvider.family<double, SpecialistCategory>((ref, category) async {
+final averagePriceForCategoryProvider = FutureProvider.family<double, SpecialistCategory>((
+  ref,
+  category,
+) async {
   final service = ref.watch(budgetRecommendationServiceProvider);
   return service.getAveragePriceForCategory(category);
 });

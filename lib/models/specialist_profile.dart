@@ -31,14 +31,15 @@ class PortfolioItem {
   });
 
   factory PortfolioItem.fromMap(Map<String, dynamic> data) => PortfolioItem(
-        id: data['id'] as String? ?? '',
-        type: data['type'] as String? ?? 'photo',
-        url: data['url'] as String? ?? '',
-        title: data['title'],
-        description: data['description'],
-        createdAt:
-            data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-      );
+    id: data['id'] as String? ?? '',
+    type: data['type'] as String? ?? 'photo',
+    url: data['url'] as String? ?? '',
+    title: data['title'],
+    description: data['description'],
+    createdAt: data['createdAt'] != null
+        ? (data['createdAt'] as Timestamp).toDate()
+        : DateTime.now(),
+  );
   final String id;
   final String type; // 'photo', 'video', 'document'
   final String url;
@@ -47,13 +48,13 @@ class PortfolioItem {
   final DateTime createdAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'type': type,
-        'url': url,
-        'title': title,
-        'description': description,
-        'createdAt': Timestamp.fromDate(createdAt),
-      };
+    'id': id,
+    'type': type,
+    'url': url,
+    'title': title,
+    'description': description,
+    'createdAt': Timestamp.fromDate(createdAt),
+  };
 }
 
 /// Профиль специалиста
@@ -118,7 +119,8 @@ class SpecialistProfile {
       name: data['name'],
       photoURL: data['photoURL'],
       bio: data['bio'],
-      categories: (data['categories'] as List<dynamic>?)
+      categories:
+          (data['categories'] as List<dynamic>?)
               ?.map((e) => _parseCategory(e.toString()))
               .where((e) => e != null)
               .cast<SpecialistCategory>()
@@ -129,7 +131,8 @@ class SpecialistProfile {
       phoneNumber: data['phoneNumber'],
       location: data['location'],
       socialLinks: Map<String, String>.from(data['socialLinks'] ?? {}),
-      portfolio: (data['portfolio'] as List<dynamic>?)
+      portfolio:
+          (data['portfolio'] as List<dynamic>?)
               ?.map((e) => PortfolioItem.fromMap(Map<String, dynamic>.from(e)))
               .toList() ??
           [],
@@ -169,10 +172,12 @@ class SpecialistProfile {
       settings: Map<String, dynamic>.from(data['settings'] ?? {}),
       notifications: Map<String, dynamic>.from(data['notifications'] ?? {}),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      createdAt:
-          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-      updatedAt:
-          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 
@@ -236,55 +241,55 @@ class SpecialistProfile {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'photoURL': photoURL,
-        'bio': bio,
-        'categories': categories.map((e) => e.name).toList(),
-        'experienceYears': experienceYears,
-        'hourlyRate': hourlyRate,
-        'phoneNumber': phoneNumber,
-        'location': location,
-        'socialLinks': socialLinks,
-        'portfolio': portfolio.map((e) => e.toMap()).toList(),
-        'services': services,
-        'workingHours': workingHours,
-        'preferences': preferences,
-        'rating': rating,
-        'reviewCount': reviewCount,
-        'isVerified': isVerified,
-        'isAvailable': isAvailable,
-        'availability': availability,
-        'languages': languages,
-        'equipment': equipment,
-        'insurance': insurance,
-        'licenses': licenses,
-        'certifications': certifications,
-        'awards': awards,
-        'testimonials': testimonials,
-        'email': email,
-        'website': website,
-        'instagram': instagram,
-        'vk': vk,
-        'telegram': telegram,
-        'whatsapp': whatsapp,
-        'skype': skype,
-        'zoom': zoom,
-        'portfolioVideos': portfolioVideos,
-        'gallery': gallery,
-        'reviews': reviews,
-        'bookings': bookings,
-        'earnings': earnings,
-        'performance': performance,
-        'verification': verification,
-        'badges': badges,
-        'achievements': achievements,
-        'analytics': analytics,
-        'settings': settings,
-        'notifications': notifications,
-        'metadata': metadata,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'name': name,
+    'photoURL': photoURL,
+    'bio': bio,
+    'categories': categories.map((e) => e.name).toList(),
+    'experienceYears': experienceYears,
+    'hourlyRate': hourlyRate,
+    'phoneNumber': phoneNumber,
+    'location': location,
+    'socialLinks': socialLinks,
+    'portfolio': portfolio.map((e) => e.toMap()).toList(),
+    'services': services,
+    'workingHours': workingHours,
+    'preferences': preferences,
+    'rating': rating,
+    'reviewCount': reviewCount,
+    'isVerified': isVerified,
+    'isAvailable': isAvailable,
+    'availability': availability,
+    'languages': languages,
+    'equipment': equipment,
+    'insurance': insurance,
+    'licenses': licenses,
+    'certifications': certifications,
+    'awards': awards,
+    'testimonials': testimonials,
+    'email': email,
+    'website': website,
+    'instagram': instagram,
+    'vk': vk,
+    'telegram': telegram,
+    'whatsapp': whatsapp,
+    'skype': skype,
+    'zoom': zoom,
+    'portfolioVideos': portfolioVideos,
+    'gallery': gallery,
+    'reviews': reviews,
+    'bookings': bookings,
+    'earnings': earnings,
+    'performance': performance,
+    'verification': verification,
+    'badges': badges,
+    'achievements': achievements,
+    'analytics': analytics,
+    'settings': settings,
+    'notifications': notifications,
+    'metadata': metadata,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   /// Копировать с изменениями
   SpecialistProfile copyWith({
@@ -337,94 +342,93 @@ class SpecialistProfile {
     Map<String, dynamic>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      SpecialistProfile(
-        userId: userId ?? this.userId,
-        name: name ?? this.name,
-        photoURL: photoURL ?? this.photoURL,
-        bio: bio ?? this.bio,
-        categories: categories ?? this.categories,
-        experienceYears: experienceYears ?? this.experienceYears,
-        hourlyRate: hourlyRate ?? this.hourlyRate,
-        phoneNumber: phoneNumber ?? this.phoneNumber,
-        location: location ?? this.location,
-        socialLinks: socialLinks ?? this.socialLinks,
-        portfolio: portfolio ?? this.portfolio,
-        services: services ?? this.services,
-        workingHours: workingHours ?? this.workingHours,
-        preferences: preferences ?? this.preferences,
-        rating: rating ?? this.rating,
-        reviewCount: reviewCount ?? this.reviewCount,
-        isVerified: isVerified ?? this.isVerified,
-        isAvailable: isAvailable ?? this.isAvailable,
-        availability: availability ?? this.availability,
-        languages: languages ?? this.languages,
-        equipment: equipment ?? this.equipment,
-        insurance: insurance ?? this.insurance,
-        licenses: licenses ?? this.licenses,
-        certifications: certifications ?? this.certifications,
-        awards: awards ?? this.awards,
-        testimonials: testimonials ?? this.testimonials,
-        email: email ?? this.email,
-        website: website ?? this.website,
-        instagram: instagram ?? this.instagram,
-        vk: vk ?? this.vk,
-        telegram: telegram ?? this.telegram,
-        whatsapp: whatsapp ?? this.whatsapp,
-        skype: skype ?? this.skype,
-        zoom: zoom ?? this.zoom,
-        portfolioVideos: portfolioVideos ?? this.portfolioVideos,
-        gallery: gallery ?? this.gallery,
-        reviews: reviews ?? this.reviews,
-        bookings: bookings ?? this.bookings,
-        earnings: earnings ?? this.earnings,
-        performance: performance ?? this.performance,
-        verification: verification ?? this.verification,
-        badges: badges ?? this.badges,
-        achievements: achievements ?? this.achievements,
-        analytics: analytics ?? this.analytics,
-        settings: settings ?? this.settings,
-        notifications: notifications ?? this.notifications,
-        metadata: metadata ?? this.metadata,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => SpecialistProfile(
+    userId: userId ?? this.userId,
+    name: name ?? this.name,
+    photoURL: photoURL ?? this.photoURL,
+    bio: bio ?? this.bio,
+    categories: categories ?? this.categories,
+    experienceYears: experienceYears ?? this.experienceYears,
+    hourlyRate: hourlyRate ?? this.hourlyRate,
+    phoneNumber: phoneNumber ?? this.phoneNumber,
+    location: location ?? this.location,
+    socialLinks: socialLinks ?? this.socialLinks,
+    portfolio: portfolio ?? this.portfolio,
+    services: services ?? this.services,
+    workingHours: workingHours ?? this.workingHours,
+    preferences: preferences ?? this.preferences,
+    rating: rating ?? this.rating,
+    reviewCount: reviewCount ?? this.reviewCount,
+    isVerified: isVerified ?? this.isVerified,
+    isAvailable: isAvailable ?? this.isAvailable,
+    availability: availability ?? this.availability,
+    languages: languages ?? this.languages,
+    equipment: equipment ?? this.equipment,
+    insurance: insurance ?? this.insurance,
+    licenses: licenses ?? this.licenses,
+    certifications: certifications ?? this.certifications,
+    awards: awards ?? this.awards,
+    testimonials: testimonials ?? this.testimonials,
+    email: email ?? this.email,
+    website: website ?? this.website,
+    instagram: instagram ?? this.instagram,
+    vk: vk ?? this.vk,
+    telegram: telegram ?? this.telegram,
+    whatsapp: whatsapp ?? this.whatsapp,
+    skype: skype ?? this.skype,
+    zoom: zoom ?? this.zoom,
+    portfolioVideos: portfolioVideos ?? this.portfolioVideos,
+    gallery: gallery ?? this.gallery,
+    reviews: reviews ?? this.reviews,
+    bookings: bookings ?? this.bookings,
+    earnings: earnings ?? this.earnings,
+    performance: performance ?? this.performance,
+    verification: verification ?? this.verification,
+    badges: badges ?? this.badges,
+    achievements: achievements ?? this.achievements,
+    analytics: analytics ?? this.analytics,
+    settings: settings ?? this.settings,
+    notifications: notifications ?? this.notifications,
+    metadata: metadata ?? this.metadata,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Получить русские названия категорий
   List<String> get categoryDisplayNames => categories.map((category) {
-        switch (category) {
-          case SpecialistCategory.host:
-            return 'Ведущий';
-          case SpecialistCategory.photographer:
-            return 'Фотограф';
-          case SpecialistCategory.animator:
-            return 'Аниматор';
-          case SpecialistCategory.dj:
-            return 'Диджей';
-          case SpecialistCategory.decorator:
-            return 'Оформитель';
-          case SpecialistCategory.catering:
-            return 'Кейтеринг';
-          case SpecialistCategory.cleaning:
-            return 'Клининг';
-          case SpecialistCategory.equipment:
-            return 'Аренда свет/звук';
-          case SpecialistCategory.clothing:
-            return 'Платья/костюмы';
-          case SpecialistCategory.fireShow:
-            return 'Фаер-шоу';
-          case SpecialistCategory.fireworks:
-            return 'Салюты';
-          case SpecialistCategory.lightShow:
-            return 'Световые шоу';
-          case SpecialistCategory.florist:
-            return 'Флорист';
-          case SpecialistCategory.coverBand:
-            return 'Кавер-группа';
-          case SpecialistCategory.teamBuilding:
-            return 'Тимбилдинг';
-        }
-      }).toList();
+    switch (category) {
+      case SpecialistCategory.host:
+        return 'Ведущий';
+      case SpecialistCategory.photographer:
+        return 'Фотограф';
+      case SpecialistCategory.animator:
+        return 'Аниматор';
+      case SpecialistCategory.dj:
+        return 'Диджей';
+      case SpecialistCategory.decorator:
+        return 'Оформитель';
+      case SpecialistCategory.catering:
+        return 'Кейтеринг';
+      case SpecialistCategory.cleaning:
+        return 'Клининг';
+      case SpecialistCategory.equipment:
+        return 'Аренда свет/звук';
+      case SpecialistCategory.clothing:
+        return 'Платья/костюмы';
+      case SpecialistCategory.fireShow:
+        return 'Фаер-шоу';
+      case SpecialistCategory.fireworks:
+        return 'Салюты';
+      case SpecialistCategory.lightShow:
+        return 'Световые шоу';
+      case SpecialistCategory.florist:
+        return 'Флорист';
+      case SpecialistCategory.coverBand:
+        return 'Кавер-группа';
+      case SpecialistCategory.teamBuilding:
+        return 'Тимбилдинг';
+    }
+  }).toList();
 
   /// Получить основную категорию
   String get primaryCategory {
@@ -497,26 +501,18 @@ class SpecialistProfile {
     final newAvailability = Map<String, dynamic>.from(availability);
     newAvailability['busyDates'] = newBusyDates.map((d) => d.toIso8601String()).toList();
 
-    return copyWith(
-      availability: newAvailability,
-      updatedAt: DateTime.now(),
-    );
+    return copyWith(availability: newAvailability, updatedAt: DateTime.now());
   }
 
   /// Удалить занятую дату
   SpecialistProfile removeBusyDate(DateTime date) {
     final newBusyDates = busyDates
-        .where(
-          (d) => !(d.year == date.year && d.month == date.month && d.day == date.day),
-        )
+        .where((d) => !(d.year == date.year && d.month == date.month && d.day == date.day))
         .toList();
     final newAvailability = Map<String, dynamic>.from(availability);
     newAvailability['busyDates'] = newBusyDates.map((d) => d.toIso8601String()).toList();
 
-    return copyWith(
-      availability: newAvailability,
-      updatedAt: DateTime.now(),
-    );
+    return copyWith(availability: newAvailability, updatedAt: DateTime.now());
   }
 
   /// Получить средний рейтинг
@@ -539,15 +535,15 @@ class SpecialistProfile {
 
   /// Получить социальные сети
   Map<String, String> get allSocialLinks => {
-        if (instagram != null) 'instagram': instagram!,
-        if (vk != null) 'vk': vk!,
-        if (telegram != null) 'telegram': telegram!,
-        if (whatsapp != null) 'whatsapp': whatsapp!,
-        if (skype != null) 'skype': skype!,
-        if (zoom != null) 'zoom': zoom!,
-        if (website != null) 'website': website!,
-        ...socialLinks,
-      };
+    if (instagram != null) 'instagram': instagram!,
+    if (vk != null) 'vk': vk!,
+    if (telegram != null) 'telegram': telegram!,
+    if (whatsapp != null) 'whatsapp': whatsapp!,
+    if (skype != null) 'skype': skype!,
+    if (zoom != null) 'zoom': zoom!,
+    if (website != null) 'website': website!,
+    ...socialLinks,
+  };
 
   /// Парсинг категории из строки
   static SpecialistCategory? _parseCategory(String categoryString) {

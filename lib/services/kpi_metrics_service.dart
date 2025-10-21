@@ -56,8 +56,10 @@ class KPIMetricsService {
   /// Загрузка метрик
   Future<void> _loadMetrics() async {
     try {
-      final snapshot =
-          await _firestore.collection(_metricsCollection).where('isActive', isEqualTo: true).get();
+      final snapshot = await _firestore
+          .collection(_metricsCollection)
+          .where('isActive', isEqualTo: true)
+          .get();
 
       for (final doc in snapshot.docs) {
         final metric = KPIMetric.fromMap(doc.data());

@@ -21,176 +21,152 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Тест ленты новостей'),
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-          bottom: TabBar(
-            controller: TabController(
-              length: 3,
-              vsync: this,
-              initialIndex: _selectedTabIndex,
-            ),
-            onTap: (index) => setState(() => _selectedTabIndex = index),
-            tabs: const [
-              Tab(icon: Icon(Icons.newspaper), text: 'Лента'),
-              Tab(icon: Icon(Icons.subscriptions), text: 'Подписки'),
-              Tab(icon: Icon(Icons.add), text: 'Создать'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          controller: TabController(
-            length: 3,
-            vsync: this,
-            initialIndex: _selectedTabIndex,
-          ),
-          children: [
-            _buildNewsFeedTab(),
-            _buildSubscriptionsTab(),
-            _buildCreateNewsTab(),
-          ],
-        ),
-      );
+    appBar: AppBar(
+      title: const Text('Тест ленты новостей'),
+      backgroundColor: Colors.blue,
+      foregroundColor: Colors.white,
+      bottom: TabBar(
+        controller: TabController(length: 3, vsync: this, initialIndex: _selectedTabIndex),
+        onTap: (index) => setState(() => _selectedTabIndex = index),
+        tabs: const [
+          Tab(icon: Icon(Icons.newspaper), text: 'Лента'),
+          Tab(icon: Icon(Icons.subscriptions), text: 'Подписки'),
+          Tab(icon: Icon(Icons.add), text: 'Создать'),
+        ],
+      ),
+    ),
+    body: TabBarView(
+      controller: TabController(length: 3, vsync: this, initialIndex: _selectedTabIndex),
+      children: [_buildNewsFeedTab(), _buildSubscriptionsTab(), _buildCreateNewsTab()],
+    ),
+  );
 
   Widget _buildNewsFeedTab() => Column(
-        children: [
-          _buildTestInfo(),
-          Expanded(
-            child: NewsFeedWidget(
-              userId: _testUserId,
-              onNewsItemTap: _showNewsItemDetails,
-              onAuthorTap: _showAuthorProfile,
-            ),
-          ),
-        ],
-      );
+    children: [
+      _buildTestInfo(),
+      Expanded(
+        child: NewsFeedWidget(
+          userId: _testUserId,
+          onNewsItemTap: _showNewsItemDetails,
+          onAuthorTap: _showAuthorProfile,
+        ),
+      ),
+    ],
+  );
 
   Widget _buildSubscriptionsTab() => SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildTestInfo(),
-            SpecialistSubscriptionWidget(
-              userId: _testUserId,
-              onSubscriptionChanged: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Подписки обновлены'),
-                    backgroundColor: Colors.blue,
-                  ),
-                );
-              },
-            ),
-          ],
+    child: Column(
+      children: [
+        _buildTestInfo(),
+        SpecialistSubscriptionWidget(
+          userId: _testUserId,
+          onSubscriptionChanged: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Подписки обновлены'), backgroundColor: Colors.blue),
+            );
+          },
         ),
-      );
+      ],
+    ),
+  );
 
-  Widget _buildCreateNewsTab() => SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildTestInfo(),
-            _buildCreateNewsForm(),
-          ],
-        ),
-      );
+  Widget _buildCreateNewsTab() =>
+      SingleChildScrollView(child: Column(children: [_buildTestInfo(), _buildCreateNewsForm()]));
 
   Widget _buildTestInfo() => Container(
-        margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.blue.shade50,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.blue.shade200),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    margin: const EdgeInsets.all(16),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.blue.shade50,
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.blue.shade200),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                Icon(Icons.info, color: Colors.blue.shade700),
-                const SizedBox(width: 8),
-                Text(
-                  'Информация о тесте',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade700,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text('User ID: $_testUserId'),
-            Text('Specialist ID: $_testSpecialistId'),
-            const SizedBox(height: 8),
-            const Text(
-              'Этот экран позволяет протестировать функциональность ленты новостей, подписок и создания новостей.',
-              style: TextStyle(fontSize: 12),
+            Icon(Icons.info, color: Colors.blue.shade700),
+            const SizedBox(width: 8),
+            Text(
+              'Информация о тесте',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue.shade700,
+              ),
             ),
           ],
         ),
-      );
+        const SizedBox(height: 8),
+        Text('User ID: $_testUserId'),
+        Text('Specialist ID: $_testSpecialistId'),
+        const SizedBox(height: 8),
+        const Text(
+          'Этот экран позволяет протестировать функциональность ленты новостей, подписок и создания новостей.',
+          style: TextStyle(fontSize: 12),
+        ),
+      ],
+    ),
+  );
 
   Widget _buildCreateNewsForm() => Card(
-        margin: const EdgeInsets.all(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Создать новость',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildCreateNewsButtons(),
-            ],
+    margin: const EdgeInsets.all(16),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Создать новость',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-        ),
-      );
+          const SizedBox(height: 16),
+          _buildCreateNewsButtons(),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildCreateNewsButtons() => Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _createTestNews,
-              icon: const Icon(Icons.auto_awesome),
-              label: const Text('Создать тестовые новости'),
-            ),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _createIdeaNews,
-              icon: const Icon(Icons.lightbulb),
-              label: const Text('Создать идею'),
-            ),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _createPromotionNews,
-              icon: const Icon(Icons.local_offer),
-              label: const Text('Создать акцию'),
-            ),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _createStoryNews,
-              icon: const Icon(Icons.book),
-              label: const Text('Создать историю'),
-            ),
-          ),
-        ],
-      );
+    children: [
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _createTestNews,
+          icon: const Icon(Icons.auto_awesome),
+          label: const Text('Создать тестовые новости'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _createIdeaNews,
+          icon: const Icon(Icons.lightbulb),
+          label: const Text('Создать идею'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _createPromotionNews,
+          icon: const Icon(Icons.local_offer),
+          label: const Text('Создать акцию'),
+        ),
+      ),
+      const SizedBox(height: 8),
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _createStoryNews,
+          icon: const Icon(Icons.book),
+          label: const Text('Создать историю'),
+        ),
+      ),
+    ],
+  );
 
   // ========== МЕТОДЫ ==========
 
@@ -211,10 +187,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
                     backgroundColor: Colors.blue.shade100,
                     child: Text(
                       newsItem.authorName.isNotEmpty ? newsItem.authorName[0].toUpperCase() : '?',
-                      style: TextStyle(
-                        color: Colors.blue.shade700,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -224,17 +197,11 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
                       children: [
                         Text(
                           newsItem.authorName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         Text(
                           newsItem.formattedDate,
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
+                          style: const TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                       ],
                     ),
@@ -242,10 +209,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
                 ],
               ),
               const SizedBox(height: 16),
-              Text(
-                newsItem.content,
-                style: const TextStyle(fontSize: 14),
-              ),
+              Text(newsItem.content, style: const TextStyle(fontSize: 14)),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -266,10 +230,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -298,20 +259,14 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
             const SizedBox(height: 16),
             Text(
               'Специалист $authorId',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             const Text('Описание специалиста...'),
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -330,10 +285,7 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Тестовые новости созданы'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Тестовые новости созданы'), backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
@@ -361,19 +313,13 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Идея создана'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Идея создана'), backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка создания идеи: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка создания идеи: $e'), backgroundColor: Colors.red),
         );
       }
     }
@@ -391,19 +337,13 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Акция создана'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Акция создана'), backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка создания акции: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка создания акции: $e'), backgroundColor: Colors.red),
         );
       }
     }
@@ -422,19 +362,13 @@ class _NewsFeedTestScreenState extends State<NewsFeedTestScreen> with TickerProv
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('История создана'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('История создана'), backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка создания истории: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка создания истории: $e'), backgroundColor: Colors.red),
         );
       }
     }

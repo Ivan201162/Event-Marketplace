@@ -1,22 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Тип рекомендации
-enum RecommendationType {
-  specialist,
-  service,
-  event,
-  content,
-  category,
-}
+enum RecommendationType { specialist, service, event, content, category }
 
 /// Статус рекомендации
-enum RecommendationStatus {
-  active,
-  inactive,
-  expired,
-  clicked,
-  booked,
-}
+enum RecommendationStatus { active, inactive, expired, clicked, booked }
 
 /// Модель рекомендации
 class Recommendation {
@@ -75,28 +63,28 @@ class Recommendation {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       expiresAt: data['expiresAt'] != null
           ? (data['expiresAt'] is Timestamp
-              ? (data['expiresAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['expiresAt'].toString()))
+                ? (data['expiresAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['expiresAt'].toString()))
           : null,
       clickedAt: data['clickedAt'] != null
           ? (data['clickedAt'] is Timestamp
-              ? (data['clickedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['clickedAt'].toString()))
+                ? (data['clickedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['clickedAt'].toString()))
           : null,
       bookedAt: data['bookedAt'] != null
           ? (data['bookedAt'] is Timestamp
-              ? (data['bookedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['bookedAt'].toString()))
+                ? (data['bookedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['bookedAt'].toString()))
           : null,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -108,31 +96,28 @@ class Recommendation {
       throw Exception('Document data is null');
     }
 
-    return Recommendation.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return Recommendation.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'type': type.name,
-        'status': status.name,
-        'title': title,
-        'description': description,
-        'imageUrl': imageUrl,
-        'targetId': targetId,
-        'targetType': targetType,
-        'score': score,
-        'reason': reason,
-        'metadata': metadata,
-        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-        'clickedAt': clickedAt != null ? Timestamp.fromDate(clickedAt!) : null,
-        'bookedAt': bookedAt != null ? Timestamp.fromDate(bookedAt!) : null,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      };
+    'userId': userId,
+    'type': type.name,
+    'status': status.name,
+    'title': title,
+    'description': description,
+    'imageUrl': imageUrl,
+    'targetId': targetId,
+    'targetType': targetType,
+    'score': score,
+    'reason': reason,
+    'metadata': metadata,
+    'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+    'clickedAt': clickedAt != null ? Timestamp.fromDate(clickedAt!) : null,
+    'bookedAt': bookedAt != null ? Timestamp.fromDate(bookedAt!) : null,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
   /// Копировать с изменениями
   Recommendation copyWith({
@@ -153,26 +138,25 @@ class Recommendation {
     DateTime? bookedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      Recommendation(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        imageUrl: imageUrl ?? this.imageUrl,
-        targetId: targetId ?? this.targetId,
-        targetType: targetType ?? this.targetType,
-        score: score ?? this.score,
-        reason: reason ?? this.reason,
-        metadata: metadata ?? this.metadata,
-        expiresAt: expiresAt ?? this.expiresAt,
-        clickedAt: clickedAt ?? this.clickedAt,
-        bookedAt: bookedAt ?? this.bookedAt,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => Recommendation(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    imageUrl: imageUrl ?? this.imageUrl,
+    targetId: targetId ?? this.targetId,
+    targetType: targetType ?? this.targetType,
+    score: score ?? this.score,
+    reason: reason ?? this.reason,
+    metadata: metadata ?? this.metadata,
+    expiresAt: expiresAt ?? this.expiresAt,
+    clickedAt: clickedAt ?? this.clickedAt,
+    bookedAt: bookedAt ?? this.bookedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Парсинг типа из строки
   static RecommendationType _parseType(String? type) {
@@ -317,18 +301,18 @@ class RecommendationStats {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'totalRecommendations': totalRecommendations,
-        'activeRecommendations': activeRecommendations,
-        'clickedRecommendations': clickedRecommendations,
-        'bookedRecommendations': bookedRecommendations,
-        'expiredRecommendations': expiredRecommendations,
-        'clickThroughRate': clickThroughRate,
-        'conversionRate': conversionRate,
-        'averageScore': averageScore,
-        'period': period,
-        'metadata': metadata,
-      };
+    'userId': userId,
+    'totalRecommendations': totalRecommendations,
+    'activeRecommendations': activeRecommendations,
+    'clickedRecommendations': clickedRecommendations,
+    'bookedRecommendations': bookedRecommendations,
+    'expiredRecommendations': expiredRecommendations,
+    'clickThroughRate': clickThroughRate,
+    'conversionRate': conversionRate,
+    'averageScore': averageScore,
+    'period': period,
+    'metadata': metadata,
+  };
 
   /// Копировать с изменениями
   RecommendationStats copyWith({
@@ -343,20 +327,19 @@ class RecommendationStats {
     double? averageScore,
     String? period,
     Map<String, dynamic>? metadata,
-  }) =>
-      RecommendationStats(
-        userId: userId ?? this.userId,
-        totalRecommendations: totalRecommendations ?? this.totalRecommendations,
-        activeRecommendations: activeRecommendations ?? this.activeRecommendations,
-        clickedRecommendations: clickedRecommendations ?? this.clickedRecommendations,
-        bookedRecommendations: bookedRecommendations ?? this.bookedRecommendations,
-        expiredRecommendations: expiredRecommendations ?? this.expiredRecommendations,
-        clickThroughRate: clickThroughRate ?? this.clickThroughRate,
-        conversionRate: conversionRate ?? this.conversionRate,
-        averageScore: averageScore ?? this.averageScore,
-        period: period ?? this.period,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => RecommendationStats(
+    userId: userId ?? this.userId,
+    totalRecommendations: totalRecommendations ?? this.totalRecommendations,
+    activeRecommendations: activeRecommendations ?? this.activeRecommendations,
+    clickedRecommendations: clickedRecommendations ?? this.clickedRecommendations,
+    bookedRecommendations: bookedRecommendations ?? this.bookedRecommendations,
+    expiredRecommendations: expiredRecommendations ?? this.expiredRecommendations,
+    clickThroughRate: clickThroughRate ?? this.clickThroughRate,
+    conversionRate: conversionRate ?? this.conversionRate,
+    averageScore: averageScore ?? this.averageScore,
+    period: period ?? this.period,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Получить процент кликов
   double get clickThroughPercentage {

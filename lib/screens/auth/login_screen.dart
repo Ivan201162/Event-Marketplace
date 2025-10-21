@@ -59,8 +59,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _signUpWithEmail() async {
-    if (_emailController.text.isEmpty || 
-        _passwordController.text.isEmpty || 
+    if (_emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
         _nameController.text.isEmpty) {
       _showError('Заполните все поля');
       return;
@@ -145,12 +145,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void _showError(String message) {
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   String _getErrorMessage(String errorCode) {
@@ -186,10 +183,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF6C5CE7),
-              Color(0xFFA29BFE),
-            ],
+            colors: [Color(0xFF6C5CE7), Color(0xFFA29BFE)],
           ),
         ),
         child: SafeArea(
@@ -207,11 +201,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const SizedBox(height: 40),
 
                         // App logo and title
-                        const Icon(
-                          Icons.event,
-                          size: 80,
-                          color: Colors.white,
-                        ),
+                        const Icon(Icons.event, size: 80, color: Colors.white),
                         const SizedBox(height: 16),
                         const Text(
                           'Event Marketplace',
@@ -225,10 +215,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const Text(
                           'Найди идеального специалиста для своего мероприятия',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white70,
-                          ),
+                          style: TextStyle(fontSize: 16, color: Colors.white70),
                         ),
 
                         const Spacer(),
@@ -257,7 +244,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       onPressed: () => setState(() => _isSignUp = false),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: _isSignUp ? Colors.grey[200] : Colors.blue,
-                                        foregroundColor: _isSignUp ? Colors.grey[600] : Colors.white,
+                                        foregroundColor: _isSignUp
+                                            ? Colors.grey[600]
+                                            : Colors.white,
                                       ),
                                       child: const Text('Вход'),
                                     ),
@@ -268,7 +257,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       onPressed: () => setState(() => _isSignUp = true),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: _isSignUp ? Colors.blue : Colors.grey[200],
-                                        foregroundColor: _isSignUp ? Colors.white : Colors.grey[600],
+                                        foregroundColor: _isSignUp
+                                            ? Colors.white
+                                            : Colors.grey[600],
                                       ),
                                       child: const Text('Регистрация'),
                                     ),
@@ -319,7 +310,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton(
-                                  onPressed: _isLoading ? null : (_isSignUp ? _signUpWithEmail : _signInWithEmail),
+                                  onPressed: _isLoading
+                                      ? null
+                                      : (_isSignUp ? _signUpWithEmail : _signInWithEmail),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
                                     foregroundColor: Colors.white,

@@ -14,21 +14,16 @@ class AvailabilityService {
     DateTime? endDate,
   }) async {
     try {
-      var query =
-          _firestore.collection(_collectionName).where('specialistId', isEqualTo: specialistId);
+      var query = _firestore
+          .collection(_collectionName)
+          .where('specialistId', isEqualTo: specialistId);
 
       if (startDate != null) {
-        query = query.where(
-          'date',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        query = query.where(
-          'date',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final querySnapshot = await query.orderBy('date').get();
@@ -45,31 +40,26 @@ class AvailabilityService {
     DateTime? startDate,
     DateTime? endDate,
   }) {
-    var query =
-        _firestore.collection(_collectionName).where('specialistId', isEqualTo: specialistId);
+    var query = _firestore
+        .collection(_collectionName)
+        .where('specialistId', isEqualTo: specialistId);
 
     if (startDate != null) {
-      query = query.where(
-        'date',
-        isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-      );
+      query = query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
     }
 
     if (endDate != null) {
       query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
     }
 
-    return query.orderBy('date').snapshots().map(
-          (querySnapshot) => querySnapshot.docs.map(AvailabilityCalendar.fromDocument).toList(),
-        );
+    return query
+        .orderBy('date')
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs.map(AvailabilityCalendar.fromDocument).toList());
   }
 
   /// Добавить занятую дату
-  Future<bool> addBusyDate(
-    String specialistId,
-    DateTime date, {
-    String? note,
-  }) async {
+  Future<bool> addBusyDate(String specialistId, DateTime date, {String? note}) async {
     try {
       final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
 
@@ -91,11 +81,7 @@ class AvailabilityService {
   }
 
   /// Добавить временной слот
-  Future<bool> addTimeSlot(
-    String specialistId,
-    DateTime date,
-    TimeSlot timeSlot,
-  ) async {
+  Future<bool> addTimeSlot(String specialistId, DateTime date, TimeSlot timeSlot) async {
     try {
       final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
 
@@ -148,10 +134,7 @@ class AvailabilityService {
       final calendar = AvailabilityCalendar.fromDocument(doc);
       final updatedTimeSlots = calendar.timeSlots.map((slot) {
         if (slot.id == timeSlotId) {
-          return slot.copyWith(
-            isAvailable: false,
-            bookingId: bookingId,
-          );
+          return slot.copyWith(isAvailable: false, bookingId: bookingId);
         }
         return slot;
       }).toList();
@@ -169,11 +152,7 @@ class AvailabilityService {
   }
 
   /// Разблокировать временной слот (отмена бронирования)
-  Future<bool> unblockTimeSlot(
-    String specialistId,
-    DateTime date,
-    String timeSlotId,
-  ) async {
+  Future<bool> unblockTimeSlot(String specialistId, DateTime date, String timeSlotId) async {
     try {
       final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
       final docRef = _firestore.collection(_collectionName).doc(calendarId);
@@ -184,9 +163,7 @@ class AvailabilityService {
       final calendar = AvailabilityCalendar.fromDocument(doc);
       final updatedTimeSlots = calendar.timeSlots.map((slot) {
         if (slot.id == timeSlotId) {
-          return slot.copyWith(
-            isAvailable: true,
-          );
+          return slot.copyWith(isAvailable: true);
         }
         return slot;
       }).toList();
@@ -216,10 +193,7 @@ class AvailabilityService {
   }
 
   /// Проверить доступность специалиста в указанное время
-  Future<bool> isSpecialistAvailable(
-    String specialistId,
-    DateTime dateTime,
-  ) async {
+  Future<bool> isSpecialistAvailable(String specialistId, DateTime dateTime) async {
     try {
       final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
       final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
@@ -236,10 +210,7 @@ class AvailabilityService {
   }
 
   /// Получить доступные временные слоты на дату
-  Future<List<TimeSlot>> getAvailableTimeSlots(
-    String specialistId,
-    DateTime date,
-  ) async {
+  Future<List<TimeSlot>> getAvailableTimeSlots(String specialistId, DateTime date) async {
     try {
       final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
       final doc = await _firestore.collection(_collectionName).doc(calendarId).get();

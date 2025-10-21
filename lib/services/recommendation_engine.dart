@@ -54,28 +54,31 @@ class RecommendationEngine {
   /// Получить историю пользователя
   Future<UserHistory> _getUserHistory(String userId) async {
     // Получаем бронирования пользователя
-    final bookingsSnapshot =
-        await _firestore.collection('bookings').where('customerId', isEqualTo: userId).get();
+    final bookingsSnapshot = await _firestore
+        .collection('bookings')
+        .where('customerId', isEqualTo: userId)
+        .get();
 
     final bookings = bookingsSnapshot.docs.map(Booking.fromDocument).toList();
 
     // Получаем отзывы пользователя
-    final reviewsSnapshot =
-        await _firestore.collection('reviews').where('userId', isEqualTo: userId).get();
+    final reviewsSnapshot = await _firestore
+        .collection('reviews')
+        .where('userId', isEqualTo: userId)
+        .get();
 
     final reviews = reviewsSnapshot.docs.map(Review.fromDocument).toList();
 
     // Получаем просмотренные события
-    final viewedEventsSnapshot =
-        await _firestore.collection('user_activity').doc(userId).collection('viewed_events').get();
+    final viewedEventsSnapshot = await _firestore
+        .collection('user_activity')
+        .doc(userId)
+        .collection('viewed_events')
+        .get();
 
     final viewedEventIds = viewedEventsSnapshot.docs.map((doc) => doc.id).toList();
 
-    return UserHistory(
-      bookings: bookings,
-      reviews: reviews,
-      viewedEventIds: viewedEventIds,
-    );
+    return UserHistory(bookings: bookings, reviews: reviews, viewedEventIds: viewedEventIds);
   }
 
   /// Анализ предпочтений пользователя
@@ -120,8 +123,9 @@ class RecommendationEngine {
     final topLocations = preferredLocations.take(3).map((e) => e.key).toList();
 
     // Вычисляем средний бюджет
-    final avgBudget =
-        priceRange.isNotEmpty ? priceRange.reduce((a, b) => a + b) / priceRange.length : 50000;
+    final avgBudget = priceRange.isNotEmpty
+        ? priceRange.reduce((a, b) => a + b) / priceRange.length
+        : 50000;
 
     // Вычисляем предпочтительный рейтинг
     final avgRating = ratingPreferences.isNotEmpty
@@ -147,18 +151,12 @@ class RecommendationEngine {
 
     // Фильтр по категориям
     if (preferences.preferredCategories.isNotEmpty) {
-      query = query.where(
-        'categories',
-        arrayContainsAny: preferences.preferredCategories,
-      );
+      query = query.where('categories', arrayContainsAny: preferences.preferredCategories);
     }
 
     // Фильтр по услугам
     if (preferences.preferredServices.isNotEmpty) {
-      query = query.where(
-        'services',
-        arrayContainsAny: preferences.preferredServices,
-      );
+      query = query.where('services', arrayContainsAny: preferences.preferredServices);
     }
 
     // Фильтр по локациям
@@ -167,10 +165,7 @@ class RecommendationEngine {
     }
 
     // Фильтр по рейтингу
-    query = query.where(
-      'rating',
-      isGreaterThanOrEqualTo: preferences.preferredRating,
-    );
+    query = query.where('rating', isGreaterThanOrEqualTo: preferences.preferredRating);
 
     // Фильтр по цене (в пределах бюджета)
     final maxPrice = (preferences.averageBudget * 1.5).round();
@@ -197,9 +192,7 @@ class RecommendationEngine {
   }
 
   /// Получить популярных специалистов
-  Future<List<Specialist>> getPopularSpecialists({
-    int limit = 10,
-  }) async {
+  Future<List<Specialist>> getPopularSpecialists({int limit = 10}) async {
     try {
       final snapshot = await _firestore
           .collection('specialists')
@@ -235,11 +228,7 @@ class RecommendationEngine {
 
 /// История пользователя
 class UserHistory {
-  const UserHistory({
-    required this.bookings,
-    required this.reviews,
-    required this.viewedEventIds,
-  });
+  const UserHistory({required this.bookings, required this.reviews, required this.viewedEventIds});
   final List<Booking> bookings;
   final List<Review> reviews;
   final List<String> viewedEventIds;

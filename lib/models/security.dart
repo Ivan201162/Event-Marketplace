@@ -30,12 +30,12 @@ class UserRoleAssignment {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'roleName': roleName,
-        'permissions': permissions,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'userId': userId,
+    'roleName': roleName,
+    'permissions': permissions,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 }
 
 /// Аудит-лог
@@ -77,15 +77,15 @@ class AuditLog {
   final DateTime timestamp;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'action': action,
-        'resource': resource,
-        'resourceId': resourceId,
-        'metadata': metadata,
-        'ipAddress': ipAddress,
-        'userAgent': userAgent,
-        'timestamp': Timestamp.fromDate(timestamp),
-      };
+    'userId': userId,
+    'action': action,
+    'resource': resource,
+    'resourceId': resourceId,
+    'metadata': metadata,
+    'ipAddress': ipAddress,
+    'userAgent': userAgent,
+    'timestamp': Timestamp.fromDate(timestamp),
+  };
 }
 
 /// Сессия безопасности
@@ -133,16 +133,16 @@ class SecuritySession {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'deviceId': deviceId,
-        'ipAddress': ipAddress,
-        'userAgent': userAgent,
-        'status': status.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'lastActivityAt': Timestamp.fromDate(lastActivityAt),
-        'expiresAt': Timestamp.fromDate(expiresAt),
-        'metadata': metadata,
-      };
+    'userId': userId,
+    'deviceId': deviceId,
+    'ipAddress': ipAddress,
+    'userAgent': userAgent,
+    'status': status.name,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'lastActivityAt': Timestamp.fromDate(lastActivityAt),
+    'expiresAt': Timestamp.fromDate(expiresAt),
+    'metadata': metadata,
+  };
 
   SecuritySession copyWith({
     String? id,
@@ -155,19 +155,18 @@ class SecuritySession {
     DateTime? lastActivityAt,
     DateTime? expiresAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      SecuritySession(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        deviceId: deviceId ?? this.deviceId,
-        ipAddress: ipAddress ?? this.ipAddress,
-        userAgent: userAgent ?? this.userAgent,
-        status: status ?? this.status,
-        createdAt: createdAt ?? this.createdAt,
-        lastActivityAt: lastActivityAt ?? this.lastActivityAt,
-        expiresAt: expiresAt ?? this.expiresAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => SecuritySession(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    deviceId: deviceId ?? this.deviceId,
+    ipAddress: ipAddress ?? this.ipAddress,
+    userAgent: userAgent ?? this.userAgent,
+    status: status ?? this.status,
+    createdAt: createdAt ?? this.createdAt,
+    lastActivityAt: lastActivityAt ?? this.lastActivityAt,
+    expiresAt: expiresAt ?? this.expiresAt,
+    metadata: metadata ?? this.metadata,
+  );
 }
 
 /// Предупреждение безопасности
@@ -218,15 +217,15 @@ class SecurityAlert {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'type': type.name,
-        'description': description,
-        'status': status.name,
-        'severity': severity.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-        'metadata': metadata,
-      };
+    'userId': userId,
+    'type': type.name,
+    'description': description,
+    'status': status.name,
+    'severity': severity.name,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+    'metadata': metadata,
+  };
 }
 
 /// Блокировка пользователя
@@ -268,22 +267,18 @@ class UserBlock {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'reason': reason,
-        'blockedBy': blockedBy,
-        'status': status.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'expiresAt': Timestamp.fromDate(expiresAt),
-        'metadata': metadata,
-      };
+    'userId': userId,
+    'reason': reason,
+    'blockedBy': blockedBy,
+    'status': status.name,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'expiresAt': Timestamp.fromDate(expiresAt),
+    'metadata': metadata,
+  };
 }
 
 /// Статусы сессий безопасности
-enum SecuritySessionStatus {
-  active,
-  expired,
-  revoked,
-}
+enum SecuritySessionStatus { active, expired, revoked }
 
 /// Типы предупреждений безопасности
 enum SecurityAlertType {
@@ -295,23 +290,10 @@ enum SecurityAlertType {
 }
 
 /// Статусы предупреждений безопасности
-enum SecurityAlertStatus {
-  active,
-  resolved,
-  dismissed,
-}
+enum SecurityAlertStatus { active, resolved, dismissed }
 
 /// Уровни серьезности предупреждений
-enum SecurityAlertSeverity {
-  low,
-  medium,
-  high,
-  critical,
-}
+enum SecurityAlertSeverity { low, medium, high, critical }
 
 /// Статусы блокировки пользователей
-enum UserBlockStatus {
-  active,
-  expired,
-  revoked,
-}
+enum UserBlockStatus { active, expired, revoked }

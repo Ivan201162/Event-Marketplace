@@ -82,9 +82,7 @@ final decryptDataProvider = FutureProvider.family<String, String>(
 /// Провайдер для безопасного сохранения
 final secureStoreProvider = FutureProvider.family<void, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
-  return Future.wait(
-    data.entries.map((entry) => service.secureStore(entry.key, entry.value)),
-  );
+  return Future.wait(data.entries.map((entry) => service.secureStore(entry.key, entry.value)));
 });
 
 /// Провайдер для безопасного чтения
@@ -126,24 +124,28 @@ final trustDeviceProvider = FutureProvider.family<bool, Map<String, String>>((re
 });
 
 /// Провайдер для проверки силы пароля
-final passwordStrengthProvider =
-    FutureProvider.family<Map<String, dynamic>, String>((ref, password) {
+final passwordStrengthProvider = FutureProvider.family<Map<String, dynamic>, String>((
+  ref,
+  password,
+) {
   final service = ref.watch(securityServiceProvider);
   return service.checkPasswordStrength(password);
 });
 
 /// Провайдер для генерации безопасного пароля
-final generatePasswordProvider = Provider<
-    String Function({
-      int length,
-      bool includeUppercase,
-      bool includeLowercase,
-      bool includeNumbers,
-      bool includeSymbols,
-    })>((ref) {
-  final service = ref.watch(securityServiceProvider);
-  return service.generateSecurePassword;
-});
+final generatePasswordProvider =
+    Provider<
+      String Function({
+        int length,
+        bool includeUppercase,
+        bool includeLowercase,
+        bool includeNumbers,
+        bool includeSymbols,
+      })
+    >((ref) {
+      final service = ref.watch(securityServiceProvider);
+      return service.generateSecurePassword;
+    });
 
 /// Провайдер для очистки всех безопасных данных
 final clearAllSecureDataProvider = FutureProvider<void>(
@@ -209,16 +211,16 @@ class SecurityRecommendation {
   });
 
   factory SecurityRecommendation.fromMap(Map<String, dynamic> map) => SecurityRecommendation(
-        id: map['id'] ?? '',
-        title: map['title'] ?? '',
-        description: map['description'] ?? '',
-        priority: SecurityRecommendationPriority.values.firstWhere(
-          (p) => p.name == map['priority'],
-          orElse: () => SecurityRecommendationPriority.medium,
-        ),
-        action: map['action'] ?? '',
-        isCompleted: map['isCompleted'] ?? false,
-      );
+    id: map['id'] ?? '',
+    title: map['title'] ?? '',
+    description: map['description'] ?? '',
+    priority: SecurityRecommendationPriority.values.firstWhere(
+      (p) => p.name == map['priority'],
+      orElse: () => SecurityRecommendationPriority.medium,
+    ),
+    action: map['action'] ?? '',
+    isCompleted: map['isCompleted'] ?? false,
+  );
   final String id;
   final String title;
   final String description;
@@ -227,13 +229,13 @@ class SecurityRecommendation {
   final bool isCompleted;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'priority': priority.name,
-        'action': action,
-        'isCompleted': isCompleted,
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'priority': priority.name,
+    'action': action,
+    'isCompleted': isCompleted,
+  };
 
   SecurityRecommendation copyWith({
     String? id,
@@ -242,21 +244,15 @@ class SecurityRecommendation {
     SecurityRecommendationPriority? priority,
     String? action,
     bool? isCompleted,
-  }) =>
-      SecurityRecommendation(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        priority: priority ?? this.priority,
-        action: action ?? this.action,
-        isCompleted: isCompleted ?? this.isCompleted,
-      );
+  }) => SecurityRecommendation(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    priority: priority ?? this.priority,
+    action: action ?? this.action,
+    isCompleted: isCompleted ?? this.isCompleted,
+  );
 }
 
 /// Приоритеты рекомендаций по безопасности
-enum SecurityRecommendationPriority {
-  low,
-  medium,
-  high,
-  critical,
-}
+enum SecurityRecommendationPriority { low, medium, high, critical }

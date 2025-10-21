@@ -56,15 +56,15 @@ class LocaleUtils {
   }
 
   static List<Locale> get supportedLocales => [
-        const Locale('ru', 'RU'),
-        const Locale('en', 'US'),
-        const Locale('de', 'DE'),
-        const Locale('fr', 'FR'),
-        const Locale('es', 'ES'),
-        const Locale('it', 'IT'),
-        const Locale('pt', 'PT'),
-        const Locale('zh', 'CN'),
-        const Locale('ja', 'JP'),
-        const Locale('ko', 'KR'),
-      ];
+    const Locale('ru', 'RU'),
+    const Locale('en', 'US'),
+    const Locale('de', 'DE'),
+    const Locale('fr', 'FR'),
+    const Locale('es', 'ES'),
+    const Locale('it', 'IT'),
+    const Locale('pt', 'PT'),
+    const Locale('zh', 'CN'),
+    const Locale('ja', 'JP'),
+    const Locale('ko', 'KR'),
+  ];
 }

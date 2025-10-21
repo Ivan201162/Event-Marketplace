@@ -47,9 +47,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
       final currentUserId = SupabaseService.currentUser?.id;
       if (currentUserId == null) return;
 
-      final requests = await SupabaseService.getUserRequests(
-        userId: currentUserId,
-      );
+      final requests = await SupabaseService.getUserRequests(userId: currentUserId);
 
       setState(() {
         _myRequests = requests;
@@ -119,10 +117,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
       body: SafeArea(
         child: TabBarView(
           controller: _tabController,
-          children: [
-            _buildMyRequestsTab(),
-            _buildAssignedRequestsTab(),
-          ],
+          children: [_buildMyRequestsTab(), _buildAssignedRequestsTab()],
         ),
       ),
     );
@@ -159,9 +154,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
     required bool isMyRequests,
   }) {
     if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (error != null) {
@@ -169,25 +162,13 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки заявок',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Ошибка загрузки заявок', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               error,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -205,27 +186,18 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.assignment_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.assignment_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               isMyRequests ? 'Нет ваших заявок' : 'Нет заявок для вас',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               isMyRequests
                   ? 'Создайте заявку, чтобы найти исполнителя'
                   : 'Заявки, назначенные вам, появятся здесь',
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -268,10 +240,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
                   Expanded(
                     child: Text(
                       request.title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   _buildStatusChip(request.status),
@@ -283,9 +252,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
               if (request.description != null) ...[
                 Text(
                   request.description!,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(color: Colors.grey[600]),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -300,10 +267,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
                     const SizedBox(width: 4),
                     Text(
                       request.category!,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                     const SizedBox(width: 16),
                   ],
@@ -312,10 +276,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
                     const SizedBox(width: 4),
                     Text(
                       '${request.budget!.toStringAsFixed(0)} ₽',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                     const SizedBox(width: 16),
                   ],
@@ -324,10 +285,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
                     const SizedBox(width: 4),
                     Text(
                       request.location!,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                   ],
                 ],
@@ -347,30 +305,20 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
                             ? NetworkImage(request.assignee!.avatarUrl!)
                             : null,
                         child: request.assignee!.avatarUrl == null
-                            ? Icon(
-                                Icons.person,
-                                size: 12,
-                                color: theme.primaryColor,
-                              )
+                            ? Icon(Icons.person, size: 12, color: theme.primaryColor)
                             : null,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         'Исполнитель: ${request.assignee!.name}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                     ] else ...[
                       Icon(Icons.person_outline, size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 4),
                       Text(
                         'Исполнитель не назначен',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                     ],
                   ] else ...[
@@ -382,29 +330,19 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
                           ? NetworkImage(request.creator!.avatarUrl!)
                           : null,
                       child: request.creator?.avatarUrl == null
-                          ? Icon(
-                              Icons.person,
-                              size: 12,
-                              color: theme.primaryColor,
-                            )
+                          ? Icon(Icons.person, size: 12, color: theme.primaryColor)
                           : null,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Заказчик: ${request.creator?.name ?? 'Неизвестный'}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                     ),
                   ],
                   const Spacer(),
                   Text(
                     _formatTime(request.createdAt),
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
                   ),
                 ],
               ),
@@ -450,11 +388,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
       ),
       child: Text(
         label,
-        style: TextStyle(
-          color: color,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
+        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
       ),
     );
   }

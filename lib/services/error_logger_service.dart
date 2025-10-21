@@ -32,12 +32,9 @@ class ErrorLoggerService {
     };
 
     // Перехватываем ошибки в зонах
-    runZonedGuarded(
-      () {
-        // Основной код приложения
-      },
-      _logZonedError,
-    );
+    runZonedGuarded(() {
+      // Основной код приложения
+    }, _logZonedError);
   }
 
   /// Логировать Flutter ошибку
@@ -75,9 +72,7 @@ class ErrorLoggerService {
         stackTrace: stack.toString(),
         errorType: 'async_error',
         timestamp: DateTime.now(),
-        metadata: {
-          'errorType': error.runtimeType.toString(),
-        },
+        metadata: {'errorType': error.runtimeType.toString()},
       );
 
       await _saveError(appError);
@@ -97,9 +92,7 @@ class ErrorLoggerService {
         stackTrace: stack.toString(),
         errorType: 'zoned_error',
         timestamp: DateTime.now(),
-        metadata: {
-          'errorType': error.runtimeType.toString(),
-        },
+        metadata: {'errorType': error.runtimeType.toString()},
       );
 
       await _saveError(appError);
@@ -152,11 +145,7 @@ class ErrorLoggerService {
         errorMessage: message,
         errorType: 'network_error',
         timestamp: DateTime.now(),
-        metadata: {
-          'url': url,
-          'statusCode': statusCode,
-          ...?metadata,
-        },
+        metadata: {'url': url, 'statusCode': statusCode, ...?metadata},
       );
 
       await _saveError(error);
@@ -181,10 +170,7 @@ class ErrorLoggerService {
         errorMessage: message,
         errorType: 'validation_error',
         timestamp: DateTime.now(),
-        metadata: {
-          'field': field,
-          ...?metadata,
-        },
+        metadata: {'field': field, ...?metadata},
       );
 
       await _saveError(error);
@@ -209,10 +195,7 @@ class ErrorLoggerService {
         errorMessage: message,
         errorType: 'ui_error',
         timestamp: DateTime.now(),
-        metadata: {
-          'widget': widget,
-          ...?metadata,
-        },
+        metadata: {'widget': widget, ...?metadata},
       );
 
       await _saveError(error);
@@ -366,9 +349,7 @@ class ErrorLoggerService {
   /// Отметить ошибку как решенную
   Future<void> markErrorAsResolved(String errorId) async {
     try {
-      await _firestore.collection('appErrors').doc(errorId).update({
-        'resolved': true,
-      });
+      await _firestore.collection('appErrors').doc(errorId).update({'resolved': true});
     } catch (e) {
       developer.log('Ошибка при отметке ошибки как решенной: $e');
     }
@@ -377,9 +358,7 @@ class ErrorLoggerService {
   /// Отметить ошибку как нерешенную
   Future<void> markErrorAsUnresolved(String errorId) async {
     try {
-      await _firestore.collection('appErrors').doc(errorId).update({
-        'resolved': false,
-      });
+      await _firestore.collection('appErrors').doc(errorId).update({'resolved': false});
     } catch (e) {
       developer.log('Ошибка при отметке ошибки как нерешенной: $e');
     }
@@ -455,9 +434,7 @@ class ErrorLoggerService {
       final csv = StringBuffer();
 
       // Заголовки
-      csv.writeln(
-        'ID,User ID,Device,Screen,Error Message,Error Type,Resolved,Timestamp',
-      );
+      csv.writeln('ID,User ID,Device,Screen,Error Message,Error Type,Resolved,Timestamp');
 
       // Данные
       for (final error in errors) {

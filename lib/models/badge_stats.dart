@@ -12,15 +12,15 @@ class BadgeStats {
   });
 
   factory BadgeStats.fromJson(Map<String, dynamic> json) => BadgeStats(
-        totalBadges: json['totalBadges'] as int? ?? 0,
-        earnedBadges: json['earnedBadges'] as int? ?? 0,
-        availableBadges: json['availableBadges'] as int? ?? 0,
-        points: json['points'] as int? ?? 0,
-        level: json['level'] as int? ?? 0,
-        currentLevel: json['currentLevel'] as String? ?? '',
-        nextLevelPoints: json['nextLevelPoints'] as int? ?? 0,
-        progress: (json['progress'] as num?)?.toDouble() ?? 0.0,
-      );
+    totalBadges: json['totalBadges'] as int? ?? 0,
+    earnedBadges: json['earnedBadges'] as int? ?? 0,
+    availableBadges: json['availableBadges'] as int? ?? 0,
+    points: json['points'] as int? ?? 0,
+    level: json['level'] as int? ?? 0,
+    currentLevel: json['currentLevel'] as String? ?? '',
+    nextLevelPoints: json['nextLevelPoints'] as int? ?? 0,
+    progress: (json['progress'] as num?)?.toDouble() ?? 0.0,
+  );
 
   final int totalBadges;
   final int earnedBadges;
@@ -32,15 +32,15 @@ class BadgeStats {
   final double progress;
 
   Map<String, dynamic> toJson() => {
-        'totalBadges': totalBadges,
-        'earnedBadges': earnedBadges,
-        'availableBadges': availableBadges,
-        'points': points,
-        'level': level,
-        'currentLevel': currentLevel,
-        'nextLevelPoints': nextLevelPoints,
-        'progress': progress,
-      };
+    'totalBadges': totalBadges,
+    'earnedBadges': earnedBadges,
+    'availableBadges': availableBadges,
+    'points': points,
+    'level': level,
+    'currentLevel': currentLevel,
+    'nextLevelPoints': nextLevelPoints,
+    'progress': progress,
+  };
 }
 
 /// Запись в таблице лидеров по бейджам
@@ -56,14 +56,14 @@ class BadgeLeaderboardEntry {
   });
 
   factory BadgeLeaderboardEntry.fromJson(Map<String, dynamic> json) => BadgeLeaderboardEntry(
-        userId: json['userId'] as String,
-        userName: json['userName'] as String,
-        userAvatar: json['userAvatar'] as String,
-        totalBadges: json['totalBadges'] as int? ?? 0,
-        points: json['points'] as int? ?? 0,
-        level: json['level'] as int? ?? 0,
-        position: json['position'] as int? ?? 0,
-      );
+    userId: json['userId'] as String,
+    userName: json['userName'] as String,
+    userAvatar: json['userAvatar'] as String,
+    totalBadges: json['totalBadges'] as int? ?? 0,
+    points: json['points'] as int? ?? 0,
+    level: json['level'] as int? ?? 0,
+    position: json['position'] as int? ?? 0,
+  );
 
   final String userId;
   final String userName;
@@ -74,12 +74,12 @@ class BadgeLeaderboardEntry {
   final int position;
 
   Map<String, dynamic> toJson() => {
-        'userId': userId,
-        'userName': userName,
-        'userAvatar': userAvatar,
-        'totalBadges': totalBadges,
-        'points': points,
-        'level': level,
-        'position': position,
-      };
+    'userId': userId,
+    'userName': userName,
+    'userAvatar': userAvatar,
+    'totalBadges': totalBadges,
+    'points': points,
+    'level': level,
+    'position': position,
+  };
 }

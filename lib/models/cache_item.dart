@@ -15,27 +15,22 @@ class CacheItem<T> {
   });
 
   /// Создать из Map
-  factory CacheItem.fromMap(
-    Map<String, dynamic> data,
-    T Function() fromJson,
-  ) =>
-      CacheItem<T>(
-        key: data['key'] as String? ?? '',
-        data: fromJson(),
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        expiresAt: (data['expiresAt'] as Timestamp).toDate(),
-        type: CacheType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => CacheType.memory,
-        ),
-        metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {},
-        ),
-        size: data['size'] as int?,
-        etag: data['etag'] as String?,
-        lastAccessed:
-            data['lastAccessed'] != null ? (data['lastAccessed'] as Timestamp).toDate() : null,
-      );
+  factory CacheItem.fromMap(Map<String, dynamic> data, T Function() fromJson) => CacheItem<T>(
+    key: data['key'] as String? ?? '',
+    data: fromJson(),
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+    expiresAt: (data['expiresAt'] as Timestamp).toDate(),
+    type: CacheType.values.firstWhere(
+      (e) => e.toString().split('.').last == data['type'],
+      orElse: () => CacheType.memory,
+    ),
+    metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+    size: data['size'] as int?,
+    etag: data['etag'] as String?,
+    lastAccessed: data['lastAccessed'] != null
+        ? (data['lastAccessed'] as Timestamp).toDate()
+        : null,
+  );
   final String key;
   final T data;
   final DateTime createdAt;
@@ -48,16 +43,16 @@ class CacheItem<T> {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap(T Function(T) toJson) => {
-        'key': key,
-        'data': toJson(data),
-        'createdAt': Timestamp.fromDate(createdAt),
-        'expiresAt': Timestamp.fromDate(expiresAt),
-        'type': type.toString().split('.').last,
-        'metadata': metadata,
-        'size': size,
-        'etag': etag,
-        'lastAccessed': lastAccessed != null ? Timestamp.fromDate(lastAccessed!) : null,
-      };
+    'key': key,
+    'data': toJson(data),
+    'createdAt': Timestamp.fromDate(createdAt),
+    'expiresAt': Timestamp.fromDate(expiresAt),
+    'type': type.toString().split('.').last,
+    'metadata': metadata,
+    'size': size,
+    'etag': etag,
+    'lastAccessed': lastAccessed != null ? Timestamp.fromDate(lastAccessed!) : null,
+  };
 
   /// Создать копию с изменениями
   CacheItem<T> copyWith({
@@ -70,18 +65,17 @@ class CacheItem<T> {
     int? size,
     String? etag,
     DateTime? lastAccessed,
-  }) =>
-      CacheItem<T>(
-        key: key ?? this.key,
-        data: data ?? this.data,
-        createdAt: createdAt ?? this.createdAt,
-        expiresAt: expiresAt ?? this.expiresAt,
-        type: type ?? this.type,
-        metadata: metadata ?? this.metadata,
-        size: size ?? this.size,
-        etag: etag ?? this.etag,
-        lastAccessed: lastAccessed ?? this.lastAccessed,
-      );
+  }) => CacheItem<T>(
+    key: key ?? this.key,
+    data: data ?? this.data,
+    createdAt: createdAt ?? this.createdAt,
+    expiresAt: expiresAt ?? this.expiresAt,
+    type: type ?? this.type,
+    metadata: metadata ?? this.metadata,
+    size: size ?? this.size,
+    etag: etag ?? this.etag,
+    lastAccessed: lastAccessed ?? this.lastAccessed,
+  );
 
   /// Проверить, истек ли срок действия
   bool get isExpired => DateTime.now().isAfter(expiresAt);
@@ -143,33 +137,15 @@ class CacheItem<T> {
   }
 
   @override
-  int get hashCode => Object.hash(
-        key,
-        data,
-        createdAt,
-        expiresAt,
-        type,
-        metadata,
-        size,
-        etag,
-        lastAccessed,
-      );
+  int get hashCode =>
+      Object.hash(key, data, createdAt, expiresAt, type, metadata, size, etag, lastAccessed);
 
   @override
   String toString() => 'CacheItem(key: $key, type: $type, expiresAt: $expiresAt)';
 }
 
 /// Типы кэша
-enum CacheType {
-  memory,
-  disk,
-  network,
-  database,
-  image,
-  api,
-  user,
-  session,
-}
+enum CacheType { memory, disk, network, database, image, api, user, session }
 
 /// Расширение для типов кэша
 extension CacheTypeExtension on CacheType {
@@ -290,7 +266,8 @@ class CacheStatistics {
 
     final averageAge = items.isNotEmpty
         ? Duration(
-            milliseconds: items.map((item) => item.age.inMilliseconds).reduce((a, b) => a + b) ~/
+            milliseconds:
+                items.map((item) => item.age.inMilliseconds).reduce((a, b) => a + b) ~/
                 items.length,
           )
         : Duration.zero;
@@ -299,7 +276,7 @@ class CacheStatistics {
         ? Duration(
             milliseconds:
                 items.map((item) => item.timeToExpiry.inMilliseconds).reduce((a, b) => a + b) ~/
-                    items.length,
+                items.length,
           )
         : Duration.zero;
 
@@ -387,26 +364,26 @@ class CacheConfig {
 
   /// Создать из Map
   factory CacheConfig.fromMap(Map<String, dynamic> data) => CacheConfig(
-        enabled: data['enabled'] as bool? ?? true,
-        defaultTTL: Duration(seconds: data['defaultTTL'] as int? ?? 3600),
-        maxSize: data['maxSize'] as int? ?? 100 * 1024 * 1024,
-        maxItems: data['maxItems'] as int? ?? 1000,
-        enableCompression: data['enableCompression'] as bool? ?? false,
-        enableEncryption: data['enableEncryption'] as bool? ?? false,
-        excludedKeys: List<String>.from(data['excludedKeys'] as List<dynamic>? ?? []),
-        customTTL: Map<String, Duration>.from(
-          (data['customTTL'] as Map<String, dynamic>?)?.map(
-                (key, value) => MapEntry(key, Duration(seconds: value as int)),
-              ) ??
-              {},
-        ),
-        evictionPolicy: CacheEvictionPolicy.values.firstWhere(
-          (e) => e.toString().split('.').last == data['evictionPolicy'],
-          orElse: () => CacheEvictionPolicy.lru,
-        ),
-        enableStatistics: data['enableStatistics'] as bool? ?? true,
-        enableLogging: data['enableLogging'] as bool? ?? false,
-      );
+    enabled: data['enabled'] as bool? ?? true,
+    defaultTTL: Duration(seconds: data['defaultTTL'] as int? ?? 3600),
+    maxSize: data['maxSize'] as int? ?? 100 * 1024 * 1024,
+    maxItems: data['maxItems'] as int? ?? 1000,
+    enableCompression: data['enableCompression'] as bool? ?? false,
+    enableEncryption: data['enableEncryption'] as bool? ?? false,
+    excludedKeys: List<String>.from(data['excludedKeys'] as List<dynamic>? ?? []),
+    customTTL: Map<String, Duration>.from(
+      (data['customTTL'] as Map<String, dynamic>?)?.map(
+            (key, value) => MapEntry(key, Duration(seconds: value as int)),
+          ) ??
+          {},
+    ),
+    evictionPolicy: CacheEvictionPolicy.values.firstWhere(
+      (e) => e.toString().split('.').last == data['evictionPolicy'],
+      orElse: () => CacheEvictionPolicy.lru,
+    ),
+    enableStatistics: data['enableStatistics'] as bool? ?? true,
+    enableLogging: data['enableLogging'] as bool? ?? false,
+  );
   final bool enabled;
   final Duration defaultTTL;
   final int maxSize;
@@ -421,18 +398,18 @@ class CacheConfig {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'enabled': enabled,
-        'defaultTTL': defaultTTL.inSeconds,
-        'maxSize': maxSize,
-        'maxItems': maxItems,
-        'enableCompression': enableCompression,
-        'enableEncryption': enableEncryption,
-        'excludedKeys': excludedKeys,
-        'customTTL': customTTL.map((key, value) => MapEntry(key, value.inSeconds)),
-        'evictionPolicy': evictionPolicy.toString().split('.').last,
-        'enableStatistics': enableStatistics,
-        'enableLogging': enableLogging,
-      };
+    'enabled': enabled,
+    'defaultTTL': defaultTTL.inSeconds,
+    'maxSize': maxSize,
+    'maxItems': maxItems,
+    'enableCompression': enableCompression,
+    'enableEncryption': enableEncryption,
+    'excludedKeys': excludedKeys,
+    'customTTL': customTTL.map((key, value) => MapEntry(key, value.inSeconds)),
+    'evictionPolicy': evictionPolicy.toString().split('.').last,
+    'enableStatistics': enableStatistics,
+    'enableLogging': enableLogging,
+  };
 
   /// Создать копию с изменениями
   CacheConfig copyWith({
@@ -447,20 +424,19 @@ class CacheConfig {
     CacheEvictionPolicy? evictionPolicy,
     bool? enableStatistics,
     bool? enableLogging,
-  }) =>
-      CacheConfig(
-        enabled: enabled ?? this.enabled,
-        defaultTTL: defaultTTL ?? this.defaultTTL,
-        maxSize: maxSize ?? this.maxSize,
-        maxItems: maxItems ?? this.maxItems,
-        enableCompression: enableCompression ?? this.enableCompression,
-        enableEncryption: enableEncryption ?? this.enableEncryption,
-        excludedKeys: excludedKeys ?? this.excludedKeys,
-        customTTL: customTTL ?? this.customTTL,
-        evictionPolicy: evictionPolicy ?? this.evictionPolicy,
-        enableStatistics: enableStatistics ?? this.enableStatistics,
-        enableLogging: enableLogging ?? this.enableLogging,
-      );
+  }) => CacheConfig(
+    enabled: enabled ?? this.enabled,
+    defaultTTL: defaultTTL ?? this.defaultTTL,
+    maxSize: maxSize ?? this.maxSize,
+    maxItems: maxItems ?? this.maxItems,
+    enableCompression: enableCompression ?? this.enableCompression,
+    enableEncryption: enableEncryption ?? this.enableEncryption,
+    excludedKeys: excludedKeys ?? this.excludedKeys,
+    customTTL: customTTL ?? this.customTTL,
+    evictionPolicy: evictionPolicy ?? this.evictionPolicy,
+    enableStatistics: enableStatistics ?? this.enableStatistics,
+    enableLogging: enableLogging ?? this.enableLogging,
+  );
 
   /// Получить TTL для ключа
   Duration getTTL(String key) => customTTL[key] ?? defaultTTL;
@@ -487,18 +463,18 @@ class CacheConfig {
 
   @override
   int get hashCode => Object.hash(
-        enabled,
-        defaultTTL,
-        maxSize,
-        maxItems,
-        enableCompression,
-        enableEncryption,
-        excludedKeys,
-        customTTL,
-        evictionPolicy,
-        enableStatistics,
-        enableLogging,
-      );
+    enabled,
+    defaultTTL,
+    maxSize,
+    maxItems,
+    enableCompression,
+    enableEncryption,
+    excludedKeys,
+    customTTL,
+    evictionPolicy,
+    enableStatistics,
+    enableLogging,
+  );
 
   @override
   String toString() =>

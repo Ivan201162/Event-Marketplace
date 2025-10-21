@@ -200,8 +200,9 @@ class RecommendationService {
       }
 
       // Определяем наиболее предпочитаемые
-      final preferredCity =
-          cities.isNotEmpty ? cities.entries.reduce((a, b) => a.value > b.value ? a : b).key : null;
+      final preferredCity = cities.isNotEmpty
+          ? cities.entries.reduce((a, b) => a.value > b.value ? a : b).key
+          : null;
 
       final preferredCategory = categories.isNotEmpty
           ? categories.entries.reduce((a, b) => a.value > b.value ? a : b).key
@@ -210,9 +211,7 @@ class RecommendationService {
       final avgPrice = prices.isNotEmpty ? prices.reduce((a, b) => a + b) / prices.length : 0.0;
 
       final preferredSpecialists = specialistIds.entries
-          .where(
-            (entry) => entry.value > 1,
-          ) // Специалисты, которых выбирали больше 1 раза
+          .where((entry) => entry.value > 1) // Специалисты, которых выбирали больше 1 раза
           .map((entry) => entry.key)
           .toList();
 
@@ -256,10 +255,7 @@ class RecommendationService {
     }
 
     if (budget != null) {
-      query = query.where(
-        'pricePerHour',
-        isLessThanOrEqualTo: budget * 1.2,
-      ); // +20% к бюджету
+      query = query.where('pricePerHour', isLessThanOrEqualTo: budget * 1.2); // +20% к бюджету
     }
 
     // Сортируем по рейтингу и количеству отзывов
@@ -294,20 +290,20 @@ class RecommendationService {
   List<Specialist> _applyContentBasedFiltering(
     List<Specialist> specialists,
     Map<String, dynamic> userPreferences,
-  ) =>
-      specialists.where((specialist) {
-        // Проверяем соответствие предпочтениям
-        final matchesCity =
-            userPreferences['city'] == null || specialist.city == userPreferences['city'];
+  ) => specialists.where((specialist) {
+    // Проверяем соответствие предпочтениям
+    final matchesCity =
+        userPreferences['city'] == null || specialist.city == userPreferences['city'];
 
-        final matchesCategory = userPreferences['category'] == null ||
-            specialist.category == userPreferences['category'];
+    final matchesCategory =
+        userPreferences['category'] == null || specialist.category == userPreferences['category'];
 
-        final matchesBudget = userPreferences['budget'] == null ||
-            specialist.pricePerHour <= userPreferences['budget'] * 1.2;
+    final matchesBudget =
+        userPreferences['budget'] == null ||
+        specialist.pricePerHour <= userPreferences['budget'] * 1.2;
 
-        return matchesCity && matchesCategory && matchesBudget;
-      }).toList();
+    return matchesCity && matchesCategory && matchesBudget;
+  }).toList();
 
   /// Collaborative filtering
   Future<List<Specialist>> _applyCollaborativeFiltering(
@@ -431,10 +427,7 @@ class RecommendationService {
       }).toList();
 
   /// Вычислить релевантность специалиста
-  double _calculateRelevanceScore(
-    Specialist specialist,
-    Map<String, dynamic> preferences,
-  ) {
+  double _calculateRelevanceScore(Specialist specialist, Map<String, dynamic> preferences) {
     var score = 0;
 
     // Базовый рейтинг
@@ -472,10 +465,7 @@ class RecommendationService {
   }
 
   /// Получить объяснение рекомендации
-  String getRecommendationExplanation(
-    Specialist specialist,
-    Map<String, dynamic> preferences,
-  ) {
+  String getRecommendationExplanation(Specialist specialist, Map<String, dynamic> preferences) {
     final reasons = <String>[];
 
     if (specialist.rating >= 4.5) {

@@ -87,11 +87,7 @@ class CustomerReviewService {
         error: 'Failed to create review: $e',
         stackTrace: stackTrace.toString(),
         action: 'create_review',
-        additionalData: {
-          'specialistId': specialistId,
-          'orderId': orderId,
-          'rating': rating,
-        },
+        additionalData: {'specialistId': specialistId, 'orderId': orderId, 'rating': rating},
       );
       return null;
     }
@@ -130,8 +126,10 @@ class CustomerReviewService {
   /// Получить отзыв по ID
   Future<CustomerReview?> getReviewById(String reviewId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('customer_reviews').doc(reviewId).get();
+      final DocumentSnapshot doc = await _firestore
+          .collection('customer_reviews')
+          .doc(reviewId)
+          .get();
 
       if (doc.exists) {
         return CustomerReview.fromDoc(doc);
@@ -160,9 +158,7 @@ class CustomerReviewService {
       final user = _auth.currentUser;
       if (user == null) return false;
 
-      final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
+      final updates = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
 
       if (rating != null) updates['rating'] = rating;
       if (text != null) updates['text'] = text;
@@ -276,12 +272,12 @@ class CustomerReviewService {
   }
 
   /// Получить статистику отзывов специалиста
-  Future<CustomerReviewStats?> getSpecialistReviewStats(
-    String specialistId,
-  ) async {
+  Future<CustomerReviewStats?> getSpecialistReviewStats(String specialistId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('review_stats').doc(specialistId).get();
+      final DocumentSnapshot doc = await _firestore
+          .collection('review_stats')
+          .doc(specialistId)
+          .get();
 
       if (doc.exists) {
         return CustomerReviewStats.fromMap(doc.data()! as Map<String, dynamic>);
@@ -303,8 +299,10 @@ class CustomerReviewService {
   /// Получить детальные оценки отзыва
   Future<DetailedRating?> getDetailedRating(String reviewId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('detailed_ratings').doc(reviewId).get();
+      final DocumentSnapshot doc = await _firestore
+          .collection('detailed_ratings')
+          .doc(reviewId)
+          .get();
 
       if (doc.exists) {
         return DetailedRating.fromMap(doc.data()! as Map<String, dynamic>);
@@ -431,9 +429,7 @@ class CustomerReviewService {
   }
 
   /// Вычислить и сохранить статистику отзывов
-  Future<CustomerReviewStats?> _calculateAndSaveReviewStats(
-    String specialistId,
-  ) async {
+  Future<CustomerReviewStats?> _calculateAndSaveReviewStats(String specialistId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('customer_reviews')

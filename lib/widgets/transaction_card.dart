@@ -7,11 +7,7 @@ class TransactionCard extends StatelessWidget {
   final Transaction transaction;
   final VoidCallback? onTap;
 
-  const TransactionCard({
-    super.key,
-    required this.transaction,
-    this.onTap,
-  });
+  const TransactionCard({super.key, required this.transaction, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +27,7 @@ class TransactionCard extends StatelessWidget {
                   color: _getTypeColor(transaction.type).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(
-                  transaction.typeIcon,
-                  style: const TextStyle(fontSize: 20),
-                ),
+                child: Text(transaction.typeIcon, style: const TextStyle(fontSize: 20)),
               ),
               const SizedBox(width: 12),
               // Content
@@ -44,9 +37,9 @@ class TransactionCard extends StatelessWidget {
                   children: [
                     Text(
                       transaction.description,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -91,24 +84,20 @@ class TransactionCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(
-                          Icons.access_time,
-                          size: 14,
-                          color: Colors.grey[600],
-                        ),
+                        Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Text(
                           transaction.formattedDate,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                         ),
                         const Spacer(),
                         Text(
                           transaction.formattedTime,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -123,16 +112,14 @@ class TransactionCard extends StatelessWidget {
                   Text(
                     transaction.formattedAmount,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: _getTypeColor(transaction.type),
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: _getTypeColor(transaction.type),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     transaction.formattedAbsoluteAmount,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                   ),
                 ],
               ),

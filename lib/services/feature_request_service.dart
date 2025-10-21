@@ -105,15 +105,10 @@ class FeatureRequestService {
     query = query.limit(30);
 
     return query.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => FeatureRequest.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
-              .toList(),
-        );
+      (snapshot) => snapshot.docs
+          .map((doc) => FeatureRequest.fromMap({'id': doc.id, ...doc.data()}))
+          .toList(),
+    );
   }
 
   /// Получить предложения пользователя
@@ -129,12 +124,7 @@ class FeatureRequestService {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map(
-                (doc) => FeatureRequest.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
+              .map((doc) => FeatureRequest.fromMap({'id': doc.id, ...doc.data()}))
               .toList(),
         );
   }
@@ -152,10 +142,7 @@ class FeatureRequestService {
         return null;
       }
 
-      return FeatureRequest.fromMap({
-        'id': doc.id,
-        ...doc.data()!,
-      });
+      return FeatureRequest.fromMap({'id': doc.id, ...doc.data()!});
     } on Exception catch (e) {
       debugPrint('Error getting feature request: $e');
       return null;
@@ -163,10 +150,7 @@ class FeatureRequestService {
   }
 
   /// Обновить предложение
-  Future<void> updateFeatureRequest(
-    String requestId,
-    Map<String, dynamic> updates,
-  ) async {
+  Future<void> updateFeatureRequest(String requestId, Map<String, dynamic> updates) async {
     if (!FeatureFlags.featureRequestsEnabled) {
       throw Exception('Предложения по функционалу отключены');
     }
@@ -317,12 +301,7 @@ class FeatureRequestService {
       final query = await _firestore.collection('feature_requests').get();
 
       final requests = query.docs
-          .map(
-            (doc) => FeatureRequest.fromMap({
-              'id': doc.id,
-              ...doc.data(),
-            }),
-          )
+          .map((doc) => FeatureRequest.fromMap({'id': doc.id, ...doc.data()}))
           .toList();
 
       return _calculateStats(requests);
@@ -364,10 +343,7 @@ class FeatureRequestService {
 
       return uniqueDocs.values
           .map(
-            (doc) => FeatureRequest.fromMap({
-              'id': doc.id,
-              ...doc.data()! as Map<String, dynamic>,
-            }),
+            (doc) => FeatureRequest.fromMap({'id': doc.id, ...doc.data()! as Map<String, dynamic>}),
           )
           .toList();
     } on Exception catch (e) {
@@ -450,32 +426,28 @@ class FeatureRequestService {
 
   /// Создать mock статистику
   FeatureRequestStats _createMockStats() => const FeatureRequestStats(
-        totalRequests: 25,
-        submittedRequests: 8,
-        underReviewRequests: 5,
-        approvedRequests: 4,
-        inDevelopmentRequests: 3,
-        completedRequests: 3,
-        rejectedRequests: 2,
-        categoryStats: {
-          FeatureCategory.ui: 8,
-          FeatureCategory.functionality: 10,
-          FeatureCategory.performance: 3,
-          FeatureCategory.integration: 2,
-          FeatureCategory.other: 2,
-        },
-        priorityStats: {
-          FeaturePriority.low: 5,
-          FeaturePriority.medium: 15,
-          FeaturePriority.high: 4,
-          FeaturePriority.critical: 1,
-        },
-        userTypeStats: {
-          UserType.customer: 18,
-          UserType.specialist: 6,
-          UserType.admin: 1,
-        },
-        totalVotes: 156,
-        averageVotesPerRequest: 6.24,
-      );
+    totalRequests: 25,
+    submittedRequests: 8,
+    underReviewRequests: 5,
+    approvedRequests: 4,
+    inDevelopmentRequests: 3,
+    completedRequests: 3,
+    rejectedRequests: 2,
+    categoryStats: {
+      FeatureCategory.ui: 8,
+      FeatureCategory.functionality: 10,
+      FeatureCategory.performance: 3,
+      FeatureCategory.integration: 2,
+      FeatureCategory.other: 2,
+    },
+    priorityStats: {
+      FeaturePriority.low: 5,
+      FeaturePriority.medium: 15,
+      FeaturePriority.high: 4,
+      FeaturePriority.critical: 1,
+    },
+    userTypeStats: {UserType.customer: 18, UserType.specialist: 6, UserType.admin: 1},
+    totalVotes: 156,
+    averageVotesPerRequest: 6.24,
+  );
 }

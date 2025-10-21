@@ -61,12 +61,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               startingDayOfWeek: StartingDayOfWeek.monday,
               calendarStyle: CalendarStyle(
                 outsideDaysVisible: false,
-                weekendTextStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                holidayTextStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                weekendTextStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+                holidayTextStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
                 selectedDecoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
                   shape: BoxShape.circle,
@@ -85,9 +81,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   color: Colors.grey.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
-                disabledTextStyle: TextStyle(
-                  color: Colors.grey.withValues(alpha: 0.6),
-                ),
+                disabledTextStyle: TextStyle(color: Colors.grey.withValues(alpha: 0.6)),
               ),
               headerStyle: HeaderStyle(
                 titleCentered: true,
@@ -96,9 +90,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                formatButtonTextStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
+                formatButtonTextStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
               ),
               onDaySelected: (selectedDay, focusedDay) {
                 // Проверяем, не занята ли дата
@@ -142,11 +134,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 markerBuilder: (context, day, events) {
                   if (events.isEmpty) return null;
 
-                  return Positioned(
-                    right: 1,
-                    bottom: 1,
-                    child: _buildEventMarker(events),
-                  );
+                  return Positioned(right: 1, bottom: 1, child: _buildEventMarker(events));
                 },
                 dowBuilder: (context, day) {
                   final text = _getDayName(day.weekday);
@@ -165,9 +153,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   // TODO(developer): Подключить провайдер для занятых дат
                   // final isBusy = _isDateBusy(day, busyDatesAsync);
                   const isBusy = false;
-                  final isPast = day.isBefore(
-                    DateTime.now().subtract(const Duration(days: 1)),
-                  );
+                  final isPast = day.isBefore(DateTime.now().subtract(const Duration(days: 1)));
 
                   return Container(
                     margin: const EdgeInsets.all(4),
@@ -175,8 +161,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                       color: isBusy
                           ? Colors.red.withValues(alpha: 0.3)
                           : isPast
-                              ? Colors.grey.withValues(alpha: 0.2)
-                              : null,
+                          ? Colors.grey.withValues(alpha: 0.2)
+                          : null,
                       shape: BoxShape.circle,
                       border: isBusy ? Border.all(color: Colors.red, width: 2) : null,
                     ),
@@ -187,8 +173,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                           color: isBusy
                               ? Colors.red
                               : isPast
-                                  ? Colors.grey
-                                  : null,
+                              ? Colors.grey
+                              : null,
                         ),
                       ),
                     ),
@@ -208,9 +194,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
         ],
 
         // Временные слоты
-        if (widget.showTimeSlots && _selectedDay != null) ...[
-          _buildTimeSlotsForSelectedDay(),
-        ],
+        if (widget.showTimeSlots && _selectedDay != null) ...[_buildTimeSlotsForSelectedDay()],
       ],
     );
   }
@@ -219,15 +203,14 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
   List<ScheduleEvent> _getEventsForDay(
     DateTime day,
     AsyncValue<SpecialistSchedule?> scheduleAsync,
-  ) =>
-      scheduleAsync.when(
-        data: (schedule) {
-          if (schedule == null) return [];
-          return schedule.getEventsForDate(day);
-        },
-        loading: () => [],
-        error: (_, __) => [],
-      );
+  ) => scheduleAsync.when(
+    data: (schedule) {
+      if (schedule == null) return [];
+      return schedule.getEventsForDate(day);
+    },
+    loading: () => [],
+    error: (_, __) => [],
+  );
 
   /// Построить маркер события
   Widget _buildEventMarker(List<ScheduleEvent> events) {
@@ -239,18 +222,12 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
       decoration: BoxDecoration(
         color: _getEventColor(events.first.type),
         shape: BoxShape.circle,
-        border: Border.all(
-          color: Theme.of(context).colorScheme.surface,
-        ),
+        border: Border.all(color: Theme.of(context).colorScheme.surface),
       ),
       child: Center(
         child: Text(
           events.length.toString(),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -277,9 +254,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
   }
 
   /// Построить события на выбранную дату
-  Widget _buildEventsForSelectedDay(
-    AsyncValue<SpecialistSchedule?> scheduleAsync,
-  ) =>
+  Widget _buildEventsForSelectedDay(AsyncValue<SpecialistSchedule?> scheduleAsync) =>
       scheduleAsync.when(
         data: (schedule) {
           if (schedule == null || _selectedDay == null) {
@@ -294,16 +269,9 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.event_available,
-                      color: Colors.green,
-                      size: 24,
-                    ),
+                    const Icon(Icons.event_available, color: Colors.green, size: 24),
                     const SizedBox(width: 12),
-                    Text(
-                      'На эту дату нет событий',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
+                    Text('На эту дату нет событий', style: Theme.of(context).textTheme.bodyLarge),
                   ],
                 ),
               ),
@@ -318,9 +286,9 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 children: [
                   Text(
                     'События на ${_formatDate(_selectedDay!)}',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   ...events.map(_buildEventItem),
@@ -356,60 +324,50 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
   /// Построить элемент события
   Widget _buildEventItem(ScheduleEvent event) => Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: _getEventColor(event.type).withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: _getEventColor(event.type).withValues(alpha: 0.3),
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: _getEventColor(event.type).withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: _getEventColor(event.type).withValues(alpha: 0.3)),
+    ),
+    child: Row(
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(color: _getEventColor(event.type), shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(event.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+              if (event.description != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  event.description!,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 4),
+              Text(
+                '${_formatTime(event.startTime)} - ${_formatTime(event.endTime)}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+            ],
           ),
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: _getEventColor(event.type),
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    event.title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  if (event.description != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      event.description!,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 4),
-                  Text(
-                    '${_formatTime(event.startTime)} - ${_formatTime(event.endTime)}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 
   /// Построить временные слоты на выбранную дату
   Widget _buildTimeSlotsForSelectedDay() {
@@ -440,19 +398,19 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
   /// Построить чип временного слота
   Widget _buildTimeSlotChip(DateTime timeSlot) => ActionChip(
-        label: Text(_formatTime(timeSlot)),
-        onPressed: () {
-          // TODO(developer): Обработка выбора временного слота
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Выбран слот: ${_formatTime(timeSlot)}')),
-          );
-        },
-        backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-        labelStyle: TextStyle(
-          color: Theme.of(context).colorScheme.primary,
-          fontWeight: FontWeight.w500,
-        ),
-      );
+    label: Text(_formatTime(timeSlot)),
+    onPressed: () {
+      // TODO(developer): Обработка выбора временного слота
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Выбран слот: ${_formatTime(timeSlot)}')));
+    },
+    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+    labelStyle: TextStyle(
+      color: Theme.of(context).colorScheme.primary,
+      fontWeight: FontWeight.w500,
+    ),
+  );
 
   /// Форматировать дату
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
@@ -463,13 +421,11 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
   /// Проверить, занята ли дата
   bool _isDateBusy(DateTime date, AsyncValue<List<DateTime>> busyDatesAsync) => busyDatesAsync.when(
-        data: (busyDates) => busyDates.any(
-          (busyDate) =>
-              busyDate.year == date.year &&
-              busyDate.month == date.month &&
-              busyDate.day == date.day,
-        ),
-        loading: () => false,
-        error: (_, __) => false,
-      );
+    data: (busyDates) => busyDates.any(
+      (busyDate) =>
+          busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day,
+    ),
+    loading: () => false,
+    error: (_, __) => false,
+  );
 }

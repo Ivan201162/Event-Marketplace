@@ -29,46 +29,38 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        appBar: AppBar(title: const Text('Мониторинг производительности')),
-        body: Column(
-          children: [
-            // Вкладки
-            _buildTabs(),
+    appBar: AppBar(title: const Text('Мониторинг производительности')),
+    body: Column(
+      children: [
+        // Вкладки
+        _buildTabs(),
 
-            // Контент
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _selectedTab == 'overview'
-                      ? _buildOverviewTab()
-                      : _selectedTab == 'metrics'
-                          ? _buildMetricsTab()
-                          : _selectedTab == 'alerts'
-                              ? _buildAlertsTab()
-                              : _buildStatisticsTab(),
-            ),
-          ],
+        // Контент
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _selectedTab == 'overview'
+              ? _buildOverviewTab()
+              : _selectedTab == 'metrics'
+              ? _buildMetricsTab()
+              : _selectedTab == 'alerts'
+              ? _buildAlertsTab()
+              : _buildStatisticsTab(),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildTabs() => ResponsiveCard(
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildTabButton('overview', 'Обзор', Icons.dashboard),
-            ),
-            Expanded(
-              child: _buildTabButton('metrics', 'Метрики', Icons.analytics),
-            ),
-            Expanded(
-              child: _buildTabButton('alerts', 'Алерты', Icons.warning),
-            ),
-            Expanded(
-              child: _buildTabButton('statistics', 'Статистика', Icons.bar_chart),
-            ),
-          ],
-        ),
-      );
+    child: Row(
+      children: [
+        Expanded(child: _buildTabButton('overview', 'Обзор', Icons.dashboard)),
+        Expanded(child: _buildTabButton('metrics', 'Метрики', Icons.analytics)),
+        Expanded(child: _buildTabButton('alerts', 'Алерты', Icons.warning)),
+        Expanded(child: _buildTabButton('statistics', 'Статистика', Icons.bar_chart)),
+      ],
+    ),
+  );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -86,17 +78,11 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.blue : Colors.grey,
-              size: 24,
-            ),
+            Icon(icon, color: isSelected ? Colors.blue : Colors.grey, size: 24),
             const SizedBox(height: 8),
             Text(
               title,
@@ -112,68 +98,60 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
   }
 
   Widget _buildOverviewTab() => SingleChildScrollView(
-        child: Column(
-          children: [
-            // Текущие метрики
-            ResponsiveCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Текущие метрики',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  if (_currentMetrics.isEmpty)
-                    const Center(child: Text('Метрики не загружены'))
-                  else
-                    GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      childAspectRatio: 2.5,
-                      children: _currentMetrics.entries
-                          .map(
-                            (entry) => _buildCurrentMetricCard(entry.key, entry.value),
-                          )
-                          .toList(),
-                    ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Активные алерты
-            ResponsiveCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Активные алерты',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const Spacer(),
-                      ElevatedButton.icon(
-                        onPressed: _loadAlerts,
-                        icon: const Icon(Icons.refresh),
-                        label: const Text('Обновить'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  if (_alerts.isEmpty)
-                    const Center(child: Text('Активных алертов нет'))
-                  else
-                    ..._alerts.take(5).map(_buildAlertCard),
-                ],
-              ),
-            ),
-          ],
+    child: Column(
+      children: [
+        // Текущие метрики
+        ResponsiveCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Текущие метрики', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 16),
+              if (_currentMetrics.isEmpty)
+                const Center(child: Text('Метрики не загружены'))
+              else
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  childAspectRatio: 2.5,
+                  children: _currentMetrics.entries
+                      .map((entry) => _buildCurrentMetricCard(entry.key, entry.value))
+                      .toList(),
+                ),
+            ],
+          ),
         ),
-      );
+
+        const SizedBox(height: 16),
+
+        // Активные алерты
+        ResponsiveCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text('Активные алерты', style: Theme.of(context).textTheme.titleMedium),
+                  const Spacer(),
+                  ElevatedButton.icon(
+                    onPressed: _loadAlerts,
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Обновить'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (_alerts.isEmpty)
+                const Center(child: Text('Активных алертов нет'))
+              else
+                ..._alerts.take(5).map(_buildAlertCard),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 
   Widget _buildCurrentMetricCard(String metricName, double value) {
     final category = _getMetricCategory(metricName);
@@ -193,28 +171,14 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
         children: [
           Text(
             _getMetricDisplayName(metricName),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color),
           ),
           const SizedBox(height: 4),
           Text(
             formattedValue,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
           ),
-          Text(
-            category,
-            style: const TextStyle(
-              fontSize: 10,
-              color: Colors.grey,
-            ),
-          ),
+          Text(category, style: const TextStyle(fontSize: 10, color: Colors.grey)),
         ],
       ),
     );
@@ -233,11 +197,7 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
       ),
       child: Row(
         children: [
-          Icon(
-            _getSeverityIcon(alert.severity),
-            color: severityColor,
-            size: 20,
-          ),
+          Icon(_getSeverityIcon(alert.severity), color: severityColor, size: 20),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -245,10 +205,7 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
               children: [
                 Text(
                   alert.message,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: severityColor,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: severityColor),
                 ),
                 Text(
                   '${alert.metricName}: ${alert.currentValue.toStringAsFixed(2)}',
@@ -272,39 +229,36 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
   }
 
   Widget _buildMetricsTab() => Column(
-        children: [
-          // Заголовок с фильтрами
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'Метрики производительности',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _loadMetrics,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
+    children: [
+      // Заголовок с фильтрами
+      ResponsiveCard(
+        child: Row(
+          children: [
+            Text('Метрики производительности', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _loadMetrics,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
-          ),
+          ],
+        ),
+      ),
 
-          // Список метрик
-          Expanded(
-            child: _metrics.isEmpty
-                ? const Center(child: Text('Метрики не найдены'))
-                : ListView.builder(
-                    itemCount: _metrics.length,
-                    itemBuilder: (context, index) {
-                      final metric = _metrics[index];
-                      return _buildMetricCard(metric);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список метрик
+      Expanded(
+        child: _metrics.isEmpty
+            ? const Center(child: Text('Метрики не найдены'))
+            : ListView.builder(
+                itemCount: _metrics.length,
+                itemBuilder: (context, index) {
+                  final metric = _metrics[index];
+                  return _buildMetricCard(metric);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildMetricCard(PerformanceMetric metric) {
     final color = _getMetricColor(metric.category);
@@ -316,18 +270,9 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
           // Заголовок
           Row(
             children: [
-              Icon(
-                _getCategoryIcon(metric.category),
-                color: color,
-                size: 24,
-              ),
+              Icon(_getCategoryIcon(metric.category), color: color, size: 24),
               const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  metric.name,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ),
+              Expanded(child: Text(metric.name, style: Theme.of(context).textTheme.titleMedium)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -337,11 +282,7 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
                 ),
                 child: Text(
                   metric.formattedValue,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: color,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -383,172 +324,147 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
   }
 
   Widget _buildAlertsTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'Алерты производительности',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _loadAlerts,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
+          children: [
+            Text('Алерты производительности', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _loadAlerts,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
-          ),
+          ],
+        ),
+      ),
 
-          // Список алертов
-          Expanded(
-            child: _alerts.isEmpty
-                ? const Center(child: Text('Алерты не найдены'))
-                : ListView.builder(
-                    itemCount: _alerts.length,
-                    itemBuilder: (context, index) {
-                      final alert = _alerts[index];
-                      return _buildAlertCard(alert);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список алертов
+      Expanded(
+        child: _alerts.isEmpty
+            ? const Center(child: Text('Алерты не найдены'))
+            : ListView.builder(
+                itemCount: _alerts.length,
+                itemBuilder: (context, index) {
+                  final alert = _alerts[index];
+                  return _buildAlertCard(alert);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildStatisticsTab() => FutureBuilder<List<PerformanceStatistics>>(
-        future: _loadAllStatistics(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    future: _loadAllStatistics(),
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-          final statistics = snapshot.data!;
+      final statistics = snapshot.data!;
 
-          return SingleChildScrollView(
-            child: Column(
-              children: statistics.map(_buildStatisticsCard).toList(),
-            ),
-          );
-        },
+      return SingleChildScrollView(
+        child: Column(children: statistics.map(_buildStatisticsCard).toList()),
       );
+    },
+  );
 
   Widget _buildStatisticsCard(PerformanceStatistics stats) => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Статистика: ${stats.metricName}', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 16),
+        Row(
           children: [
-            Text(
-              'Статистика: ${stats.metricName}',
-              style: Theme.of(context).textTheme.titleMedium,
+            Expanded(
+              child: _buildStatCard(
+                'Среднее',
+                stats.avgValue.toStringAsFixed(2),
+                Colors.blue,
+                Icons.trending_up,
+              ),
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    'Среднее',
-                    stats.avgValue.toStringAsFixed(2),
-                    Colors.blue,
-                    Icons.trending_up,
-                  ),
-                ),
-                Expanded(
-                  child: _buildStatCard(
-                    'Максимум',
-                    stats.maxValue.toStringAsFixed(2),
-                    Colors.red,
-                    Icons.trending_up,
-                  ),
-                ),
-                Expanded(
-                  child: _buildStatCard(
-                    'P95',
-                    stats.p95Value.toStringAsFixed(2),
-                    Colors.orange,
-                    Icons.trending_up,
-                  ),
-                ),
-              ],
+            Expanded(
+              child: _buildStatCard(
+                'Максимум',
+                stats.maxValue.toStringAsFixed(2),
+                Colors.red,
+                Icons.trending_up,
+              ),
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    'Образцов',
-                    '${stats.totalSamples}',
-                    Colors.green,
-                    Icons.analytics,
-                  ),
-                ),
-                Expanded(
-                  child: _buildStatCard(
-                    'Тренд',
-                    stats.trend,
-                    _getTrendColor(stats.trend),
-                    _getTrendIcon(stats.trend),
-                  ),
-                ),
-              ],
+            Expanded(
+              child: _buildStatCard(
+                'P95',
+                stats.p95Value.toStringAsFixed(2),
+                Colors.orange,
+                Icons.trending_up,
+              ),
             ),
           ],
         ),
-      );
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                'Образцов',
+                '${stats.totalSamples}',
+                Colors.green,
+                Icons.analytics,
+              ),
+            ),
+            Expanded(
+              child: _buildStatCard(
+                'Тренд',
+                stats.trend,
+                _getTrendColor(stats.trend),
+                _getTrendIcon(stats.trend),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 
-  Widget _buildStatCard(
-    String title,
-    String value,
-    Color color,
-    IconData icon,
-  ) =>
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color),
+  Widget _buildStatCard(String title, String value, Color color, IconData icon) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: color),
+    ),
+    child: Column(
+      children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
         ),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+        Text(
+          title,
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+          textAlign: TextAlign.center,
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color),
-        ),
-        child: Text(
-          '$label: $value',
-          style: TextStyle(
-            fontSize: 12,
-            color: color,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color),
+    ),
+    child: Text(
+      '$label: $value',
+      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+    ),
+  );
 
   String _getMetricCategory(String metricName) {
     if (metricName.contains('memory')) return 'memory';
@@ -702,10 +618,7 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
     });
 
     try {
-      await Future.wait([
-        _loadMetrics(),
-        _loadAlerts(),
-      ]);
+      await Future.wait([_loadMetrics(), _loadAlerts()]);
     } finally {
       setState(() {
         _isLoading = false;
@@ -734,10 +647,7 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка загрузки метрик: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка загрузки метрик: $e'), backgroundColor: Colors.red),
       );
     }
   }
@@ -750,10 +660,7 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка загрузки алертов: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка загрузки алертов: $e'), backgroundColor: Colors.red),
       );
     }
   }
@@ -793,18 +700,12 @@ class _PerformanceMonitoringScreenState extends ConsumerState<PerformanceMonitor
     try {
       await _performanceService.resolveAlert(alertId);
       _loadAlerts();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Алерт решен'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Алерт решен'), backgroundColor: Colors.green));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка решения алерта: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка решения алерта: $e'), backgroundColor: Colors.red),
       );
     }
   }

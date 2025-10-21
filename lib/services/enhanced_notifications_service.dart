@@ -44,11 +44,7 @@ class EnhancedNotificationsService {
     // iOS
     await _localNotifications
         .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+        ?.requestPermissions(alert: true, badge: true, sound: true);
 
     // Firebase Messaging
     final settings = await _messaging.requestPermission();
@@ -116,10 +112,7 @@ class EnhancedNotificationsService {
       presentSound: true,
     );
 
-    const details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
+    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     await _localNotifications.show(
       DateTime.now().millisecondsSinceEpoch.remainder(100000),
@@ -195,17 +188,15 @@ class EnhancedNotificationsService {
   }
 
   /// Получить уведомление по ID
-  Future<EnhancedNotification?> getNotificationById(
-    String notificationId,
-  ) async {
+  Future<EnhancedNotification?> getNotificationById(String notificationId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('notifications').doc(notificationId).get();
+      final DocumentSnapshot doc = await _firestore
+          .collection('notifications')
+          .doc(notificationId)
+          .get();
 
       if (doc.exists) {
-        return EnhancedNotification.fromMap(
-          doc.data()! as Map<String, dynamic>,
-        );
+        return EnhancedNotification.fromMap(doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -318,10 +309,7 @@ class EnhancedNotificationsService {
       final batch = _firestore.batch();
 
       for (final doc in snapshot.docs) {
-        batch.update(doc.reference, {
-          'isRead': true,
-          'readAt': FieldValue.serverTimestamp(),
-        });
+        batch.update(doc.reference, {'isRead': true, 'readAt': FieldValue.serverTimestamp()});
       }
 
       await batch.commit();
@@ -354,8 +342,10 @@ class EnhancedNotificationsService {
   /// Очистить все уведомления
   Future<void> clearAllNotifications(String userId) async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('notifications').where('userId', isEqualTo: userId).get();
+      final QuerySnapshot snapshot = await _firestore
+          .collection('notifications')
+          .where('userId', isEqualTo: userId)
+          .get();
 
       final batch = _firestore.batch();
 
@@ -372,8 +362,10 @@ class EnhancedNotificationsService {
   /// Получить статистику уведомлений
   Future<NotificationStats> getNotificationStats(String userId) async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('notifications').where('userId', isEqualTo: userId).get();
+      final QuerySnapshot snapshot = await _firestore
+          .collection('notifications')
+          .where('userId', isEqualTo: userId)
+          .get();
 
       var total = 0;
       var unread = 0;
@@ -391,9 +383,7 @@ class EnhancedNotificationsService {
         final type = NotificationType.fromString(data['type'] as String);
         byType[type] = (byType[type] ?? 0) + 1;
 
-        final priority = NotificationPriority.fromString(
-          data['priority'] as String? ?? 'normal',
-        );
+        final priority = NotificationPriority.fromString(data['priority'] as String? ?? 'normal');
         byPriority[priority] = (byPriority[priority] ?? 0) + 1;
       }
 

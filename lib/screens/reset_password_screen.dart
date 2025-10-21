@@ -61,153 +61,135 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Сброс пароля'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: _emailSent ? _buildSuccessView() : _buildResetForm(),
-          ),
-        ),
-      );
+    appBar: AppBar(
+      title: const Text('Сброс пароля'),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+    ),
+    body: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: _emailSent ? _buildSuccessView() : _buildResetForm(),
+      ),
+    ),
+  );
 
   Widget _buildResetForm() => Form(
-        key: _formKey,
+    key: _formKey,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 32),
+        Icon(Icons.lock_reset, size: 80, color: Theme.of(context).colorScheme.primary),
+        const SizedBox(height: 32),
+        Text(
+          'Сброс пароля',
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'Введите ваш email адрес, и мы отправим вам ссылку для сброса пароля',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 48),
+        TextFormField(
+          controller: _emailController,
+          keyboardType: TextInputType.emailAddress,
+          decoration: const InputDecoration(
+            labelText: 'Email',
+            hintText: 'Введите ваш email',
+            prefixIcon: Icon(Icons.email),
+            border: OutlineInputBorder(),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Пожалуйста, введите email';
+            }
+            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              return 'Пожалуйста, введите корректный email';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 32),
+        ElevatedButton(
+          onPressed: _isLoading ? null : _resetPassword,
+          style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+          child: _isLoading
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text('Отправить ссылку'),
+        ),
+        const SizedBox(height: 24),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Вернуться к входу'),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildSuccessView() => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      const SizedBox(height: 32),
+      Icon(Icons.mark_email_read, size: 80, color: Theme.of(context).colorScheme.primary),
+      const SizedBox(height: 32),
+      Text(
+        'Письмо отправлено!',
+        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+        textAlign: TextAlign.center,
+      ),
+      const SizedBox(height: 16),
+      Text(
+        'Мы отправили ссылку для сброса пароля на адрес:\n${_emailController.text}',
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+        ),
+        textAlign: TextAlign.center,
+      ),
+      const SizedBox(height: 24),
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 32),
-            Icon(
-              Icons.lock_reset,
-              size: 80,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(height: 32),
+            Icon(Icons.info_outline, color: Theme.of(context).colorScheme.onPrimaryContainer),
+            const SizedBox(height: 8),
             Text(
-              'Сброс пароля',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Введите ваш email адрес, и мы отправим вам ссылку для сброса пароля',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 48),
-            TextFormField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                hintText: 'Введите ваш email',
-                prefixIcon: Icon(Icons.email),
-                border: OutlineInputBorder(),
+              'Проверьте папку "Спам", если письмо не пришло в течение нескольких минут',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Пожалуйста, введите email';
-                }
-                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                  return 'Пожалуйста, введите корректный email';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _resetPassword,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              child: _isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Text('Отправить ссылку'),
-            ),
-            const SizedBox(height: 24),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Вернуться к входу'),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
-      );
-
-  Widget _buildSuccessView() => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 32),
-          Icon(
-            Icons.mark_email_read,
-            size: 80,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          const SizedBox(height: 32),
-          Text(
-            'Письмо отправлено!',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Мы отправили ссылку для сброса пароля на адрес:\n${_emailController.text}',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Проверьте папку "Спам", если письмо не пришло в течение нескольких минут',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Понятно'),
-          ),
-          const SizedBox(height: 16),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _emailSent = false;
-              });
-            },
-            child: const Text('Отправить еще раз'),
-          ),
-        ],
-      );
+      ),
+      const SizedBox(height: 32),
+      ElevatedButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Понятно')),
+      const SizedBox(height: 16),
+      TextButton(
+        onPressed: () {
+          setState(() {
+            _emailSent = false;
+          });
+        },
+        child: const Text('Отправить еще раз'),
+      ),
+    ],
+  );
 }

@@ -3,11 +3,7 @@ import '../models/payment_models.dart';
 
 /// Ответ от СБП
 class SbpPaymentResponse {
-  const SbpPaymentResponse({
-    required this.id,
-    required this.confirmationUrl,
-    this.qrCode,
-  });
+  const SbpPaymentResponse({required this.id, required this.confirmationUrl, this.qrCode});
   final String id;
   final String confirmationUrl;
   final String? qrCode;
@@ -15,11 +11,7 @@ class SbpPaymentResponse {
 
 /// Ответ от ЮKassa
 class YooKassaPaymentResponse {
-  const YooKassaPaymentResponse({
-    required this.id,
-    required this.confirmationUrl,
-    this.qrCode,
-  });
+  const YooKassaPaymentResponse({required this.id, required this.confirmationUrl, this.qrCode});
   final String id;
   final String confirmationUrl;
   final String? qrCode;
@@ -27,11 +19,7 @@ class YooKassaPaymentResponse {
 
 /// Ответ от Тинькофф
 class TinkoffPaymentResponse {
-  const TinkoffPaymentResponse({
-    required this.paymentId,
-    required this.paymentUrl,
-    this.qrCode,
-  });
+  const TinkoffPaymentResponse({required this.paymentId, required this.paymentUrl, this.qrCode});
   final String paymentId;
   final String paymentUrl;
   final String? qrCode;
@@ -39,40 +27,28 @@ class TinkoffPaymentResponse {
 
 /// Статус платежа СБП
 class SbpPaymentStatus {
-  const SbpPaymentStatus({
-    required this.paid,
-    required this.status,
-  });
+  const SbpPaymentStatus({required this.paid, required this.status});
   final bool paid;
   final String status;
 }
 
 /// Статус платежа ЮKassa
 class YooKassaPaymentStatus {
-  const YooKassaPaymentStatus({
-    required this.paid,
-    required this.status,
-  });
+  const YooKassaPaymentStatus({required this.paid, required this.status});
   final bool paid;
   final String status;
 }
 
 /// Статус платежа Тинькофф
 class TinkoffPaymentStatus {
-  const TinkoffPaymentStatus({
-    required this.success,
-    required this.status,
-  });
+  const TinkoffPaymentStatus({required this.success, required this.status});
   final bool success;
   final String status;
 }
 
 /// Ответ на возврат
 class RefundResponse {
-  const RefundResponse({
-    required this.id,
-    required this.status,
-  });
+  const RefundResponse({required this.id, required this.status});
   final String id;
   final String status;
 }
@@ -159,10 +135,7 @@ class RussianBankService {
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
 
-      return const SbpPaymentStatus(
-        paid: true,
-        status: 'succeeded',
-      );
+      return const SbpPaymentStatus(paid: true, status: 'succeeded');
     } catch (e) {
       debugPrint('Error getting SBP payment status: $e');
       throw Exception('Ошибка получения статуса платежа СБП: $e');
@@ -170,18 +143,13 @@ class RussianBankService {
   }
 
   /// Получить статус платежа ЮKassa
-  Future<YooKassaPaymentStatus> getYooKassaPaymentStatus(
-    String externalPaymentId,
-  ) async {
+  Future<YooKassaPaymentStatus> getYooKassaPaymentStatus(String externalPaymentId) async {
     try {
       // В реальном приложении здесь должна быть проверка статуса в ЮKassa
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
 
-      return const YooKassaPaymentStatus(
-        paid: true,
-        status: 'succeeded',
-      );
+      return const YooKassaPaymentStatus(paid: true, status: 'succeeded');
     } catch (e) {
       debugPrint('Error getting YooKassa payment status: $e');
       throw Exception('Ошибка получения статуса платежа ЮKassa: $e');
@@ -189,18 +157,13 @@ class RussianBankService {
   }
 
   /// Получить статус платежа Тинькофф
-  Future<TinkoffPaymentStatus> getTinkoffPaymentStatus(
-    String externalPaymentId,
-  ) async {
+  Future<TinkoffPaymentStatus> getTinkoffPaymentStatus(String externalPaymentId) async {
     try {
       // В реальном приложении здесь должна быть проверка статуса в Тинькофф
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
 
-      return const TinkoffPaymentStatus(
-        success: true,
-        status: 'CONFIRMED',
-      );
+      return const TinkoffPaymentStatus(success: true, status: 'CONFIRMED');
     } catch (e) {
       debugPrint('Error getting Tinkoff payment status: $e');
       throw Exception('Ошибка получения статуса платежа Тинькофф: $e');
@@ -231,35 +194,35 @@ class RussianBankService {
 
   /// Получить доступные методы платежей
   List<PaymentMethodInfo> getAvailablePaymentMethods() => [
-        const PaymentMethodInfo(
-          method: PaymentMethod.sbp,
-          name: 'СБП',
-          description: 'Система быстрых платежей',
-          isAvailable: true,
-        ),
-        const PaymentMethodInfo(
-          method: PaymentMethod.yookassa,
-          name: 'ЮKassa',
-          description: 'Платежи через ЮKassa',
-          isAvailable: true,
-        ),
-        const PaymentMethodInfo(
-          method: PaymentMethod.tinkoff,
-          name: 'Тинькофф',
-          description: 'Платежи через Тинькофф',
-          isAvailable: true,
-        ),
-        const PaymentMethodInfo(
-          method: PaymentMethod.card,
-          name: 'Банковская карта',
-          description: 'Оплата банковской картой',
-          isAvailable: true,
-        ),
-        const PaymentMethodInfo(
-          method: PaymentMethod.cash,
-          name: 'Наличные',
-          description: 'Оплата наличными',
-          isAvailable: false,
-        ),
-      ];
+    const PaymentMethodInfo(
+      method: PaymentMethod.sbp,
+      name: 'СБП',
+      description: 'Система быстрых платежей',
+      isAvailable: true,
+    ),
+    const PaymentMethodInfo(
+      method: PaymentMethod.yookassa,
+      name: 'ЮKassa',
+      description: 'Платежи через ЮKassa',
+      isAvailable: true,
+    ),
+    const PaymentMethodInfo(
+      method: PaymentMethod.tinkoff,
+      name: 'Тинькофф',
+      description: 'Платежи через Тинькофф',
+      isAvailable: true,
+    ),
+    const PaymentMethodInfo(
+      method: PaymentMethod.card,
+      name: 'Банковская карта',
+      description: 'Оплата банковской картой',
+      isAvailable: true,
+    ),
+    const PaymentMethodInfo(
+      method: PaymentMethod.cash,
+      name: 'Наличные',
+      description: 'Оплата наличными',
+      isAvailable: false,
+    ),
+  ];
 }

@@ -43,21 +43,13 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
       appBar: AppBar(
         title: const Text(
           'Лента',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.add_circle_outline,
-              color: Colors.black,
-              size: 28,
-            ),
+            icon: const Icon(Icons.add_circle_outline, color: Colors.black, size: 28),
             onPressed: () => _showCreatePostDialog(context),
           ),
         ],
@@ -94,10 +86,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
     );
   }
 
-  Widget _buildFeedContent(
-    AsyncValue<List<FeedPost>> feedPosts,
-    FeedFilter filter,
-  ) =>
+  Widget _buildFeedContent(AsyncValue<List<FeedPost>> feedPosts, FeedFilter filter) =>
       feedPosts.when(
         data: (posts) {
           if (posts.isEmpty) {
@@ -126,30 +115,19 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
             ),
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.red,
-              ),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
-              Text(
-                'Ошибка загрузки ленты',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
+              Text('Ошибка загрузки ленты', style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 8),
               Text(
                 error.toString(),
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
@@ -195,17 +173,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 80,
-            color: Colors.grey[400],
-          ),
+          Icon(icon, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 24),
           Text(
             title,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.grey[700],
-                ),
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[700]),
           ),
           const SizedBox(height: 8),
           Padding(
@@ -213,9 +185,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
             child: Text(
               subtitle,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
             ),
           ),
           const SizedBox(height: 24),
@@ -245,16 +215,16 @@ class _FeedScreenState extends ConsumerState<FeedScreen> with TickerProviderStat
 
   void _handleComment(FeedPost post) {
     // TODO(developer): Открыть экран комментариев
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Комментарии будут добавлены позже')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Комментарии будут добавлены позже')));
   }
 
   void _handleShare(FeedPost post) {
     // TODO(developer): Реализовать функционал шаринга
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Функция шаринга будет добавлена позже')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
   }
 
   void _handleProfileTap(String authorId) {

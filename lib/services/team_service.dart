@@ -131,10 +131,7 @@ class TeamService {
   }
 
   /// Подтвердить команду
-  Future<void> confirmTeam({
-    required String teamId,
-    String? notes,
-  }) async {
+  Future<void> confirmTeam({required String teamId, String? notes}) async {
     final teamRef = _firestore.collection(_collection).doc(teamId);
     final now = DateTime.now();
 
@@ -147,10 +144,7 @@ class TeamService {
   }
 
   /// Отклонить команду
-  Future<void> rejectTeam({
-    required String teamId,
-    required String reason,
-  }) async {
+  Future<void> rejectTeam({required String teamId, required String reason}) async {
     final teamRef = _firestore.collection(_collection).doc(teamId);
     final now = DateTime.now();
 
@@ -193,9 +187,7 @@ class TeamService {
     Map<String, double>? paymentSplit,
   }) async {
     final teamRef = _firestore.collection(_collection).doc(teamId);
-    final updateData = <String, dynamic>{
-      'updatedAt': Timestamp.fromDate(DateTime.now()),
-    };
+    final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
 
     if (teamName != null) updateData['teamName'] = teamName;
     if (description != null) updateData['description'] = description;
@@ -266,9 +258,7 @@ class TeamService {
       .where('organizerId', isEqualTo: organizerId)
       .orderBy('createdAt', descending: true)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(SpecialistTeam.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(SpecialistTeam.fromDocument).toList());
 
   /// Слушать команды специалиста
   Stream<List<SpecialistTeam>> watchSpecialistTeams(String specialistId) => _firestore
@@ -276,9 +266,7 @@ class TeamService {
       .where('specialists', arrayContains: specialistId)
       .orderBy('createdAt', descending: true)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(SpecialistTeam.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(SpecialistTeam.fromDocument).toList());
 
   /// Удалить команду
   Future<void> deleteTeam(String teamId) async {

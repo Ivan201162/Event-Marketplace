@@ -52,14 +52,10 @@ class ProfileService {
   }
 
   /// Создать или обновить профиль специалиста
-  Future<void> createOrUpdateSpecialistProfile(
-    SpecialistProfile profile,
-  ) async {
+  Future<void> createOrUpdateSpecialistProfile(SpecialistProfile profile) async {
     try {
       // Обновляем время последнего изменения
-      final updatedProfile = profile.copyWith(
-        updatedAt: DateTime.now(),
-      );
+      final updatedProfile = profile.copyWith(updatedAt: DateTime.now());
 
       await _firestore
           .collection('specialist_profiles')
@@ -130,11 +126,7 @@ class ProfileService {
   }
 
   /// Загрузить элемент портфолио
-  Future<String?> uploadPortfolioItem(
-    String userId,
-    String filePath,
-    String type,
-  ) async {
+  Future<String?> uploadPortfolioItem(String userId, String filePath, String type) async {
     try {
       // В реальном приложении здесь была бы загрузка в Firebase Storage
       // Для демонстрации возвращаем фиктивный URL
@@ -182,10 +174,9 @@ class ProfileService {
     bool onlyVerified = false,
   }) async {
     try {
-      var query = _firestore.collection('specialist_profiles').where(
-            'categories',
-            arrayContainsAny: categories.map((e) => e.name).toList(),
-          );
+      var query = _firestore
+          .collection('specialist_profiles')
+          .where('categories', arrayContainsAny: categories.map((e) => e.name).toList());
 
       if (onlyAvailable) {
         query = query.where('isAvailable', isEqualTo: true);
@@ -205,9 +196,7 @@ class ProfileService {
   }
 
   /// Получить популярные категории специалистов
-  Future<List<Map<String, dynamic>>> getPopularCategories({
-    int limit = 10,
-  }) async {
+  Future<List<Map<String, dynamic>>> getPopularCategories({int limit = 10}) async {
     try {
       final querySnapshot = await _firestore
           .collection('specialist_profiles')
@@ -230,12 +219,7 @@ class ProfileService {
 
       return sortedCategories
           .take(limit)
-          .map(
-            (entry) => {
-              'category': entry.key,
-              'count': entry.value,
-            },
-          )
+          .map((entry) => {'category': entry.key, 'count': entry.value})
           .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения популярных категорий: $e');
@@ -291,16 +275,10 @@ class ProfileService {
 
       // Фильтр по опыту
       if (minExperienceYears != null) {
-        queryRef = queryRef.where(
-          'experienceYears',
-          isGreaterThanOrEqualTo: minExperienceYears,
-        );
+        queryRef = queryRef.where('experienceYears', isGreaterThanOrEqualTo: minExperienceYears);
       }
       if (maxExperienceYears != null) {
-        queryRef = queryRef.where(
-          'experienceYears',
-          isLessThanOrEqualTo: maxExperienceYears,
-        );
+        queryRef = queryRef.where('experienceYears', isLessThanOrEqualTo: maxExperienceYears);
       }
 
       // Фильтр по локации
@@ -337,12 +315,8 @@ class ProfileService {
                       specialist.categoryDisplayNames.any(
                         (category) => category.toLowerCase().contains(lowerQuery),
                       ) ||
-                      specialist.languages.any(
-                        (lang) => lang.toLowerCase().contains(lowerQuery),
-                      ) ||
-                      specialist.equipment.any(
-                        (eq) => eq.toLowerCase().contains(lowerQuery),
-                      ),
+                      specialist.languages.any((lang) => lang.toLowerCase().contains(lowerQuery)) ||
+                      specialist.equipment.any((eq) => eq.toLowerCase().contains(lowerQuery)),
             )
             .toList();
       }
@@ -415,42 +389,47 @@ class ProfileService {
   }
 
   /// Получить статистику профиля
-  Future<Map<String, dynamic>> getProfileStats(
-    String userId,
-    UserRole role,
-  ) async {
+  Future<Map<String, dynamic>> getProfileStats(String userId, UserRole role) async {
     try {
       var stats = <String, dynamic>{};
 
       if (role == UserRole.specialist) {
         // Статистика для специалиста
-        final bookingsQuery =
-            await _firestore.collection('bookings').where('specialistId', isEqualTo: userId).get();
+        final bookingsQuery = await _firestore
+            .collection('bookings')
+            .where('specialistId', isEqualTo: userId)
+            .get();
 
-        final reviewsQuery =
-            await _firestore.collection('reviews').where('specialistId', isEqualTo: userId).get();
+        final reviewsQuery = await _firestore
+            .collection('reviews')
+            .where('specialistId', isEqualTo: userId)
+            .get();
 
         stats = {
           'totalBookings': bookingsQuery.docs.length,
-          'completedBookings':
-              bookingsQuery.docs.where((doc) => doc.data()['status'] == 'completed').length,
+          'completedBookings': bookingsQuery.docs
+              .where((doc) => doc.data()['status'] == 'completed')
+              .length,
           'totalReviews': reviewsQuery.docs.length,
           'averageRating': reviewsQuery.docs.isNotEmpty
               ? reviewsQuery.docs
-                      .map((doc) => doc.data()['rating'] as double)
-                      .reduce((a, b) => a + b) /
-                  reviewsQuery.docs.length
+                        .map((doc) => doc.data()['rating'] as double)
+                        .reduce((a, b) => a + b) /
+                    reviewsQuery.docs.length
               : 0.0,
         };
       } else if (role == UserRole.customer) {
         // Статистика для заказчика
-        final bookingsQuery =
-            await _firestore.collection('bookings').where('customerId', isEqualTo: userId).get();
+        final bookingsQuery = await _firestore
+            .collection('bookings')
+            .where('customerId', isEqualTo: userId)
+            .get();
 
         stats = {
           'totalBookings': bookingsQuery.docs.length,
-          'completedBookings':
-              bookingsQuery.docs.where((doc) => doc.data()['status'] == 'completed').length,
+          'completedBookings': bookingsQuery.docs
+              .where((doc) => doc.data()['status'] == 'completed')
+              .length,
         };
       }
 

@@ -22,15 +22,19 @@ final receivedRequestsProvider = FutureProvider.family<List<Request>, String>((r
 
 /// Requests by status provider
 final requestsByStatusProvider =
-    FutureProvider.family<List<Request>, ({String userId, RequestStatus status})>(
-        (ref, params) async {
-  final service = ref.read(requestServiceProvider);
-  return await service.getRequestsByStatus(params.userId, params.status);
-});
+    FutureProvider.family<List<Request>, ({String userId, RequestStatus status})>((
+      ref,
+      params,
+    ) async {
+      final service = ref.read(requestServiceProvider);
+      return await service.getRequestsByStatus(params.userId, params.status);
+    });
 
 /// Requests by category provider
-final requestsByCategoryProvider =
-    FutureProvider.family<List<Request>, String>((ref, category) async {
+final requestsByCategoryProvider = FutureProvider.family<List<Request>, String>((
+  ref,
+  category,
+) async {
   final service = ref.read(requestServiceProvider);
   return await service.getRequestsByCategory(category);
 });

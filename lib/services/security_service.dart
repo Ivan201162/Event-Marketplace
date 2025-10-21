@@ -134,10 +134,7 @@ class SecurityService {
   }
 
   /// Применить политику безопасности
-  Future<void> _enforcePolicy(
-    SecurityPolicy policy,
-    SecurityAudit audit,
-  ) async {
+  Future<void> _enforcePolicy(SecurityPolicy policy, SecurityAudit audit) async {
     try {
       final action = policy.rules['action'] as String?;
 
@@ -191,10 +188,7 @@ class SecurityService {
   }
 
   /// Отправить алерт безопасности
-  Future<void> _sendSecurityAlert(
-    SecurityPolicy policy,
-    SecurityAudit audit,
-  ) async {
+  Future<void> _sendSecurityAlert(SecurityPolicy policy, SecurityAudit audit) async {
     try {
       // TODO(developer): Интеграция с системой уведомлений
       if (kDebugMode) {
@@ -208,10 +202,7 @@ class SecurityService {
   }
 
   /// Применить ограничение скорости
-  Future<void> _applyRateLimit(
-    String? userId,
-    Map<String, dynamic> rules,
-  ) async {
+  Future<void> _applyRateLimit(String? userId, Map<String, dynamic> rules) async {
     if (userId == null) return;
 
     try {
@@ -239,10 +230,7 @@ class SecurityService {
       final dataBytes = utf8.encode(data);
 
       // Используем AES-256-CBC
-      final cipher = PaddedBlockCipherImpl(
-        PKCS7Padding(),
-        CBCBlockCipher(AESEngine()),
-      );
+      final cipher = PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()));
 
       final keyParam = KeyParameter(keyBytes);
       final iv = _generateIV();
@@ -277,10 +265,7 @@ class SecurityService {
       final encrypted = dataBytes.sublist(16);
 
       // Используем AES-256-CBC
-      final cipher = PaddedBlockCipherImpl(
-        PKCS7Padding(),
-        CBCBlockCipher(AESEngine()),
-      );
+      final cipher = PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()));
 
       final keyParam = KeyParameter(keyBytes);
       final ivParam = ParametersWithIV(keyParam, iv);
@@ -338,10 +323,7 @@ class SecurityService {
     final random = Random.secure();
 
     return String.fromCharCodes(
-      Iterable.generate(
-        length,
-        (_) => charSet.codeUnitAt(random.nextInt(charSet.length)),
-      ),
+      Iterable.generate(length, (_) => charSet.codeUnitAt(random.nextInt(charSet.length))),
     );
   }
 
@@ -430,16 +412,10 @@ class SecurityService {
         query = query.where('userId', isEqualTo: userId);
       }
       if (startDate != null) {
-        query = query.where(
-          'timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        );
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where(
-          'timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final snapshot = await query.orderBy('timestamp', descending: true).limit(limit).get();
@@ -514,10 +490,7 @@ class SecurityService {
   }
 
   /// Обновить политику безопасности
-  Future<void> updateSecurityPolicy(
-    String policyId,
-    SecurityPolicy updatedPolicy,
-  ) async {
+  Future<void> updateSecurityPolicy(String policyId, SecurityPolicy updatedPolicy) async {
     try {
       await _firestore.collection('securityPolicies').doc(policyId).update({
         ...updatedPolicy.toMap(),
@@ -707,17 +680,11 @@ class SecurityService {
           .limit(limit);
 
       if (fromDate != null) {
-        query = query.where(
-          'timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate),
-        );
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
       }
 
       if (toDate != null) {
-        query = query.where(
-          'timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(toDate),
-        );
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(toDate));
       }
 
       final snapshot = await query.get();
@@ -736,14 +703,7 @@ class SecurityService {
           .orderBy('lastSeen', descending: true)
           .get();
 
-      return snapshot.docs
-          .map(
-            (doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            },
-          )
-          .toList();
+      return snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
     } catch (e) {
       throw Exception('Ошибка получения устройств пользователя: $e');
     }
@@ -947,8 +907,8 @@ class SecurityService {
         'strength': score >= 80
             ? 'strong'
             : score >= 60
-                ? 'medium'
-                : 'weak',
+            ? 'medium'
+            : 'weak',
         'suggestions': password.length < 8 ? ['Use at least 8 characters'] : [],
       };
     } catch (e) {
@@ -1104,28 +1064,15 @@ class SecurityService {
           .limit(limit);
 
       if (fromDate != null) {
-        query = query.where(
-          'timestamp',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate),
-        );
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
       }
 
       if (toDate != null) {
-        query = query.where(
-          'timestamp',
-          isLessThanOrEqualTo: Timestamp.fromDate(toDate),
-        );
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(toDate));
       }
 
       final snapshot = await query.get();
-      return snapshot.docs
-          .map(
-            (doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            },
-          )
-          .toList();
+      return snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Ошибка получения логов сессий: $e');

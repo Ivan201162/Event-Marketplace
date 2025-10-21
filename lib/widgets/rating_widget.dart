@@ -21,31 +21,31 @@ class RatingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(maxRating, (index) {
-          final starIndex = index + 1;
-          final isFilled = starIndex <= rating;
-          final isHalfFilled = starIndex - 0.5 <= rating && starIndex > rating;
+    mainAxisSize: MainAxisSize.min,
+    children: List.generate(maxRating, (index) {
+      final starIndex = index + 1;
+      final isFilled = starIndex <= rating;
+      final isHalfFilled = starIndex - 0.5 <= rating && starIndex > rating;
 
-          return GestureDetector(
-            onTap: isInteractive && onRatingChanged != null
-                ? () => onRatingChanged!(starIndex.toDouble())
-                : null,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 1),
-              child: Icon(
-                isFilled
-                    ? Icons.star
-                    : isHalfFilled
-                        ? Icons.star_half
-                        : Icons.star_border,
-                size: starSize,
-                color: color,
-              ),
-            ),
-          );
-        }),
+      return GestureDetector(
+        onTap: isInteractive && onRatingChanged != null
+            ? () => onRatingChanged!(starIndex.toDouble())
+            : null,
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 1),
+          child: Icon(
+            isFilled
+                ? Icons.star
+                : isHalfFilled
+                ? Icons.star_half
+                : Icons.star_border,
+            size: starSize,
+            color: color,
+          ),
+        ),
       );
+    }),
+  );
 }
 
 /// Виджет для отображения рейтинга с числом
@@ -68,22 +68,14 @@ class RatingDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultTextStyle = theme.textTheme.bodyMedium?.copyWith(
-      fontWeight: FontWeight.w500,
-    );
+    final defaultTextStyle = theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        RatingWidget(
-          rating: rating,
-          starSize: starSize,
-        ),
+        RatingWidget(rating: rating, starSize: starSize),
         const SizedBox(width: 4),
-        Text(
-          rating.toStringAsFixed(1),
-          style: textStyle ?? defaultTextStyle,
-        ),
+        Text(rating.toStringAsFixed(1), style: textStyle ?? defaultTextStyle),
         if (showCount && reviewCount > 0) ...[
           const SizedBox(width: 4),
           Text(
@@ -130,18 +122,12 @@ class RatingDistributionWidget extends StatelessWidget {
             children: [
               Text(
                 '$rating',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
                 textWidthBasis: TextWidthBasis.longestLine,
               ),
               const SizedBox(width: 8),
-              const Icon(
-                Icons.star,
-                size: 12,
-                color: Colors.amber,
-              ),
+              const Icon(Icons.star, size: 12, color: Colors.amber),
               const SizedBox(width: 8),
               Expanded(
                 child: LinearProgressIndicator(
@@ -154,9 +140,7 @@ class RatingDistributionWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 '$count',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
@@ -185,22 +169,18 @@ class RatingSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(maxRating, (index) {
-          final starIndex = index + 1;
-          final isFilled = starIndex <= rating;
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: List.generate(maxRating, (index) {
+      final starIndex = index + 1;
+      final isFilled = starIndex <= rating;
 
-          return GestureDetector(
-            onTap: () => onRatingChanged(starIndex.toDouble()),
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              child: Icon(
-                isFilled ? Icons.star : Icons.star_border,
-                size: starSize,
-                color: color,
-              ),
-            ),
-          );
-        }),
+      return GestureDetector(
+        onTap: () => onRatingChanged(starIndex.toDouble()),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          child: Icon(isFilled ? Icons.star : Icons.star_border, size: starSize, color: color),
+        ),
       );
+    }),
+  );
 }

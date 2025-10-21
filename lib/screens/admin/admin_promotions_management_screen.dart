@@ -40,10 +40,7 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showCreatePromotionDialog(),
-          ),
+          IconButton(icon: const Icon(Icons.add), onPressed: () => _showCreatePromotionDialog()),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -63,9 +60,7 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
 
           final campaigns = snapshot.data?.docs ?? [];
           if (campaigns.isEmpty) {
-            return const Center(
-              child: Text('Нет промо-кампаний'),
-            );
+            return const Center(child: Text('Нет промо-кампаний'));
           }
 
           return ListView.builder(
@@ -80,15 +75,9 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundColor: _getCampaignColor(campaign.status),
-                    child: Icon(
-                      _getCampaignIcon(campaign.type),
-                      color: Colors.white,
-                    ),
+                    child: Icon(_getCampaignIcon(campaign.type), color: Colors.white),
                   ),
-                  title: Text(
-                    campaign.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  title: Text(campaign.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -195,10 +184,7 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
                   border: OutlineInputBorder(),
                 ),
                 items: MarketingCampaignType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(_getCampaignTypeName(type)),
-                  );
+                  return DropdownMenuItem(value: type, child: Text(_getCampaignTypeName(type)));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -242,14 +228,8 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: _createPromotion,
-            child: const Text('Создать'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          ElevatedButton(onPressed: _createPromotion, child: const Text('Создать')),
         ],
       ),
     );
@@ -276,9 +256,9 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
 
   Future<void> _createPromotion() async {
     if (_titleController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Заполните название кампании')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Заполните название кампании')));
       return;
     }
 
@@ -309,18 +289,16 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
 
       if (success) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Промо-кампания создана успешно')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Промо-кампания создана успешно')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка создания промо-кампании')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка создания промо-кампании')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -391,10 +369,7 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
                   border: OutlineInputBorder(),
                 ),
                 items: MarketingCampaignType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(_getCampaignTypeName(type)),
-                  );
+                  return DropdownMenuItem(value: type, child: Text(_getCampaignTypeName(type)));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -438,10 +413,7 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => _updateCampaign(campaign),
             child: const Text('Сохранить'),
@@ -477,23 +449,23 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
 
       if (success) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Промо-кампания обновлена успешно')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Промо-кампания обновлена успешно')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка обновления промо-кампании')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка обновления промо-кампании')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
   Future<void> _toggleCampaignStatus(
-      MarketingCampaign campaign, MarketingCampaignStatus newStatus) async {
+    MarketingCampaign campaign,
+    MarketingCampaignStatus newStatus,
+  ) async {
     try {
       // Mock admin data for testing
       const adminId = 'admin_123';
@@ -509,17 +481,16 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Статус кампании изменен на ${_getCampaignStatusName(newStatus)}')),
+            content: Text('Статус кампании изменен на ${_getCampaignStatusName(newStatus)}'),
+          ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка изменения статуса кампании')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка изменения статуса кампании')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -530,10 +501,7 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
         title: const Text('Удалить промо-кампанию'),
         content: Text('Вы уверены, что хотите удалить кампанию "${campaign.name}"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -549,13 +517,11 @@ class _AdminPromotionsManagementScreen extends State<AdminPromotionsManagementSc
             .collection('marketing_campaigns')
             .doc(campaign.id)
             .delete();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Промо-кампания удалена')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Промо-кампания удалена')));
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка удаления: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка удаления: $e')));
       }
     }
   }

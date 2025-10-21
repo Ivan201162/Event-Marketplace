@@ -184,10 +184,7 @@ class VersionManagementService {
   }
 
   /// Обновить версию
-  Future<void> updateVersion(
-    String versionId,
-    AppVersion updatedVersion,
-  ) async {
+  Future<void> updateVersion(String versionId, AppVersion updatedVersion) async {
     try {
       await _firestore.collection('appVersions').doc(versionId).update(updatedVersion.toMap());
       _versionsCache[versionId] = updatedVersion;
@@ -213,23 +210,17 @@ class VersionManagementService {
 
       // Деактивируем все версии того же типа и платформы
       final sameTypeVersions = _versionsCache.values
-          .where(
-            (v) => v.platform == version.platform && v.type == version.type && v.isAvailable,
-          )
+          .where((v) => v.platform == version.platform && v.type == version.type && v.isAvailable)
           .toList();
 
       for (final v in sameTypeVersions) {
-        await _firestore.collection('appVersions').doc(v.id).update({
-          'isAvailable': false,
-        });
+        await _firestore.collection('appVersions').doc(v.id).update({'isAvailable': false});
 
         _versionsCache[v.id] = v.copyWith(isAvailable: false);
       }
 
       // Активируем выбранную версию
-      await _firestore.collection('appVersions').doc(versionId).update({
-        'isAvailable': true,
-      });
+      await _firestore.collection('appVersions').doc(versionId).update({'isAvailable': true});
 
       _versionsCache[versionId] = version.copyWith(isAvailable: true);
 
@@ -287,21 +278,14 @@ class VersionManagementService {
   }
 
   /// Обновить прогресс обновления
-  Future<void> updateProgress(
-    String updateId,
-    double progress, {
-    UpdateStatus? status,
-  }) async {
+  Future<void> updateProgress(String updateId, double progress, {UpdateStatus? status}) async {
     try {
       final update = _updatesCache[updateId];
       if (update == null) {
         throw Exception('Обновление не найдено');
       }
 
-      final updatedUpdate = update.copyWith(
-        progress: progress,
-        status: status ?? update.status,
-      );
+      final updatedUpdate = update.copyWith(progress: progress, status: status ?? update.status);
 
       await _firestore.collection('appUpdates').doc(updateId).update({
         'progress': progress,
@@ -321,11 +305,7 @@ class VersionManagementService {
   }
 
   /// Завершить обновление
-  Future<void> completeUpdate(
-    String updateId, {
-    bool success = true,
-    String? errorMessage,
-  }) async {
+  Future<void> completeUpdate(String updateId, {bool success = true, String? errorMessage}) async {
     try {
       final update = _updatesCache[updateId];
       if (update == null) {
@@ -348,9 +328,7 @@ class VersionManagementService {
       _updatesCache[updateId] = updatedUpdate;
 
       if (kDebugMode) {
-        debugPrint(
-          'Update completed: $updateId - ${success ? 'success' : 'failed'}',
-        );
+        debugPrint('Update completed: $updateId - ${success ? 'success' : 'failed'}');
       }
     } catch (e) {
       if (kDebugMode) {

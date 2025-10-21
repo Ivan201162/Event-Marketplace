@@ -104,17 +104,17 @@ class HostFilters extends Equatable {
 
   @override
   List<Object?> get props => [
-        searchQuery,
-        city,
-        categories,
-        minRating,
-        maxRating,
-        minPrice,
-        maxPrice,
-        isAvailable,
-        isVerified,
-        experienceLevel,
-      ];
+    searchQuery,
+    city,
+    categories,
+    minRating,
+    maxRating,
+    minPrice,
+    maxPrice,
+    isAvailable,
+    isVerified,
+    experienceLevel,
+  ];
 
   @override
   String toString() {

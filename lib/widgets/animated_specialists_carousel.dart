@@ -44,20 +44,14 @@ class _AnimatedSpecialistsCarouselState extends ConsumerState<AnimatedSpecialist
       return Tween<double>(
         begin: 0.0,
         end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.elasticOut,
-      ));
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.elasticOut));
     }).toList();
 
     _cardSlideAnimations = _cardControllers.map((controller) {
       return Tween<Offset>(
         begin: const Offset(1.0, 0.0),
         end: Offset.zero,
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeOutBack,
-      ));
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
     }).toList();
 
     _animationController.forward();
@@ -103,14 +97,11 @@ class _AnimatedSpecialistsCarouselState extends ConsumerState<AnimatedSpecialist
                 children: [
                   Text(
                     'Лучшие специалисты недели',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  TextButton(
-                    onPressed: () => context.push('/search'),
-                    child: const Text('Все'),
-                  ),
+                  TextButton(onPressed: () => context.push('/search'), child: const Text('Все')),
                 ],
               ),
             ),
@@ -172,10 +163,7 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.05,
-    ).animate(CurvedAnimation(
-      parent: _hoverController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut));
   }
 
   @override
@@ -186,201 +174,169 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Container(
-              width: 170,
-              margin: const EdgeInsets.only(right: 12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+    animation: _scaleAnimation,
+    builder: (context, child) {
+      return Transform.scale(
+        scale: _scaleAnimation.value,
+        child: Container(
+          width: 170,
+          margin: const EdgeInsets.only(right: 12),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
-              child: InkWell(
-                onTap: () => context.push('/specialist/${widget.specialist.id}'),
-                onTapDown: (_) {
-                  setState(() => _isHovered = true);
-                  _hoverController.forward();
-                },
-                onTapUp: (_) {
-                  setState(() => _isHovered = false);
-                  _hoverController.reverse();
-                },
-                onTapCancel: () {
-                  setState(() => _isHovered = false);
-                  _hoverController.reverse();
-                },
-                borderRadius: BorderRadius.circular(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Аватар специалиста
-                    Container(
-                      height: 110,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(16),
+            ],
+          ),
+          child: InkWell(
+            onTap: () => context.push('/specialist/${widget.specialist.id}'),
+            onTapDown: (_) {
+              setState(() => _isHovered = true);
+              _hoverController.forward();
+            },
+            onTapUp: (_) {
+              setState(() => _isHovered = false);
+              _hoverController.reverse();
+            },
+            onTapCancel: () {
+              setState(() => _isHovered = false);
+              _hoverController.reverse();
+            },
+            borderRadius: BorderRadius.circular(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Аватар специалиста
+                Container(
+                  height: 110,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                    image: widget.specialist.avatar != null
+                        ? DecorationImage(
+                            image: CachedNetworkImageProvider(widget.specialist.avatar!),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                    color: widget.specialist.avatar == null
+                        ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                        : null,
+                  ),
+                  child: widget.specialist.avatar == null
+                      ? const Center(child: Icon(Icons.person, size: 50, color: Colors.grey))
+                      : null,
+                ),
+                // Информация о специалисте
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.specialist.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        image: widget.specialist.avatar != null
-                            ? DecorationImage(
-                                image: CachedNetworkImageProvider(widget.specialist.avatar!),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                        color: widget.specialist.avatar == null
-                            ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                            : null,
-                      ),
-                      child: widget.specialist.avatar == null
-                          ? const Center(
-                              child: Icon(
-                                Icons.person,
-                                size: 50,
-                                color: Colors.grey,
-                              ),
-                            )
-                          : null,
-                    ),
-                    // Информация о специалисте
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        const SizedBox(height: 2),
+                        Text(
+                          widget.specialist.category?.displayName ?? 'Категория',
+                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Spacer(),
+                        Row(
                           children: [
+                            Icon(Icons.star, color: Colors.amber[600], size: 14),
+                            const SizedBox(width: 2),
                             Text(
-                              widget.specialist.name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              widget.specialist.category?.displayName ?? 'Категория',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                              widget.specialist.rating.toString(),
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                             const Spacer(),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  color: Colors.amber[600],
-                                  size: 14,
-                                ),
-                                const SizedBox(width: 2),
-                                Text(
-                                  widget.specialist.rating.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  '${widget.specialist.price}₸',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            // Интерактивные кнопки
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => _openChat(context),
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 6),
-                                      minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                      backgroundColor: Theme.of(context).primaryColor,
-                                      foregroundColor: Colors.white,
-                                    ),
-                                    child: const Text(
-                                      'Связаться',
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => _openBooking(context),
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 6),
-                                      minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                      backgroundColor: Colors.green,
-                                      foregroundColor: Colors.white,
-                                    ),
-                                    child: const Text(
-                                      'Забронировать',
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              '${widget.specialist.price}₸',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                        const SizedBox(height: 8),
+                        // Интерактивные кнопки
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () => _openChat(context),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 6),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text('Связаться', style: TextStyle(fontSize: 10)),
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () => _openBooking(context),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 6),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                ),
+                                child: const Text('Забронировать', style: TextStyle(fontSize: 10)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          );
-        },
+          ),
+        ),
       );
+    },
+  );
 
   /// Открыть чат с специалистом
   Future<void> _openChat(BuildContext context) async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Необходимо войти в аккаунт')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Необходимо войти в аккаунт')));
         return;
       }
 
       final chatsRepository = ChatsRepository();
-      final chatId = await chatsRepository.findOrCreateChat(
-        currentUser.uid,
-        widget.specialist.id,
-      );
+      final chatId = await chatsRepository.findOrCreateChat(currentUser.uid, widget.specialist.id);
 
       if (chatId != null) {
         context.push('/chat/$chatId');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка создания чата')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка создания чата')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 

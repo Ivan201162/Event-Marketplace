@@ -7,10 +7,7 @@ import '../../services/payment_service.dart';
 import '../../widgets/subscription/subscription_plan_card.dart';
 
 class SubscriptionScreen extends ConsumerStatefulWidget {
-  const SubscriptionScreen({
-    super.key,
-    required this.userId,
-  });
+  const SubscriptionScreen({super.key, required this.userId});
   final String userId;
 
   @override
@@ -31,187 +28,160 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Мой тариф'),
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Current Subscription Status
-              if (_currentSubscription != null) ...[
-                _buildCurrentSubscriptionCard(),
-                const SizedBox(height: 24),
+    appBar: AppBar(
+      title: const Text('Мой тариф'),
+      backgroundColor: Colors.blue,
+      foregroundColor: Colors.white,
+    ),
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Current Subscription Status
+          if (_currentSubscription != null) ...[
+            _buildCurrentSubscriptionCard(),
+            const SizedBox(height: 24),
+          ],
+
+          // Header
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Colors.blue, Colors.indigo],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.diamond, color: Colors.white, size: 32),
+                SizedBox(height: 12),
+                Text(
+                  'Выберите подписку',
+                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Получите доступ к расширенному функционалу',
+                  style: TextStyle(color: Colors.white70, fontSize: 16),
+                ),
               ],
-
-              // Header
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Colors.blue, Colors.indigo],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.diamond,
-                      color: Colors.white,
-                      size: 32,
-                    ),
-                    SizedBox(height: 12),
-                    Text(
-                      'Выберите подписку',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Получите доступ к расширенному функционалу',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Subscription Plans
-              const Text(
-                'Доступные тарифы:',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Standard Plan
-              SubscriptionPlanCard(
-                plan: SubscriptionPlan.standard,
-                price: PaymentConfig.subscriptionPlans['standard']!,
-                isSelected: _selectedPlan == SubscriptionPlan.standard,
-                isCurrentPlan: _currentSubscription?.plan == SubscriptionPlan.standard,
-                onTap: () {
-                  setState(() {
-                    _selectedPlan = SubscriptionPlan.standard;
-                  });
-                },
-              ),
-
-              // Pro Plan
-              SubscriptionPlanCard(
-                plan: SubscriptionPlan.pro,
-                price: PaymentConfig.subscriptionPlans['pro']!,
-                isSelected: _selectedPlan == SubscriptionPlan.pro,
-                isCurrentPlan: _currentSubscription?.plan == SubscriptionPlan.pro,
-                onTap: () {
-                  setState(() {
-                    _selectedPlan = SubscriptionPlan.pro;
-                  });
-                },
-              ),
-
-              // Elite Plan
-              SubscriptionPlanCard(
-                plan: SubscriptionPlan.elite,
-                price: PaymentConfig.subscriptionPlans['elite']!,
-                isSelected: _selectedPlan == SubscriptionPlan.elite,
-                isCurrentPlan: _currentSubscription?.plan == SubscriptionPlan.elite,
-                onTap: () {
-                  setState(() {
-                    _selectedPlan = SubscriptionPlan.elite;
-                  });
-                },
-              ),
-
-              const SizedBox(height: 32),
-
-              // Action Button
-              if (_selectedPlan != null && _selectedPlan != _currentSubscription?.plan) ...[
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _processSubscription,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : Text(
-                            _selectedPlan == SubscriptionPlan.standard
-                                ? 'Активировать бесплатный тариф'
-                                : 'Оплатить ${PaymentConfig.subscriptionPlans[_selectedPlan.toString().split('.').last]} ₽/мес',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Cancel Subscription Button
-              if (_currentSubscription != null &&
-                  _currentSubscription!.plan != SubscriptionPlan.standard) ...[
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: OutlinedButton(
-                    onPressed: _cancelSubscription,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text(
-                      'Отменить подписку',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-
-              // Terms
-              Text(
-                'Подписка продлевается автоматически. '
-                'Вы можете отменить её в любое время в настройках.',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+            ),
           ),
-        ),
-      );
+
+          const SizedBox(height: 24),
+
+          // Subscription Plans
+          const Text(
+            'Доступные тарифы:',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+
+          // Standard Plan
+          SubscriptionPlanCard(
+            plan: SubscriptionPlan.standard,
+            price: PaymentConfig.subscriptionPlans['standard']!,
+            isSelected: _selectedPlan == SubscriptionPlan.standard,
+            isCurrentPlan: _currentSubscription?.plan == SubscriptionPlan.standard,
+            onTap: () {
+              setState(() {
+                _selectedPlan = SubscriptionPlan.standard;
+              });
+            },
+          ),
+
+          // Pro Plan
+          SubscriptionPlanCard(
+            plan: SubscriptionPlan.pro,
+            price: PaymentConfig.subscriptionPlans['pro']!,
+            isSelected: _selectedPlan == SubscriptionPlan.pro,
+            isCurrentPlan: _currentSubscription?.plan == SubscriptionPlan.pro,
+            onTap: () {
+              setState(() {
+                _selectedPlan = SubscriptionPlan.pro;
+              });
+            },
+          ),
+
+          // Elite Plan
+          SubscriptionPlanCard(
+            plan: SubscriptionPlan.elite,
+            price: PaymentConfig.subscriptionPlans['elite']!,
+            isSelected: _selectedPlan == SubscriptionPlan.elite,
+            isCurrentPlan: _currentSubscription?.plan == SubscriptionPlan.elite,
+            onTap: () {
+              setState(() {
+                _selectedPlan = SubscriptionPlan.elite;
+              });
+            },
+          ),
+
+          const SizedBox(height: 32),
+
+          // Action Button
+          if (_selectedPlan != null && _selectedPlan != _currentSubscription?.plan) ...[
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: _isLoading ? null : _processSubscription,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : Text(
+                        _selectedPlan == SubscriptionPlan.standard
+                            ? 'Активировать бесплатный тариф'
+                            : 'Оплатить ${PaymentConfig.subscriptionPlans[_selectedPlan.toString().split('.').last]} ₽/мес',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          // Cancel Subscription Button
+          if (_currentSubscription != null &&
+              _currentSubscription!.plan != SubscriptionPlan.standard) ...[
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: OutlinedButton(
+                onPressed: _cancelSubscription,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.red,
+                  side: const BorderSide(color: Colors.red),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text(
+                  'Отменить подписку',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+
+          // Terms
+          Text(
+            'Подписка продлевается автоматически. '
+            'Вы можете отменить её в любое время в настройках.',
+            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildCurrentSubscriptionCard() {
     final subscription = _currentSubscription!;
@@ -223,9 +193,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
       decoration: BoxDecoration(
         color: isExpired ? Colors.red.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isExpired ? Colors.red : Colors.green,
-        ),
+        border: Border.all(color: isExpired ? Colors.red : Colors.green),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,19 +219,13 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
           const SizedBox(height: 8),
           Text(
             isExpired ? 'Подписка истекла' : 'Осталось дней: $daysRemaining',
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.grey[600], fontSize: 14),
           ),
           if (!isExpired) ...[
             const SizedBox(height: 4),
             Text(
               'Следующее списание: ${_formatDate(subscription.expiresAt)}',
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.grey[600], fontSize: 14),
             ),
           ],
         ],
@@ -335,10 +297,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
           'Доступ к премиум-функциям будет прекращен в конце текущего периода.',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Нет'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Нет')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Да, отменить'),
@@ -351,10 +310,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
       // Here you would implement subscription cancellation
       // For now, just show a success message
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Подписка отменена'),
-          backgroundColor: Colors.green,
-        ),
+        const SnackBar(content: Text('Подписка отменена'), backgroundColor: Colors.green),
       );
     }
   }
@@ -370,14 +326,9 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
             Text('Успешно!'),
           ],
         ),
-        content: Text(
-          'Подписка ${_getPlanName(_selectedPlan!)} успешно активирована!',
-        ),
+        content: Text('Подписка ${_getPlanName(_selectedPlan!)} успешно активирована!'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отлично'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отлично')),
         ],
       ),
     );
@@ -399,10 +350,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
           'Попробуйте еще раз или обратитесь в поддержку.',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Понятно'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Понятно')),
         ],
       ),
     );

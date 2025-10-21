@@ -36,8 +36,10 @@ class NotificationService {
   }
 
   /// Get unread notifications
-  static Future<List<AppNotification>> getUnreadNotifications(String userId,
-      {int limit = 20}) async {
+  static Future<List<AppNotification>> getUnreadNotifications(
+    String userId, {
+    int limit = 20,
+  }) async {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection(_collection)
@@ -55,8 +57,11 @@ class NotificationService {
   }
 
   /// Get notifications by type
-  Future<List<AppNotification>> getNotificationsByType(String userId, NotificationType type,
-      {int limit = 20}) async {
+  Future<List<AppNotification>> getNotificationsByType(
+    String userId,
+    NotificationType type, {
+    int limit = 20,
+  }) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -160,8 +165,10 @@ class NotificationService {
   Future<bool> deleteAllNotifications(String userId) async {
     try {
       final batch = _firestore.batch();
-      final snapshot =
-          await _firestore.collection(_collection).where('userId', isEqualTo: userId).get();
+      final snapshot = await _firestore
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .get();
 
       for (final doc in snapshot.docs) {
         batch.delete(doc.reference);

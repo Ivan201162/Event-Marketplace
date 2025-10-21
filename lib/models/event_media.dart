@@ -1,21 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Тип медиафайла
-enum MediaType {
-  image,
-  video,
-  audio,
-  document,
-}
+enum MediaType { image, video, audio, document }
 
 /// Статус медиафайла
-enum MediaStatus {
-  uploading,
-  processing,
-  ready,
-  failed,
-  deleted,
-}
+enum MediaStatus { uploading, processing, ready, failed, deleted }
 
 /// Медиафайл мероприятия
 class EventMedia {
@@ -45,34 +34,31 @@ class EventMedia {
 
   /// Создать из Map
   factory EventMedia.fromMap(Map<String, dynamic> data) => EventMedia(
-        id: data['id'] as String? ?? '',
-        eventId: data['eventId'] as String? ?? '',
-        uploadedBy: data['uploadedBy'] as String? ?? '',
-        uploadedByName: data['uploadedByName'] as String? ?? '',
-        uploadedByPhoto: data['uploadedByPhoto'] as String?,
-        fileName: data['fileName'] as String? ?? '',
-        fileUrl: data['fileUrl'] as String? ?? '',
-        thumbnailUrl: data['thumbnailUrl'] as String?,
-        type: MediaType.values.firstWhere(
-          (e) => e.name == data['type'],
-          orElse: () => MediaType.image,
-        ),
-        status: MediaStatus.values.firstWhere(
-          (e) => e.name == data['status'],
-          orElse: () => MediaStatus.ready,
-        ),
-        fileSize: data['fileSize'] as int? ?? 0,
-        mimeType: data['mimeType'] as String?,
-        duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
-        metadata: data['metadata'] as Map<String, dynamic>?,
-        tags: List<String>.from((data['tags'] as List<dynamic>?) ?? []),
-        isPublic: data['isPublic'] as bool? ?? true,
-        isFeatured: data['isFeatured'] as bool? ?? false,
-        likesCount: data['likesCount'] as int? ?? 0,
-        likedBy: List<String>.from((data['likedBy'] as List<dynamic>?) ?? []),
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      );
+    id: data['id'] as String? ?? '',
+    eventId: data['eventId'] as String? ?? '',
+    uploadedBy: data['uploadedBy'] as String? ?? '',
+    uploadedByName: data['uploadedByName'] as String? ?? '',
+    uploadedByPhoto: data['uploadedByPhoto'] as String?,
+    fileName: data['fileName'] as String? ?? '',
+    fileUrl: data['fileUrl'] as String? ?? '',
+    thumbnailUrl: data['thumbnailUrl'] as String?,
+    type: MediaType.values.firstWhere((e) => e.name == data['type'], orElse: () => MediaType.image),
+    status: MediaStatus.values.firstWhere(
+      (e) => e.name == data['status'],
+      orElse: () => MediaStatus.ready,
+    ),
+    fileSize: data['fileSize'] as int? ?? 0,
+    mimeType: data['mimeType'] as String?,
+    duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
+    metadata: data['metadata'] as Map<String, dynamic>?,
+    tags: List<String>.from((data['tags'] as List<dynamic>?) ?? []),
+    isPublic: data['isPublic'] as bool? ?? true,
+    isFeatured: data['isFeatured'] as bool? ?? false,
+    likesCount: data['likesCount'] as int? ?? 0,
+    likedBy: List<String>.from((data['likedBy'] as List<dynamic>?) ?? []),
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+  );
   final String id;
   final String eventId;
   final String uploadedBy;
@@ -97,28 +83,28 @@ class EventMedia {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'eventId': eventId,
-        'uploadedBy': uploadedBy,
-        'uploadedByName': uploadedByName,
-        'uploadedByPhoto': uploadedByPhoto,
-        'fileName': fileName,
-        'fileUrl': fileUrl,
-        'thumbnailUrl': thumbnailUrl,
-        'type': type.name,
-        'status': status.name,
-        'fileSize': fileSize,
-        'mimeType': mimeType,
-        'duration': duration?.inMilliseconds,
-        'metadata': metadata,
-        'tags': tags,
-        'isPublic': isPublic,
-        'isFeatured': isFeatured,
-        'likesCount': likesCount,
-        'likedBy': likedBy,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'eventId': eventId,
+    'uploadedBy': uploadedBy,
+    'uploadedByName': uploadedByName,
+    'uploadedByPhoto': uploadedByPhoto,
+    'fileName': fileName,
+    'fileUrl': fileUrl,
+    'thumbnailUrl': thumbnailUrl,
+    'type': type.name,
+    'status': status.name,
+    'fileSize': fileSize,
+    'mimeType': mimeType,
+    'duration': duration?.inMilliseconds,
+    'metadata': metadata,
+    'tags': tags,
+    'isPublic': isPublic,
+    'isFeatured': isFeatured,
+    'likesCount': likesCount,
+    'likedBy': likedBy,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   /// Создать копию с изменениями
   EventMedia copyWith({
@@ -143,30 +129,29 @@ class EventMedia {
     List<String>? likedBy,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      EventMedia(
-        id: id ?? this.id,
-        eventId: eventId ?? this.eventId,
-        uploadedBy: uploadedBy ?? this.uploadedBy,
-        uploadedByName: uploadedByName ?? this.uploadedByName,
-        uploadedByPhoto: uploadedByPhoto ?? this.uploadedByPhoto,
-        fileName: fileName ?? this.fileName,
-        fileUrl: fileUrl ?? this.fileUrl,
-        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        fileSize: fileSize ?? this.fileSize,
-        mimeType: mimeType ?? this.mimeType,
-        duration: duration ?? this.duration,
-        metadata: metadata ?? this.metadata,
-        tags: tags ?? this.tags,
-        isPublic: isPublic ?? this.isPublic,
-        isFeatured: isFeatured ?? this.isFeatured,
-        likesCount: likesCount ?? this.likesCount,
-        likedBy: likedBy ?? this.likedBy,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => EventMedia(
+    id: id ?? this.id,
+    eventId: eventId ?? this.eventId,
+    uploadedBy: uploadedBy ?? this.uploadedBy,
+    uploadedByName: uploadedByName ?? this.uploadedByName,
+    uploadedByPhoto: uploadedByPhoto ?? this.uploadedByPhoto,
+    fileName: fileName ?? this.fileName,
+    fileUrl: fileUrl ?? this.fileUrl,
+    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    fileSize: fileSize ?? this.fileSize,
+    mimeType: mimeType ?? this.mimeType,
+    duration: duration ?? this.duration,
+    metadata: metadata ?? this.metadata,
+    tags: tags ?? this.tags,
+    isPublic: isPublic ?? this.isPublic,
+    isFeatured: isFeatured ?? this.isFeatured,
+    likesCount: likesCount ?? this.likesCount,
+    likedBy: likedBy ?? this.likedBy,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Проверить, лайкнул ли пользователь файл
   bool isLikedBy(String userId) => likedBy.contains(userId);

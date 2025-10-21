@@ -20,10 +20,7 @@ class FeedNotificationService {
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings();
 
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
+    const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
 
     await _localNotifications.initialize(
       initSettings,
@@ -47,11 +44,7 @@ class FeedNotificationService {
     // iOS
     await _localNotifications
         .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+        ?.requestPermissions(alert: true, badge: true, sound: true);
 
     // Firebase Messaging
     final settings = await _messaging.requestPermission();
@@ -59,13 +52,9 @@ class FeedNotificationService {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       debugPrint('Пользователь предоставил разрешение на уведомления');
     } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      debugPrint(
-        'Пользователь предоставил временное разрешение на уведомления',
-      );
+      debugPrint('Пользователь предоставил временное разрешение на уведомления');
     } else {
-      debugPrint(
-        'Пользователь отклонил или не предоставил разрешение на уведомления',
-      );
+      debugPrint('Пользователь отклонил или не предоставил разрешение на уведомления');
     }
   }
 
@@ -133,10 +122,7 @@ class FeedNotificationService {
       presentSound: true,
     );
 
-    const details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
+    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     await _localNotifications.show(
       DateTime.now().millisecondsSinceEpoch.remainder(100000),
@@ -170,11 +156,7 @@ class FeedNotificationService {
           body: postDescription.length > 100
               ? '${postDescription.substring(0, 100)}...'
               : postDescription,
-          data: {
-            'type': 'new_post',
-            'postId': postId,
-            'authorId': authorId,
-          },
+          data: {'type': 'new_post', 'postId': postId, 'authorId': authorId},
         );
       }
     } catch (e) {
@@ -199,11 +181,7 @@ class FeedNotificationService {
         userId: postAuthorId,
         title: 'Новый лайк',
         body: '$likerName поставил лайк вашему посту',
-        data: {
-          'type': 'like',
-          'postId': postId,
-          'likerId': likerId,
-        },
+        data: {'type': 'like', 'postId': postId, 'likerId': likerId},
       );
     } catch (e) {
       debugPrint('Ошибка отправки уведомления о лайке: $e');
@@ -229,11 +207,7 @@ class FeedNotificationService {
         title: 'Новый комментарий',
         body:
             '$commenterName: ${commentText.length > 50 ? '${commentText.substring(0, 50)}...' : commentText}',
-        data: {
-          'type': 'comment',
-          'postId': postId,
-          'commenterId': commenterId,
-        },
+        data: {'type': 'comment', 'postId': postId, 'commenterId': commenterId},
       );
     } catch (e) {
       debugPrint('Ошибка отправки уведомления о комментарии: $e');
@@ -247,9 +221,7 @@ class FeedNotificationService {
 
       if (userDoc.exists) {
         final userData = userDoc.data()!;
-        return List<String>.from(
-          (userData['followers'] as List<dynamic>?) ?? [],
-        );
+        return List<String>.from((userData['followers'] as List<dynamic>?) ?? []);
       }
 
       return [];

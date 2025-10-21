@@ -131,10 +131,7 @@ class BackupService {
         BackupStatus.completed,
         fileUrl: downloadUrl,
         fileSize: bytes.length,
-        metadata: {
-          'totalDocuments': totalDocuments,
-          'fileName': fileName,
-        },
+        metadata: {'totalDocuments': totalDocuments, 'fileName': fileName},
       );
     } catch (e) {
       if (kDebugMode) {
@@ -142,11 +139,7 @@ class BackupService {
       }
 
       // Обновляем статус на "ошибка"
-      await _updateBackupStatus(
-        backupId,
-        BackupStatus.failed,
-        errorMessage: e.toString(),
-      );
+      await _updateBackupStatus(backupId, BackupStatus.failed, errorMessage: e.toString());
     }
   }
 
@@ -355,11 +348,7 @@ class BackupService {
       }
 
       // Обновляем статус на "ошибка"
-      await _updateRestoreStatus(
-        restoreId,
-        RestoreStatus.failed,
-        errorMessage: e.toString(),
-      );
+      await _updateRestoreStatus(restoreId, RestoreStatus.failed, errorMessage: e.toString());
     }
   }
 
@@ -378,26 +367,20 @@ class BackupService {
   }
 
   /// Импортировать данные бэкапа
-  Future<void> _importBackupData(
-    Map<String, dynamic> backupData,
-    Restore restore,
-  ) async {
+  Future<void> _importBackupData(Map<String, dynamic> backupData, Restore restore) async {
     try {
       final data = backupData['data'] as Map<String, dynamic>?;
       if (data == null) return;
 
-      final collectionsToRestore =
-          restore.collections.isEmpty ? data.keys.toList() : restore.collections;
+      final collectionsToRestore = restore.collections.isEmpty
+          ? data.keys.toList()
+          : restore.collections;
 
       for (final collectionName in collectionsToRestore) {
         final collectionData = data[collectionName] as List<dynamic>?;
         if (collectionData == null) continue;
 
-        await _importCollection(
-          collectionName,
-          collectionData,
-          restore.options,
-        );
+        await _importCollection(collectionName, collectionData, restore.options);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -582,24 +565,11 @@ class BackupService {
           'appErrors',
         ];
       case BackupType.incremental:
-        return [
-          'bookings',
-          'payments',
-          'messages',
-          'notifications',
-        ];
+        return ['bookings', 'payments', 'messages', 'notifications'];
       case BackupType.differential:
-        return [
-          'users',
-          'specialists',
-          'bookings',
-          'payments',
-        ];
+        return ['users', 'specialists', 'bookings', 'payments'];
       case BackupType.selective:
-        return [
-          'users',
-          'specialists',
-        ];
+        return ['users', 'specialists'];
     }
   }
 

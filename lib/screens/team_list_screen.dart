@@ -7,11 +7,7 @@ import 'team_screen.dart';
 
 /// Экран списка команд специалистов
 class TeamListScreen extends ConsumerWidget {
-  const TeamListScreen({
-    super.key,
-    required this.organizerId,
-    this.title = 'Мои команды',
-  });
+  const TeamListScreen({super.key, required this.organizerId, this.title = 'Мои команды'});
 
   final String organizerId;
   final String title;
@@ -39,19 +35,9 @@ class TeamListScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.group_off,
-                    size: 64,
-                    color: Colors.grey,
-                  ),
+                  Icon(Icons.group_off, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text(
-                    'У вас пока нет команд',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
-                  ),
+                  Text('У вас пока нет команд', style: TextStyle(fontSize: 18, color: Colors.grey)),
                   SizedBox(height: 8),
                   Text(
                     'Создайте команду специалистов для вашего мероприятия',
@@ -93,45 +79,45 @@ class TeamListScreen extends ConsumerWidget {
   }
 
   Widget _buildTeamCard(BuildContext context, SpecialistTeam team) => Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: InkWell(
-          onTap: () => _navigateToTeam(context, team),
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    margin: const EdgeInsets.only(bottom: 16),
+    child: InkWell(
+      onTap: () => _navigateToTeam(context, team),
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок и статус
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Заголовок и статус
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        team.teamName ?? 'Команда специалистов',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ),
-                    _buildStatusChip(team.status),
-                  ],
+                Expanded(
+                  child: Text(
+                    team.teamName ?? 'Команда специалистов',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
-
-                const SizedBox(height: 12),
-
-                // Информация о команде
-                _buildTeamInfo(team),
-
-                const SizedBox(height: 12),
-
-                // Действия
-                _buildTeamActions(context, team),
+                _buildStatusChip(team.status),
               ],
             ),
-          ),
+
+            const SizedBox(height: 12),
+
+            // Информация о команде
+            _buildTeamInfo(team),
+
+            const SizedBox(height: 12),
+
+            // Действия
+            _buildTeamActions(context, team),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _buildStatusChip(TeamStatus status) {
     Color backgroundColor;
@@ -168,10 +154,7 @@ class TeamListScreen extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(12)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -179,11 +162,7 @@ class TeamListScreen extends ConsumerWidget {
           const SizedBox(width: 4),
           Text(
             status.displayName,
-            style: TextStyle(
-              color: textColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -191,121 +170,107 @@ class TeamListScreen extends ConsumerWidget {
   }
 
   Widget _buildTeamInfo(SpecialistTeam team) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Количество специалистов
+      Row(
         children: [
-          // Количество специалистов
-          Row(
-            children: [
-              const Icon(Icons.people, size: 16, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text('Специалистов: ${team.specialistCount}'),
-            ],
-          ),
-
-          const SizedBox(height: 4),
-
-          // Мероприятие
-          if (team.eventTitle != null) ...[
-            Row(
-              children: [
-                const Icon(Icons.event, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    team.eventTitle!,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-          ],
-
-          // Дата мероприятия
-          if (team.eventDate != null) ...[
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Text(
-                  '${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}',
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-          ],
-
-          // Место проведения
-          if (team.eventLocation != null) ...[
-            Row(
-              children: [
-                const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(team.eventLocation!),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-          ],
-
-          // Стоимость
-          if (team.totalPrice != null) ...[
-            Row(
-              children: [
-                const Icon(Icons.attach_money, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Text(
-                  'Стоимость: ${team.totalPrice!.toStringAsFixed(0)} ₽',
-                  style: const TextStyle(fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-          ],
+          const Icon(Icons.people, size: 16, color: Colors.grey),
+          const SizedBox(width: 8),
+          Text('Специалистов: ${team.specialistCount}'),
         ],
-      );
+      ),
+
+      const SizedBox(height: 4),
+
+      // Мероприятие
+      if (team.eventTitle != null) ...[
+        Row(
+          children: [
+            const Icon(Icons.event, size: 16, color: Colors.grey),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(team.eventTitle!, style: const TextStyle(fontWeight: FontWeight.w500)),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+      ],
+
+      // Дата мероприятия
+      if (team.eventDate != null) ...[
+        Row(
+          children: [
+            const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+            const SizedBox(width: 8),
+            Text('${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}'),
+          ],
+        ),
+        const SizedBox(height: 4),
+      ],
+
+      // Место проведения
+      if (team.eventLocation != null) ...[
+        Row(
+          children: [
+            const Icon(Icons.location_on, size: 16, color: Colors.grey),
+            const SizedBox(width: 8),
+            Expanded(child: Text(team.eventLocation!)),
+          ],
+        ),
+        const SizedBox(height: 4),
+      ],
+
+      // Стоимость
+      if (team.totalPrice != null) ...[
+        Row(
+          children: [
+            const Icon(Icons.attach_money, size: 16, color: Colors.grey),
+            const SizedBox(width: 8),
+            Text(
+              'Стоимость: ${team.totalPrice!.toStringAsFixed(0)} ₽',
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ],
+    ],
+  );
 
   Widget _buildTeamActions(BuildContext context, SpecialistTeam team) => Row(
-        children: [
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: () => _navigateToTeam(context, team),
-              icon: const Icon(Icons.visibility),
-              label: const Text('Просмотреть'),
-            ),
+    children: [
+      Expanded(
+        child: OutlinedButton.icon(
+          onPressed: () => _navigateToTeam(context, team),
+          icon: const Icon(Icons.visibility),
+          label: const Text('Просмотреть'),
+        ),
+      ),
+      const SizedBox(width: 8),
+      if (team.status == TeamStatus.draft) ...[
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () => _navigateToTeam(context, team, isEditable: true),
+            icon: const Icon(Icons.edit),
+            label: const Text('Редактировать'),
           ),
-          const SizedBox(width: 8),
-          if (team.status == TeamStatus.draft) ...[
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () => _navigateToTeam(context, team, isEditable: true),
-                icon: const Icon(Icons.edit),
-                label: const Text('Редактировать'),
-              ),
-            ),
-          ] else ...[
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: () => _navigateToTeam(context, team),
-                icon: const Icon(Icons.info),
-                label: const Text('Подробнее'),
-              ),
-            ),
-          ],
-        ],
-      );
+        ),
+      ] else ...[
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: () => _navigateToTeam(context, team),
+            icon: const Icon(Icons.info),
+            label: const Text('Подробнее'),
+          ),
+        ),
+      ],
+    ],
+  );
 
-  void _navigateToTeam(
-    BuildContext context,
-    SpecialistTeam team, {
-    bool isEditable = false,
-  }) {
+  void _navigateToTeam(BuildContext context, SpecialistTeam team, {bool isEditable = false}) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => TeamScreen(
-          teamId: team.id,
-          isEditable: isEditable,
-        ),
+        builder: (context) => TeamScreen(teamId: team.id, isEditable: isEditable),
       ),
     );
   }
@@ -313,10 +278,7 @@ class TeamListScreen extends ConsumerWidget {
 
 /// Экран команд специалиста
 class SpecialistTeamListScreen extends ConsumerWidget {
-  const SpecialistTeamListScreen({
-    super.key,
-    required this.specialistId,
-  });
+  const SpecialistTeamListScreen({super.key, required this.specialistId});
 
   final String specialistId;
 
@@ -343,18 +305,11 @@ class SpecialistTeamListScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.group_off,
-                    size: 64,
-                    color: Colors.grey,
-                  ),
+                  Icon(Icons.group_off, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
                   Text(
                     'Вы не участвуете в командах',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                   SizedBox(height: 8),
                   Text(
@@ -417,9 +372,9 @@ class SpecialistTeamListScreen extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       team.teamName ?? 'Команда специалистов',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
                   _buildStatusChip(team.status),
@@ -434,10 +389,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
                   children: [
                     if (role != null) ...[
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.blue.shade100,
                           borderRadius: BorderRadius.circular(8),
@@ -455,10 +407,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
                     ],
                     if (payment > 0) ...[
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.green.shade100,
                           borderRadius: BorderRadius.circular(8),
@@ -534,10 +483,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(12)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -545,11 +491,7 @@ class SpecialistTeamListScreen extends ConsumerWidget {
           const SizedBox(width: 4),
           Text(
             status.displayName,
-            style: TextStyle(
-              color: textColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -557,59 +499,49 @@ class SpecialistTeamListScreen extends ConsumerWidget {
   }
 
   Widget _buildTeamInfo(SpecialistTeam team) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Количество специалистов
+      Row(
         children: [
-          // Количество специалистов
-          Row(
-            children: [
-              const Icon(Icons.people, size: 16, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text('Специалистов: ${team.specialistCount}'),
-            ],
-          ),
-
-          const SizedBox(height: 4),
-
-          // Мероприятие
-          if (team.eventTitle != null) ...[
-            Row(
-              children: [
-                const Icon(Icons.event, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    team.eventTitle!,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-          ],
-
-          // Дата мероприятия
-          if (team.eventDate != null) ...[
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Text(
-                  '${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}',
-                ),
-              ],
-            ),
-          ],
+          const Icon(Icons.people, size: 16, color: Colors.grey),
+          const SizedBox(width: 8),
+          Text('Специалистов: ${team.specialistCount}'),
         ],
-      );
+      ),
+
+      const SizedBox(height: 4),
+
+      // Мероприятие
+      if (team.eventTitle != null) ...[
+        Row(
+          children: [
+            const Icon(Icons.event, size: 16, color: Colors.grey),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(team.eventTitle!, style: const TextStyle(fontWeight: FontWeight.w500)),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+      ],
+
+      // Дата мероприятия
+      if (team.eventDate != null) ...[
+        Row(
+          children: [
+            const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+            const SizedBox(width: 8),
+            Text('${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}'),
+          ],
+        ),
+      ],
+    ],
+  );
 
   void _navigateToTeam(BuildContext context, SpecialistTeam team) {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => TeamScreen(
-          teamId: team.id,
-          isEditable: false,
-        ),
-      ),
+      MaterialPageRoute<void>(builder: (context) => TeamScreen(teamId: team.id, isEditable: false)),
     );
   }
 }

@@ -53,8 +53,6 @@ class OptimizedCachedImage extends StatefulWidget {
 class _OptimizedCachedImageState extends State<OptimizedCachedImage>
     with AutomaticKeepAliveClientMixin {
   late String _effectiveImageUrl;
-  bool _isLoading = true;
-  bool _hasError = false;
 
   @override
   bool get wantKeepAlive => widget.enableMemoryOptimization;
@@ -71,8 +69,6 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.imageUrl != widget.imageUrl) {
       _effectiveImageUrl = widget.imageUrl;
-      _isLoading = true;
-      _hasError = false;
       _preloadImage();
     }
   }
@@ -80,27 +76,19 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
   void _preloadImage() {
     if (widget.enableMemoryOptimization) {
       // Предзагрузка изображения в кэш
-      precacheImage(
-        CachedNetworkImageProvider(_effectiveImageUrl),
-        context,
-      ).then((_) {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
+      precacheImage(CachedNetworkImageProvider(_effectiveImageUrl), context)
+          .then((_) {
+            if (mounted) {
+              setState(() {});
+            }
+          })
+          .catchError((error) {
+            if (mounted) {
+              setState(() {});
+            }
           });
-        }
-      }).catchError((error) {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-            _hasError = true;
-          });
-        }
-      });
     } else {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() {});
     }
   }
 
@@ -129,10 +117,7 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
     );
 
     if (widget.borderRadius != null) {
-      imageWidget = ClipRRect(
-        borderRadius: widget.borderRadius!,
-        child: imageWidget,
-      );
+      imageWidget = ClipRRect(borderRadius: widget.borderRadius!, child: imageWidget);
     }
 
     return imageWidget;
@@ -156,9 +141,7 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
           height: (widget.height ?? 100) * 0.2,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(
-              theme.colorScheme.primary,
-            ),
+            valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
           ),
         ),
       ),
@@ -188,16 +171,13 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
   }
 
   Widget _buildImageBuilder(ImageProvider imageProvider) => Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          borderRadius: widget.borderRadius,
-          image: DecorationImage(
-            image: imageProvider,
-            fit: widget.fit,
-          ),
-        ),
-      );
+    width: widget.width,
+    height: widget.height,
+    decoration: BoxDecoration(
+      borderRadius: widget.borderRadius,
+      image: DecorationImage(image: imageProvider, fit: widget.fit),
+    ),
+  );
 }
 
 /// Специализированный виджет для аватаров с оптимизацией
@@ -239,18 +219,11 @@ class OptimizedAvatar extends StatelessWidget {
                 maxHeightDiskCache: (radius * 2).toInt(),
               ),
             )
-          : child ??
-              Icon(
-                Icons.person,
-                size: radius,
-              ),
+          : child ?? Icon(Icons.person, size: radius),
     );
 
     if (onTap != null) {
-      avatar = GestureDetector(
-        onTap: onTap,
-        child: avatar,
-      );
+      avatar = GestureDetector(onTap: onTap, child: avatar);
     }
 
     return avatar;
@@ -293,18 +266,11 @@ class OptimizedCardImage extends StatelessWidget {
     );
 
     if (elevation > 0) {
-      image = Material(
-        elevation: elevation,
-        borderRadius: borderRadius,
-        child: image,
-      );
+      image = Material(elevation: elevation, borderRadius: borderRadius, child: image);
     }
 
     if (onTap != null) {
-      image = GestureDetector(
-        onTap: onTap,
-        child: image,
-      );
+      image = GestureDetector(onTap: onTap, child: image);
     }
 
     return image;

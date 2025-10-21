@@ -27,17 +27,17 @@ class AppUpdateService {
       }
 
       // Получаем информацию о последней версии
-      final response = await http.get(
-        Uri.parse(_updateCheckUrl),
-        headers: {'Accept': 'application/vnd.github.v3+json'},
-      ).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(Uri.parse(_updateCheckUrl), headers: {'Accept': 'application/vnd.github.v3+json'})
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final latestVersion = data['tag_name']?.replaceAll('v', '') ?? '';
         final releaseNotes = data['body'] ?? '';
-        final downloadUrl =
-            data['assets']?.isNotEmpty == true ? data['assets'][0]['browser_download_url'] : null;
+        final downloadUrl = data['assets']?.isNotEmpty == true
+            ? data['assets'][0]['browser_download_url']
+            : null;
 
         final updateInfo = UpdateInfo(
           currentVersion: currentVersion,
@@ -67,17 +67,17 @@ class AppUpdateService {
       final packageInfo = await PackageInfo.fromPlatform();
       final currentVersion = packageInfo.version;
 
-      final response = await http.get(
-        Uri.parse(_updateCheckUrl),
-        headers: {'Accept': 'application/vnd.github.v3+json'},
-      ).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(Uri.parse(_updateCheckUrl), headers: {'Accept': 'application/vnd.github.v3+json'})
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final latestVersion = data['tag_name']?.replaceAll('v', '') ?? '';
         final releaseNotes = data['body'] ?? '';
-        final downloadUrl =
-            data['assets']?.isNotEmpty == true ? data['assets'][0]['browser_download_url'] : null;
+        final downloadUrl = data['assets']?.isNotEmpty == true
+            ? data['assets'][0]['browser_download_url']
+            : null;
 
         final updateInfo = UpdateInfo(
           currentVersion: currentVersion,
@@ -241,13 +241,13 @@ class UpdateInfo {
 
   /// Создать из JSON
   factory UpdateInfo.fromJson(Map<String, dynamic> json) => UpdateInfo(
-        currentVersion: json['currentVersion'] ?? '',
-        latestVersion: json['latestVersion'] ?? '',
-        releaseNotes: json['releaseNotes'] ?? '',
-        downloadUrl: json['downloadUrl'],
-        isUpdateAvailable: json['isUpdateAvailable'] ?? false,
-        checkTime: DateTime.fromMillisecondsSinceEpoch(json['checkTime'] ?? 0),
-      );
+    currentVersion: json['currentVersion'] ?? '',
+    latestVersion: json['latestVersion'] ?? '',
+    releaseNotes: json['releaseNotes'] ?? '',
+    downloadUrl: json['downloadUrl'],
+    isUpdateAvailable: json['isUpdateAvailable'] ?? false,
+    checkTime: DateTime.fromMillisecondsSinceEpoch(json['checkTime'] ?? 0),
+  );
   final String currentVersion;
   final String latestVersion;
   final String releaseNotes;
@@ -257,13 +257,13 @@ class UpdateInfo {
 
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {
-        'currentVersion': currentVersion,
-        'latestVersion': latestVersion,
-        'releaseNotes': releaseNotes,
-        'downloadUrl': downloadUrl,
-        'isUpdateAvailable': isUpdateAvailable,
-        'checkTime': checkTime.millisecondsSinceEpoch,
-      };
+    'currentVersion': currentVersion,
+    'latestVersion': latestVersion,
+    'releaseNotes': releaseNotes,
+    'downloadUrl': downloadUrl,
+    'isUpdateAvailable': isUpdateAvailable,
+    'checkTime': checkTime.millisecondsSinceEpoch,
+  };
 
   /// Получить тип обновления
   UpdateType get updateType => AppUpdateService.getUpdateType(currentVersion, latestVersion);
@@ -310,8 +310,4 @@ class UpdateInfo {
 }
 
 /// Типы обновлений
-enum UpdateType {
-  major,
-  minor,
-  patch,
-}
+enum UpdateType { major, minor, patch }

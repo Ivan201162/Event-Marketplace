@@ -45,18 +45,14 @@ class SpecialistProposalWidget extends StatelessWidget {
           ],
           Flexible(
             child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.8,
-              ),
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
               decoration: BoxDecoration(
                 color: isFromCurrentUser
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
                 border: !isFromCurrentUser
-                    ? Border.all(
-                        color: Theme.of(context).dividerColor,
-                      )
+                    ? Border.all(color: Theme.of(context).dividerColor)
                     : null,
                 boxShadow: [
                   BoxShadow(
@@ -82,11 +78,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                     ),
                     child: const Row(
                       children: [
-                        Icon(
-                          Icons.person_add,
-                          color: Colors.green,
-                          size: 20,
-                        ),
+                        Icon(Icons.person_add, color: Colors.green, size: 20),
                         SizedBox(width: 8),
                         Text(
                           'Предложение специалиста',
@@ -112,8 +104,9 @@ class SpecialistProposalWidget extends StatelessWidget {
                             // Фото специалиста
                             CircleAvatar(
                               radius: 30,
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary.withValues(alpha: 0.1),
                               backgroundImage: proposal.specialistPhoto != null
                                   ? NetworkImage(proposal.specialistPhoto!)
                                   : null,
@@ -151,11 +144,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                                   const SizedBox(height: 4),
                                   Row(
                                     children: [
-                                      const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                        size: 16,
-                                      ),
+                                      const Icon(Icons.star, color: Colors.amber, size: 16),
                                       const SizedBox(width: 4),
                                       Text(
                                         '${proposal.rating.toStringAsFixed(1)} (${proposal.reviewCount})',
@@ -176,10 +165,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Colors.green.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
@@ -195,10 +181,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: proposal.isAvailable
                                     ? Colors.green.withValues(alpha: 0.1)
@@ -241,15 +224,11 @@ class SpecialistProposalWidget extends StatelessWidget {
                                 .take(3)
                                 .map(
                                   (service) => Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                      vertical: 2,
-                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary
-                                          .withValues(alpha: 0.1),
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary.withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
@@ -276,10 +255,7 @@ class SpecialistProposalWidget extends StatelessWidget {
                               color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text(
-                              message.text,
-                              style: const TextStyle(fontSize: 14),
-                            ),
+                            child: Text(message.text, style: const TextStyle(fontSize: 14)),
                           ),
                           const SizedBox(height: 12),
                         ],

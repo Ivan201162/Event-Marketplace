@@ -118,17 +118,17 @@ class MediaUploadResult extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        url,
-        fileName,
-        fileType,
-        fileSize,
-        thumbnailUrl,
-        metadata,
-        uploadedAt,
-        isSuccess,
-        error,
-      ];
+    id,
+    url,
+    fileName,
+    fileType,
+    fileSize,
+    thumbnailUrl,
+    metadata,
+    uploadedAt,
+    isSuccess,
+    error,
+  ];
 
   @override
   String toString() {

@@ -110,21 +110,13 @@ final reviewFormProvider = NotifierProvider<ReviewFormNotifier, ReviewFormState>
 
 /// Review state
 class ReviewState {
-  const ReviewState({
-    this.reviews = const [],
-    this.isLoading = false,
-    this.error,
-  });
+  const ReviewState({this.reviews = const [], this.isLoading = false, this.error});
 
   final List<Review> reviews;
   final bool isLoading;
   final String? error;
 
-  ReviewState copyWith({
-    List<Review>? reviews,
-    bool? isLoading,
-    String? error,
-  }) {
+  ReviewState copyWith({List<Review>? reviews, bool? isLoading, String? error}) {
     return ReviewState(
       reviews: reviews ?? this.reviews,
       isLoading: isLoading ?? this.isLoading,
@@ -198,8 +190,10 @@ final reviewStateProvider = NotifierProvider<ReviewStateNotifier, ReviewState>(
 );
 
 /// Reviews by specialist provider
-final reviewsBySpecialistProvider =
-    FutureProvider.family<List<Review>, String>((ref, specialistId) async {
+final reviewsBySpecialistProvider = FutureProvider.family<List<Review>, String>((
+  ref,
+  specialistId,
+) async {
   final service = ref.read(reviewServiceProvider);
   return service.getReviewsBySpecialist(specialistId);
 });
@@ -211,15 +205,19 @@ final reviewStatsProvider = FutureProvider.family<ReviewStats?, String>((ref, sp
 });
 
 /// Specialist review stats provider
-final specialistReviewStatsProvider =
-    FutureProvider.family<SpecialistReviewStats?, String>((ref, specialistId) async {
+final specialistReviewStatsProvider = FutureProvider.family<SpecialistReviewStats?, String>((
+  ref,
+  specialistId,
+) async {
   final service = ref.read(reviewServiceProvider);
   return service.getSpecialistReviewStats(specialistId);
 });
 
 /// Specialist reviews provider
-final specialistReviewsProvider =
-    FutureProvider.family<List<Review>, String>((ref, specialistId) async {
+final specialistReviewsProvider = FutureProvider.family<List<Review>, String>((
+  ref,
+  specialistId,
+) async {
   final service = ref.read(reviewServiceProvider);
   return service.getSpecialistReviews(specialistId);
 });

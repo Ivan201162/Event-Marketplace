@@ -21,11 +21,7 @@ final sortedSpecialistsProvider = FutureProvider.family<List<Specialist>, SortPa
 
 /// Параметры для сортировки
 class SortParams {
-  const SortParams({
-    this.categoryId,
-    this.filters,
-    required this.sorting,
-  });
+  const SortParams({this.categoryId, this.filters, required this.sorting});
   final String? categoryId;
   final SpecialistFilters? filters;
   final SpecialistSorting sorting;
@@ -112,18 +108,10 @@ final sortStatsProvider = Provider.family<SortStats, SortParams>((ref, params) {
 
   return specialists.when(
     data: (specialists) => SpecialistSortingUtils.getSortStats(specialists, params.sorting),
-    loading: () => const SortStats(
-      totalCount: 0,
-      priceRange: null,
-      averageRating: 0,
-      averageReviews: 0,
-    ),
-    error: (_, __) => const SortStats(
-      totalCount: 0,
-      priceRange: null,
-      averageRating: 0,
-      averageReviews: 0,
-    ),
+    loading: () =>
+        const SortStats(totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0),
+    error: (_, __) =>
+        const SortStats(totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0),
   );
 });
 
@@ -147,11 +135,7 @@ final combinedParamsProvider = Provider.family<SortParams, CombinedParams>((ref,
   final filters = ref.watch(params.filtersProvider);
   final sorting = ref.watch(params.sortingProvider);
 
-  return SortParams(
-    categoryId: params.categoryId,
-    filters: filters,
-    sorting: sorting,
-  );
+  return SortParams(categoryId: params.categoryId, filters: filters, sorting: sorting);
 });
 
 /// Параметры для комбинированного провайдера
@@ -181,9 +165,9 @@ class CombinedParams {
 /// Провайдер для отсортированных и отфильтрованных специалистов
 final filteredAndSortedSpecialistsProvider =
     FutureProvider.family<List<Specialist>, CombinedParams>((ref, params) {
-  final combinedParams = ref.watch(combinedParamsProvider(params));
-  return ref.watch(sortedSpecialistsProvider(combinedParams));
-});
+      final combinedParams = ref.watch(combinedParamsProvider(params));
+      return ref.watch(sortedSpecialistsProvider(combinedParams));
+    });
 
 /// Провайдер для получения информации о текущей сортировке
 final currentSortingInfoProvider = Provider<SortingInfo>((ref) {

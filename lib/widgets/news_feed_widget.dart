@@ -47,53 +47,39 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
 
   @override
   Widget build(BuildContext context) => Column(
-        children: [
-          _buildHeader(),
-          Expanded(
-            child: _buildContent(),
-          ),
-        ],
-      );
+    children: [
+      _buildHeader(),
+      Expanded(child: _buildContent()),
+    ],
+  );
 
   Widget _buildHeader() => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.1),
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: const Offset(0, 1),
-            ),
-          ],
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withValues(alpha: 0.1),
+          spreadRadius: 1,
+          blurRadius: 3,
+          offset: const Offset(0, 1),
         ),
-        child: Row(
-          children: [
-            const Icon(Icons.newspaper, color: Colors.blue),
-            const SizedBox(width: 8),
-            const Text(
-              'Лента новостей',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Spacer(),
-            IconButton(
-              onPressed: _refreshNews,
-              icon: const Icon(Icons.refresh),
-              tooltip: 'Обновить',
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+    child: Row(
+      children: [
+        const Icon(Icons.newspaper, color: Colors.blue),
+        const SizedBox(width: 8),
+        const Text('Лента новостей', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Spacer(),
+        IconButton(onPressed: _refreshNews, icon: const Icon(Icons.refresh), tooltip: 'Обновить'),
+      ],
+    ),
+  );
 
   Widget _buildContent() {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -113,10 +99,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
         itemBuilder: (context, index) {
           if (index == _newsItems.length) {
             return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator(),
-              ),
+              child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
             );
           }
 
@@ -128,135 +111,106 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   }
 
   Widget _buildError() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red.shade300,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки новостей',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.red.shade700,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _error!,
-              style: const TextStyle(color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadNews,
-              child: const Text('Повторить'),
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
+        const SizedBox(height: 16),
+        Text(
+          'Ошибка загрузки новостей',
+          style: TextStyle(fontSize: 18, color: Colors.red.shade700),
         ),
-      );
+        const SizedBox(height: 8),
+        Text(
+          _error!,
+          style: const TextStyle(color: Colors.grey),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton(onPressed: _loadNews, child: const Text('Повторить')),
+      ],
+    ),
+  );
 
   Widget _buildEmptyState() => Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.newspaper_outlined, size: 64, color: Colors.grey.shade300),
+        const SizedBox(height: 16),
+        const Text('Новостей пока нет', style: TextStyle(fontSize: 18, color: Colors.grey)),
+        const SizedBox(height: 8),
+        const Text(
+          'Следите за обновлениями от специалистов',
+          style: TextStyle(color: Colors.grey),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildNewsItem(NewsItem newsItem) => Card(
+    margin: const EdgeInsets.only(bottom: 16),
+    child: InkWell(
+      onTap: () => _onNewsItemTap(newsItem),
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.newspaper_outlined,
-              size: 64,
-              color: Colors.grey.shade300,
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Новостей пока нет',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
+            _buildNewsHeader(newsItem),
+            const SizedBox(height: 12),
+            _buildNewsContent(newsItem),
+            if (newsItem.imageUrl != null) ...[
+              const SizedBox(height: 12),
+              _buildNewsImage(newsItem.imageUrl!),
+            ],
+            const SizedBox(height: 12),
+            _buildNewsActions(newsItem),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  Widget _buildNewsHeader(NewsItem newsItem) => Row(
+    children: [
+      CircleAvatar(
+        radius: 20,
+        backgroundColor: Colors.blue.shade100,
+        child: Text(
+          newsItem.authorName.isNotEmpty ? newsItem.authorName[0].toUpperCase() : '?',
+          style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.bold),
+        ),
+      ),
+      const SizedBox(width: 12),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () => _onAuthorTap(newsItem.authorId),
+              child: Text(
+                newsItem.authorName,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
-            const SizedBox(height: 8),
-            const Text(
-              'Следите за обновлениями от специалистов',
-              style: TextStyle(color: Colors.grey),
-              textAlign: TextAlign.center,
+            Row(
+              children: [
+                _buildTypeChip(newsItem.type),
+                const SizedBox(width: 8),
+                Text(
+                  newsItem.formattedDate,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
             ),
           ],
         ),
-      );
-
-  Widget _buildNewsItem(NewsItem newsItem) => Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: InkWell(
-          onTap: () => _onNewsItemTap(newsItem),
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildNewsHeader(newsItem),
-                const SizedBox(height: 12),
-                _buildNewsContent(newsItem),
-                if (newsItem.imageUrl != null) ...[
-                  const SizedBox(height: 12),
-                  _buildNewsImage(newsItem.imageUrl!),
-                ],
-                const SizedBox(height: 12),
-                _buildNewsActions(newsItem),
-              ],
-            ),
-          ),
-        ),
-      );
-
-  Widget _buildNewsHeader(NewsItem newsItem) => Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.blue.shade100,
-            child: Text(
-              newsItem.authorName.isNotEmpty ? newsItem.authorName[0].toUpperCase() : '?',
-              style: TextStyle(
-                color: Colors.blue.shade700,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () => _onAuthorTap(newsItem.authorId),
-                  child: Text(
-                    newsItem.authorName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    _buildTypeChip(newsItem.type),
-                    const SizedBox(width: 8),
-                    Text(
-                      newsItem.formattedDate,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
+      ),
+    ],
+  );
 
   Widget _buildTypeChip(NewsType type) {
     Color color;
@@ -299,11 +253,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
           const SizedBox(width: 4),
           Text(
             type.name.toUpperCase(),
-            style: TextStyle(
-              color: color,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -311,75 +261,60 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   }
 
   Widget _buildNewsContent(NewsItem newsItem) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            newsItem.title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            newsItem.content,
-            style: const TextStyle(fontSize: 14),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(newsItem.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      Text(
+        newsItem.content,
+        style: const TextStyle(fontSize: 14),
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ],
+  );
 
   Widget _buildNewsImage(String imageUrl) => ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          imageUrl,
-          width: double.infinity,
-          height: 200,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => Container(
-            height: 200,
-            color: Colors.grey.shade200,
-            child: const Center(
-              child: Icon(Icons.broken_image, size: 48, color: Colors.grey),
-            ),
-          ),
-        ),
-      );
+    borderRadius: BorderRadius.circular(8),
+    child: Image.network(
+      imageUrl,
+      width: double.infinity,
+      height: 200,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => Container(
+        height: 200,
+        color: Colors.grey.shade200,
+        child: const Center(child: Icon(Icons.broken_image, size: 48, color: Colors.grey)),
+      ),
+    ),
+  );
 
   Widget _buildNewsActions(NewsItem newsItem) => Row(
-        children: [
-          _buildActionButton(
-            icon: Icons.favorite_border,
-            label: newsItem.likes.toString(),
-            onTap: () => _onLikeTap(newsItem),
-          ),
-          const SizedBox(width: 16),
-          _buildActionButton(
-            icon: Icons.share,
-            label: newsItem.shares.toString(),
-            onTap: () => _onShareTap(newsItem),
-          ),
-          const SizedBox(width: 16),
-          _buildActionButton(
-            icon: Icons.visibility,
-            label: newsItem.views.toString(),
-          ),
-          const Spacer(),
-          if (newsItem.linkUrl != null)
-            TextButton.icon(
-              onPressed: () => _onLinkTap(newsItem.linkUrl!),
-              icon: const Icon(Icons.link, size: 16),
-              label: const Text('Подробнее'),
-            ),
-        ],
-      );
+    children: [
+      _buildActionButton(
+        icon: Icons.favorite_border,
+        label: newsItem.likes.toString(),
+        onTap: () => _onLikeTap(newsItem),
+      ),
+      const SizedBox(width: 16),
+      _buildActionButton(
+        icon: Icons.share,
+        label: newsItem.shares.toString(),
+        onTap: () => _onShareTap(newsItem),
+      ),
+      const SizedBox(width: 16),
+      _buildActionButton(icon: Icons.visibility, label: newsItem.views.toString()),
+      const Spacer(),
+      if (newsItem.linkUrl != null)
+        TextButton.icon(
+          onPressed: () => _onLinkTap(newsItem.linkUrl!),
+          icon: const Icon(Icons.link, size: 16),
+          label: const Text('Подробнее'),
+        ),
+    ],
+  );
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    VoidCallback? onTap,
-  }) =>
+  Widget _buildActionButton({required IconData icon, required String label, VoidCallback? onTap}) =>
       InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
@@ -390,13 +325,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             children: [
               Icon(icon, size: 16, color: Colors.grey.shade600),
               const SizedBox(width: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 12,
-                ),
-              ),
+              Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
             ],
           ),
         ),
@@ -412,12 +341,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
 
     try {
       final newsItems = widget.specialistId != null
-          ? await _newsService.getSpecialistNews(
-              specialistId: widget.specialistId!,
-            )
-          : await _newsService.getNewsFeed(
-              userId: widget.userId,
-            );
+          ? await _newsService.getSpecialistNews(specialistId: widget.specialistId!)
+          : await _newsService.getNewsFeed(userId: widget.userId);
 
       setState(() {
         _newsItems = newsItems;
@@ -455,10 +380,7 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
               specialistId: widget.specialistId!,
               lastDocument: _lastDocument,
             )
-          : await _newsService.getNewsFeed(
-              userId: widget.userId,
-              lastDocument: _lastDocument,
-            );
+          : await _newsService.getNewsFeed(userId: widget.userId, lastDocument: _lastDocument);
 
       setState(() {
         _newsItems.addAll(newsItems);
@@ -483,31 +405,22 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
 
   void _onLikeTap(NewsItem newsItem) {
     // TODO(developer): Implement like functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Лайк добавлен'),
-        duration: Duration(seconds: 1),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Лайк добавлен'), duration: Duration(seconds: 1)));
   }
 
   void _onShareTap(NewsItem newsItem) {
     // TODO(developer): Implement share functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Поделиться'),
-        duration: Duration(seconds: 1),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Поделиться'), duration: Duration(seconds: 1)));
   }
 
   void _onLinkTap(String linkUrl) {
     // TODO(developer): Implement link opening
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Открыть ссылку: $linkUrl'),
-        duration: const Duration(seconds: 1),
-      ),
+      SnackBar(content: Text('Открыть ссылку: $linkUrl'), duration: const Duration(seconds: 1)),
     );
   }
 }

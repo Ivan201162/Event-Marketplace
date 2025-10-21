@@ -1,11 +1,5 @@
 /// Уровни безопасности пароля
-enum SecurityPasswordLevel {
-  weak,
-  fair,
-  good,
-  strong,
-  veryStrong,
-}
+enum SecurityPasswordLevel { weak, fair, good, strong, veryStrong }
 
 /// Расширение для SecurityPasswordLevel
 extension SecurityPasswordLevelExtension on SecurityPasswordLevel {

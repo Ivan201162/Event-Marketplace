@@ -18,10 +18,7 @@ class FCMService {
     // Настройка локальных уведомлений
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings();
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
+    const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
 
     await _localNotifications.initialize(
       initSettings,
@@ -67,9 +64,7 @@ class FCMService {
 
   /// Обработка сообщений в foreground
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    debugPrint(
-      '📬 Получено уведомление в foreground: ${message.notification?.title}',
-    );
+    debugPrint('📬 Получено уведомление в foreground: ${message.notification?.title}');
 
     // Сохраняем уведомление в историю
     await _saveNotificationToHistory(message);
@@ -289,16 +284,16 @@ class FCMService {
           .doc(userId)
           .collection('notifications_history')
           .add({
-        'title': notification?.title ?? '',
-        'body': notification?.body ?? '',
-        'type': data['type'] ?? 'system',
-        'targetId': data['id'] ?? data['targetId'] ?? '',
-        'senderId': data['senderId'] ?? '',
-        'timestamp': FieldValue.serverTimestamp(),
-        'isRead': false,
-        'isPinned': false,
-        'data': data,
-      });
+            'title': notification?.title ?? '',
+            'body': notification?.body ?? '',
+            'type': data['type'] ?? 'system',
+            'targetId': data['id'] ?? data['targetId'] ?? '',
+            'senderId': data['senderId'] ?? '',
+            'timestamp': FieldValue.serverTimestamp(),
+            'isRead': false,
+            'isPinned': false,
+            'data': data,
+          });
 
       debugPrint('Уведомление сохранено в историю для пользователя: $userId');
     } on Exception catch (e) {
@@ -363,16 +358,16 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           .doc(userId)
           .collection('notifications_history')
           .add({
-        'title': notification?.title ?? '',
-        'body': notification?.body ?? '',
-        'type': data['type'] ?? 'system',
-        'targetId': data['id'] ?? data['targetId'] ?? '',
-        'senderId': data['senderId'] ?? '',
-        'timestamp': FieldValue.serverTimestamp(),
-        'isRead': false,
-        'isPinned': false,
-        'data': data,
-      });
+            'title': notification?.title ?? '',
+            'body': notification?.body ?? '',
+            'type': data['type'] ?? 'system',
+            'targetId': data['id'] ?? data['targetId'] ?? '',
+            'senderId': data['senderId'] ?? '',
+            'timestamp': FieldValue.serverTimestamp(),
+            'isRead': false,
+            'isPinned': false,
+            'data': data,
+          });
     }
   } catch (e) {
     debugPrint('Ошибка сохранения фонового уведомления: $e');

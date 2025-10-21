@@ -61,32 +61,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
     _logoScaleAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _logoController,
-        curve: Curves.elasticOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _logoController, curve: Curves.elasticOut));
 
     _logoFadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _logoController,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _logoController, curve: Curves.easeInOut));
 
     _progressAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _progressController,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _progressController, curve: Curves.easeInOut));
 
     _logoController.forward();
   }
@@ -188,27 +173,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
             // Диагностический текст
             const Text(
               '✅ App started successfully',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            Text(
-              'Status: $_statusText',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
+            Text('Status: $_statusText', style: const TextStyle(color: Colors.white, fontSize: 16)),
             const SizedBox(height: 10),
             Text(
               'Progress: ${(_progress * 100).toInt()}%',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
             ),
             const SizedBox(height: 20),
             // Простой прогресс-бар
@@ -251,8 +223,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
 }
 
 /// Провайдер для состояния сплэш-экрана (мигрирован с StateNotifierProvider)
-final splashStateProvider =
-    NotifierProvider<SplashStateNotifier, SplashState>(SplashStateNotifier.new);
+final splashStateProvider = NotifierProvider<SplashStateNotifier, SplashState>(
+  SplashStateNotifier.new,
+);
 
 class SplashState {
   const SplashState({
@@ -272,13 +245,12 @@ class SplashState {
     double? progress,
     String? statusText,
     String? error,
-  }) =>
-      SplashState(
-        isInitialized: isInitialized ?? this.isInitialized,
-        progress: progress ?? this.progress,
-        statusText: statusText ?? this.statusText,
-        error: error ?? this.error,
-      );
+  }) => SplashState(
+    isInitialized: isInitialized ?? this.isInitialized,
+    progress: progress ?? this.progress,
+    statusText: statusText ?? this.statusText,
+    error: error ?? this.error,
+  );
 }
 
 class SplashStateNotifier extends Notifier<SplashState> {

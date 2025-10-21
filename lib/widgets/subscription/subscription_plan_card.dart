@@ -18,144 +18,118 @@ class SubscriptionPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: _getBorderColor(),
-              width: isSelected ? 2 : 1,
-            ),
-            borderRadius: BorderRadius.circular(12),
-            color: _getBackgroundColor(),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    onTap: onTap,
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        border: Border.all(color: _getBorderColor(), width: isSelected ? 2 : 1),
+        borderRadius: BorderRadius.circular(12),
+        color: _getBackgroundColor(),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  // Plan Icon
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: _getIconColor().withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      _getPlanIcon(),
-                      color: _getIconColor(),
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
+              // Plan Icon
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: _getIconColor().withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(_getPlanIcon(), color: _getIconColor(), size: 24),
+              ),
+              const SizedBox(width: 16),
 
-                  // Plan Info
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              // Plan Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              _getPlanName(),
+                        Text(
+                          _getPlanName(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: _getTextColor(),
+                          ),
+                        ),
+                        if (isCurrentPlan) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Text(
+                              'АКТИВЕН',
                               style: TextStyle(
-                                fontSize: 20,
+                                color: Colors.white,
+                                fontSize: 10,
                                 fontWeight: FontWeight.bold,
-                                color: _getTextColor(),
                               ),
                             ),
-                            if (isCurrentPlan) ...[
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const Text(
-                                  'АКТИВЕН',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _getPlanDescription(),
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
                           ),
-                        ),
+                        ],
                       ],
                     ),
-                  ),
-
-                  // Price
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        price == 0 ? 'Бесплатно' : '${price.toInt()} ₽/мес',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: _getTextColor(),
-                        ),
-                      ),
-                      if (price > 0)
-                        Text(
-                          '${(price / 30).round()} ₽/день',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 12,
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    Text(
+                      _getPlanDescription(),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                    ),
+                  ],
+                ),
               ),
 
-              const SizedBox(height: 16),
-
-              // Features
-              ..._getPlanFeatures().map(
-                (feature) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.check,
-                        color: _getIconColor(),
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          feature,
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ],
+              // Price
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    price == 0 ? 'Бесплатно' : '${price.toInt()} ₽/мес',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: _getTextColor(),
+                    ),
                   ),
-                ),
+                  if (price > 0)
+                    Text(
+                      '${(price / 30).round()} ₽/день',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    ),
+                ],
               ),
             ],
           ),
-        ),
-      );
+
+          const SizedBox(height: 16),
+
+          // Features
+          ..._getPlanFeatures().map(
+            (feature) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Icon(Icons.check, color: _getIconColor(), size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(feature, style: TextStyle(color: Colors.grey[700], fontSize: 14)),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 
   Color _getBorderColor() {
     if (isCurrentPlan) {

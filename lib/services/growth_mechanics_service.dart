@@ -8,8 +8,10 @@ class GrowthMechanicsService {
   /// Добавление опыта пользователю
   Future<void> addExperience(String userId, int experience, String reason) async {
     try {
-      final DocumentSnapshot userLevelDoc =
-          await _firestore.collection('user_levels').doc(userId).get();
+      final DocumentSnapshot userLevelDoc = await _firestore
+          .collection('user_levels')
+          .doc(userId)
+          .get();
 
       Map<String, dynamic> userLevel;
       if (userLevelDoc.exists) {
@@ -115,10 +117,7 @@ class GrowthMechanicsService {
         'createdAt': DateTime.now(),
         'actionUrl': '/profile/level',
         'actionText': 'Посмотреть профиль',
-        'data': {
-          'level': newLevel,
-          'totalExperience': totalExperience,
-        },
+        'data': {'level': newLevel, 'totalExperience': totalExperience},
       };
 
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
@@ -131,11 +130,16 @@ class GrowthMechanicsService {
 
   /// Проверка и выдача достижений
   Future<void> checkAndAwardAchievements(
-      String userId, String action, Map<String, dynamic> context) async {
+    String userId,
+    String action,
+    Map<String, dynamic> context,
+  ) async {
     try {
       // Получаем все активные достижения
-      final QuerySnapshot achievementsSnapshot =
-          await _firestore.collection('achievements').where('isActive', isEqualTo: true).get();
+      final QuerySnapshot achievementsSnapshot = await _firestore
+          .collection('achievements')
+          .where('isActive', isEqualTo: true)
+          .get();
 
       for (final doc in achievementsSnapshot.docs) {
         final Map<String, dynamic> achievement = doc.data() as Map<String, dynamic>;
@@ -247,7 +251,8 @@ class GrowthMechanicsService {
       await _sendAchievementNotification(userId, achievement);
 
       debugPrint(
-          'INFO: [GrowthMechanicsService] Achievement awarded: ${achievement['name']} to user $userId');
+        'INFO: [GrowthMechanicsService] Achievement awarded: ${achievement['name']} to user $userId',
+      );
     } catch (e) {
       debugPrint('ERROR: [GrowthMechanicsService] Failed to award achievement: $e');
     }
@@ -355,8 +360,10 @@ class GrowthMechanicsService {
       final bool alreadyJoined = await _isUserInChallenge(userId, challengeId);
       if (alreadyJoined) return;
 
-      final DocumentSnapshot challengeDoc =
-          await _firestore.collection('challenges').doc(challengeId).get();
+      final DocumentSnapshot challengeDoc = await _firestore
+          .collection('challenges')
+          .doc(challengeId)
+          .get();
 
       if (!challengeDoc.exists) {
         throw Exception('Challenge not found');
@@ -395,7 +402,10 @@ class GrowthMechanicsService {
 
   /// Обновление прогресса челленджа
   Future<void> updateChallengeProgress(
-      String userId, String challengeId, Map<String, dynamic> progress) async {
+    String userId,
+    String challengeId,
+    Map<String, dynamic> progress,
+  ) async {
     try {
       final QuerySnapshot userChallengeSnapshot = await _firestore
           .collection('user_challenges')
@@ -425,8 +435,10 @@ class GrowthMechanicsService {
   /// Проверка выполнения челленджа
   Future<void> _checkChallengeCompletion(String userId, String challengeId) async {
     try {
-      final DocumentSnapshot challengeDoc =
-          await _firestore.collection('challenges').doc(challengeId).get();
+      final DocumentSnapshot challengeDoc = await _firestore
+          .collection('challenges')
+          .doc(challengeId)
+          .get();
 
       if (!challengeDoc.exists) return;
 
@@ -457,7 +469,9 @@ class GrowthMechanicsService {
 
   /// Проверка условий челленджа
   Future<bool> _checkChallengeConditions(
-      Map<String, dynamic> challenge, Map<String, dynamic> userChallenge) async {
+    Map<String, dynamic> challenge,
+    Map<String, dynamic> userChallenge,
+  ) async {
     try {
       final Map<String, dynamic> conditions = challenge['conditions'] ?? {};
       final Map<String, dynamic> progress = userChallenge['progress'] ?? {};
@@ -505,7 +519,8 @@ class GrowthMechanicsService {
       await _sendChallengeCompletionNotification(userId, challenge);
 
       debugPrint(
-          'INFO: [GrowthMechanicsService] Challenge completed: $challengeId by user $userId');
+        'INFO: [GrowthMechanicsService] Challenge completed: $challengeId by user $userId',
+      );
     } catch (e) {
       debugPrint('ERROR: [GrowthMechanicsService] Failed to complete challenge: $e');
     }
@@ -542,7 +557,9 @@ class GrowthMechanicsService {
 
   /// Отправка уведомления о завершении челленджа
   Future<void> _sendChallengeCompletionNotification(
-      String userId, Map<String, dynamic> challenge) async {
+    String userId,
+    Map<String, dynamic> challenge,
+  ) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
@@ -564,7 +581,8 @@ class GrowthMechanicsService {
       await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
     } catch (e) {
       debugPrint(
-          'ERROR: [GrowthMechanicsService] Failed to send challenge completion notification: $e');
+        'ERROR: [GrowthMechanicsService] Failed to send challenge completion notification: $e',
+      );
     }
   }
 

@@ -7,13 +7,7 @@ void main() {
   group('MyBookingsScreen', () {
     testWidgets('should display empty state when no bookings', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -25,13 +19,7 @@ void main() {
 
     testWidgets('should display loading state initially', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       // Assert
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -39,13 +27,7 @@ void main() {
 
     testWidgets('should display error state when error occurs', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -57,13 +39,7 @@ void main() {
 
     testWidgets('should display filter button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -73,13 +49,7 @@ void main() {
 
     testWidgets('should show filter dialog when filter button tapped', (tester) async {
       // Arrange
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -97,13 +67,7 @@ void main() {
 
     testWidgets('should show booking details when booking card tapped', (tester) async {
       // Arrange
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -120,13 +84,7 @@ void main() {
 
     testWidgets('should show cancel dialog when cancel button tapped', (tester) async {
       // Arrange
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -138,10 +96,7 @@ void main() {
 
         // Assert
         expect(find.text('Отменить заявку'), findsOneWidget);
-        expect(
-          find.text('Вы уверены, что хотите отменить эту заявку?'),
-          findsOneWidget,
-        );
+        expect(find.text('Вы уверены, что хотите отменить эту заявку?'), findsOneWidget);
         expect(find.text('Отменить'), findsOneWidget);
         expect(find.text('Отмена'), findsOneWidget);
       }
@@ -149,13 +104,7 @@ void main() {
 
     testWidgets('should show payment dialog when payment button tapped', (tester) async {
       // Arrange
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -172,13 +121,7 @@ void main() {
 
     testWidgets('should display booking status correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -188,13 +131,7 @@ void main() {
 
     testWidgets('should display booking date correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -204,13 +141,7 @@ void main() {
 
     testWidgets('should display specialist information correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -220,13 +151,7 @@ void main() {
 
     testWidgets('should display event details correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -236,13 +161,7 @@ void main() {
 
     testWidgets('should display pricing information correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -252,13 +171,7 @@ void main() {
 
     testWidgets('should display payment information correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -268,13 +181,7 @@ void main() {
 
     testWidgets('should display action buttons correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -284,13 +191,7 @@ void main() {
 
     testWidgets('should handle booking cancellation correctly', (tester) async {
       // Arrange
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -307,13 +208,7 @@ void main() {
 
     testWidgets('should handle payment processing correctly', (tester) async {
       // Arrange
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -330,13 +225,7 @@ void main() {
 
     testWidgets('should display booking statistics correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -346,13 +235,7 @@ void main() {
 
     testWidgets('should handle empty state correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -362,13 +245,7 @@ void main() {
 
     testWidgets('should handle error state correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -378,13 +255,7 @@ void main() {
 
     testWidgets('should display payment status correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -394,13 +265,7 @@ void main() {
 
     testWidgets('should display payment amount correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -410,13 +275,7 @@ void main() {
 
     testWidgets('should display payment type correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -426,13 +285,7 @@ void main() {
 
     testWidgets('should display payment due date correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -442,13 +295,7 @@ void main() {
 
     testWidgets('should display payment method correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -458,13 +305,7 @@ void main() {
 
     testWidgets('should display payment transaction ID correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -474,13 +315,7 @@ void main() {
 
     testWidgets('should display payment creation date correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 
@@ -490,13 +325,7 @@ void main() {
 
     testWidgets('should display payment update date correctly', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: MyBookingsScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: MyBookingsScreen())));
 
       await tester.pumpAndSettle();
 

@@ -8,11 +8,7 @@ import '../providers/archive_providers.dart';
 
 /// Виджет секции архивов фото/видео
 class ArchiveSection extends ConsumerStatefulWidget {
-  const ArchiveSection({
-    super.key,
-    required this.bookingId,
-    required this.currentUserId,
-  });
+  const ArchiveSection({super.key, required this.bookingId, required this.currentUserId});
   final String bookingId;
   final String currentUserId;
 
@@ -47,15 +43,16 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
       if (source == null) return;
 
       if (source == ImageSource.gallery) {
-        await ref.read(archiveUploadStateProvider.notifier).uploadArchiveFromGallery(
+        await ref
+            .read(archiveUploadStateProvider.notifier)
+            .uploadArchiveFromGallery(
               bookingId: widget.bookingId,
               uploadedBy: widget.currentUserId,
             );
       } else if (source == ImageSource.camera) {
-        await ref.read(archiveUploadStateProvider.notifier).uploadArchiveFromCamera(
-              bookingId: widget.bookingId,
-              uploadedBy: widget.currentUserId,
-            );
+        await ref
+            .read(archiveUploadStateProvider.notifier)
+            .uploadArchiveFromCamera(bookingId: widget.bookingId, uploadedBy: widget.currentUserId);
       }
 
       // Обновляем список архивов
@@ -63,45 +60,39 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Архив успешно загружен'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Архив успешно загружен'), backgroundColor: Colors.green),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка загрузки: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
       }
     }
   }
 
   Future<ImageSource?> _showSourceDialog() async => showDialog<ImageSource>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Выберите источник'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Галерея'),
-                onTap: () => Navigator.of(context).pop(ImageSource.gallery),
-              ),
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('Камера'),
-                onTap: () => Navigator.of(context).pop(ImageSource.camera),
-              ),
-            ],
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Выберите источник'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.photo_library),
+            title: const Text('Галерея'),
+            onTap: () => Navigator.of(context).pop(ImageSource.gallery),
           ),
-        ),
-      );
+          ListTile(
+            leading: const Icon(Icons.camera_alt),
+            title: const Text('Камера'),
+            onTap: () => Navigator.of(context).pop(ImageSource.camera),
+          ),
+        ],
+      ),
+    ),
+  );
 
   Future<void> _deleteArchive(EventArchive archive) async {
     try {
@@ -115,20 +106,14 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Архив удален'),
-            backgroundColor: Colors.orange,
-          ),
+          const SnackBar(content: Text('Архив удален'), backgroundColor: Colors.orange),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка удаления: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -138,9 +123,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Удалить архив?'),
-          content: Text(
-            'Вы уверены, что хотите удалить "${archive.fileName ?? 'файл'}"?',
-          ),
+          content: Text('Вы уверены, что хотите удалить "${archive.fileName ?? 'файл'}"?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -174,10 +157,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
               children: [
                 const Text(
                   'Архив фото/видео',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 if (_canUpload)
                   ElevatedButton.icon(
@@ -189,9 +169,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.upload),
-                    label: Text(
-                      uploadState.isUploading ? 'Загрузка...' : 'Загрузить',
-                    ),
+                    label: Text(uploadState.isUploading ? 'Загрузка...' : 'Загрузить'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: BrandColors.primary,
                       foregroundColor: Colors.white,
@@ -220,144 +198,100 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
   }
 
   Widget _buildEmptyState() => Container(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          children: [
-            Icon(
-              Icons.folder_open,
-              size: 64,
-              color: Colors.grey.shade400,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Архив пуст',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey.shade600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Загрузите фото и видео после завершения мероприятия',
-              style: TextStyle(
-                color: Colors.grey.shade500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+    padding: const EdgeInsets.all(32),
+    child: Column(
+      children: [
+        Icon(Icons.folder_open, size: 64, color: Colors.grey.shade400),
+        const SizedBox(height: 16),
+        Text('Архив пуст', style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
+        const SizedBox(height: 8),
+        Text(
+          'Загрузите фото и видео после завершения мероприятия',
+          style: TextStyle(color: Colors.grey.shade500),
+          textAlign: TextAlign.center,
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildErrorWidget(Object error) => Container(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red.shade400,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.red.shade600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.red.shade500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => ref.refresh(bookingArchivesProvider(widget.bookingId)),
-              child: const Text('Повторить'),
-            ),
-          ],
+    padding: const EdgeInsets.all(32),
+    child: Column(
+      children: [
+        Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
+        const SizedBox(height: 16),
+        Text('Ошибка загрузки', style: TextStyle(fontSize: 18, color: Colors.red.shade600)),
+        const SizedBox(height: 8),
+        Text(
+          error.toString(),
+          style: TextStyle(fontSize: 14, color: Colors.red.shade500),
+          textAlign: TextAlign.center,
         ),
-      );
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () => ref.refresh(bookingArchivesProvider(widget.bookingId)),
+          child: const Text('Повторить'),
+        ),
+      ],
+    ),
+  );
 
-  Widget _buildArchivesList(List<EventArchive> archives) => Column(
-        children: archives.map(_buildArchiveItem).toList(),
-      );
+  Widget _buildArchivesList(List<EventArchive> archives) =>
+      Column(children: archives.map(_buildArchiveItem).toList());
 
   Widget _buildArchiveItem(EventArchive archive) => Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: ListTile(
-          leading: _buildArchiveIcon(archive),
-          title: Text(
-            archive.fileName ?? 'Файл',
-            style: const TextStyle(fontWeight: FontWeight.w500),
+    margin: const EdgeInsets.only(bottom: 12),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey.shade300),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: ListTile(
+      leading: _buildArchiveIcon(archive),
+      title: Text(archive.fileName ?? 'Файл', style: const TextStyle(fontWeight: FontWeight.w500)),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(archive.formattedFileSize),
+          if (archive.description != null && archive.description!.isNotEmpty)
+            Text(archive.description!, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+          Text(
+            'Загружено: ${_formatDate(archive.uploadedAt)}',
+            style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
           ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(archive.formattedFileSize),
-              if (archive.description != null && archive.description!.isNotEmpty)
-                Text(
-                  archive.description!,
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontSize: 12,
-                  ),
-                ),
-              Text(
-                'Загружено: ${_formatDate(archive.uploadedAt)}',
-                style: TextStyle(
-                  color: Colors.grey.shade500,
-                  fontSize: 11,
-                ),
+        ],
+      ),
+      trailing: PopupMenuButton<String>(
+        onSelected: (value) {
+          switch (value) {
+            case 'download':
+              _downloadArchive(archive);
+              break;
+            case 'delete':
+              _deleteArchive(archive);
+              break;
+          }
+        },
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+            value: 'download',
+            child: Row(children: [Icon(Icons.download), SizedBox(width: 8), Text('Скачать')]),
+          ),
+          if (_canUpload)
+            const PopupMenuItem(
+              value: 'delete',
+              child: Row(
+                children: [
+                  Icon(Icons.delete, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text('Удалить', style: TextStyle(color: Colors.red)),
+                ],
               ),
-            ],
-          ),
-          trailing: PopupMenuButton<String>(
-            onSelected: (value) {
-              switch (value) {
-                case 'download':
-                  _downloadArchive(archive);
-                  break;
-                case 'delete':
-                  _deleteArchive(archive);
-                  break;
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'download',
-                child: Row(
-                  children: [
-                    Icon(Icons.download),
-                    SizedBox(width: 8),
-                    Text('Скачать'),
-                  ],
-                ),
-              ),
-              if (_canUpload)
-                const PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(Icons.delete, color: Colors.red),
-                      SizedBox(width: 8),
-                      Text('Удалить', style: TextStyle(color: Colors.red)),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-          onTap: () => _showArchivePreview(archive),
-        ),
-      );
+            ),
+        ],
+      ),
+      onTap: () => _showArchivePreview(archive),
+    ),
+  );
 
   Widget _buildArchiveIcon(EventArchive archive) {
     if (archive.isImage) {
@@ -367,10 +301,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           image: archive.isImage
-              ? DecorationImage(
-                  image: NetworkImage(archive.fileUrl),
-                  fit: BoxFit.cover,
-                )
+              ? DecorationImage(image: NetworkImage(archive.fileUrl), fit: BoxFit.cover)
               : null,
           color: !archive.isImage ? Colors.grey.shade200 : null,
         ),
@@ -433,10 +364,7 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                     Expanded(
                       child: Text(
                         archive.fileName ?? 'Файл',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
                     IconButton(
@@ -455,9 +383,8 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                       ? Image.network(
                           archive.fileUrl,
                           fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) => const Center(
-                            child: Icon(Icons.error, size: 50),
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Center(child: Icon(Icons.error, size: 50)),
                         )
                       : const Center(
                           child: Column(

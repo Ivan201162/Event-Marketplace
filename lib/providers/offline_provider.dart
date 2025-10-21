@@ -38,14 +38,13 @@ class OfflineModeState {
     DateTime? lastSyncTime,
     bool? isCacheStale,
     String? error,
-  }) =>
-      OfflineModeState(
-        isOfflineMode: isOfflineMode ?? this.isOfflineMode,
-        isOnline: isOnline ?? this.isOnline,
-        lastSyncTime: lastSyncTime ?? this.lastSyncTime,
-        isCacheStale: isCacheStale ?? this.isCacheStale,
-        error: error ?? this.error,
-      );
+  }) => OfflineModeState(
+    isOfflineMode: isOfflineMode ?? this.isOfflineMode,
+    isOnline: isOnline ?? this.isOnline,
+    lastSyncTime: lastSyncTime ?? this.lastSyncTime,
+    isCacheStale: isCacheStale ?? this.isCacheStale,
+    error: error ?? this.error,
+  );
 
   /// Получить статус подключения
   String get connectionStatus {
@@ -90,14 +89,13 @@ class CacheInfoState {
     List<String>? cacheKeys,
     int? cacheVersion,
     String? error,
-  }) =>
-      CacheInfoState(
-        isLoading: isLoading ?? this.isLoading,
-        cacheSize: cacheSize ?? this.cacheSize,
-        cacheKeys: cacheKeys ?? this.cacheKeys,
-        cacheVersion: cacheVersion ?? this.cacheVersion,
-        error: error ?? this.error,
-      );
+  }) => CacheInfoState(
+    isLoading: isLoading ?? this.isLoading,
+    cacheSize: cacheSize ?? this.cacheSize,
+    cacheKeys: cacheKeys ?? this.cacheKeys,
+    cacheVersion: cacheVersion ?? this.cacheVersion,
+    error: error ?? this.error,
+  );
 
   /// Получить отформатированный размер кэша
   String get formattedCacheSize => OfflineService.formatBytes(cacheSize);
@@ -127,14 +125,13 @@ class SyncState {
     String? error,
     int? syncProgress,
     String? currentOperation,
-  }) =>
-      SyncState(
-        isSyncing: isSyncing ?? this.isSyncing,
-        lastSyncTime: lastSyncTime ?? this.lastSyncTime,
-        error: error ?? this.error,
-        syncProgress: syncProgress ?? this.syncProgress,
-        currentOperation: currentOperation ?? this.currentOperation,
-      );
+  }) => SyncState(
+    isSyncing: isSyncing ?? this.isSyncing,
+    lastSyncTime: lastSyncTime ?? this.lastSyncTime,
+    error: error ?? this.error,
+    syncProgress: syncProgress ?? this.syncProgress,
+    currentOperation: currentOperation ?? this.currentOperation,
+  );
 
   /// Получить время последней синхронизации в читаемом виде
   String get formattedLastSyncTime {
@@ -278,10 +275,7 @@ class CacheInfoNotifier extends Notifier<CacheInfoState> {
         cacheVersion: cacheVersion,
       );
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -291,16 +285,9 @@ class CacheInfoNotifier extends Notifier<CacheInfoState> {
 
     try {
       await OfflineService.clearCache();
-      state = state.copyWith(
-        isLoading: false,
-        cacheSize: 0,
-        cacheKeys: [],
-      );
+      state = state.copyWith(isLoading: false, cacheSize: 0, cacheKeys: []);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -345,10 +332,7 @@ class SyncNotifier extends Notifier<SyncState> {
       // Проверяем подключение
       final isOnline = await OfflineService.isOnline();
       if (!isOnline) {
-        state = state.copyWith(
-          isSyncing: false,
-          error: 'Нет подключения к интернету',
-        );
+        state = state.copyWith(isSyncing: false, error: 'Нет подключения к интернету');
         return;
       }
 
@@ -361,51 +345,31 @@ class SyncNotifier extends Notifier<SyncState> {
       // TODO(developer): Реализовать синхронизацию пользовательских данных
       await Future.delayed(const Duration(seconds: 1));
 
-      state = state.copyWith(
-        syncProgress: 50,
-        currentOperation: 'Синхронизация бронирований...',
-      );
+      state = state.copyWith(syncProgress: 50, currentOperation: 'Синхронизация бронирований...');
 
       // TODO(developer): Реализовать синхронизацию бронирований
       await Future.delayed(const Duration(seconds: 1));
 
-      state = state.copyWith(
-        syncProgress: 75,
-        currentOperation: 'Синхронизация сообщений...',
-      );
+      state = state.copyWith(syncProgress: 75, currentOperation: 'Синхронизация сообщений...');
 
       // TODO(developer): Реализовать синхронизацию сообщений
       await Future.delayed(const Duration(seconds: 1));
 
-      state = state.copyWith(
-        syncProgress: 100,
-        currentOperation: 'Завершение синхронизации...',
-      );
+      state = state.copyWith(syncProgress: 100, currentOperation: 'Завершение синхронизации...');
 
       // Обновляем время последней синхронизации
       await OfflineService.updateLastSyncTime();
       await OfflineService.updateCacheVersion();
 
-      state = state.copyWith(
-        isSyncing: false,
-        lastSyncTime: DateTime.now(),
-        syncProgress: 0,
-      );
+      state = state.copyWith(isSyncing: false, lastSyncTime: DateTime.now(), syncProgress: 0);
     } catch (e) {
-      state = state.copyWith(
-        isSyncing: false,
-        error: e.toString(),
-        syncProgress: 0,
-      );
+      state = state.copyWith(isSyncing: false, error: e.toString(), syncProgress: 0);
     }
   }
 
   /// Остановить синхронизацию
   void stopSync() {
-    state = state.copyWith(
-      isSyncing: false,
-      syncProgress: 0,
-    );
+    state = state.copyWith(isSyncing: false, syncProgress: 0);
   }
 
   /// Очистить ошибки
@@ -437,5 +401,6 @@ final operationLimitationProvider = Provider.family<String, String>((ref, operat
 });
 
 /// Провайдер для рекомендаций офлайн-режима
-final offlineRecommendationsProvider =
-    Provider<List<String>>((ref) => OfflineUtils.getOfflineRecommendations());
+final offlineRecommendationsProvider = Provider<List<String>>(
+  (ref) => OfflineUtils.getOfflineRecommendations(),
+);

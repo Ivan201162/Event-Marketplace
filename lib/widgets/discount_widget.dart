@@ -32,17 +32,9 @@ class DiscountWidget extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(
-                _getDiscountIcon(),
-                color: _getDiscountColor(),
-              ),
+              Icon(_getDiscountIcon(), color: _getDiscountColor()),
               const SizedBox(width: 8),
-              const Expanded(
-                child: ResponsiveText(
-                  'Предложение скидки',
-                  isTitle: true,
-                ),
-              ),
+              const Expanded(child: ResponsiveText('Предложение скидки', isTitle: true)),
               _buildStatusChip(),
             ],
           ),
@@ -63,10 +55,7 @@ class DiscountWidget extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const ResponsiveText(
-                      'Старая цена:',
-                      isSubtitle: true,
-                    ),
+                    const ResponsiveText('Старая цена:', isSubtitle: true),
                     ResponsiveText(
                       '${discount!.oldPrice?.toStringAsFixed(0)} ₽',
                       style: const TextStyle(
@@ -80,10 +69,7 @@ class DiscountWidget extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const ResponsiveText(
-                      'Новая цена:',
-                      isSubtitle: true,
-                    ),
+                    const ResponsiveText('Новая цена:', isSubtitle: true),
                     ResponsiveText(
                       '${discount!.newPrice?.toStringAsFixed(0)} ₽',
                       style: TextStyle(
@@ -98,16 +84,10 @@ class DiscountWidget extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const ResponsiveText(
-                      'Экономия:',
-                      isSubtitle: true,
-                    ),
+                    const ResponsiveText('Экономия:', isSubtitle: true),
                     ResponsiveText(
                       '${discount!.savings?.toStringAsFixed(0)} ₽ (${discount!.discountPercent?.toStringAsFixed(0)}%)',
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -118,10 +98,7 @@ class DiscountWidget extends ConsumerWidget {
           // Причина скидки
           if (discount!.reason != null) ...[
             const SizedBox(height: 8),
-            ResponsiveText(
-              'Причина: ${discount!.reason}',
-              isSubtitle: true,
-            ),
+            ResponsiveText('Причина: ${discount!.reason}', isSubtitle: true),
           ],
 
           // Время действия
@@ -131,10 +108,7 @@ class DiscountWidget extends ConsumerWidget {
               children: [
                 const Icon(Icons.access_time, size: 16),
                 const SizedBox(width: 4),
-                ResponsiveText(
-                  _getTimeRemaining(),
-                  isSubtitle: true,
-                ),
+                ResponsiveText(_getTimeRemaining(), isSubtitle: true),
               ],
             ),
           ],
@@ -161,9 +135,7 @@ class DiscountWidget extends ConsumerWidget {
                     onPressed: () => _rejectDiscount(context, ref),
                     icon: const Icon(Icons.close),
                     label: const Text('Отклонить'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                    ),
+                    style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
                   ),
                 ),
               ],
@@ -207,11 +179,7 @@ class DiscountWidget extends ConsumerWidget {
       ),
       child: Text(
         chipText,
-        style: TextStyle(
-          color: chipColor,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(color: chipColor, fontSize: 12, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -270,15 +238,11 @@ class DiscountWidget extends ConsumerWidget {
         customerId: 'current_user_id', // TODO(developer): Получить из контекста
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Скидка принята')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Скидка принята')));
 
       onDiscountChanged?.call();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -297,10 +261,7 @@ class DiscountWidget extends ConsumerWidget {
 
 /// Диалог для отклонения скидки
 class _RejectDiscountDialog extends StatefulWidget {
-  const _RejectDiscountDialog({
-    required this.bookingId,
-    required this.onRejected,
-  });
+  const _RejectDiscountDialog({required this.bookingId, required this.onRejected});
   final String bookingId;
   final VoidCallback onRejected;
 
@@ -320,43 +281,40 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Отклонить скидку'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Вы уверены, что хотите отклонить предложение скидки?'),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _reasonController,
-              decoration: const InputDecoration(
-                labelText: 'Причина отклонения (необязательно)',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-          ],
+    title: const Text('Отклонить скидку'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text('Вы уверены, что хотите отклонить предложение скидки?'),
+        const SizedBox(height: 16),
+        TextField(
+          controller: _reasonController,
+          decoration: const InputDecoration(
+            labelText: 'Причина отклонения (необязательно)',
+            border: OutlineInputBorder(),
+          ),
+          maxLines: 3,
         ),
-        actions: [
-          TextButton(
-            onPressed: _isLoading ? null : () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: _isLoading ? null : _rejectDiscount,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: _isLoading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text('Отклонить'),
-          ),
-        ],
-      );
+      ],
+    ),
+    actions: [
+      TextButton(
+        onPressed: _isLoading ? null : () => Navigator.pop(context),
+        child: const Text('Отмена'),
+      ),
+      ElevatedButton(
+        onPressed: _isLoading ? null : _rejectDiscount,
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+        child: _isLoading
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Text('Отклонить'),
+      ),
+    ],
+  );
 
   Future<void> _rejectDiscount() async {
     setState(() {
@@ -372,15 +330,11 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
       );
 
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Скидка отклонена')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Скидка отклонена')));
 
       widget.onRejected();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {
       setState(() {
         _isLoading = false;
@@ -403,32 +357,27 @@ class OfferDiscountWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
           children: [
-            const Row(
-              children: [
-                Icon(Icons.local_offer, color: Colors.blue),
-                SizedBox(width: 8),
-                ResponsiveText(
-                  'Предложить скидку',
-                  isTitle: true,
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Предложите клиенту скидку для увеличения шансов на бронирование.',
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () => _showOfferDiscountDialog(context, ref),
-              icon: const Icon(Icons.local_offer),
-              label: const Text('Предложить скидку'),
-            ),
+            Icon(Icons.local_offer, color: Colors.blue),
+            SizedBox(width: 8),
+            ResponsiveText('Предложить скидку', isTitle: true),
           ],
         ),
-      );
+        const SizedBox(height: 12),
+        const Text('Предложите клиенту скидку для увеличения шансов на бронирование.'),
+        const SizedBox(height: 16),
+        ElevatedButton.icon(
+          onPressed: () => _showOfferDiscountDialog(context, ref),
+          icon: const Icon(Icons.local_offer),
+          label: const Text('Предложить скидку'),
+        ),
+      ],
+    ),
+  );
 
   void _showOfferDiscountDialog(BuildContext context, WidgetRef ref) {
     showDialog<void>(
@@ -548,10 +497,7 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
                   const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Новая цена:'),
-                      Text('${newPrice.toStringAsFixed(0)} ₽'),
-                    ],
+                    children: [const Text('Новая цена:'), Text('${newPrice.toStringAsFixed(0)} ₽')],
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -560,10 +506,7 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
                       const Text('Скидка:'),
                       Text(
                         '${discountPercent.toStringAsFixed(0)}% (${savings.toStringAsFixed(0)} ₽)',
-                        style: const TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -611,15 +554,13 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
       );
 
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Скидка предложена')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Скидка предложена')));
 
       widget.onOffered();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {
       setState(() {
         _isLoading = false;

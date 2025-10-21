@@ -8,11 +8,7 @@ class BookingWidget extends ConsumerStatefulWidget {
   final Specialist specialist;
   final Function(BookingData) onBookingConfirmed;
 
-  const BookingWidget({
-    super.key,
-    required this.specialist,
-    required this.onBookingConfirmed,
-  });
+  const BookingWidget({super.key, required this.specialist, required this.onBookingConfirmed});
 
   @override
   ConsumerState<BookingWidget> createState() => _BookingWidgetState();
@@ -31,9 +27,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
@@ -68,17 +62,11 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                     children: [
                       Text(
                         widget.specialist.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         widget.specialist.specialization,
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                     ],
                   ),
@@ -141,9 +129,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.grey[50],
-              border: Border(
-                top: BorderSide(color: Colors.grey[200]!),
-              ),
+              border: Border(top: BorderSide(color: Colors.grey[200]!)),
             ),
             child: Row(
               children: [
@@ -162,10 +148,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                       ),
                       Text(
                         'Длительность: $_duration час${_duration > 1 ? 'а' : ''}',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                     ],
                   ),
@@ -190,31 +173,24 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Выберите услугу',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Выберите услугу', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         if (widget.specialist.services.isNotEmpty)
-          ...widget.specialist.services.map((service) => RadioListTile<String>(
-                title: Text(service),
-                value: service,
-                groupValue: _selectedService,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedService = value;
-                  });
-                },
-              ))
+          ...widget.specialist.services.map(
+            (service) => RadioListTile<String>(
+              title: Text(service),
+              value: service,
+              groupValue: _selectedService,
+              onChanged: (value) {
+                setState(() {
+                  _selectedService = value;
+                });
+              },
+            ),
+          )
         else
           const Card(
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('Услуги не указаны'),
-            ),
+            child: Padding(padding: EdgeInsets.all(16), child: Text('Услуги не указаны')),
           ),
       ],
     );
@@ -224,13 +200,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Выберите дату',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Выберите дату', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         InkWell(
           onTap: _selectDate,
@@ -268,13 +238,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Выберите время',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Выберите время', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         InkWell(
           onTap: _selectTime,
@@ -312,13 +276,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Длительность',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Длительность', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         Row(
           children: [
@@ -353,10 +311,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       children: [
         const Text(
           'Дополнительные пожелания',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         TextField(
@@ -382,10 +337,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
           children: [
             const Text(
               'Расчет стоимости',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Row(
@@ -400,13 +352,7 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Итого:',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                const Text('Итого:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 Text(
                   '$totalPrice ₽',
                   style: const TextStyle(

@@ -30,9 +30,7 @@ class ContentCreatorService {
       // Фильтрация по форматам на клиенте (если указаны)
       if (formats != null && formats.isNotEmpty) {
         creators = creators
-            .where(
-              (creator) => creator.formats.any((format) => formats.contains(format.name)),
-            )
+            .where((creator) => creator.formats.any((format) => formats.contains(format.name)))
             .toList();
       }
 
@@ -90,10 +88,7 @@ class ContentCreatorService {
   }
 
   /// Добавить медиа в портфолио
-  Future<void> addMediaToPortfolio(
-    String creatorId,
-    MediaShowcase media,
-  ) async {
+  Future<void> addMediaToPortfolio(String creatorId, MediaShowcase media) async {
     try {
       await _firestore.collection('contentCreators').doc(creatorId).update({
         'mediaShowcase': FieldValue.arrayUnion([media.toMap()]),
@@ -105,10 +100,7 @@ class ContentCreatorService {
   }
 
   /// Удалить медиа из портфолио
-  Future<void> removeMediaFromPortfolio(
-    String creatorId,
-    String mediaId,
-  ) async {
+  Future<void> removeMediaFromPortfolio(String creatorId, String mediaId) async {
     try {
       // Получаем текущий контент-мейкер
       final doc = await _firestore.collection('contentCreators').doc(creatorId).get();
@@ -169,9 +161,7 @@ class ContentCreatorService {
                 creator.categories.any(
                   (category) => category.toLowerCase().contains(searchQuery),
                 ) ||
-                creator.formats.any(
-                  (format) => format.name.toLowerCase().contains(searchQuery),
-                ),
+                creator.formats.any((format) => format.name.toLowerCase().contains(searchQuery)),
           )
           .toList();
 
@@ -184,8 +174,10 @@ class ContentCreatorService {
   /// Получить популярные форматы контента
   Future<List<String>> getPopularFormats() async {
     try {
-      final snapshot =
-          await _firestore.collection('contentCreators').where('isActive', isEqualTo: true).get();
+      final snapshot = await _firestore
+          .collection('contentCreators')
+          .where('isActive', isEqualTo: true)
+          .get();
 
       final formatCounts = <String, int>{};
 
@@ -231,8 +223,10 @@ class ContentCreatorService {
       }
 
       // Получаем средний рейтинг
-      final reviewsSnapshot =
-          await _firestore.collection('reviews').where('specialistId', isEqualTo: creatorId).get();
+      final reviewsSnapshot = await _firestore
+          .collection('reviews')
+          .where('specialistId', isEqualTo: creatorId)
+          .get();
 
       double averageRating = 0;
       if (reviewsSnapshot.docs.isNotEmpty) {
@@ -292,10 +286,7 @@ class ContentCreatorService {
 
         final categoryIds = topCategories.take(3).map((e) => e.key).toList();
 
-        final creators = await getContentCreators(
-          categories: categoryIds,
-          limit: limit * 2,
-        );
+        final creators = await getContentCreators(categories: categoryIds, limit: limit * 2);
 
         recommendedCreators.addAll(creators);
       }
@@ -320,8 +311,10 @@ class ContentCreatorService {
   Future<void> updateCreatorRating(String creatorId) async {
     try {
       // Получаем все отзывы
-      final reviewsSnapshot =
-          await _firestore.collection('reviews').where('specialistId', isEqualTo: creatorId).get();
+      final reviewsSnapshot = await _firestore
+          .collection('reviews')
+          .where('specialistId', isEqualTo: creatorId)
+          .get();
 
       if (reviewsSnapshot.docs.isEmpty) return;
 

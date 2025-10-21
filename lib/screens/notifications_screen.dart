@@ -29,12 +29,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
     _animationController.forward();
   }
 
@@ -74,16 +69,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Theme.of(context).colorScheme.error,
-                ),
+                Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
                 const SizedBox(height: 16),
-                Text(
-                  'Ошибка загрузки уведомлений',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text('Ошибка загрузки уведомлений', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Text(
                   error.toString(),
@@ -125,119 +113,101 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
   }
 
   Widget _buildEmptyState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.notifications_none, size: 80, color: Theme.of(context).colorScheme.outline),
+        const SizedBox(height: 16),
+        Text(
+          'Нет уведомлений',
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Здесь будут отображаться ваши уведомления',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildNotificationCard(app_notification.AppNotification notification) => Card(
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+      side: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.1)),
+    ),
+    child: InkWell(
+      onTap: () => _handleNotificationTap(notification),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: notification.isRead
+              ? null
+              : Theme.of(context).primaryColor.withValues(alpha: 0.05),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.notifications_none,
-              size: 80,
-              color: Theme.of(context).colorScheme.outline,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Нет уведомлений',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
+            _buildNotificationIcon(notification.type),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          notification.title,
+                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      if (!notification.isRead)
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                    ],
                   ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Здесь будут отображаться ваши уведомления',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
+                  const SizedBox(height: 4),
+                  Text(
+                    notification.body,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-              textAlign: TextAlign.center,
+                  const SizedBox(height: 8),
+                  Text(
+                    _formatDateTime(notification.createdAt),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.5),
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-      );
-
-  Widget _buildNotificationCard(
-    app_notification.AppNotification notification,
-  ) =>
-      Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-            color: Theme.of(context).dividerColor.withValues(alpha: 0.1),
-          ),
-        ),
-        child: InkWell(
-          onTap: () => _handleNotificationTap(notification),
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: notification.isRead
-                  ? null
-                  : Theme.of(context).primaryColor.withValues(alpha: 0.05),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildNotificationIcon(notification.type),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              notification.title,
-                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight:
-                                        notification.isRead ? FontWeight.normal : FontWeight.bold,
-                                  ),
-                            ),
-                          ),
-                          if (!notification.isRead)
-                            Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        notification.body,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.color
-                                  ?.withValues(alpha: 0.7),
-                            ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _formatDateTime(notification.createdAt),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.color
-                                  ?.withValues(alpha: 0.5),
-                              fontSize: 11,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
+      ),
+    ),
+  );
 
   Widget _buildNotificationIcon(String type) {
     IconData icon;
@@ -272,11 +242,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Icon(
-        icon,
-        color: color,
-        size: 20,
-      ),
+      child: Icon(icon, color: color, size: 20),
     );
   }
 
@@ -295,9 +261,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     }
   }
 
-  Future<void> _handleNotificationTap(
-    app_notification.AppNotification notification,
-  ) async {
+  Future<void> _handleNotificationTap(app_notification.AppNotification notification) async {
     // Отмечаем уведомление как прочитанное
     if (!notification.isRead) {
       await NotificationService.markNotificationAsRead(notification.id);
@@ -331,12 +295,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       builder: (context) => AlertDialog(
         title: const Text('Скоро'),
         content: Text('Функция "$feature" будет реализована в следующих версиях.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
       ),
     );
   }
@@ -348,10 +307,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
         title: const Text('Очистить уведомления'),
         content: const Text('Вы уверены, что хотите удалить все уведомления?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);

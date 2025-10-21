@@ -40,12 +40,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _loadVideos();
     _animationController.forward();
@@ -61,9 +56,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
 
   Future<void> _loadVideos() async {
     try {
-      final videos = await _ideasService.getPublishedIdeas(
-        limit: 50,
-      );
+      final videos = await _ideasService.getPublishedIdeas(limit: 50);
 
       setState(() {
         _videos = videos.where((idea) => idea.isVideo ?? false).toList();
@@ -73,9 +66,7 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
       if (_videos.isNotEmpty) {
         // Найти индекс начального видео
         if (widget.initialIdea != null) {
-          final initialIndex = _videos.indexWhere(
-            (video) => video.id == widget.initialIdea!.id,
-          );
+          final initialIndex = _videos.indexWhere((video) => video.id == widget.initialIdea!.id);
           if (initialIndex != -1) {
             _currentIndex = initialIndex;
             _pageController = PageController(initialPage: initialIndex);
@@ -87,18 +78,16 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка загрузки видео: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка загрузки видео: $e')));
     }
   }
 
   Future<void> _initializeVideo(EventIdea video) async {
     try {
       _currentController?.dispose();
-      _currentController = VideoPlayerController.networkUrl(
-        Uri.parse(video.mediaUrl ?? ''),
-      );
+      _currentController = VideoPlayerController.networkUrl(Uri.parse(video.mediaUrl ?? ''));
 
       await _currentController!.initialize();
       _currentController!.setLooping(true);
@@ -127,276 +116,238 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.black,
-        body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              )
-            : _videos.isEmpty
-                ? const Center(
-                    child: Text(
-                      'Нет видео для просмотра',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  )
-                : FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      scrollDirection: Axis.vertical,
-                      onPageChanged: (index) {
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                        _initializeVideo(_videos[index]);
-                      },
-                      itemCount: _videos.length,
-                      itemBuilder: (context, index) {
-                        final video = _videos[index];
-                        return _buildVideoPage(video);
-                      },
-                    ),
-                  ),
-      );
+    backgroundColor: Colors.black,
+    body: _isLoading
+        ? const Center(child: CircularProgressIndicator(color: Colors.white))
+        : _videos.isEmpty
+        ? const Center(
+            child: Text(
+              'Нет видео для просмотра',
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+          )
+        : FadeTransition(
+            opacity: _fadeAnimation,
+            child: PageView.builder(
+              controller: _pageController,
+              scrollDirection: Axis.vertical,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+                _initializeVideo(_videos[index]);
+              },
+              itemCount: _videos.length,
+              itemBuilder: (context, index) {
+                final video = _videos[index];
+                return _buildVideoPage(video);
+              },
+            ),
+          ),
+  );
 
   Widget _buildVideoPage(EventIdea video) => Stack(
-        fit: StackFit.expand,
-        children: [
-          // Видео
-          if (_currentController != null && _currentController!.value.isInitialized)
-            GestureDetector(
-              onTap: _togglePlayPause,
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: SizedBox(
-                  width: _currentController!.value.size.width,
-                  height: _currentController!.value.size.height,
-                  child: VideoPlayer(_currentController!),
-                ),
-              ),
-            )
-          else
-            Container(
-              color: Colors.grey[900],
-              child: const Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              ),
+    fit: StackFit.expand,
+    children: [
+      // Видео
+      if (_currentController != null && _currentController!.value.isInitialized)
+        GestureDetector(
+          onTap: _togglePlayPause,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: _currentController!.value.size.width,
+              height: _currentController!.value.size.height,
+              child: VideoPlayer(_currentController!),
             ),
+          ),
+        )
+      else
+        Container(
+          color: Colors.grey[900],
+          child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+        ),
 
-          // Информация о видео
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.7),
-                  ],
+      // Информация о видео
+      Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+            ),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Заголовок
+              Text(
+                video.title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+              const SizedBox(height: 8),
+
+              // Описание
+              if (video.description.isNotEmpty) ...[
+                Text(
+                  video.description,
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
+              ],
+
+              // Автор
+              Row(
                 children: [
-                  // Заголовок
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundImage: video.authorAvatar != null
+                        ? NetworkImage(video.authorAvatar!)
+                        : null,
+                    child: video.authorAvatar == null
+                        ? const Icon(Icons.person, size: 16, color: Colors.white)
+                        : null,
+                  ),
+                  const SizedBox(width: 8),
                   Text(
-                    video.title,
+                    video.authorName ?? 'Неизвестный',
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 8),
-
-                  // Описание
-                  if (video.description.isNotEmpty) ...[
-                    Text(
-                      video.description,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-
-                  // Автор
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 16,
-                        backgroundImage:
-                            video.authorAvatar != null ? NetworkImage(video.authorAvatar!) : null,
-                        child: video.authorAvatar == null
-                            ? const Icon(
-                                Icons.person,
-                                size: 16,
-                                color: Colors.white,
-                              )
-                            : null,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        video.authorName ?? 'Неизвестный',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        _formatDate(video.createdAt),
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+                  const Spacer(),
+                  Text(
+                    _formatDate(video.createdAt),
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
                   ),
                 ],
               ),
+            ],
+          ),
+        ),
+      ),
+
+      // Кнопки действий справа
+      Positioned(
+        bottom: 100,
+        right: 16,
+        child: Column(
+          children: [
+            _buildActionButton(
+              icon: Icons.favorite_border,
+              color: Colors.white,
+              count: video.likes,
+              onTap: () => _toggleLike(video),
+            ),
+            const SizedBox(height: 16),
+            _buildActionButton(
+              icon: Icons.comment,
+              color: Colors.white,
+              count: video.comments,
+              onTap: () => _openComments(video),
+            ),
+            const SizedBox(height: 16),
+            _buildActionButton(
+              icon: Icons.bookmark_border,
+              color: Colors.white,
+              count: 0,
+              onTap: () => _toggleSave(video),
+            ),
+            const SizedBox(height: 16),
+            _buildActionButton(
+              icon: Icons.share,
+              color: Colors.white,
+              count: video.shares,
+              onTap: () => _shareVideo(video),
+            ),
+          ],
+        ),
+      ),
+
+      // Кнопка воспроизведения/паузы в центре
+      if (!_isPlaying)
+        Center(
+          child: GestureDetector(
+            onTap: _togglePlayPause,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
+              child: const Icon(Icons.play_arrow, color: Colors.white, size: 60),
             ),
           ),
+        ),
 
-          // Кнопки действий справа
-          Positioned(
-            bottom: 100,
-            right: 16,
-            child: Column(
-              children: [
-                _buildActionButton(
-                  icon: Icons.favorite_border,
-                  color: Colors.white,
-                  count: video.likes,
-                  onTap: () => _toggleLike(video),
-                ),
-                const SizedBox(height: 16),
-                _buildActionButton(
-                  icon: Icons.comment,
-                  color: Colors.white,
-                  count: video.comments,
-                  onTap: () => _openComments(video),
-                ),
-                const SizedBox(height: 16),
-                _buildActionButton(
-                  icon: Icons.bookmark_border,
-                  color: Colors.white,
-                  count: 0,
-                  onTap: () => _toggleSave(video),
-                ),
-                const SizedBox(height: 16),
-                _buildActionButton(
-                  icon: Icons.share,
-                  color: Colors.white,
-                  count: video.shares,
-                  onTap: () => _shareVideo(video),
-                ),
-              ],
+      // Кнопка закрытия
+      Positioned(
+        top: MediaQuery.of(context).padding.top + 16,
+        right: 16,
+        child: GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
+            child: const Icon(Icons.close, color: Colors.white, size: 24),
+          ),
+        ),
+      ),
+
+      // Индикатор прогресса
+      if (_currentController != null && _currentController!.value.isInitialized)
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: VideoProgressIndicator(
+            _currentController!,
+            allowScrubbing: true,
+            colors: const VideoProgressColors(
+              playedColor: Colors.white,
+              bufferedColor: Colors.white30,
+              backgroundColor: Colors.white10,
             ),
           ),
-
-          // Кнопка воспроизведения/паузы в центре
-          if (!_isPlaying)
-            Center(
-              child: GestureDetector(
-                onTap: _togglePlayPause,
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                    color: Colors.black54,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                    size: 60,
-                  ),
-                ),
-              ),
-            ),
-
-          // Кнопка закрытия
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 16,
-            right: 16,
-            child: GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-            ),
-          ),
-
-          // Индикатор прогресса
-          if (_currentController != null && _currentController!.value.isInitialized)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: VideoProgressIndicator(
-                _currentController!,
-                allowScrubbing: true,
-                colors: const VideoProgressColors(
-                  playedColor: Colors.white,
-                  bufferedColor: Colors.white30,
-                  backgroundColor: Colors.white10,
-                ),
-              ),
-            ),
-        ],
-      );
+        ),
+    ],
+  );
 
   Widget _buildActionButton({
     required IconData icon,
     required Color color,
     required int count,
     required VoidCallback onTap,
-  }) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: const BoxDecoration(
-            color: Colors.black54,
-            shape: BoxShape.circle,
+  }) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.all(12),
+      decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 4),
+          Text(
+            count.toString(),
+            style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
           ),
-          child: Column(
-            children: [
-              Icon(icon, color: color, size: 24),
-              const SizedBox(height: 4),
-              Text(
-                count.toString(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   Future<void> _toggleLike(EventIdea video) async {
     final currentUser = ref.read(currentUserProvider).value;
@@ -413,21 +364,11 @@ class _VideoReelsViewerState extends ConsumerState<VideoReelsViewer> with Ticker
   }
 
   Future<void> _shareVideo(EventIdea video) async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ShareIdeaScreen(idea: video),
-      ),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ShareIdeaScreen(idea: video)));
   }
 
   void _openComments(EventIdea video) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => IdeaDetailScreen(idea: video),
-      ),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => IdeaDetailScreen(idea: video)));
   }
 
   String _formatDate(DateTime date) {

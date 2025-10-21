@@ -10,10 +10,7 @@ import '../widgets/profile/profile_tabs_widget.dart';
 
 /// Экран профиля пользователя
 class ProfileScreen extends ConsumerStatefulWidget {
-  const ProfileScreen({
-    super.key,
-    this.userId,
-  });
+  const ProfileScreen({super.key, this.userId});
 
   final String? userId;
 
@@ -33,23 +30,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         title: Text(isCurrentUser ? 'Мой профиль' : 'Профиль'),
         centerTitle: true,
         actions: [
-          if (isCurrentUser)
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: _editProfile,
-            ),
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: _shareProfile,
-          ),
+          if (isCurrentUser) IconButton(icon: const Icon(Icons.edit), onPressed: _editProfile),
+          IconButton(icon: const Icon(Icons.share), onPressed: _shareProfile),
         ],
       ),
       body: currentUser.when(
         data: (user) {
           if (user == null) {
-            return const Center(
-              child: Text('Пользователь не найден'),
-            );
+            return const Center(child: Text('Пользователь не найден'));
           }
 
           return RefreshIndicator(
@@ -62,62 +50,39 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Column(
                 children: [
                   // Заголовок профиля
-                  ProfileHeaderWidget(
-                    user: user,
-                    isCurrentUser: isCurrentUser,
-                  ),
+                  ProfileHeaderWidget(user: user, isCurrentUser: isCurrentUser),
 
                   const SizedBox(height: 16),
 
                   // Статистика профиля
-                  ProfileStatsWidget(
-                    user: user,
-                    isCurrentUser: isCurrentUser,
-                  ),
+                  ProfileStatsWidget(user: user, isCurrentUser: isCurrentUser),
 
                   const SizedBox(height: 16),
 
                   // Действия профиля
-                  ProfileActionsWidget(
-                    user: user,
-                    isCurrentUser: isCurrentUser,
-                  ),
+                  ProfileActionsWidget(user: user, isCurrentUser: isCurrentUser),
 
                   const SizedBox(height: 16),
 
                   // Вкладки профиля
-                  ProfileTabsWidget(
-                    user: user,
-                    isCurrentUser: isCurrentUser,
-                  ),
+                  ProfileTabsWidget(user: user, isCurrentUser: isCurrentUser),
                 ],
               ),
             ),
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: theme.colorScheme.error,
-              ),
+              Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
               const SizedBox(height: 16),
-              Text(
-                'Ошибка загрузки профиля',
-                style: theme.textTheme.headlineSmall,
-              ),
+              Text('Ошибка загрузки профиля', style: theme.textTheme.headlineSmall),
               const SizedBox(height: 8),
               Text(
                 error.toString(),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.error,
-                ),
+                style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -140,10 +105,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   void _shareProfile() {
     // TODO: Реализовать шаринг профиля
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Функция шаринга будет добавлена позже'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
   }
 }

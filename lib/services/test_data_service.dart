@@ -1,4 +1,4 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -994,27 +994,14 @@ class TestDataService {
       }
 
       // Заполняем данные параллельно где возможно
-      await Future.wait([
-        _populateSpecialists(),
-        _populateChats(),
-        _populateBookings(),
-      ]);
+      await Future.wait([_populateSpecialists(), _populateChats(), _populateBookings()]);
 
-      await Future.wait([
-        _populatePosts(),
-        _populateIdeas(),
-        _populateNotifications(),
-      ]);
+      await Future.wait([_populatePosts(), _populateIdeas(), _populateNotifications()]);
 
-      await Future.wait([
-        createTestPromotions(),
-        _populateReviews(),
-      ]);
+      await Future.wait([createTestPromotions(), _populateReviews()]);
 
       stopwatch.stop();
-      debugPrint(
-        '✅ Тестовые данные успешно созданы за ${stopwatch.elapsedMilliseconds}ms',
-      );
+      debugPrint('✅ Тестовые данные успешно созданы за ${stopwatch.elapsedMilliseconds}ms');
     } on FirebaseException catch (e) {
       debugPrint('❌ Ошибка Firebase при заполнении данных: ${e.message}');
       rethrow;
@@ -1603,9 +1590,7 @@ class TestDataService {
             }
 
             totalDeleted += snapshot.docs.length;
-            debugPrint(
-              '  ✅ Удалено ${snapshot.docs.length} документов из $collection',
-            );
+            debugPrint('  ✅ Удалено ${snapshot.docs.length} документов из $collection');
           }
         } on FirebaseException catch (e) {
           debugPrint('  ⚠️ Ошибка при удалении из $collection: ${e.message}');
@@ -1655,9 +1640,7 @@ class TestDataService {
           final snapshot = await _firestore.collection(collection).get();
           stats[collection] = snapshot.docs.length;
         } on FirebaseException catch (e) {
-          debugPrint(
-            '⚠️ Ошибка при получении статистики для $collection: ${e.message}',
-          );
+          debugPrint('⚠️ Ошибка при получении статистики для $collection: ${e.message}');
           stats[collection] = 0;
         }
       }
@@ -1685,10 +1668,7 @@ class TestDataService {
         'text':
             'Алексей - потрясающий ведущий! Наша свадьба прошла на высшем уровне. Он создал незабываемую атмосферу, все гости были в восторге. Очень рекомендую!',
         'date': DateTime.now().subtract(const Duration(days: 5)),
-        'photos': [
-          'https://picsum.photos/400?random=201',
-          'https://picsum.photos/400?random=202',
-        ],
+        'photos': ['https://picsum.photos/400?random=201', 'https://picsum.photos/400?random=202'],
         'likes': 12,
         'responses': [
           {
@@ -1696,7 +1676,7 @@ class TestDataService {
             'authorName': 'Алексей Смирнов',
             'text': 'Спасибо большое за отзыв! Было очень приятно работать с вами!',
             'date': DateTime.now().subtract(const Duration(days: 4)),
-          }
+          },
         ],
         'bookingId': 'booking_1',
         'eventTitle': 'Свадьба Ольги и Игоря',
@@ -1741,7 +1721,7 @@ class TestDataService {
             'authorName': 'Алексей Смирнов',
             'text': 'Благодарю за отзыв! Рад, что мероприятие понравилось!',
             'date': DateTime.now().subtract(const Duration(days: 14)),
-          }
+          },
         ],
         'bookingId': 'booking_3',
         'eventTitle': 'День рождения',
@@ -1759,10 +1739,7 @@ class TestDataService {
         'text':
             'Неплохой ведущий, но ожидала больше интерактива. В целом справился со своей задачей.',
         'date': DateTime.now().subtract(const Duration(days: 20)),
-        'photos': [
-          'https://picsum.photos/400?random=204',
-          'https://picsum.photos/400?random=205',
-        ],
+        'photos': ['https://picsum.photos/400?random=204', 'https://picsum.photos/400?random=205'],
         'likes': 3,
         'responses': <String>[],
         'bookingId': 'booking_4',
@@ -1789,7 +1766,7 @@ class TestDataService {
             'authorName': 'Алексей Смирнов',
             'text': 'Спасибо за теплые слова! Было очень приятно работать с вами!',
             'date': DateTime.now().subtract(const Duration(days: 24)),
-          }
+          },
         ],
         'bookingId': 'booking_5',
         'eventTitle': 'Свадьба Сергея и Анны',
@@ -1809,10 +1786,7 @@ class TestDataService {
         'text':
             'Анна - талантливый фотограф! Снимки получились просто потрясающие. Очень внимательная к деталям, профессиональный подход.',
         'date': DateTime.now().subtract(const Duration(days: 3)),
-        'photos': [
-          'https://picsum.photos/400?random=207',
-          'https://picsum.photos/400?random=208',
-        ],
+        'photos': ['https://picsum.photos/400?random=207', 'https://picsum.photos/400?random=208'],
         'likes': 18,
         'responses': [
           {
@@ -1820,7 +1794,7 @@ class TestDataService {
             'authorName': 'Анна Лебедева',
             'text': 'Спасибо за отзыв! Рада, что фото понравились!',
             'date': DateTime.now().subtract(const Duration(days: 2)),
-          }
+          },
         ],
         'bookingId': 'booking_6',
         'eventTitle': 'Свадебная фотосессия',
@@ -1857,10 +1831,7 @@ class TestDataService {
         'text':
             'Анна - профессионал высшего класса! Создала невероятные снимки нашей свадьбы. Каждый кадр - произведение искусства!',
         'date': DateTime.now().subtract(const Duration(days: 12)),
-        'photos': [
-          'https://picsum.photos/400?random=210',
-          'https://picsum.photos/400?random=211',
-        ],
+        'photos': ['https://picsum.photos/400?random=210', 'https://picsum.photos/400?random=211'],
         'likes': 22,
         'responses': [
           {
@@ -1868,7 +1839,7 @@ class TestDataService {
             'authorName': 'Анна Лебедева',
             'text': 'Благодарю за такие теплые слова! Было очень приятно работать с вами!',
             'date': DateTime.now().subtract(const Duration(days: 11)),
-          }
+          },
         ],
         'bookingId': 'booking_8',
         'eventTitle': 'Свадьба в стиле прованс',
@@ -1896,7 +1867,7 @@ class TestDataService {
             'authorName': 'Дмитрий Козлов',
             'text': 'Спасибо за отзыв! Учту ваши пожелания на будущее.',
             'date': DateTime.now().subtract(const Duration(days: 5)),
-          }
+          },
         ],
         'bookingId': 'booking_9',
         'eventTitle': 'День рождения',
@@ -1922,7 +1893,7 @@ class TestDataService {
             'authorName': 'Дмитрий Козлов',
             'text': 'Спасибо! Рад, что музыка понравилась всем!',
             'date': DateTime.now().subtract(const Duration(days: 13)),
-          }
+          },
         ],
         'bookingId': 'booking_10',
         'eventTitle': 'Свадьба Натальи и Михаила',
@@ -2199,9 +2170,7 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    debugPrint(
-      'Добавлено ${monetizationUsers.length} пользователей с монетизацией',
-    );
+    debugPrint('Добавлено ${monetizationUsers.length} пользователей с монетизацией');
   }
 
   /// Получить тестовые промоакции
@@ -2717,8 +2686,10 @@ class TestDataService {
       final collections = ['users', 'feed', 'orders', 'chats', 'ideas'];
 
       for (final collection in collections) {
-        final querySnapshot =
-            await _firestore.collection(collection).where('isTest', isEqualTo: true).get();
+        final querySnapshot = await _firestore
+            .collection(collection)
+            .where('isTest', isEqualTo: true)
+            .get();
 
         for (final doc in querySnapshot.docs) {
           if (collection == 'chats') {

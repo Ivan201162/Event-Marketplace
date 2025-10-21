@@ -43,9 +43,7 @@ class SpecialistDiscountService {
   }
 
   /// Получить скидки для заказа
-  Future<List<SpecialistDiscount>> getDiscountsForBooking(
-    String bookingId,
-  ) async {
+  Future<List<SpecialistDiscount>> getDiscountsForBooking(String bookingId) async {
     try {
       final snapshot = await _firestore
           .collection('specialist_discounts')
@@ -62,9 +60,7 @@ class SpecialistDiscountService {
   }
 
   /// Получить активные скидки специалиста
-  Future<List<SpecialistDiscount>> getActiveDiscountsForSpecialist(
-    String specialistId,
-  ) async {
+  Future<List<SpecialistDiscount>> getActiveDiscountsForSpecialist(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('specialist_discounts')
@@ -133,9 +129,7 @@ class SpecialistDiscountService {
   }
 
   /// Получить статистику скидок специалиста
-  Future<SpecialistDiscountStats> getSpecialistDiscountStats(
-    String specialistId,
-  ) async {
+  Future<SpecialistDiscountStats> getSpecialistDiscountStats(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('specialist_discounts')
@@ -148,9 +142,7 @@ class SpecialistDiscountService {
       final acceptedOffers = discounts.where((d) => d.isAccepted).length;
       final rejectedOffers = discounts.where((d) => d.isRejected).length;
       final expiredOffers = discounts
-          .where(
-            (d) => d.expiresAt.isBefore(DateTime.now()) && !d.isAccepted && !d.isRejected,
-          )
+          .where((d) => d.expiresAt.isBefore(DateTime.now()) && !d.isAccepted && !d.isRejected)
           .length;
 
       final averageDiscount = discounts.isNotEmpty
@@ -194,10 +186,7 @@ class SpecialistDiscountService {
   // ========== ПРИВАТНЫЕ МЕТОДЫ ==========
 
   /// Отправить уведомление о скидке
-  Future<void> _sendDiscountNotification(
-    String bookingId,
-    String discountId,
-  ) async {
+  Future<void> _sendDiscountNotification(String bookingId, String discountId) async {
     try {
       // Получаем информацию о заказе
       final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
@@ -212,10 +201,7 @@ class SpecialistDiscountService {
         'type': 'discount_offer',
         'title': 'Предложение скидки',
         'body': 'Специалист предложил скидку на ваш заказ',
-        'data': {
-          'bookingId': bookingId,
-          'discountId': discountId,
-        },
+        'data': {'bookingId': bookingId, 'discountId': discountId},
         'createdAt': FieldValue.serverTimestamp(),
         'isRead': false,
       });
@@ -279,10 +265,12 @@ class SpecialistDiscount {
       message: data['message'] as String?,
       isActive: data['isActive'] as bool? ?? true,
       isAccepted: data['isAccepted'] as bool? ?? false,
-      createdAt:
-          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-      expiresAt:
-          data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : DateTime.now(),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      expiresAt: data['expiresAt'] != null
+          ? (data['expiresAt'] as Timestamp).toDate()
+          : DateTime.now(),
       isRejected: data['isRejected'] as bool? ?? false,
       isCancelled: data['isCancelled'] as bool? ?? false,
       acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
@@ -307,20 +295,20 @@ class SpecialistDiscount {
   final DateTime? cancelledAt;
 
   Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'bookingId': bookingId,
-        'discountPercent': discountPercent,
-        'message': message,
-        'isActive': isActive,
-        'isAccepted': isAccepted,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'expiresAt': Timestamp.fromDate(expiresAt),
-        'isRejected': isRejected,
-        'isCancelled': isCancelled,
-        'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
-        'rejectedAt': rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
-        'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
-      };
+    'specialistId': specialistId,
+    'bookingId': bookingId,
+    'discountPercent': discountPercent,
+    'message': message,
+    'isActive': isActive,
+    'isAccepted': isAccepted,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'expiresAt': Timestamp.fromDate(expiresAt),
+    'isRejected': isRejected,
+    'isCancelled': isCancelled,
+    'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
+    'rejectedAt': rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
+    'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+  };
 }
 
 /// Статистика скидок специалиста
@@ -336,14 +324,14 @@ class SpecialistDiscountStats {
   });
 
   factory SpecialistDiscountStats.empty() => SpecialistDiscountStats(
-        specialistId: '',
-        totalOffers: 0,
-        acceptedOffers: 0,
-        rejectedOffers: 0,
-        expiredOffers: 0,
-        averageDiscount: 0,
-        lastUpdated: DateTime.now(),
-      );
+    specialistId: '',
+    totalOffers: 0,
+    acceptedOffers: 0,
+    rejectedOffers: 0,
+    expiredOffers: 0,
+    averageDiscount: 0,
+    lastUpdated: DateTime.now(),
+  );
 
   final String specialistId;
   final int totalOffers;

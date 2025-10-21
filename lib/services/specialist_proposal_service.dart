@@ -15,9 +15,7 @@ class SpecialistProposalService {
   final FCMService _fcmService = FCMService();
 
   /// Создать предложение специалистов
-  Future<SpecialistProposal> createProposal(
-    CreateSpecialistProposal data,
-  ) async {
+  Future<SpecialistProposal> createProposal(CreateSpecialistProposal data) async {
     if (!data.isValid) {
       throw Exception('Неверные данные: ${data.validationErrors.join(', ')}');
     }
@@ -81,9 +79,7 @@ class SpecialistProposalService {
   }
 
   /// Получить предложения для клиента
-  Future<List<SpecialistProposal>> getCustomerProposals(
-    String customerId,
-  ) async {
+  Future<List<SpecialistProposal>> getCustomerProposals(String customerId) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -94,9 +90,7 @@ class SpecialistProposalService {
   }
 
   /// Получить предложения от организатора
-  Future<List<SpecialistProposal>> getOrganizerProposals(
-    String organizerId,
-  ) async {
+  Future<List<SpecialistProposal>> getOrganizerProposals(String organizerId) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('organizerId', isEqualTo: organizerId)
@@ -205,9 +199,7 @@ class SpecialistProposalService {
   }
 
   /// Получить активные предложения для клиента
-  Future<List<SpecialistProposal>> getActiveCustomerProposals(
-    String customerId,
-  ) async {
+  Future<List<SpecialistProposal>> getActiveCustomerProposals(String customerId) async {
     final snapshot = await _firestore
         .collection(_collection)
         .where('customerId', isEqualTo: customerId)
@@ -221,8 +213,10 @@ class SpecialistProposalService {
 
   /// Получить статистику предложений организатора
   Future<Map<String, int>> getOrganizerStats(String organizerId) async {
-    final snapshot =
-        await _firestore.collection(_collection).where('organizerId', isEqualTo: organizerId).get();
+    final snapshot = await _firestore
+        .collection(_collection)
+        .where('organizerId', isEqualTo: organizerId)
+        .get();
 
     var total = 0;
     var accepted = 0;
@@ -242,12 +236,7 @@ class SpecialistProposalService {
       }
     }
 
-    return {
-      'total': total,
-      'accepted': accepted,
-      'rejected': rejected,
-      'pending': pending,
-    };
+    return {'total': total, 'accepted': accepted, 'rejected': rejected, 'pending': pending};
   }
 
   /// Подписаться на изменения предложений для клиента
@@ -256,20 +245,13 @@ class SpecialistProposalService {
       .where('customerId', isEqualTo: customerId)
       .orderBy('createdAt', descending: true)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(SpecialistProposal.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(SpecialistProposal.fromDocument).toList());
 
   /// Подписаться на изменения предложений организатора
-  Stream<List<SpecialistProposal>> watchOrganizerProposals(
-    String organizerId,
-  ) =>
-      _firestore
-          .collection(_collection)
-          .where('organizerId', isEqualTo: organizerId)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs.map(SpecialistProposal.fromDocument).toList(),
-          );
+  Stream<List<SpecialistProposal>> watchOrganizerProposals(String organizerId) => _firestore
+      .collection(_collection)
+      .where('organizerId', isEqualTo: organizerId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(SpecialistProposal.fromDocument).toList());
 }

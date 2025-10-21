@@ -13,7 +13,6 @@ enum BadgeType {
   popularSpecialist, // Популярный специалист
   qualityMaster, // Мастер качества
   customerFavorite, // Любимец клиентов
-
   // Бейджи для заказчиков
   firstEvent, // Первое мероприятие
   regularCustomer, // Постоянный клиент
@@ -23,7 +22,6 @@ enum BadgeType {
   loyalCustomer, // Лояльный клиент
   socialButterfly, // Социальная бабочка (много мероприятий)
   trendsetter, // Трендсеттер (популярные категории)
-
   // Общие бейджи
   earlyAdopter, // Ранний пользователь
   communityHelper, // Помощник сообщества
@@ -78,16 +76,16 @@ class Badge {
 
   /// Преобразует бейдж в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'type': type.name,
-        'title': title,
-        'description': description,
-        'icon': icon,
-        'color': color,
-        'earnedAt': Timestamp.fromDate(earnedAt),
-        'isVisible': isVisible,
-        'metadata': metadata,
-      };
+    'userId': userId,
+    'type': type.name,
+    'title': title,
+    'description': description,
+    'icon': icon,
+    'color': color,
+    'earnedAt': Timestamp.fromDate(earnedAt),
+    'isVisible': isVisible,
+    'metadata': metadata,
+  };
 
   /// Создаёт копию бейджа с обновлёнными полями
   Badge copyWith({
@@ -101,19 +99,18 @@ class Badge {
     DateTime? earnedAt,
     bool? isVisible,
     Map<String, dynamic>? metadata,
-  }) =>
-      Badge(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        type: type ?? this.type,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        icon: icon ?? this.icon,
-        color: color ?? this.color,
-        earnedAt: earnedAt ?? this.earnedAt,
-        isVisible: isVisible ?? this.isVisible,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => Badge(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    type: type ?? this.type,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    icon: icon ?? this.icon,
+    color: color ?? this.color,
+    earnedAt: earnedAt ?? this.earnedAt,
+    isVisible: isVisible ?? this.isVisible,
+    metadata: metadata ?? this.metadata,
+  );
 
   @override
   bool operator ==(Object other) {
@@ -327,11 +324,7 @@ class BadgeInfo {
 }
 
 /// Категории бейджей
-enum BadgeCategory {
-  specialist,
-  customer,
-  general,
-}
+enum BadgeCategory { specialist, customer, general }
 
 /// Статистика бейджей пользователя
 class BadgeStats {

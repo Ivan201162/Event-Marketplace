@@ -54,15 +54,14 @@ class LoggingSettings {
     bool? enableFileLogging,
     int? maxLogFileSize,
     int? maxLogFiles,
-  }) =>
-      LoggingSettings(
-        enableCrashlytics: enableCrashlytics ?? this.enableCrashlytics,
-        enablePerformance: enablePerformance ?? this.enablePerformance,
-        enableConsoleLogging: enableConsoleLogging ?? this.enableConsoleLogging,
-        enableFileLogging: enableFileLogging ?? this.enableFileLogging,
-        maxLogFileSize: maxLogFileSize ?? this.maxLogFileSize,
-        maxLogFiles: maxLogFiles ?? this.maxLogFiles,
-      );
+  }) => LoggingSettings(
+    enableCrashlytics: enableCrashlytics ?? this.enableCrashlytics,
+    enablePerformance: enablePerformance ?? this.enablePerformance,
+    enableConsoleLogging: enableConsoleLogging ?? this.enableConsoleLogging,
+    enableFileLogging: enableFileLogging ?? this.enableFileLogging,
+    maxLogFileSize: maxLogFileSize ?? this.maxLogFileSize,
+    maxLogFiles: maxLogFiles ?? this.maxLogFiles,
+  );
 }
 
 /// Нотификатор для настроек логирования
@@ -142,13 +141,7 @@ final isLoggingEnabledProvider = Provider<bool>((ref) {
 /// Провайдер для получения статистики логирования
 final loggingStatsProvider = FutureProvider<LoggingStats>((ref) async {
   // В реальном приложении здесь можно получить статистику из файлов или базы данных
-  return const LoggingStats(
-    totalLogs: 0,
-    errorLogs: 0,
-    warningLogs: 0,
-    infoLogs: 0,
-    debugLogs: 0,
-  );
+  return const LoggingStats(totalLogs: 0, errorLogs: 0, warningLogs: 0, infoLogs: 0, debugLogs: 0);
 });
 
 /// Статистика логирования

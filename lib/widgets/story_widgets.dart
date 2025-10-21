@@ -10,12 +10,7 @@ import '../providers/story_providers.dart';
 
 /// Виджет для отображения сториса
 class StoryWidget extends ConsumerWidget {
-  const StoryWidget({
-    super.key,
-    required this.story,
-    this.onTap,
-    this.showProgress = true,
-  });
+  const StoryWidget({super.key, required this.story, this.onTap, this.showProgress = true});
   final Story story;
   final VoidCallback? onTap;
   final bool showProgress;
@@ -47,9 +42,7 @@ class StoryWidget extends ConsumerWidget {
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: Colors.grey[300],
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: const Center(child: CircularProgressIndicator()),
                   ),
                   errorWidget: (context, url, error) => Container(
                     color: Colors.grey[300],
@@ -64,9 +57,7 @@ class StoryWidget extends ConsumerWidget {
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
                         color: Colors.grey[300],
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
+                        child: const Center(child: CircularProgressIndicator()),
                       ),
                       errorWidget: (context, url, error) => Container(
                         color: Colors.grey[300],
@@ -76,11 +67,7 @@ class StoryWidget extends ConsumerWidget {
                     const Positioned(
                       bottom: 4,
                       right: 4,
-                      child: Icon(
-                        Icons.play_circle_fill,
-                        color: Colors.white,
-                        size: 16,
-                      ),
+                      child: Icon(Icons.play_circle_fill, color: Colors.white, size: 16),
                     ),
                   ],
                 )
@@ -109,11 +96,7 @@ class StoryWidget extends ConsumerWidget {
                 const Positioned(
                   top: 4,
                   right: 4,
-                  child: Icon(
-                    Icons.check_circle,
-                    color: Colors.blue,
-                    size: 16,
-                  ),
+                  child: Icon(Icons.check_circle, color: Colors.blue, size: 16),
                 ),
             ],
           ),
@@ -232,18 +215,15 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
 
       if (mounted) {
         final l10n = AppLocalizations.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.storyCreatedSuccessfully)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.storyCreatedSuccessfully)));
       }
     } catch (e) {
       if (mounted) {
         final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${l10n.errorCreatingStory}: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('${l10n.errorCreatingStory}: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -258,11 +238,7 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
 
 /// Виджет для отображения списка сторисов
 class StoriesListWidget extends ConsumerWidget {
-  const StoriesListWidget({
-    super.key,
-    required this.stories,
-    this.onStoryTap,
-  });
+  const StoriesListWidget({super.key, required this.stories, this.onStoryTap});
   final List<Story> stories;
   final void Function(Story)? onStoryTap;
 
@@ -282,10 +258,7 @@ class StoriesListWidget extends ConsumerWidget {
           final story = stories[index];
           return Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: StoryWidget(
-              story: story,
-              onTap: () => onStoryTap?.call(story),
-            ),
+            child: StoryWidget(story: story, onTap: () => onStoryTap?.call(story)),
           );
         },
       ),
@@ -295,11 +268,7 @@ class StoriesListWidget extends ConsumerWidget {
 
 /// Виджет для просмотра сториса в полноэкранном режиме
 class StoryViewerWidget extends ConsumerStatefulWidget {
-  const StoryViewerWidget({
-    super.key,
-    required this.story,
-    this.onClose,
-  });
+  const StoryViewerWidget({super.key, required this.story, this.onClose});
   final Story story;
   final VoidCallback? onClose;
 
@@ -328,126 +297,106 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            // Медиа контент
-            Center(
-              child: widget.story.type == StoryType.image
-                  ? CachedNetworkImage(
-                      imageUrl: widget.story.mediaUrl,
-                      fit: BoxFit.contain,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      errorWidget: (context, url, error) => const Center(
-                        child: Icon(Icons.error, color: Colors.white, size: 64),
-                      ),
-                    )
-                  : widget.story.type == StoryType.video
-                      ? const Center(
-                          child: Icon(
-                            Icons.play_circle_fill,
-                            color: Colors.white,
-                            size: 64,
-                          ),
-                        )
-                      : Center(
-                          child: Text(
-                            widget.story.caption,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-            ),
-
-            // Заголовок
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 16,
-              left: 16,
-              right: 16,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(widget.story.specialistPhotoUrl),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.story.specialistName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          _formatTimeAgo(widget.story.createdAt),
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: widget.onClose,
-                    icon: const Icon(Icons.close, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-
-            // Подпись
-            if (widget.story.caption.isNotEmpty)
-              Positioned(
-                bottom: 100,
-                left: 16,
-                right: 16,
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.5),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+    backgroundColor: Colors.black,
+    body: Stack(
+      children: [
+        // Медиа контент
+        Center(
+          child: widget.story.type == StoryType.image
+              ? CachedNetworkImage(
+                  imageUrl: widget.story.mediaUrl,
+                  fit: BoxFit.contain,
+                  placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) =>
+                      const Center(child: Icon(Icons.error, color: Colors.white, size: 64)),
+                )
+              : widget.story.type == StoryType.video
+              ? const Center(child: Icon(Icons.play_circle_fill, color: Colors.white, size: 64))
+              : Center(
                   child: Text(
                     widget.story.caption,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              ),
+        ),
 
-            // Действия
-            Positioned(
-              bottom: 40,
-              right: 16,
-              child: Column(
-                children: [
-                  IconButton(
-                    onPressed: _likeStory,
-                    icon: Icon(
-                      widget.story.likes > 0 ? Icons.favorite : Icons.favorite_border,
-                      color: Colors.white,
-                      size: 32,
+        // Заголовок
+        Positioned(
+          top: MediaQuery.of(context).padding.top + 16,
+          left: 16,
+          right: 16,
+          child: Row(
+            children: [
+              CircleAvatar(backgroundImage: NetworkImage(widget.story.specialistPhotoUrl)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.story.specialistName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    widget.story.likes.toString(),
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
+                    Text(
+                      _formatTimeAgo(widget.story.createdAt),
+                      style: const TextStyle(color: Colors.white70, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                onPressed: widget.onClose,
+                icon: const Icon(Icons.close, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+
+        // Подпись
+        if (widget.story.caption.isNotEmpty)
+          Positioned(
+            bottom: 100,
+            left: 16,
+            right: 16,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.5),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                widget.story.caption,
+                style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
             ),
-          ],
+          ),
+
+        // Действия
+        Positioned(
+          bottom: 40,
+          right: 16,
+          child: Column(
+            children: [
+              IconButton(
+                onPressed: _likeStory,
+                icon: Icon(
+                  widget.story.likes > 0 ? Icons.favorite : Icons.favorite_border,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              Text(widget.story.likes.toString(), style: const TextStyle(color: Colors.white)),
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 
   Future<void> _likeStory() async {
     try {
@@ -458,9 +407,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка лайка: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка лайка: $e')));
       }
     }
   }

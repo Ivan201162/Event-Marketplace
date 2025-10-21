@@ -94,149 +94,137 @@ class _DiscountNotificationsScreenState extends ConsumerState<DiscountNotificati
   }
 
   Widget _buildUnreadNotifications(String userId) => StreamBuilder<List<DiscountNotification>>(
-        stream: _notificationService.watchUnreadCustomerNotifications(userId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    stream: _notificationService.watchUnreadCustomerNotifications(userId),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка: ${snapshot.error}'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {}),
-                    child: const Text('Повторить'),
-                  ),
-                ],
+      if (snapshot.hasError) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('Ошибка: ${snapshot.error}'),
+              const SizedBox(height: 16),
+              ElevatedButton(onPressed: () => setState(() {}), child: const Text('Повторить')),
+            ],
+          ),
+        );
+      }
+
+      final notifications = snapshot.data ?? [];
+
+      if (notifications.isEmpty) {
+        return const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.notifications_off, size: 64, color: Colors.grey),
+              SizedBox(height: 16),
+              Text('Нет новых уведомлений', style: TextStyle(fontSize: 18, color: Colors.grey)),
+              SizedBox(height: 8),
+              Text(
+                'Когда специалисты предложат скидки, они появятся здесь',
+                style: TextStyle(color: Colors.grey),
+                textAlign: TextAlign.center,
               ),
-            );
-          }
+            ],
+          ),
+        );
+      }
 
-          final notifications = snapshot.data ?? [];
-
-          if (notifications.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.notifications_off, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'Нет новых уведомлений',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Когда специалисты предложат скидки, они появятся здесь',
-                    style: TextStyle(color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              setState(() {});
-            },
-            child: ListView.builder(
-              itemCount: notifications.length,
-              itemBuilder: (context, index) {
-                final notification = notifications[index];
-                return DiscountNotificationCard(
-                  notification: notification,
-                  onRead: () {
-                    setState(() {});
-                  },
-                  onDelete: () {
-                    setState(() {});
-                  },
-                );
-              },
-            ),
-          );
+      return RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
         },
+        child: ListView.builder(
+          itemCount: notifications.length,
+          itemBuilder: (context, index) {
+            final notification = notifications[index];
+            return DiscountNotificationCard(
+              notification: notification,
+              onRead: () {
+                setState(() {});
+              },
+              onDelete: () {
+                setState(() {});
+              },
+            );
+          },
+        ),
       );
+    },
+  );
 
   Widget _buildAllNotifications(String userId) => StreamBuilder<List<DiscountNotification>>(
-        stream: _notificationService.watchCustomerNotifications(userId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    stream: _notificationService.watchCustomerNotifications(userId),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка: ${snapshot.error}'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {}),
-                    child: const Text('Повторить'),
-                  ),
-                ],
+      if (snapshot.hasError) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('Ошибка: ${snapshot.error}'),
+              const SizedBox(height: 16),
+              ElevatedButton(onPressed: () => setState(() {}), child: const Text('Повторить')),
+            ],
+          ),
+        );
+      }
+
+      final notifications = snapshot.data ?? [];
+
+      if (notifications.isEmpty) {
+        return const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.local_offer, size: 64, color: Colors.grey),
+              SizedBox(height: 16),
+              Text('Нет уведомлений о скидках', style: TextStyle(fontSize: 18, color: Colors.grey)),
+              SizedBox(height: 8),
+              Text(
+                'Уведомления о скидках от специалистов будут отображаться здесь',
+                style: TextStyle(color: Colors.grey),
+                textAlign: TextAlign.center,
               ),
-            );
-          }
+            ],
+          ),
+        );
+      }
 
-          final notifications = snapshot.data ?? [];
-
-          if (notifications.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.local_offer, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'Нет уведомлений о скидках',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Уведомления о скидках от специалистов будут отображаться здесь',
-                    style: TextStyle(color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              setState(() {});
-            },
-            child: ListView.builder(
-              itemCount: notifications.length,
-              itemBuilder: (context, index) {
-                final notification = notifications[index];
-                return DiscountNotificationCard(
-                  notification: notification,
-                  onRead: () {
-                    setState(() {});
-                  },
-                  onDelete: () {
-                    setState(() {});
-                  },
-                  showActions: !notification.isRead,
-                );
-              },
-            ),
-          );
+      return RefreshIndicator(
+        onRefresh: () async {
+          setState(() {});
         },
+        child: ListView.builder(
+          itemCount: notifications.length,
+          itemBuilder: (context, index) {
+            final notification = notifications[index];
+            return DiscountNotificationCard(
+              notification: notification,
+              onRead: () {
+                setState(() {});
+              },
+              onDelete: () {
+                setState(() {});
+              },
+              showActions: !notification.isRead,
+            );
+          },
+        ),
       );
+    },
+  );
 
   Future<void> _markAllAsRead(String userId) async {
     try {
@@ -251,12 +239,9 @@ class _DiscountNotificationsScreenState extends ConsumerState<DiscountNotificati
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     }
   }

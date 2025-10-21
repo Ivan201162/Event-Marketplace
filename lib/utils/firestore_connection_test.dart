@@ -30,9 +30,7 @@ class FirestoreConnectionTest {
       debugPrint('❌ Firestore connection failed: $e');
 
       if (_retryCount < _maxRetries) {
-        debugPrint(
-          '🔄 Повторная попытка через 3 секунды... ($_retryCount/$_maxRetries)',
-        );
+        debugPrint('🔄 Повторная попытка через 3 секунды... ($_retryCount/$_maxRetries)');
         await Future.delayed(const Duration(seconds: 3));
         return testConnection();
       } else {
@@ -66,10 +64,7 @@ class FirestoreConnectionTest {
       await _firestore
           .collection('ping_test')
           .doc('test_${DateTime.now().millisecondsSinceEpoch}')
-          .set({
-        'timestamp': FieldValue.serverTimestamp(),
-        'test': true,
-      });
+          .set({'timestamp': FieldValue.serverTimestamp(), 'test': true});
 
       debugPrint('✅ Firestore write test OK');
       return true;

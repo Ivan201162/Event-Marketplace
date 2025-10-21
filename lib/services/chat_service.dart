@@ -103,8 +103,11 @@ class ChatService {
   }
 
   /// Get messages for a chat
-  Future<List<Message>> getChatMessages(String chatId,
-      {int limit = 50, DocumentSnapshot? lastDocument}) async {
+  Future<List<Message>> getChatMessages(
+    String chatId, {
+    int limit = 50,
+    DocumentSnapshot? lastDocument,
+  }) async {
     try {
       Query query = _firestore
           .collection(_messagesCollection)
@@ -268,7 +271,11 @@ class ChatService {
 
   /// Add member to group chat
   Future<bool> addMemberToChat(
-      String chatId, String userId, String userName, String? userAvatarUrl) async {
+    String chatId,
+    String userId,
+    String userName,
+    String? userAvatarUrl,
+  ) async {
     try {
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'members': FieldValue.arrayUnion([userId]),
@@ -368,13 +375,13 @@ class ChatService {
         .where('members', arrayContains: userId)
         .snapshots()
         .map((snapshot) {
-      int totalUnread = 0;
-      for (final doc in snapshot.docs) {
-        final chat = Chat.fromFirestore(doc);
-        totalUnread += chat.getUnreadCount(userId);
-      }
-      return totalUnread;
-    });
+          int totalUnread = 0;
+          for (final doc in snapshot.docs) {
+            final chat = Chat.fromFirestore(doc);
+            totalUnread += chat.getUnreadCount(userId);
+          }
+          return totalUnread;
+        });
   }
 
   /// Helper method to get media message text

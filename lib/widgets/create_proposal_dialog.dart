@@ -9,11 +9,7 @@ import '../services/specialist_service.dart';
 
 /// Диалог создания предложения специалистов
 class CreateProposalDialog extends ConsumerStatefulWidget {
-  const CreateProposalDialog({
-    super.key,
-    required this.customerId,
-    this.customerName,
-  });
+  const CreateProposalDialog({super.key, required this.customerId, this.customerName});
 
   final String customerId;
   final String? customerName;
@@ -50,9 +46,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
     final currentUser = ref.watch(currentUserProvider);
 
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
         height: MediaQuery.of(context).size.height * 0.8,
@@ -66,9 +60,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                 Expanded(
                   child: Text(
                     'Создать предложение',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 IconButton(
@@ -156,9 +148,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                       // Поиск специалистов
                       Text(
                         'Выберите специалистов',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 8),
                       TextField(
@@ -189,9 +179,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                       else if (_searchResults.isNotEmpty) ...[
                         Text(
                           'Результаты поиска:',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(height: 8),
                         Container(
@@ -206,8 +194,9 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                             itemCount: _searchResults.length,
                             itemBuilder: (context, index) {
                               final specialist = _searchResults[index];
-                              final isSelected =
-                                  _selectedSpecialists.any((s) => s.id == specialist.id);
+                              final isSelected = _selectedSpecialists.any(
+                                (s) => s.id == specialist.id,
+                              );
 
                               return ListTile(
                                 leading: CircleAvatar(
@@ -227,15 +216,9 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                                     if (specialist.rating > 0)
                                       Row(
                                         children: [
-                                          const Icon(
-                                            Icons.star,
-                                            size: 14,
-                                            color: Colors.amber,
-                                          ),
+                                          const Icon(Icons.star, size: 14, color: Colors.amber),
                                           const SizedBox(width: 4),
-                                          Text(
-                                            specialist.rating.toStringAsFixed(1),
-                                          ),
+                                          Text(specialist.rating.toStringAsFixed(1)),
                                         ],
                                       ),
                                   ],
@@ -259,9 +242,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
                       if (_selectedSpecialists.isNotEmpty) ...[
                         Text(
                           'Выбранные специалисты (${_selectedSpecialists.length}):',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(height: 8),
                         Wrap(
@@ -337,10 +318,7 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
     });
 
     try {
-      final results = await _specialistService.searchSpecialists(
-        query: query.trim(),
-        limit: 10,
-      );
+      final results = await _specialistService.searchSpecialists(query: query.trim(), limit: 10);
 
       // Исключить уже выбранных специалистов
       final filteredResults = results
@@ -354,12 +332,9 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
       });
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка поиска: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка поиска: $e'), backgroundColor: Colors.red));
       }
     } finally {
       setState(() {
@@ -430,12 +405,9 @@ class _CreateProposalDialogState extends ConsumerState<CreateProposalDialog> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {

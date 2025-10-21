@@ -24,24 +24,24 @@ class Story {
 
   /// Создать сторис из Map
   factory Story.fromMap(Map<String, dynamic> data, [String? id]) => Story(
-        id: id ?? data['id'] ?? '',
-        specialistId: data['specialistId'] ?? '',
-        title: data['title'] ?? '',
-        mediaUrl: data['mediaUrl'] ?? '',
-        thumbnailUrl: data['thumbnailUrl'] ?? '',
-        createdAt: data['createdAt'] != null
-            ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
-            : DateTime.now(),
-        expiresAt: data['expiresAt'] != null
-            ? (data['expiresAt'] is Timestamp
-                ? (data['expiresAt'] as Timestamp).toDate()
-                : DateTime.parse(data['expiresAt'].toString()))
-            : DateTime.now().add(const Duration(hours: 24)),
-        viewsCount: data['viewsCount'] as int? ?? 0,
-        metadata: data['metadata'],
-      );
+    id: id ?? data['id'] ?? '',
+    specialistId: data['specialistId'] ?? '',
+    title: data['title'] ?? '',
+    mediaUrl: data['mediaUrl'] ?? '',
+    thumbnailUrl: data['thumbnailUrl'] ?? '',
+    createdAt: data['createdAt'] != null
+        ? (data['createdAt'] is Timestamp
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
+        : DateTime.now(),
+    expiresAt: data['expiresAt'] != null
+        ? (data['expiresAt'] is Timestamp
+              ? (data['expiresAt'] as Timestamp).toDate()
+              : DateTime.parse(data['expiresAt'].toString()))
+        : DateTime.now().add(const Duration(hours: 24)),
+    viewsCount: data['viewsCount'] as int? ?? 0,
+    metadata: data['metadata'],
+  );
 
   final String id;
   final String specialistId;
@@ -55,15 +55,15 @@ class Story {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'title': title,
-        'mediaUrl': mediaUrl,
-        'thumbnailUrl': thumbnailUrl,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'expiresAt': Timestamp.fromDate(expiresAt),
-        'viewsCount': viewsCount,
-        'metadata': metadata,
-      };
+    'specialistId': specialistId,
+    'title': title,
+    'mediaUrl': mediaUrl,
+    'thumbnailUrl': thumbnailUrl,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'expiresAt': Timestamp.fromDate(expiresAt),
+    'viewsCount': viewsCount,
+    'metadata': metadata,
+  };
 
   /// Копировать с изменениями
   Story copyWith({
@@ -76,18 +76,17 @@ class Story {
     DateTime? expiresAt,
     int? viewsCount,
     Map<String, dynamic>? metadata,
-  }) =>
-      Story(
-        id: id ?? this.id,
-        specialistId: specialistId ?? this.specialistId,
-        title: title ?? this.title,
-        mediaUrl: mediaUrl ?? this.mediaUrl,
-        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-        createdAt: createdAt ?? this.createdAt,
-        expiresAt: expiresAt ?? this.expiresAt,
-        viewsCount: viewsCount ?? this.viewsCount,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => Story(
+    id: id ?? this.id,
+    specialistId: specialistId ?? this.specialistId,
+    title: title ?? this.title,
+    mediaUrl: mediaUrl ?? this.mediaUrl,
+    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+    createdAt: createdAt ?? this.createdAt,
+    expiresAt: expiresAt ?? this.expiresAt,
+    viewsCount: viewsCount ?? this.viewsCount,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, активна ли история
   bool get isActive => expiresAt.isAfter(DateTime.now());

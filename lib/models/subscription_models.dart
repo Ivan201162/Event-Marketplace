@@ -1,21 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Статус подписки
-enum SubscriptionStatus {
-  active,
-  inactive,
-  cancelled,
-  expired,
-  pending,
-}
+enum SubscriptionStatus { active, inactive, cancelled, expired, pending }
 
 /// Тип подписки
-enum SubscriptionType {
-  free,
-  basic,
-  premium,
-  enterprise,
-}
+enum SubscriptionType { free, basic, premium, enterprise }
 
 /// Модель подписки пользователя
 class UserSubscription {
@@ -61,13 +50,13 @@ class UserSubscription {
       status: _parseStatus(data['status']),
       startDate: data['startDate'] != null
           ? (data['startDate'] is Timestamp
-              ? (data['startDate'] as Timestamp).toDate()
-              : DateTime.tryParse(data['startDate'].toString()))
+                ? (data['startDate'] as Timestamp).toDate()
+                : DateTime.tryParse(data['startDate'].toString()))
           : null,
       endDate: data['endDate'] != null
           ? (data['endDate'] is Timestamp
-              ? (data['endDate'] as Timestamp).toDate()
-              : DateTime.tryParse(data['endDate'].toString()))
+                ? (data['endDate'] as Timestamp).toDate()
+                : DateTime.tryParse(data['endDate'].toString()))
           : null,
       autoRenew: data['autoRenew'] as bool? ?? false,
       price: (data['price'] as num?)?.toDouble(),
@@ -76,13 +65,13 @@ class UserSubscription {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -94,28 +83,25 @@ class UserSubscription {
       throw Exception('Document data is null');
     }
 
-    return UserSubscription.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return UserSubscription.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'specialistId': specialistId,
-        'type': type.name,
-        'status': status.name,
-        'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
-        'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
-        'autoRenew': autoRenew,
-        'price': price,
-        'currency': currency,
-        'features': features,
-        'metadata': metadata,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      };
+    'userId': userId,
+    'specialistId': specialistId,
+    'type': type.name,
+    'status': status.name,
+    'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
+    'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
+    'autoRenew': autoRenew,
+    'price': price,
+    'currency': currency,
+    'features': features,
+    'metadata': metadata,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
   /// Копировать с изменениями
   UserSubscription copyWith({
@@ -133,23 +119,22 @@ class UserSubscription {
     Map<String, dynamic>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      UserSubscription(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        specialistId: specialistId ?? this.specialistId,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-        autoRenew: autoRenew ?? this.autoRenew,
-        price: price ?? this.price,
-        currency: currency ?? this.currency,
-        features: features ?? this.features,
-        metadata: metadata ?? this.metadata,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => UserSubscription(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    specialistId: specialistId ?? this.specialistId,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    autoRenew: autoRenew ?? this.autoRenew,
+    price: price ?? this.price,
+    currency: currency ?? this.currency,
+    features: features ?? this.features,
+    metadata: metadata ?? this.metadata,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Парсинг типа из строки
   static SubscriptionType _parseType(String? type) {
@@ -293,13 +278,13 @@ class Subscription {
       status: _parseStatus(data['status']),
       startDate: data['startDate'] != null
           ? (data['startDate'] is Timestamp
-              ? (data['startDate'] as Timestamp).toDate()
-              : DateTime.tryParse(data['startDate'].toString()))
+                ? (data['startDate'] as Timestamp).toDate()
+                : DateTime.tryParse(data['startDate'].toString()))
           : null,
       endDate: data['endDate'] != null
           ? (data['endDate'] is Timestamp
-              ? (data['endDate'] as Timestamp).toDate()
-              : DateTime.tryParse(data['endDate'].toString()))
+                ? (data['endDate'] as Timestamp).toDate()
+                : DateTime.tryParse(data['endDate'].toString()))
           : null,
       autoRenew: data['autoRenew'] as bool? ?? false,
       price: (data['price'] as num?)?.toDouble(),
@@ -308,13 +293,13 @@ class Subscription {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -326,28 +311,25 @@ class Subscription {
       throw Exception('Document data is null');
     }
 
-    return Subscription.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return Subscription.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'specialistId': specialistId,
-        'type': type.name,
-        'status': status.name,
-        'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
-        'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
-        'autoRenew': autoRenew,
-        'price': price,
-        'currency': currency,
-        'features': features,
-        'metadata': metadata,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      };
+    'userId': userId,
+    'specialistId': specialistId,
+    'type': type.name,
+    'status': status.name,
+    'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
+    'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
+    'autoRenew': autoRenew,
+    'price': price,
+    'currency': currency,
+    'features': features,
+    'metadata': metadata,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
   /// Копировать с изменениями
   Subscription copyWith({
@@ -365,23 +347,22 @@ class Subscription {
     Map<String, dynamic>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      Subscription(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        specialistId: specialistId ?? this.specialistId,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-        autoRenew: autoRenew ?? this.autoRenew,
-        price: price ?? this.price,
-        currency: currency ?? this.currency,
-        features: features ?? this.features,
-        metadata: metadata ?? this.metadata,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => Subscription(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    specialistId: specialistId ?? this.specialistId,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    autoRenew: autoRenew ?? this.autoRenew,
+    price: price ?? this.price,
+    currency: currency ?? this.currency,
+    features: features ?? this.features,
+    metadata: metadata ?? this.metadata,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Парсинг типа из строки
   static SubscriptionType _parseType(String? type) {

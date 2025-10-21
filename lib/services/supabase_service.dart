@@ -33,15 +33,12 @@ class SupabaseService {
   }
 
   // Получение топ специалистов недели
-  static Future<List<WeeklyLeader>> getWeeklyLeaders({
-    String? city,
-    int limit = 10,
-  }) async {
+  static Future<List<WeeklyLeader>> getWeeklyLeaders({String? city, int limit = 10}) async {
     try {
-      final response = await _client.rpc('get_weekly_leaders', params: {
-        'city_filter': city,
-        'limit_count': limit,
-      });
+      final response = await _client.rpc(
+        'get_weekly_leaders',
+        params: {'city_filter': city, 'limit_count': limit},
+      );
 
       return (response as List).map((json) => WeeklyLeader.fromJson(json)).toList();
     } catch (e) {
@@ -134,10 +131,10 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return null;
 
-      final response = await _client.rpc('get_or_create_chat', params: {
-        'user1_id': currentUserId,
-        'user2_id': otherUserId,
-      });
+      final response = await _client.rpc(
+        'get_or_create_chat',
+        params: {'user1_id': currentUserId, 'user2_id': otherUserId},
+      );
 
       return response.toString();
     } catch (e) {
@@ -152,11 +149,14 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return [];
 
-      final response = await _client.from('chat_participants').select('''
+      final response = await _client
+          .from('chat_participants')
+          .select('''
             chat_id,
             chats!inner(id, created_at, updated_at),
             profiles!inner(id, username, name, avatar_url)
-          ''').eq('user_id', currentUserId);
+          ''')
+          .eq('user_id', currentUserId);
 
       final List<ChatListItem> chats = [];
 
@@ -182,13 +182,15 @@ class SupabaseService {
               .limit(1)
               .maybeSingle();
 
-          chats.add(ChatListItem(
-            chatId: chatId,
-            otherUser: Profile.fromJson(otherUser),
-            lastMessage: lastMessage?['text'] as String?,
-            lastMessageTime: lastMessage?['created_at'] as String?,
-            updatedAt: item['chats']['updated_at'] as String,
-          ));
+          chats.add(
+            ChatListItem(
+              chatId: chatId,
+              otherUser: Profile.fromJson(otherUser),
+              lastMessage: lastMessage?['text'] as String?,
+              lastMessageTime: lastMessage?['created_at'] as String?,
+              updatedAt: item['chats']['updated_at'] as String,
+            ),
+          );
         }
       }
 
@@ -205,13 +207,17 @@ class SupabaseService {
   // Получение сообщений чата
   static Future<List<Message>> getChatMessages(String chatId) async {
     try {
-      final response = await _client.from('messages').select('''
+      final response = await _client
+          .from('messages')
+          .select('''
             id,
             text,
             created_at,
             sender_id,
             profiles!inner(username, name, avatar_url)
-          ''').eq('chat_id', chatId).order('created_at', ascending: true);
+          ''')
+          .eq('chat_id', chatId)
+          .order('created_at', ascending: true);
 
       return (response as List).map((json) => Message.fromJson(json)).toList();
     } catch (e) {
@@ -235,7 +241,8 @@ class SupabaseService {
       // Обновляем время последнего обновления чата
       await _client
           .from('chats')
-          .update({'updated_at': DateTime.now().toIso8601String()}).eq('id', chatId);
+          .update({'updated_at': DateTime.now().toIso8601String()})
+          .eq('id', chatId);
 
       return true;
     } catch (e) {
@@ -247,8 +254,10 @@ class SupabaseService {
   // Получение подписчиков
   static Future<List<Profile>> getFollowers(String userId) async {
     try {
-      final response =
-          await _client.from('follows').select('profiles!inner(*)').eq('following_id', userId);
+      final response = await _client
+          .from('follows')
+          .select('profiles!inner(*)')
+          .eq('following_id', userId);
 
       return (response as List).map((json) => Profile.fromJson(json['profiles'])).toList();
     } catch (e) {
@@ -260,8 +269,10 @@ class SupabaseService {
   // Получение подписок
   static Future<List<Profile>> getFollowing(String userId) async {
     try {
-      final response =
-          await _client.from('follows').select('profiles!inner(*)').eq('follower_id', userId);
+      final response = await _client
+          .from('follows')
+          .select('profiles!inner(*)')
+          .eq('follower_id', userId);
 
       return (response as List).map((json) => Profile.fromJson(json['profiles'])).toList();
     } catch (e) {
@@ -317,11 +328,7 @@ class SupabaseService {
   // =============================================
 
   // Получение идей с пагинацией
-  static Future<List<Idea>> getIdeas({
-    int limit = 20,
-    int offset = 0,
-    String? category,
-  }) async {
+  static Future<List<Idea>> getIdeas({int limit = 20, int offset = 0, String? category}) async {
     try {
       final query = _client
           .from('ideas')
@@ -357,17 +364,21 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return null;
 
-      final response = await _client.from('ideas').insert({
-        'user_id': currentUserId,
-        'type': type,
-        'content': content,
-        'media_urls': mediaUrls,
-        'category': category,
-        'is_public': true,
-      }).select('''
+      final response = await _client
+          .from('ideas')
+          .insert({
+            'user_id': currentUserId,
+            'type': type,
+            'content': content,
+            'media_urls': mediaUrls,
+            'category': category,
+            'is_public': true,
+          })
+          .select('''
         *,
         profiles!inner(id, username, name, avatar_url)
-      ''').single();
+      ''')
+          .single();
 
       return Idea.fromJson(response);
     } catch (e) {
@@ -382,10 +393,7 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return false;
 
-      await _client.from('idea_likes').insert({
-        'idea_id': ideaId,
-        'user_id': currentUserId,
-      });
+      await _client.from('idea_likes').insert({'idea_id': ideaId, 'user_id': currentUserId});
 
       return true;
     } catch (e) {
@@ -474,19 +482,23 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return null;
 
-      final response = await _client.from('requests').insert({
-        'created_by': currentUserId,
-        'title': title,
-        'description': description,
-        'category': category,
-        'budget': budget,
-        'deadline': deadline?.toIso8601String(),
-        'location': location,
-        'status': 'open',
-      }).select('''
+      final response = await _client
+          .from('requests')
+          .insert({
+            'created_by': currentUserId,
+            'title': title,
+            'description': description,
+            'category': category,
+            'budget': budget,
+            'deadline': deadline?.toIso8601String(),
+            'location': location,
+            'status': 'open',
+          })
+          .select('''
         *,
         creator:profiles!created_by(id, username, name, avatar_url)
-      ''').single();
+      ''')
+          .single();
 
       return Request.fromJson(response);
     } catch (e) {
@@ -510,10 +522,10 @@ class SupabaseService {
   // Назначение исполнителя
   static Future<bool> assignRequest(String requestId, String assigneeId) async {
     try {
-      await _client.from('requests').update({
-        'assigned_to': assigneeId,
-        'status': 'in_progress',
-      }).eq('id', requestId);
+      await _client
+          .from('requests')
+          .update({'assigned_to': assigneeId, 'status': 'in_progress'})
+          .eq('id', requestId);
 
       return true;
     } catch (e) {

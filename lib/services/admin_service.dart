@@ -95,13 +95,23 @@ class AdminService {
       query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
     }
 
-    return query.orderBy('timestamp', descending: true).limit(limit).snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>)).toList());
+    return query
+        .orderBy('timestamp', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>))
+              .toList(),
+        );
   }
 
   /// Получение статистики действий администратора
-  Future<Map<String, dynamic>> getAdminStats(String adminId,
-      {DateTime? startDate, DateTime? endDate}) async {
+  Future<Map<String, dynamic>> getAdminStats(
+    String adminId, {
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     try {
       Query query = _firestore.collection('admin_logs').where('adminId', isEqualTo: adminId);
 
@@ -113,8 +123,9 @@ class AdminService {
       }
 
       final snapshot = await query.get();
-      final logs =
-          snapshot.docs.map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>)).toList();
+      final logs = snapshot.docs
+          .map((doc) => AdminLog.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
 
       final stats = <String, dynamic>{
         'totalActions': logs.length,

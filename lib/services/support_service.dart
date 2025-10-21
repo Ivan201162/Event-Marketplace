@@ -47,9 +47,7 @@ class SupportService {
       .where('userId', isEqualTo: userId)
       .orderBy('createdAt', descending: false)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(SupportMessage.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(SupportMessage.fromDocument).toList());
 
   /// Получить FAQ
   Future<List<FAQItem>> getFAQ() async {
@@ -155,8 +153,10 @@ class SupportService {
   /// Получить статистику поддержки
   Future<SupportStats> getSupportStats(String userId) async {
     try {
-      final messagesSnapshot =
-          await _firestore.collection('support_messages').where('userId', isEqualTo: userId).get();
+      final messagesSnapshot = await _firestore
+          .collection('support_messages')
+          .where('userId', isEqualTo: userId)
+          .get();
 
       final messages = messagesSnapshot.docs.map(SupportMessage.fromDocument).toList();
 
@@ -180,11 +180,7 @@ class SupportService {
   // ========== ПРИВАТНЫЕ МЕТОДЫ ==========
 
   /// Генерировать ответ бота
-  Future<void> _generateBotResponse(
-    String userId,
-    String userMessage,
-    String messageId,
-  ) async {
+  Future<void> _generateBotResponse(String userId, String userMessage, String messageId) async {
     try {
       // Простая логика ответов бота на основе ключевых слов
       final response = _getBotResponse(userMessage);
@@ -246,20 +242,10 @@ class SupportService {
 }
 
 /// Тип сообщения
-enum MessageType {
-  text,
-  image,
-  file,
-  system,
-}
+enum MessageType { text, image, file, system }
 
 /// Статус передачи чата
-enum TransferStatus {
-  notRequested,
-  pending,
-  accepted,
-  rejected,
-}
+enum TransferStatus { notRequested, pending, accepted, rejected }
 
 /// Модель сообщения поддержки
 class SupportMessage {
@@ -290,8 +276,9 @@ class SupportMessage {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       isFromUser: data['isFromUser'] as bool? ?? true,
       isRead: data['isRead'] as bool? ?? false,
-      createdAt:
-          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
       readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
     );
   }
@@ -308,16 +295,16 @@ class SupportMessage {
   final DateTime? readAt;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'message': message,
-        'type': type.name,
-        'attachmentUrl': attachmentUrl,
-        'metadata': metadata,
-        'isFromUser': isFromUser,
-        'isRead': isRead,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-      };
+    'userId': userId,
+    'message': message,
+    'type': type.name,
+    'attachmentUrl': attachmentUrl,
+    'metadata': metadata,
+    'isFromUser': isFromUser,
+    'isRead': isRead,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+  };
 }
 
 /// Модель FAQ
@@ -361,12 +348,8 @@ class SupportStats {
     required this.lastUpdated,
   });
 
-  factory SupportStats.empty() => SupportStats(
-        userId: '',
-        totalMessages: 0,
-        unreadMessages: 0,
-        lastUpdated: DateTime.now(),
-      );
+  factory SupportStats.empty() =>
+      SupportStats(userId: '', totalMessages: 0, unreadMessages: 0, lastUpdated: DateTime.now());
 
   final String userId;
   final int totalMessages;

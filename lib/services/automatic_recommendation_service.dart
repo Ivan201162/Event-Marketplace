@@ -107,9 +107,7 @@ class AutomaticRecommendationService {
   // ========== ПРИВАТНЫЕ МЕТОДЫ ==========
 
   /// Получить специалистов по ID
-  Future<List<Specialist>> _getSpecialistsByIds(
-    List<String> specialistIds,
-  ) async {
+  Future<List<Specialist>> _getSpecialistsByIds(List<String> specialistIds) async {
     final specialists = <Specialist>[];
 
     for (final id in specialistIds) {
@@ -127,9 +125,7 @@ class AutomaticRecommendationService {
   }
 
   /// Анализировать выбранные категории
-  Map<SpecialistCategory, int> _analyzeSelectedCategories(
-    List<Specialist> specialists,
-  ) {
+  Map<SpecialistCategory, int> _analyzeSelectedCategories(List<Specialist> specialists) {
     final categoryCount = <SpecialistCategory, int>{};
 
     for (final specialist in specialists) {
@@ -169,11 +165,7 @@ class AutomaticRecommendationService {
             specialistId: specialist.id,
             specialist: specialist,
             reason: _getRecommendationReason(selectedCategory, recommendedCategory),
-            score: _calculateRecommendationScore(
-                  selectedCategory,
-                  recommendedCategory,
-                ) *
-                count,
+            score: _calculateRecommendationScore(selectedCategory, recommendedCategory) * count,
             timestamp: DateTime.now(),
             category: recommendedCategory,
             isAutomatic: true,
@@ -191,9 +183,7 @@ class AutomaticRecommendationService {
   }
 
   /// Получить рекомендуемые категории для данной категории
-  List<SpecialistCategory> _getRecommendedCategoriesFor(
-    SpecialistCategory category,
-  ) {
+  List<SpecialistCategory> _getRecommendedCategoriesFor(SpecialistCategory category) {
     switch (category) {
       case SpecialistCategory.host:
         return [
@@ -282,10 +272,7 @@ class AutomaticRecommendationService {
   }
 
   /// Получить причину рекомендации
-  String _getRecommendationReason(
-    SpecialistCategory selected,
-    SpecialistCategory recommended,
-  ) {
+  String _getRecommendationReason(SpecialistCategory selected, SpecialistCategory recommended) {
     final reasons = {
       '${SpecialistCategory.host.name}_${SpecialistCategory.photographer.name}':
           'Рекомендуем добавить фотографа для съемки ведущего',
@@ -345,25 +332,24 @@ class SpecialistRecommendation {
   });
 
   factory SpecialistRecommendation.fromMap(Map<String, dynamic> data) => SpecialistRecommendation(
-        id: data['id'] as String? ?? '',
-        specialistId: data['specialistId'] as String? ?? '',
-        specialist: Specialist.fromMap(
-          data['specialist'] as Map<String, dynamic>? ?? {},
-        ),
-        reason: data['reason'] as String? ?? '',
-        score: (data['score'] as num?)?.toDouble() ?? 0.0,
-        timestamp:
-            data['timestamp'] != null ? (data['timestamp'] as Timestamp).toDate() : DateTime.now(),
-        category: data['category'] != null
-            ? SpecialistCategory.values.firstWhere(
-                (e) => e.name == data['category'] as String,
-                orElse: () => SpecialistCategory.other,
-              )
-            : null,
-        isAutomatic: data['isAutomatic'] as bool? ?? false,
-        isShown: data['isShown'] as bool? ?? false,
-        isAccepted: data['isAccepted'] as bool? ?? false,
-      );
+    id: data['id'] as String? ?? '',
+    specialistId: data['specialistId'] as String? ?? '',
+    specialist: Specialist.fromMap(data['specialist'] as Map<String, dynamic>? ?? {}),
+    reason: data['reason'] as String? ?? '',
+    score: (data['score'] as num?)?.toDouble() ?? 0.0,
+    timestamp: data['timestamp'] != null
+        ? (data['timestamp'] as Timestamp).toDate()
+        : DateTime.now(),
+    category: data['category'] != null
+        ? SpecialistCategory.values.firstWhere(
+            (e) => e.name == data['category'] as String,
+            orElse: () => SpecialistCategory.other,
+          )
+        : null,
+    isAutomatic: data['isAutomatic'] as bool? ?? false,
+    isShown: data['isShown'] as bool? ?? false,
+    isAccepted: data['isAccepted'] as bool? ?? false,
+  );
 
   final String id;
   final String specialistId;
@@ -377,15 +363,15 @@ class SpecialistRecommendation {
   final bool isAccepted;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'specialistId': specialistId,
-        'specialist': specialist.toMap(),
-        'reason': reason,
-        'score': score,
-        'timestamp': Timestamp.fromDate(timestamp),
-        'category': category?.name,
-        'isAutomatic': isAutomatic,
-        'isShown': isShown,
-        'isAccepted': isAccepted,
-      };
+    'id': id,
+    'specialistId': specialistId,
+    'specialist': specialist.toMap(),
+    'reason': reason,
+    'score': score,
+    'timestamp': Timestamp.fromDate(timestamp),
+    'category': category?.name,
+    'isAutomatic': isAutomatic,
+    'isShown': isShown,
+    'isAccepted': isAccepted,
+  };
 }

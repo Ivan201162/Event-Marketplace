@@ -226,9 +226,9 @@ class EnvironmentConfigService {
 
   /// Получение активной конфигурации окружения
   EnvironmentConfig? getActiveEnvironmentConfig() => _environmentCache.values.firstWhere(
-        (config) => config.isActive,
-        orElse: () => _environmentCache.values.isNotEmpty ? _environmentCache.values.first : null,
-      );
+    (config) => config.isActive,
+    orElse: () => _environmentCache.values.isNotEmpty ? _environmentCache.values.first : null,
+  );
 
   /// Активация конфигурации окружения
   Future<void> activateEnvironmentConfig(String id) async {
@@ -383,10 +383,8 @@ class EnvironmentConfigService {
   EnvironmentVariable? getEnvironmentVariable(String id) => _variableCache[id];
 
   /// Получение переменной окружения по ключу
-  EnvironmentVariable? getEnvironmentVariableByKey(String key) => _variableCache.values.firstWhere(
-        (variable) => variable.key == key,
-        orElse: () => null,
-      );
+  EnvironmentVariable? getEnvironmentVariableByKey(String key) =>
+      _variableCache.values.firstWhere((variable) => variable.key == key, orElse: () => null);
 
   /// Получение всех переменных окружения
   List<EnvironmentVariable> getAllEnvironmentVariables() => _variableCache.values.toList();
@@ -508,18 +506,13 @@ class EnvironmentConfigService {
   List<DeploymentConfig> getAllDeploymentConfigs() => _deploymentCache.values.toList();
 
   /// Получение конфигураций развертывания для окружения
-  List<DeploymentConfig> getDeploymentConfigsForEnvironment(
-    String environmentId,
-  ) =>
+  List<DeploymentConfig> getDeploymentConfigsForEnvironment(String environmentId) =>
       _deploymentCache.values
           .where((deployment) => deployment.environmentId == environmentId)
           .toList();
 
   /// Экспорт конфигурации окружения
-  Future<String> exportEnvironmentConfig(
-    String id, {
-    String format = 'json',
-  }) async {
+  Future<String> exportEnvironmentConfig(String id, {String format = 'json'}) async {
     try {
       final config = _environmentCache[id];
       if (config == null) throw Exception('Environment config not found');
@@ -551,10 +544,7 @@ class EnvironmentConfigService {
   }
 
   /// Импорт конфигурации окружения
-  Future<EnvironmentConfig> importEnvironmentConfig(
-    String data, {
-    String format = 'json',
-  }) async {
+  Future<EnvironmentConfig> importEnvironmentConfig(String data, {String format = 'json'}) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('User not authenticated');
@@ -575,9 +565,7 @@ class EnvironmentConfigService {
       final environmentConfig = EnvironmentConfig(
         id: _generateId(),
         name: environmentData['name'] ?? 'Imported Environment',
-        type: EnvironmentType.fromString(
-          environmentData['type'] ?? 'development',
-        ),
+        type: EnvironmentType.fromString(environmentData['type'] ?? 'development'),
         config: Map<String, dynamic>.from(environmentData['config'] ?? {}),
         secrets: Map<String, dynamic>.from(environmentData['secrets'] ?? {}),
         featureFlags: Map<String, dynamic>.from(environmentData['featureFlags'] ?? {}),
@@ -585,9 +573,7 @@ class EnvironmentConfigService {
         databaseConfig: Map<String, dynamic>.from(environmentData['databaseConfig'] ?? {}),
         cacheConfig: Map<String, dynamic>.from(environmentData['cacheConfig'] ?? {}),
         loggingConfig: Map<String, dynamic>.from(environmentData['loggingConfig'] ?? {}),
-        monitoringConfig: Map<String, dynamic>.from(
-          environmentData['monitoringConfig'] ?? {},
-        ),
+        monitoringConfig: Map<String, dynamic>.from(environmentData['monitoringConfig'] ?? {}),
         securityConfig: Map<String, dynamic>.from(environmentData['securityConfig'] ?? {}),
         isActive: false,
         description: environmentData['description'],
@@ -612,9 +598,7 @@ class EnvironmentConfigService {
           id: _generateId(),
           key: variableData['key'] ?? '',
           value: variableData['value'] ?? '',
-          type: EnvironmentVariableType.fromString(
-            variableData['type'] ?? 'string',
-          ),
+          type: EnvironmentVariableType.fromString(variableData['type'] ?? 'string'),
           isSecret: variableData['isSecret'] ?? false,
           description: variableData['description'],
           defaultValue: variableData['defaultValue'],
@@ -645,13 +629,9 @@ class EnvironmentConfigService {
           dependencies: List<String>.from(deploymentData['dependencies'] ?? []),
           healthChecks: List<String>.from(deploymentData['healthChecks'] ?? []),
           scalingConfig: Map<String, dynamic>.from(deploymentData['scalingConfig'] ?? {}),
-          networkingConfig: Map<String, dynamic>.from(
-            deploymentData['networkingConfig'] ?? {},
-          ),
+          networkingConfig: Map<String, dynamic>.from(deploymentData['networkingConfig'] ?? {}),
           storageConfig: Map<String, dynamic>.from(deploymentData['storageConfig'] ?? {}),
-          monitoringConfig: Map<String, dynamic>.from(
-            deploymentData['monitoringConfig'] ?? {},
-          ),
+          monitoringConfig: Map<String, dynamic>.from(deploymentData['monitoringConfig'] ?? {}),
           description: deploymentData['description'],
           metadata: Map<String, dynamic>.from(deploymentData['metadata'] ?? {}),
           createdAt: now,
@@ -715,9 +695,7 @@ class EnvironmentConfigService {
       // Проверяем переменные окружения
       for (final variable in _variableCache.values) {
         if (variable.isRequired && !config.config.containsKey(variable.key)) {
-          errors.add(
-            'Required environment variable "${variable.key}" is missing',
-          );
+          errors.add('Required environment variable "${variable.key}" is missing');
         }
       }
 
@@ -769,9 +747,7 @@ class EnvironmentConfigService {
   }
 
   /// Группировка окружений по типу
-  Map<String, int> _groupEnvironmentsByType(
-    List<EnvironmentConfig> environments,
-  ) {
+  Map<String, int> _groupEnvironmentsByType(List<EnvironmentConfig> environments) {
     final groups = <String, int>{};
     for (final env in environments) {
       groups[env.type.value] = (groups[env.type.value] ?? 0) + 1;
@@ -789,9 +765,7 @@ class EnvironmentConfigService {
   }
 
   /// Группировка развертываний по статусу
-  Map<String, int> _groupDeploymentsByStatus(
-    List<DeploymentConfig> deployments,
-  ) {
+  Map<String, int> _groupDeploymentsByStatus(List<DeploymentConfig> deployments) {
     final groups = <String, int>{};
     for (final deployment in deployments) {
       groups[deployment.status.value] = (groups[deployment.status.value] ?? 0) + 1;

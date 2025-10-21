@@ -30,34 +30,30 @@ class MonitoringMetric {
       category: data['category'] as String? ?? '',
       value: (data['value'] as num?)?.toDouble() ?? 0.0,
       unit: data['unit'] as String? ?? '',
-      tags: Map<String, dynamic>.from(
-        data['tags'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      tags: Map<String, dynamic>.from(data['tags'] as Map<dynamic, dynamic>? ?? {}),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
       source: data['source'] as String?,
-      metadata: Map<String, dynamic>.from(
-        data['metadata'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
   /// Создать из Map
   factory MonitoringMetric.fromMap(Map<String, dynamic> data) => MonitoringMetric(
-        id: data['id'] as String? ?? '',
-        name: data['name'] as String? ?? '',
-        description: data['description'] as String? ?? '',
-        type: MetricType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => MetricType.gauge,
-        ),
-        category: data['category'] ?? '',
-        value: (data['value'] as num?)?.toDouble() ?? 0.0,
-        unit: data['unit'] ?? '',
-        tags: Map<String, dynamic>.from(data['tags'] ?? {}),
-        timestamp: (data['timestamp'] as Timestamp).toDate(),
-        source: data['source'],
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      );
+    id: data['id'] as String? ?? '',
+    name: data['name'] as String? ?? '',
+    description: data['description'] as String? ?? '',
+    type: MetricType.values.firstWhere(
+      (e) => e.toString().split('.').last == data['type'],
+      orElse: () => MetricType.gauge,
+    ),
+    category: data['category'] ?? '',
+    value: (data['value'] as num?)?.toDouble() ?? 0.0,
+    unit: data['unit'] ?? '',
+    tags: Map<String, dynamic>.from(data['tags'] ?? {}),
+    timestamp: (data['timestamp'] as Timestamp).toDate(),
+    source: data['source'],
+    metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+  );
   final String id;
   final String name;
   final String description;
@@ -72,17 +68,17 @@ class MonitoringMetric {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'type': type.toString().split('.').last,
-        'category': category,
-        'value': value,
-        'unit': unit,
-        'tags': tags,
-        'timestamp': Timestamp.fromDate(timestamp),
-        'source': source,
-        'metadata': metadata,
-      };
+    'name': name,
+    'description': description,
+    'type': type.toString().split('.').last,
+    'category': category,
+    'value': value,
+    'unit': unit,
+    'tags': tags,
+    'timestamp': Timestamp.fromDate(timestamp),
+    'source': source,
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   MonitoringMetric copyWith({
@@ -97,20 +93,19 @@ class MonitoringMetric {
     DateTime? timestamp,
     String? source,
     Map<String, dynamic>? metadata,
-  }) =>
-      MonitoringMetric(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        type: type ?? this.type,
-        category: category ?? this.category,
-        value: value ?? this.value,
-        unit: unit ?? this.unit,
-        tags: tags ?? this.tags,
-        timestamp: timestamp ?? this.timestamp,
-        source: source ?? this.source,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => MonitoringMetric(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    type: type ?? this.type,
+    category: category ?? this.category,
+    value: value ?? this.value,
+    unit: unit ?? this.unit,
+    tags: tags ?? this.tags,
+    timestamp: timestamp ?? this.timestamp,
+    source: source ?? this.source,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Получить форматированное значение
   String get formattedValue {
@@ -147,18 +142,18 @@ class MonitoringMetric {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        name,
-        description,
-        type,
-        category,
-        value,
-        unit,
-        tags,
-        timestamp,
-        source,
-        metadata,
-      );
+    id,
+    name,
+    description,
+    type,
+    category,
+    value,
+    unit,
+    tags,
+    timestamp,
+    source,
+    metadata,
+  );
 
   @override
   String toString() => 'MonitoringMetric(id: $id, name: $name, value: $formattedValue)';
@@ -217,30 +212,29 @@ class MonitoringAlert {
 
   /// Создать из Map
   factory MonitoringAlert.fromMap(Map<String, dynamic> data) => MonitoringAlert(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
-        severity: AlertSeverity.values.firstWhere(
-          (e) => e.toString().split('.').last == data['severity'],
-          orElse: () => AlertSeverity.medium,
-        ),
-        status: AlertStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == data['status'],
-          orElse: () => AlertStatus.active,
-        ),
-        metricName: data['metricName'] ?? '',
-        condition: data['condition'] ?? '',
-        threshold: (data['threshold'] as num?)?.toDouble() ?? 0.0,
-        operator: data['operator'] ?? '',
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        triggeredAt:
-            data['triggeredAt'] != null ? (data['triggeredAt'] as Timestamp).toDate() : null,
-        resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
-        triggeredBy: data['triggeredBy'],
-        resolvedBy: data['resolvedBy'],
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-        notificationChannels: List<String>.from(data['notificationChannels'] ?? []),
-      );
+    id: data['id'] ?? '',
+    name: data['name'] ?? '',
+    description: data['description'] ?? '',
+    severity: AlertSeverity.values.firstWhere(
+      (e) => e.toString().split('.').last == data['severity'],
+      orElse: () => AlertSeverity.medium,
+    ),
+    status: AlertStatus.values.firstWhere(
+      (e) => e.toString().split('.').last == data['status'],
+      orElse: () => AlertStatus.active,
+    ),
+    metricName: data['metricName'] ?? '',
+    condition: data['condition'] ?? '',
+    threshold: (data['threshold'] as num?)?.toDouble() ?? 0.0,
+    operator: data['operator'] ?? '',
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+    triggeredAt: data['triggeredAt'] != null ? (data['triggeredAt'] as Timestamp).toDate() : null,
+    resolvedAt: data['resolvedAt'] != null ? (data['resolvedAt'] as Timestamp).toDate() : null,
+    triggeredBy: data['triggeredBy'],
+    resolvedBy: data['resolvedBy'],
+    metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+    notificationChannels: List<String>.from(data['notificationChannels'] ?? []),
+  );
   final String id;
   final String name;
   final String description;
@@ -261,22 +255,22 @@ class MonitoringAlert {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'severity': severity.toString().split('.').last,
-        'status': status.toString().split('.').last,
-        'metricName': metricName,
-        'condition': condition,
-        'threshold': threshold,
-        'operator': operator,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'triggeredAt': triggeredAt != null ? Timestamp.fromDate(triggeredAt!) : null,
-        'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-        'triggeredBy': triggeredBy,
-        'resolvedBy': resolvedBy,
-        'metadata': metadata,
-        'notificationChannels': notificationChannels,
-      };
+    'name': name,
+    'description': description,
+    'severity': severity.toString().split('.').last,
+    'status': status.toString().split('.').last,
+    'metricName': metricName,
+    'condition': condition,
+    'threshold': threshold,
+    'operator': operator,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'triggeredAt': triggeredAt != null ? Timestamp.fromDate(triggeredAt!) : null,
+    'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+    'triggeredBy': triggeredBy,
+    'resolvedBy': resolvedBy,
+    'metadata': metadata,
+    'notificationChannels': notificationChannels,
+  };
 
   /// Создать копию с изменениями
   MonitoringAlert copyWith({
@@ -296,25 +290,24 @@ class MonitoringAlert {
     String? resolvedBy,
     Map<String, dynamic>? metadata,
     List<String>? notificationChannels,
-  }) =>
-      MonitoringAlert(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        severity: severity ?? this.severity,
-        status: status ?? this.status,
-        metricName: metricName ?? this.metricName,
-        condition: condition ?? this.condition,
-        threshold: threshold ?? this.threshold,
-        operator: operator ?? this.operator,
-        createdAt: createdAt ?? this.createdAt,
-        triggeredAt: triggeredAt ?? this.triggeredAt,
-        resolvedAt: resolvedAt ?? this.resolvedAt,
-        triggeredBy: triggeredBy ?? this.triggeredBy,
-        resolvedBy: resolvedBy ?? this.resolvedBy,
-        metadata: metadata ?? this.metadata,
-        notificationChannels: notificationChannels ?? this.notificationChannels,
-      );
+  }) => MonitoringAlert(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    severity: severity ?? this.severity,
+    status: status ?? this.status,
+    metricName: metricName ?? this.metricName,
+    condition: condition ?? this.condition,
+    threshold: threshold ?? this.threshold,
+    operator: operator ?? this.operator,
+    createdAt: createdAt ?? this.createdAt,
+    triggeredAt: triggeredAt ?? this.triggeredAt,
+    resolvedAt: resolvedAt ?? this.resolvedAt,
+    triggeredBy: triggeredBy ?? this.triggeredBy,
+    resolvedBy: resolvedBy ?? this.resolvedBy,
+    metadata: metadata ?? this.metadata,
+    notificationChannels: notificationChannels ?? this.notificationChannels,
+  );
 
   /// Проверить, сработал ли алерт
   bool get isTriggered => status == AlertStatus.triggered;
@@ -359,23 +352,23 @@ class MonitoringAlert {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        name,
-        description,
-        severity,
-        status,
-        metricName,
-        condition,
-        threshold,
-        operator,
-        createdAt,
-        triggeredAt,
-        resolvedAt,
-        triggeredBy,
-        resolvedBy,
-        metadata,
-        notificationChannels,
-      );
+    id,
+    name,
+    description,
+    severity,
+    status,
+    metricName,
+    condition,
+    threshold,
+    operator,
+    createdAt,
+    triggeredAt,
+    resolvedAt,
+    triggeredBy,
+    resolvedBy,
+    metadata,
+    notificationChannels,
+  );
 
   @override
   String toString() => 'MonitoringAlert(id: $id, name: $name, status: $status)';
@@ -420,21 +413,21 @@ class MonitoringDashboard {
 
   /// Создать из Map
   factory MonitoringDashboard.fromMap(Map<String, dynamic> data) => MonitoringDashboard(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
-        metricIds: List<String>.from(data['metricIds'] ?? []),
-        alertIds: List<String>.from(data['alertIds'] ?? []),
-        layout: DashboardLayout.values.firstWhere(
-          (e) => e.toString().split('.').last == data['layout'],
-          orElse: () => DashboardLayout.grid,
-        ),
-        isPublic: data['isPublic'] as bool? ?? false,
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        createdBy: data['createdBy'],
-        settings: Map<String, dynamic>.from(data['settings'] ?? {}),
-      );
+    id: data['id'] ?? '',
+    name: data['name'] ?? '',
+    description: data['description'] ?? '',
+    metricIds: List<String>.from(data['metricIds'] ?? []),
+    alertIds: List<String>.from(data['alertIds'] ?? []),
+    layout: DashboardLayout.values.firstWhere(
+      (e) => e.toString().split('.').last == data['layout'],
+      orElse: () => DashboardLayout.grid,
+    ),
+    isPublic: data['isPublic'] as bool? ?? false,
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+    createdBy: data['createdBy'],
+    settings: Map<String, dynamic>.from(data['settings'] ?? {}),
+  );
   final String id;
   final String name;
   final String description;
@@ -449,17 +442,17 @@ class MonitoringDashboard {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'metricIds': metricIds,
-        'alertIds': alertIds,
-        'layout': layout.toString().split('.').last,
-        'isPublic': isPublic,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'createdBy': createdBy,
-        'settings': settings,
-      };
+    'name': name,
+    'description': description,
+    'metricIds': metricIds,
+    'alertIds': alertIds,
+    'layout': layout.toString().split('.').last,
+    'isPublic': isPublic,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'createdBy': createdBy,
+    'settings': settings,
+  };
 
   /// Создать копию с изменениями
   MonitoringDashboard copyWith({
@@ -474,20 +467,19 @@ class MonitoringDashboard {
     DateTime? updatedAt,
     String? createdBy,
     Map<String, dynamic>? settings,
-  }) =>
-      MonitoringDashboard(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        metricIds: metricIds ?? this.metricIds,
-        alertIds: alertIds ?? this.alertIds,
-        layout: layout ?? this.layout,
-        isPublic: isPublic ?? this.isPublic,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        createdBy: createdBy ?? this.createdBy,
-        settings: settings ?? this.settings,
-      );
+  }) => MonitoringDashboard(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    metricIds: metricIds ?? this.metricIds,
+    alertIds: alertIds ?? this.alertIds,
+    layout: layout ?? this.layout,
+    isPublic: isPublic ?? this.isPublic,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdBy: createdBy ?? this.createdBy,
+    settings: settings ?? this.settings,
+  );
 
   /// Получить количество метрик
   int get metricCount => metricIds.length;
@@ -514,18 +506,18 @@ class MonitoringDashboard {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        name,
-        description,
-        metricIds,
-        alertIds,
-        layout,
-        isPublic,
-        createdAt,
-        updatedAt,
-        createdBy,
-        settings,
-      );
+    id,
+    name,
+    description,
+    metricIds,
+    alertIds,
+    layout,
+    isPublic,
+    createdAt,
+    updatedAt,
+    createdBy,
+    settings,
+  );
 
   @override
   String toString() =>
@@ -533,13 +525,7 @@ class MonitoringDashboard {
 }
 
 /// Типы метрик
-enum MetricType {
-  counter,
-  gauge,
-  histogram,
-  timer,
-  rate,
-}
+enum MetricType { counter, gauge, histogram, timer, rate }
 
 /// Расширение для типов метрик
 extension MetricTypeExtension on MetricType {
@@ -590,12 +576,7 @@ extension MetricTypeExtension on MetricType {
 }
 
 /// Серьезность алертов
-enum AlertSeverity {
-  low,
-  medium,
-  high,
-  critical,
-}
+enum AlertSeverity { low, medium, high, critical }
 
 /// Расширение для серьезности алертов
 extension AlertSeverityExtension on AlertSeverity {
@@ -640,12 +621,7 @@ extension AlertSeverityExtension on AlertSeverity {
 }
 
 /// Статусы алертов
-enum AlertStatus {
-  active,
-  triggered,
-  resolved,
-  disabled,
-}
+enum AlertStatus { active, triggered, resolved, disabled }
 
 /// Расширение для статусов алертов
 extension AlertStatusExtension on AlertStatus {
@@ -690,11 +666,7 @@ extension AlertStatusExtension on AlertStatus {
 }
 
 /// Макеты дашбордов
-enum DashboardLayout {
-  grid,
-  list,
-  custom,
-}
+enum DashboardLayout { grid, list, custom }
 
 /// Расширение для макетов дашбордов
 extension DashboardLayoutExtension on DashboardLayout {

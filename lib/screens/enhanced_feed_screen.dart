@@ -30,9 +30,7 @@ class _EnhancedFeedScreenState extends ConsumerState<EnhancedFeedScreen> {
 
   Widget _buildFeedContent(EnhancedFeedState state) {
     if (state.isLoading && state.posts.isEmpty) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (state.error != null && state.posts.isEmpty) {
@@ -40,18 +38,11 @@ class _EnhancedFeedScreenState extends ConsumerState<EnhancedFeedScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               state.error!,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.grey[600], fontSize: 16),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -69,27 +60,16 @@ class _EnhancedFeedScreenState extends ConsumerState<EnhancedFeedScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.feed_outlined,
-              size: 64,
-              color: Colors.grey,
-            ),
+            Icon(Icons.feed_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
             Text(
               'Лента пуста',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w500),
             ),
             SizedBox(height: 8),
             Text(
               'Здесь будут появляться новые посты',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
           ],
         ),
@@ -150,17 +130,11 @@ class _FeedPostCard extends ConsumerWidget {
                     children: [
                       Text(
                         post.authorName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
                         _formatDate(post.createdAt),
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
                       ),
                     ],
                   ),
@@ -170,18 +144,9 @@ class _FeedPostCard extends ConsumerWidget {
                     // Обработка действий с постом
                   },
                   itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: 'save',
-                      child: Text('Сохранить'),
-                    ),
-                    const PopupMenuItem(
-                      value: 'share',
-                      child: Text('Поделиться'),
-                    ),
-                    const PopupMenuItem(
-                      value: 'report',
-                      child: Text('Пожаловаться'),
-                    ),
+                    const PopupMenuItem(value: 'save', child: Text('Сохранить')),
+                    const PopupMenuItem(value: 'share', child: Text('Поделиться')),
+                    const PopupMenuItem(value: 'report', child: Text('Пожаловаться')),
                   ],
                 ),
               ],
@@ -192,18 +157,12 @@ class _FeedPostCard extends ConsumerWidget {
           if (post.content.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                post.content,
-                style: const TextStyle(fontSize: 14),
-              ),
+              child: Text(post.content, style: const TextStyle(fontSize: 14)),
             ),
 
           // Медиа контент
           if (post.media.isNotEmpty)
-            Container(
-              margin: const EdgeInsets.all(16),
-              child: _buildMediaContent(post.media),
-            ),
+            Container(margin: const EdgeInsets.all(16), child: _buildMediaContent(post.media)),
 
           // Теги
           if (post.tags.isNotEmpty)
@@ -216,10 +175,7 @@ class _FeedPostCard extends ConsumerWidget {
                       (tag) => Chip(
                         label: Text('#$tag'),
                         backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                        labelStyle: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 12,
-                        ),
+                        labelStyle: TextStyle(color: Theme.of(context).primaryColor, fontSize: 12),
                       ),
                     )
                     .toList(),
@@ -290,16 +246,12 @@ class _FeedPostCard extends ConsumerWidget {
             placeholder: (context, url) => Container(
               height: 200,
               color: Colors.grey[300],
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             ),
             errorWidget: (context, url, error) => Container(
               height: 200,
               color: Colors.grey[300],
-              child: const Center(
-                child: Icon(Icons.error),
-              ),
+              child: const Center(child: Icon(Icons.error)),
             ),
           ),
         );
@@ -314,13 +266,7 @@ class _FeedPostCard extends ConsumerWidget {
                 height: 200,
                 width: double.infinity,
               ),
-              const Center(
-                child: Icon(
-                  Icons.play_circle_filled,
-                  size: 64,
-                  color: Colors.white,
-                ),
-              ),
+              const Center(child: Icon(Icons.play_circle_filled, size: 64, color: Colors.white)),
             ],
           ),
         );
@@ -328,42 +274,36 @@ class _FeedPostCard extends ConsumerWidget {
         return Container(
           height: 200,
           color: Colors.grey[300],
-          child: const Center(
-            child: Icon(Icons.media),
-          ),
+          child: const Center(child: Icon(Icons.media)),
         );
     }
   }
 
   Widget _buildMultipleMedia(List<FeedPostMedia> media) => GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 2,
+      crossAxisSpacing: 8,
+      mainAxisSpacing: 8,
+    ),
+    itemCount: media.length,
+    itemBuilder: (context, index) => ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: CachedNetworkImage(
+        imageUrl: media[index].url,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Container(
+          color: Colors.grey[300],
+          child: const Center(child: CircularProgressIndicator()),
         ),
-        itemCount: media.length,
-        itemBuilder: (context, index) => ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: CachedNetworkImage(
-            imageUrl: media[index].url,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Container(
-              color: Colors.grey[300],
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-            errorWidget: (context, url, error) => Container(
-              color: Colors.grey[300],
-              child: const Center(
-                child: Icon(Icons.error),
-              ),
-            ),
-          ),
+        errorWidget: (context, url, error) => Container(
+          color: Colors.grey[300],
+          child: const Center(child: Icon(Icons.error)),
         ),
-      );
+      ),
+    ),
+  );
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();

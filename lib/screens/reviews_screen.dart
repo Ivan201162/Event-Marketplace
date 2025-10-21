@@ -58,617 +58,539 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: _showSearchDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: _createReview,
-          ),
+          IconButton(icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
+          IconButton(icon: const Icon(Icons.add), onPressed: _createReview),
         ],
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildReviewsList(currentUser),
-          _buildStatisticsTab(),
-        ],
+        children: [_buildReviewsList(currentUser), _buildStatisticsTab()],
       ),
     );
   }
 
   Widget _buildReviewsList(currentUser) => StreamBuilder<List<Review>>(
-        stream: _reviewService.getReviewsForTarget(
-          widget.targetId,
-          widget.type,
-          filter: _filter,
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    stream: _reviewService.getReviewsForTarget(widget.targetId, widget.type, filter: _filter),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка загрузки отзывов: ${snapshot.error}'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {}),
-                    child: const Text('Повторить'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final reviews = snapshot.data ?? [];
-
-          if (reviews.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.reviews, size: 64, color: Colors.grey),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Пока нет отзывов',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Станьте первым, кто оставит отзыв!',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(height: 24),
-                  if (currentUser != null)
-                    ElevatedButton.icon(
-                      onPressed: _createReview,
-                      icon: const Icon(Icons.add),
-                      label: const Text('Оставить отзыв'),
-                    ),
-                ],
-              ),
-            );
-          }
-
-          return Column(
+      if (snapshot.hasError) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Информация о фильтрах
-              if (_filter.hasActiveFilters || _searchQuery.isNotEmpty) _buildFilterInfo(),
-
-              // Список отзывов
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: reviews.length,
-                  itemBuilder: (context, index) {
-                    final review = reviews[index];
-                    return _buildReviewCard(review, currentUser);
-                  },
-                ),
-              ),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('Ошибка загрузки отзывов: ${snapshot.error}'),
+              const SizedBox(height: 16),
+              ElevatedButton(onPressed: () => setState(() {}), child: const Text('Повторить')),
             ],
-          );
-        },
+          ),
+        );
+      }
+
+      final reviews = snapshot.data ?? [];
+
+      if (reviews.isEmpty) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.reviews, size: 64, color: Colors.grey),
+              const SizedBox(height: 16),
+              Text('Пока нет отзывов', style: Theme.of(context).textTheme.headlineSmall),
+              const SizedBox(height: 8),
+              const Text(
+                'Станьте первым, кто оставит отзыв!',
+                style: TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(height: 24),
+              if (currentUser != null)
+                ElevatedButton.icon(
+                  onPressed: _createReview,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Оставить отзыв'),
+                ),
+            ],
+          ),
+        );
+      }
+
+      return Column(
+        children: [
+          // Информация о фильтрах
+          if (_filter.hasActiveFilters || _searchQuery.isNotEmpty) _buildFilterInfo(),
+
+          // Список отзывов
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: reviews.length,
+              itemBuilder: (context, index) {
+                final review = reviews[index];
+                return _buildReviewCard(review, currentUser);
+              },
+            ),
+          ),
+        ],
       );
+    },
+  );
 
   Widget _buildStatisticsTab() => StreamBuilder<ReviewStats>(
-        stream: _reviewService.getReviewStatsStream(widget.targetId, widget.type),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    stream: _reviewService.getReviewStatsStream(widget.targetId, widget.type),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка загрузки статистики: ${snapshot.error}'),
-                ],
-              ),
-            );
-          }
-
-          final stats = snapshot.data ??
-              ReviewStats(
-                averageRating: 0,
-                totalReviews: 0,
-                ratingDistribution: const {},
-                verifiedReviews: 0,
-                helpfulReviews: 0,
-                helpfulPercentage: 0,
-                lastUpdated: DateTime.now(),
-              );
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Общая статистика
-                _buildOverallStats(stats),
-                const SizedBox(height: 24),
-
-                // Распределение рейтингов
-                _buildRatingDistribution(stats),
-                const SizedBox(height: 24),
-
-                // Дополнительная статистика
-                _buildAdditionalStats(stats),
-              ],
-            ),
-          );
-        },
-      );
-
-  Widget _buildFilterInfo() => Container(
-        padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              Icons.filter_list,
-              size: 16,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                _getFilterDescription(),
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-            TextButton(
-              onPressed: _clearFilters,
-              child: const Text('Очистить'),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildReviewCard(Review review, currentUser) => Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
+      if (snapshot.hasError) {
+        return Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Заголовок отзыва
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      review.title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
-                  if (review.isVerified)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Text(
-                        'Проверено',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              // Рейтинг и автор
-              Row(
-                children: [
-                  _buildRatingStars(review.rating),
-                  const SizedBox(width: 8),
-                  Text(
-                    review.reviewerName,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '•',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    _formatDate(review.createdAt),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              // Содержимое отзыва
-              Text(
-                review.content,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-
-              // Изображения
-              if (review.images.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                _buildReviewImages(review.images),
-              ],
-
-              // Теги
-              if (review.tags.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                _buildReviewTags(review.tags),
-              ],
-
-              // Ответ на отзыв
-              if (review.hasResponse) ...[
-                const SizedBox(height: 16),
-                _buildReviewResponse(review),
-              ],
-
-              const SizedBox(height: 12),
-
-              // Действия
-              _buildReviewActions(review, currentUser),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('Ошибка загрузки статистики: ${snapshot.error}'),
             ],
           ),
-        ),
-      );
+        );
+      }
 
-  Widget _buildRatingStars(int rating) => Row(
-        children: List.generate(
-          5,
-          (index) => Icon(
-            index < rating ? Icons.star : Icons.star_border,
-            color: Colors.amber,
-            size: 16,
-          ),
-        ),
-      );
+      final stats =
+          snapshot.data ??
+          ReviewStats(
+            averageRating: 0,
+            totalReviews: 0,
+            ratingDistribution: const {},
+            verifiedReviews: 0,
+            helpfulReviews: 0,
+            helpfulPercentage: 0,
+            lastUpdated: DateTime.now(),
+          );
 
-  Widget _buildReviewImages(List<String> images) => SizedBox(
-        height: 100,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: images.length,
-          itemBuilder: (context, index) => Container(
-            width: 100,
-            margin: const EdgeInsets.only(right: 8),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                images[index],
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    color: Colors.grey[300],
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.error, color: Colors.red),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-
-  Widget _buildReviewTags(List<String> tags) => Wrap(
-        spacing: 8,
-        runSpacing: 4,
-        children: tags
-            .map(
-              (tag) => Chip(
-                label: Text(tag),
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-                labelStyle: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 12,
-                ),
-              ),
-            )
-            .toList(),
-      );
-
-  Widget _buildReviewResponse(Review review) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(8),
-          border: Border(
-            left: BorderSide(
-              color: Theme.of(context).colorScheme.primary,
-              width: 3,
-            ),
-          ),
-        ),
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.business,
-                  size: 16,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Ответ владельца',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                ),
-                const Spacer(),
-                if (review.responseDate != null)
-                  Text(
-                    _formatDate(review.responseDate!),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                        ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              review.response!,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            // Общая статистика
+            _buildOverallStats(stats),
+            const SizedBox(height: 24),
+
+            // Распределение рейтингов
+            _buildRatingDistribution(stats),
+            const SizedBox(height: 24),
+
+            // Дополнительная статистика
+            _buildAdditionalStats(stats),
           ],
         ),
       );
+    },
+  );
 
-  Widget _buildReviewActions(Review review, currentUser) => Row(
+  Widget _buildFilterInfo() => Container(
+    padding: const EdgeInsets.all(12),
+    margin: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Row(
+      children: [
+        Icon(Icons.filter_list, size: 16, color: Theme.of(context).colorScheme.primary),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(_getFilterDescription(), style: Theme.of(context).textTheme.bodySmall),
+        ),
+        TextButton(onPressed: _clearFilters, child: const Text('Очистить')),
+      ],
+    ),
+  );
+
+  Widget _buildReviewCard(Review review, currentUser) => Card(
+    margin: const EdgeInsets.only(bottom: 16),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Голосование за полезность
-          if (currentUser != null && review.canVoteHelpful(currentUser.id)) ...[
-            TextButton.icon(
-              onPressed: () => _voteHelpful(review, true),
-              icon: const Icon(Icons.thumb_up, size: 16),
-              label: Text('${review.helpfulCount}'),
-            ),
-            TextButton.icon(
-              onPressed: () => _voteHelpful(review, false),
-              icon: const Icon(Icons.thumb_down, size: 16),
-              label: Text('${review.notHelpfulCount}'),
-            ),
-          ] else ...[
-            Icon(
-              Icons.thumb_up,
-              size: 16,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '${review.helpfulCount}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
-            ),
-            const SizedBox(width: 16),
-            Icon(
-              Icons.thumb_down,
-              size: 16,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '${review.notHelpfulCount}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-                  ),
-            ),
-          ],
-
-          const Spacer(),
-
-          // Действия пользователя
-          if (currentUser != null && currentUser.id == review.reviewerId) ...[
-            TextButton(
-              onPressed: () => _editReview(review),
-              child: const Text('Редактировать'),
-            ),
-          ],
-        ],
-      );
-
-  Widget _buildOverallStats(ReviewStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          // Заголовок отзыва
+          Row(
             children: [
-              Text(
-                'Общая оценка',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              Expanded(
+                child: Text(
+                  review.title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+              if (review.isVerified)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    'Проверено',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  // Средний рейтинг
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        stats.roundedAverageRating.toString(),
-                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                      _buildRatingStars(stats.averageRating.round()),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${stats.totalReviews} отзывов',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                            ),
-                      ),
-                    ],
                   ),
-                  const SizedBox(width: 32),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
 
-                  // Дополнительная информация
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildStatItem(
-                          'Проверенные отзывы',
-                          '${stats.verifiedReviews}',
-                        ),
-                        _buildStatItem(
-                          'Полезные отзывы',
-                          '${stats.helpfulReviews}',
-                        ),
-                        _buildStatItem(
-                          'Процент полезности',
-                          '${stats.helpfulPercentage.toStringAsFixed(1)}%',
-                        ),
-                      ],
+          // Рейтинг и автор
+          Row(
+            children: [
+              _buildRatingStars(review.rating),
+              const SizedBox(width: 8),
+              Text(
+                review.reviewerName,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '•',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                _formatDate(review.createdAt),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Содержимое отзыва
+          Text(review.content, style: Theme.of(context).textTheme.bodyMedium),
+
+          // Изображения
+          if (review.images.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _buildReviewImages(review.images),
+          ],
+
+          // Теги
+          if (review.tags.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _buildReviewTags(review.tags),
+          ],
+
+          // Ответ на отзыв
+          if (review.hasResponse) ...[const SizedBox(height: 16), _buildReviewResponse(review)],
+
+          const SizedBox(height: 12),
+
+          // Действия
+          _buildReviewActions(review, currentUser),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildRatingStars(int rating) => Row(
+    children: List.generate(
+      5,
+      (index) =>
+          Icon(index < rating ? Icons.star : Icons.star_border, color: Colors.amber, size: 16),
+    ),
+  );
+
+  Widget _buildReviewImages(List<String> images) => SizedBox(
+    height: 100,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: images.length,
+      itemBuilder: (context, index) => Container(
+        width: 100,
+        margin: const EdgeInsets.only(right: 8),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            images[index],
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                color: Colors.grey[300],
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) => Container(
+              color: Colors.grey[300],
+              child: const Icon(Icons.error, color: Colors.red),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  Widget _buildReviewTags(List<String> tags) => Wrap(
+    spacing: 8,
+    runSpacing: 4,
+    children: tags
+        .map(
+          (tag) => Chip(
+            label: Text(tag),
+            backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+            labelStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontSize: 12,
+            ),
+          ),
+        )
+        .toList(),
+  );
+
+  Widget _buildReviewResponse(Review review) => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(8),
+      border: Border(left: BorderSide(color: Theme.of(context).colorScheme.primary, width: 3)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(Icons.business, size: 16, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 8),
+            Text(
+              'Ответ владельца',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const Spacer(),
+            if (review.responseDate != null)
+              Text(
+                _formatDate(review.responseDate!),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(review.response!, style: Theme.of(context).textTheme.bodyMedium),
+      ],
+    ),
+  );
+
+  Widget _buildReviewActions(Review review, currentUser) => Row(
+    children: [
+      // Голосование за полезность
+      if (currentUser != null && review.canVoteHelpful(currentUser.id)) ...[
+        TextButton.icon(
+          onPressed: () => _voteHelpful(review, true),
+          icon: const Icon(Icons.thumb_up, size: 16),
+          label: Text('${review.helpfulCount}'),
+        ),
+        TextButton.icon(
+          onPressed: () => _voteHelpful(review, false),
+          icon: const Icon(Icons.thumb_down, size: 16),
+          label: Text('${review.notHelpfulCount}'),
+        ),
+      ] else ...[
+        Icon(
+          Icons.thumb_up,
+          size: 16,
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          '${review.helpfulCount}',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Icon(
+          Icons.thumb_down,
+          size: 16,
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          '${review.notHelpfulCount}',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+        ),
+      ],
+
+      const Spacer(),
+
+      // Действия пользователя
+      if (currentUser != null && currentUser.id == review.reviewerId) ...[
+        TextButton(onPressed: () => _editReview(review), child: const Text('Редактировать')),
+      ],
+    ],
+  );
+
+  Widget _buildOverallStats(ReviewStats stats) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Общая оценка',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              // Средний рейтинг
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    stats.roundedAverageRating.toString(),
+                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  _buildRatingStars(stats.averageRating.round()),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${stats.totalReviews} отзывов',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
               ),
+              const SizedBox(width: 32),
+
+              // Дополнительная информация
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildStatItem('Проверенные отзывы', '${stats.verifiedReviews}'),
+                    _buildStatItem('Полезные отзывы', '${stats.helpfulReviews}'),
+                    _buildStatItem(
+                      'Процент полезности',
+                      '${stats.helpfulPercentage.toStringAsFixed(1)}%',
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   Widget _buildStatItem(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: Theme.of(context).textTheme.bodyMedium),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildRatingDistribution(ReviewStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Распределение оценок',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              ...List.generate(5, (index) {
-                final rating = 5 - index;
-                final count = stats.ratingDistribution[rating] ?? 0;
-                final percentage = stats.getRatingPercentage(rating);
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    children: [
-                      Text(
-                        '$rating',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.star, color: Colors.amber, size: 16),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: LinearProgressIndicator(
-                          value: percentage / 100,
-                          backgroundColor: Colors.grey[300],
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '$count (${percentage.toStringAsFixed(1)}%)',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ],
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Распределение оценок',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
-        ),
-      );
+          const SizedBox(height: 16),
+          ...List.generate(5, (index) {
+            final rating = 5 - index;
+            final count = stats.ratingDistribution[rating] ?? 0;
+            final percentage = stats.getRatingPercentage(rating);
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  Text(
+                    '$rating',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.star, color: Colors.amber, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: percentage / 100,
+                      backgroundColor: Colors.grey[300],
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '$count (${percentage.toStringAsFixed(1)}%)',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildAdditionalStats(ReviewStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Дополнительная информация',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              _buildStatItem(
-                'Последнее обновление',
-                _formatDate(stats.lastUpdated),
-              ),
-              _buildStatItem('Всего отзывов', '${stats.totalReviews}'),
-              _buildStatItem('Проверенные отзывы', '${stats.verifiedReviews}'),
-              _buildStatItem('Полезные отзывы', '${stats.helpfulReviews}'),
-            ],
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Дополнительная информация',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
-        ),
-      );
+          const SizedBox(height: 16),
+          _buildStatItem('Последнее обновление', _formatDate(stats.lastUpdated)),
+          _buildStatItem('Всего отзывов', '${stats.totalReviews}'),
+          _buildStatItem('Проверенные отзывы', '${stats.verifiedReviews}'),
+          _buildStatItem('Полезные отзывы', '${stats.helpfulReviews}'),
+        ],
+      ),
+    ),
+  );
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
@@ -735,10 +657,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           onChanged: (value) => _searchQuery = value,
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -758,10 +677,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
         title: const Text('Фильтры'),
         content: const Text('Фильтры будут реализованы в следующей версии'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('ОК'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('ОК')),
         ],
       ),
     );
@@ -770,38 +686,38 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
   void _createReview() {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<bool>(
-        builder: (context) => ReviewFormScreen(
-          targetId: widget.targetId,
-          type: widget.type,
-          targetName: widget.targetName,
-        ),
-      ),
-    )
+          MaterialPageRoute<bool>(
+            builder: (context) => ReviewFormScreen(
+              targetId: widget.targetId,
+              type: widget.type,
+              targetName: widget.targetName,
+            ),
+          ),
+        )
         .then((result) {
-      if (result == true) {
-        setState(() {});
-      }
-    });
+          if (result == true) {
+            setState(() {});
+          }
+        });
   }
 
   void _editReview(Review review) {
     Navigator.of(context)
         .push(
-      MaterialPageRoute<bool>(
-        builder: (context) => ReviewFormScreen(
-          targetId: widget.targetId,
-          type: widget.type,
-          targetName: widget.targetName,
-          existingReview: review,
-        ),
-      ),
-    )
+          MaterialPageRoute<bool>(
+            builder: (context) => ReviewFormScreen(
+              targetId: widget.targetId,
+              type: widget.type,
+              targetName: widget.targetName,
+              existingReview: review,
+            ),
+          ),
+        )
         .then((result) {
-      if (result == true) {
-        setState(() {});
-      }
-    });
+          if (result == true) {
+            setState(() {});
+          }
+        });
   }
 
   Future<void> _voteHelpful(Review review, bool isHelpful) async {
@@ -809,9 +725,9 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
     final currentUser = currentUserAsync.value;
 
     if (currentUser == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Пользователь не найден')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Пользователь не найден')));
       return;
     }
 
@@ -821,10 +737,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
       SafeLog.error('ReviewsScreen: Error voting helpful', e, stackTrace);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка голосования: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка голосования: $e'), backgroundColor: Colors.red),
       );
     }
   }

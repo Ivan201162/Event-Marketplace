@@ -48,9 +48,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
   Widget build(BuildContext context) {
     if (!FeatureFlags.featureRequestsEnabled) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('Предложения по функционалу'),
-        ),
+        appBar: AppBar(title: const Text('Предложения по функционалу')),
         body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -82,382 +80,333 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          _buildAllRequestsTab(),
-          _buildCreateRequestTab(),
-          _buildSearchTab(),
-        ],
+        children: [_buildAllRequestsTab(), _buildCreateRequestTab(), _buildSearchTab()],
       ),
     );
   }
 
   Widget _buildAllRequestsTab() => StreamBuilder<List<FeatureRequest>>(
-        stream: _featureRequestService.getFeatureRequests(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    stream: _featureRequestService.getFeatureRequests(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка загрузки: ${snapshot.error}'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {}),
-                    child: const Text('Повторить'),
-                  ),
-                ],
-              ),
-            );
-          }
+      if (snapshot.hasError) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('Ошибка загрузки: ${snapshot.error}'),
+              const SizedBox(height: 16),
+              ElevatedButton(onPressed: () => setState(() {}), child: const Text('Повторить')),
+            ],
+          ),
+        );
+      }
 
-          final requests = snapshot.data ?? [];
-          if (requests.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'Пока нет предложений',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Будьте первым, кто предложит улучшение!',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
+      final requests = snapshot.data ?? [];
+      if (requests.isEmpty) {
+        return const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey),
+              SizedBox(height: 16),
+              Text('Пока нет предложений', style: TextStyle(fontSize: 18, color: Colors.grey)),
+              SizedBox(height: 8),
+              Text('Будьте первым, кто предложит улучшение!', style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+        );
+      }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: requests.length,
-            itemBuilder: (context, index) {
-              final request = requests[index];
-              return _buildRequestCard(request);
-            },
-          );
+      return ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: requests.length,
+        itemBuilder: (context, index) {
+          final request = requests[index];
+          return _buildRequestCard(request);
         },
       );
+    },
+  );
 
   Widget _buildRequestCard(FeatureRequest request) => Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          request.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'от ${request.userName} • ${request.categoryText}',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: request.statusColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: request.statusColor),
-                        ),
-                        child: Text(
-                          request.statusText,
-                          style: TextStyle(
-                            color: request.statusColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: request.priorityColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: request.priorityColor),
-                        ),
-                        child: Text(
-                          request.priorityText,
-                          style: TextStyle(
-                            color: request.priorityColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                request.description,
-                style: const TextStyle(fontSize: 16),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              if (request.tags.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 4,
-                  runSpacing: 4,
-                  children: request.tags
-                      .map(
-                        (tag) => Chip(
-                          label: Text(tag),
-                          backgroundColor: Colors.blue[50],
-                          labelStyle: TextStyle(
-                            color: Colors.blue[600],
-                            fontSize: 12,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Icon(Icons.thumb_up, size: 16, color: Colors.grey[600]),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${request.votes}',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                  ),
-                  const SizedBox(width: 16),
-                  Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
-                  const SizedBox(width: 4),
-                  Text(
-                    _formatDate(request.createdAt),
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () => _showRequestDetails(request),
-                    child: const Text('Подробнее'),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton.icon(
-                    onPressed: () => _voteForRequest(request),
-                    icon: const Icon(Icons.thumb_up, size: 16),
-                    label: const Text('Голосовать'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[600],
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildCreateRequestTab() => SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildCreateForm(),
-            const SizedBox(height: 24),
-            _buildSubmitButton(),
-          ],
-        ),
-      );
-
-  Widget _buildCreateForm() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Создать предложение',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Заголовок предложения',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.title),
-                ),
-                maxLength: 100,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Описание предложения',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.description),
-                  alignLabelWithHint: true,
-                ),
-                maxLines: 5,
-                maxLength: 1000,
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<FeatureCategory>(
-                initialValue: _selectedCategory,
-                decoration: const InputDecoration(
-                  labelText: 'Категория',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.category),
-                ),
-                items: FeatureCategory.values
-                    .map(
-                      (category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(_getCategoryText(category)),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCategory = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<FeaturePriority>(
-                initialValue: _selectedPriority,
-                decoration: const InputDecoration(
-                  labelText: 'Приоритет',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.priority_high),
-                ),
-                items: FeaturePriority.values
-                    .map(
-                      (priority) => DropdownMenuItem(
-                        value: priority,
-                        child: Text(_getPriorityText(priority)),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedPriority = value!;
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildSubmitButton() => SizedBox(
-        width: double.infinity,
-        child: ElevatedButton.icon(
-          onPressed: _isLoading ? null : _submitRequest,
-          icon: _isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.send),
-          label: Text(_isLoading ? 'Отправка...' : 'Отправить предложение'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.amber[600],
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
-      );
-
-  Widget _buildSearchTab() => Column(
+    margin: const EdgeInsets.only(bottom: 16),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Поиск предложений',
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _searchController.clear();
-                    setState(() {
-                      _searchResults = [];
-                    });
-                  },
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      request.title,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'от ${request.userName} • ${request.categoryText}',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                    ),
+                  ],
                 ),
               ),
-              onSubmitted: _performSearch,
-            ),
+              Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: request.statusColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: request.statusColor),
+                    ),
+                    child: Text(
+                      request.statusText,
+                      style: TextStyle(
+                        color: request.statusColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: request.priorityColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: request.priorityColor),
+                    ),
+                    child: Text(
+                      request.priorityText,
+                      style: TextStyle(
+                        color: request.priorityColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          Expanded(
-            child: _searchResults.isEmpty
-                ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search, size: 64, color: Colors.grey),
-                        SizedBox(height: 16),
-                        Text(
-                          'Введите запрос для поиска',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
-                        ),
-                      ],
+          const SizedBox(height: 12),
+          Text(
+            request.description,
+            style: const TextStyle(fontSize: 16),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (request.tags.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              children: request.tags
+                  .map(
+                    (tag) => Chip(
+                      label: Text(tag),
+                      backgroundColor: Colors.blue[50],
+                      labelStyle: TextStyle(color: Colors.blue[600], fontSize: 12),
                     ),
                   )
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: _searchResults.length,
-                    itemBuilder: (context, index) {
-                      final request = _searchResults[index];
-                      return _buildRequestCard(request);
-                    },
-                  ),
+                  .toList(),
+            ),
+          ],
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Icon(Icons.thumb_up, size: 16, color: Colors.grey[600]),
+              const SizedBox(width: 4),
+              Text('${request.votes}', style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+              const SizedBox(width: 16),
+              Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
+              const SizedBox(width: 4),
+              Text(
+                _formatDate(request.createdAt),
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () => _showRequestDetails(request),
+                child: const Text('Подробнее'),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton.icon(
+                onPressed: () => _voteForRequest(request),
+                icon: const Icon(Icons.thumb_up, size: 16),
+                label: const Text('Голосовать'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[600],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                ),
+              ),
+            ],
           ),
         ],
-      );
+      ),
+    ),
+  );
+
+  Widget _buildCreateRequestTab() => SingleChildScrollView(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [_buildCreateForm(), const SizedBox(height: 24), _buildSubmitButton()],
+    ),
+  );
+
+  Widget _buildCreateForm() => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Создать предложение',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _titleController,
+            decoration: const InputDecoration(
+              labelText: 'Заголовок предложения',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.title),
+            ),
+            maxLength: 100,
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _descriptionController,
+            decoration: const InputDecoration(
+              labelText: 'Описание предложения',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.description),
+              alignLabelWithHint: true,
+            ),
+            maxLines: 5,
+            maxLength: 1000,
+          ),
+          const SizedBox(height: 16),
+          DropdownButtonFormField<FeatureCategory>(
+            initialValue: _selectedCategory,
+            decoration: const InputDecoration(
+              labelText: 'Категория',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.category),
+            ),
+            items: FeatureCategory.values
+                .map(
+                  (category) =>
+                      DropdownMenuItem(value: category, child: Text(_getCategoryText(category))),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedCategory = value!;
+              });
+            },
+          ),
+          const SizedBox(height: 16),
+          DropdownButtonFormField<FeaturePriority>(
+            initialValue: _selectedPriority,
+            decoration: const InputDecoration(
+              labelText: 'Приоритет',
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.priority_high),
+            ),
+            items: FeaturePriority.values
+                .map(
+                  (priority) =>
+                      DropdownMenuItem(value: priority, child: Text(_getPriorityText(priority))),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedPriority = value!;
+              });
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildSubmitButton() => SizedBox(
+    width: double.infinity,
+    child: ElevatedButton.icon(
+      onPressed: _isLoading ? null : _submitRequest,
+      icon: _isLoading
+          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+          : const Icon(Icons.send),
+      label: Text(_isLoading ? 'Отправка...' : 'Отправить предложение'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.amber[600],
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+      ),
+    ),
+  );
+
+  Widget _buildSearchTab() => Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(16),
+        child: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            labelText: 'Поиск предложений',
+            border: const OutlineInputBorder(),
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: () {
+                _searchController.clear();
+                setState(() {
+                  _searchResults = [];
+                });
+              },
+            ),
+          ),
+          onSubmitted: _performSearch,
+        ),
+      ),
+      Expanded(
+        child: _searchResults.isEmpty
+            ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.search, size: 64, color: Colors.grey),
+                    SizedBox(height: 16),
+                    Text(
+                      'Введите запрос для поиска',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                  final request = _searchResults[index];
+                  return _buildRequestCard(request);
+                },
+              ),
+      ),
+    ],
+  );
 
   String _getCategoryText(FeatureCategory category) {
     switch (category) {
@@ -565,12 +514,9 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
         ),
       );
     } on Exception catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка отправки: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка отправки: $e'), backgroundColor: Colors.red));
     } finally {
       setState(() {
         _isLoading = false;
@@ -587,12 +533,9 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
         _searchResults = results;
       });
     } on Exception catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка поиска: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка поиска: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -611,18 +554,12 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
             children: [
               Text(
                 request.title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(
                 'от ${request.userName} • ${_formatDate(request.createdAt)}',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
               ),
               const SizedBox(height: 16),
               Expanded(
@@ -631,10 +568,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        request.description,
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                      Text(request.description, style: const TextStyle(fontSize: 16)),
                       if (request.adminComment != null) ...[
                         const SizedBox(height: 16),
                         Container(
@@ -679,17 +613,11 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ваш голос учтен!'),
-          backgroundColor: Colors.green,
-        ),
+        const SnackBar(content: Text('Ваш голос учтен!'), backgroundColor: Colors.green),
       );
     } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка голосования: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка голосования: $e'), backgroundColor: Colors.red),
       );
     }
   }

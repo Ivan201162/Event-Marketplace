@@ -119,30 +119,20 @@ class ProposalService {
   }
 
   // Получение всех предложений для заказчика
-  static Stream<List<SpecialistProposal>> getCustomerProposals(
-    String customerId,
-  ) =>
-      _firestore
-          .collection(_collection)
-          .where('customerId', isEqualTo: customerId)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
-          );
+  static Stream<List<SpecialistProposal>> getCustomerProposals(String customerId) => _firestore
+      .collection(_collection)
+      .where('customerId', isEqualTo: customerId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
 
   // Получение всех предложений от организатора
-  static Stream<List<SpecialistProposal>> getOrganizerProposals(
-    String organizerId,
-  ) =>
-      _firestore
-          .collection(_collection)
-          .where('organizerId', isEqualTo: organizerId)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
-          );
+  static Stream<List<SpecialistProposal>> getOrganizerProposals(String organizerId) => _firestore
+      .collection(_collection)
+      .where('organizerId', isEqualTo: organizerId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
 
   // Получение предложений по статусу
   static Stream<List<SpecialistProposal>> getProposalsByStatus(
@@ -157,9 +147,7 @@ class ProposalService {
         .where('status', isEqualTo: status)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map(
-          (snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList(),
-        );
+        .map((snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
   }
 
   // Получение активных предложений (pending)
@@ -176,10 +164,7 @@ class ProposalService {
   }
 
   // Обновление предложения
-  static Future<void> updateProposal(
-    String proposalId,
-    Map<String, dynamic> updates,
-  ) async {
+  static Future<void> updateProposal(String proposalId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection(_collection).doc(proposalId).update(updates);
@@ -191,11 +176,15 @@ class ProposalService {
   // Получение статистики предложений
   static Future<Map<String, int>> getProposalStats(String userId) async {
     try {
-      final organizerProposals =
-          await _firestore.collection(_collection).where('organizerId', isEqualTo: userId).get();
+      final organizerProposals = await _firestore
+          .collection(_collection)
+          .where('organizerId', isEqualTo: userId)
+          .get();
 
-      final customerProposals =
-          await _firestore.collection(_collection).where('customerId', isEqualTo: userId).get();
+      final customerProposals = await _firestore
+          .collection(_collection)
+          .where('customerId', isEqualTo: userId)
+          .get();
 
       final stats = <String, int>{
         'totalSent': organizerProposals.docs.length,

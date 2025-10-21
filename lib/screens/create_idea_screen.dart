@@ -24,12 +24,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
   List<File> _selectedImages = [];
   bool _isLoading = false;
 
-  final List<String> _types = [
-    'text',
-    'photo',
-    'video',
-    'reel',
-  ];
+  final List<String> _types = ['text', 'photo', 'video', 'reel'];
 
   final List<String> _categories = [
     'Фотография',
@@ -58,10 +53,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка выбора изображений: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка выбора изображений: $e'), backgroundColor: Colors.red),
       );
     }
   }
@@ -79,10 +71,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка выбора видео: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка выбора видео: $e'), backgroundColor: Colors.red),
       );
     }
   }
@@ -107,10 +96,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
 
       if (idea != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Идея создана успешно!'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Идея создана успешно!'), backgroundColor: Colors.green),
         );
         context.pop();
       } else {
@@ -119,10 +105,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка создания идеи: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка создания идеи: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -155,10 +138,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : const Text(
-                    'Опубликовать',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                : const Text('Опубликовать', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -200,13 +180,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Тип контента',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        const Text('Тип контента', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),
         Wrap(
           spacing: 8,
@@ -238,13 +212,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Категория',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        const Text('Категория', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
           initialValue: _selectedCategory,
@@ -253,10 +221,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
             hintText: 'Выберите категорию',
           ),
           items: _categories.map((category) {
-            return DropdownMenuItem(
-              value: category,
-              child: Text(category),
-            );
+            return DropdownMenuItem(value: category, child: Text(category));
           }).toList(),
           onChanged: (value) {
             setState(() {
@@ -272,13 +237,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Описание',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        const Text('Описание', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),
         TextFormField(
           controller: _contentController,
@@ -304,13 +263,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Медиа',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        const Text('Медиа', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 12),
         Row(
           children: [
@@ -341,10 +294,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
       children: [
         const Text(
           'Предварительный просмотр',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -386,11 +336,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
                               color: Colors.red,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
-                              Icons.close,
-                              color: Colors.white,
-                              size: 16,
-                            ),
+                            child: const Icon(Icons.close, color: Colors.white, size: 16),
                           ),
                         ),
                       ),

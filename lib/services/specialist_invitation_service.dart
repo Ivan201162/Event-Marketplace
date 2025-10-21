@@ -46,10 +46,7 @@ class SpecialistInvitationService {
         await _errorLogger.logWarning(
           warning: 'Invitation already exists for this specialist and order',
           action: 'create_invitation',
-          additionalData: {
-            'orderId': orderId,
-            'specialistId': specialistId,
-          },
+          additionalData: {'orderId': orderId, 'specialistId': specialistId},
         );
         return null;
       }
@@ -95,10 +92,7 @@ class SpecialistInvitationService {
         error: 'Failed to create invitation: $e',
         stackTrace: stackTrace.toString(),
         action: 'create_invitation',
-        additionalData: {
-          'orderId': orderId,
-          'specialistId': specialistId,
-        },
+        additionalData: {'orderId': orderId, 'specialistId': specialistId},
       );
       return null;
     }
@@ -136,10 +130,7 @@ class SpecialistInvitationService {
         message: 'Invitation response recorded',
         userId: user.uid,
         action: 'respond_to_invitation',
-        additionalData: {
-          'invitationId': invitationId,
-          'status': status.name,
-        },
+        additionalData: {'invitationId': invitationId, 'status': status.name},
       );
 
       return true;
@@ -227,8 +218,10 @@ class SpecialistInvitationService {
   /// Получить приглашение по ID
   Future<SpecialistInvitation?> getInvitationById(String invitationId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('specialist_invitations').doc(invitationId).get();
+      final DocumentSnapshot doc = await _firestore
+          .collection('specialist_invitations')
+          .doc(invitationId)
+          .get();
 
       if (doc.exists) {
         return SpecialistInvitation.fromDoc(doc);
@@ -282,12 +275,12 @@ class SpecialistInvitationService {
   }
 
   /// Получить статистику приглашений специалиста
-  Future<InvitationStats?> getSpecialistInvitationStats(
-    String specialistId,
-  ) async {
+  Future<InvitationStats?> getSpecialistInvitationStats(String specialistId) async {
     try {
-      final DocumentSnapshot doc =
-          await _firestore.collection('invitation_stats').doc(specialistId).get();
+      final DocumentSnapshot doc = await _firestore
+          .collection('invitation_stats')
+          .doc(specialistId)
+          .get();
 
       if (doc.exists) {
         return InvitationStats.fromMap(doc.data()! as Map<String, dynamic>);
@@ -387,10 +380,7 @@ class SpecialistInvitationService {
         error: 'Failed to create bulk invitations: $e',
         stackTrace: stackTrace.toString(),
         action: 'create_bulk_invitations',
-        additionalData: {
-          'orderId': orderId,
-          'specialistIds': specialistIds,
-        },
+        additionalData: {'orderId': orderId, 'specialistIds': specialistIds},
       );
       return [];
     }
@@ -443,13 +433,15 @@ class SpecialistInvitationService {
       }
 
       if (startDate != null) {
-        invitations =
-            invitations.where((invitation) => invitation.createdAt.isAfter(startDate)).toList();
+        invitations = invitations
+            .where((invitation) => invitation.createdAt.isAfter(startDate))
+            .toList();
       }
 
       if (endDate != null) {
-        invitations =
-            invitations.where((invitation) => invitation.createdAt.isBefore(endDate)).toList();
+        invitations = invitations
+            .where((invitation) => invitation.createdAt.isBefore(endDate))
+            .toList();
       }
 
       return invitations.take(limit).toList();
@@ -485,9 +477,7 @@ class SpecialistInvitationService {
   }
 
   /// Вычислить и сохранить статистику приглашений
-  Future<InvitationStats?> _calculateAndSaveInvitationStats(
-    String specialistId,
-  ) async {
+  Future<InvitationStats?> _calculateAndSaveInvitationStats(String specialistId) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('specialist_invitations')
@@ -500,14 +490,18 @@ class SpecialistInvitationService {
 
       // Вычисляем статистику
       final totalInvitations = invitations.length;
-      final acceptedInvitations =
-          invitations.where((i) => i.status == InvitationStatus.accepted).length;
-      final declinedInvitations =
-          invitations.where((i) => i.status == InvitationStatus.declined).length;
-      final pendingInvitations =
-          invitations.where((i) => i.status == InvitationStatus.pending).length;
-      final expiredInvitations =
-          invitations.where((i) => i.status == InvitationStatus.expired).length;
+      final acceptedInvitations = invitations
+          .where((i) => i.status == InvitationStatus.accepted)
+          .length;
+      final declinedInvitations = invitations
+          .where((i) => i.status == InvitationStatus.declined)
+          .length;
+      final pendingInvitations = invitations
+          .where((i) => i.status == InvitationStatus.pending)
+          .length;
+      final expiredInvitations = invitations
+          .where((i) => i.status == InvitationStatus.expired)
+          .length;
 
       final respondedInvitations = acceptedInvitations + declinedInvitations;
       final acceptanceRate = totalInvitations > 0 ? acceptedInvitations / totalInvitations : 0.0;

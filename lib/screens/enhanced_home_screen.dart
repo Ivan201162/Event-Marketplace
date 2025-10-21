@@ -57,18 +57,12 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
     _profileOpacityAnimation = Tween<double>(
       begin: 1.0,
       end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _profileAnimationController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _profileAnimationController, curve: Curves.easeInOut));
 
     _profileScaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _profileAnimationController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _profileAnimationController, curve: Curves.easeInOut));
 
     _scrollController.addListener(_onScroll);
   }
@@ -128,8 +122,9 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
       }
     });
 
-    final queryString =
-        queryParams.entries.map((e) => '${e.key}=${Uri.encodeComponent(e.value)}').join('&');
+    final queryString = queryParams.entries
+        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
+        .join('&');
 
     context.push('/search?$queryString');
   }
@@ -191,39 +186,25 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
               ),
 
               // Поиск специалистов
-              SliverToBoxAdapter(
-                child: _buildSearchSection(),
-              ),
+              SliverToBoxAdapter(child: _buildSearchSection()),
 
               // Категории специалистов
-              SliverToBoxAdapter(
-                child: _buildCategoriesSection(),
-              ),
+              SliverToBoxAdapter(child: _buildCategoriesSection()),
 
               // Карусель лучших специалистов недели
-              SliverToBoxAdapter(
-                child: _buildBestSpecialistsCarousel(),
-              ),
+              SliverToBoxAdapter(child: _buildBestSpecialistsCarousel()),
 
               // Лучшие специалисты по городу
-              SliverToBoxAdapter(
-                child: _buildCitySpecialistsCarousel(),
-              ),
+              SliverToBoxAdapter(child: _buildCitySpecialistsCarousel()),
 
               // Блок "Интересное"
-              SliverToBoxAdapter(
-                child: _buildInterestingSection(),
-              ),
+              SliverToBoxAdapter(child: _buildInterestingSection()),
 
               // Быстрые действия
-              SliverToBoxAdapter(
-                child: _buildQuickActionsSection(),
-              ),
+              SliverToBoxAdapter(child: _buildQuickActionsSection()),
 
               // Дополнительный отступ внизу для предотвращения overflow
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 20),
-              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 20)),
             ],
           ),
         ),
@@ -233,103 +214,90 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
 
   /// Плашка пользователя с аватаром, именем и городом
   Widget _buildUserProfileCard(user) => AnimatedBuilder(
-        animation: _profileAnimationController,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _profileScaleAnimation.value,
-            child: Opacity(
-              opacity: _profileOpacityAnimation.value,
-              child: Container(
-                margin: const EdgeInsets.all(16),
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).primaryColor,
-                      Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                      Theme.of(context).primaryColor.withValues(alpha: 0.6),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: const [0.0, 0.6, 1.0],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).primaryColor.withValues(alpha: 0.4),
-                      blurRadius: 15,
-                      offset: const Offset(0, 8),
-                      spreadRadius: 2,
-                    ),
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+    animation: _profileAnimationController,
+    builder: (context, child) {
+      return Transform.scale(
+        scale: _profileScaleAnimation.value,
+        child: Opacity(
+          opacity: _profileOpacityAnimation.value,
+          child: Container(
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Theme.of(context).primaryColor,
+                  Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                  Theme.of(context).primaryColor.withValues(alpha: 0.6),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: const [0.0, 0.6, 1.0],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.4),
+                  blurRadius: 15,
+                  offset: const Offset(0, 8),
+                  spreadRadius: 2,
                 ),
-                child: Row(
-                  children: [
-                    // Аватар пользователя
-                    GestureDetector(
-                      onTap: () {
-                        if (user != null) {
-                          context.push('/profile/me');
-                        }
-                      },
-                      child: Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.white,
-                            width: 4,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                              spreadRadius: 1,
-                            ),
-                            BoxShadow(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              blurRadius: 8,
-                              offset: const Offset(0, -2),
-                            ),
-                          ],
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                // Аватар пользователя
+                GestureDetector(
+                  onTap: () {
+                    if (user != null) {
+                      context.push('/profile/me');
+                    }
+                  },
+                  child: Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                          spreadRadius: 1,
                         ),
-                        child: CircleAvatar(
-                          radius: 31,
-                          backgroundColor: Colors.white,
-                          child: user?.photoURL?.isNotEmpty == true
-                              ? ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: user.photoURL!,
-                                    width: 70,
-                                    height: 70,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Container(
-                                      color: Colors.grey[200],
-                                      child: const Center(
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-                                        ),
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) => Container(
-                                      color: Colors.grey[200],
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 35,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
+                        BoxShadow(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          blurRadius: 8,
+                          offset: const Offset(0, -2),
+                        ),
+                      ],
+                    ),
+                    child: CircleAvatar(
+                      radius: 31,
+                      backgroundColor: Colors.white,
+                      child: user?.photoURL?.isNotEmpty == true
+                          ? ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: user.photoURL!,
+                                width: 70,
+                                height: 70,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey[200],
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
                                     ),
                                   ),
-                                )
-                              : Container(
+                                ),
+                                errorWidget: (context, url, error) => Container(
                                   color: Colors.grey[200],
                                   child: Icon(
                                     Icons.person,
@@ -337,399 +305,366 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                                     color: Theme.of(context).primaryColor,
                                   ),
                                 ),
+                              ),
+                            )
+                          : Container(
+                              color: Colors.grey[200],
+                              child: Icon(
+                                Icons.person,
+                                size: 35,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Информация о пользователе
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user?.displayName ?? 'Добро пожаловать!',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(color: Colors.black26, offset: Offset(0, 1), blurRadius: 2),
+                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 16),
-                    // Информация о пользователе
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      const SizedBox(height: 6),
+                      Text(
+                        user?.email ?? 'Войдите в аккаунт',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          shadows: [
+                            Shadow(color: Colors.black26, offset: Offset(0, 1), blurRadius: 1),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
                         children: [
-                          Text(
-                            user?.displayName ?? 'Добро пожаловать!',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black26,
-                                  offset: Offset(0, 1),
-                                  blurRadius: 2,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            user?.email ?? 'Войдите в аккаунт',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black26,
-                                  offset: Offset(0, 1),
-                                  blurRadius: 1,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on,
+                          const Icon(Icons.location_on, color: Colors.white, size: 18),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              user?.city?.trim().isNotEmpty == true
+                                  ? user!.city!
+                                  : 'Город не указан',
+                              style: const TextStyle(
                                 color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 6),
-                              Expanded(
-                                child: Text(
-                                  user?.city?.trim().isNotEmpty == true
-                                      ? user!.city!
-                                      : 'Город не указан',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black26,
-                                        offset: Offset(0, 1),
-                                        blurRadius: 1,
-                                      ),
-                                    ],
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black26,
+                                    offset: Offset(0, 1),
+                                    blurRadius: 1,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          // Статус и подписчики
-                          Row(
-                            children: [
-                              // Статус онлайн/офлайн
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: Colors.green.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.green.withValues(alpha: 0.5),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: 8,
-                                      height: 8,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 4),
-                                    const Text(
-                                      'Онлайн',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              // Количество подписчиков
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.2),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.people,
-                                      color: Colors.white,
-                                      size: 14,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      '${_getRandomFollowers()} подписчиков',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                    // Кнопка редактирования профиля
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: IconButton(
-                        onPressed: () => context.push('/profile/edit'),
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        tooltip: 'Редактировать профиль',
-                        padding: const EdgeInsets.all(8),
-                        constraints: const BoxConstraints(
-                          minWidth: 40,
-                          minHeight: 40,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      );
-
-  /// Строка поиска специалистов
-  Widget _buildSearchSection() => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Найти специалиста',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                Row(
-                  children: [
-                    // Индикатор активных фильтров
-                    if (_currentFilters.isNotEmpty)
-                      Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          '${_currentFilters.length}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                      const SizedBox(height: 8),
+                      // Статус и подписчики
+                      Row(
+                        children: [
+                          // Статус онлайн/офлайн
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.green.withValues(alpha: 0.5)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.green,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                const Text(
+                                  'Онлайн',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 12),
+                          // Количество подписчиков
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.people, color: Colors.white, size: 14),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${_getRandomFollowers()} подписчиков',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    IconButton(
-                      onPressed: _showFiltersDialog,
-                      icon: const Icon(Icons.filter_list),
-                      tooltip: 'Фильтры',
-                      style: IconButton.styleFrom(
-                        backgroundColor: _currentFilters.isNotEmpty
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                        foregroundColor: _currentFilters.isNotEmpty
-                            ? Colors.white
-                            : Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+                // Кнопка редактирования профиля
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                  ),
+                  child: IconButton(
+                    onPressed: () => context.push('/profile/edit'),
+                    icon: const Icon(Icons.edit, color: Colors.white, size: 20),
+                    tooltip: 'Редактировать профиль',
+                    padding: const EdgeInsets.all(8),
+                    constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Найти специалиста…',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (_searchController.text.isNotEmpty)
-                      IconButton(
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {});
-                        },
-                        icon: const Icon(Icons.clear),
-                        tooltip: 'Очистить',
-                      ),
-                    IconButton(
-                      onPressed: () {
-                        if (_searchController.text.isNotEmpty) {
-                          context.push('/search?q=${Uri.encodeComponent(_searchController.text)}');
-                        }
-                      },
-                      icon: const Icon(Icons.search),
-                      tooltip: 'Поиск',
-                    ),
-                  ],
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
-              ),
-              onChanged: (value) {
-                setState(() {});
-              },
-              onSubmitted: (query) {
-                if (query.isNotEmpty) {
-                  context.push('/search?q=${Uri.encodeComponent(query)}');
-                }
-              },
-            ),
-            // Отображение активных фильтров
-            if (_currentFilters.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 32,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _currentFilters.length,
-                  itemBuilder: (context, index) {
-                    final entry = _currentFilters.entries.elementAt(index);
-                    return Container(
-                      margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '${_getFilterDisplayName(entry.key)}: ${entry.value}',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          GestureDetector(
-                            onTap: () => _removeFilter(entry.key),
-                            child: Icon(
-                              Icons.close,
-                              size: 16,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ],
+          ),
         ),
       );
+    },
+  );
+
+  /// Строка поиска специалистов
+  Widget _buildSearchSection() => Container(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Найти специалиста',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: [
+                // Индикатор активных фильтров
+                if (_currentFilters.isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '${_currentFilters.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                IconButton(
+                  onPressed: _showFiltersDialog,
+                  icon: const Icon(Icons.filter_list),
+                  tooltip: 'Фильтры',
+                  style: IconButton.styleFrom(
+                    backgroundColor: _currentFilters.isNotEmpty
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    foregroundColor: _currentFilters.isNotEmpty
+                        ? Colors.white
+                        : Theme.of(context).primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Найти специалиста…',
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (_searchController.text.isNotEmpty)
+                  IconButton(
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {});
+                    },
+                    icon: const Icon(Icons.clear),
+                    tooltip: 'Очистить',
+                  ),
+                IconButton(
+                  onPressed: () {
+                    if (_searchController.text.isNotEmpty) {
+                      context.push('/search?q=${Uri.encodeComponent(_searchController.text)}');
+                    }
+                  },
+                  icon: const Icon(Icons.search),
+                  tooltip: 'Поиск',
+                ),
+              ],
+            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            filled: true,
+            fillColor: Theme.of(context).cardColor,
+          ),
+          onChanged: (value) {
+            setState(() {});
+          },
+          onSubmitted: (query) {
+            if (query.isNotEmpty) {
+              context.push('/search?q=${Uri.encodeComponent(query)}');
+            }
+          },
+        ),
+        // Отображение активных фильтров
+        if (_currentFilters.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 32,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _currentFilters.length,
+              itemBuilder: (context, index) {
+                final entry = _currentFilters.entries.elementAt(index);
+                return Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${_getFilterDisplayName(entry.key)}: ${entry.value}',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () => _removeFilter(entry.key),
+                        child: Icon(Icons.close, size: 16, color: Theme.of(context).primaryColor),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ],
+    ),
+  );
 
   /// Категории специалистов
   Widget _buildCategoriesSection() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Категории',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 100,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _categories.length,
-                itemBuilder: (context, index) {
-                  final category = _categories[index];
-                  final isSelected = category['name'] == _selectedCategory;
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Категории',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: _categories.length,
+            itemBuilder: (context, index) {
+              final category = _categories[index];
+              final isSelected = category['name'] == _selectedCategory;
 
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedCategory = category['name'] as String;
-                      });
-                      // Переход к отфильтрованным специалистам
-                      context.push(
-                          '/search?category=${Uri.encodeComponent(category['name'] as String)}');
-                    },
-                    child: Container(
-                      width: 80,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? (category['color'] as Color).withValues(alpha: 0.2)
-                            : (category['color'] as Color).withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: (category['color'] as Color).withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            category['icon'] as String,
-                            style: const TextStyle(fontSize: 24),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            category['name'] as String,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: isSelected ? (category['color'] as Color) : Colors.grey[700],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedCategory = category['name'] as String;
+                  });
+                  // Переход к отфильтрованным специалистам
+                  context.push(
+                    '/search?category=${Uri.encodeComponent(category['name'] as String)}',
                   );
                 },
-              ),
-            ),
-          ],
+                child: Container(
+                  width: 80,
+                  margin: const EdgeInsets.only(right: 12),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? (category['color'] as Color).withValues(alpha: 0.2)
+                        : (category['color'] as Color).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: (category['color'] as Color).withValues(alpha: 0.3)),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(category['icon'] as String, style: const TextStyle(fontSize: 24)),
+                      const SizedBox(height: 4),
+                      Text(
+                        category['name'] as String,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: isSelected ? (category['color'] as Color) : Colors.grey[700],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
-      );
+      ],
+    ),
+  );
 
   /// Карусель лучших специалистов недели
   Widget _buildBestSpecialistsCarousel() {
@@ -751,14 +686,11 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                 children: [
                   Text(
                     'Лучшие специалисты недели',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  TextButton(
-                    onPressed: () => context.push('/search'),
-                    child: const Text('Все'),
-                  ),
+                  TextButton(onPressed: () => context.push('/search'), child: const Text('Все')),
                 ],
               ),
             ),
@@ -816,9 +748,9 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                     userCity != null && userCity.isNotEmpty
                         ? 'Лучшие специалисты в $userCity'
                         : 'Лучшие специалисты по городу',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   TextButton(
                     onPressed: () =>
@@ -843,11 +775,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.location_city,
-                        size: 48,
-                        color: Colors.grey[400],
-                      ),
+                      Icon(Icons.location_city, size: 48, color: Colors.grey[400]),
                       const SizedBox(height: 12),
                       Text(
                         'Пока нет специалистов\nв вашем городе',
@@ -862,10 +790,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
                       Text(
                         'Попробуйте изменить город\nв настройках профиля',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(color: Colors.grey[500], fontSize: 14),
                       ),
                     ],
                   ),
@@ -894,84 +819,80 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen>
 
   /// Блок "Интересное"
   Widget _buildInterestingSection() => Container(
-        margin: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    margin: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Интересное',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Row(
           children: [
-            Text(
-              'Интересное',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            Expanded(
+              child: _InterestingCard(
+                title: 'Самые популярные категории недели',
+                icon: Icons.trending_up,
+                color: Colors.orange,
+                onTap: () => context.push('/search?sort=popular'),
+              ),
             ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _InterestingCard(
-                    title: 'Самые популярные категории недели',
-                    icon: Icons.trending_up,
-                    color: Colors.orange,
-                    onTap: () => context.push('/search?sort=popular'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _InterestingCard(
-                    title: 'Новые специалисты',
-                    icon: Icons.person_add,
-                    color: Colors.green,
-                    onTap: () => context.push('/search?sort=newest'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _InterestingCard(
-              title: 'Специалисты рядом',
-              icon: Icons.location_on,
-              color: Colors.blue,
-              onTap: () => context.push('/search?nearby=true'),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _InterestingCard(
+                title: 'Новые специалисты',
+                icon: Icons.person_add,
+                color: Colors.green,
+                onTap: () => context.push('/search?sort=newest'),
+              ),
             ),
           ],
         ),
-      );
+        const SizedBox(height: 12),
+        _InterestingCard(
+          title: 'Специалисты рядом',
+          icon: Icons.location_on,
+          color: Colors.blue,
+          onTap: () => context.push('/search?nearby=true'),
+        ),
+      ],
+    ),
+  );
 
   /// Быстрые действия
   Widget _buildQuickActionsSection() => Container(
-        margin: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    margin: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Быстрые действия',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Row(
           children: [
-            Text(
-              'Быстрые действия',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            Expanded(
+              child: _QuickActionCard(
+                icon: Icons.event,
+                title: 'Создать заявку',
+                onTap: () => context.push('/requests/create'),
+              ),
             ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _QuickActionCard(
-                    icon: Icons.event,
-                    title: 'Создать заявку',
-                    onTap: () => context.push('/requests/create'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _QuickActionCard(
-                    icon: Icons.photo_library,
-                    title: 'Мои идеи',
-                    onTap: () => context.push('/ideas'),
-                  ),
-                ),
-              ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: _QuickActionCard(
+                icon: Icons.photo_library,
+                title: 'Мои идеи',
+                onTap: () => context.push('/ideas'),
+              ),
             ),
           ],
         ),
-      );
+      ],
+    ),
+  );
 }
 
 /// Карточка специалиста с интерактивными кнопками
@@ -981,177 +902,145 @@ class _SpecialistCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        width: 160,
-        margin: const EdgeInsets.only(right: 12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+    width: 160,
+    margin: const EdgeInsets.only(right: 12),
+    decoration: BoxDecoration(
+      color: Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.1),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
         ),
-        child: InkWell(
-          onTap: () => context.push('/specialist/${specialist.id}'),
-          borderRadius: BorderRadius.circular(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Аватар специалиста
-              Container(
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
+      ],
+    ),
+    child: InkWell(
+      onTap: () => context.push('/specialist/${specialist.id}'),
+      borderRadius: BorderRadius.circular(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Аватар специалиста
+          Container(
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              image: specialist.avatar != null
+                  ? DecorationImage(
+                      image: CachedNetworkImageProvider(specialist.avatar!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+              color: specialist.avatar == null
+                  ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                  : null,
+            ),
+            child: specialist.avatar == null
+                ? const Center(child: Icon(Icons.person, size: 40, color: Colors.grey))
+                : null,
+          ),
+          // Информация о специалисте
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    specialist.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  image: specialist.avatar != null
-                      ? DecorationImage(
-                          image: CachedNetworkImageProvider(specialist.avatar!),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                  color: specialist.avatar == null
-                      ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                      : null,
-                ),
-                child: specialist.avatar == null
-                    ? const Center(
-                        child: Icon(
-                          Icons.person,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                      )
-                    : null,
-              ),
-              // Информация о специалисте
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const SizedBox(height: 2),
+                  Text(
+                    specialist.category.displayName,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const Spacer(),
+                  Row(
                     children: [
+                      Icon(Icons.star, color: Colors.amber[600], size: 14),
+                      const SizedBox(width: 2),
                       Text(
-                        specialist.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        specialist.category.displayName,
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        specialist.rating.toString(),
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star,
-                            color: Colors.amber[600],
-                            size: 14,
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            specialist.rating.toString(),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            '${specialist.price}₸',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      // Интерактивные кнопки
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () => _openChat(context),
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
-                                minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: const Text(
-                                'Связаться',
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () => _openBooking(context),
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
-                                minimumSize: Size.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              child: const Text(
-                                'Забронировать',
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        '${specialist.price}₸',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 8),
+                  // Интерактивные кнопки
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => _openChat(context),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text('Связаться', style: TextStyle(fontSize: 10)),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => _openBooking(context),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text('Забронировать', style: TextStyle(fontSize: 10)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   /// Открыть чат с специалистом
   Future<void> _openChat(BuildContext context) async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Необходимо войти в аккаунт')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Необходимо войти в аккаунт')));
         return;
       }
 
       final chatsRepository = ChatsRepository();
-      final chatId = await chatsRepository.findOrCreateChat(
-        currentUser.uid,
-        specialist.id,
-      );
+      final chatId = await chatsRepository.findOrCreateChat(currentUser.uid, specialist.id);
 
       if (chatId != null) {
         context.push('/chat/$chatId');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка создания чата')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка создания чата')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -1177,74 +1066,58 @@ class _InterestingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(12),
+    child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withValues(alpha: 0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 32),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: TextStyle(color: color, fontWeight: FontWeight.w500, fontSize: 12),
+            textAlign: TextAlign.center,
           ),
-          child: Column(
-            children: [
-              Icon(icon, color: color, size: 32),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }
 
 class _QuickActionCard extends StatelessWidget {
-  const _QuickActionCard({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-  });
+  const _QuickActionCard({required this.icon, required this.title, required this.onTap});
   final IconData icon;
   final String title;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(12),
+    child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Theme.of(context).dividerColor,
-            ),
+        border: Border.all(color: Theme.of(context).dividerColor),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 32, color: Theme.of(context).primaryColor),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
           ),
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                size: 32,
-                color: Theme.of(context).primaryColor,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }

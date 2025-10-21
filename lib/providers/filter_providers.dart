@@ -19,10 +19,7 @@ final filteredSpecialistsProvider = FutureProvider.family<List<Specialist>, Filt
 
 /// Параметры для фильтрации
 class FilterParams {
-  const FilterParams({
-    this.categoryId,
-    required this.filters,
-  });
+  const FilterParams({this.categoryId, required this.filters});
   final String? categoryId;
   final SpecialistFilters filters;
 
@@ -55,18 +52,12 @@ class SpecialistFiltersNotifier extends Notifier<SpecialistFilters> {
 
   /// Установить фильтр по цене
   void setPriceFilter({double? minPrice, double? maxPrice}) {
-    state = state.copyWith(
-      minPrice: minPrice,
-      maxPrice: maxPrice,
-    );
+    state = state.copyWith(minPrice: minPrice, maxPrice: maxPrice);
   }
 
   /// Установить фильтр по рейтингу
   void setRatingFilter({double? minRating, double? maxRating}) {
-    state = state.copyWith(
-      minRating: minRating,
-      maxRating: maxRating,
-    );
+    state = state.copyWith(minRating: minRating, maxRating: maxRating);
   }
 
   /// Установить фильтр по дате
@@ -165,15 +156,14 @@ final allPriceRangeProvider = FutureProvider<Map<String, double>>((ref) async {
     }
   }
 
-  return {
-    'min': minPrice == double.infinity ? 0 : minPrice,
-    'max': maxPrice,
-  };
+  return {'min': minPrice == double.infinity ? 0 : minPrice, 'max': maxPrice};
 });
 
 /// Провайдер для получения ценового диапазона по категории
-final categoryPriceRangeProvider =
-    FutureProvider.family<Map<String, double>, String>((ref, categoryId) async {
+final categoryPriceRangeProvider = FutureProvider.family<Map<String, double>, String>((
+  ref,
+  categoryId,
+) async {
   final specialists = MockDataService.getSpecialistsByCategory(categoryId);
   var minPrice = double.infinity;
   double maxPrice = 0;
@@ -186,15 +176,14 @@ final categoryPriceRangeProvider =
     }
   }
 
-  return {
-    'min': minPrice == double.infinity ? 0 : minPrice,
-    'max': maxPrice,
-  };
+  return {'min': minPrice == double.infinity ? 0 : minPrice, 'max': maxPrice};
 });
 
 /// Провайдер для получения подкатегорий по категории
-final categorySubcategoriesProvider =
-    FutureProvider.family<List<String>, String>((ref, categoryId) async {
+final categorySubcategoriesProvider = FutureProvider.family<List<String>, String>((
+  ref,
+  categoryId,
+) async {
   final specialists = MockDataService.getSpecialistsByCategory(categoryId);
   final subcategories = <String>{};
 
@@ -220,18 +209,9 @@ final filterStatsProvider = Provider.family<FilterStats, FilterParams>((ref, par
       priceRange: specialists.isNotEmpty ? _calculatePriceRange(specialists) : null,
       cities: specialists.map((s) => s.city).toSet().toList(),
     ),
-    loading: () => const FilterStats(
-      totalCount: 0,
-      averageRating: 0,
-      priceRange: null,
-      cities: [],
-    ),
-    error: (_, __) => const FilterStats(
-      totalCount: 0,
-      averageRating: 0,
-      priceRange: null,
-      cities: [],
-    ),
+    loading: () => const FilterStats(totalCount: 0, averageRating: 0, priceRange: null, cities: []),
+    error: (_, __) =>
+        const FilterStats(totalCount: 0, averageRating: 0, priceRange: null, cities: []),
   );
 });
 
@@ -266,8 +246,5 @@ PriceRange? _calculatePriceRange(List<Specialist> specialists) {
 
   if (!hasPrice) return null;
 
-  return PriceRange(
-    minPrice: minPrice == double.infinity ? 0 : minPrice,
-    maxPrice: maxPrice,
-  );
+  return PriceRange(minPrice: minPrice == double.infinity ? 0 : minPrice, maxPrice: maxPrice);
 }

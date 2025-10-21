@@ -82,15 +82,7 @@ class NoteFilters extends Equatable {
   bool get isNotEmpty => !isEmpty;
 
   @override
-  List<Object?> get props => [
-        searchQuery,
-        tags,
-        dateFrom,
-        dateTo,
-        isPinned,
-        category,
-        authorId,
-      ];
+  List<Object?> get props => [searchQuery, tags, dateFrom, dateTo, isPinned, category, authorId];
 
   @override
   String toString() {

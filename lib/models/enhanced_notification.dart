@@ -24,34 +24,32 @@ class EnhancedNotification {
 
   /// Создать из Map
   factory EnhancedNotification.fromMap(Map<String, dynamic> map) => EnhancedNotification(
-        id: map['id'] as String,
-        userId: map['userId'] as String,
-        title: map['title'] as String,
-        body: map['body'] as String,
-        type: NotificationType.fromString(map['type'] as String),
-        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-        isRead: (map['isRead'] as bool?) ?? false,
-        isArchived: (map['isArchived'] as bool?) ?? false,
-        data: Map<String, dynamic>.from((map['data'] as Map?) ?? {}),
-        imageUrl: map['imageUrl'] as String?,
-        actionUrl: map['actionUrl'] as String?,
-        priority: NotificationPriority.fromString(
-          map['priority'] as String? ?? 'normal',
-        ),
-        category: map['category'] as String?,
-        senderId: map['senderId'] as String?,
-        senderName: map['senderName'] as String?,
-        senderAvatar: map['senderAvatar'] as String?,
-        expiresAt: map['expiresAt'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(map['expiresAt'] as int)
-            : null,
-        readAt: map['readAt'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(map['readAt'] as int)
-            : null,
-        archivedAt: map['archivedAt'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(map['archivedAt'] as int)
-            : null,
-      );
+    id: map['id'] as String,
+    userId: map['userId'] as String,
+    title: map['title'] as String,
+    body: map['body'] as String,
+    type: NotificationType.fromString(map['type'] as String),
+    createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+    isRead: (map['isRead'] as bool?) ?? false,
+    isArchived: (map['isArchived'] as bool?) ?? false,
+    data: Map<String, dynamic>.from((map['data'] as Map?) ?? {}),
+    imageUrl: map['imageUrl'] as String?,
+    actionUrl: map['actionUrl'] as String?,
+    priority: NotificationPriority.fromString(map['priority'] as String? ?? 'normal'),
+    category: map['category'] as String?,
+    senderId: map['senderId'] as String?,
+    senderName: map['senderName'] as String?,
+    senderAvatar: map['senderAvatar'] as String?,
+    expiresAt: map['expiresAt'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(map['expiresAt'] as int)
+        : null,
+    readAt: map['readAt'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(map['readAt'] as int)
+        : null,
+    archivedAt: map['archivedAt'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(map['archivedAt'] as int)
+        : null,
+  );
 
   /// Уникальный идентификатор
   final String id;
@@ -112,26 +110,26 @@ class EnhancedNotification {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'title': title,
-        'body': body,
-        'type': type.value,
-        'createdAt': createdAt.millisecondsSinceEpoch,
-        'isRead': isRead,
-        'isArchived': isArchived,
-        'data': data,
-        'imageUrl': imageUrl,
-        'actionUrl': actionUrl,
-        'priority': priority.value,
-        'category': category,
-        'senderId': senderId,
-        'senderName': senderName,
-        'senderAvatar': senderAvatar,
-        'expiresAt': expiresAt?.millisecondsSinceEpoch,
-        'readAt': readAt?.millisecondsSinceEpoch,
-        'archivedAt': archivedAt?.millisecondsSinceEpoch,
-      };
+    'id': id,
+    'userId': userId,
+    'title': title,
+    'body': body,
+    'type': type.value,
+    'createdAt': createdAt.millisecondsSinceEpoch,
+    'isRead': isRead,
+    'isArchived': isArchived,
+    'data': data,
+    'imageUrl': imageUrl,
+    'actionUrl': actionUrl,
+    'priority': priority.value,
+    'category': category,
+    'senderId': senderId,
+    'senderName': senderName,
+    'senderAvatar': senderAvatar,
+    'expiresAt': expiresAt?.millisecondsSinceEpoch,
+    'readAt': readAt?.millisecondsSinceEpoch,
+    'archivedAt': archivedAt?.millisecondsSinceEpoch,
+  };
 
   /// Создать копию с изменениями
   EnhancedNotification copyWith({
@@ -154,28 +152,27 @@ class EnhancedNotification {
     DateTime? expiresAt,
     DateTime? readAt,
     DateTime? archivedAt,
-  }) =>
-      EnhancedNotification(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        title: title ?? this.title,
-        body: body ?? this.body,
-        type: type ?? this.type,
-        createdAt: createdAt ?? this.createdAt,
-        isRead: isRead ?? this.isRead,
-        isArchived: isArchived ?? this.isArchived,
-        data: data ?? this.data,
-        imageUrl: imageUrl ?? this.imageUrl,
-        actionUrl: actionUrl ?? this.actionUrl,
-        priority: priority ?? this.priority,
-        category: category ?? this.category,
-        senderId: senderId ?? this.senderId,
-        senderName: senderName ?? this.senderName,
-        senderAvatar: senderAvatar ?? this.senderAvatar,
-        expiresAt: expiresAt ?? this.expiresAt,
-        readAt: readAt ?? this.readAt,
-        archivedAt: archivedAt ?? this.archivedAt,
-      );
+  }) => EnhancedNotification(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    title: title ?? this.title,
+    body: body ?? this.body,
+    type: type ?? this.type,
+    createdAt: createdAt ?? this.createdAt,
+    isRead: isRead ?? this.isRead,
+    isArchived: isArchived ?? this.isArchived,
+    data: data ?? this.data,
+    imageUrl: imageUrl ?? this.imageUrl,
+    actionUrl: actionUrl ?? this.actionUrl,
+    priority: priority ?? this.priority,
+    category: category ?? this.category,
+    senderId: senderId ?? this.senderId,
+    senderName: senderName ?? this.senderName,
+    senderAvatar: senderAvatar ?? this.senderAvatar,
+    expiresAt: expiresAt ?? this.expiresAt,
+    readAt: readAt ?? this.readAt,
+    archivedAt: archivedAt ?? this.archivedAt,
+  );
 }
 
 /// Тип уведомления
@@ -347,28 +344,22 @@ class NotificationStats {
   });
 
   factory NotificationStats.fromMap(Map<String, dynamic> map) => NotificationStats(
-        total: (map['total'] as int?) ?? 0,
-        unread: (map['unread'] as int?) ?? 0,
-        archived: (map['archived'] as int?) ?? 0,
-        byType: Map<NotificationType, int>.from(
-          (map['byType'] as Map?)?.map(
-                (key, value) => MapEntry(
-                  NotificationType.fromString(key as String),
-                  value as int,
-                ),
-              ) ??
-              {},
-        ),
-        byPriority: Map<NotificationPriority, int>.from(
-          (map['byPriority'] as Map?)?.map(
-                (key, value) => MapEntry(
-                  NotificationPriority.fromString(key as String),
-                  value as int,
-                ),
-              ) ??
-              {},
-        ),
-      );
+    total: (map['total'] as int?) ?? 0,
+    unread: (map['unread'] as int?) ?? 0,
+    archived: (map['archived'] as int?) ?? 0,
+    byType: Map<NotificationType, int>.from(
+      (map['byType'] as Map?)?.map(
+            (key, value) => MapEntry(NotificationType.fromString(key as String), value as int),
+          ) ??
+          {},
+    ),
+    byPriority: Map<NotificationPriority, int>.from(
+      (map['byPriority'] as Map?)?.map(
+            (key, value) => MapEntry(NotificationPriority.fromString(key as String), value as int),
+          ) ??
+          {},
+    ),
+  );
 
   final int total;
   final int unread;
@@ -377,10 +368,10 @@ class NotificationStats {
   final Map<NotificationPriority, int> byPriority;
 
   Map<String, dynamic> toMap() => {
-        'total': total,
-        'unread': unread,
-        'archived': archived,
-        'byType': byType.map((key, value) => MapEntry(key.value, value)),
-        'byPriority': byPriority.map((key, value) => MapEntry(key.value, value)),
-      };
+    'total': total,
+    'unread': unread,
+    'archived': archived,
+    'byType': byType.map((key, value) => MapEntry(key.value, value)),
+    'byPriority': byPriority.map((key, value) => MapEntry(key.value, value)),
+  };
 }

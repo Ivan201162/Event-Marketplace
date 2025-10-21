@@ -20,14 +20,8 @@ class GuestService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs
-              .map(
-                (doc) => Guest.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
-              .toList(),
+          (snapshot) =>
+              snapshot.docs.map((doc) => Guest.fromMap({'id': doc.id, ...doc.data()})).toList(),
         );
   }
 
@@ -107,10 +101,7 @@ class GuestService {
         return null;
       }
 
-      return Guest.fromMap({
-        'id': doc.id,
-        ...doc.data()!,
-      });
+      return Guest.fromMap({'id': doc.id, ...doc.data()!});
     } catch (e) {
       debugPrint('Error getting guest: $e');
       return null;
@@ -194,10 +185,7 @@ class GuestService {
         return null;
       }
 
-      return Event.fromMap({
-        'id': eventDoc.id,
-        ...eventDoc.data()!,
-      });
+      return Event.fromMap({'id': eventDoc.id, ...eventDoc.data()!});
     } catch (e) {
       debugPrint('Error getting event by access code: $e');
       return null;
@@ -223,10 +211,7 @@ class GuestService {
       }
 
       final accessDoc = accessQuery.docs.first;
-      final access = GuestEventAccess.fromMap({
-        'id': accessDoc.id,
-        ...accessDoc.data(),
-      });
+      final access = GuestEventAccess.fromMap({'id': accessDoc.id, ...accessDoc.data()});
 
       // Проверяем срок действия
       if (access.expiresAt.isBefore(DateTime.now())) {
@@ -265,12 +250,7 @@ class GuestService {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map(
-                (doc) => GuestGreeting.fromMap({
-                  'id': doc.id,
-                  ...doc.data(),
-                }),
-              )
+              .map((doc) => GuestGreeting.fromMap({'id': doc.id, ...doc.data()}))
               .toList(),
         );
   }
@@ -333,10 +313,7 @@ class GuestService {
           throw Exception('Приветствие не найдено');
         }
 
-        final greeting = GuestGreeting.fromMap({
-          'id': greetingDoc.id,
-          ...greetingDoc.data()!,
-        });
+        final greeting = GuestGreeting.fromMap({'id': greetingDoc.id, ...greetingDoc.data()!});
 
         final isLiked = greeting.likedBy.contains(userId);
         final newLikedBy = List<String>.from(greeting.likedBy);
@@ -347,10 +324,7 @@ class GuestService {
           newLikedBy.add(userId);
         }
 
-        transaction.update(greetingRef, {
-          'likedBy': newLikedBy,
-          'likesCount': newLikedBy.length,
-        });
+        transaction.update(greetingRef, {'likedBy': newLikedBy, 'likesCount': newLikedBy.length});
       });
     } catch (e) {
       debugPrint('Error toggling greeting like: $e');
@@ -365,8 +339,10 @@ class GuestService {
     }
 
     try {
-      final guestsQuery =
-          await _firestore.collection('guests').where('eventId', isEqualTo: eventId).get();
+      final guestsQuery = await _firestore
+          .collection('guests')
+          .where('eventId', isEqualTo: eventId)
+          .get();
 
       final stats = <String, int>{
         'total': 0,
@@ -378,10 +354,7 @@ class GuestService {
       };
 
       for (final doc in guestsQuery.docs) {
-        final guest = Guest.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
+        final guest = Guest.fromMap({'id': doc.id, ...doc.data()});
 
         stats['total'] = (stats['total'] ?? 0) + 1;
         stats[guest.status.name] = (stats[guest.status.name] ?? 0) + 1;
@@ -447,9 +420,7 @@ class GuestService {
   }
 
   /// Получить события организатора
-  Future<List<Map<String, dynamic>>> getOrganizerEvents(
-    String organizerId,
-  ) async {
+  Future<List<Map<String, dynamic>>> getOrganizerEvents(String organizerId) async {
     try {
       final snapshot = await _firestore
           .collection('events')
@@ -457,14 +428,7 @@ class GuestService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map(
-            (doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            },
-          )
-          .toList();
+      return snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
     } catch (e) {
       throw Exception('Ошибка получения событий организатора: $e');
     }
@@ -514,10 +478,7 @@ class GuestService {
     try {
       final doc = await _firestore.collection('events').doc(eventId).get();
       if (doc.exists) {
-        return {
-          'id': doc.id,
-          ...doc.data()!,
-        };
+        return {'id': doc.id, ...doc.data()!};
       }
       return null;
     } catch (e) {

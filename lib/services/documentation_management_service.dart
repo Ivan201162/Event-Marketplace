@@ -271,10 +271,9 @@ class DocumentationManagementService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore
-          .collection(_documentsCollection)
-          .doc(documentId)
-          .update({'viewCount': updatedDocument.viewCount});
+      await _firestore.collection(_documentsCollection).doc(documentId).update({
+        'viewCount': updatedDocument.viewCount,
+      });
 
       _documentCache[documentId] = updatedDocument;
       _documentStreamController.add(updatedDocument);
@@ -393,10 +392,9 @@ class DocumentationManagementService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore
-          .collection(_templatesCollection)
-          .doc(templateId)
-          .update({'usageCount': updatedTemplate.usageCount});
+      await _firestore.collection(_templatesCollection).doc(templateId).update({
+        'usageCount': updatedTemplate.usageCount,
+      });
 
       _templateCache[templateId] = updatedTemplate;
       _templateStreamController.add(updatedTemplate);
@@ -498,15 +496,11 @@ class DocumentationManagementService {
         updatedLikes.add(user.uid);
       }
 
-      final updatedComment = comment.copyWith(
-        likes: updatedLikes,
-        updatedAt: DateTime.now(),
-      );
+      final updatedComment = comment.copyWith(likes: updatedLikes, updatedAt: DateTime.now());
 
-      await _firestore
-          .collection(_commentsCollection)
-          .doc(commentId)
-          .update({'likes': updatedLikes});
+      await _firestore.collection(_commentsCollection).doc(commentId).update({
+        'likes': updatedLikes,
+      });
 
       _commentCache[commentId] = updatedComment;
       _commentStreamController.add(updatedComment);

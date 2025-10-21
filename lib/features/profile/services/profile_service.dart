@@ -15,17 +15,13 @@ class ProfileService {
 
   /// Обновить город пользователя
   Future<bool> updateUserCity(String uid, String city) async {
-    final updates = <String, dynamic>{
-      'city': city.trim().isEmpty ? null : city.trim(),
-    };
+    final updates = <String, dynamic>{'city': city.trim().isEmpty ? null : city.trim()};
     return _userRepository.updateUser(uid, updates);
   }
 
   /// Обновить регион пользователя
   Future<bool> updateUserRegion(String uid, String region) async {
-    final updates = <String, dynamic>{
-      'region': region.trim().isEmpty ? null : region.trim(),
-    };
+    final updates = <String, dynamic>{'region': region.trim().isEmpty ? null : region.trim()};
     return _userRepository.updateUser(uid, updates);
   }
 
@@ -48,8 +44,10 @@ final profileServiceProvider = Provider<ProfileService>((ref) {
 });
 
 /// Провайдер для обновления города пользователя
-final updateUserCityProvider =
-    FutureProvider.family<bool, Map<String, String>>((ref, params) async {
+final updateUserCityProvider = FutureProvider.family<bool, Map<String, String>>((
+  ref,
+  params,
+) async {
   final service = ref.watch(profileServiceProvider);
   final uid = params['uid']!;
   final city = params['city']!;
@@ -57,8 +55,10 @@ final updateUserCityProvider =
 });
 
 /// Провайдер для обновления региона пользователя
-final updateUserRegionProvider =
-    FutureProvider.family<bool, Map<String, String>>((ref, params) async {
+final updateUserRegionProvider = FutureProvider.family<bool, Map<String, String>>((
+  ref,
+  params,
+) async {
   final service = ref.watch(profileServiceProvider);
   final uid = params['uid']!;
   final region = params['region']!;

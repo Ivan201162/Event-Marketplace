@@ -12,14 +12,7 @@ import '../core/safe_log.dart';
 import '../utils/storage_guard.dart';
 
 /// Типы файлов для загрузки
-enum FileType {
-  image,
-  video,
-  audio,
-  document,
-  archive,
-  other,
-}
+enum FileType { image, video, audio, document, archive, other }
 
 /// Результат загрузки файла
 class UploadResult {
@@ -95,14 +88,7 @@ class UploadService {
     'webm',
     'mkv',
   ];
-  static const List<String> _allowedAudioExtensions = [
-    'mp3',
-    'wav',
-    'aac',
-    'flac',
-    'ogg',
-    'm4a',
-  ];
+  static const List<String> _allowedAudioExtensions = ['mp3', 'wav', 'aac', 'flac', 'ogg', 'm4a'];
   static const List<String> _allowedDocumentExtensions = [
     'pdf',
     'doc',
@@ -114,13 +100,7 @@ class UploadService {
     'txt',
     'rtf',
   ];
-  static const List<String> _allowedArchiveExtensions = [
-    'zip',
-    'rar',
-    '7z',
-    'tar',
-    'gz',
-  ];
+  static const List<String> _allowedArchiveExtensions = ['zip', 'rar', '7z', 'tar', 'gz'];
 
   final FirebaseStorage? _storage = getStorage();
   final ImagePicker _imagePicker = ImagePicker();
@@ -153,10 +133,7 @@ class UploadService {
         return null;
       }
 
-      return await uploadFile(
-        File(image.path),
-        fileType: FileType.image,
-      );
+      return await uploadFile(File(image.path), fileType: FileType.image);
     } catch (e, stackTrace) {
       SafeLog.error('UploadService: Error picking image', e, stackTrace);
       throw UploadException('Ошибка выбора изображения: $e');
@@ -176,20 +153,14 @@ class UploadService {
     try {
       SafeLog.info('UploadService: Picking video from ${source.name}');
 
-      final video = await _imagePicker.pickVideo(
-        source: source,
-        maxDuration: maxDuration,
-      );
+      final video = await _imagePicker.pickVideo(source: source, maxDuration: maxDuration);
 
       if (video == null) {
         SafeLog.info('UploadService: No video selected');
         return null;
       }
 
-      return await uploadFile(
-        File(video.path),
-        fileType: FileType.video,
-      );
+      return await uploadFile(File(video.path), fileType: FileType.video);
     } catch (e, stackTrace) {
       SafeLog.error('UploadService: Error picking video', e, stackTrace);
       throw UploadException('Ошибка выбора видео: $e');
@@ -207,9 +178,7 @@ class UploadService {
     }
 
     try {
-      SafeLog.info(
-        'UploadService: Picking file with extensions: $allowedExtensions',
-      );
+      SafeLog.info('UploadService: Picking file with extensions: $allowedExtensions');
 
       final result = await FilePicker.platform.pickFiles(
         type: FileType.image,
@@ -279,18 +248,13 @@ class UploadService {
       // Загружаем файл
       final uploadTask = ref.putFile(
         file,
-        SettableMetadata(
-          contentType: _getContentType(fileExtension),
-          customMetadata: metadata,
-        ),
+        SettableMetadata(contentType: _getContentType(fileExtension), customMetadata: metadata),
       );
 
       // Отслеживаем прогресс загрузки
       uploadTask.snapshotEvents.listen((snapshot) {
         final progress = snapshot.bytesTransferred / snapshot.totalBytes;
-        SafeLog.info(
-          'UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%',
-        );
+        SafeLog.info('UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%');
       });
 
       // Ждем завершения загрузки
@@ -365,19 +329,14 @@ class UploadService {
       // Загружаем файл
       final uploadTask = ref.putData(
         bytes,
-        SettableMetadata(
-          contentType: _getContentType(fileExtension),
-          customMetadata: metadata,
-        ),
+        SettableMetadata(contentType: _getContentType(fileExtension), customMetadata: metadata),
       );
 
       // Ждем завершения загрузки
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
-      SafeLog.info(
-        'UploadService: File uploaded successfully from bytes: $downloadUrl',
-      );
+      SafeLog.info('UploadService: File uploaded successfully from bytes: $downloadUrl');
 
       // Создаем превью для изображений
       String? thumbnailUrl;
@@ -401,11 +360,7 @@ class UploadService {
         },
       );
     } catch (e, stackTrace) {
-      SafeLog.error(
-        'UploadService: Error uploading file from bytes',
-        e,
-        stackTrace,
-      );
+      SafeLog.error('UploadService: Error uploading file from bytes', e, stackTrace);
 
       if (e is UploadException) {
         rethrow;
@@ -452,11 +407,7 @@ class UploadService {
       final ref = _storage.ref().child(filePath);
       return await ref.getMetadata();
     } catch (e, stackTrace) {
-      SafeLog.error(
-        'UploadService: Error getting file metadata',
-        e,
-        stackTrace,
-      );
+      SafeLog.error('UploadService: Error getting file metadata', e, stackTrace);
       throw UploadException('Ошибка получения метаданных файла: $e');
     }
   }

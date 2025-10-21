@@ -4,8 +4,9 @@ import '../models/recommendation.dart';
 import '../services/recommendation_service.dart';
 
 /// Провайдер для RecommendationService
-final recommendationServiceProvider =
-    Provider<RecommendationService>((ref) => RecommendationService());
+final recommendationServiceProvider = Provider<RecommendationService>(
+  (ref) => RecommendationService(),
+);
 
 /// Провайдер для получения рекомендаций пользователя
 final userRecommendationsProvider = FutureProvider.family<List<Recommendation>, String>(
@@ -29,8 +30,10 @@ final recommendationStatsProvider = FutureProvider.family<RecommendationStats, S
 );
 
 /// Провайдер для группированных рекомендаций
-final groupedRecommendationsProvider =
-    FutureProvider.family<List<RecommendationGroup>, String>((ref, userId) async {
+final groupedRecommendationsProvider = FutureProvider.family<List<RecommendationGroup>, String>((
+  ref,
+  userId,
+) async {
   final service = ref.watch(recommendationServiceProvider);
 
   // Получаем все типы рекомендаций
@@ -96,37 +99,29 @@ final groupedRecommendationsProvider =
 /// Провайдер для получения рекомендаций по категориям
 final categoryRecommendationsProvider =
     FutureProvider.family<List<Recommendation>, Map<String, dynamic>>((ref, params) {
-  final userId = params['userId'] as String;
-  final categoryPreferences = params['categoryPreferences'] as Map<String, int>;
+      final userId = params['userId'] as String;
+      final categoryPreferences = params['categoryPreferences'] as Map<String, int>;
 
-  return ref
-      .watch(recommendationServiceProvider)
-      .getRecommendationsByCategories(userId, categoryPreferences);
-});
+      return ref
+          .watch(recommendationServiceProvider)
+          .getRecommendationsByCategories(userId, categoryPreferences);
+    });
 
 /// Провайдер для управления состоянием рекомендаций (мигрирован с StateNotifierProvider)
 final recommendationStateProvider =
     NotifierProvider<RecommendationStateNotifier, RecommendationState>(
-  () => RecommendationStateNotifier(),
-);
+      () => RecommendationStateNotifier(),
+    );
 
 /// Состояние рекомендаций
 class RecommendationState {
-  const RecommendationState({
-    this.isLoading = false,
-    this.error,
-    this.lastUpdated,
-  });
+  const RecommendationState({this.isLoading = false, this.error, this.lastUpdated});
 
   final bool isLoading;
   final String? error;
   final DateTime? lastUpdated;
 
-  RecommendationState copyWith({
-    bool? isLoading,
-    String? error,
-    DateTime? lastUpdated,
-  }) =>
+  RecommendationState copyWith({bool? isLoading, String? error, DateTime? lastUpdated}) =>
       RecommendationState(
         isLoading: isLoading ?? this.isLoading,
         error: error ?? this.error,
@@ -149,15 +144,9 @@ class RecommendationStateNotifier extends Notifier<RecommendationState> {
 
     try {
       await _service.getRecommendationsForUser(userId);
-      state = state.copyWith(
-        isLoading: false,
-        lastUpdated: DateTime.now(),
-      );
+      state = state.copyWith(isLoading: false, lastUpdated: DateTime.now());
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 

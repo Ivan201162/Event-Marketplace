@@ -137,21 +137,21 @@ class SpecialistReviewStats extends Equatable {
 
   @override
   List<Object?> get props => [
-        specialistId,
-        specialistName,
-        specialistAvatar,
-        totalReviews,
-        averageRating,
-        ratingDistribution,
-        topTags,
-        verifiedReviews,
-        recentReviews,
-        responseRate,
-        satisfactionRate,
-        specializations,
-        completedBookings,
-        responseTime,
-      ];
+    specialistId,
+    specialistName,
+    specialistAvatar,
+    totalReviews,
+    averageRating,
+    ratingDistribution,
+    topTags,
+    verifiedReviews,
+    recentReviews,
+    responseRate,
+    satisfactionRate,
+    specializations,
+    completedBookings,
+    responseTime,
+  ];
 
   @override
   String toString() {

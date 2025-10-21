@@ -33,10 +33,7 @@ void main() {
         serviceAreas: const ['Москва', 'Санкт-Петербург'],
         languages: const ['Русский', 'Английский'],
         equipment: const ['Canon EOS R5', 'Canon 24-70mm f/2.8'],
-        portfolio: const [
-          'https://example.com/portfolio1',
-          'https://example.com/portfolio2',
-        ],
+        portfolio: const ['https://example.com/portfolio1', 'https://example.com/portfolio2'],
         isVerified: true,
         reviewCount: 47,
       );
@@ -48,10 +45,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-              ),
+              body: SpecialistCard(specialist: testSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -74,10 +68,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-              ),
+              body: SpecialistCard(specialist: testSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -95,10 +86,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-              ),
+              body: SpecialistCard(specialist: testSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -117,10 +105,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(
-                specialist: unverifiedSpecialist,
-                onTap: () {},
-              ),
+              body: SpecialistCard(specialist: unverifiedSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -136,10 +121,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-              ),
+              body: SpecialistCard(specialist: testSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -159,10 +141,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(
-                specialist: unavailableSpecialist,
-                onTap: () {},
-              ),
+              body: SpecialistCard(specialist: unavailableSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -206,10 +185,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-              ),
+              body: SpecialistCard(specialist: testSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -225,10 +201,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(
-                specialist: testSpecialist,
-                onTap: () {},
-              ),
+              body: SpecialistCard(specialist: testSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -247,10 +220,7 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(
-                specialist: specialistWithoutHours,
-                onTap: () {},
-              ),
+              body: SpecialistCard(specialist: specialistWithoutHours, onTap: () {}),
             ),
           ),
         ),

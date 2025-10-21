@@ -208,11 +208,15 @@ class BookingService {
           .collection('bookings')
           .where('specialistId', isEqualTo: specialistId)
           .where('date', isEqualTo: Timestamp.fromDate(date))
-          .where('status', whereIn: [
-        BookingStatus.pending.name,
-        BookingStatus.confirmed.name,
-        BookingStatus.inProgress.name,
-      ]).get();
+          .where(
+            'status',
+            whereIn: [
+              BookingStatus.pending.name,
+              BookingStatus.confirmed.name,
+              BookingStatus.inProgress.name,
+            ],
+          )
+          .get();
 
       for (final doc in querySnapshot.docs) {
         final data = doc.data();
@@ -243,10 +247,7 @@ class BookingService {
   }
 
   /// Get available time slots for a date
-  Future<List<String>> getAvailableTimeSlots(
-    String specialistId,
-    DateTime date,
-  ) async {
+  Future<List<String>> getAvailableTimeSlots(String specialistId, DateTime date) async {
     try {
       final availableSlots = <String>[];
       final workingHours = <int>[9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
@@ -254,12 +255,7 @@ class BookingService {
       for (final hour in workingHours) {
         final timeSlot = '${hour.toString().padLeft(2, '0')}:00';
 
-        final isAvailable = await isTimeSlotAvailable(
-          specialistId,
-          date,
-          timeSlot,
-          1,
-        );
+        final isAvailable = await isTimeSlotAvailable(specialistId, date, timeSlot, 1);
 
         if (isAvailable) {
           availableSlots.add(timeSlot);

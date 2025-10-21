@@ -44,9 +44,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
       margin: const EdgeInsets.only(right: 12),
       child: Card(
         elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: InkWell(
           onTap: () => context.push('/specialist/${specialist['id']}'),
           borderRadius: BorderRadius.circular(12),
@@ -61,10 +59,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                     Container(
                       width: 24,
                       height: 24,
-                      decoration: BoxDecoration(
-                        color: _getRankColor(rank),
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: BoxDecoration(color: _getRankColor(rank), shape: BoxShape.circle),
                       child: Center(
                         child: Text(
                           '$rank',
@@ -93,10 +88,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                 // Имя
                 Text(
                   specialist['name'] ?? 'Специалист',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -105,10 +97,7 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                 // Категория
                 Text(
                   specialist['category'] ?? 'Категория',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -117,19 +106,12 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                 // Город
                 Row(
                   children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 12,
-                      color: Colors.grey[500],
-                    ),
+                    Icon(Icons.location_on, size: 12, color: Colors.grey[500]),
                     const SizedBox(width: 2),
                     Expanded(
                       child: Text(
                         specialist['city'] ?? 'Город',
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                          fontSize: 10,
-                        ),
+                        style: TextStyle(color: Colors.grey[500], fontSize: 10),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -141,18 +123,11 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                 // Рейтинг
                 Row(
                   children: [
-                    const Icon(
-                      Icons.star,
-                      size: 14,
-                      color: Colors.amber,
-                    ),
+                    const Icon(Icons.star, size: 14, color: Colors.amber),
                     const SizedBox(width: 2),
                     Text(
                       '${specialist['rating'] ?? 0.0}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -180,27 +155,14 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
   Widget _buildEmptyState() {
     return Container(
       height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
       child: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.people_outline,
-              size: 48,
-              color: Colors.grey,
-            ),
+            Icon(Icons.people_outline, size: 48, color: Colors.grey),
             SizedBox(height: 8),
-            Text(
-              'Нет данных о специалистах',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-            ),
+            Text('Нет данных о специалистах', style: TextStyle(color: Colors.grey, fontSize: 14)),
           ],
         ),
       ),
@@ -210,40 +172,22 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
   Widget _buildLoadingState() {
     return Container(
       height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Center(
-        child: CircularProgressIndicator(),
-      ),
+      decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+      child: const Center(child: CircularProgressIndicator()),
     );
   }
 
   Widget _buildErrorState(String error) {
     return Container(
       height: 200,
-      decoration: BoxDecoration(
-        color: Colors.red[50],
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: Colors.red[50], borderRadius: BorderRadius.circular(12)),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 48,
-              color: Colors.red,
-            ),
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 8),
-            Text(
-              'Ошибка загрузки',
-              style: TextStyle(
-                color: Colors.red[700],
-                fontSize: 14,
-              ),
-            ),
+            Text('Ошибка загрузки', style: TextStyle(color: Colors.red[700], fontSize: 14)),
           ],
         ),
       ),

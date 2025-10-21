@@ -34,8 +34,9 @@ class StudioRecommendationService {
         expiresAt: expiresAt,
       );
 
-      final docRef =
-          await _firestore.collection('studioRecommendations').add(recommendation.toMap());
+      final docRef = await _firestore
+          .collection('studioRecommendations')
+          .add(recommendation.toMap());
 
       // Логируем создание рекомендации
       await _logRecommendationAction(docRef.id, 'created', photographerId);
@@ -47,9 +48,7 @@ class StudioRecommendationService {
   }
 
   /// Получить рекомендации фотографа
-  Future<List<StudioRecommendation>> getPhotographerRecommendations(
-    String photographerId,
-  ) async {
+  Future<List<StudioRecommendation>> getPhotographerRecommendations(String photographerId) async {
     try {
       final snapshot = await _firestore
           .collection('studioRecommendations')
@@ -68,9 +67,7 @@ class StudioRecommendationService {
   }
 
   /// Получить рекомендации для студии
-  Future<List<StudioRecommendation>> getStudioRecommendations(
-    String studioId,
-  ) async {
+  Future<List<StudioRecommendation>> getStudioRecommendations(String studioId) async {
     try {
       final snapshot = await _firestore
           .collection('studioRecommendations')
@@ -89,9 +86,7 @@ class StudioRecommendationService {
   }
 
   /// Получить рекомендацию по ID
-  Future<StudioRecommendation?> getRecommendation(
-    String recommendationId,
-  ) async {
+  Future<StudioRecommendation?> getRecommendation(String recommendationId) async {
     try {
       final doc = await _firestore.collection('studioRecommendations').doc(recommendationId).get();
       if (doc.exists) {
@@ -206,9 +201,7 @@ class StudioRecommendationService {
   }
 
   /// Получить двойные бронирования фотографа
-  Future<List<DualBooking>> getPhotographerDualBookings(
-    String photographerId,
-  ) async {
+  Future<List<DualBooking>> getPhotographerDualBookings(String photographerId) async {
     try {
       final snapshot = await _firestore
           .collection('dualBookings')
@@ -262,9 +255,7 @@ class StudioRecommendationService {
   }
 
   /// Получить рекомендуемые студии для фотографа
-  Future<List<PhotoStudio>> getRecommendedStudiosForPhotographer(
-    String photographerId,
-  ) async {
+  Future<List<PhotoStudio>> getRecommendedStudiosForPhotographer(String photographerId) async {
     try {
       // Получаем информацию о фотографе
       final photographerDoc = await _firestore.collection('specialists').doc(photographerId).get();
@@ -289,9 +280,7 @@ class StudioRecommendationService {
   }
 
   /// Получить статистику рекомендаций
-  Future<Map<String, dynamic>> getRecommendationStats(
-    String photographerId,
-  ) async {
+  Future<Map<String, dynamic>> getRecommendationStats(String photographerId) async {
     try {
       final snapshot = await _firestore
           .collection('studioRecommendations')
@@ -317,8 +306,9 @@ class StudioRecommendationService {
         'totalRecommendations': totalRecommendations,
         'activeRecommendations': activeRecommendations,
         'expiredRecommendations': expiredRecommendations,
-        'successRate':
-            totalRecommendations > 0 ? (activeRecommendations / totalRecommendations) * 100 : 0,
+        'successRate': totalRecommendations > 0
+            ? (activeRecommendations / totalRecommendations) * 100
+            : 0,
       };
     } catch (e) {
       throw Exception('Ошибка получения статистики рекомендаций: $e');
@@ -335,7 +325,8 @@ class StudioRecommendationService {
       final snapshot = await _firestore
           .collection('bookings')
           .where('specialistId', isEqualTo: photographerId)
-          .where('status', whereIn: ['confirmed', 'in_progress']).get();
+          .where('status', whereIn: ['confirmed', 'in_progress'])
+          .get();
 
       for (final doc in snapshot.docs) {
         final data = doc.data();
@@ -364,7 +355,8 @@ class StudioRecommendationService {
       final snapshot = await _firestore
           .collection('studioBookings')
           .where('studioId', isEqualTo: studioId)
-          .where('status', whereIn: ['confirmed', 'in_progress']).get();
+          .where('status', whereIn: ['confirmed', 'in_progress'])
+          .get();
 
       for (final doc in snapshot.docs) {
         final data = doc.data();
@@ -398,10 +390,7 @@ class StudioRecommendationService {
         'description': 'Двойное бронирование с фотостудией',
         'createdAt': Timestamp.fromDate(dualBooking.createdAt),
         'updatedAt': Timestamp.fromDate(dualBooking.updatedAt),
-        'metadata': {
-          'dualBookingId': dualBooking.id,
-          'type': 'dual_booking',
-        },
+        'metadata': {'dualBookingId': dualBooking.id, 'type': 'dual_booking'},
       });
 
       // Создаем бронирование студии
@@ -416,10 +405,7 @@ class StudioRecommendationService {
         'notes': 'Двойное бронирование с фотографом',
         'createdAt': Timestamp.fromDate(dualBooking.createdAt),
         'updatedAt': Timestamp.fromDate(dualBooking.updatedAt),
-        'metadata': {
-          'dualBookingId': dualBooking.id,
-          'type': 'dual_booking',
-        },
+        'metadata': {'dualBookingId': dualBooking.id, 'type': 'dual_booking'},
       });
     } catch (e) {
       throw Exception('Ошибка создания отдельных бронирований: $e');
@@ -427,10 +413,7 @@ class StudioRecommendationService {
   }
 
   /// Обновить статусы отдельных бронирований
-  Future<void> _updateIndividualBookingStatuses(
-    String dualBookingId,
-    String status,
-  ) async {
+  Future<void> _updateIndividualBookingStatuses(String dualBookingId, String status) async {
     try {
       // Обновляем бронирование фотографа
       final photographerBookings = await _firestore
@@ -471,10 +454,7 @@ class StudioRecommendationService {
         title: 'Новое двойное бронирование',
         body:
             'Создано двойное бронирование с фотостудией на ${dualBooking.startTime.day}.${dualBooking.startTime.month}',
-        data: {
-          'type': 'dual_booking_created',
-          'bookingId': dualBooking.id,
-        },
+        data: {'type': 'dual_booking_created', 'bookingId': dualBooking.id},
       );
 
       // Уведомление студии (если есть владелец)
@@ -500,18 +480,11 @@ class StudioRecommendationService {
 
       if (fcmTokens.isEmpty) return;
 
-      final notification = {
-        'title': title,
-        'body': body,
-        'data': data,
-      };
+      final notification = {'title': title, 'body': body, 'data': data};
 
       for (final token in fcmTokens) {
         try {
-          await _messaging.sendMessage(
-            to: token,
-            notification: notification,
-          );
+          await _messaging.sendMessage(to: token, notification: notification);
         } catch (e) {
           debugPrint('Ошибка отправки уведомления на токен $token: $e');
         }
@@ -540,11 +513,7 @@ class StudioRecommendationService {
   }
 
   /// Логировать действие с двойным бронированием
-  Future<void> _logDualBookingAction(
-    String bookingId,
-    String action,
-    String userId,
-  ) async {
+  Future<void> _logDualBookingAction(String bookingId, String action, String userId) async {
     try {
       await _firestore.collection('dualBookingLogs').add({
         'bookingId': bookingId,

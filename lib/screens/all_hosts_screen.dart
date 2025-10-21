@@ -172,9 +172,7 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
-          ),
+          CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor)),
           const SizedBox(height: 16),
           Text(
             'Загрузка ведущих...',
@@ -194,17 +192,11 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: theme.colorScheme.error,
-          ),
+          Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
           const SizedBox(height: 16),
           Text(
             'Ошибка загрузки',
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: theme.colorScheme.error,
-            ),
+            style: theme.textTheme.headlineSmall?.copyWith(color: theme.colorScheme.error),
           ),
           const SizedBox(height: 8),
           Text(

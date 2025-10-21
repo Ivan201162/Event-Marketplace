@@ -130,10 +130,7 @@ class VideoCallService {
   }
 
   /// Получить историю звонков
-  Future<List<VideoCall>> getCallHistory({
-    required String userId,
-    int limit = 50,
-  }) async {
+  Future<List<VideoCall>> getCallHistory({required String userId, int limit = 50}) async {
     try {
       // TODO(developer): Получить историю звонков из Firestore
       return [];
@@ -176,17 +173,7 @@ class VideoCall {
 }
 
 /// Типы звонков
-enum CallType {
-  audio,
-  video,
-}
+enum CallType { audio, video }
 
 /// Статусы звонков
-enum CallStatus {
-  initiating,
-  ringing,
-  active,
-  ended,
-  rejected,
-  missed,
-}
+enum CallStatus { initiating, ringing, active, ended, rejected, missed }

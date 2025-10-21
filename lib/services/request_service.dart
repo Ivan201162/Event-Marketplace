@@ -43,8 +43,11 @@ class RequestService {
   }
 
   /// Get requests by status
-  Future<List<Request>> getRequestsByStatus(String userId, RequestStatus status,
-      {int limit = 20}) async {
+  Future<List<Request>> getRequestsByStatus(
+    String userId,
+    RequestStatus status, {
+    int limit = 20,
+  }) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -228,11 +231,15 @@ class RequestService {
   /// Get request statistics
   Future<Map<String, int>> getRequestStats(String userId) async {
     try {
-      final sentSnapshot =
-          await _firestore.collection(_collection).where('fromUserId', isEqualTo: userId).get();
+      final sentSnapshot = await _firestore
+          .collection(_collection)
+          .where('fromUserId', isEqualTo: userId)
+          .get();
 
-      final receivedSnapshot =
-          await _firestore.collection(_collection).where('toUserId', isEqualTo: userId).get();
+      final receivedSnapshot = await _firestore
+          .collection(_collection)
+          .where('toUserId', isEqualTo: userId)
+          .get();
 
       final int sentCount = sentSnapshot.docs.length;
       final int receivedCount = receivedSnapshot.docs.length;
@@ -265,13 +272,7 @@ class RequestService {
       };
     } catch (e) {
       debugPrint('Error getting request stats: $e');
-      return {
-        'sent': 0,
-        'received': 0,
-        'pending': 0,
-        'accepted': 0,
-        'completed': 0,
-      };
+      return {'sent': 0, 'received': 0, 'pending': 0, 'accepted': 0, 'completed': 0};
     }
   }
 

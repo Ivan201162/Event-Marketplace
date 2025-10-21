@@ -19,20 +19,20 @@ class CustomerReview {
   });
 
   factory CustomerReview.fromMap(Map<String, dynamic> map) => CustomerReview(
-        id: map['id'] as String,
-        customerId: map['customerId'] as String,
-        specialistId: map['specialistId'] as String,
-        orderId: map['orderId'] as String,
-        rating: (map['rating'] as num).toDouble(),
-        text: map['text'] as String,
-        images: map['images'] != null ? List<String>.from(map['images']) : null,
-        createdAt: _parseTimestamp(map['createdAt']),
-        updatedAt: _parseTimestamp(map['updatedAt']),
-        isVerified: map['isVerified'] as bool? ?? false,
-        metadata: map['metadata'] as Map<String, dynamic>?,
-        response: map['response'] as String?,
-        responseDate: map['responseDate'] != null ? _parseTimestamp(map['responseDate']) : null,
-      );
+    id: map['id'] as String,
+    customerId: map['customerId'] as String,
+    specialistId: map['specialistId'] as String,
+    orderId: map['orderId'] as String,
+    rating: (map['rating'] as num).toDouble(),
+    text: map['text'] as String,
+    images: map['images'] != null ? List<String>.from(map['images']) : null,
+    createdAt: _parseTimestamp(map['createdAt']),
+    updatedAt: _parseTimestamp(map['updatedAt']),
+    isVerified: map['isVerified'] as bool? ?? false,
+    metadata: map['metadata'] as Map<String, dynamic>?,
+    response: map['response'] as String?,
+    responseDate: map['responseDate'] != null ? _parseTimestamp(map['responseDate']) : null,
+  );
 
   factory CustomerReview.fromDoc(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
@@ -53,20 +53,20 @@ class CustomerReview {
   final DateTime? responseDate;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'customerId': customerId,
-        'specialistId': specialistId,
-        'orderId': orderId,
-        'rating': rating,
-        'text': text,
-        if (images != null) 'images': images,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'isVerified': isVerified,
-        if (metadata != null) 'metadata': metadata,
-        if (response != null) 'response': response,
-        if (responseDate != null) 'responseDate': Timestamp.fromDate(responseDate!),
-      };
+    'id': id,
+    'customerId': customerId,
+    'specialistId': specialistId,
+    'orderId': orderId,
+    'rating': rating,
+    'text': text,
+    if (images != null) 'images': images,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'isVerified': isVerified,
+    if (metadata != null) 'metadata': metadata,
+    if (response != null) 'response': response,
+    if (responseDate != null) 'responseDate': Timestamp.fromDate(responseDate!),
+  };
 
   CustomerReview copyWith({
     String? id,
@@ -82,22 +82,21 @@ class CustomerReview {
     Map<String, dynamic>? metadata,
     String? response,
     DateTime? responseDate,
-  }) =>
-      CustomerReview(
-        id: id ?? this.id,
-        customerId: customerId ?? this.customerId,
-        specialistId: specialistId ?? this.specialistId,
-        orderId: orderId ?? this.orderId,
-        rating: rating ?? this.rating,
-        text: text ?? this.text,
-        images: images ?? this.images,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        isVerified: isVerified ?? this.isVerified,
-        metadata: metadata ?? this.metadata,
-        response: response ?? this.response,
-        responseDate: responseDate ?? this.responseDate,
-      );
+  }) => CustomerReview(
+    id: id ?? this.id,
+    customerId: customerId ?? this.customerId,
+    specialistId: specialistId ?? this.specialistId,
+    orderId: orderId ?? this.orderId,
+    rating: rating ?? this.rating,
+    text: text ?? this.text,
+    images: images ?? this.images,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    isVerified: isVerified ?? this.isVerified,
+    metadata: metadata ?? this.metadata,
+    response: response ?? this.response,
+    responseDate: responseDate ?? this.responseDate,
+  );
 
   static DateTime _parseTimestamp(timestamp) {
     if (timestamp == null) return DateTime.now();
@@ -134,15 +133,15 @@ class CustomerReviewStats {
   });
 
   factory CustomerReviewStats.fromMap(Map<String, dynamic> map) => CustomerReviewStats(
-        specialistId: map['specialistId'] as String,
-        averageRating: (map['averageRating'] as num).toDouble(),
-        totalReviews: map['totalReviews'] as int,
-        ratingDistribution: Map<int, int>.from(map['ratingDistribution'] ?? {}),
-        verifiedReviews: map['verifiedReviews'] as int,
-        reviewsWithImages: map['reviewsWithImages'] as int,
-        reviewsWithResponse: map['reviewsWithResponse'] as int,
-        lastUpdated: _parseTimestamp(map['lastUpdated']),
-      );
+    specialistId: map['specialistId'] as String,
+    averageRating: (map['averageRating'] as num).toDouble(),
+    totalReviews: map['totalReviews'] as int,
+    ratingDistribution: Map<int, int>.from(map['ratingDistribution'] ?? {}),
+    verifiedReviews: map['verifiedReviews'] as int,
+    reviewsWithImages: map['reviewsWithImages'] as int,
+    reviewsWithResponse: map['reviewsWithResponse'] as int,
+    lastUpdated: _parseTimestamp(map['lastUpdated']),
+  );
   final String specialistId;
   final double averageRating;
   final int totalReviews;
@@ -153,15 +152,15 @@ class CustomerReviewStats {
   final DateTime lastUpdated;
 
   Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'averageRating': averageRating,
-        'totalReviews': totalReviews,
-        'ratingDistribution': ratingDistribution,
-        'verifiedReviews': verifiedReviews,
-        'reviewsWithImages': reviewsWithImages,
-        'reviewsWithResponse': reviewsWithResponse,
-        'lastUpdated': Timestamp.fromDate(lastUpdated),
-      };
+    'specialistId': specialistId,
+    'averageRating': averageRating,
+    'totalReviews': totalReviews,
+    'ratingDistribution': ratingDistribution,
+    'verifiedReviews': verifiedReviews,
+    'reviewsWithImages': reviewsWithImages,
+    'reviewsWithResponse': reviewsWithResponse,
+    'lastUpdated': Timestamp.fromDate(lastUpdated),
+  };
 
   static DateTime _parseTimestamp(timestamp) {
     if (timestamp == null) return DateTime.now();

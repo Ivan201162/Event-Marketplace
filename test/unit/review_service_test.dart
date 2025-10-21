@@ -46,7 +46,7 @@ void main() {
         serviceTags: const ['photography'],
         photos: const ['photo1.jpg'],
         responses: const [
-          {'text': 'Thank you!'}
+          {'text': 'Thank you!'},
         ],
       );
 
@@ -61,7 +61,7 @@ void main() {
       expect(review.serviceTags, ['photography']);
       expect(review.photos, ['photo1.jpg']);
       expect(review.responses, [
-        {'text': 'Thank you!'}
+        {'text': 'Thank you!'},
       ]);
     });
 

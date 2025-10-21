@@ -12,10 +12,7 @@ class PerformanceOptimizations {
   /// Инициализация оптимизаций производительности
   static void initialize() {
     // Отключаем системные анимации для лучшей производительности
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
-      overlays: [SystemUiOverlay.top],
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
 
     // Устанавливаем оптимальные настройки рендеринга
     // Note: ViewConfiguration doesn't have copyWith, so we skip this optimization
@@ -37,30 +34,27 @@ class PerformanceOptimizations {
     double? width,
     double? height,
     BoxFit fit = BoxFit.cover,
-  }) =>
-      CachedNetworkImage(
-        imageUrl: imageUrl,
-        width: width,
-        height: height,
-        fit: fit,
-        placeholder: (context, url) => Container(
-          width: width,
-          height: height,
-          color: Colors.grey[300],
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-        errorWidget: (context, url, error) => Container(
-          width: width,
-          height: height,
-          color: Colors.grey[300],
-          child: const Icon(Icons.error),
-        ),
-        // Оптимизации для производительности
-        memCacheWidth: width?.toInt(),
-        memCacheHeight: height?.toInt(),
-      );
+  }) => CachedNetworkImage(
+    imageUrl: imageUrl,
+    width: width,
+    height: height,
+    fit: fit,
+    placeholder: (context, url) => Container(
+      width: width,
+      height: height,
+      color: Colors.grey[300],
+      child: const Center(child: CircularProgressIndicator()),
+    ),
+    errorWidget: (context, url, error) => Container(
+      width: width,
+      height: height,
+      color: Colors.grey[300],
+      child: const Icon(Icons.error),
+    ),
+    // Оптимизации для производительности
+    memCacheWidth: width?.toInt(),
+    memCacheHeight: height?.toInt(),
+  );
 
   /// Оптимизация списков
   static Widget optimizeList({
@@ -68,19 +62,18 @@ class PerformanceOptimizations {
     ScrollController? controller,
     bool shrinkWrap = false,
     ScrollPhysics? physics,
-  }) =>
-      ListView.builder(
-        controller: controller,
-        shrinkWrap: shrinkWrap,
-        physics: physics,
-        itemCount: children.length,
-        itemBuilder: (context, index) => children[index],
-        // Оптимизации для производительности
-        addAutomaticKeepAlives: false,
-        addRepaintBoundaries: false,
-        addSemanticIndexes: false,
-        cacheExtent: 250,
-      );
+  }) => ListView.builder(
+    controller: controller,
+    shrinkWrap: shrinkWrap,
+    physics: physics,
+    itemCount: children.length,
+    itemBuilder: (context, index) => children[index],
+    // Оптимизации для производительности
+    addAutomaticKeepAlives: false,
+    addRepaintBoundaries: false,
+    addSemanticIndexes: false,
+    cacheExtent: 250,
+  );
 
   /// Оптимизация сеток
   static Widget optimizeGrid({
@@ -91,96 +84,70 @@ class PerformanceOptimizations {
     ScrollController? controller,
     bool shrinkWrap = false,
     ScrollPhysics? physics,
-  }) =>
-      GridView.builder(
-        controller: controller,
-        shrinkWrap: shrinkWrap,
-        physics: physics,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          mainAxisSpacing: mainAxisSpacing,
-          crossAxisSpacing: crossAxisSpacing,
-        ),
-        itemCount: children.length,
-        itemBuilder: (context, index) => children[index],
-        // Оптимизации для производительности
-        addAutomaticKeepAlives: false,
-        addRepaintBoundaries: false,
-        addSemanticIndexes: false,
-        cacheExtent: 250,
-      );
+  }) => GridView.builder(
+    controller: controller,
+    shrinkWrap: shrinkWrap,
+    physics: physics,
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: crossAxisCount,
+      mainAxisSpacing: mainAxisSpacing,
+      crossAxisSpacing: crossAxisSpacing,
+    ),
+    itemCount: children.length,
+    itemBuilder: (context, index) => children[index],
+    // Оптимизации для производительности
+    addAutomaticKeepAlives: false,
+    addRepaintBoundaries: false,
+    addSemanticIndexes: false,
+    cacheExtent: 250,
+  );
 
   /// Оптимизация анимаций
   static Widget optimizeAnimation({
     required Widget child,
     Duration duration = const Duration(milliseconds: 300),
     Curve curve = Curves.easeInOut,
-  }) =>
-      AnimatedSwitcher(
-        duration: duration,
-        switchInCurve: curve,
-        switchOutCurve: curve,
-        transitionBuilder: (child, animation) => FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
-        child: child,
-      );
+  }) => AnimatedSwitcher(
+    duration: duration,
+    switchInCurve: curve,
+    switchOutCurve: curve,
+    transitionBuilder: (child, animation) => FadeTransition(opacity: animation, child: child),
+    child: child,
+  );
 
   /// Оптимизация переходов между страницами
   static PageRouteBuilder optimizePageRoute({
     required Widget child,
     Duration duration = const Duration(milliseconds: 300),
     Curve curve = Curves.easeInOut,
-  }) =>
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => child,
-        transitionDuration: duration,
-        reverseTransitionDuration: duration,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
-      );
+  }) => PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => child,
+    transitionDuration: duration,
+    reverseTransitionDuration: duration,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        FadeTransition(opacity: animation, child: child),
+  );
 
   /// Оптимизация провайдеров
-  static Provider<T> optimizeProvider<T>({
-    required T Function() create,
-    String? name,
-  }) =>
-      Provider<T>(
-        (ref) => create(),
-        name: name,
-      );
+  static Provider<T> optimizeProvider<T>({required T Function() create, String? name}) =>
+      Provider<T>((ref) => create(), name: name);
 
   /// Оптимизация состояния
   static NotifierProvider<T, U> optimizeStateNotifier<T extends Notifier<U>, U>({
     required T Function() create,
     required U initial,
     String? name,
-  }) =>
-      NotifierProvider<T, U>(
-        create,
-        name: name,
-      );
+  }) => NotifierProvider<T, U>(create, name: name);
 
   /// Оптимизация кэширования
   static Widget optimizeCache({
     required Widget child,
     required String key,
     Duration duration = const Duration(minutes: 30),
-  }) =>
-      CacheProvider(
-        cacheKey: key,
-        duration: duration,
-        child: child,
-      );
+  }) => CacheProvider(cacheKey: key, duration: duration, child: child);
 
   /// Оптимизация ленивой загрузки
-  static Widget optimizeLazyLoad({
-    required Widget child,
-    required bool isVisible,
-  }) {
+  static Widget optimizeLazyLoad({required Widget child, required bool isVisible}) {
     if (!isVisible) {
       return const SizedBox.shrink();
     }
@@ -192,28 +159,22 @@ class PerformanceOptimizations {
     required List<Widget> children,
     required double itemHeight,
     ScrollController? controller,
-  }) =>
-      ListView.builder(
-        controller: controller,
-        itemCount: children.length,
-        itemExtent: itemHeight,
-        itemBuilder: (context, index) => children[index],
-        // Оптимизации для виртуализации
-        addAutomaticKeepAlives: false,
-        addRepaintBoundaries: false,
-        addSemanticIndexes: false,
-        cacheExtent: 250,
-      );
+  }) => ListView.builder(
+    controller: controller,
+    itemCount: children.length,
+    itemExtent: itemHeight,
+    itemBuilder: (context, index) => children[index],
+    // Оптимизации для виртуализации
+    addAutomaticKeepAlives: false,
+    addRepaintBoundaries: false,
+    addSemanticIndexes: false,
+    cacheExtent: 250,
+  );
 
   /// Оптимизация рендеринга
-  static Widget optimizeRendering({
-    required Widget child,
-    bool shouldRepaint = false,
-  }) {
+  static Widget optimizeRendering({required Widget child, bool shouldRepaint = false}) {
     if (shouldRepaint) {
-      return RepaintBoundary(
-        child: child,
-      );
+      return RepaintBoundary(child: child);
     }
     return child;
   }
@@ -225,32 +186,28 @@ class PerformanceOptimizations {
     double? width,
     double? height,
     BoxFit fit = BoxFit.cover,
-  }) =>
-      CachedNetworkImage(
-        imageUrl: imageUrl,
+  }) => CachedNetworkImage(
+    imageUrl: imageUrl,
+    width: width,
+    height: height,
+    fit: fit,
+    memCacheWidth: width?.toInt(),
+    memCacheHeight: height?.toInt(),
+    // Очистка кэша при нехватке памяти
+    errorWidget: (context, url, error) {
+      // Очищаем кэш изображения
+      imageCache.clear();
+      return Container(
         width: width,
         height: height,
-        fit: fit,
-        memCacheWidth: width?.toInt(),
-        memCacheHeight: height?.toInt(),
-        // Очистка кэша при нехватке памяти
-        errorWidget: (context, url, error) {
-          // Очищаем кэш изображения
-          imageCache.clear();
-          return Container(
-            width: width,
-            height: height,
-            color: Colors.grey[300],
-            child: const Icon(Icons.error),
-          );
-        },
+        color: Colors.grey[300],
+        child: const Icon(Icons.error),
       );
+    },
+  );
 
   /// Оптимизация сети
-  static Widget optimizeNetwork({
-    required Widget child,
-    required bool isConnected,
-  }) {
+  static Widget optimizeNetwork({required Widget child, required bool isConnected}) {
     if (!isConnected) {
       return const Center(
         child: Column(
@@ -269,10 +226,7 @@ class PerformanceOptimizations {
   /// Оптимизация батареи
   static void optimizeBattery() {
     // Отключаем анимации при низком заряде батареи
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
-      overlays: [SystemUiOverlay.top],
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
   }
 
   /// Оптимизация CPU
@@ -402,11 +356,7 @@ class _MemoryOptimizer extends WidgetsBindingObserver {
 
 /// Оптимизатор производительности
 class PerformanceOptimizer extends StatefulWidget {
-  const PerformanceOptimizer({
-    super.key,
-    required this.child,
-    this.enableOptimizations = true,
-  });
+  const PerformanceOptimizer({super.key, required this.child, this.enableOptimizations = true});
   final Widget child;
   final bool enableOptimizations;
 

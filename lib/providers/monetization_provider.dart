@@ -152,10 +152,7 @@ class MonetizationProvider extends ChangeNotifier {
   }
 
   /// Покупка подписки
-  Future<bool> purchaseSubscription({
-    required String userId,
-    required String planId,
-  }) async {
+  Future<bool> purchaseSubscription({required String userId, required String planId}) async {
     _setLoading(true);
     _clearError();
 
@@ -177,10 +174,7 @@ class MonetizationProvider extends ChangeNotifier {
   }
 
   /// Покупка продвижения
-  Future<bool> purchasePromotion({
-    required String userId,
-    required String packageId,
-  }) async {
+  Future<bool> purchasePromotion({required String userId, required String packageId}) async {
     _setLoading(true);
     _clearError();
 

@@ -23,12 +23,7 @@ class TestPhotoStudioData {
             'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
             'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
           ],
-          amenities: [
-            'Профессиональное освещение',
-            'Гримерная',
-            'Wi-Fi',
-            'Парковка',
-          ],
+          amenities: ['Профессиональное освещение', 'Гримерная', 'Wi-Fi', 'Парковка'],
           pricing: {
             'hourlyRate': 2500.0,
             'dailyRate': 15000.0,
@@ -47,11 +42,7 @@ class TestPhotoStudioData {
             'saturday': {'open': '10:00', 'close': '20:00'},
             'sunday': {'open': '10:00', 'close': '18:00'},
           },
-          location: {
-            'latitude': 55.7558,
-            'longitude': 37.6176,
-            'city': 'Москва',
-          },
+          location: {'latitude': 55.7558, 'longitude': 37.6176, 'city': 'Москва'},
         ),
         const CreatePhotoStudio(
           name: 'Art Studio Pro',
@@ -67,12 +58,7 @@ class TestPhotoStudioData {
             'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800',
             'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
           ],
-          amenities: [
-            'Художественное освещение',
-            'Декорации',
-            'Гримерная',
-            'Wi-Fi',
-          ],
+          amenities: ['Художественное освещение', 'Декорации', 'Гримерная', 'Wi-Fi'],
           pricing: {
             'hourlyRate': 3000.0,
             'dailyRate': 18000.0,
@@ -91,11 +77,7 @@ class TestPhotoStudioData {
             'saturday': {'open': '11:00', 'close': '21:00'},
             'sunday': {'open': '11:00', 'close': '19:00'},
           },
-          location: {
-            'latitude': 55.7804,
-            'longitude': 37.6392,
-            'city': 'Москва',
-          },
+          location: {'latitude': 55.7804, 'longitude': 37.6392, 'city': 'Москва'},
         ),
         const CreatePhotoStudio(
           name: 'Студия "Момент"',
@@ -113,13 +95,7 @@ class TestPhotoStudioData {
             'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800',
             'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
           ],
-          amenities: [
-            'Мягкое освещение',
-            'Детская зона',
-            'Гримерная',
-            'Wi-Fi',
-            'Парковка',
-          ],
+          amenities: ['Мягкое освещение', 'Детская зона', 'Гримерная', 'Wi-Fi', 'Парковка'],
           pricing: {
             'hourlyRate': 1800.0,
             'dailyRate': 12000.0,
@@ -138,11 +114,7 @@ class TestPhotoStudioData {
             'saturday': {'open': '10:00', 'close': '19:00'},
             'sunday': {'open': '10:00', 'close': '18:00'},
           },
-          location: {
-            'latitude': 55.7522,
-            'longitude': 37.5911,
-            'city': 'Москва',
-          },
+          location: {'latitude': 55.7522, 'longitude': 37.5911, 'city': 'Москва'},
         ),
         const CreatePhotoStudio(
           name: 'Luxury Photo Studio',
@@ -184,11 +156,7 @@ class TestPhotoStudioData {
             'saturday': {'open': '09:00', 'close': '22:00'},
             'sunday': {'open': '09:00', 'close': '20:00'},
           },
-          location: {
-            'latitude': 55.7539,
-            'longitude': 37.6208,
-            'city': 'Москва',
-          },
+          location: {'latitude': 55.7539, 'longitude': 37.6208, 'city': 'Москва'},
         ),
         const CreatePhotoStudio(
           name: 'Студия "Радуга"',
@@ -224,11 +192,7 @@ class TestPhotoStudioData {
             'saturday': {'open': '11:00', 'close': '20:00'},
             'sunday': {'open': '11:00', 'close': '19:00'},
           },
-          location: {
-            'latitude': 55.7522,
-            'longitude': 37.5911,
-            'city': 'Москва',
-          },
+          location: {'latitude': 55.7522, 'longitude': 37.5911, 'city': 'Москва'},
         ),
         const CreatePhotoStudio(
           name: 'Black & White Studio',
@@ -240,18 +204,12 @@ class TestPhotoStudioData {
           ownerId: 'owner_6',
           avatarUrl: 'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
           coverImageUrl: 'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
-          images: [
-            'https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800',
-          ],
+          images: ['https://images.unsplash.com/photo-1554048612-b6a482b5b2e8?w=800'],
           amenities: ['Классическое освещение', 'Гримерная', 'Wi-Fi'],
           pricing: {
             'hourlyRate': 2800.0,
             'dailyRate': 16000.0,
-            'packages': {
-              'Черно-белая съемка': 2800,
-              'Портретная съемка': 2500,
-              'Арт съемка': 3000,
-            },
+            'packages': {'Черно-белая съемка': 2800, 'Портретная съемка': 2500, 'Арт съемка': 3000},
           },
           workingHours: {
             'monday': {'open': '09:00', 'close': '20:00'},
@@ -262,11 +220,7 @@ class TestPhotoStudioData {
             'saturday': {'open': '10:00', 'close': '19:00'},
             'sunday': {'open': '10:00', 'close': '18:00'},
           },
-          location: {
-            'latitude': 55.7558,
-            'longitude': 37.6176,
-            'city': 'Москва',
-          },
+          location: {'latitude': 55.7558, 'longitude': 37.6176, 'city': 'Москва'},
         ),
       ];
 

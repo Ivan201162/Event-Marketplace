@@ -35,67 +35,62 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
   @override
   Widget build(BuildContext context) => Column(
-        children: [
-          // Поиск и фильтры
-          _buildSearchAndFilters(),
+    children: [
+      // Поиск и фильтры
+      _buildSearchAndFilters(),
 
-          // Табы заявок
-          TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            tabs: const [
-              Tab(text: 'Мои заявки'),
-              Tab(text: 'Заявки мне'),
-            ],
-          ),
-
-          // Список заявок
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildMyRequestsList(),
-                _buildRequestsForMeList(),
-              ],
-            ),
-          ),
+      // Табы заявок
+      TabBar(
+        controller: _tabController,
+        isScrollable: true,
+        tabs: const [
+          Tab(text: 'Мои заявки'),
+          Tab(text: 'Заявки мне'),
         ],
-      );
+      ),
+
+      // Список заявок
+      Expanded(
+        child: TabBarView(
+          controller: _tabController,
+          children: [_buildMyRequestsList(), _buildRequestsForMeList()],
+        ),
+      ),
+    ],
+  );
 
   Widget _buildSearchAndFilters() => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Поиск
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Поиск по заявкам...',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            _searchQuery = '';
-                          });
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
-            ),
-
-            const SizedBox(height: 12),
-          ],
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      children: [
+        // Поиск
+        TextField(
+          decoration: InputDecoration(
+            hintText: 'Поиск по заявкам...',
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: _searchQuery.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        _searchQuery = '';
+                      });
+                    },
+                  )
+                : null,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+          onChanged: (value) {
+            setState(() {
+              _searchQuery = value;
+            });
+          },
         ),
-      );
+
+        const SizedBox(height: 12),
+      ],
+    ),
+  );
 
   Widget _buildMyRequestsList() {
     // Заявки, созданные текущим пользователем
@@ -183,26 +178,16 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 64,
-            color: Colors.grey[400],
-          ),
+          Icon(icon, size: 64, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
             title,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: TextStyle(
-              color: Colors.grey[500],
-            ),
+            style: TextStyle(color: Colors.grey[500]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -437,10 +422,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
                   Expanded(
                     child: Text(
                       order.title,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   IconButton(
@@ -471,13 +453,7 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
               const SizedBox(height: 16),
 
               // Описание
-              const Text(
-                'Описание',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              const Text('Описание', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               Text(order.description),
 
@@ -491,18 +467,11 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
               // Таймлайн
               const Text(
                 'История заявки',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
 
-              Expanded(
-                child: OrderTimelineWidget(
-                  timeline: order.timeline,
-                ),
-              ),
+              Expanded(child: OrderTimelineWidget(timeline: order.timeline)),
             ],
           ),
         ),
@@ -511,44 +480,38 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
   }
 
   Widget _buildOrderDetails(EnhancedOrder order) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildDetailRow('Бюджет', '${order.budget} ₽'),
-          _buildDetailRow(
-            'Срок',
-            order.deadline != null ? _formatDate(order.deadline!) : 'Не указан',
-          ),
-          _buildDetailRow('Место', order.location ?? 'Не указано'),
-          _buildDetailRow('Категория', order.category ?? 'Не указана'),
-          _buildDetailRow('Приоритет', _getPriorityText(order.priority)),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _buildDetailRow('Бюджет', '${order.budget} ₽'),
+      _buildDetailRow('Срок', order.deadline != null ? _formatDate(order.deadline!) : 'Не указан'),
+      _buildDetailRow('Место', order.location ?? 'Не указано'),
+      _buildDetailRow('Категория', order.category ?? 'Не указана'),
+      _buildDetailRow('Приоритет', _getPriorityText(order.priority)),
+    ],
+  );
 
   Widget _buildDetailRow(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 80,
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            Expanded(child: Text(value)),
-          ],
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 80,
+          child: Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.grey),
+          ),
         ),
-      );
+        Expanded(child: Text(value)),
+      ],
+    ),
+  );
 
   void _editOrder(EnhancedOrder order) {
     // TODO: Реализовать редактирование заявки
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Редактирование заявки будет реализовано')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Редактирование заявки будет реализовано')));
   }
 
   void _cancelOrder(EnhancedOrder order) {
@@ -558,17 +521,14 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         title: const Text('Отменить заявку'),
         content: const Text('Вы уверены, что хотите отменить эту заявку?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Нет'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Нет')),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               // TODO: Отменить заявку
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Заявка отменена')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Заявка отменена')));
             },
             child: const Text('Да'),
           ),
@@ -579,9 +539,9 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
   void _completeOrder(EnhancedOrder order) {
     // TODO: Реализовать завершение заявки
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Завершение заявки будет реализовано')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Завершение заявки будет реализовано')));
   }
 
   void _createNewOrder() {

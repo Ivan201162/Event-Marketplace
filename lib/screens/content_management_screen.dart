@@ -29,40 +29,34 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Column(
-          children: [
-            // Вкладки
-            _buildTabs(),
+    body: Column(
+      children: [
+        // Вкладки
+        _buildTabs(),
 
-            // Контент
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _selectedTab == 'media'
-                      ? _buildMediaTab()
-                      : _selectedTab == 'galleries'
-                          ? _buildGalleriesTab()
-                          : _buildUploadTab(),
-            ),
-          ],
+        // Контент
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _selectedTab == 'media'
+              ? _buildMediaTab()
+              : _selectedTab == 'galleries'
+              ? _buildGalleriesTab()
+              : _buildUploadTab(),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildTabs() => ResponsiveCard(
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildTabButton('media', 'Медиа', Icons.photo_library),
-            ),
-            Expanded(
-              child: _buildTabButton('galleries', 'Галереи', Icons.collections),
-            ),
-            Expanded(
-              child: _buildTabButton('upload', 'Загрузка', Icons.cloud_upload),
-            ),
-          ],
-        ),
-      );
+    child: Row(
+      children: [
+        Expanded(child: _buildTabButton('media', 'Медиа', Icons.photo_library)),
+        Expanded(child: _buildTabButton('galleries', 'Галереи', Icons.collections)),
+        Expanded(child: _buildTabButton('upload', 'Загрузка', Icons.cloud_upload)),
+      ],
+    ),
+  );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -77,17 +71,11 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.blue : Colors.grey,
-              size: 24,
-            ),
+            Icon(icon, color: isSelected ? Colors.blue : Colors.grey, size: 24),
             const SizedBox(height: 8),
             Text(
               title,
@@ -103,69 +91,60 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
   }
 
   Widget _buildMediaTab() => Column(
-        children: [
-          // Заголовок с фильтрами
-          ResponsiveCard(
-            child: Row(
-              children: [
-                const ResponsiveText(
-                  'Медиа контент',
-                  isTitle: true,
-                ),
-                const Spacer(),
-                DropdownButton<MediaType?>(
-                  hint: const Text('Все типы'),
-                  items: [
-                    const DropdownMenuItem<MediaType?>(
-                      child: Text('Все типы'),
+    children: [
+      // Заголовок с фильтрами
+      ResponsiveCard(
+        child: Row(
+          children: [
+            const ResponsiveText('Медиа контент', isTitle: true),
+            const Spacer(),
+            DropdownButton<MediaType?>(
+              hint: const Text('Все типы'),
+              items: [
+                const DropdownMenuItem<MediaType?>(child: Text('Все типы')),
+                ...MediaType.values.map(
+                  (type) => DropdownMenuItem<MediaType?>(
+                    value: type,
+                    child: Row(
+                      children: [Text(type.icon), const SizedBox(width: 8), Text(type.displayName)],
                     ),
-                    ...MediaType.values.map(
-                      (type) => DropdownMenuItem<MediaType?>(
-                        value: type,
-                        child: Row(
-                          children: [
-                            Text(type.icon),
-                            const SizedBox(width: 8),
-                            Text(type.displayName),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    // TODO(developer): Реализовать фильтрацию
-                  },
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
+                  ),
                 ),
               ],
+              onChanged: (value) {
+                // TODO(developer): Реализовать фильтрацию
+              },
             ),
-          ),
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
+            ),
+          ],
+        ),
+      ),
 
-          // Список медиа
-          Expanded(
-            child: _mediaContent.isEmpty
-                ? const Center(child: Text('Медиа контент не найден'))
-                : GridView.builder(
-                    padding: const EdgeInsets.all(16),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                    ),
-                    itemCount: _mediaContent.length,
-                    itemBuilder: (context, index) {
-                      final media = _mediaContent[index];
-                      return _buildMediaCard(media);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список медиа
+      Expanded(
+        child: _mediaContent.isEmpty
+            ? const Center(child: Text('Медиа контент не найден'))
+            : GridView.builder(
+                padding: const EdgeInsets.all(16),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: _mediaContent.length,
+                itemBuilder: (context, index) {
+                  final media = _mediaContent[index];
+                  return _buildMediaCard(media);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildMediaCard(MediaContent media) {
     final statusColor = _getStatusColor(media.status);
@@ -192,15 +171,9 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                media.type.icon,
-                                style: const TextStyle(fontSize: 32),
-                              ),
+                              Text(media.type.icon, style: const TextStyle(fontSize: 32)),
                               const SizedBox(height: 8),
-                              Text(
-                                media.type.displayName,
-                                style: const TextStyle(fontSize: 12),
-                              ),
+                              Text(media.type.displayName, style: const TextStyle(fontSize: 12)),
                             ],
                           ),
                         ),
@@ -210,15 +183,9 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            media.type.icon,
-                            style: const TextStyle(fontSize: 32),
-                          ),
+                          Text(media.type.icon, style: const TextStyle(fontSize: 32)),
                           const SizedBox(height: 8),
-                          Text(
-                            media.type.displayName,
-                            style: const TextStyle(fontSize: 12),
-                          ),
+                          Text(media.type.displayName, style: const TextStyle(fontSize: 12)),
                         ],
                       ),
                     ),
@@ -230,10 +197,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
           // Информация о медиа
           Text(
             media.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -252,20 +216,13 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
                 ),
                 child: Text(
                   media.status.displayName,
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 10, color: statusColor, fontWeight: FontWeight.bold),
                 ),
               ),
               const Spacer(),
               Text(
                 media.formattedFileSize,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 10, color: Colors.grey),
               ),
             ],
           ),
@@ -304,159 +261,138 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
   }
 
   Widget _buildGalleriesTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                const ResponsiveText(
-                  'Галереи контента',
-                  isTitle: true,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _showCreateGalleryDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Создать галерею'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
-            ),
-          ),
-
-          // Список галерей
-          Expanded(
-            child: _galleries.isEmpty
-                ? const Center(child: Text('Галереи не найдены'))
-                : ListView.builder(
-                    itemCount: _galleries.length,
-                    itemBuilder: (context, index) {
-                      final gallery = _galleries[index];
-                      return _buildGalleryCard(gallery);
-                    },
-                  ),
-          ),
-        ],
-      );
-
-  Widget _buildGalleryCard(ContentGallery gallery) => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
           children: [
-            // Заголовок
-            Row(
-              children: [
-                Text(
-                  gallery.type.icon,
-                  style: const TextStyle(fontSize: 24),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        gallery.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      if (gallery.description != null)
-                        Text(
-                          gallery.description!,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                    ],
-                  ),
-                ),
-                PopupMenuButton<String>(
-                  onSelected: (value) => _handleGalleryAction(value, gallery),
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: 'edit',
-                      child: ListTile(
-                        leading: Icon(Icons.edit),
-                        title: Text('Редактировать'),
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'manage',
-                      child: ListTile(
-                        leading: Icon(Icons.manage_accounts),
-                        title: Text('Управление медиа'),
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'delete',
-                      child: ListTile(
-                        leading: Icon(Icons.delete),
-                        title: Text('Удалить'),
-                      ),
-                    ),
-                  ],
-                  child: const Icon(Icons.more_vert),
-                ),
-              ],
+            const ResponsiveText('Галереи контента', isTitle: true),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _showCreateGalleryDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать галерею'),
             ),
-
-            const SizedBox(height: 12),
-
-            // Метаданные
-            Row(
-              children: [
-                _buildInfoChip('Тип', gallery.type.displayName, Colors.blue),
-                const SizedBox(width: 8),
-                _buildInfoChip('Медиа', '${gallery.mediaCount}', Colors.green),
-                const SizedBox(width: 8),
-                _buildInfoChip(
-                  'Статус',
-                  gallery.isPublic ? 'Публичная' : 'Приватная',
-                  gallery.isPublic ? Colors.green : Colors.orange,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            // Время создания
-            Row(
-              children: [
-                const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  'Создана: ${_formatDateTime(gallery.createdAt)}',
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ],
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
           ],
         ),
-      );
+      ),
+
+      // Список галерей
+      Expanded(
+        child: _galleries.isEmpty
+            ? const Center(child: Text('Галереи не найдены'))
+            : ListView.builder(
+                itemCount: _galleries.length,
+                itemBuilder: (context, index) {
+                  final gallery = _galleries[index];
+                  return _buildGalleryCard(gallery);
+                },
+              ),
+      ),
+    ],
+  );
+
+  Widget _buildGalleryCard(ContentGallery gallery) => ResponsiveCard(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Заголовок
+        Row(
+          children: [
+            Text(gallery.type.icon, style: const TextStyle(fontSize: 24)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    gallery.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  if (gallery.description != null)
+                    Text(gallery.description!, style: const TextStyle(fontSize: 14)),
+                ],
+              ),
+            ),
+            PopupMenuButton<String>(
+              onSelected: (value) => _handleGalleryAction(value, gallery),
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'edit',
+                  child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
+                ),
+                const PopupMenuItem(
+                  value: 'manage',
+                  child: ListTile(
+                    leading: Icon(Icons.manage_accounts),
+                    title: Text('Управление медиа'),
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 'delete',
+                  child: ListTile(leading: Icon(Icons.delete), title: Text('Удалить')),
+                ),
+              ],
+              child: const Icon(Icons.more_vert),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        // Метаданные
+        Row(
+          children: [
+            _buildInfoChip('Тип', gallery.type.displayName, Colors.blue),
+            const SizedBox(width: 8),
+            _buildInfoChip('Медиа', '${gallery.mediaCount}', Colors.green),
+            const SizedBox(width: 8),
+            _buildInfoChip(
+              'Статус',
+              gallery.isPublic ? 'Публичная' : 'Приватная',
+              gallery.isPublic ? Colors.green : Colors.orange,
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 8),
+
+        // Время создания
+        Row(
+          children: [
+            const Icon(Icons.access_time, size: 16, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(
+              'Создана: ${_formatDateTime(gallery.createdAt)}',
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 
   Widget _buildUploadTab() => SingleChildScrollView(
-        child: ResponsiveCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const ResponsiveText(
-                'Загрузка медиа',
-                isTitle: true,
-              ),
+    child: ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const ResponsiveText('Загрузка медиа', isTitle: true),
 
-              const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-              // Форма загрузки
-              _buildUploadForm(),
-            ],
-          ),
-        ),
-      );
+          // Форма загрузки
+          _buildUploadForm(),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildUploadForm() {
     final titleController = TextEditingController();
@@ -507,11 +443,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.cloud_upload,
-                            size: 48,
-                            color: Colors.grey,
-                          ),
+                          Icon(Icons.cloud_upload, size: 48, color: Colors.grey),
                           SizedBox(height: 8),
                           Text('Нажмите для выбора файла'),
                         ],
@@ -521,10 +453,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            selectedType.icon,
-                            style: const TextStyle(fontSize: 32),
-                          ),
+                          Text(selectedType.icon, style: const TextStyle(fontSize: 32)),
                           const SizedBox(height: 8),
                           Text(
                             selectedFile!.split('/').last,
@@ -542,10 +471,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
           // Название
           TextField(
             controller: titleController,
-            decoration: const InputDecoration(
-              labelText: 'Название',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Название', border: OutlineInputBorder()),
           ),
 
           const SizedBox(height: 16),
@@ -553,10 +479,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
           // Описание
           TextField(
             controller: descriptionController,
-            decoration: const InputDecoration(
-              labelText: 'Описание',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Описание', border: OutlineInputBorder()),
             maxLines: 3,
           ),
 
@@ -577,20 +500,13 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
           // Тип медиа
           DropdownButtonFormField<MediaType>(
             initialValue: selectedType,
-            decoration: const InputDecoration(
-              labelText: 'Тип медиа',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Тип медиа', border: OutlineInputBorder()),
             items: MediaType.values
                 .map(
                   (type) => DropdownMenuItem(
                     value: type,
                     child: Row(
-                      children: [
-                        Text(type.icon),
-                        const SizedBox(width: 8),
-                        Text(type.displayName),
-                      ],
+                      children: [Text(type.icon), const SizedBox(width: 8), Text(type.displayName)],
                     ),
                   ),
                 )
@@ -611,12 +527,12 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
               onPressed: selectedFile == null || titleController.text.isEmpty
                   ? null
                   : () => _uploadMedia(
-                        selectedFile!,
-                        titleController.text,
-                        descriptionController.text,
-                        tagsController.text,
-                        selectedType,
-                      ),
+                      selectedFile!,
+                      titleController.text,
+                      descriptionController.text,
+                      tagsController.text,
+                      selectedType,
+                    ),
               icon: const Icon(Icons.cloud_upload),
               label: const Text('Загрузить медиа'),
             ),
@@ -627,21 +543,17 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
   }
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color),
-        ),
-        child: Text(
-          '$label: $value',
-          style: TextStyle(
-            fontSize: 12,
-            color: color,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color),
+    ),
+    child: Text(
+      '$label: $value',
+      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+    ),
+  );
 
   Color _getStatusColor(ContentStatus status) {
     switch (status) {
@@ -677,10 +589,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка загрузки данных: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка загрузки данных: $e'), backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -713,10 +622,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -725,9 +631,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
   void _addToGallery(MediaContent media) {
     // TODO(developer): Реализовать добавление в галерею
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Добавление "${media.title}" в галерею будет реализовано'),
-      ),
+      SnackBar(content: Text('Добавление "${media.title}" в галерею будет реализовано')),
     );
   }
 
@@ -738,10 +642,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
         title: const Text('Удалить медиа'),
         content: Text('Вы уверены, что хотите удалить "${media.title}"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -749,17 +650,11 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
                 await _contentService.deleteMedia(media.id);
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Медиа удалено'),
-                    backgroundColor: Colors.green,
-                  ),
+                  const SnackBar(content: Text('Медиа удалено'), backgroundColor: Colors.green),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Ошибка удаления медиа: $e'),
-                    backgroundColor: Colors.red,
-                  ),
+                  SnackBar(content: Text('Ошибка удаления медиа: $e'), backgroundColor: Colors.red),
                 );
               }
             },
@@ -844,10 +739,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена'),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
             ElevatedButton(
               onPressed: nameController.text.isEmpty
                   ? null
@@ -901,20 +793,14 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
   void _editGallery(ContentGallery gallery) {
     // TODO(developer): Реализовать редактирование галереи
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Редактирование галереи "${gallery.name}" будет реализовано'),
-      ),
+      SnackBar(content: Text('Редактирование галереи "${gallery.name}" будет реализовано')),
     );
   }
 
   void _manageGalleryMedia(ContentGallery gallery) {
     // TODO(developer): Реализовать управление медиа в галерее
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Управление медиа в галерее "${gallery.name}" будет реализовано',
-        ),
-      ),
+      SnackBar(content: Text('Управление медиа в галерее "${gallery.name}" будет реализовано')),
     );
   }
 
@@ -925,10 +811,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
         title: const Text('Удалить галерею'),
         content: Text('Вы уверены, что хотите удалить галерею "${gallery.name}"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -936,10 +819,7 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
                 await _contentService.deleteGallery(gallery.id);
                 _loadData();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Галерея удалена'),
-                    backgroundColor: Colors.green,
-                  ),
+                  const SnackBar(content: Text('Галерея удалена'), backgroundColor: Colors.green),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -969,8 +849,11 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
     MediaType type,
   ) async {
     try {
-      final tagsList =
-          tags.split(',').map((tag) => tag.trim()).where((tag) => tag.isNotEmpty).toList();
+      final tagsList = tags
+          .split(',')
+          .map((tag) => tag.trim())
+          .where((tag) => tag.isNotEmpty)
+          .toList();
 
       await _contentService.uploadMedia(
         filePath: filePath,
@@ -986,17 +869,11 @@ class _ContentManagementScreenState extends ConsumerState<ContentManagementScree
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Медиа "$title" загружено'),
-          backgroundColor: Colors.green,
-        ),
+        SnackBar(content: Text('Медиа "$title" загружено'), backgroundColor: Colors.green),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка загрузки медиа: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка загрузки медиа: $e'), backgroundColor: Colors.red),
       );
     }
   }

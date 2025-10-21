@@ -48,10 +48,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
+          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
@@ -63,9 +60,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
       body: currentUserAsync.when(
         data: (user) {
           if (user == null) {
-            return const Center(
-              child: Text('Войдите в аккаунт для просмотра бронирований'),
-            );
+            return const Center(child: Text('Войдите в аккаунт для просмотра бронирований'));
           }
 
           return TabBarView(
@@ -78,9 +73,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
             ],
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -151,9 +144,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
           ),
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -223,11 +214,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
           const SizedBox(height: 16),
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
           Text(
@@ -261,19 +248,21 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                 },
               ),
             ),
-            ...BookingStatus.values.map((status) => ListTile(
-                  title: Text(status.displayName),
-                  leading: Radio<BookingStatus>(
-                    value: status,
-                    groupValue: _selectedStatus,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedStatus = value!;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                )),
+            ...BookingStatus.values.map(
+              (status) => ListTile(
+                title: Text(status.displayName),
+                leading: Radio<BookingStatus>(
+                  value: status,
+                  groupValue: _selectedStatus,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedStatus = value!;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -291,9 +280,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
         builder: (context, scrollController) => Container(
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
@@ -325,18 +312,12 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                               children: [
                                 Text(
                                   booking.service,
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   'Клиент: ${booking.clientName}',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 16,
-                                  ),
+                                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
                                 ),
                               ],
                             ),
@@ -370,10 +351,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                         const SizedBox(height: 16),
                         const Text(
                           'Примечания',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Text(booking.notes),
@@ -393,9 +371,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[200]!),
-                  ),
+                  border: Border(top: BorderSide(color: Colors.grey[200]!)),
                 ),
                 child: Row(
                   children: [
@@ -439,22 +415,10 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
         children: [
           SizedBox(
             width: 120,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14,
-              ),
-            ),
+            child: Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            child: Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
           ),
         ],
       ),
@@ -483,14 +447,14 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
 
     bookingService.updateBookingStatus(booking.id, newStatus).then((success) {
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Статус изменен на: ${newStatus.displayName}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Статус изменен на: ${newStatus.displayName}')));
         Navigator.of(context).pop();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка при изменении статуса')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка при изменении статуса')));
       }
     });
   }
@@ -509,23 +473,20 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
         title: const Text('Удалить бронирование'),
         content: const Text('Вы уверены, что хотите удалить это бронирование?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               final bookingService = ref.read(bookingServiceProvider);
               bookingService.deleteBooking(booking.id).then((success) {
                 if (success) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Бронирование удалено')),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('Бронирование удалено')));
                   Navigator.of(context).pop();
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Ошибка при удалении бронирования')),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('Ошибка при удалении бронирования')));
                 }
               });
             },

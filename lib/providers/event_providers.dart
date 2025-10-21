@@ -13,21 +13,14 @@ final createEventProvider = NotifierProvider<CreateEventNotifier, CreateEventSta
 
 /// Состояние формы создания события
 class CreateEventState {
-  const CreateEventState({
-    this.isLoading = false,
-    this.errorMessage,
-  });
+  const CreateEventState({this.isLoading = false, this.errorMessage});
   final bool isLoading;
   final String? errorMessage;
 
-  CreateEventState copyWith({
-    bool? isLoading,
-    String? errorMessage,
-  }) =>
-      CreateEventState(
-        isLoading: isLoading ?? this.isLoading,
-        errorMessage: errorMessage ?? this.errorMessage,
-      );
+  CreateEventState copyWith({bool? isLoading, String? errorMessage}) => CreateEventState(
+    isLoading: isLoading ?? this.isLoading,
+    errorMessage: errorMessage ?? this.errorMessage,
+  );
 }
 
 /// Нотификатор для формы создания события
@@ -67,14 +60,11 @@ final eventProvider = FutureProvider.family<Event?, String>((ref, eventId) async
 });
 
 /// Провайдер для статистики событий пользователя
-final userEventStatsProvider =
-    FutureProvider.family<Map<String, dynamic>, String>((ref, userId) async {
+final userEventStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((
+  ref,
+  userId,
+) async {
   final eventService = ref.read(eventServiceProvider);
   // Заглушка для статистики событий пользователя
-  return {
-    'totalEvents': 0,
-    'upcomingEvents': 0,
-    'pastEvents': 0,
-    'cancelledEvents': 0,
-  };
+  return {'totalEvents': 0, 'upcomingEvents': 0, 'pastEvents': 0, 'cancelledEvents': 0};
 });

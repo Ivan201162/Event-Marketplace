@@ -261,10 +261,7 @@ class DependencyManagementService {
             dependencyId: dependency.id,
             currentVersion: dependency.version,
             newVersion: dependency.latestVersion!,
-            type: _determineUpdateType(
-              dependency.version,
-              dependency.latestVersion!,
-            ),
+            type: _determineUpdateType(dependency.version, dependency.latestVersion!),
             priority: _determineUpdatePriority(dependency),
             breakingChanges: [],
             securityFixes: [],
@@ -386,10 +383,7 @@ class DependencyManagementService {
       final user = _auth.currentUser;
       if (user == null) throw Exception('User not authenticated');
 
-      final updatedConfig = config.copyWith(
-        updatedAt: DateTime.now(),
-        updatedBy: user.uid,
-      );
+      final updatedConfig = config.copyWith(updatedAt: DateTime.now(), updatedBy: user.uid);
 
       await _saveConfig(updatedConfig);
       _config = updatedConfig;

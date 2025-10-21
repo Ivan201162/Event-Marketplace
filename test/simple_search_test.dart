@@ -6,34 +6,19 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('Тесты поиска на главной странице', () {
     testWidgets('Проверка отображения поисковой строки', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
       // Проверяем, что заголовок поиска отображается
-      expect(
-        find.text('Найди специалиста для своего праздника 🎉'),
-        findsOneWidget,
-      );
+      expect(find.text('Найди специалиста для своего праздника 🎉'), findsOneWidget);
 
       // Проверяем наличие поисковой строки
       expect(find.byType(TextField), findsOneWidget);
     });
 
     testWidgets('Проверка быстрых фильтров', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -47,13 +32,7 @@ void main() {
     });
 
     testWidgets('Проверка ввода в поисковую строку', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -66,20 +45,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // Проверяем, что текст введён
-      expect(
-        tester.widget<TextField>(searchField).controller?.text,
-        equals('тест'),
-      );
+      expect(tester.widget<TextField>(searchField).controller?.text, equals('тест'));
     });
 
     testWidgets('Проверка кнопки очистки поиска', (tester) async {
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 

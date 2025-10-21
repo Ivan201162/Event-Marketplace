@@ -42,10 +42,7 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showCreatePlanDialog(),
-          ),
+          IconButton(icon: const Icon(Icons.add), onPressed: () => _showCreatePlanDialog()),
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -64,9 +61,7 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
 
           final plans = snapshot.data?.docs ?? [];
           if (plans.isEmpty) {
-            return const Center(
-              child: Text('Нет тарифных планов'),
-            );
+            return const Center(child: Text('Нет тарифных планов'));
           }
 
           return ListView.builder(
@@ -81,15 +76,9 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundColor: _getPlanColor(plan.type),
-                    child: Icon(
-                      _getPlanIcon(plan.type),
-                      color: Colors.white,
-                    ),
+                    child: Icon(_getPlanIcon(plan.type), color: Colors.white),
                   ),
-                  title: Text(
-                    plan.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  title: Text(plan.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -187,10 +176,7 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
                   border: OutlineInputBorder(),
                 ),
                 items: SubscriptionPlanType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(_getPlanTypeName(type)),
-                  );
+                  return DropdownMenuItem(value: type, child: Text(_getPlanTypeName(type)));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -215,14 +201,8 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: _createPlan,
-            child: const Text('Создать'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          ElevatedButton(onPressed: _createPlan, child: const Text('Создать')),
         ],
       ),
     );
@@ -258,9 +238,9 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
     if (_nameController.text.isEmpty ||
         _priceController.text.isEmpty ||
         _durationController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Заполните все обязательные поля')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Заполните все обязательные поля')));
       return;
     }
 
@@ -289,18 +269,16 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
 
       if (success) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Тарифный план создан успешно')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Тарифный план создан успешно')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка создания тарифного плана')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка создания тарифного плана')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -367,10 +345,7 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
                   border: OutlineInputBorder(),
                 ),
                 items: SubscriptionPlanType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(_getPlanTypeName(type)),
-                  );
+                  return DropdownMenuItem(value: type, child: Text(_getPlanTypeName(type)));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -395,14 +370,8 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () => _updatePlan(plan),
-            child: const Text('Сохранить'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          ElevatedButton(onPressed: () => _updatePlan(plan), child: const Text('Сохранить')),
         ],
       ),
     );
@@ -433,27 +402,22 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
 
       if (success) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Тарифный план обновлен успешно')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Тарифный план обновлен успешно')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка обновления тарифного плана')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка обновления тарифного плана')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
   Future<void> _togglePlanStatus(SubscriptionPlan plan) async {
     try {
-      final updates = {
-        'isActive': !plan.isActive,
-        'updatedAt': DateTime.now(),
-      };
+      final updates = {'isActive': !plan.isActive, 'updatedAt': DateTime.now()};
 
       // Mock admin data for testing
       const adminId = 'admin_123';
@@ -469,17 +433,16 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text('Статус плана изменен на ${!plan.isActive ? 'активен' : 'неактивен'}')),
+            content: Text('Статус плана изменен на ${!plan.isActive ? 'активен' : 'неактивен'}'),
+          ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка изменения статуса плана')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка изменения статуса плана')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -490,10 +453,7 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
         title: const Text('Удалить тарифный план'),
         content: Text('Вы уверены, что хотите удалить план "${plan.name}"?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -506,13 +466,11 @@ class _AdminSubscriptionManagementScreenState extends State<AdminSubscriptionMan
     if (confirmed == true) {
       try {
         await FirebaseFirestore.instance.collection('subscription_plans').doc(plan.id).delete();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Тарифный план удален')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Тарифный план удален')));
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка удаления: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка удаления: $e')));
       }
     }
   }

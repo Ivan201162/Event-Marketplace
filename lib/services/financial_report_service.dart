@@ -84,10 +84,7 @@ class FinancialReportService {
           )
           .toList();
 
-      final totalIncome = incomePayments.fold<double>(
-        0,
-        (sum, payment) => sum + payment.amount,
-      );
+      final totalIncome = incomePayments.fold<double>(0, (sum, payment) => sum + payment.amount);
 
       final totalFees = incomePayments.fold<double>(
         0,
@@ -152,10 +149,7 @@ class FinancialReportService {
     }
 
     query = query
-        .where(
-          'createdAt',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-        )
+        .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
         .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
         .orderBy('createdAt', descending: true);
 

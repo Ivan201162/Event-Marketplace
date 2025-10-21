@@ -19,19 +19,19 @@ class WeddingAnniversary {
 
   /// Создать из Map
   factory WeddingAnniversary.fromMap(Map<String, dynamic> data) => WeddingAnniversary(
-        id: data['id'] ?? '',
-        customerId: data['customerId'] ?? '',
-        customerName: data['customerName'] ?? '',
-        customerEmail: data['customerEmail'],
-        weddingDate: (data['weddingDate'] as Timestamp).toDate(),
-        yearsMarried: data['yearsMarried'] as int? ?? 0,
-        nextAnniversary: (data['nextAnniversary'] as Timestamp).toDate(),
-        isActive: data['isActive'] as bool? ?? true,
-        reminderDates: List<String>.from(data['reminderDates'] ?? ['30', '7', '1']),
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      );
+    id: data['id'] ?? '',
+    customerId: data['customerId'] ?? '',
+    customerName: data['customerName'] ?? '',
+    customerEmail: data['customerEmail'],
+    weddingDate: (data['weddingDate'] as Timestamp).toDate(),
+    yearsMarried: data['yearsMarried'] as int? ?? 0,
+    nextAnniversary: (data['nextAnniversary'] as Timestamp).toDate(),
+    isActive: data['isActive'] as bool? ?? true,
+    reminderDates: List<String>.from(data['reminderDates'] ?? ['30', '7', '1']),
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+    metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+  );
   final String id;
   final String customerId;
   final String customerName;
@@ -47,19 +47,19 @@ class WeddingAnniversary {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'customerId': customerId,
-        'customerName': customerName,
-        'customerEmail': customerEmail,
-        'weddingDate': Timestamp.fromDate(weddingDate),
-        'yearsMarried': yearsMarried,
-        'nextAnniversary': Timestamp.fromDate(nextAnniversary),
-        'isActive': isActive,
-        'reminderDates': reminderDates,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'metadata': metadata,
-      };
+    'id': id,
+    'customerId': customerId,
+    'customerName': customerName,
+    'customerEmail': customerEmail,
+    'weddingDate': Timestamp.fromDate(weddingDate),
+    'yearsMarried': yearsMarried,
+    'nextAnniversary': Timestamp.fromDate(nextAnniversary),
+    'isActive': isActive,
+    'reminderDates': reminderDates,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'metadata': metadata,
+  };
 
   /// Копировать с изменениями
   WeddingAnniversary copyWith({
@@ -75,21 +75,20 @@ class WeddingAnniversary {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      WeddingAnniversary(
-        id: id ?? this.id,
-        customerId: customerId ?? this.customerId,
-        customerName: customerName ?? this.customerName,
-        customerEmail: customerEmail ?? this.customerEmail,
-        weddingDate: weddingDate ?? this.weddingDate,
-        yearsMarried: yearsMarried ?? this.yearsMarried,
-        nextAnniversary: nextAnniversary ?? this.nextAnniversary,
-        isActive: isActive ?? this.isActive,
-        reminderDates: reminderDates ?? this.reminderDates,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => WeddingAnniversary(
+    id: id ?? this.id,
+    customerId: customerId ?? this.customerId,
+    customerName: customerName ?? this.customerName,
+    customerEmail: customerEmail ?? this.customerEmail,
+    weddingDate: weddingDate ?? this.weddingDate,
+    yearsMarried: yearsMarried ?? this.yearsMarried,
+    nextAnniversary: nextAnniversary ?? this.nextAnniversary,
+    isActive: isActive ?? this.isActive,
+    reminderDates: reminderDates ?? this.reminderDates,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Вычислить количество лет брака
   static int calculateYearsMarried(DateTime weddingDate) {
@@ -216,29 +215,13 @@ class WeddingAnniversary {
           'Подарок из дерева (мебель, декор)',
         ];
       case 10:
-        return [
-          'Повторение свадебной церемонии',
-          'Семейная фотосессия',
-          'Подарок с розами',
-        ];
+        return ['Повторение свадебной церемонии', 'Семейная фотосессия', 'Подарок с розами'];
       case 25:
-        return [
-          'Торжественный прием',
-          'Обновление свадебных колец',
-          'Серебряные подарки',
-        ];
+        return ['Торжественный прием', 'Обновление свадебных колец', 'Серебряные подарки'];
       case 50:
-        return [
-          'Большой семейный праздник',
-          'Золотые подарки',
-          'Повторение свадебной церемонии',
-        ];
+        return ['Большой семейный праздник', 'Золотые подарки', 'Повторение свадебной церемонии'];
       default:
-        return [
-          'Романтический ужин',
-          'Подарок по случаю',
-          'Время вдвоем',
-        ];
+        return ['Романтический ужин', 'Подарок по случаю', 'Время вдвоем'];
     }
   }
 }
@@ -258,15 +241,15 @@ class AnniversaryReminder {
 
   /// Создать из Map
   factory AnniversaryReminder.fromMap(Map<String, dynamic> data) => AnniversaryReminder(
-        id: data['id'] ?? '',
-        anniversaryId: data['anniversaryId'] ?? '',
-        customerId: data['customerId'] ?? '',
-        reminderDate: (data['reminderDate'] as Timestamp).toDate(),
-        message: data['message'] ?? '',
-        isSent: data['isSent'] as bool? ?? false,
-        sentAt: data['sentAt'] != null ? (data['sentAt'] as Timestamp).toDate() : null,
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-      );
+    id: data['id'] ?? '',
+    anniversaryId: data['anniversaryId'] ?? '',
+    customerId: data['customerId'] ?? '',
+    reminderDate: (data['reminderDate'] as Timestamp).toDate(),
+    message: data['message'] ?? '',
+    isSent: data['isSent'] as bool? ?? false,
+    sentAt: data['sentAt'] != null ? (data['sentAt'] as Timestamp).toDate() : null,
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+  );
   final String id;
   final String anniversaryId;
   final String customerId;
@@ -278,13 +261,13 @@ class AnniversaryReminder {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'anniversaryId': anniversaryId,
-        'customerId': customerId,
-        'reminderDate': Timestamp.fromDate(reminderDate),
-        'message': message,
-        'isSent': isSent,
-        'sentAt': sentAt != null ? Timestamp.fromDate(sentAt!) : null,
-        'createdAt': Timestamp.fromDate(createdAt),
-      };
+    'id': id,
+    'anniversaryId': anniversaryId,
+    'customerId': customerId,
+    'reminderDate': Timestamp.fromDate(reminderDate),
+    'message': message,
+    'isSent': isSent,
+    'sentAt': sentAt != null ? Timestamp.fromDate(sentAt!) : null,
+    'createdAt': Timestamp.fromDate(createdAt),
+  };
 }

@@ -29,34 +29,30 @@ class Documentation {
   });
 
   factory Documentation.fromMap(Map<String, dynamic> map) => Documentation(
-        id: map['id'] as String? ?? '',
-        title: map['title'] as String? ?? '',
-        content: map['content'] as String? ?? '',
-        summary: map['summary'] as String?,
-        type: DocumentType.fromString(map['type'] as String? ?? 'article'),
-        category: DocumentCategory.fromString(
-          map['category'] as String? ?? 'general',
-        ),
-        status: DocumentStatus.fromString(map['status'] as String? ?? 'draft'),
-        version: map['version'] as String?,
-        parentId: map['parentId'] as String?,
-        tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
-        attachments: List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
-        metadata: Map<String, dynamic>.from(
-          (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
-        ),
-        isPublic: map['isPublic'] as bool? ?? false,
-        isArchived: map['isArchived'] as bool? ?? false,
-        viewCount: map['viewCount'] as int? ?? 0,
-        likeCount: map['likeCount'] as int? ?? 0,
-        contributors: List<String>.from((map['contributors'] as List<dynamic>?) ?? []),
-        authorId: map['authorId'] as String?,
-        authorName: map['authorName'] as String?,
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] as String? ?? '',
-        updatedBy: map['updatedBy'] as String? ?? '',
-      );
+    id: map['id'] as String? ?? '',
+    title: map['title'] as String? ?? '',
+    content: map['content'] as String? ?? '',
+    summary: map['summary'] as String?,
+    type: DocumentType.fromString(map['type'] as String? ?? 'article'),
+    category: DocumentCategory.fromString(map['category'] as String? ?? 'general'),
+    status: DocumentStatus.fromString(map['status'] as String? ?? 'draft'),
+    version: map['version'] as String?,
+    parentId: map['parentId'] as String?,
+    tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
+    attachments: List<String>.from((map['attachments'] as List<dynamic>?) ?? []),
+    metadata: Map<String, dynamic>.from((map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+    isPublic: map['isPublic'] as bool? ?? false,
+    isArchived: map['isArchived'] as bool? ?? false,
+    viewCount: map['viewCount'] as int? ?? 0,
+    likeCount: map['likeCount'] as int? ?? 0,
+    contributors: List<String>.from((map['contributors'] as List<dynamic>?) ?? []),
+    authorId: map['authorId'] as String?,
+    authorName: map['authorName'] as String?,
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+    createdBy: map['createdBy'] as String? ?? '',
+    updatedBy: map['updatedBy'] as String? ?? '',
+  );
   final String id;
   final String title;
   final String content;
@@ -82,30 +78,30 @@ class Documentation {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'content': content,
-        'summary': summary,
-        'type': type.value,
-        'category': category.value,
-        'status': status.value,
-        'version': version,
-        'parentId': parentId,
-        'tags': tags,
-        'attachments': attachments,
-        'metadata': metadata,
-        'isPublic': isPublic,
-        'isArchived': isArchived,
-        'viewCount': viewCount,
-        'likeCount': likeCount,
-        'contributors': contributors,
-        'authorId': authorId,
-        'authorName': authorName,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'createdBy': createdBy,
-        'updatedBy': updatedBy,
-      };
+    'id': id,
+    'title': title,
+    'content': content,
+    'summary': summary,
+    'type': type.value,
+    'category': category.value,
+    'status': status.value,
+    'version': version,
+    'parentId': parentId,
+    'tags': tags,
+    'attachments': attachments,
+    'metadata': metadata,
+    'isPublic': isPublic,
+    'isArchived': isArchived,
+    'viewCount': viewCount,
+    'likeCount': likeCount,
+    'contributors': contributors,
+    'authorId': authorId,
+    'authorName': authorName,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'createdBy': createdBy,
+    'updatedBy': updatedBy,
+  };
 
   Documentation copyWith({
     String? id,
@@ -131,32 +127,31 @@ class Documentation {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) =>
-      Documentation(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        content: content ?? this.content,
-        summary: summary ?? this.summary,
-        type: type ?? this.type,
-        category: category ?? this.category,
-        status: status ?? this.status,
-        version: version ?? this.version,
-        parentId: parentId ?? this.parentId,
-        tags: tags ?? this.tags,
-        attachments: attachments ?? this.attachments,
-        metadata: metadata ?? this.metadata,
-        isPublic: isPublic ?? this.isPublic,
-        isArchived: isArchived ?? this.isArchived,
-        viewCount: viewCount ?? this.viewCount,
-        likeCount: likeCount ?? this.likeCount,
-        contributors: contributors ?? this.contributors,
-        authorId: authorId ?? this.authorId,
-        authorName: authorName ?? this.authorName,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        createdBy: createdBy ?? this.createdBy,
-        updatedBy: updatedBy ?? this.updatedBy,
-      );
+  }) => Documentation(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    content: content ?? this.content,
+    summary: summary ?? this.summary,
+    type: type ?? this.type,
+    category: category ?? this.category,
+    status: status ?? this.status,
+    version: version ?? this.version,
+    parentId: parentId ?? this.parentId,
+    tags: tags ?? this.tags,
+    attachments: attachments ?? this.attachments,
+    metadata: metadata ?? this.metadata,
+    isPublic: isPublic ?? this.isPublic,
+    isArchived: isArchived ?? this.isArchived,
+    viewCount: viewCount ?? this.viewCount,
+    likeCount: likeCount ?? this.likeCount,
+    contributors: contributors ?? this.contributors,
+    authorId: authorId ?? this.authorId,
+    authorName: authorName ?? this.authorName,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdBy: createdBy ?? this.createdBy,
+    updatedBy: updatedBy ?? this.updatedBy,
+  );
 
   @override
   String toString() => 'Documentation(id: $id, title: $title, type: $type, status: $status)';
@@ -190,9 +185,9 @@ enum DocumentType {
   final String displayName;
 
   static DocumentType fromString(String value) => DocumentType.values.firstWhere(
-        (type) => type.value == value,
-        orElse: () => DocumentType.article,
-      );
+    (type) => type.value == value,
+    orElse: () => DocumentType.article,
+  );
 
   String get icon {
     switch (this) {
@@ -264,9 +259,9 @@ enum DocumentCategory {
   final String displayName;
 
   static DocumentCategory fromString(String value) => DocumentCategory.values.firstWhere(
-        (category) => category.value == value,
-        orElse: () => DocumentCategory.general,
-      );
+    (category) => category.value == value,
+    orElse: () => DocumentCategory.general,
+  );
 
   String get icon {
     switch (this) {
@@ -334,9 +329,9 @@ enum DocumentStatus {
   final String displayName;
 
   static DocumentStatus fromString(String value) => DocumentStatus.values.firstWhere(
-        (status) => status.value == value,
-        orElse: () => DocumentStatus.draft,
-      );
+    (status) => status.value == value,
+    orElse: () => DocumentStatus.draft,
+  );
 
   String get icon {
     switch (this) {
@@ -393,25 +388,21 @@ class DocumentTemplate {
   });
 
   factory DocumentTemplate.fromMap(Map<String, dynamic> map) => DocumentTemplate(
-        id: map['id'] as String? ?? '',
-        name: map['name'] as String? ?? '',
-        description: map['description'] as String? ?? '',
-        content: map['content'] as String? ?? '',
-        type: DocumentType.fromString(map['type'] as String? ?? 'article'),
-        category: DocumentCategory.fromString(
-          map['category'] as String? ?? 'general',
-        ),
-        tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
-        metadata: Map<String, dynamic>.from(
-          (map['metadata'] as Map<dynamic, dynamic>?) ?? {},
-        ),
-        isPublic: map['isPublic'] as bool? ?? false,
-        usageCount: map['usageCount'] as int? ?? 0,
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] as String? ?? '',
-        updatedBy: map['updatedBy'] as String? ?? '',
-      );
+    id: map['id'] as String? ?? '',
+    name: map['name'] as String? ?? '',
+    description: map['description'] as String? ?? '',
+    content: map['content'] as String? ?? '',
+    type: DocumentType.fromString(map['type'] as String? ?? 'article'),
+    category: DocumentCategory.fromString(map['category'] as String? ?? 'general'),
+    tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
+    metadata: Map<String, dynamic>.from((map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+    isPublic: map['isPublic'] as bool? ?? false,
+    usageCount: map['usageCount'] as int? ?? 0,
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+    createdBy: map['createdBy'] as String? ?? '',
+    updatedBy: map['updatedBy'] as String? ?? '',
+  );
   final String id;
   final String name;
   final String description;
@@ -428,21 +419,21 @@ class DocumentTemplate {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'name': name,
-        'description': description,
-        'content': content,
-        'type': type.value,
-        'category': category.value,
-        'tags': tags,
-        'metadata': metadata,
-        'isPublic': isPublic,
-        'usageCount': usageCount,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'createdBy': createdBy,
-        'updatedBy': updatedBy,
-      };
+    'id': id,
+    'name': name,
+    'description': description,
+    'content': content,
+    'type': type.value,
+    'category': category.value,
+    'tags': tags,
+    'metadata': metadata,
+    'isPublic': isPublic,
+    'usageCount': usageCount,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'createdBy': createdBy,
+    'updatedBy': updatedBy,
+  };
 
   DocumentTemplate copyWith({
     String? id,
@@ -459,23 +450,22 @@ class DocumentTemplate {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) =>
-      DocumentTemplate(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        content: content ?? this.content,
-        type: type ?? this.type,
-        category: category ?? this.category,
-        tags: tags ?? this.tags,
-        metadata: metadata ?? this.metadata,
-        isPublic: isPublic ?? this.isPublic,
-        usageCount: usageCount ?? this.usageCount,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        createdBy: createdBy ?? this.createdBy,
-        updatedBy: updatedBy ?? this.updatedBy,
-      );
+  }) => DocumentTemplate(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    content: content ?? this.content,
+    type: type ?? this.type,
+    category: category ?? this.category,
+    tags: tags ?? this.tags,
+    metadata: metadata ?? this.metadata,
+    isPublic: isPublic ?? this.isPublic,
+    usageCount: usageCount ?? this.usageCount,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdBy: createdBy ?? this.createdBy,
+    updatedBy: updatedBy ?? this.updatedBy,
+  );
 
   @override
   String toString() =>
@@ -508,18 +498,18 @@ class DocumentComment {
   });
 
   factory DocumentComment.fromMap(Map<String, dynamic> map) => DocumentComment(
-        id: map['id'] as String? ?? '',
-        documentId: map['documentId'] as String? ?? '',
-        content: map['content'] as String? ?? '',
-        parentId: map['parentId'] as String?,
-        authorId: map['authorId'] as String? ?? '',
-        authorName: map['authorName'] as String? ?? '',
-        authorEmail: map['authorEmail'] as String?,
-        isResolved: map['isResolved'] as bool? ?? false,
-        likes: List<String>.from((map['likes'] as List<dynamic>?) ?? []),
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-      );
+    id: map['id'] as String? ?? '',
+    documentId: map['documentId'] as String? ?? '',
+    content: map['content'] as String? ?? '',
+    parentId: map['parentId'] as String?,
+    authorId: map['authorId'] as String? ?? '',
+    authorName: map['authorName'] as String? ?? '',
+    authorEmail: map['authorEmail'] as String?,
+    isResolved: map['isResolved'] as bool? ?? false,
+    likes: List<String>.from((map['likes'] as List<dynamic>?) ?? []),
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+  );
   final String id;
   final String documentId;
   final String content;
@@ -533,18 +523,18 @@ class DocumentComment {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'documentId': documentId,
-        'content': content,
-        'parentId': parentId,
-        'authorId': authorId,
-        'authorName': authorName,
-        'authorEmail': authorEmail,
-        'isResolved': isResolved,
-        'likes': likes,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'documentId': documentId,
+    'content': content,
+    'parentId': parentId,
+    'authorId': authorId,
+    'authorName': authorName,
+    'authorEmail': authorEmail,
+    'isResolved': isResolved,
+    'likes': likes,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   DocumentComment copyWith({
     String? id,
@@ -558,20 +548,19 @@ class DocumentComment {
     List<String>? likes,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      DocumentComment(
-        id: id ?? this.id,
-        documentId: documentId ?? this.documentId,
-        content: content ?? this.content,
-        parentId: parentId ?? this.parentId,
-        authorId: authorId ?? this.authorId,
-        authorName: authorName ?? this.authorName,
-        authorEmail: authorEmail ?? this.authorEmail,
-        isResolved: isResolved ?? this.isResolved,
-        likes: likes ?? this.likes,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => DocumentComment(
+    id: id ?? this.id,
+    documentId: documentId ?? this.documentId,
+    content: content ?? this.content,
+    parentId: parentId ?? this.parentId,
+    authorId: authorId ?? this.authorId,
+    authorName: authorName ?? this.authorName,
+    authorEmail: authorEmail ?? this.authorEmail,
+    isResolved: isResolved ?? this.isResolved,
+    likes: likes ?? this.likes,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   @override
   String toString() => 'DocumentComment(id: $id, documentId: $documentId, authorName: $authorName)';

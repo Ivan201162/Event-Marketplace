@@ -9,8 +9,10 @@ final bookingServiceProvider = Provider<BookingService>((ref) {
 });
 
 /// Specialist bookings provider
-final specialistBookingsProvider =
-    FutureProvider.family<List<Booking>, String>((ref, specialistId) async {
+final specialistBookingsProvider = FutureProvider.family<List<Booking>, String>((
+  ref,
+  specialistId,
+) async {
   final bookingService = ref.read(bookingServiceProvider);
   return bookingService.getSpecialistBookings(specialistId);
 });
@@ -22,8 +24,10 @@ final clientBookingsProvider = FutureProvider.family<List<Booking>, String>((ref
 });
 
 /// Bookings by status provider
-final bookingsByStatusProvider =
-    FutureProvider.family<List<Booking>, BookingStatus>((ref, status) async {
+final bookingsByStatusProvider = FutureProvider.family<List<Booking>, BookingStatus>((
+  ref,
+  status,
+) async {
   final bookingService = ref.read(bookingServiceProvider);
   return bookingService.getBookingsByStatus(status);
 });
@@ -35,8 +39,10 @@ final bookingByIdProvider = FutureProvider.family<Booking?, String>((ref, bookin
 });
 
 /// Specialist bookings stream provider
-final specialistBookingsStreamProvider =
-    StreamProvider.family<List<Booking>, String>((ref, specialistId) {
+final specialistBookingsStreamProvider = StreamProvider.family<List<Booking>, String>((
+  ref,
+  specialistId,
+) {
   final bookingService = ref.read(bookingServiceProvider);
   return bookingService.getSpecialistBookingsStream(specialistId);
 });
@@ -48,22 +54,28 @@ final clientBookingsStreamProvider = StreamProvider.family<List<Booking>, String
 });
 
 /// Bookings by status stream provider
-final bookingsByStatusStreamProvider =
-    StreamProvider.family<List<Booking>, BookingStatus>((ref, status) {
+final bookingsByStatusStreamProvider = StreamProvider.family<List<Booking>, BookingStatus>((
+  ref,
+  status,
+) {
   final bookingService = ref.read(bookingServiceProvider);
   return bookingService.getBookingsByStatusStream(status);
 });
 
 /// Booking statistics provider
-final bookingStatsProvider =
-    FutureProvider.family<Map<String, int>, String>((ref, specialistId) async {
+final bookingStatsProvider = FutureProvider.family<Map<String, int>, String>((
+  ref,
+  specialistId,
+) async {
   final bookingService = ref.read(bookingServiceProvider);
   return bookingService.getBookingStats(specialistId);
 });
 
 /// Available time slots provider
-final availableTimeSlotsProvider =
-    FutureProvider.family<List<String>, Map<String, dynamic>>((ref, params) async {
+final availableTimeSlotsProvider = FutureProvider.family<List<String>, Map<String, dynamic>>((
+  ref,
+  params,
+) async {
   final bookingService = ref.read(bookingServiceProvider);
   final specialistId = params['specialistId'] as String;
   final date = params['date'] as DateTime;
@@ -71,8 +83,10 @@ final availableTimeSlotsProvider =
 });
 
 /// Time slot availability provider
-final timeSlotAvailabilityProvider =
-    FutureProvider.family<bool, Map<String, dynamic>>((ref, params) async {
+final timeSlotAvailabilityProvider = FutureProvider.family<bool, Map<String, dynamic>>((
+  ref,
+  params,
+) async {
   final bookingService = ref.read(bookingServiceProvider);
   final specialistId = params['specialistId'] as String;
   final date = params['date'] as DateTime;
@@ -97,8 +111,10 @@ final pendingBookingsCountStreamProvider = StreamProvider.family<int, String>((r
 });
 
 /// Today's bookings provider
-final todaysBookingsProvider =
-    FutureProvider.family<List<Booking>, String>((ref, specialistId) async {
+final todaysBookingsProvider = FutureProvider.family<List<Booking>, String>((
+  ref,
+  specialistId,
+) async {
   final bookingService = ref.read(bookingServiceProvider);
   final today = DateTime.now();
   final bookings = await bookingService.getSpecialistBookings(specialistId);
@@ -111,23 +127,29 @@ final todaysBookingsProvider =
 });
 
 /// Today's bookings stream provider
-final todaysBookingsStreamProvider =
-    StreamProvider.family<List<Booking>, String>((ref, specialistId) {
+final todaysBookingsStreamProvider = StreamProvider.family<List<Booking>, String>((
+  ref,
+  specialistId,
+) {
   final bookingService = ref.read(bookingServiceProvider);
   final today = DateTime.now();
   return bookingService
       .getSpecialistBookingsStream(specialistId)
-      .map((bookings) => bookings.where((booking) {
-            final bookingDate = booking.date;
-            return bookingDate.year == today.year &&
-                bookingDate.month == today.month &&
-                bookingDate.day == today.day;
-          }).toList());
+      .map(
+        (bookings) => bookings.where((booking) {
+          final bookingDate = booking.date;
+          return bookingDate.year == today.year &&
+              bookingDate.month == today.month &&
+              bookingDate.day == today.day;
+        }).toList(),
+      );
 });
 
 /// Upcoming bookings provider
-final upcomingBookingsProvider =
-    FutureProvider.family<List<Booking>, String>((ref, specialistId) async {
+final upcomingBookingsProvider = FutureProvider.family<List<Booking>, String>((
+  ref,
+  specialistId,
+) async {
   final bookingService = ref.read(bookingServiceProvider);
   final now = DateTime.now();
   final bookings = await bookingService.getSpecialistBookings(specialistId);
@@ -138,15 +160,19 @@ final upcomingBookingsProvider =
 });
 
 /// Upcoming bookings stream provider
-final upcomingBookingsStreamProvider =
-    StreamProvider.family<List<Booking>, String>((ref, specialistId) {
+final upcomingBookingsStreamProvider = StreamProvider.family<List<Booking>, String>((
+  ref,
+  specialistId,
+) {
   final bookingService = ref.read(bookingServiceProvider);
   final now = DateTime.now();
   return bookingService
       .getSpecialistBookingsStream(specialistId)
-      .map((bookings) => bookings.where((booking) {
-            return booking.date.isAfter(now) &&
-                (booking.status == BookingStatus.confirmed ||
-                    booking.status == BookingStatus.pending);
-          }).toList());
+      .map(
+        (bookings) => bookings.where((booking) {
+          return booking.date.isAfter(now) &&
+              (booking.status == BookingStatus.confirmed ||
+                  booking.status == BookingStatus.pending);
+        }).toList(),
+      );
 });

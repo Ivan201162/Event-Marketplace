@@ -12,8 +12,9 @@ final reviewStatsProvider = FutureProvider<ReviewStats>(
 );
 
 /// Провайдер для проверки доступности in-app review
-final reviewAvailabilityProvider =
-    FutureProvider<bool>((ref) async => AppReviewService.isAvailable());
+final reviewAvailabilityProvider = FutureProvider<bool>(
+  (ref) async => AppReviewService.isAvailable(),
+);
 
 /// Провайдер для рекомендуемого времени запроса отзыва
 final reviewTimingProvider = FutureProvider<ReviewTiming>(
@@ -41,14 +42,13 @@ class AppReviewState {
     String? error,
     ReviewTiming? recommendedTiming,
     bool? shouldShowRequest,
-  }) =>
-      AppReviewState(
-        isRequesting: isRequesting ?? this.isRequesting,
-        isAvailable: isAvailable ?? this.isAvailable,
-        error: error ?? this.error,
-        recommendedTiming: recommendedTiming ?? this.recommendedTiming,
-        shouldShowRequest: shouldShowRequest ?? this.shouldShowRequest,
-      );
+  }) => AppReviewState(
+    isRequesting: isRequesting ?? this.isRequesting,
+    isAvailable: isAvailable ?? this.isAvailable,
+    error: error ?? this.error,
+    recommendedTiming: recommendedTiming ?? this.recommendedTiming,
+    shouldShowRequest: shouldShowRequest ?? this.shouldShowRequest,
+  );
 
   /// Получить статус отзыва
   String get reviewStatus {
@@ -121,10 +121,7 @@ class AppReviewNotifier extends Notifier<AppReviewState> {
       await _updateShouldShowRequest();
       state = state.copyWith(isRequesting: false);
     } catch (e) {
-      state = state.copyWith(
-        isRequesting: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isRequesting: false, error: e.toString());
     }
   }
 
@@ -137,10 +134,7 @@ class AppReviewNotifier extends Notifier<AppReviewState> {
       await _updateShouldShowRequest();
       state = state.copyWith(isRequesting: false);
     } catch (e) {
-      state = state.copyWith(
-        isRequesting: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isRequesting: false, error: e.toString());
     }
   }
 
@@ -153,10 +147,7 @@ class AppReviewNotifier extends Notifier<AppReviewState> {
       await _updateShouldShowRequest();
       state = state.copyWith(isRequesting: false);
     } catch (e) {
-      state = state.copyWith(
-        isRequesting: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isRequesting: false, error: e.toString());
     }
   }
 

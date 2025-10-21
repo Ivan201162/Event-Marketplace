@@ -85,9 +85,7 @@ class ProSubscriptionService {
     Map<String, bool>? features,
   }) async {
     try {
-      final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
+      final updates = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
 
       if (plan != null) updates['plan'] = plan.value;
       if (status != null) updates['status'] = status.value;
@@ -119,16 +117,16 @@ class ProSubscriptionService {
   Future<ProSubscription> renewSubscription(String subscriptionId) async {
     try {
       // Получить текущую подписку
-      final subscriptionDoc =
-          await _firestore.collection('subscriptions').doc(subscriptionId).get();
+      final subscriptionDoc = await _firestore
+          .collection('subscriptions')
+          .doc(subscriptionId)
+          .get();
 
       if (!subscriptionDoc.exists) {
         throw Exception('Подписка не найдена');
       }
 
-      final subscription = ProSubscription.fromMap(
-        subscriptionDoc.data()!,
-      );
+      final subscription = ProSubscription.fromMap(subscriptionDoc.data()!);
 
       // Обновить дату окончания
       final newEndDate = subscription.endDate.add(const Duration(days: 30));
@@ -148,10 +146,7 @@ class ProSubscriptionService {
   }
 
   /// Получить историю платежей
-  Future<List<Payment>> getPaymentHistory({
-    required String subscriptionId,
-    int limit = 20,
-  }) async {
+  Future<List<Payment>> getPaymentHistory({required String subscriptionId, int limit = 20}) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('payments')
@@ -174,10 +169,7 @@ class ProSubscriptionService {
   }
 
   /// Проверить доступность функции
-  Future<bool> hasFeature({
-    required String userId,
-    required String feature,
-  }) async {
+  Future<bool> hasFeature({required String userId, required String feature}) async {
     try {
       final subscription = await getUserSubscription(userId);
       if (subscription == null) return false;
@@ -229,11 +221,7 @@ class ProSubscriptionService {
   Map<String, bool> _getPlanFeatures(SubscriptionPlan plan) {
     switch (plan) {
       case SubscriptionPlan.basic:
-        return {
-          'basic_profile': true,
-          'portfolio_limit_5': true,
-          'standard_support': true,
-        };
+        return {'basic_profile': true, 'portfolio_limit_5': true, 'standard_support': true};
       case SubscriptionPlan.pro:
         return {
           'basic_profile': true,

@@ -47,11 +47,7 @@ class VoiceMessageService {
 
       // Начинаем запись
       await _recorder.start(
-        const RecordConfig(
-          encoder: AudioEncoder.aacLc,
-          bitRate: 128000,
-          sampleRate: 44100,
-        ),
+        const RecordConfig(encoder: AudioEncoder.aacLc, bitRate: 128000, sampleRate: 44100),
         path: _currentRecordingPath!,
       );
 
@@ -101,11 +97,7 @@ class VoiceMessageService {
   }
 
   /// Загрузить голосовое сообщение в Firebase Storage
-  Future<String?> uploadVoiceMessage(
-    String filePath,
-    String chatId,
-    String senderId,
-  ) async {
+  Future<String?> uploadVoiceMessage(String filePath, String chatId, String senderId) async {
     try {
       final file = File(filePath);
       if (!await file.exists()) return null;

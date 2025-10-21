@@ -80,9 +80,7 @@ class SignatureService {
         signature = digitalSignature;
         signatureType = 'digital';
       } else {
-        throw Exception(
-          'Необходимо предоставить либо подпись от руки, либо цифровую подпись',
-        );
+        throw Exception('Необходимо предоставить либо подпись от руки, либо цифровую подпись');
       }
 
       return {
@@ -104,18 +102,10 @@ class SignatureService {
     try {
       // Пытаемся декодировать как base64 (подпись от руки)
       final bytes = base64Decode(signature);
-      return {
-        'type': 'drawn',
-        'size': bytes.length,
-        'format': 'PNG',
-      };
+      return {'type': 'drawn', 'size': bytes.length, 'format': 'PNG'};
     } catch (e) {
       // Если не base64, то это цифровая подпись
-      return {
-        'type': 'digital',
-        'size': signature.length,
-        'format': 'HASH',
-      };
+      return {'type': 'digital', 'size': signature.length, 'format': 'HASH'};
     }
   }
 
@@ -177,41 +167,41 @@ class _SignaturePadState extends State<SignaturePad> {
 
   @override
   Widget build(BuildContext context) => RepaintBoundary(
-        key: _signatureKey,
-        child: Container(
-          width: widget.width ?? 300,
-          height: widget.height ?? 200,
-          decoration: BoxDecoration(
-            color: widget.backgroundColor ?? Colors.white,
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: GestureDetector(
-            onPanStart: (details) {
-              setState(() {
-                _points.add(details.localPosition);
-              });
-            },
-            onPanUpdate: (details) {
-              setState(() {
-                _points.add(details.localPosition);
-              });
-            },
-            onPanEnd: (details) {
-              setState(() {
-                _points.add(Offset.infinite);
-              });
-            },
-            child: CustomPaint(
-              painter: SignaturePainter(
-                points: _points,
-                penColor: widget.penColor ?? Colors.black,
-                penWidth: widget.penWidth ?? 2.0,
-              ),
-            ),
+    key: _signatureKey,
+    child: Container(
+      width: widget.width ?? 300,
+      height: widget.height ?? 200,
+      decoration: BoxDecoration(
+        color: widget.backgroundColor ?? Colors.white,
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: GestureDetector(
+        onPanStart: (details) {
+          setState(() {
+            _points.add(details.localPosition);
+          });
+        },
+        onPanUpdate: (details) {
+          setState(() {
+            _points.add(details.localPosition);
+          });
+        },
+        onPanEnd: (details) {
+          setState(() {
+            _points.add(Offset.infinite);
+          });
+        },
+        child: CustomPaint(
+          painter: SignaturePainter(
+            points: _points,
+            penColor: widget.penColor ?? Colors.black,
+            penWidth: widget.penWidth ?? 2.0,
           ),
         ),
-      );
+      ),
+    ),
+  );
 
   /// Очистить подпись
   void clear() {
@@ -227,11 +217,7 @@ class _SignaturePadState extends State<SignaturePad> {
 
 /// Художник для отрисовки подписи
 class SignaturePainter extends CustomPainter {
-  const SignaturePainter({
-    required this.points,
-    required this.penColor,
-    required this.penWidth,
-  });
+  const SignaturePainter({required this.points, required this.penColor, required this.penWidth});
 
   final List<Offset> points;
   final Color penColor;

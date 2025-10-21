@@ -4,11 +4,7 @@ import 'package:intl/intl.dart';
 import '../models/payment.dart';
 
 class PaymentHistoryItem extends StatelessWidget {
-  const PaymentHistoryItem({
-    super.key,
-    required this.payment,
-    this.onTap,
-  });
+  const PaymentHistoryItem({super.key, required this.payment, this.onTap});
   final Payment payment;
   final VoidCallback? onTap;
 
@@ -19,9 +15,7 @@ class PaymentHistoryItem extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -51,9 +45,7 @@ class PaymentHistoryItem extends StatelessWidget {
                       children: [
                         Text(
                           payment.typeDisplayName ?? 'Платеж',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 2),
                         Text(
@@ -136,11 +128,7 @@ class PaymentHistoryItem extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 16,
-                        color: theme.colorScheme.error,
-                      ),
+                      Icon(Icons.error_outline, size: 16, color: theme.colorScheme.error),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(

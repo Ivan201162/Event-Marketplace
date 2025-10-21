@@ -24,9 +24,7 @@ class CustomerPortfolioService {
   }
 
   /// Создать или обновить портфолио заказчика
-  Future<CustomerPortfolio> createOrUpdatePortfolio(
-    CustomerPortfolio portfolio,
-  ) async {
+  Future<CustomerPortfolio> createOrUpdatePortfolio(CustomerPortfolio portfolio) async {
     try {
       await _firestore
           .collection(_customersCollection)
@@ -72,22 +70,19 @@ class CustomerPortfolioService {
   /// Добавить заказ из бронирования в историю
   Future<void> addBookingToHistory(String customerId, Booking booking) async {
     try {
-      final orderHistory = OrderHistory.fromMap(
-        {
-          'specialistId': booking.specialistId,
-          'specialistName': booking.specialistName,
-          'serviceName': booking.serviceName ?? booking.eventTitle,
-          'date': booking.eventDate,
-          'price': booking.effectivePrice,
-          'status': booking.status.toString().split('.').last,
-          'eventType': booking.eventType,
-          'location': booking.eventLocation,
-          'notes': booking.specialRequests,
-          'createdAt': booking.createdAt,
-          'updatedAt': booking.updatedAt,
-        },
-        booking.id,
-      );
+      final orderHistory = OrderHistory.fromMap({
+        'specialistId': booking.specialistId,
+        'specialistName': booking.specialistName,
+        'serviceName': booking.serviceName ?? booking.eventTitle,
+        'date': booking.eventDate,
+        'price': booking.effectivePrice,
+        'status': booking.status.toString().split('.').last,
+        'eventType': booking.eventType,
+        'location': booking.eventLocation,
+        'notes': booking.specialRequests,
+        'createdAt': booking.createdAt,
+        'updatedAt': booking.updatedAt,
+      }, booking.id);
       await addOrderToHistory(customerId, orderHistory);
     } on Exception catch (e) {
       throw Exception('Ошибка добавления бронирования в историю: $e');
@@ -95,10 +90,7 @@ class CustomerPortfolioService {
   }
 
   /// Обновить заказ в истории
-  Future<void> updateOrderInHistory(
-    String customerId,
-    OrderHistory order,
-  ) async {
+  Future<void> updateOrderInHistory(String customerId, OrderHistory order) async {
     try {
       await _firestore
           .collection(_customersCollection)
@@ -151,10 +143,7 @@ class CustomerPortfolioService {
   }
 
   /// Удалить специалиста из избранного
-  Future<void> removeFromFavorites(
-    String customerId,
-    String specialistId,
-  ) async {
+  Future<void> removeFromFavorites(String customerId, String specialistId) async {
     try {
       final portfolio = await getCustomerPortfolio(customerId);
       if (portfolio == null) {
@@ -169,10 +158,7 @@ class CustomerPortfolioService {
   }
 
   /// Проверить, является ли специалист избранным
-  Future<bool> isFavoriteSpecialist(
-    String customerId,
-    String specialistId,
-  ) async {
+  Future<bool> isFavoriteSpecialist(String customerId, String specialistId) async {
     try {
       final favorites = await getFavoriteSpecialists(customerId);
       return favorites.contains(specialistId);
@@ -207,10 +193,7 @@ class CustomerPortfolioService {
   }
 
   /// Удалить годовщину
-  Future<void> removeAnniversary(
-    String customerId,
-    DateTime anniversary,
-  ) async {
+  Future<void> removeAnniversary(String customerId, DateTime anniversary) async {
     try {
       final portfolio = await getCustomerPortfolio(customerId);
       if (portfolio == null) {
@@ -273,10 +256,7 @@ class CustomerPortfolioService {
 
       final querySnapshot = await _firestore
           .collection(_customersCollection)
-          .where(
-            'weddingDate',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(today),
-          )
+          .where('weddingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(today))
           .where('weddingDate', isLessThan: Timestamp.fromDate(tomorrow))
           .where('anniversaryRemindersEnabled', isEqualTo: true)
           .get();
@@ -288,9 +268,7 @@ class CustomerPortfolioService {
   }
 
   /// Получить заказчиков с годовщинами в ближайшие дни
-  Future<List<CustomerPortfolio>> getCustomersWithUpcomingAnniversaries(
-    int daysAhead,
-  ) async {
+  Future<List<CustomerPortfolio>> getCustomersWithUpcomingAnniversaries(int daysAhead) async {
     try {
       final now = DateTime.now();
       final startDate = DateTime(now.year, now.month, now.day);
@@ -298,10 +276,7 @@ class CustomerPortfolioService {
 
       final querySnapshot = await _firestore
           .collection(_customersCollection)
-          .where(
-            'weddingDate',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
-          )
+          .where('weddingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
           .where('weddingDate', isLessThan: Timestamp.fromDate(endDate))
           .where('anniversaryRemindersEnabled', isEqualTo: true)
           .get();

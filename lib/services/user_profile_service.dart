@@ -65,10 +65,9 @@ class UserProfileService {
       await ref.putFile(File(imagePath));
       final downloadUrl = await ref.getDownloadURL();
 
-      await _firestore
-          .collection(_profilesCollection)
-          .doc(userId)
-          .update({'avatarUrl': downloadUrl});
+      await _firestore.collection(_profilesCollection).doc(userId).update({
+        'avatarUrl': downloadUrl,
+      });
 
       return downloadUrl;
     } on Exception {
@@ -84,10 +83,9 @@ class UserProfileService {
       await ref.putFile(File(imagePath));
       final downloadUrl = await ref.getDownloadURL();
 
-      await _firestore
-          .collection(_profilesCollection)
-          .doc(userId)
-          .update({'coverUrl': downloadUrl});
+      await _firestore.collection(_profilesCollection).doc(userId).update({
+        'coverUrl': downloadUrl,
+      });
 
       return downloadUrl;
     } on Exception {
@@ -102,9 +100,7 @@ class UserProfileService {
       .where('userId', isEqualTo: userId)
       .orderBy('timestamp', descending: true)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map((doc) => UserPost.fromMap(doc.data())).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map((doc) => UserPost.fromMap(doc.data())).toList());
 
   /// Создать пост
   static Future<bool> createPost(UserPost post) async {
@@ -179,9 +175,7 @@ class UserProfileService {
       .orderBy('expiresAt')
       .orderBy('timestamp', descending: true)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map((doc) => UserStory.fromMap(doc.data())).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map((doc) => UserStory.fromMap(doc.data())).toList());
 
   /// Создать сторис
   static Future<bool> createStory(UserStory story) async {
@@ -224,9 +218,7 @@ class UserProfileService {
       .where('specialistId', isEqualTo: specialistId)
       .orderBy('timestamp', descending: true)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map((doc) => UserReview.fromMap(doc.data())).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map((doc) => UserReview.fromMap(doc.data())).toList());
 
   /// Создать отзыв
   static Future<bool> createReview(UserReview review) async {
@@ -261,20 +253,16 @@ class UserProfileService {
 
       final averageRating = totalRating / reviewsSnapshot.docs.length;
 
-      await _firestore
-          .collection(_profilesCollection)
-          .doc(specialistId)
-          .update({'rating': averageRating});
+      await _firestore.collection(_profilesCollection).doc(specialistId).update({
+        'rating': averageRating,
+      });
     } on Exception {
       // Логирование:'Ошибка обновления рейтинга: $e');
     }
   }
 
   /// Обновить прайс-лист специалиста
-  static Future<bool> updateServices(
-    String userId,
-    List<ServicePrice> services,
-  ) async {
+  static Future<bool> updateServices(String userId, List<ServicePrice> services) async {
     try {
       await _firestore.collection(_profilesCollection).doc(userId).update({
         'services': services.map((service) => service.toMap()).toList(),
@@ -288,10 +276,7 @@ class UserProfileService {
   }
 
   /// Подписаться/отписаться от пользователя
-  static Future<bool> toggleFollow(
-    String followerId,
-    String followingId,
-  ) async {
+  static Future<bool> toggleFollow(String followerId, String followingId) async {
     try {
       final batch = _firestore.batch();
 
@@ -391,11 +376,7 @@ class UserProfileService {
   }
 
   /// Загрузить медиа файл
-  static Future<String?> uploadMedia(
-    String userId,
-    String filePath,
-    String type,
-  ) async {
+  static Future<String?> uploadMedia(String userId, String filePath, String type) async {
     try {
       final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = _storage.ref().child('$type/$userId/$fileName');

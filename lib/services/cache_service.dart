@@ -38,10 +38,7 @@ class CacheService {
   Future<void> cacheSpecialists(List<Map<String, dynamic>> specialists) async {
     try {
       await _specialistsCache.put('specialists_list', specialists);
-      await _specialistsCache.put(
-        'last_updated',
-        DateTime.now().millisecondsSinceEpoch,
-      );
+      await _specialistsCache.put('last_updated', DateTime.now().millisecondsSinceEpoch);
     } on Exception catch (e) {
       debugPrint('Ошибка кэширования специалистов: $e');
     }
@@ -78,10 +75,7 @@ class CacheService {
   Future<void> cachePosts(List<Map<String, dynamic>> posts) async {
     try {
       await _postsCache.put('posts_list', posts);
-      await _postsCache.put(
-        'last_updated',
-        DateTime.now().millisecondsSinceEpoch,
-      );
+      await _postsCache.put('last_updated', DateTime.now().millisecondsSinceEpoch);
     } on Exception catch (e) {
       debugPrint('Ошибка кэширования постов: $e');
     }
@@ -104,10 +98,7 @@ class CacheService {
   Future<void> cacheIdeas(List<Map<String, dynamic>> ideas) async {
     try {
       await _ideasCache.put('ideas_list', ideas);
-      await _ideasCache.put(
-        'last_updated',
-        DateTime.now().millisecondsSinceEpoch,
-      );
+      await _ideasCache.put('last_updated', DateTime.now().millisecondsSinceEpoch);
     } on Exception catch (e) {
       debugPrint('Ошибка кэширования идей: $e');
     }
@@ -130,10 +121,7 @@ class CacheService {
   Future<void> cacheStories(List<Map<String, dynamic>> stories) async {
     try {
       await _storiesCache.put('stories_list', stories);
-      await _storiesCache.put(
-        'last_updated',
-        DateTime.now().millisecondsSinceEpoch,
-      );
+      await _storiesCache.put('last_updated', DateTime.now().millisecondsSinceEpoch);
     } on Exception catch (e) {
       debugPrint('Ошибка кэширования историй: $e');
     }
@@ -153,10 +141,7 @@ class CacheService {
   }
 
   /// Кэширование пользовательских данных
-  Future<void> cacheUserData(
-    String userId,
-    Map<String, dynamic> userData,
-  ) async {
+  Future<void> cacheUserData(String userId, Map<String, dynamic> userData) async {
     try {
       await _userDataCache.put(userId, userData);
     } on Exception catch (e) {
@@ -189,9 +174,7 @@ class CacheService {
   /// Предзагрузка списка изображений
   Future<void> preloadImages(List<String> imageUrls) async {
     try {
-      await Future.wait(
-        imageUrls.map(_imageCacheManager.getSingleFile),
-      );
+      await Future.wait(imageUrls.map(_imageCacheManager.getSingleFile));
     } on Exception catch (e) {
       debugPrint('Ошибка предзагрузки изображений: $e');
     }

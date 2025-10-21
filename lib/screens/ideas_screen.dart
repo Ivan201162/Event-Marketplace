@@ -19,10 +19,7 @@ class IdeasScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showCreateIdeaDialog(context),
-          ),
+          IconButton(icon: const Icon(Icons.add), onPressed: () => _showCreateIdeaDialog(context)),
         ],
       ),
       body: SafeArea(
@@ -33,26 +30,13 @@ class IdeasScreen extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.lightbulb_outline,
-                      size: 64,
-                      color: Colors.grey,
-                    ),
+                    Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey),
                     SizedBox(height: 16),
-                    Text(
-                      'Нет идей',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
-                      ),
-                    ),
+                    Text('Нет идей', style: TextStyle(fontSize: 18, color: Colors.grey)),
                     SizedBox(height: 8),
                     Text(
                       'Создайте первую идею или подпишитесь на специалистов',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -72,18 +56,11 @@ class IdeasScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Colors.red,
-                ),
+                const Icon(Icons.error_outline, size: 64, color: Colors.red),
                 const SizedBox(height: 16),
                 Text(
                   'Ошибка загрузки идей',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.red[700],
-                  ),
+                  style: TextStyle(fontSize: 18, color: Colors.red[700]),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -99,200 +76,171 @@ class IdeasScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildIdeasGrid(
-    BuildContext context,
-    List<Idea> ideas,
-    WidgetRef ref,
-  ) =>
-      Padding(
-        padding: const EdgeInsets.all(8),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 8,
-            mainAxisSpacing: 8,
-          ),
-          itemCount: ideas.length,
-          itemBuilder: (context, index) {
-            final idea = ideas[index];
-            return _buildIdeaCard(context, idea, ref);
-          },
-        ),
-      );
+  Widget _buildIdeasGrid(BuildContext context, List<Idea> ideas, WidgetRef ref) => Padding(
+    padding: const EdgeInsets.all(8),
+    child: GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.75,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemCount: ideas.length,
+      itemBuilder: (context, index) {
+        final idea = ideas[index];
+        return _buildIdeaCard(context, idea, ref);
+      },
+    ),
+  );
 
   Widget _buildIdeaCard(BuildContext context, Idea idea, WidgetRef ref) => Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: InkWell(
-          onTap: () => _showIdeaDetails(context, idea),
-          borderRadius: BorderRadius.circular(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Изображение
-              Expanded(
-                flex: 3,
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                    image: idea.imageUrl != null
-                        ? DecorationImage(
-                            image: NetworkImage(idea.imageUrl!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                    color: idea.imageUrl == null ? Colors.grey[200] : null,
-                  ),
-                  child: idea.imageUrl == null
-                      ? const Center(
-                          child: Icon(
-                            Icons.image,
-                            size: 48,
-                            color: Colors.grey,
-                          ),
-                        )
-                      : Stack(
-                          children: [
-                            // Кнопка сохранения
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: GestureDetector(
-                                onTap: () => _toggleSave(context, idea),
-                                child: Container(
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.5),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    idea.isSaved ? Icons.bookmark : Icons.bookmark_border,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
+    elevation: 2,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    child: InkWell(
+      onTap: () => _showIdeaDetails(context, idea),
+      borderRadius: BorderRadius.circular(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Изображение
+          Expanded(
+            flex: 3,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                image: idea.imageUrl != null
+                    ? DecorationImage(image: NetworkImage(idea.imageUrl!), fit: BoxFit.cover)
+                    : null,
+                color: idea.imageUrl == null ? Colors.grey[200] : null,
+              ),
+              child: idea.imageUrl == null
+                  ? const Center(child: Icon(Icons.image, size: 48, color: Colors.grey))
+                  : Stack(
+                      children: [
+                        // Кнопка сохранения
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () => _toggleSave(context, idea),
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                idea.isSaved ? Icons.bookmark : Icons.bookmark_border,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+          // Контент
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Заголовок
+                  Text(
+                    idea.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  // Описание
+                  Expanded(
+                    child: Text(
+                      idea.description,
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Автор и действия
+                  Row(
+                    children: [
+                      // Аватар автора
+                      GestureDetector(
+                        onTap: () => context.push('/profile/${idea.authorId}'),
+                        child: CircleAvatar(
+                          radius: 12,
+                          backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                          backgroundImage: idea.authorAvatar != null
+                              ? NetworkImage(idea.authorAvatar!)
+                              : null,
+                          child: idea.authorAvatar == null
+                              ? const Icon(Icons.person, size: 12)
+                              : null,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Имя автора
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => context.push('/profile/${idea.authorId}'),
+                          child: Text(
+                            idea.authorName ?? 'Неизвестный автор',
+                            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      // Лайк
+                      GestureDetector(
+                        onTap: () => _toggleLike(context, idea),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              idea.isLiked ? Icons.favorite : Icons.favorite_border,
+                              color: idea.isLiked ? Colors.red : Colors.grey[600],
+                              size: 16,
+                            ),
+                            if (idea.likeCount > 0) ...[
+                              const SizedBox(width: 4),
+                              Text(
+                                idea.likeCount.toString(),
+                                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                              ),
+                            ],
                           ],
                         ),
-                ),
-              ),
-              // Контент
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Заголовок
-                      Text(
-                        idea.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      // Описание
-                      Expanded(
-                        child: Text(
-                          idea.description,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      // Автор и действия
-                      Row(
-                        children: [
-                          // Аватар автора
-                          GestureDetector(
-                            onTap: () => context.push('/profile/${idea.authorId}'),
-                            child: CircleAvatar(
-                              radius: 12,
-                              backgroundColor:
-                                  Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                              backgroundImage: idea.authorAvatar != null
-                                  ? NetworkImage(idea.authorAvatar!)
-                                  : null,
-                              child: idea.authorAvatar == null
-                                  ? const Icon(Icons.person, size: 12)
-                                  : null,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          // Имя автора
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () => context.push('/profile/${idea.authorId}'),
-                              child: Text(
-                                idea.authorName ?? 'Неизвестный автор',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey[600],
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                          // Лайк
-                          GestureDetector(
-                            onTap: () => _toggleLike(context, idea),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  idea.isLiked ? Icons.favorite : Icons.favorite_border,
-                                  color: idea.isLiked ? Colors.red : Colors.grey[600],
-                                  size: 16,
-                                ),
-                                if (idea.likeCount > 0) ...[
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    idea.likeCount.toString(),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   void _toggleLike(BuildContext context, Idea idea) {
     // TODO: Реализовать лайк через Firestore
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(idea.isLiked ? 'Лайк убран' : 'Лайк поставлен')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(idea.isLiked ? 'Лайк убран' : 'Лайк поставлен')));
   }
 
   void _toggleSave(BuildContext context, Idea idea) {
     // TODO: Реализовать сохранение через Firestore
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(idea.isSaved ? 'Убрано из сохранённых' : 'Сохранено'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(idea.isSaved ? 'Убрано из сохранённых' : 'Сохранено')));
   }
 
   void _showIdeaDetails(BuildContext context, Idea idea) {
@@ -314,10 +262,7 @@ class IdeasScreen extends ConsumerWidget {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    image: DecorationImage(
-                      image: NetworkImage(idea.imageUrl!),
-                      fit: BoxFit.cover,
-                    ),
+                    image: DecorationImage(image: NetworkImage(idea.imageUrl!), fit: BoxFit.cover),
                   ),
                 ),
               const SizedBox(height: 16),
@@ -337,8 +282,9 @@ class IdeasScreen extends ConsumerWidget {
                   CircleAvatar(
                     radius: 16,
                     backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                    backgroundImage:
-                        idea.authorAvatar != null ? NetworkImage(idea.authorAvatar!) : null,
+                    backgroundImage: idea.authorAvatar != null
+                        ? NetworkImage(idea.authorAvatar!)
+                        : null,
                     child: idea.authorAvatar == null ? const Icon(Icons.person, size: 16) : null,
                   ),
                   const SizedBox(width: 8),
@@ -354,10 +300,7 @@ class IdeasScreen extends ConsumerWidget {
               Expanded(
                 child: SingleChildScrollView(
                   controller: scrollController,
-                  child: Text(
-                    idea.description,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+                  child: Text(idea.description, style: Theme.of(context).textTheme.bodyLarge),
                 ),
               ),
 
@@ -414,19 +357,14 @@ class IdeasScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Text(
-                'Комментарии',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
+              Text('Комментарии', style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 16),
               Expanded(
                 child: ListView(
                   controller: scrollController,
                   children: const [
                     // TODO: Загрузить комментарии из Firestore
-                    Center(
-                      child: Text('Комментарии загружаются...'),
-                    ),
+                    Center(child: Text('Комментарии загружаются...')),
                   ],
                 ),
               ),
@@ -455,12 +393,7 @@ class IdeasScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text('Создать идею'),
         content: const Text('Функция создания идей в разработке'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
       ),
     );
   }

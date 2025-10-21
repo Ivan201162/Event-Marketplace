@@ -18,10 +18,7 @@ class AppLocalizations {
     GlobalCupertinoLocalizations.delegate,
   ];
 
-  static const List<Locale> supportedLocales = [
-    Locale('en'),
-    Locale('ru'),
-  ];
+  static const List<Locale> supportedLocales = [Locale('en'), Locale('ru')];
 
   static const Map<String, Map<String, String>> _localizedValues = {
     'en': {
@@ -85,8 +82,10 @@ class AppLocalizations {
   @override
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.isGetter) {
-      final key =
-          invocation.memberName.toString().replaceFirst('Symbol("', '').replaceFirst('")', '');
+      final key = invocation.memberName
+          .toString()
+          .replaceFirst('Symbol("', '')
+          .replaceFirst('")', '');
       return t(key);
     }
     return super.noSuchMethod(invocation);
@@ -125,8 +124,8 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 
   @override
   bool isSupported(Locale locale) => AppLocalizations.supportedLocales.any(
-        (supportedLocale) => supportedLocale.languageCode == locale.languageCode,
-      );
+    (supportedLocale) => supportedLocale.languageCode == locale.languageCode,
+  );
 
   @override
   Future<AppLocalizations> load(Locale locale) async => AppLocalizations(locale);

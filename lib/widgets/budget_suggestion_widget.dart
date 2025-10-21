@@ -7,312 +7,276 @@ import 'responsive_text.dart';
 
 /// Виджет для отображения предложения по увеличению бюджета
 class BudgetSuggestionWidget extends ConsumerWidget {
-  const BudgetSuggestionWidget({
-    super.key,
-    required this.suggestion,
-    this.onSuggestionChanged,
-  });
+  const BudgetSuggestionWidget({super.key, required this.suggestion, this.onSuggestionChanged});
   final BudgetSuggestion suggestion;
   final VoidCallback? onSuggestionChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Заголовок с статусом
+        Row(
           children: [
-            // Заголовок с статусом
-            Row(
-              children: [
-                Icon(
-                  _getSuggestionIcon(),
-                  color: suggestion.status.color,
-                  size: 24,
+            Icon(_getSuggestionIcon(), color: suggestion.status.color, size: 24),
+            const SizedBox(width: 8),
+            Expanded(
+              child: ResponsiveText(
+                'Рекомендуем увеличить бюджет',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            _buildStatusChip(),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        // Информация о предложении
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: suggestion.status.color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: suggestion.status.color),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ResponsiveText(
+                    'Дополнительных услуг:',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                  ),
+                  ResponsiveText(
+                    '${suggestion.suggestionCount}',
+                    style: TextStyle(color: suggestion.status.color, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ResponsiveText(
+                    'Общая стоимость:',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                  ),
+                  ResponsiveText(
+                    '${suggestion.totalCost.toStringAsFixed(0)} ₽',
+                    style: TextStyle(color: suggestion.status.color, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              if (suggestion.minCost != suggestion.maxCost) ...[
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ResponsiveText(
+                      'Диапазон цен:',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                    ),
+                    ResponsiveText(
+                      '${suggestion.minCost.toStringAsFixed(0)} - ${suggestion.maxCost.toStringAsFixed(0)} ₽',
+                      style: TextStyle(color: suggestion.status.color, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
+              ],
+            ],
+          ),
+        ),
+
+        // Сообщение
+        if (suggestion.message != null) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.blue),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.message, color: Colors.blue, size: 20),
                 const SizedBox(width: 8),
                 Expanded(
                   child: ResponsiveText(
-                    'Рекомендуем увеличить бюджет',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    suggestion.message!,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                   ),
                 ),
-                _buildStatusChip(),
               ],
             ),
+          ),
+        ],
 
-            const SizedBox(height: 12),
+        // Список рекомендуемых услуг
+        const SizedBox(height: 12),
+        ResponsiveText(
+          'Рекомендуемые услуги:',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
 
-            // Информация о предложении
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: suggestion.status.color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: suggestion.status.color),
+        const SizedBox(height: 8),
+
+        ...suggestion.suggestions.map(_buildServiceCard),
+
+        // Кнопки действий
+        if (suggestion.canRespond) ...[
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () => _acceptSuggestion(context, ref),
+                  icon: const Icon(Icons.check),
+                  label: const Text('Принять все'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
               ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _rejectSuggestion(context, ref),
+                  icon: const Icon(Icons.close),
+                  label: const Text('Отклонить'),
+                  style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                ),
+              ),
+            ],
+          ),
+        ],
+
+        // Информация о времени
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            const Icon(Icons.access_time, size: 16, color: Colors.grey),
+            const SizedBox(width: 4),
+            ResponsiveText(
+              'Создано: ${_formatDate(suggestion.createdAt)}',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildStatusChip() => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    decoration: BoxDecoration(
+      color: suggestion.status.color.withValues(alpha: 0.2),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: suggestion.status.color),
+    ),
+    child: Text(
+      suggestion.status.displayName,
+      style: TextStyle(color: suggestion.status.color, fontSize: 12, fontWeight: FontWeight.bold),
+    ),
+  );
+
+  Widget _buildServiceCard(BudgetSuggestionItem item) => Container(
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.grey.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ResponsiveText(
-                        'Дополнительных услуг:',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                      ResponsiveText(
-                        '${suggestion.suggestionCount}',
-                        style: TextStyle(
-                          color: suggestion.status.color,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                  ResponsiveText(
+                    item.categoryName,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ResponsiveText(
-                        'Общая стоимость:',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                      ResponsiveText(
-                        '${suggestion.totalCost.toStringAsFixed(0)} ₽',
-                        style: TextStyle(
-                          color: suggestion.status.color,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (suggestion.minCost != suggestion.maxCost) ...[
-                    const SizedBox(height: 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ResponsiveText(
-                          'Диапазон цен:',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                        ),
-                        ResponsiveText(
-                          '${suggestion.minCost.toStringAsFixed(0)} - ${suggestion.maxCost.toStringAsFixed(0)} ₽',
-                          style: TextStyle(
-                            color: suggestion.status.color,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                  if (item.specialistName != null) ...[
+                    const SizedBox(height: 2),
+                    ResponsiveText(
+                      item.specialistName!,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                     ),
                   ],
                 ],
               ),
             ),
-
-            // Сообщение
-            if (suggestion.message != null) ...[
-              const SizedBox(height: 12),
+            if (item.estimatedPrice != null) ...[
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue),
+                  color: Colors.green.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.message, color: Colors.blue, size: 20),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ResponsiveText(
-                        suggestion.message!,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-
-            // Список рекомендуемых услуг
-            const SizedBox(height: 12),
-            ResponsiveText(
-              'Рекомендуемые услуги:',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                child: Text(
+                  '${item.estimatedPrice!.toStringAsFixed(0)} ₽',
+                  style: const TextStyle(
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
+                    color: Colors.green,
                   ),
-            ),
-
-            const SizedBox(height: 8),
-
-            ...suggestion.suggestions.map(_buildServiceCard),
-
-            // Кнопки действий
-            if (suggestion.canRespond) ...[
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _acceptSuggestion(context, ref),
-                      icon: const Icon(Icons.check),
-                      label: const Text('Принять все'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _rejectSuggestion(context, ref),
-                      icon: const Icon(Icons.close),
-                      label: const Text('Отклонить'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
-
-            // Информация о времени
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                const SizedBox(width: 4),
-                ResponsiveText(
-                  'Создано: ${_formatDate(suggestion.createdAt)}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-              ],
-            ),
           ],
         ),
-      );
-
-  Widget _buildStatusChip() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: suggestion.status.color.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: suggestion.status.color),
+        const SizedBox(height: 8),
+        ResponsiveText(
+          item.description,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
         ),
-        child: Text(
-          suggestion.status.displayName,
-          style: TextStyle(
-            color: suggestion.status.color,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      );
-
-  Widget _buildServiceCard(BudgetSuggestionItem item) => Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        if (item.reason != null) ...[
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.blue.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Row(
               children: [
+                const Icon(Icons.info_outline, size: 16, color: Colors.blue),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ResponsiveText(
-                        item.categoryName,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      if (item.specialistName != null) ...[
-                        const SizedBox(height: 2),
-                        ResponsiveText(
-                          item.specialistName!,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                        ),
-                      ],
-                    ],
+                  child: Text(
+                    item.reason!,
+                    style: const TextStyle(fontSize: 12, color: Colors.blue),
                   ),
                 ),
-                if (item.estimatedPrice != null) ...[
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${item.estimatedPrice!.toStringAsFixed(0)} ₽',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ),
-                ],
               ],
             ),
-            const SizedBox(height: 8),
-            ResponsiveText(
-              item.description,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-            ),
-            if (item.reason != null) ...[
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.info_outline,
-                      size: 16,
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        item.reason!,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ],
-        ),
-      );
+          ),
+        ],
+      ],
+    ),
+  );
 
   IconData _getSuggestionIcon() {
     switch (suggestion.status) {
@@ -360,12 +324,9 @@ class BudgetSuggestionWidget extends ConsumerWidget {
 
       onSuggestionChanged?.call();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -419,141 +380,135 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
 
   @override
   Widget build(BuildContext context) => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                const Icon(Icons.trending_up, color: Colors.blue),
-                const SizedBox(width: 8),
-                ResponsiveText(
-                  'Предложить увеличить бюджет',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            const Text(
-              'Проанализируйте бюджет клиента и предложите дополнительные услуги для улучшения мероприятия.',
-            ),
-
-            const SizedBox(height: 16),
-
-            // Кнопка анализа бюджета
-            ElevatedButton.icon(
-              onPressed: _isLoading ? null : _loadBudgetSuggestions,
-              icon: _isLoading
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.analytics),
-              label: Text(_isLoading ? 'Анализ...' : 'Проанализировать бюджет'),
-            ),
-
-            // Список рекомендуемых услуг
-            if (_selectedItems.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              ResponsiveText(
-                'Рекомендуемые услуги:',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              ..._selectedItems.map(_buildSelectedServiceCard),
-            ],
-
-            // Сообщение
-            const SizedBox(height: 16),
-            TextField(
-              controller: _messageController,
-              decoration: const InputDecoration(
-                labelText: 'Сообщение клиенту (необязательно)',
-                border: OutlineInputBorder(),
-                hintText: 'Добавьте комментарий к предложению...',
-              ),
-              maxLines: 3,
-            ),
-
-            // Кнопка создания предложения
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _canCreateSuggestion() ? _createSuggestion : null,
-                    icon: _isLoading
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Icon(Icons.send),
-                    label: Text(
-                      _isLoading ? 'Создание...' : 'Создать предложение',
-                    ),
-                  ),
-                ),
-              ],
+            const Icon(Icons.trending_up, color: Colors.blue),
+            const SizedBox(width: 8),
+            ResponsiveText(
+              'Предложить увеличить бюджет',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
-      );
 
-  Widget _buildSelectedServiceCard(BudgetSuggestionItem item) => Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.blue.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.blue),
+        const SizedBox(height: 12),
+
+        const Text(
+          'Проанализируйте бюджет клиента и предложите дополнительные услуги для улучшения мероприятия.',
         ),
-        child: Row(
+
+        const SizedBox(height: 16),
+
+        // Кнопка анализа бюджета
+        ElevatedButton.icon(
+          onPressed: _isLoading ? null : _loadBudgetSuggestions,
+          icon: _isLoading
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.analytics),
+          label: Text(_isLoading ? 'Анализ...' : 'Проанализировать бюджет'),
+        ),
+
+        // Список рекомендуемых услуг
+        if (_selectedItems.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          ResponsiveText(
+            'Рекомендуемые услуги:',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          ..._selectedItems.map(_buildSelectedServiceCard),
+        ],
+
+        // Сообщение
+        const SizedBox(height: 16),
+        TextField(
+          controller: _messageController,
+          decoration: const InputDecoration(
+            labelText: 'Сообщение клиенту (необязательно)',
+            border: OutlineInputBorder(),
+            hintText: 'Добавьте комментарий к предложению...',
+          ),
+          maxLines: 3,
+        ),
+
+        // Кнопка создания предложения
+        const SizedBox(height: 16),
+        Row(
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ResponsiveText(
-                    item.categoryName,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  if (item.specialistName != null) ...[
-                    const SizedBox(height: 2),
-                    ResponsiveText(
-                      item.specialistName!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                  ],
-                  if (item.estimatedPrice != null) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      '${item.estimatedPrice!.toStringAsFixed(0)} ₽',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ],
-                ],
+              child: ElevatedButton.icon(
+                onPressed: _canCreateSuggestion() ? _createSuggestion : null,
+                icon: _isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.send),
+                label: Text(_isLoading ? 'Создание...' : 'Создать предложение'),
               ),
-            ),
-            IconButton(
-              onPressed: () => _removeService(item),
-              icon: const Icon(Icons.remove_circle, color: Colors.red),
             ),
           ],
         ),
-      );
+      ],
+    ),
+  );
+
+  Widget _buildSelectedServiceCard(BudgetSuggestionItem item) => Container(
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.blue.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.blue),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ResponsiveText(
+                item.categoryName,
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
+              if (item.specialistName != null) ...[
+                const SizedBox(height: 2),
+                ResponsiveText(
+                  item.specialistName!,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                ),
+              ],
+              if (item.estimatedPrice != null) ...[
+                const SizedBox(height: 4),
+                Text(
+                  '${item.estimatedPrice!.toStringAsFixed(0)} ₽',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        IconButton(
+          onPressed: () => _removeService(item),
+          icon: const Icon(Icons.remove_circle, color: Colors.red),
+        ),
+      ],
+    ),
+  );
 
   bool _canCreateSuggestion() => _selectedItems.isNotEmpty && !_isLoading;
 
@@ -577,10 +532,7 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка анализа бюджета: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка анализа бюджета: $e'), backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -622,12 +574,9 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
 
       widget.onSuggestionCreated?.call();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     } finally {
       setState(() {
         _isLoading = false;
@@ -638,10 +587,7 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
 
 /// Диалог для отклонения предложения
 class _RejectSuggestionDialog extends StatefulWidget {
-  const _RejectSuggestionDialog({
-    required this.suggestion,
-    required this.onRejected,
-  });
+  const _RejectSuggestionDialog({required this.suggestion, required this.onRejected});
   final BudgetSuggestion suggestion;
   final VoidCallback onRejected;
 
@@ -661,43 +607,40 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Отклонить предложение'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Вы уверены, что хотите отклонить это предложение?'),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _reasonController,
-              decoration: const InputDecoration(
-                labelText: 'Причина отклонения (необязательно)',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-          ],
+    title: const Text('Отклонить предложение'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text('Вы уверены, что хотите отклонить это предложение?'),
+        const SizedBox(height: 16),
+        TextField(
+          controller: _reasonController,
+          decoration: const InputDecoration(
+            labelText: 'Причина отклонения (необязательно)',
+            border: OutlineInputBorder(),
+          ),
+          maxLines: 3,
         ),
-        actions: [
-          TextButton(
-            onPressed: _isLoading ? null : () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: _isLoading ? null : _rejectSuggestion,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: _isLoading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text('Отклонить'),
-          ),
-        ],
-      );
+      ],
+    ),
+    actions: [
+      TextButton(
+        onPressed: _isLoading ? null : () => Navigator.pop(context),
+        child: const Text('Отмена'),
+      ),
+      ElevatedButton(
+        onPressed: _isLoading ? null : _rejectSuggestion,
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+        child: _isLoading
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Text('Отклонить'),
+      ),
+    ],
+  );
 
   Future<void> _rejectSuggestion() async {
     setState(() {
@@ -717,20 +660,14 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Предложение отклонено'),
-          backgroundColor: Colors.orange,
-        ),
+        const SnackBar(content: Text('Предложение отклонено'), backgroundColor: Colors.orange),
       );
 
       widget.onRejected();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     } finally {
       setState(() {
         _isLoading = false;
@@ -740,5 +677,6 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
 }
 
 /// Провайдер для сервиса предложений по бюджету
-final budgetSuggestionServiceProvider =
-    Provider<BudgetSuggestionService>((ref) => BudgetSuggestionService());
+final budgetSuggestionServiceProvider = Provider<BudgetSuggestionService>(
+  (ref) => BudgetSuggestionService(),
+);

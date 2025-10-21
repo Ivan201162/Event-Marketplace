@@ -33,9 +33,9 @@ class _AdminReferralManagementScreenState extends State<AdminReferralManagementS
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки статистики: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки статистики: $e')));
       }
     }
   }
@@ -47,12 +47,7 @@ class _AdminReferralManagementScreenState extends State<AdminReferralManagementS
         title: const Text('Управление рефералами'),
         backgroundColor: Colors.purple,
         foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadReferralStats,
-          ),
-        ],
+        actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadReferralStats)],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -147,18 +142,11 @@ class _AdminReferralManagementScreenState extends State<AdminReferralManagementS
           const SizedBox(height: 8),
           Text(
             value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
           ),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
         ],
@@ -194,10 +182,7 @@ class _AdminReferralManagementScreenState extends State<AdminReferralManagementS
                       backgroundColor: Colors.purple,
                       child: Text(
                         '${index + 1}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                     title: Text('Пользователь ${referrer['userId']}'),
@@ -245,10 +230,7 @@ class _AdminReferralManagementScreenState extends State<AdminReferralManagementS
               leading: const Icon(Icons.toggle_on),
               title: const Text('Статус программы'),
               subtitle: const Text('Активна'),
-              trailing: Switch(
-                value: true,
-                onChanged: (value) => _toggleReferralProgram(value),
-              ),
+              trailing: Switch(value: true, onChanged: (value) => _toggleReferralProgram(value)),
             ),
           ],
         ),
@@ -351,16 +333,13 @@ class _AdminReferralManagementScreenState extends State<AdminReferralManagementS
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Настройки бонусов сохранены')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Настройки бонусов сохранены')));
             },
             child: const Text('Сохранить'),
           ),
@@ -395,16 +374,13 @@ class _AdminReferralManagementScreenState extends State<AdminReferralManagementS
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Настройки наград сохранены')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Настройки наград сохранены')));
             },
             child: const Text('Сохранить'),
           ),

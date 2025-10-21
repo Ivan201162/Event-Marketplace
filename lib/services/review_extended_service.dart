@@ -56,10 +56,7 @@ class ReviewExtendedService {
   }
 
   /// Получить отзывы специалиста
-  Stream<List<ReviewExtended>> getSpecialistReviews(
-    String specialistId,
-    ReviewFilter filter,
-  ) {
+  Stream<List<ReviewExtended>> getSpecialistReviews(String specialistId, ReviewFilter filter) {
     var query = _firestore
         .collection('reviews_extended')
         .where('specialistId', isEqualTo: specialistId)
@@ -90,10 +87,7 @@ class ReviewExtendedService {
     }
 
     if (filter.endDate != null) {
-      query = query.where(
-        'createdAt',
-        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
-      );
+      query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
     }
 
     // Сортировка
@@ -105,16 +99,10 @@ class ReviewExtendedService {
         query = query.orderBy('rating', descending: !filter.sortAscending);
         break;
       case ReviewSortBy.likes:
-        query = query.orderBy(
-          'stats.likesCount',
-          descending: !filter.sortAscending,
-        );
+        query = query.orderBy('stats.likesCount', descending: !filter.sortAscending);
         break;
       case ReviewSortBy.helpfulness:
-        query = query.orderBy(
-          'stats.helpfulnessScore',
-          descending: !filter.sortAscending,
-        );
+        query = query.orderBy('stats.helpfulnessScore', descending: !filter.sortAscending);
         break;
     }
 
@@ -127,17 +115,13 @@ class ReviewExtendedService {
       // Применяем фильтры, которые нельзя применить в Firestore
       if (filter.hasMedia != null) {
         reviews = reviews
-            .where(
-              (review) => filter.hasMedia! ? review.media.isNotEmpty : review.media.isEmpty,
-            )
+            .where((review) => filter.hasMedia! ? review.media.isNotEmpty : review.media.isEmpty)
             .toList();
       }
 
       if (filter.tags != null && filter.tags!.isNotEmpty) {
         reviews = reviews
-            .where(
-              (review) => review.tags.any((tag) => filter.tags!.contains(tag)),
-            )
+            .where((review) => review.tags.any((tag) => filter.tags!.contains(tag)))
             .toList();
       }
 
@@ -244,19 +228,13 @@ class ReviewExtendedService {
   }
 
   /// Добавить медиа к отзыву
-  Future<bool> addMediaToReview(
-    String reviewId,
-    List<ReviewMedia> media,
-  ) async {
+  Future<bool> addMediaToReview(String reviewId, List<ReviewMedia> media) async {
     try {
       final review = await getReview(reviewId);
       if (review == null) return false;
 
       final updatedMedia = [...review.media, ...media];
-      final updatedReview = review.copyWith(
-        media: updatedMedia,
-        updatedAt: DateTime.now(),
-      );
+      final updatedReview = review.copyWith(media: updatedMedia, updatedAt: DateTime.now());
 
       return await updateReview(updatedReview);
     } catch (e) {
@@ -272,10 +250,7 @@ class ReviewExtendedService {
       if (review == null) return false;
 
       final updatedMedia = review.media.where((m) => m.id != mediaId).toList();
-      final updatedReview = review.copyWith(
-        media: updatedMedia,
-        updatedAt: DateTime.now(),
-      );
+      final updatedReview = review.copyWith(media: updatedMedia, updatedAt: DateTime.now());
 
       return await updateReview(updatedReview);
     } catch (e) {
@@ -418,9 +393,7 @@ class ReviewExtendedService {
   }
 
   /// Получить статистику отзывов специалиста
-  Future<SpecialistReviewStats> getSpecialistReviewStats(
-    String specialistId,
-  ) async {
+  Future<SpecialistReviewStats> getSpecialistReviewStats(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('reviews_extended')
@@ -510,14 +483,9 @@ class ReviewExtendedService {
       final review = await getReview(reviewId);
       if (review == null) return;
 
-      final updatedStats = review.stats.copyWith(
-        viewsCount: review.stats.viewsCount + 1,
-      );
+      final updatedStats = review.stats.copyWith(viewsCount: review.stats.viewsCount + 1);
 
-      final updatedReview = review.copyWith(
-        stats: updatedStats,
-        updatedAt: DateTime.now(),
-      );
+      final updatedReview = review.copyWith(stats: updatedStats, updatedAt: DateTime.now());
 
       await updateReview(updatedReview);
     } catch (e) {
@@ -531,14 +499,9 @@ class ReviewExtendedService {
       final review = await getReview(reviewId);
       if (review == null) return;
 
-      final updatedStats = review.stats.copyWith(
-        sharesCount: review.stats.sharesCount + 1,
-      );
+      final updatedStats = review.stats.copyWith(sharesCount: review.stats.sharesCount + 1);
 
-      final updatedReview = review.copyWith(
-        stats: updatedStats,
-        updatedAt: DateTime.now(),
-      );
+      final updatedReview = review.copyWith(stats: updatedStats, updatedAt: DateTime.now());
 
       await updateReview(updatedReview);
     } catch (e) {
@@ -547,18 +510,12 @@ class ReviewExtendedService {
   }
 
   /// Пожаловаться на отзыв
-  Future<bool> reportReview(
-    String reviewId,
-    String reason,
-    String reporterId,
-  ) async {
+  Future<bool> reportReview(String reviewId, String reason, String reporterId) async {
     try {
       final review = await getReview(reviewId);
       if (review == null) return false;
 
-      final updatedStats = review.stats.copyWith(
-        reportsCount: review.stats.reportsCount + 1,
-      );
+      final updatedStats = review.stats.copyWith(reportsCount: review.stats.reportsCount + 1);
 
       final updatedReview = review.copyWith(
         stats: updatedStats,
@@ -571,7 +528,7 @@ class ReviewExtendedService {
               'reporterId': reporterId,
               'reason': reason,
               'reportedAt': DateTime.now().toIso8601String(),
-            }
+            },
           ],
         },
       );

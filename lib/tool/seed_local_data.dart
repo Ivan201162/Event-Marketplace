@@ -46,7 +46,7 @@ class LocalDataSeeder {
           'id': 'cat_6',
           'name': 'Аниматоры',
           'icon': 'sentiment_very_satisfied',
-          'color': 0xFF009688
+          'color': 0xFF009688,
         },
         {'id': 'cat_7', 'name': 'Организатор мероприятий', 'icon': 'event', 'color': 0xFF3F51B5},
         {'id': 'cat_8', 'name': 'Музыканты', 'icon': 'music_note', 'color': 0xFFE91E63},

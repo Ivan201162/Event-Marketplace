@@ -23,10 +23,7 @@ class PromotionService {
           .get();
 
       return snapshot.docs
-          .map((doc) => PromotionPackage.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
+          .map((doc) => PromotionPackage.fromMap({'id': doc.id, ...doc.data()}))
           .toList();
     } catch (e) {
       debugPrint('ERROR: [promotion_service] Ошибка получения пакетов: $e');
@@ -40,10 +37,7 @@ class PromotionService {
       final doc = await _firestore.collection('promotion_packages').doc(packageId).get();
 
       if (doc.exists) {
-        return PromotionPackage.fromMap({
-          'id': doc.id,
-          ...doc.data()!,
-        });
+        return PromotionPackage.fromMap({'id': doc.id, ...doc.data()!});
       }
       return null;
     } catch (e) {
@@ -56,7 +50,8 @@ class PromotionService {
   Future<List<PromotionBoost>> getActivePromotions(String userId) async {
     try {
       debugPrint(
-          'INFO: [promotion_service] Получение активных продвижений для пользователя $userId');
+        'INFO: [promotion_service] Получение активных продвижений для пользователя $userId',
+      );
 
       final snapshot = await _firestore
           .collection('promotions')
@@ -66,10 +61,7 @@ class PromotionService {
           .get();
 
       return snapshot.docs
-          .map((doc) => PromotionBoost.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
+          .map((doc) => PromotionBoost.fromMap({'id': doc.id, ...doc.data()}))
           .toList();
     } catch (e) {
       debugPrint('ERROR: [promotion_service] Ошибка получения активных продвижений: $e');
@@ -87,10 +79,7 @@ class PromotionService {
           .get();
 
       return snapshot.docs
-          .map((doc) => PromotionBoost.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
+          .map((doc) => PromotionBoost.fromMap({'id': doc.id, ...doc.data()}))
           .toList();
     } catch (e) {
       debugPrint('ERROR: [promotion_service] Ошибка получения продвижений пользователя: $e');
@@ -111,15 +100,13 @@ class PromotionService {
   }) async {
     try {
       debugPrint(
-          'INFO: [promotion_service] Покупка продвижения $packageId для пользователя $userId');
+        'INFO: [promotion_service] Покупка продвижения $packageId для пользователя $userId',
+      );
 
       // Получаем пакет продвижения
       final package = await getPackageById(packageId);
       if (package == null) {
-        return PaymentResult(
-          success: false,
-          errorMessage: 'Пакет продвижения не найден',
-        );
+        return PaymentResult(success: false, errorMessage: 'Пакет продвижения не найден');
       }
 
       // Создаем платеж
@@ -162,10 +149,7 @@ class PromotionService {
       return paymentResult;
     } catch (e) {
       debugPrint('ERROR: [promotion_service] Ошибка покупки продвижения: $e');
-      return PaymentResult(
-        success: false,
-        errorMessage: e.toString(),
-      );
+      return PaymentResult(success: false, errorMessage: e.toString());
     }
   }
 
@@ -287,9 +271,7 @@ class PromotionService {
     int? clicks,
   }) async {
     try {
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      };
+      final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
 
       if (impressions != null) {
         updateData['impressions'] = FieldValue.increment(impressions);
@@ -345,7 +327,8 @@ class PromotionService {
       await batch.commit();
 
       debugPrint(
-          'INFO: [promotion_service] Обработано ${snapshot.docs.length} истекших продвижений');
+        'INFO: [promotion_service] Обработано ${snapshot.docs.length} истекших продвижений',
+      );
     } catch (e) {
       debugPrint('ERROR: [promotion_service] Ошибка проверки истекших продвижений: $e');
     }
@@ -386,10 +369,9 @@ class PromotionService {
           .get();
 
       return snapshot.docs
-          .map((doc) => PromotionBoost.fromMap({
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              }))
+          .map(
+            (doc) => PromotionBoost.fromMap({'id': doc.id, ...doc.data() as Map<String, dynamic>}),
+          )
           .toList();
     } catch (e) {
       debugPrint('ERROR: [promotion_service] Ошибка получения продвинутых профилей: $e');

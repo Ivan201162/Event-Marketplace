@@ -13,15 +13,19 @@ final teamProvider = StreamProvider.family<SpecialistTeam?, String>((ref, teamId
 });
 
 /// Провайдер команд организатора
-final organizerTeamsProvider =
-    StreamProvider.family<List<SpecialistTeam>, String>((ref, organizerId) {
+final organizerTeamsProvider = StreamProvider.family<List<SpecialistTeam>, String>((
+  ref,
+  organizerId,
+) {
   final teamService = ref.watch(teamServiceProvider);
   return teamService.watchOrganizerTeams(organizerId);
 });
 
 /// Провайдер команд специалиста
-final specialistTeamsProvider =
-    StreamProvider.family<List<SpecialistTeam>, String>((ref, specialistId) {
+final specialistTeamsProvider = StreamProvider.family<List<SpecialistTeam>, String>((
+  ref,
+  specialistId,
+) {
   final teamService = ref.watch(teamServiceProvider);
   return teamService.watchSpecialistTeams(specialistId);
 });
@@ -54,21 +58,13 @@ final teamCreationProvider = NotifierProvider<TeamCreationNotifier, TeamCreation
 
 /// Состояние создания команды
 class TeamCreationState {
-  const TeamCreationState({
-    this.isLoading = false,
-    this.error,
-    this.createdTeam,
-  });
+  const TeamCreationState({this.isLoading = false, this.error, this.createdTeam});
 
   final bool isLoading;
   final String? error;
   final SpecialistTeam? createdTeam;
 
-  TeamCreationState copyWith({
-    bool? isLoading,
-    String? error,
-    SpecialistTeam? createdTeam,
-  }) =>
+  TeamCreationState copyWith({bool? isLoading, String? error, SpecialistTeam? createdTeam}) =>
       TeamCreationState(
         isLoading: isLoading ?? this.isLoading,
         error: error,
@@ -109,15 +105,9 @@ class TeamCreationNotifier extends Notifier<TeamCreationState> {
         notes: notes,
       );
 
-      state = state.copyWith(
-        isLoading: false,
-        createdTeam: team,
-      );
+      state = state.copyWith(isLoading: false, createdTeam: team);
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -133,21 +123,13 @@ final teamManagementProvider = NotifierProvider<TeamManagementNotifier, TeamMana
 
 /// Состояние управления командой
 class TeamManagementState {
-  const TeamManagementState({
-    this.isLoading = false,
-    this.error,
-    this.successMessage,
-  });
+  const TeamManagementState({this.isLoading = false, this.error, this.successMessage});
 
   final bool isLoading;
   final String? error;
   final String? successMessage;
 
-  TeamManagementState copyWith({
-    bool? isLoading,
-    String? error,
-    String? successMessage,
-  }) =>
+  TeamManagementState copyWith({bool? isLoading, String? error, String? successMessage}) =>
       TeamManagementState(
         isLoading: isLoading ?? this.isLoading,
         error: error,
@@ -180,15 +162,9 @@ class TeamManagementNotifier extends Notifier<TeamManagementState> {
         paymentAmount: paymentAmount,
       );
 
-      state = state.copyWith(
-        isLoading: false,
-        successMessage: 'Специалист добавлен в команду',
-      );
+      state = state.copyWith(isLoading: false, successMessage: 'Специалист добавлен в команду');
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -199,68 +175,35 @@ class TeamManagementNotifier extends Notifier<TeamManagementState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _teamService.removeSpecialistFromTeam(
-        teamId: teamId,
-        specialistId: specialistId,
-      );
+      await _teamService.removeSpecialistFromTeam(teamId: teamId, specialistId: specialistId);
 
-      state = state.copyWith(
-        isLoading: false,
-        successMessage: 'Специалист удален из команды',
-      );
+      state = state.copyWith(isLoading: false, successMessage: 'Специалист удален из команды');
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
-  Future<void> confirmTeam({
-    required String teamId,
-    String? notes,
-  }) async {
+  Future<void> confirmTeam({required String teamId, String? notes}) async {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _teamService.confirmTeam(
-        teamId: teamId,
-        notes: notes,
-      );
+      await _teamService.confirmTeam(teamId: teamId, notes: notes);
 
-      state = state.copyWith(
-        isLoading: false,
-        successMessage: 'Команда подтверждена',
-      );
+      state = state.copyWith(isLoading: false, successMessage: 'Команда подтверждена');
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
-  Future<void> rejectTeam({
-    required String teamId,
-    required String reason,
-  }) async {
+  Future<void> rejectTeam({required String teamId, required String reason}) async {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _teamService.rejectTeam(
-        teamId: teamId,
-        reason: reason,
-      );
+      await _teamService.rejectTeam(teamId: teamId, reason: reason);
 
-      state = state.copyWith(
-        isLoading: false,
-        successMessage: 'Команда отклонена',
-      );
+      state = state.copyWith(isLoading: false, successMessage: 'Команда отклонена');
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -286,15 +229,9 @@ class TeamManagementNotifier extends Notifier<TeamManagementState> {
         paymentSplit: paymentSplit,
       );
 
-      state = state.copyWith(
-        isLoading: false,
-        successMessage: 'Команда обновлена',
-      );
+      state = state.copyWith(isLoading: false, successMessage: 'Команда обновлена');
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 

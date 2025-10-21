@@ -203,10 +203,7 @@ class ReviewsService {
       }
 
       // Помечаем как удаленный
-      await reviewRef.update({
-        'isDeleted': true,
-        'deletedAt': FieldValue.serverTimestamp(),
-      });
+      await reviewRef.update({'isDeleted': true, 'deletedAt': FieldValue.serverTimestamp()});
 
       // Обновляем рейтинг специалиста
       await _updateSpecialistRating(review.specialistId);
@@ -226,14 +223,13 @@ class ReviewsService {
   }
 
   /// Поставить лайк отзыву
-  Future<void> likeReview(
-    String reviewId,
-    String userId,
-    String userName,
-  ) async {
+  Future<void> likeReview(String reviewId, String userId, String userName) async {
     try {
-      final likeRef =
-          _firestore.collection('reviews').doc(reviewId).collection('likes').doc(userId);
+      final likeRef = _firestore
+          .collection('reviews')
+          .doc(reviewId)
+          .collection('likes')
+          .doc(userId);
 
       final likeDoc = await likeRef.get();
 
@@ -246,11 +242,7 @@ class ReviewsService {
       } else {
         // Ставим лайк
         await likeRef.set(
-          ReviewLike(
-            userId: userId,
-            userName: userName,
-            date: DateTime.now(),
-          ).toMap(),
+          ReviewLike(userId: userId, userName: userName, date: DateTime.now()).toMap(),
         );
         await _firestore.collection('reviews').doc(reviewId).update({
           'likes': FieldValue.increment(1),
@@ -260,10 +252,7 @@ class ReviewsService {
       // Логируем событие
       await _analytics.logEvent(
         name: 'like_review',
-        parameters: {
-          'review_id': reviewId,
-          'user_id': userId,
-        },
+        parameters: {'review_id': reviewId, 'user_id': userId},
       );
     } catch (e) {
       throw Exception('Ошибка при лайке отзыва: $e');
@@ -300,10 +289,7 @@ class ReviewsService {
       // Логируем событие
       await _analytics.logEvent(
         name: 'respond_review',
-        parameters: {
-          'review_id': reviewId,
-          'author_id': authorId,
-        },
+        parameters: {'review_id': reviewId, 'author_id': authorId},
       );
     } catch (e) {
       throw Exception('Ошибка при ответе на отзыв: $e');
@@ -341,11 +327,7 @@ class ReviewsService {
       // Логируем событие
       await _analytics.logEvent(
         name: 'report_review',
-        parameters: {
-          'review_id': reviewId,
-          'reporter_id': reporterId,
-          'reason': reason.value,
-        },
+        parameters: {'review_id': reviewId, 'reporter_id': reporterId, 'reason': reason.value},
       );
     } catch (e) {
       throw Exception('Ошибка при жалобе на отзыв: $e');
@@ -353,9 +335,7 @@ class ReviewsService {
   }
 
   /// Получить репутацию специалиста
-  Future<SpecialistReputation> getSpecialistReputation(
-    String specialistId,
-  ) async {
+  Future<SpecialistReputation> getSpecialistReputation(String specialistId) async {
     try {
       final doc = await _firestore.collection('userStats').doc(specialistId).get();
 
@@ -490,12 +470,7 @@ enum ReviewSortType {
 
 /// Фильтр отзывов
 class ReviewFilter {
-  const ReviewFilter({
-    this.minRating,
-    this.hasPhotos = false,
-    this.fromDate,
-    this.toDate,
-  });
+  const ReviewFilter({this.minRating, this.hasPhotos = false, this.fromDate, this.toDate});
 
   factory ReviewFilter.fromJson(String json) {
     // Простая реализация парсинга JSON
@@ -503,17 +478,15 @@ class ReviewFilter {
     final minRatingMatch = RegExp(r'"minRating": (\d+(?:\.\d+)?)').firstMatch(json);
     final minRating = minRatingMatch != null ? double.tryParse(minRatingMatch.group(1)!) : null;
 
-    return ReviewFilter(
-      minRating: minRating,
-      hasPhotos: hasPhotos,
-    );
+    return ReviewFilter(minRating: minRating, hasPhotos: hasPhotos);
   }
   final double? minRating;
   final bool hasPhotos;
   final DateTime? fromDate;
   final DateTime? toDate;
 
-  String toJson() => '''
+  String toJson() =>
+      '''
     {
       "minRating": ${minRating ?? 'null'},
       "hasPhotos": $hasPhotos,

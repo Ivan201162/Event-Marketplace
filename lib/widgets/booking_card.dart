@@ -40,18 +40,12 @@ class BookingCard extends StatelessWidget {
                       children: [
                         Text(
                           booking.service,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Клиент: ${booking.clientName}',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
-                          ),
+                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
                         ),
                       ],
                     ),
@@ -81,17 +75,11 @@ class BookingCard extends StatelessWidget {
                 children: [
                   Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
-                  Text(
-                    booking.formattedDate,
-                    style: const TextStyle(fontSize: 14),
-                  ),
+                  Text(booking.formattedDate, style: const TextStyle(fontSize: 14)),
                   const SizedBox(width: 16),
                   Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
-                  Text(
-                    booking.formattedTime,
-                    style: const TextStyle(fontSize: 14),
-                  ),
+                  Text(booking.formattedTime, style: const TextStyle(fontSize: 14)),
                 ],
               ),
 
@@ -102,10 +90,7 @@ class BookingCard extends StatelessWidget {
                 children: [
                   Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
-                  Text(
-                    booking.formattedDuration,
-                    style: const TextStyle(fontSize: 14),
-                  ),
+                  Text(booking.formattedDuration, style: const TextStyle(fontSize: 14)),
                   const Spacer(),
                   Text(
                     booking.formattedPrice,
@@ -128,10 +113,7 @@ class BookingCard extends StatelessWidget {
                   ),
                   child: Text(
                     booking.notes,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[700]),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),

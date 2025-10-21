@@ -10,11 +10,7 @@ void main() {
     testWidgets('should display theme switch widget', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: ThemeSwitch(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: ThemeSwitch())),
         ),
       );
 
@@ -28,11 +24,7 @@ void main() {
     testWidgets('should show theme options when tapped', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: ThemeSwitch(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: ThemeSwitch())),
         ),
       );
 
@@ -52,11 +44,7 @@ void main() {
     testWidgets('should change theme when option is selected', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: ThemeSwitch(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: ThemeSwitch())),
         ),
       );
 
@@ -77,11 +65,7 @@ void main() {
     testWidgets('should display compact theme switch', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: CompactThemeSwitch(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: CompactThemeSwitch())),
         ),
       );
 
@@ -95,11 +79,7 @@ void main() {
     testWidgets('should display current theme display', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: CurrentThemeDisplay(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: CurrentThemeDisplay())),
         ),
       );
 
@@ -112,11 +92,7 @@ void main() {
     testWidgets('should display quick theme toggle', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: QuickThemeToggle(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: QuickThemeToggle())),
         ),
       );
 
@@ -132,11 +108,7 @@ void main() {
     testWidgets('should display language selector widget', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: LanguageSelector(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: LanguageSelector())),
         ),
       );
 
@@ -150,11 +122,7 @@ void main() {
     testWidgets('should show language options when tapped', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: LanguageSelector(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: LanguageSelector())),
         ),
       );
 
@@ -173,11 +141,7 @@ void main() {
     testWidgets('should change language when option is selected', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: LanguageSelector(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: LanguageSelector())),
         ),
       );
 
@@ -198,11 +162,7 @@ void main() {
     testWidgets('should display compact language selector', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: CompactLanguageSelector(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: CompactLanguageSelector())),
         ),
       );
 
@@ -216,11 +176,7 @@ void main() {
     testWidgets('should display current language display', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: CurrentLanguageDisplay(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: CurrentLanguageDisplay())),
         ),
       );
 
@@ -305,10 +261,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: ResponsiveWidget(
-              mobile: Text('Mobile'),
-              desktop: Text('Desktop'),
-            ),
+            body: ResponsiveWidget(mobile: Text('Mobile'), desktop: Text('Desktop')),
           ),
         ),
       );
@@ -326,10 +279,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: ResponsiveWidget(
-              mobile: Text('Mobile'),
-              tablet: Text('Tablet'),
-            ),
+            body: ResponsiveWidget(mobile: Text('Mobile'), tablet: Text('Tablet')),
           ),
         ),
       );
@@ -347,10 +297,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: ResponsiveContainer(
-              padding: EdgeInsets.all(16),
-              child: Text('Content'),
-            ),
+            body: ResponsiveContainer(padding: EdgeInsets.all(16), child: Text('Content')),
           ),
         ),
       );
@@ -369,11 +316,7 @@ void main() {
           home: Scaffold(
             body: ResponsiveGrid(
               crossAxisCount: 2,
-              children: [
-                Text('Item 1'),
-                Text('Item 2'),
-                Text('Item 3'),
-              ],
+              children: [Text('Item 1'), Text('Item 2'), Text('Item 3')],
             ),
           ),
         ),
@@ -393,13 +336,7 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: ResponsiveList(
-              children: [
-                Text('Item 1'),
-                Text('Item 2'),
-                Text('Item 3'),
-              ],
-            ),
+            body: ResponsiveList(children: [Text('Item 1'), Text('Item 2'), Text('Item 3')]),
           ),
         ),
       );

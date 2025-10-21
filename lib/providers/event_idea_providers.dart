@@ -6,8 +6,10 @@ import '../services/event_idea_service.dart';
 final eventIdeaServiceProvider = Provider<EventIdeaService>((ref) => EventIdeaService());
 
 /// Провайдер всех идей мероприятий
-final allEventIdeasProvider =
-    FutureProvider.family<List<EventIdea>, EventIdeasParams>((ref, params) async {
+final allEventIdeasProvider = FutureProvider.family<List<EventIdea>, EventIdeasParams>((
+  ref,
+  params,
+) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.getAllIdeas(
     limit: params.limit,
@@ -42,20 +44,21 @@ final popularTagsProvider = FutureProvider<List<String>>((ref) async {
 });
 
 /// Провайдер для создания идеи
-final createEventIdeaProvider =
-    FutureProvider.family<String, CreateEventIdea>((ref, createIdea) async {
+final createEventIdeaProvider = FutureProvider.family<String, CreateEventIdea>((
+  ref,
+  createIdea,
+) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.createIdea(createIdea);
 });
 
 /// Провайдер для загрузки изображений идеи
-final uploadIdeaImagesProvider =
-    FutureProvider.family<List<String>, UploadIdeaImagesParams>((ref, params) async {
+final uploadIdeaImagesProvider = FutureProvider.family<List<String>, UploadIdeaImagesParams>((
+  ref,
+  params,
+) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
-  return ideaService.uploadIdeaImages(
-    authorId: params.authorId,
-    imageFiles: params.imageFiles,
-  );
+  return ideaService.uploadIdeaImages(authorId: params.authorId, imageFiles: params.imageFiles);
 });
 
 /// Провайдер для лайка идеи
@@ -85,12 +88,7 @@ final addCommentProvider = FutureProvider.family<String, AddCommentParams>((ref,
 
 /// Параметры для получения идей
 class EventIdeasParams {
-  const EventIdeasParams({
-    this.limit = 20,
-    this.category,
-    this.tags,
-    this.searchQuery,
-  });
+  const EventIdeasParams({this.limit = 20, this.category, this.tags, this.searchQuery});
 
   final int limit;
   final String? category;
@@ -100,10 +98,7 @@ class EventIdeasParams {
 
 /// Параметры для загрузки изображений идеи
 class UploadIdeaImagesParams {
-  const UploadIdeaImagesParams({
-    required this.authorId,
-    required this.imageFiles,
-  });
+  const UploadIdeaImagesParams({required this.authorId, required this.imageFiles});
 
   final String authorId;
   final List<dynamic> imageFiles; // List<XFile>

@@ -58,8 +58,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
 
-    final specialistDoc =
-        await FirebaseFirestore.instance.collection('specialists').doc(user.uid).get();
+    final specialistDoc = await FirebaseFirestore.instance
+        .collection('specialists')
+        .doc(user.uid)
+        .get();
 
     setState(() {
       _isSpecialist = specialistDoc.exists;
@@ -68,32 +70,29 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Аналитика'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          bottom: _isSpecialist
-              ? TabBar(
-                  controller: _tabController,
-                  tabs: const [
-                    Tab(text: 'Как специалист'),
-                    Tab(text: 'Как заказчик'),
-                  ],
-                )
-              : null,
-        ),
-        body: _isSpecialist
-            ? TabBarView(
-                controller: _tabController,
-                children: [
-                  _SpecialistAnalyticsTab(),
-                  _CustomerAnalyticsTab(),
-                ],
-              )
-            : _CustomerAnalyticsTab(),
-      );
+    appBar: AppBar(
+      title: const Text('Аналитика'),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      bottom: _isSpecialist
+          ? TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(text: 'Как специалист'),
+                Tab(text: 'Как заказчик'),
+              ],
+            )
+          : null,
+    ),
+    body: _isSpecialist
+        ? TabBarView(
+            controller: _tabController,
+            children: [_SpecialistAnalyticsTab(), _CustomerAnalyticsTab()],
+          )
+        : _CustomerAnalyticsTab(),
+  );
 }
 
 /// Вкладка аналитики специалиста
@@ -140,13 +139,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Общая статистика',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Общая статистика', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         GridView.count(
           shrinkWrap: true,
@@ -162,12 +155,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
               Icons.attach_money,
               Colors.green,
             ),
-            _buildStatCard(
-              'Всего заказов',
-              totalBookings.toString(),
-              Icons.event,
-              Colors.blue,
-            ),
+            _buildStatCard('Всего заказов', totalBookings.toString(), Icons.event, Colors.blue),
             _buildStatCard(
               'Средний рейтинг',
               averageRating.toStringAsFixed(1),
@@ -186,57 +174,38 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) =>
-      Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            gradient: LinearGradient(
-              colors: [
-                color.withValues(alpha: 0.1),
-                color.withValues(alpha: 0.05),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) => Card(
+    elevation: 2,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Icon(icon, color: color, size: 24),
-                  const Spacer(),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
+              Icon(icon, color: color, size: 24),
+              const Spacer(),
               Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                value,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
               ),
             ],
           ),
-        ),
-      );
+          const SizedBox(height: 8),
+          Text(title, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildIncomeChart(Map<String, dynamic> analytics) {
     final monthlyIncome = analytics['monthlyIncome'] as List<dynamic>? ?? [];
@@ -251,18 +220,12 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
           children: [
             const Text(
               'Доход по месяцам',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             if (monthlyIncome.isEmpty)
               const Center(
-                child: Text(
-                  'Данных о доходах пока нет',
-                  style: TextStyle(color: Colors.grey),
-                ),
+                child: Text('Данных о доходах пока нет', style: TextStyle(color: Colors.grey)),
               )
             else
               _buildSimpleBarChart(monthlyIncome),
@@ -309,10 +272,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
-                month,
-                style: const TextStyle(fontSize: 10),
-              ),
+              Text(month, style: const TextStyle(fontSize: 10)),
             ],
           );
         }).toList(),
@@ -333,10 +293,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
           children: [
             const Text(
               'Заказы по статусам',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             ...bookingsByStatus.entries.map((entry) {
@@ -351,18 +308,12 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
                     Container(
                       width: 12,
                       height: 12,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
                     ),
                     const SizedBox(width: 8),
                     Text(_getStatusText(status)),
                     const Spacer(),
-                    Text(
-                      count.toString(),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    Text(count.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                   ],
                 ),
               );
@@ -386,18 +337,12 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
           children: [
             const Text(
               'Топ-5 заказчиков',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             if (topCustomers.isEmpty)
               const Center(
-                child: Text(
-                  'Данных о заказчиках пока нет',
-                  style: TextStyle(color: Colors.grey),
-                ),
+                child: Text('Данных о заказчиках пока нет', style: TextStyle(color: Colors.grey)),
               )
             else
               ...topCustomers.asMap().entries.map((entry) {
@@ -412,10 +357,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
                     backgroundColor: Colors.blue,
                     child: Text(
                       '${index + 1}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                   title: Text(name),
@@ -426,10 +368,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
                       symbol: '₽',
                       decimalDigits: 0,
                     ).format(totalSpent),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
                   ),
                 );
               }),
@@ -452,10 +391,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
           children: [
             const Text(
               'Распределение оценок',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             ...ratingDistribution.entries.map((entry) {
@@ -479,10 +415,7 @@ class _SpecialistAnalyticsTab extends ConsumerWidget {
                     const SizedBox(width: 8),
                     Text('$rating звезд'),
                     const Spacer(),
-                    Text(
-                      count.toString(),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    Text(count.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                   ],
                 ),
               );
@@ -566,13 +499,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Моя статистика',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Моя статистика', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         GridView.count(
           shrinkWrap: true,
@@ -600,72 +527,48 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
               Icons.star,
               Colors.orange,
             ),
-            _buildStatCard(
-              'Любимая категория',
-              favoriteCategory,
-              Icons.favorite,
-              Colors.pink,
-            ),
+            _buildStatCard('Любимая категория', favoriteCategory, Icons.favorite, Colors.pink),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) =>
-      Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            gradient: LinearGradient(
-              colors: [
-                color.withValues(alpha: 0.1),
-                color.withValues(alpha: 0.05),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) => Card(
+    elevation: 2,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Icon(icon, color: color, size: 24),
-                  const Spacer(),
-                  Flexible(
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: color,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
+              Icon(icon, color: color, size: 24),
+              const Spacer(),
+              Flexible(
+                child: Text(
+                  value,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-        ),
-      );
+          const SizedBox(height: 8),
+          Text(title, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildSpendingChart(Map<String, dynamic> analytics) {
     final monthlySpending = analytics['monthlySpending'] as List<dynamic>? ?? [];
@@ -680,18 +583,12 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
           children: [
             const Text(
               'Расходы по месяцам',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             if (monthlySpending.isEmpty)
               const Center(
-                child: Text(
-                  'Данных о расходах пока нет',
-                  style: TextStyle(color: Colors.grey),
-                ),
+                child: Text('Данных о расходах пока нет', style: TextStyle(color: Colors.grey)),
               )
             else
               _buildSimpleBarChart(monthlySpending, Colors.red),
@@ -732,16 +629,10 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
               Container(
                 width: 30,
                 height: height,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+                decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
               ),
               const SizedBox(height: 4),
-              Text(
-                month,
-                style: const TextStyle(fontSize: 10),
-              ),
+              Text(month, style: const TextStyle(fontSize: 10)),
             ],
           );
         }).toList(),
@@ -762,10 +653,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
           children: [
             const Text(
               'Частота заказов',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             ...bookingFrequency.entries.map((entry) {
@@ -778,10 +666,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
                   children: [
                     Text(_getPeriodText(period)),
                     const Spacer(),
-                    Text(
-                      count.toString(),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    Text(count.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
                   ],
                 ),
               );
@@ -805,18 +690,12 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
           children: [
             const Text(
               'Любимые специалисты',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             if (topSpecialists.isEmpty)
               const Center(
-                child: Text(
-                  'Данных о специалистах пока нет',
-                  style: TextStyle(color: Colors.grey),
-                ),
+                child: Text('Данных о специалистах пока нет', style: TextStyle(color: Colors.grey)),
               )
             else
               ...topSpecialists.asMap().entries.map((entry) {
@@ -832,10 +711,7 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
                     backgroundColor: Colors.blue,
                     child: Text(
                       '${index + 1}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                   title: Text(name),
@@ -876,59 +752,35 @@ class _CustomerAnalyticsTab extends ConsumerWidget {
 }
 
 Widget _buildEmptyState(String title) => Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.analytics_outlined,
-            size: 64,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Аналитика $title',
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Данных пока нет. Аналитика появится после первых заказов.',
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      const Icon(Icons.analytics_outlined, size: 64, color: Colors.grey),
+      const SizedBox(height: 16),
+      Text('Аналитика $title', style: const TextStyle(fontSize: 18, color: Colors.grey)),
+      const SizedBox(height: 8),
+      const Text(
+        'Данных пока нет. Аналитика появится после первых заказов.',
+        style: TextStyle(color: Colors.grey),
+        textAlign: TextAlign.center,
       ),
-    );
+    ],
+  ),
+);
 
 Widget _buildErrorState(String error) => Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Colors.red,
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Ошибка загрузки аналитики',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.red,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            error,
-            style: const TextStyle(
-              color: Colors.grey,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      const Icon(Icons.error_outline, size: 64, color: Colors.red),
+      const SizedBox(height: 16),
+      const Text('Ошибка загрузки аналитики', style: TextStyle(fontSize: 18, color: Colors.red)),
+      const SizedBox(height: 8),
+      Text(
+        error,
+        style: const TextStyle(color: Colors.grey),
+        textAlign: TextAlign.center,
       ),
-    );
+    ],
+  ),
+);

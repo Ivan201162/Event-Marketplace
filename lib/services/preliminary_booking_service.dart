@@ -58,8 +58,9 @@ class PreliminaryBookingService {
       );
 
       // Сохраняем в Firestore
-      final docRef =
-          await _firestore.collection('preliminary_bookings').add(preliminaryBooking.toMap());
+      final docRef = await _firestore
+          .collection('preliminary_bookings')
+          .add(preliminaryBooking.toMap());
 
       // Отправляем уведомление специалисту
       await _notifySpecialist(docRef.id, specialistId, customerId);
@@ -143,11 +144,7 @@ class PreliminaryBookingService {
       });
 
       // Отправляем уведомление заказчику
-      await _notifyCustomer(
-        bookingDocRef.id,
-        preliminaryBooking.customerId,
-        specialistId,
-      );
+      await _notifyCustomer(bookingDocRef.id, preliminaryBooking.customerId, specialistId);
 
       // Автоматически генерируем договор
       try {
@@ -187,11 +184,7 @@ class PreliminaryBookingService {
       });
 
       // Отправляем уведомление заказчику
-      await _notifyCustomerRejection(
-        preliminaryBooking.customerId,
-        specialistId,
-        reason,
-      );
+      await _notifyCustomerRejection(preliminaryBooking.customerId, specialistId, reason);
     } catch (e) {
       throw Exception('Ошибка отклонения бронирования: $e');
     }
@@ -225,20 +218,14 @@ class PreliminaryBookingService {
       });
 
       // Отправляем уведомление специалисту
-      await _notifySpecialistCancellation(
-        preliminaryBooking.specialistId,
-        customerId,
-        reason,
-      );
+      await _notifySpecialistCancellation(preliminaryBooking.specialistId, customerId, reason);
     } catch (e) {
       throw Exception('Ошибка отмены бронирования: $e');
     }
   }
 
   /// Получить предварительные бронирования специалиста
-  Future<List<PreliminaryBooking>> getSpecialistPreliminaryBookings(
-    String specialistId,
-  ) async {
+  Future<List<PreliminaryBooking>> getSpecialistPreliminaryBookings(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('preliminary_bookings')
@@ -253,9 +240,7 @@ class PreliminaryBookingService {
   }
 
   /// Получить предварительные бронирования заказчика
-  Future<List<PreliminaryBooking>> getCustomerPreliminaryBookings(
-    String customerId,
-  ) async {
+  Future<List<PreliminaryBooking>> getCustomerPreliminaryBookings(String customerId) async {
     try {
       final snapshot = await _firestore
           .collection('preliminary_bookings')
@@ -270,19 +255,17 @@ class PreliminaryBookingService {
   }
 
   /// Получить предварительное бронирование по ID
-  Future<PreliminaryBooking?> getPreliminaryBooking(
-    String preliminaryBookingId,
-  ) async =>
+  Future<PreliminaryBooking?> getPreliminaryBooking(String preliminaryBookingId) async =>
       _getPreliminaryBooking(preliminaryBookingId);
 
   // Приватные методы
 
-  Future<PreliminaryBooking?> _getPreliminaryBooking(
-    String preliminaryBookingId,
-  ) async {
+  Future<PreliminaryBooking?> _getPreliminaryBooking(String preliminaryBookingId) async {
     try {
-      final doc =
-          await _firestore.collection('preliminary_bookings').doc(preliminaryBookingId).get();
+      final doc = await _firestore
+          .collection('preliminary_bookings')
+          .doc(preliminaryBookingId)
+          .get();
       if (doc.exists) {
         return PreliminaryBooking.fromDocument(doc);
       }
@@ -319,11 +302,7 @@ class PreliminaryBookingService {
     }
   }
 
-  Future<void> _notifyCustomer(
-    String bookingId,
-    String customerId,
-    String specialistId,
-  ) async {
+  Future<void> _notifyCustomer(String bookingId, String customerId, String specialistId) async {
     try {
       // TODO(developer): Отправить push-уведомление заказчику
       // TODO(developer): Отправить email уведомление
@@ -427,23 +406,23 @@ class PreliminaryBooking {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'customerId': customerId,
-        'eventDate': Timestamp.fromDate(eventDate),
-        'duration': duration.inSeconds,
-        'eventTitle': eventTitle,
-        'eventDescription': eventDescription,
-        'participantsCount': participantsCount,
-        'eventLocation': eventLocation,
-        'specialRequests': specialRequests,
-        'status': status.name,
-        'expiresAt': Timestamp.fromDate(expiresAt),
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'confirmedAt': confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
-        'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
-        'metadata': metadata,
-      };
+    'specialistId': specialistId,
+    'customerId': customerId,
+    'eventDate': Timestamp.fromDate(eventDate),
+    'duration': duration.inSeconds,
+    'eventTitle': eventTitle,
+    'eventDescription': eventDescription,
+    'participantsCount': participantsCount,
+    'eventLocation': eventLocation,
+    'specialRequests': specialRequests,
+    'status': status.name,
+    'expiresAt': Timestamp.fromDate(expiresAt),
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'confirmedAt': confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
+    'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   PreliminaryBooking copyWith({
@@ -464,26 +443,25 @@ class PreliminaryBooking {
     DateTime? confirmedAt,
     DateTime? cancelledAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      PreliminaryBooking(
-        id: id ?? this.id,
-        specialistId: specialistId ?? this.specialistId,
-        customerId: customerId ?? this.customerId,
-        eventDate: eventDate ?? this.eventDate,
-        duration: duration ?? this.duration,
-        eventTitle: eventTitle ?? this.eventTitle,
-        eventDescription: eventDescription ?? this.eventDescription,
-        participantsCount: participantsCount ?? this.participantsCount,
-        eventLocation: eventLocation ?? this.eventLocation,
-        specialRequests: specialRequests ?? this.specialRequests,
-        status: status ?? this.status,
-        expiresAt: expiresAt ?? this.expiresAt,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        confirmedAt: confirmedAt ?? this.confirmedAt,
-        cancelledAt: cancelledAt ?? this.cancelledAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => PreliminaryBooking(
+    id: id ?? this.id,
+    specialistId: specialistId ?? this.specialistId,
+    customerId: customerId ?? this.customerId,
+    eventDate: eventDate ?? this.eventDate,
+    duration: duration ?? this.duration,
+    eventTitle: eventTitle ?? this.eventTitle,
+    eventDescription: eventDescription ?? this.eventDescription,
+    participantsCount: participantsCount ?? this.participantsCount,
+    eventLocation: eventLocation ?? this.eventLocation,
+    specialRequests: specialRequests ?? this.specialRequests,
+    status: status ?? this.status,
+    expiresAt: expiresAt ?? this.expiresAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    confirmedAt: confirmedAt ?? this.confirmedAt,
+    cancelledAt: cancelledAt ?? this.cancelledAt,
+    metadata: metadata ?? this.metadata,
+  );
 }
 
 /// Статусы предварительного бронирования

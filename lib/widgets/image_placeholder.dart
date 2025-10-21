@@ -32,20 +32,20 @@ class ImagePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ClipRRect(
-        borderRadius: borderRadius ?? BorderRadius.circular(8),
-        child: CachedNetworkImage(
-          imageUrl: imageUrl,
-          width: width,
-          height: height,
-          fit: fit,
-          memCacheWidth: memCacheWidth,
-          memCacheHeight: memCacheHeight,
-          placeholder: (context, url) => _buildPlaceholder(context),
-          errorWidget: (context, url, error) => _buildErrorWidget(context),
-          fadeInDuration: fadeInDuration,
-          fadeOutDuration: const Duration(milliseconds: 100),
-        ),
-      );
+    borderRadius: borderRadius ?? BorderRadius.circular(8),
+    child: CachedNetworkImage(
+      imageUrl: imageUrl,
+      width: width,
+      height: height,
+      fit: fit,
+      memCacheWidth: memCacheWidth,
+      memCacheHeight: memCacheHeight,
+      placeholder: (context, url) => _buildPlaceholder(context),
+      errorWidget: (context, url, error) => _buildErrorWidget(context),
+      fadeInDuration: fadeInDuration,
+      fadeOutDuration: const Duration(milliseconds: 100),
+    ),
+  );
 
   Widget _buildPlaceholder(BuildContext context) {
     if (placeholder != null) {
@@ -68,9 +68,7 @@ class ImagePlaceholder extends StatelessWidget {
               height: 24,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).colorScheme.primary,
-                ),
+                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
               ),
             ),
             const SizedBox(height: 8),
@@ -83,9 +81,9 @@ class ImagePlaceholder extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             'Загрузка...',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ],
       ),
@@ -115,9 +113,9 @@ class ImagePlaceholder extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             'Ошибка загрузки',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onErrorContainer,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onErrorContainer),
             textAlign: TextAlign.center,
           ),
         ],
@@ -171,21 +169,14 @@ class AvatarPlaceholder extends StatelessWidget {
     return _buildInitialsPlaceholder(context, bgColor, txtColor);
   }
 
-  Widget _buildInitialsPlaceholder(
-    BuildContext context,
-    Color backgroundColor,
-    Color textColor,
-  ) {
+  Widget _buildInitialsPlaceholder(BuildContext context, Color backgroundColor, Color textColor) {
     final initials = _getInitials(name);
     final radius = borderRadius ?? BorderRadius.circular(size / 2);
 
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: radius,
-      ),
+      decoration: BoxDecoration(color: backgroundColor, borderRadius: radius),
       child: Center(
         child: Text(
           initials,
@@ -251,14 +242,8 @@ class _LazyImageState extends State<LazyImage> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.fadeInDuration,
-      vsync: this,
-    );
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    );
+    _controller = AnimationController(duration: widget.fadeInDuration, vsync: this);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
   }
 
   @override
@@ -269,114 +254,116 @@ class _LazyImageState extends State<LazyImage> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) => ClipRRect(
-        borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
-        child: Stack(
-          children: [
-            // Placeholder
-            if (!_isLoaded && !_hasError)
-              Container(
-                width: widget.width,
-                height: widget.height,
-                color: widget.placeholderColor ??
-                    Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: widget.placeholder ??
-                    Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).colorScheme.primary,
+    borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
+    child: Stack(
+      children: [
+        // Placeholder
+        if (!_isLoaded && !_hasError)
+          Container(
+            width: widget.width,
+            height: widget.height,
+            color: widget.placeholderColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
+            child:
+                widget.placeholder ??
+                Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+          ),
+
+        // Error widget
+        if (_hasError)
+          Container(
+            width: widget.width,
+            height: widget.height,
+            color: Theme.of(context).colorScheme.errorContainer,
+            child:
+                widget.errorWidget ??
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.broken_image_outlined,
+                        color: Theme.of(context).colorScheme.onErrorContainer,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Ошибка загрузки',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onErrorContainer,
                         ),
                       ),
-                    ),
-              ),
+                    ],
+                  ),
+                ),
+          ),
 
-            // Error widget
-            if (_hasError)
-              Container(
-                width: widget.width,
-                height: widget.height,
-                color: Theme.of(context).colorScheme.errorContainer,
-                child: widget.errorWidget ??
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.broken_image_outlined,
-                            color: Theme.of(context).colorScheme.onErrorContainer,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Ошибка загрузки',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onErrorContainer,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-              ),
-
-            // Image
-            if (_isLoaded)
-              FadeTransition(
-                opacity: _animation,
-                child: Image.network(
-                  widget.imageUrl,
+        // Image
+        if (_isLoaded)
+          FadeTransition(
+            opacity: _animation,
+            child: Image.network(
+              widget.imageUrl,
+              width: widget.width,
+              height: widget.height,
+              fit: widget.fit,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  _controller.forward();
+                  return child;
+                }
+                return Container(
                   width: widget.width,
                   height: widget.height,
-                  fit: widget.fit,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      _controller.forward();
-                      return child;
-                    }
-                    return Container(
-                      width: widget.width,
-                      height: widget.height,
-                      color: widget.placeholderColor ??
-                          Theme.of(context).colorScheme.surfaceContainerHighest,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
+                  color:
+                      widget.placeholderColor ??
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                          : null,
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).colorScheme.primary,
                       ),
-                    );
-                  },
-                  errorBuilder: (context, error, stackTrace) {
-                    setState(() {
-                      _hasError = true;
-                    });
-                    return const SizedBox.shrink();
-                  },
-                  frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                    if (wasSynchronouslyLoaded) {
-                      setState(() {
-                        _isLoaded = true;
-                      });
-                      _controller.forward();
-                      return child;
-                    }
-                    if (frame != null) {
-                      setState(() {
-                        _isLoaded = true;
-                      });
-                      return child;
-                    }
-                    return const SizedBox.shrink();
-                  },
-                ),
-              ),
-          ],
-        ),
-      );
+                    ),
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                setState(() {
+                  _hasError = true;
+                });
+                return const SizedBox.shrink();
+              },
+              frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                if (wasSynchronouslyLoaded) {
+                  setState(() {
+                    _isLoaded = true;
+                  });
+                  _controller.forward();
+                  return child;
+                }
+                if (frame != null) {
+                  setState(() {
+                    _isLoaded = true;
+                  });
+                  return child;
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+      ],
+    ),
+  );
 }
 
 /// Виджет для отображения сетки изображений с placeholder
@@ -402,24 +389,24 @@ class ImageGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          crossAxisSpacing: crossAxisSpacing,
-          mainAxisSpacing: mainAxisSpacing,
-          childAspectRatio: aspectRatio,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: crossAxisCount,
+      crossAxisSpacing: crossAxisSpacing,
+      mainAxisSpacing: mainAxisSpacing,
+      childAspectRatio: aspectRatio,
+    ),
+    itemCount: imageUrls.length,
+    itemBuilder: (context, index) {
+      final imageUrl = imageUrls[index];
+      return GestureDetector(
+        onTap: () => onImageTap?.call(imageUrl),
+        child: ImagePlaceholder(
+          imageUrl: imageUrl,
+          borderRadius: borderRadius ?? BorderRadius.circular(8),
         ),
-        itemCount: imageUrls.length,
-        itemBuilder: (context, index) {
-          final imageUrl = imageUrls[index];
-          return GestureDetector(
-            onTap: () => onImageTap?.call(imageUrl),
-            child: ImagePlaceholder(
-              imageUrl: imageUrl,
-              borderRadius: borderRadius ?? BorderRadius.circular(8),
-            ),
-          );
-        },
       );
+    },
+  );
 }

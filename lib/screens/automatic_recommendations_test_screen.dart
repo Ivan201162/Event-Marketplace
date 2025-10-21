@@ -19,100 +19,66 @@ class _AutomaticRecommendationsTestScreenState
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Тест автоматических рекомендаций'),
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
+    appBar: AppBar(
+      title: const Text('Тест автоматических рекомендаций'),
+      backgroundColor: Colors.blue,
+      foregroundColor: Colors.white,
+    ),
+    body: Column(
+      children: [
+        _buildSpecialistSelection(),
+        const Divider(),
+        Expanded(
+          child: _selectedSpecialistIds.isEmpty
+              ? const Center(
+                  child: Text(
+                    'Выберите специалистов для получения рекомендаций',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                )
+              : AutomaticRecommendationsWidget(
+                  selectedSpecialistIds: _selectedSpecialistIds,
+                  userId: _testUserId,
+                  onSpecialistSelected: _onSpecialistSelected,
+                ),
         ),
-        body: Column(
-          children: [
-            _buildSpecialistSelection(),
-            const Divider(),
-            Expanded(
-              child: _selectedSpecialistIds.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'Выберите специалистов для получения рекомендаций',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    )
-                  : AutomaticRecommendationsWidget(
-                      selectedSpecialistIds: _selectedSpecialistIds,
-                      userId: _testUserId,
-                      onSpecialistSelected: _onSpecialistSelected,
-                    ),
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildSpecialistSelection() => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Выберите специалистов:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _buildSpecialistChips(),
-            ),
-            const SizedBox(height: 16),
-            if (_selectedSpecialistIds.isNotEmpty) ...[
-              const Text(
-                'Выбранные специалисты:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: _buildSelectedSpecialistChips(),
-              ),
-            ],
-          ],
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Выберите специалистов:',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-      );
+        const SizedBox(height: 12),
+        Wrap(spacing: 8, runSpacing: 8, children: _buildSpecialistChips()),
+        const SizedBox(height: 16),
+        if (_selectedSpecialistIds.isNotEmpty) ...[
+          const Text(
+            'Выбранные специалисты:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Wrap(spacing: 8, runSpacing: 8, children: _buildSelectedSpecialistChips()),
+        ],
+      ],
+    ),
+  );
 
   List<Widget> _buildSpecialistChips() {
     const testSpecialists = [
       _TestSpecialist('host_1', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('dj_1', 'DJ Мария', SpecialistCategory.dj),
-      _TestSpecialist(
-        'photographer_1',
-        'Фотограф Алексей',
-        SpecialistCategory.photographer,
-      ),
-      _TestSpecialist(
-        'videographer_1',
-        'Видеограф Елена',
-        SpecialistCategory.videographer,
-      ),
-      _TestSpecialist(
-        'decorator_1',
-        'Декоратор Ольга',
-        SpecialistCategory.decorator,
-      ),
-      _TestSpecialist(
-        'musician_1',
-        'Музыкант Дмитрий',
-        SpecialistCategory.musician,
-      ),
-      _TestSpecialist(
-        'animator_1',
-        'Аниматор Анна',
-        SpecialistCategory.animator,
-      ),
+      _TestSpecialist('photographer_1', 'Фотограф Алексей', SpecialistCategory.photographer),
+      _TestSpecialist('videographer_1', 'Видеограф Елена', SpecialistCategory.videographer),
+      _TestSpecialist('decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator),
+      _TestSpecialist('musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician),
+      _TestSpecialist('animator_1', 'Аниматор Анна', SpecialistCategory.animator),
     ];
 
     return testSpecialists.map((specialist) {
@@ -135,18 +101,18 @@ class _AutomaticRecommendationsTestScreenState
   }
 
   List<Widget> _buildSelectedSpecialistChips() => _selectedSpecialistIds.map((id) {
-        final specialist = _getTestSpecialistById(id);
-        return Chip(
-          label: Text(specialist.name),
-          avatar: Text(specialist.category.emoji),
-          deleteIcon: const Icon(Icons.close, size: 18),
-          onDeleted: () {
-            setState(() {
-              _selectedSpecialistIds.remove(id);
-            });
-          },
-        );
-      }).toList();
+    final specialist = _getTestSpecialistById(id);
+    return Chip(
+      label: Text(specialist.name),
+      avatar: Text(specialist.category.emoji),
+      deleteIcon: const Icon(Icons.close, size: 18),
+      onDeleted: () {
+        setState(() {
+          _selectedSpecialistIds.remove(id);
+        });
+      },
+    );
+  }).toList();
 
   void _onSpecialistSelected(Specialist specialist) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -161,31 +127,11 @@ class _AutomaticRecommendationsTestScreenState
     const testSpecialists = [
       _TestSpecialist('host_1', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('dj_1', 'DJ Мария', SpecialistCategory.dj),
-      _TestSpecialist(
-        'photographer_1',
-        'Фотограф Алексей',
-        SpecialistCategory.photographer,
-      ),
-      _TestSpecialist(
-        'videographer_1',
-        'Видеограф Елена',
-        SpecialistCategory.videographer,
-      ),
-      _TestSpecialist(
-        'decorator_1',
-        'Декоратор Ольга',
-        SpecialistCategory.decorator,
-      ),
-      _TestSpecialist(
-        'musician_1',
-        'Музыкант Дмитрий',
-        SpecialistCategory.musician,
-      ),
-      _TestSpecialist(
-        'animator_1',
-        'Аниматор Анна',
-        SpecialistCategory.animator,
-      ),
+      _TestSpecialist('photographer_1', 'Фотограф Алексей', SpecialistCategory.photographer),
+      _TestSpecialist('videographer_1', 'Видеограф Елена', SpecialistCategory.videographer),
+      _TestSpecialist('decorator_1', 'Декоратор Ольга', SpecialistCategory.decorator),
+      _TestSpecialist('musician_1', 'Музыкант Дмитрий', SpecialistCategory.musician),
+      _TestSpecialist('animator_1', 'Аниматор Анна', SpecialistCategory.animator),
     ];
 
     return testSpecialists.firstWhere((s) => s.id == id);

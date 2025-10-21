@@ -6,8 +6,8 @@ import '../models/specialist_comparison.dart';
 /// Провайдер для управления сравнением специалистов (мигрирован с StateNotifierProvider)
 final specialistComparisonProvider =
     NotifierProvider<SpecialistComparisonNotifier, SpecialistComparison>(
-  () => SpecialistComparisonNotifier(),
-);
+      () => SpecialistComparisonNotifier(),
+    );
 
 /// Нотификатор для сравнения специалистов (мигрирован с StateNotifier)
 class SpecialistComparisonNotifier extends Notifier<SpecialistComparison> {
@@ -190,24 +190,17 @@ final comparisonResultsProvider = Provider<List<ComparisonResult>>((ref) {
         case ComparisonCriteria.experience:
         case ComparisonCriteria.reviews:
           winner = values.entries
-              .reduce(
-                (a, b) => (a.value as Comparable).compareTo(b.value) > 0 ? a : b,
-              )
+              .reduce((a, b) => (a.value as Comparable).compareTo(b.value) > 0 ? a : b)
               .key;
           break;
         case ComparisonCriteria.price:
           winner = values.entries
-              .reduce(
-                (a, b) => (a.value as double) < (b.value as double) ? a : b,
-              )
+              .reduce((a, b) => (a.value as double) < (b.value as double) ? a : b)
               .key;
           break;
         case ComparisonCriteria.availability:
           winner = values.entries
-              .firstWhere(
-                (e) => e.value == true,
-                orElse: () => values.entries.first,
-              )
+              .firstWhere((e) => e.value == true, orElse: () => values.entries.first)
               .key;
           break;
         case ComparisonCriteria.location:
@@ -216,13 +209,7 @@ final comparisonResultsProvider = Provider<List<ComparisonResult>>((ref) {
       }
     }
 
-    results.add(
-      ComparisonResult(
-        criteria: criteria,
-        values: values,
-        winner: winner,
-      ),
-    );
+    results.add(ComparisonResult(criteria: criteria, values: values, winner: winner));
   }
 
   return results;

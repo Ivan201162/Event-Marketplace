@@ -18,10 +18,7 @@ class TaxReminderService {
   /// Отправить напоминание о налоге
   Future<void> sendTaxReminder(TaxInfo taxInfo) async {
     try {
-      SafeLog.info(
-        'Отправляем напоминание о налоге ${taxInfo.id}',
-        'tax_reminder_service',
-      );
+      SafeLog.info('Отправляем напоминание о налоге ${taxInfo.id}', 'tax_reminder_service');
 
       // Обновляем статус напоминания в базе данных
       await _taxService.sendTaxReminder(taxInfo.id);
@@ -56,10 +53,7 @@ class TaxReminderService {
 
       // Здесь можно добавить отправку push-уведомления через Firebase Cloud Messaging
       // Для демонстрации просто логируем
-      SafeLog.info(
-        'Отправляем push-уведомление на токен: $fcmToken',
-        'tax_reminder_service',
-      );
+      SafeLog.info('Отправляем push-уведомление на токен: $fcmToken', 'tax_reminder_service');
 
       // TODO(developer): Реализовать отправку push-уведомления через FCM
       // Временная заглушка - просто логируем
@@ -86,10 +80,7 @@ class TaxReminderService {
       }
 
       // Здесь можно добавить отправку email через EmailJS или другой сервис
-      SafeLog.info(
-        'Отправляем email напоминание на: $email',
-        'tax_reminder_service',
-      );
+      SafeLog.info('Отправляем email напоминание на: $email', 'tax_reminder_service');
 
       // TODO(developer): Реализовать отправку email
       // await _sendEmail(email, taxInfo);
@@ -107,18 +98,12 @@ class TaxReminderService {
       final querySnapshot = await _db
           .collection('tax_info')
           .where('isPaid', isEqualTo: false)
-          .where(
-            'nextReminderDate',
-            isLessThanOrEqualTo: Timestamp.fromDate(now),
-          )
+          .where('nextReminderDate', isLessThanOrEqualTo: Timestamp.fromDate(now))
           .get();
 
       final overdueTaxes = querySnapshot.docs.map(TaxInfo.fromDocument).toList();
 
-      SafeLog.info(
-        'Найдено ${overdueTaxes.length} просроченных налогов',
-        'tax_reminder_service',
-      );
+      SafeLog.info('Найдено ${overdueTaxes.length} просроченных налогов', 'tax_reminder_service');
 
       for (final taxInfo in overdueTaxes) {
         await sendTaxReminder(taxInfo);
@@ -126,10 +111,7 @@ class TaxReminderService {
         await Future.delayed(const Duration(seconds: 1));
       }
 
-      SafeLog.info(
-        'Напоминания о просроченных налогах отправлены',
-        'tax_reminder_service',
-      );
+      SafeLog.info('Напоминания о просроченных налогах отправлены', 'tax_reminder_service');
     } on Exception catch (e) {
       SafeLog.error('Ошибка проверки просроченных налогов: $e');
     }
@@ -138,19 +120,13 @@ class TaxReminderService {
   /// Настроить периодические напоминания
   Future<void> schedulePeriodicReminders() async {
     try {
-      SafeLog.info(
-        'Настраиваем периодические напоминания',
-        'tax_reminder_service',
-      );
+      SafeLog.info('Настраиваем периодические напоминания', 'tax_reminder_service');
 
       // Проверяем напоминания каждый день в 9:00
       // В реальном приложении это можно сделать через cron job или Cloud Functions
 
       // Для демонстрации просто логируем
-      SafeLog.info(
-        'Периодические напоминания настроены',
-        'tax_reminder_service',
-      );
+      SafeLog.info('Периодические напоминания настроены', 'tax_reminder_service');
     } on Exception catch (e) {
       SafeLog.error('Ошибка настройки периодических напоминаний: $e');
     }
@@ -175,10 +151,7 @@ class TaxReminderService {
       final overdueTaxes = await _db
           .collection('tax_info')
           .where('isPaid', isEqualTo: false)
-          .where(
-            'nextReminderDate',
-            isLessThanOrEqualTo: Timestamp.fromDate(now),
-          )
+          .where('nextReminderDate', isLessThanOrEqualTo: Timestamp.fromDate(now))
           .get();
 
       final statistics = {
@@ -198,10 +171,7 @@ class TaxReminderService {
   /// Отправить напоминание о приближающемся сроке оплаты
   Future<void> sendUpcomingDeadlineReminder(TaxInfo taxInfo) async {
     try {
-      SafeLog.info(
-        'Отправляем напоминание о приближающемся сроке',
-        'tax_reminder_service',
-      );
+      SafeLog.info('Отправляем напоминание о приближающемся сроке', 'tax_reminder_service');
 
       // Проверяем, приближается ли срок оплаты (например, за 3 дня)
       final deadline = taxInfo.createdAt.add(const Duration(days: 30));
@@ -210,10 +180,7 @@ class TaxReminderService {
 
       if (daysUntilDeadline <= 3 && daysUntilDeadline > 0) {
         await sendTaxReminder(taxInfo);
-        SafeLog.info(
-          'Напоминание о приближающемся сроке отправлено',
-          'tax_reminder_service',
-        );
+        SafeLog.info('Напоминание о приближающемся сроке отправлено', 'tax_reminder_service');
       }
     } on Exception catch (e) {
       SafeLog.error('Ошибка отправки напоминания о приближающемся сроке: $e');
@@ -223,19 +190,13 @@ class TaxReminderService {
   /// Получить список налогов, требующих напоминания
   Future<List<TaxInfo>> getTaxesNeedingReminder() async {
     try {
-      SafeLog.info(
-        'Получаем налоги, требующие напоминания',
-        'tax_reminder_service',
-      );
+      SafeLog.info('Получаем налоги, требующие напоминания', 'tax_reminder_service');
 
       final now = DateTime.now();
       final querySnapshot = await _db
           .collection('tax_info')
           .where('isPaid', isEqualTo: false)
-          .where(
-            'nextReminderDate',
-            isLessThanOrEqualTo: Timestamp.fromDate(now),
-          )
+          .where('nextReminderDate', isLessThanOrEqualTo: Timestamp.fromDate(now))
           .get();
 
       final taxesNeedingReminder = querySnapshot.docs.map(TaxInfo.fromDocument).toList();

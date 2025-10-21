@@ -27,10 +27,7 @@ class AnniversaryNotificationService {
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings();
 
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
+    const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
 
     await _notifications.initialize(
       initSettings,
@@ -78,16 +75,16 @@ class AnniversaryNotificationService {
   Future<void> _checkAnniversaries() async {
     try {
       // Получаем заказчиков с годовщинами сегодня
-      final customersWithAnniversaries =
-          await _portfolioService.getCustomersWithAnniversariesToday();
+      final customersWithAnniversaries = await _portfolioService
+          .getCustomersWithAnniversariesToday();
 
       for (final customer in customersWithAnniversaries) {
         await _sendAnniversaryNotification(customer);
       }
 
       // Получаем заказчиков с годовщинами в ближайшие 7 дней
-      final customersWithUpcomingAnniversaries =
-          await _portfolioService.getCustomersWithUpcomingAnniversaries(7);
+      final customersWithUpcomingAnniversaries = await _portfolioService
+          .getCustomersWithUpcomingAnniversaries(7);
 
       for (final customer in customersWithUpcomingAnniversaries) {
         await _sendUpcomingAnniversaryNotification(customer);
@@ -121,10 +118,7 @@ class AnniversaryNotificationService {
       presentSound: true,
     );
 
-    const details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
+    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     const title = '🎉 Поздравляем с годовщиной!';
     final body = customer.weddingDate != null
@@ -141,9 +135,7 @@ class AnniversaryNotificationService {
   }
 
   /// Отправка уведомления о приближающейся годовщине
-  Future<void> _sendUpcomingAnniversaryNotification(
-    CustomerPortfolio customer,
-  ) async {
+  Future<void> _sendUpcomingAnniversaryNotification(CustomerPortfolio customer) async {
     if (!customer.anniversaryRemindersEnabled) return;
 
     final upcomingAnniversaries = customer.upcomingAnniversaries;
@@ -174,10 +166,7 @@ class AnniversaryNotificationService {
         presentSound: true,
       );
 
-      const details = NotificationDetails(
-        android: androidDetails,
-        iOS: iosDetails,
-      );
+      const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
       const title = '📅 Скоро годовщина!';
       final body = 'Через $daysUntil дней годовщина! Не забудьте заказать мероприятие.';
@@ -230,10 +219,7 @@ class AnniversaryNotificationService {
       presentSound: true,
     );
 
-    const details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
+    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     const title = '🎉 Годовщина!';
     const body = 'Сегодня годовщина! Время заказать новое мероприятие?';
@@ -251,10 +237,7 @@ class AnniversaryNotificationService {
   }
 
   /// Отмена уведомления о годовщине
-  Future<void> cancelAnniversaryNotification(
-    String customerId,
-    DateTime anniversary,
-  ) async {
+  Future<void> cancelAnniversaryNotification(String customerId, DateTime anniversary) async {
     final notificationId = customerId.hashCode + anniversary.hashCode;
     await _notifications.cancel(notificationId);
   }
@@ -287,10 +270,7 @@ class AnniversaryNotificationService {
       presentSound: true,
     );
 
-    const details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
+    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     await _notifications.show(
       999,
@@ -304,8 +284,8 @@ class AnniversaryNotificationService {
   Future<bool> requestPermissions() async {
     final androidPlugin = _notifications
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-    final iosPlugin =
-        _notifications.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+    final iosPlugin = _notifications
+        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
 
     const granted = true;
 
@@ -315,11 +295,7 @@ class AnniversaryNotificationService {
     }
 
     if (iosPlugin != null) {
-      final granted = await iosPlugin.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+      final granted = await iosPlugin.requestPermissions(alert: true, badge: true, sound: true);
       if (!granted) return false;
     }
 

@@ -8,81 +8,101 @@ final specialistProfileExtendedServiceProvider = Provider<SpecialistProfileExten
 );
 
 /// Провайдер расширенного профиля специалиста
-final specialistProfileExtendedProvider =
-    FutureProvider.family<SpecialistProfileExtended?, String>((ref, specialistId) async {
-  final service = ref.read(specialistProfileExtendedServiceProvider);
-  return service.getExtendedProfile(specialistId);
-});
+final specialistProfileExtendedProvider = FutureProvider.family<SpecialistProfileExtended?, String>(
+  (ref, specialistId) async {
+    final service = ref.read(specialistProfileExtendedServiceProvider);
+    return service.getExtendedProfile(specialistId);
+  },
+);
 
 /// Провайдер FAQ специалиста
-final specialistFAQProvider =
-    FutureProvider.family<List<FAQItem>, String>((ref, specialistId) async {
+final specialistFAQProvider = FutureProvider.family<List<FAQItem>, String>((
+  ref,
+  specialistId,
+) async {
   final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.faqItems ?? [];
 });
 
 /// Провайдер портфолио видео специалиста
-final specialistPortfolioVideosProvider =
-    FutureProvider.family<List<PortfolioVideo>, String>((ref, specialistId) async {
+final specialistPortfolioVideosProvider = FutureProvider.family<List<PortfolioVideo>, String>((
+  ref,
+  specialistId,
+) async {
   final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.portfolioVideos ?? [];
 });
 
 /// Провайдер сертификатов специалиста
-final specialistCertificationsProvider =
-    FutureProvider.family<List<String>, String>((ref, specialistId) async {
+final specialistCertificationsProvider = FutureProvider.family<List<String>, String>((
+  ref,
+  specialistId,
+) async {
   final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.certifications ?? [];
 });
 
 /// Провайдер наград специалиста
-final specialistAwardsProvider =
-    FutureProvider.family<List<String>, String>((ref, specialistId) async {
+final specialistAwardsProvider = FutureProvider.family<List<String>, String>((
+  ref,
+  specialistId,
+) async {
   final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.awards ?? [];
 });
 
 /// Провайдер отзывов специалиста
-final specialistTestimonialsProvider =
-    FutureProvider.family<List<String>, String>((ref, specialistId) async {
+final specialistTestimonialsProvider = FutureProvider.family<List<String>, String>((
+  ref,
+  specialistId,
+) async {
   final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.testimonials ?? [];
 });
 
 /// Провайдер FAQ по категории
-final specialistFAQByCategoryProvider =
-    FutureProvider.family<List<FAQItem>, (String, String)>((ref, params) async {
+final specialistFAQByCategoryProvider = FutureProvider.family<List<FAQItem>, (String, String)>((
+  ref,
+  params,
+) async {
   final (specialistId, category) = params;
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return service.getFAQByCategory(specialistId, category);
 });
 
 /// Провайдер публичных видео
-final specialistPublicVideosProvider =
-    FutureProvider.family<List<PortfolioVideo>, String>((ref, specialistId) async {
+final specialistPublicVideosProvider = FutureProvider.family<List<PortfolioVideo>, String>((
+  ref,
+  specialistId,
+) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return service.getPublicVideos(specialistId);
 });
 
 /// Провайдер поиска по FAQ
-final specialistFAQSearchProvider =
-    FutureProvider.family<List<FAQItem>, (String, String)>((ref, params) async {
+final specialistFAQSearchProvider = FutureProvider.family<List<FAQItem>, (String, String)>((
+  ref,
+  params,
+) async {
   final (specialistId, query) = params;
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return service.searchFAQ(specialistId, query);
 });
 
 /// Провайдер поиска по видео
-final specialistVideoSearchProvider =
-    FutureProvider.family<List<PortfolioVideo>, (String, String)>((ref, params) async {
-  final (specialistId, query) = params;
-  final service = ref.read(specialistProfileExtendedServiceProvider);
-  return service.searchVideos(specialistId, query);
-});
+final specialistVideoSearchProvider = FutureProvider.family<List<PortfolioVideo>, (String, String)>(
+  (ref, params) async {
+    final (specialistId, query) = params;
+    final service = ref.read(specialistProfileExtendedServiceProvider);
+    return service.searchVideos(specialistId, query);
+  },
+);
 
 /// Провайдер статистики профиля специалиста
-final specialistProfileStatsProvider =
-    FutureProvider.family<SpecialistProfileStats, String>((ref, specialistId) async {
+final specialistProfileStatsProvider = FutureProvider.family<SpecialistProfileStats, String>((
+  ref,
+  specialistId,
+) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return service.getProfileStats(specialistId);
 });
@@ -142,8 +162,8 @@ class SpecialistSearchStateNotifier extends Notifier<Map<String, String>> {
 /// Провайдер для управления состоянием поиска
 final specialistSearchStateProvider =
     NotifierProvider<SpecialistSearchStateNotifier, Map<String, String>>(
-  SpecialistSearchStateNotifier.new,
-);
+      SpecialistSearchStateNotifier.new,
+    );
 
 /// Нотификатор для выбранных категорий FAQ
 class SelectedFAQCategoriesNotifier extends Notifier<Set<String>> {
@@ -183,9 +203,7 @@ class FaqFiltersNotifier extends Notifier<FAQFilters> {
 }
 
 /// Провайдер для управления фильтрами FAQ
-final faqFiltersProvider = NotifierProvider<FaqFiltersNotifier, FAQFilters>(
-  FaqFiltersNotifier.new,
-);
+final faqFiltersProvider = NotifierProvider<FaqFiltersNotifier, FAQFilters>(FaqFiltersNotifier.new);
 
 /// Нотификатор для фильтров видео
 class VideoFiltersNotifier extends Notifier<VideoFilters> {
@@ -230,15 +248,14 @@ class FAQFilters {
     bool? showByDate,
     DateTime? fromDate,
     DateTime? toDate,
-  }) =>
-      FAQFilters(
-        searchQuery: searchQuery ?? this.searchQuery,
-        selectedCategories: selectedCategories ?? this.selectedCategories,
-        showPublishedOnly: showPublishedOnly ?? this.showPublishedOnly,
-        showByDate: showByDate ?? this.showByDate,
-        fromDate: fromDate ?? this.fromDate,
-        toDate: toDate ?? this.toDate,
-      );
+  }) => FAQFilters(
+    searchQuery: searchQuery ?? this.searchQuery,
+    selectedCategories: selectedCategories ?? this.selectedCategories,
+    showPublishedOnly: showPublishedOnly ?? this.showPublishedOnly,
+    showByDate: showByDate ?? this.showByDate,
+    fromDate: fromDate ?? this.fromDate,
+    toDate: toDate ?? this.toDate,
+  );
 }
 
 /// Фильтры для видео
@@ -268,14 +285,13 @@ class VideoFilters {
     bool? showByDate,
     DateTime? fromDate,
     DateTime? toDate,
-  }) =>
-      VideoFilters(
-        searchQuery: searchQuery ?? this.searchQuery,
-        selectedTags: selectedTags ?? this.selectedTags,
-        selectedPlatforms: selectedPlatforms ?? this.selectedPlatforms,
-        showPublicOnly: showPublicOnly ?? this.showPublicOnly,
-        showByDate: showByDate ?? this.showByDate,
-        fromDate: fromDate ?? this.fromDate,
-        toDate: toDate ?? this.toDate,
-      );
+  }) => VideoFilters(
+    searchQuery: searchQuery ?? this.searchQuery,
+    selectedTags: selectedTags ?? this.selectedTags,
+    selectedPlatforms: selectedPlatforms ?? this.selectedPlatforms,
+    showPublicOnly: showPublicOnly ?? this.showPublicOnly,
+    showByDate: showByDate ?? this.showByDate,
+    fromDate: fromDate ?? this.fromDate,
+    toDate: toDate ?? this.toDate,
+  );
 }

@@ -26,19 +26,11 @@ class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     // Запускаем анимацию с задержкой
     Future.delayed(widget.delay, () {
@@ -55,10 +47,7 @@ class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderSt
   }
 
   @override
-  Widget build(BuildContext context) => FadeTransition(
-        opacity: _animation,
-        child: widget.child,
-      );
+  Widget build(BuildContext context) => FadeTransition(opacity: _animation, child: widget.child);
 }
 
 /// Виджет для анимированного появления снизу
@@ -89,19 +78,11 @@ class _SlideInUpWidgetState extends State<SlideInUpWidget> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<Offset>(
       begin: Offset(0, widget.distance / 100),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -117,10 +98,7 @@ class _SlideInUpWidgetState extends State<SlideInUpWidget> with SingleTickerProv
   }
 
   @override
-  Widget build(BuildContext context) => SlideTransition(
-        position: _animation,
-        child: widget.child,
-      );
+  Widget build(BuildContext context) => SlideTransition(position: _animation, child: widget.child);
 }
 
 /// Виджет для анимированного масштабирования
@@ -151,19 +129,11 @@ class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: widget.scale,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -179,10 +149,7 @@ class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => ScaleTransition(
-        scale: _animation,
-        child: widget.child,
-      );
+  Widget build(BuildContext context) => ScaleTransition(scale: _animation, child: widget.child);
 }
 
 /// Виджет для анимированного поворота
@@ -213,19 +180,11 @@ class _RotateInWidgetState extends State<RotateInWidget> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: widget.angle,
       end: 0,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     Future.delayed(widget.delay, () {
       if (mounted) {
@@ -241,10 +200,7 @@ class _RotateInWidgetState extends State<RotateInWidget> with SingleTickerProvid
   }
 
   @override
-  Widget build(BuildContext context) => RotationTransition(
-        turns: _animation,
-        child: widget.child,
-      );
+  Widget build(BuildContext context) => RotationTransition(turns: _animation, child: widget.child);
 }
 
 /// Виджет для анимированного списка
@@ -269,23 +225,23 @@ class AnimatedListView extends StatefulWidget {
 class _AnimatedListViewState extends State<AnimatedListView> {
   @override
   Widget build(BuildContext context) => Column(
-        children: widget.children.asMap().entries.map((entry) {
-          final index = entry.key;
-          final child = entry.value;
+    children: widget.children.asMap().entries.map((entry) {
+      final index = entry.key;
+      final child = entry.value;
 
-          return FadeInWidget(
-            duration: widget.duration,
-            delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
-            curve: widget.curve,
-            child: SlideInUpWidget(
-              duration: widget.duration,
-              delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
-              curve: widget.curve,
-              child: child,
-            ),
-          );
-        }).toList(),
+      return FadeInWidget(
+        duration: widget.duration,
+        delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
+        curve: widget.curve,
+        child: SlideInUpWidget(
+          duration: widget.duration,
+          delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
+          curve: widget.curve,
+          child: child,
+        ),
       );
+    }).toList(),
+  );
 }
 
 /// Виджет для анимированной кнопки
@@ -316,19 +272,11 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: 1,
       end: widget.scale,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
   }
 
   @override
@@ -339,27 +287,24 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTapDown: (_) {
-          if (widget.onPressed != null) {
-            _controller.forward();
-          }
-        },
-        onTapUp: (_) {
-          if (widget.onPressed != null) {
-            _controller.reverse();
-          }
-        },
-        onTapCancel: () {
-          if (widget.onPressed != null) {
-            _controller.reverse();
-          }
-        },
-        onTap: widget.onPressed,
-        child: ScaleTransition(
-          scale: _animation,
-          child: widget.child,
-        ),
-      );
+    onTapDown: (_) {
+      if (widget.onPressed != null) {
+        _controller.forward();
+      }
+    },
+    onTapUp: (_) {
+      if (widget.onPressed != null) {
+        _controller.reverse();
+      }
+    },
+    onTapCancel: () {
+      if (widget.onPressed != null) {
+        _controller.reverse();
+      }
+    },
+    onTap: widget.onPressed,
+    child: ScaleTransition(scale: _animation, child: widget.child),
+  );
 }
 
 /// Виджет для анимированного перехода между страницами
@@ -388,30 +333,17 @@ class _AnimatedPageTransitionState extends State<AnimatedPageTransition>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     _controller.forward();
   }
@@ -424,12 +356,9 @@ class _AnimatedPageTransitionState extends State<AnimatedPageTransition>
 
   @override
   Widget build(BuildContext context) => FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: widget.child,
-        ),
-      );
+    opacity: _fadeAnimation,
+    child: SlideTransition(position: _slideAnimation, child: widget.child),
+  );
 }
 
 /// Виджет для анимированного индикатора загрузки
@@ -457,14 +386,8 @@ class _AnimatedLoadingIndicatorState extends State<AnimatedLoadingIndicator>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
-    _animation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(_controller);
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
     _controller.repeat();
   }
@@ -477,14 +400,14 @@ class _AnimatedLoadingIndicatorState extends State<AnimatedLoadingIndicator>
 
   @override
   Widget build(BuildContext context) => RotationTransition(
-        turns: _animation,
-        child: SizedBox(
-          width: widget.size,
-          height: widget.size,
-          child: CircularProgressIndicator(
-            color: widget.color ?? Theme.of(context).colorScheme.primary,
-            strokeWidth: 2,
-          ),
-        ),
-      );
+    turns: _animation,
+    child: SizedBox(
+      width: widget.size,
+      height: widget.size,
+      child: CircularProgressIndicator(
+        color: widget.color ?? Theme.of(context).colorScheme.primary,
+        strokeWidth: 2,
+      ),
+    ),
+  );
 }

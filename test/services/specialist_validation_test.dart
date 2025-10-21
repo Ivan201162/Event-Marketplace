@@ -49,13 +49,7 @@ void main() {
 
     group('Service Offering Validation', () {
       test('should validate service categories', () {
-        final validCategories = [
-          'photography',
-          'videography',
-          'music',
-          'catering',
-          'decoration',
-        ];
+        final validCategories = ['photography', 'videography', 'music', 'catering', 'decoration'];
         final invalidCategories = ['', 'invalid-category', null];
 
         for (final category in validCategories) {
@@ -107,12 +101,7 @@ void main() {
           'https://example.com/image3.jpeg',
         ];
 
-        final invalidImages = [
-          'invalid-url',
-          'https://example.com/image1.txt',
-          '',
-          null,
-        ];
+        final invalidImages = ['invalid-url', 'https://example.com/image1.txt', '', null];
 
         for (final image in validImages) {
           expect(_isValidPortfolioImage(image), isTrue);
@@ -130,12 +119,7 @@ void main() {
           'https://youtube.com/watch?v=123',
         ];
 
-        final invalidVideos = [
-          'invalid-url',
-          'https://example.com/video1.txt',
-          '',
-          null,
-        ];
+        final invalidVideos = ['invalid-url', 'https://example.com/video1.txt', '', null];
 
         for (final video in validVideos) {
           expect(_isValidPortfolioVideo(video), isTrue);
@@ -169,27 +153,18 @@ void main() {
       });
 
       test('should validate booking rejection', () {
-        final booking = {
-          'id': 'booking-123',
-          'status': 'pending',
-        };
+        final booking = {'id': 'booking-123', 'status': 'pending'};
 
         expect(_canRejectBooking(booking), isTrue);
 
-        final completedBooking = {
-          'id': 'booking-123',
-          'status': 'completed',
-        };
+        final completedBooking = {'id': 'booking-123', 'status': 'completed'};
 
         expect(_canRejectBooking(completedBooking), isFalse);
       });
 
       test('should validate schedule conflicts', () {
         final existingBookings = [
-          {
-            'startTime': DateTime(2024, 1, 1, 14),
-            'endTime': DateTime(2024, 1, 1, 16),
-          },
+          {'startTime': DateTime(2024, 1, 1, 14), 'endTime': DateTime(2024, 1, 1, 16)},
         ];
 
         final newBooking = {
@@ -234,20 +209,10 @@ void main() {
         const customerLocation = 'Moscow';
         const maxDistance = 50; // km
 
-        expect(
-          _isWithinServiceArea(
-            specialistLocation,
-            customerLocation,
-            maxDistance,
-          ),
-          isTrue,
-        );
+        expect(_isWithinServiceArea(specialistLocation, customerLocation, maxDistance), isTrue);
 
         const farLocation = 'St. Petersburg';
-        expect(
-          _isWithinServiceArea(specialistLocation, farLocation, maxDistance),
-          isFalse,
-        );
+        expect(_isWithinServiceArea(specialistLocation, farLocation, maxDistance), isFalse);
       });
 
       test('should validate travel fees', () {
@@ -265,10 +230,7 @@ void main() {
         const commissionRate = 0.1; // 10%
         const expectedCommission = 100.0;
 
-        expect(
-          _calculateCommission(servicePrice, commissionRate),
-          equals(expectedCommission),
-        );
+        expect(_calculateCommission(servicePrice, commissionRate), equals(expectedCommission));
       });
 
       test('should validate payout eligibility', () {
@@ -314,14 +276,7 @@ void main() {
 bool _isProfileComplete(Map<String, dynamic>? profile) {
   if (profile == null) return false;
 
-  final requiredFields = [
-    'name',
-    'email',
-    'phone',
-    'bio',
-    'skills',
-    'experience',
-  ];
+  final requiredFields = ['name', 'email', 'phone', 'bio', 'skills', 'experience'];
   for (final field in requiredFields) {
     if (!profile.containsKey(field) || profile[field] == null) {
       return false;
@@ -493,11 +448,7 @@ bool _canSubmitReview(DateTime? bookingDate, DateTime? serviceDate) {
 }
 
 /// Helper function to check service area
-bool _isWithinServiceArea(
-  String specialistLocation,
-  String customerLocation,
-  int maxDistance,
-) {
+bool _isWithinServiceArea(String specialistLocation, String customerLocation, int maxDistance) {
   // Mock implementation - in real app would calculate actual distance
   return specialistLocation == customerLocation;
 }

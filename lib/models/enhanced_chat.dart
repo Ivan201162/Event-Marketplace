@@ -21,34 +21,31 @@ class EnhancedChat {
 
   /// Создать из Map
   factory EnhancedChat.fromMap(Map<String, dynamic> map) => EnhancedChat(
-        id: map['id'] as String,
-        type: ChatType.fromString(map['type'] as String),
-        members: (map['members'] as List?)
-                ?.map(
-                  (member) => ChatMember.fromMap(member as Map<String, dynamic>),
-                )
-                .toList() ??
-            [],
-        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-        name: map['name'] as String?,
-        description: map['description'] as String?,
-        avatarUrl: map['avatarUrl'] as String?,
-        lastMessage: map['lastMessage'] != null
-            ? ChatLastMessage.fromMap(
-                map['lastMessage'] as Map<String, dynamic>,
-              )
-            : null,
-        updatedAt: map['updatedAt'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
-            : null,
-        isPinned: (map['isPinned'] as bool?) ?? false,
-        isMuted: (map['isMuted'] as bool?) ?? false,
-        isArchived: (map['isArchived'] as bool?) ?? false,
-        settings: map['settings'] != null
-            ? ChatSettings.fromMap(map['settings'] as Map<String, dynamic>)
-            : const ChatSettings(),
-        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-      );
+    id: map['id'] as String,
+    type: ChatType.fromString(map['type'] as String),
+    members:
+        (map['members'] as List?)
+            ?.map((member) => ChatMember.fromMap(member as Map<String, dynamic>))
+            .toList() ??
+        [],
+    createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+    name: map['name'] as String?,
+    description: map['description'] as String?,
+    avatarUrl: map['avatarUrl'] as String?,
+    lastMessage: map['lastMessage'] != null
+        ? ChatLastMessage.fromMap(map['lastMessage'] as Map<String, dynamic>)
+        : null,
+    updatedAt: map['updatedAt'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
+        : null,
+    isPinned: (map['isPinned'] as bool?) ?? false,
+    isMuted: (map['isMuted'] as bool?) ?? false,
+    isArchived: (map['isArchived'] as bool?) ?? false,
+    settings: map['settings'] != null
+        ? ChatSettings.fromMap(map['settings'] as Map<String, dynamic>)
+        : const ChatSettings(),
+    metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+  );
 
   /// Уникальный идентификатор
   final String id;
@@ -94,21 +91,21 @@ class EnhancedChat {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'type': type.value,
-        'members': members.map((member) => member.toMap()).toList(),
-        'createdAt': createdAt.millisecondsSinceEpoch,
-        'name': name,
-        'description': description,
-        'avatarUrl': avatarUrl,
-        'lastMessage': lastMessage?.toMap(),
-        'updatedAt': updatedAt?.millisecondsSinceEpoch,
-        'isPinned': isPinned,
-        'isMuted': isMuted,
-        'isArchived': isArchived,
-        'settings': settings.toMap(),
-        'metadata': metadata,
-      };
+    'id': id,
+    'type': type.value,
+    'members': members.map((member) => member.toMap()).toList(),
+    'createdAt': createdAt.millisecondsSinceEpoch,
+    'name': name,
+    'description': description,
+    'avatarUrl': avatarUrl,
+    'lastMessage': lastMessage?.toMap(),
+    'updatedAt': updatedAt?.millisecondsSinceEpoch,
+    'isPinned': isPinned,
+    'isMuted': isMuted,
+    'isArchived': isArchived,
+    'settings': settings.toMap(),
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   EnhancedChat copyWith({
@@ -126,23 +123,22 @@ class EnhancedChat {
     bool? isArchived,
     ChatSettings? settings,
     Map<String, dynamic>? metadata,
-  }) =>
-      EnhancedChat(
-        id: id ?? this.id,
-        type: type ?? this.type,
-        members: members ?? this.members,
-        createdAt: createdAt ?? this.createdAt,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        avatarUrl: avatarUrl ?? this.avatarUrl,
-        lastMessage: lastMessage ?? this.lastMessage,
-        updatedAt: updatedAt ?? this.updatedAt,
-        isPinned: isPinned ?? this.isPinned,
-        isMuted: isMuted ?? this.isMuted,
-        isArchived: isArchived ?? this.isArchived,
-        settings: settings ?? this.settings,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => EnhancedChat(
+    id: id ?? this.id,
+    type: type ?? this.type,
+    members: members ?? this.members,
+    createdAt: createdAt ?? this.createdAt,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    avatarUrl: avatarUrl ?? this.avatarUrl,
+    lastMessage: lastMessage ?? this.lastMessage,
+    updatedAt: updatedAt ?? this.updatedAt,
+    isPinned: isPinned ?? this.isPinned,
+    isMuted: isMuted ?? this.isMuted,
+    isArchived: isArchived ?? this.isArchived,
+    settings: settings ?? this.settings,
+    metadata: metadata ?? this.metadata,
+  );
 }
 
 /// Тип чата
@@ -210,20 +206,18 @@ class ChatMember {
   });
 
   factory ChatMember.fromMap(Map<String, dynamic> map) => ChatMember(
-        userId: map['userId'] as String,
-        role: ChatMemberRole.fromString(map['role'] as String),
-        joinedAt: DateTime.fromMillisecondsSinceEpoch(map['joinedAt'] as int),
-        nickname: map['nickname'] as String?,
-        permissions: map['permissions'] != null
-            ? ChatPermissions.fromMap(
-                map['permissions'] as Map<String, dynamic>,
-              )
-            : const ChatPermissions(),
-        isOnline: (map['isOnline'] as bool?) ?? false,
-        lastSeen: map['lastSeen'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(map['lastSeen'] as int)
-            : null,
-      );
+    userId: map['userId'] as String,
+    role: ChatMemberRole.fromString(map['role'] as String),
+    joinedAt: DateTime.fromMillisecondsSinceEpoch(map['joinedAt'] as int),
+    nickname: map['nickname'] as String?,
+    permissions: map['permissions'] != null
+        ? ChatPermissions.fromMap(map['permissions'] as Map<String, dynamic>)
+        : const ChatPermissions(),
+    isOnline: (map['isOnline'] as bool?) ?? false,
+    lastSeen: map['lastSeen'] != null
+        ? DateTime.fromMillisecondsSinceEpoch(map['lastSeen'] as int)
+        : null,
+  );
 
   final String userId;
   final ChatMemberRole role;
@@ -234,14 +228,14 @@ class ChatMember {
   final DateTime? lastSeen;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'role': role.value,
-        'joinedAt': joinedAt.millisecondsSinceEpoch,
-        'nickname': nickname,
-        'permissions': permissions.toMap(),
-        'isOnline': isOnline,
-        'lastSeen': lastSeen?.millisecondsSinceEpoch,
-      };
+    'userId': userId,
+    'role': role.value,
+    'joinedAt': joinedAt.millisecondsSinceEpoch,
+    'nickname': nickname,
+    'permissions': permissions.toMap(),
+    'isOnline': isOnline,
+    'lastSeen': lastSeen?.millisecondsSinceEpoch,
+  };
 }
 
 /// Роль участника чата
@@ -296,14 +290,14 @@ class ChatPermissions {
   });
 
   factory ChatPermissions.fromMap(Map<String, dynamic> map) => ChatPermissions(
-        canSendMessages: (map['canSendMessages'] as bool?) ?? true,
-        canSendMedia: (map['canSendMedia'] as bool?) ?? true,
-        canSendDocuments: (map['canSendDocuments'] as bool?) ?? true,
-        canInviteMembers: (map['canInviteMembers'] as bool?) ?? false,
-        canEditChat: (map['canEditChat'] as bool?) ?? false,
-        canDeleteMessages: (map['canDeleteMessages'] as bool?) ?? false,
-        canPinMessages: (map['canPinMessages'] as bool?) ?? false,
-      );
+    canSendMessages: (map['canSendMessages'] as bool?) ?? true,
+    canSendMedia: (map['canSendMedia'] as bool?) ?? true,
+    canSendDocuments: (map['canSendDocuments'] as bool?) ?? true,
+    canInviteMembers: (map['canInviteMembers'] as bool?) ?? false,
+    canEditChat: (map['canEditChat'] as bool?) ?? false,
+    canDeleteMessages: (map['canDeleteMessages'] as bool?) ?? false,
+    canPinMessages: (map['canPinMessages'] as bool?) ?? false,
+  );
 
   final bool canSendMessages;
   final bool canSendMedia;
@@ -314,14 +308,14 @@ class ChatPermissions {
   final bool canPinMessages;
 
   Map<String, dynamic> toMap() => {
-        'canSendMessages': canSendMessages,
-        'canSendMedia': canSendMedia,
-        'canSendDocuments': canSendDocuments,
-        'canInviteMembers': canInviteMembers,
-        'canEditChat': canEditChat,
-        'canDeleteMessages': canDeleteMessages,
-        'canPinMessages': canPinMessages,
-      };
+    'canSendMessages': canSendMessages,
+    'canSendMedia': canSendMedia,
+    'canSendDocuments': canSendDocuments,
+    'canInviteMembers': canInviteMembers,
+    'canEditChat': canEditChat,
+    'canDeleteMessages': canDeleteMessages,
+    'canPinMessages': canPinMessages,
+  };
 }
 
 /// Последнее сообщение в чате
@@ -336,20 +330,17 @@ class ChatLastMessage {
   });
 
   factory ChatLastMessage.fromMap(Map<String, dynamic> map) => ChatLastMessage(
-        id: map['id'] as String,
-        senderId: map['senderId'] as String,
-        text: map['text'] as String,
-        type: MessageType.fromString(map['type'] as String),
-        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-        attachments: (map['attachments'] as List?)
-                ?.map(
-                  (attachment) => MessageAttachment.fromMap(
-                    attachment as Map<String, dynamic>,
-                  ),
-                )
-                .toList() ??
-            [],
-      );
+    id: map['id'] as String,
+    senderId: map['senderId'] as String,
+    text: map['text'] as String,
+    type: MessageType.fromString(map['type'] as String),
+    createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+    attachments:
+        (map['attachments'] as List?)
+            ?.map((attachment) => MessageAttachment.fromMap(attachment as Map<String, dynamic>))
+            .toList() ??
+        [],
+  );
 
   final String id;
   final String senderId;
@@ -359,13 +350,13 @@ class ChatLastMessage {
   final List<MessageAttachment> attachments;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'senderId': senderId,
-        'text': text,
-        'type': type.value,
-        'createdAt': createdAt.millisecondsSinceEpoch,
-        'attachments': attachments.map((attachment) => attachment.toMap()).toList(),
-      };
+    'id': id,
+    'senderId': senderId,
+    'text': text,
+    'type': type.value,
+    'createdAt': createdAt.millisecondsSinceEpoch,
+    'attachments': attachments.map((attachment) => attachment.toMap()).toList(),
+  };
 }
 
 /// Настройки чата
@@ -382,15 +373,15 @@ class ChatSettings {
   });
 
   factory ChatSettings.fromMap(Map<String, dynamic> map) => ChatSettings(
-        notifications: (map['notifications'] as bool?) ?? true,
-        soundEnabled: (map['soundEnabled'] as bool?) ?? true,
-        vibrationEnabled: (map['vibrationEnabled'] as bool?) ?? true,
-        showPreview: (map['showPreview'] as bool?) ?? true,
-        autoDownloadMedia: (map['autoDownloadMedia'] as bool?) ?? true,
-        autoDownloadDocuments: (map['autoDownloadDocuments'] as bool?) ?? false,
-        language: (map['language'] as String?) ?? 'ru',
-        theme: ChatTheme.fromString(map['theme'] as String? ?? 'system'),
-      );
+    notifications: (map['notifications'] as bool?) ?? true,
+    soundEnabled: (map['soundEnabled'] as bool?) ?? true,
+    vibrationEnabled: (map['vibrationEnabled'] as bool?) ?? true,
+    showPreview: (map['showPreview'] as bool?) ?? true,
+    autoDownloadMedia: (map['autoDownloadMedia'] as bool?) ?? true,
+    autoDownloadDocuments: (map['autoDownloadDocuments'] as bool?) ?? false,
+    language: (map['language'] as String?) ?? 'ru',
+    theme: ChatTheme.fromString(map['theme'] as String? ?? 'system'),
+  );
 
   final bool notifications;
   final bool soundEnabled;
@@ -402,15 +393,15 @@ class ChatSettings {
   final ChatTheme theme;
 
   Map<String, dynamic> toMap() => {
-        'notifications': notifications,
-        'soundEnabled': soundEnabled,
-        'vibrationEnabled': vibrationEnabled,
-        'showPreview': showPreview,
-        'autoDownloadMedia': autoDownloadMedia,
-        'autoDownloadDocuments': autoDownloadDocuments,
-        'language': language,
-        'theme': theme.value,
-      };
+    'notifications': notifications,
+    'soundEnabled': soundEnabled,
+    'vibrationEnabled': vibrationEnabled,
+    'showPreview': showPreview,
+    'autoDownloadMedia': autoDownloadMedia,
+    'autoDownloadDocuments': autoDownloadDocuments,
+    'language': language,
+    'theme': theme.value,
+  };
 }
 
 /// Тема чата

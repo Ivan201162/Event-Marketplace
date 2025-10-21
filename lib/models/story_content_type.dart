@@ -1,12 +1,5 @@
 /// Тип контента истории
-enum StoryContentType {
-  image,
-  video,
-  text,
-  poll,
-  quiz,
-  link,
-}
+enum StoryContentType { image, video, text, poll, quiz, link }
 
 /// Расширение для StoryContentType
 extension StoryContentTypeExtension on StoryContentType {

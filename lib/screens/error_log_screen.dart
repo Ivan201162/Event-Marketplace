@@ -28,438 +28,341 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        appBar: AppBar(title: const Text('Журнал ошибок')),
-        body: Column(
-          children: [
-            // Фильтры и сортировка
-            _buildFilters(),
+    appBar: AppBar(title: const Text('Журнал ошибок')),
+    body: Column(
+      children: [
+        // Фильтры и сортировка
+        _buildFilters(),
 
-            // Статистика
-            _buildStatistics(),
+        // Статистика
+        _buildStatistics(),
 
-            // Список ошибок
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _errors.isEmpty
-                      ? const Center(child: Text('Ошибки не найдены'))
-                      : _buildErrorsList(),
-            ),
-          ],
+        // Список ошибок
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _errors.isEmpty
+              ? const Center(child: Text('Ошибки не найдены'))
+              : _buildErrorsList(),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildFilters() => ResponsiveCard(
-        child: Column(
+    child: Column(
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    initialValue: _selectedFilter,
-                    decoration: const InputDecoration(
-                      labelText: 'Фильтр по типу',
-                      border: OutlineInputBorder(),
-                    ),
-                    items: const [
-                      DropdownMenuItem(value: 'all', child: Text('Все')),
-                      DropdownMenuItem(
-                        value: 'flutter_error',
-                        child: Text('Flutter ошибки'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'network_error',
-                        child: Text('Сетевые ошибки'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'validation_error',
-                        child: Text('Ошибки валидации'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'ui_error',
-                        child: Text('UI ошибки'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'user_error',
-                        child: Text('Пользовательские ошибки'),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedFilter = value!;
-                      });
-                      _loadErrors();
-                    },
-                  ),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                initialValue: _selectedFilter,
+                decoration: const InputDecoration(
+                  labelText: 'Фильтр по типу',
+                  border: OutlineInputBorder(),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    initialValue: _selectedSort,
-                    decoration: const InputDecoration(
-                      labelText: 'Сортировка',
-                      border: OutlineInputBorder(),
-                    ),
-                    items: const [
-                      DropdownMenuItem(
-                        value: 'timestamp',
-                        child: Text('По времени'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'errorType',
-                        child: Text('По типу'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'screen',
-                        child: Text('По экрану'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'severity',
-                        child: Text('По критичности'),
-                      ),
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedSort = value!;
-                      });
-                      _sortErrors();
-                    },
-                  ),
-                ),
-              ],
+                items: const [
+                  DropdownMenuItem(value: 'all', child: Text('Все')),
+                  DropdownMenuItem(value: 'flutter_error', child: Text('Flutter ошибки')),
+                  DropdownMenuItem(value: 'network_error', child: Text('Сетевые ошибки')),
+                  DropdownMenuItem(value: 'validation_error', child: Text('Ошибки валидации')),
+                  DropdownMenuItem(value: 'ui_error', child: Text('UI ошибки')),
+                  DropdownMenuItem(value: 'user_error', child: Text('Пользовательские ошибки')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedFilter = value!;
+                  });
+                  _loadErrors();
+                },
+              ),
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Checkbox(
-                  value: _showResolvedOnly,
-                  onChanged: (value) {
-                    setState(() {
-                      _showResolvedOnly = value ?? false;
-                    });
-                    _loadErrors();
-                  },
+            const SizedBox(width: 16),
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                initialValue: _selectedSort,
+                decoration: const InputDecoration(
+                  labelText: 'Сортировка',
+                  border: OutlineInputBorder(),
                 ),
-                const Text('Показать только решенные'),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _exportErrors,
-                  icon: const Icon(Icons.download),
-                  label: const Text('Экспорт CSV'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _cleanupOldErrors,
-                  icon: const Icon(Icons.cleaning_services),
-                  label: const Text('Очистить старые'),
-                ),
-              ],
+                items: const [
+                  DropdownMenuItem(value: 'timestamp', child: Text('По времени')),
+                  DropdownMenuItem(value: 'errorType', child: Text('По типу')),
+                  DropdownMenuItem(value: 'screen', child: Text('По экрану')),
+                  DropdownMenuItem(value: 'severity', child: Text('По критичности')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedSort = value!;
+                  });
+                  _sortErrors();
+                },
+              ),
             ),
           ],
         ),
-      );
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Checkbox(
+              value: _showResolvedOnly,
+              onChanged: (value) {
+                setState(() {
+                  _showResolvedOnly = value ?? false;
+                });
+                _loadErrors();
+              },
+            ),
+            const Text('Показать только решенные'),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _exportErrors,
+              icon: const Icon(Icons.download),
+              label: const Text('Экспорт CSV'),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _cleanupOldErrors,
+              icon: const Icon(Icons.cleaning_services),
+              label: const Text('Очистить старые'),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 
   Widget _buildStatistics() => FutureBuilder<ErrorStatistics>(
-        future: _errorLogger.getErrorStatistics(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const SizedBox.shrink();
-          }
+    future: _errorLogger.getErrorStatistics(),
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        return const SizedBox.shrink();
+      }
 
-          final stats = snapshot.data!;
+      final stats = snapshot.data!;
 
-          return ResponsiveCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Статистика ошибок',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatCard(
-                        'Всего ошибок',
-                        '${stats.totalErrors}',
-                        Colors.blue,
-                        Icons.bug_report,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildStatCard(
-                        'Решено',
-                        '${stats.resolvedErrors}',
-                        Colors.green,
-                        Icons.check_circle,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildStatCard(
-                        'Критических',
-                        '${stats.criticalErrors}',
-                        Colors.red,
-                        Icons.warning,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildStatCard(
-                        'Недавних',
-                        '${stats.recentErrors}',
-                        Colors.orange,
-                        Icons.schedule,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
-      );
-
-  Widget _buildStatCard(
-    String title,
-    String value,
-    Color color,
-    IconData icon,
-  ) =>
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildErrorsList() => ListView.builder(
-        itemCount: _errors.length,
-        itemBuilder: (context, index) {
-          final error = _errors[index];
-          return _buildErrorCard(error);
-        },
-      );
-
-  Widget _buildErrorCard(AppError error) => ResponsiveCard(
+      return ResponsiveCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Заголовок
-            Row(
-              children: [
-                Icon(
-                  _getErrorIcon(error.errorType),
-                  color: error.severity.color,
-                  size: 24,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    error.errorType,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-                _buildSeverityChip(error.severity),
-                if (error.resolved) ...[
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'Решено',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // Сообщение об ошибке
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: error.severity.color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: error.severity.color),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    error.shortDescription,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  if (error.stackTrace != null) ...[
-                    const SizedBox(height: 8),
-                    ExpansionTile(
-                      title: const Text('Stack Trace'),
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            error.stackTrace!,
-                            style: const TextStyle(
-                              fontFamily: 'monospace',
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            // Метаданные
+            Text('Статистика ошибок', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
-                  child: _buildMetadataItem(
-                    'Экран',
-                    error.screen,
-                    Icons.screen_share,
+                  child: _buildStatCard(
+                    'Всего ошибок',
+                    '${stats.totalErrors}',
+                    Colors.blue,
+                    Icons.bug_report,
                   ),
                 ),
                 Expanded(
-                  child: _buildMetadataItem(
-                    'Устройство',
-                    error.device,
-                    Icons.phone_android,
+                  child: _buildStatCard(
+                    'Решено',
+                    '${stats.resolvedErrors}',
+                    Colors.green,
+                    Icons.check_circle,
                   ),
                 ),
-              ],
-            ),
-
-            if (error.userId != null) ...[
-              const SizedBox(height: 8),
-              _buildMetadataItem(
-                'Пользователь',
-                error.userId!,
-                Icons.person,
-              ),
-            ],
-
-            const SizedBox(height: 12),
-
-            // Время и действия
-            Row(
-              children: [
-                const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  '${error.timestamp.day}.${error.timestamp.month}.${error.timestamp.year} ${error.timestamp.hour}:${error.timestamp.minute.toString().padLeft(2, '0')}',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                Expanded(
+                  child: _buildStatCard(
+                    'Критических',
+                    '${stats.criticalErrors}',
+                    Colors.red,
+                    Icons.warning,
+                  ),
                 ),
-                const Spacer(),
-                if (!error.resolved) ...[
-                  ElevatedButton(
-                    onPressed: () => _markAsResolved(error.id),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('Решено'),
+                Expanded(
+                  child: _buildStatCard(
+                    'Недавних',
+                    '${stats.recentErrors}',
+                    Colors.orange,
+                    Icons.schedule,
                   ),
-                ] else ...[
-                  ElevatedButton(
-                    onPressed: () => _markAsUnresolved(error.id),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('Не решено'),
-                  ),
-                ],
+                ),
               ],
             ),
           ],
         ),
       );
+    },
+  );
 
-  Widget _buildSeverityChip(ErrorSeverity severity) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: severity.color.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: severity.color),
+  Widget _buildStatCard(String title, String value, Color color, IconData icon) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: color),
+    ),
+    child: Column(
+      children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
         ),
-        child: Text(
-          severity.displayName,
-          style: TextStyle(
-            fontSize: 12,
-            color: severity.color,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      );
+        Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    ),
+  );
 
-  Widget _buildMetadataItem(String label, String value, IconData icon) => Row(
-        children: [
-          Icon(icon, size: 16, color: Colors.grey),
-          const SizedBox(width: 4),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  value,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
+  Widget _buildErrorsList() => ListView.builder(
+    itemCount: _errors.length,
+    itemBuilder: (context, index) {
+      final error = _errors[index];
+      return _buildErrorCard(error);
+    },
+  );
+
+  Widget _buildErrorCard(AppError error) => ResponsiveCard(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Заголовок
+        Row(
+          children: [
+            Icon(_getErrorIcon(error.errorType), color: error.severity.color, size: 24),
+            const SizedBox(width: 8),
+            Expanded(child: Text(error.errorType, style: Theme.of(context).textTheme.titleMedium)),
+            _buildSeverityChip(error.severity),
+            if (error.resolved) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.green.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey,
-                  ),
+                child: const Text(
+                  'Решено',
+                  style: TextStyle(fontSize: 12, color: Colors.green, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        // Сообщение об ошибке
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: error.severity.color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: error.severity.color),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(error.shortDescription, style: Theme.of(context).textTheme.bodyMedium),
+              if (error.stackTrace != null) ...[
+                const SizedBox(height: 8),
+                ExpansionTile(
+                  title: const Text('Stack Trace'),
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        error.stackTrace!,
+                        style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
+            ],
           ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // Метаданные
+        Row(
+          children: [
+            Expanded(child: _buildMetadataItem('Экран', error.screen, Icons.screen_share)),
+            Expanded(child: _buildMetadataItem('Устройство', error.device, Icons.phone_android)),
+          ],
+        ),
+
+        if (error.userId != null) ...[
+          const SizedBox(height: 8),
+          _buildMetadataItem('Пользователь', error.userId!, Icons.person),
         ],
-      );
+
+        const SizedBox(height: 12),
+
+        // Время и действия
+        Row(
+          children: [
+            const Icon(Icons.access_time, size: 16, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(
+              '${error.timestamp.day}.${error.timestamp.month}.${error.timestamp.year} ${error.timestamp.hour}:${error.timestamp.minute.toString().padLeft(2, '0')}',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const Spacer(),
+            if (!error.resolved) ...[
+              ElevatedButton(
+                onPressed: () => _markAsResolved(error.id),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Решено'),
+              ),
+            ] else ...[
+              ElevatedButton(
+                onPressed: () => _markAsUnresolved(error.id),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Не решено'),
+              ),
+            ],
+          ],
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildSeverityChip(ErrorSeverity severity) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: severity.color.withValues(alpha: 0.2),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: severity.color),
+    ),
+    child: Text(
+      severity.displayName,
+      style: TextStyle(fontSize: 12, color: severity.color, fontWeight: FontWeight.bold),
+    ),
+  );
+
+  Widget _buildMetadataItem(String label, String value, IconData icon) => Row(
+    children: [
+      Icon(icon, size: 16, color: Colors.grey),
+      const SizedBox(width: 4),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+            Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          ],
+        ),
+      ),
+    ],
+  );
 
   IconData _getErrorIcon(String errorType) {
     switch (errorType) {
@@ -508,12 +411,9 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка загрузки: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -547,12 +447,9 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -567,12 +464,9 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -581,18 +475,12 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       final csv = await _errorLogger.exportErrorsToCSV(_errors);
       // TODO(developer): Реализовать сохранение файла
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Экспорт завершен'),
-          backgroundColor: Colors.green,
-        ),
+        const SnackBar(content: Text('Экспорт завершен'), backgroundColor: Colors.green),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка экспорта: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -601,18 +489,12 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
       await _errorLogger.cleanupOldErrors();
       _loadErrors();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Старые ошибки очищены'),
-          backgroundColor: Colors.green,
-        ),
+        const SnackBar(content: Text('Старые ошибки очищены'), backgroundColor: Colors.green),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка очистки: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка очистки: $e'), backgroundColor: Colors.red));
     }
   }
 }

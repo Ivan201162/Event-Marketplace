@@ -43,10 +43,7 @@ class LanguageSelector extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (showLabel) ...[
-          Text(
-            l10n.language,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text(l10n.language, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
         ],
         Container(
@@ -54,9 +51,7 @@ class LanguageSelector extends ConsumerWidget {
           decoration: BoxDecoration(
             color: backgroundColor ?? Theme.of(context).cardColor,
             borderRadius: borderRadius ?? BorderRadius.circular(12),
-            border: Border.all(
-              color: Theme.of(context).dividerColor,
-            ),
+            border: Border.all(color: Theme.of(context).dividerColor),
           ),
           child: isExpanded
               ? DropdownButtonHideUnderline(
@@ -83,17 +78,9 @@ class LanguageSelector extends ConsumerWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (showFlag) ...[
-                        _buildFlag(currentLocale),
-                        const SizedBox(width: 8),
-                      ],
+                      if (showFlag) ...[_buildFlag(currentLocale), const SizedBox(width: 8)],
                       Text(
-                        _getLanguageName(
-                          currentLocale,
-                          showNativeName,
-                          showEnglishName,
-                          showCode,
-                        ),
+                        _getLanguageName(currentLocale, showNativeName, showEnglishName, showCode),
                         style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(width: 4),
@@ -111,28 +98,25 @@ class LanguageSelector extends ConsumerWidget {
   }
 
   List<DropdownMenuItem<Locale>> _buildLanguageItems(BuildContext context) => [
-        DropdownMenuItem(
-          value: const Locale('ru', 'RU'),
-          child: _buildLanguageItem(const Locale('ru', 'RU')),
-        ),
-        DropdownMenuItem(
-          value: const Locale('en', 'US'),
-          child: _buildLanguageItem(const Locale('en', 'US')),
-        ),
-      ];
+    DropdownMenuItem(
+      value: const Locale('ru', 'RU'),
+      child: _buildLanguageItem(const Locale('ru', 'RU')),
+    ),
+    DropdownMenuItem(
+      value: const Locale('en', 'US'),
+      child: _buildLanguageItem(const Locale('en', 'US')),
+    ),
+  ];
 
   Widget _buildLanguageItem(Locale locale) => Row(
-        children: [
-          if (showFlag) ...[
-            _buildFlag(locale),
-            const SizedBox(width: 12),
-          ],
-          Text(
-            _getLanguageName(locale, showNativeName, showEnglishName, showCode),
-            style: const TextStyle(fontSize: 16),
-          ),
-        ],
-      );
+    children: [
+      if (showFlag) ...[_buildFlag(locale), const SizedBox(width: 12)],
+      Text(
+        _getLanguageName(locale, showNativeName, showEnglishName, showCode),
+        style: const TextStyle(fontSize: 16),
+      ),
+    ],
+  );
 
   Widget _buildFlag(Locale locale) {
     String flagEmoji;
@@ -147,18 +131,10 @@ class LanguageSelector extends ConsumerWidget {
         flagEmoji = '🌐';
     }
 
-    return Text(
-      flagEmoji,
-      style: const TextStyle(fontSize: 20),
-    );
+    return Text(flagEmoji, style: const TextStyle(fontSize: 20));
   }
 
-  String _getLanguageName(
-    Locale locale,
-    bool showNative,
-    bool showEnglish,
-    bool showCode,
-  ) {
+  String _getLanguageName(Locale locale, bool showNative, bool showEnglish, bool showCode) {
     if (showCode) {
       return locale.languageCode.toUpperCase();
     }
@@ -263,10 +239,7 @@ class CompactLanguageSelector extends ConsumerWidget {
       icon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (showFlag) ...[
-            _buildFlag(currentLocale),
-            if (showText) const SizedBox(width: 4),
-          ],
+          if (showFlag) ...[_buildFlag(currentLocale), if (showText) const SizedBox(width: 4)],
           if (showText) ...[
             Text(
               _getLanguageCode(currentLocale),
@@ -292,10 +265,7 @@ class CompactLanguageSelector extends ConsumerWidget {
         flagEmoji = '🌐';
     }
 
-    return Text(
-      flagEmoji,
-      style: const TextStyle(fontSize: 16),
-    );
+    return Text(flagEmoji, style: const TextStyle(fontSize: 16));
   }
 
   String _getLanguageCode(Locale locale) => locale.languageCode.toUpperCase();
@@ -308,21 +278,9 @@ class CompactLanguageSelector extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildLanguageOption(
-              context,
-              ref,
-              const Locale('ru', 'RU'),
-              '🇷🇺',
-              'Русский',
-            ),
+            _buildLanguageOption(context, ref, const Locale('ru', 'RU'), '🇷🇺', 'Русский'),
             const SizedBox(height: 8),
-            _buildLanguageOption(
-              context,
-              ref,
-              const Locale('en', 'US'),
-              '🇺🇸',
-              'English',
-            ),
+            _buildLanguageOption(context, ref, const Locale('en', 'US'), '🇺🇸', 'English'),
           ],
         ),
         actions: [
@@ -382,10 +340,7 @@ class CurrentLanguageDisplay extends ConsumerWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showFlag) ...[
-          _buildFlag(currentLocale),
-          const SizedBox(width: 8),
-        ],
+        if (showFlag) ...[_buildFlag(currentLocale), const SizedBox(width: 8)],
         if (showName || showCode) ...[
           Text(
             _getLanguageDisplay(currentLocale),
@@ -409,10 +364,7 @@ class CurrentLanguageDisplay extends ConsumerWidget {
         flagEmoji = '🌐';
     }
 
-    return Text(
-      flagEmoji,
-      style: const TextStyle(fontSize: 20),
-    );
+    return Text(flagEmoji, style: const TextStyle(fontSize: 20));
   }
 
   String _getLanguageDisplay(Locale locale) {

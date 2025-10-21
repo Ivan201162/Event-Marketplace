@@ -143,10 +143,7 @@ class FirestoreTestDataService {
 
     for (final user in testUsers) {
       final docRef = _firestore.collection('users').doc(user['id']);
-      batch.set(docRef, {
-        ...user,
-        'createdAt': Timestamp.fromDate(user['createdAt'] as DateTime),
-      });
+      batch.set(docRef, {...user, 'createdAt': Timestamp.fromDate(user['createdAt'] as DateTime)});
     }
 
     await batch.commit();
@@ -260,10 +257,7 @@ class FirestoreTestDataService {
 
     for (final txn in testTransactions) {
       final docRef = _firestore.collection('transactions').doc(txn['id']);
-      batch.set(docRef, {
-        ...txn,
-        'timestamp': Timestamp.fromDate(txn['timestamp'] as DateTime),
-      });
+      batch.set(docRef, {...txn, 'timestamp': Timestamp.fromDate(txn['timestamp'] as DateTime)});
     }
 
     await batch.commit();

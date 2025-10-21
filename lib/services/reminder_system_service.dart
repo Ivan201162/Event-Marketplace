@@ -109,10 +109,7 @@ class ReminderSystemService {
         stackTrace: stackTrace.toString(),
         userId: userId,
         action: 'create_reminder',
-        additionalData: {
-          'title': title,
-          'reminderTime': reminderTime.toIso8601String(),
-        },
+        additionalData: {'title': title, 'reminderTime': reminderTime.toIso8601String()},
       );
       return null;
     }
@@ -134,9 +131,7 @@ class ReminderSystemService {
       _activeReminders[reminderId]?.cancel();
       _activeReminders.remove(reminderId);
 
-      final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
+      final updates = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
 
       if (title != null) updates['title'] = title;
       if (message != null) updates['message'] = message;
@@ -230,10 +225,7 @@ class ReminderSystemService {
         );
       }
       if (endDate != null) {
-        query = query.where(
-          'nextReminderTime',
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
-        );
+        query = query.where('nextReminderTime', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       query = query.orderBy('nextReminderTime').limit(limit);
@@ -273,10 +265,7 @@ class ReminderSystemService {
   }
 
   /// Планировать напоминание
-  Future<void> _scheduleReminder(
-    String reminderId,
-    Map<String, dynamic> reminder,
-  ) async {
+  Future<void> _scheduleReminder(String reminderId, Map<String, dynamic> reminder) async {
     try {
       final reminderTime = (reminder['nextReminderTime'] as Timestamp).toDate();
       final now = DateTime.now();
@@ -296,9 +285,7 @@ class ReminderSystemService {
       _activeReminders[reminderId] = timer;
 
       if (kDebugMode) {
-        developer.log(
-          'Reminder scheduled: $reminderId at ${reminderTime.toIso8601String()}',
-        );
+        developer.log('Reminder scheduled: $reminderId at ${reminderTime.toIso8601String()}');
       }
     } catch (e, stackTrace) {
       await _errorLogger.logError(
@@ -311,10 +298,7 @@ class ReminderSystemService {
   }
 
   /// Сработать напоминание
-  Future<void> _triggerReminder(
-    String reminderId,
-    Map<String, dynamic> reminder,
-  ) async {
+  Future<void> _triggerReminder(String reminderId, Map<String, dynamic> reminder) async {
     try {
       final type = ReminderType.values.firstWhere(
         (t) => t.name == reminder['type'],
@@ -340,10 +324,7 @@ class ReminderSystemService {
       await _errorLogger.logInfo(
         message: 'Reminder triggered',
         action: 'trigger_reminder',
-        additionalData: {
-          'reminderId': reminderId,
-          'type': type.name,
-        },
+        additionalData: {'reminderId': reminderId, 'type': type.name},
       );
     } catch (e, stackTrace) {
       await _errorLogger.logError(
@@ -381,10 +362,7 @@ class ReminderSystemService {
         error: 'Failed to send reminder: $e',
         stackTrace: stackTrace.toString(),
         action: 'send_reminder',
-        additionalData: {
-          'reminderId': reminderId,
-          'type': type.name,
-        },
+        additionalData: {'reminderId': reminderId, 'type': type.name},
       );
     }
   }
@@ -422,10 +400,7 @@ class ReminderSystemService {
   }
 
   /// Обработать повторение напоминания
-  Future<void> _handleReminderRepeat(
-    String reminderId,
-    Map<String, dynamic> reminder,
-  ) async {
+  Future<void> _handleReminderRepeat(String reminderId, Map<String, dynamic> reminder) async {
     try {
       final repeatDays = List<int>.from(reminder['repeatDays'] ?? []);
       final repeatInterval = reminder['repeatInterval'] as int?;
@@ -482,13 +457,7 @@ class ReminderSystemService {
     for (var i = 1; i <= 7; i++) {
       final nextDay = from.add(Duration(days: i));
       if (repeatDays.contains(nextDay.weekday)) {
-        return DateTime(
-          nextDay.year,
-          nextDay.month,
-          nextDay.day,
-          from.hour,
-          from.minute,
-        );
+        return DateTime(nextDay.year, nextDay.month, nextDay.day, from.hour, from.minute);
       }
     }
     return null;
@@ -504,10 +473,7 @@ class ReminderSystemService {
           .collection('reminders')
           .where('isActive', isEqualTo: true)
           .where('isTriggered', isEqualTo: false)
-          .where(
-            'nextReminderTime',
-            isLessThanOrEqualTo: Timestamp.fromDate(fiveMinutesFromNow),
-          )
+          .where('nextReminderTime', isLessThanOrEqualTo: Timestamp.fromDate(fiveMinutesFromNow))
           .get();
 
       for (final doc in snapshot.docs) {
@@ -555,9 +521,7 @@ class ReminderSystemService {
         'triggeredReminders': allReminders.where((r) => r['isTriggered'] == true).length,
         'pendingReminders': allReminders.where((r) => r['isTriggered'] == false).length,
         'repeatingReminders': allReminders
-            .where(
-              (r) => (r['repeatDays'] as List).isNotEmpty || r['repeatInterval'] != null,
-            )
+            .where((r) => (r['repeatDays'] as List).isNotEmpty || r['repeatInterval'] != null)
             .length,
         'lastUpdated': now.toIso8601String(),
       };

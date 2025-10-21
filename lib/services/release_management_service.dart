@@ -256,14 +256,13 @@ class ReleaseManagementService {
 
   /// Получение последнего релиза
   Release? getLatestRelease() {
-    final releases =
-        _releaseCache.values.where((release) => release.status == ReleaseStatus.released).toList();
+    final releases = _releaseCache.values
+        .where((release) => release.status == ReleaseStatus.released)
+        .toList();
 
     if (releases.isEmpty) return null;
 
-    releases.sort(
-      (a, b) => b.releasedDate?.compareTo(a.releasedDate ?? DateTime(1970)) ?? 0,
-    );
+    releases.sort((a, b) => b.releasedDate?.compareTo(a.releasedDate ?? DateTime(1970)) ?? 0);
     return releases.first;
   }
 
@@ -612,9 +611,7 @@ class ReleaseManagementService {
   }
 
   /// Группировка деплоев по окружению
-  Map<String, int> _groupDeploymentsByEnvironment(
-    List<Deployment> deployments,
-  ) {
+  Map<String, int> _groupDeploymentsByEnvironment(List<Deployment> deployments) {
     final groups = <String, int>{};
     for (final deployment in deployments) {
       groups[deployment.environment] = (groups[deployment.environment] ?? 0) + 1;

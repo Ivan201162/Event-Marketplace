@@ -30,9 +30,7 @@ class CrossSellService {
         status: CrossSellStatus.pending,
         message: message,
         createdAt: now,
-        metadata: {
-          'expiresAt': now.add(const Duration(hours: 48)).toIso8601String(),
-        },
+        metadata: {'expiresAt': now.add(const Duration(hours: 48)).toIso8601String()},
       );
 
       final docRef = await _firestore.collection('crossSellSuggestions').add(suggestion.toMap());
@@ -64,8 +62,10 @@ class CrossSellService {
       });
 
       // Получаем данные предложения
-      final suggestionDoc =
-          await _firestore.collection('crossSellSuggestions').doc(suggestionId).get();
+      final suggestionDoc = await _firestore
+          .collection('crossSellSuggestions')
+          .doc(suggestionId)
+          .get();
       if (!suggestionDoc.exists) throw Exception('Предложение не найдено');
 
       final suggestion = CrossSellSuggestion.fromDocument(suggestionDoc);
@@ -76,10 +76,7 @@ class CrossSellService {
       }
 
       // Отправляем уведомление специалисту
-      await _sendCrossSellAcceptedNotification(
-        suggestion.specialistId,
-        suggestion,
-      );
+      await _sendCrossSellAcceptedNotification(suggestion.specialistId, suggestion);
 
       // Логируем принятие предложения
       await _logCrossSellAction(suggestionId, 'accepted', customerId);
@@ -105,18 +102,16 @@ class CrossSellService {
       });
 
       // Получаем данные предложения
-      final suggestionDoc =
-          await _firestore.collection('crossSellSuggestions').doc(suggestionId).get();
+      final suggestionDoc = await _firestore
+          .collection('crossSellSuggestions')
+          .doc(suggestionId)
+          .get();
       if (!suggestionDoc.exists) throw Exception('Предложение не найдено');
 
       final suggestion = CrossSellSuggestion.fromDocument(suggestionDoc);
 
       // Отправляем уведомление специалисту
-      await _sendCrossSellRejectedNotification(
-        suggestion.specialistId,
-        suggestion,
-        reason,
-      );
+      await _sendCrossSellRejectedNotification(suggestion.specialistId, suggestion, reason);
 
       // Логируем отклонение предложения
       await _logCrossSellAction(suggestionId, 'rejected', customerId);
@@ -138,9 +133,7 @@ class CrossSellService {
   }
 
   /// Получить кросс-селл предложения для клиента
-  Future<List<CrossSellSuggestion>> getCustomerSuggestions(
-    String customerId,
-  ) async {
+  Future<List<CrossSellSuggestion>> getCustomerSuggestions(String customerId) async {
     try {
       final snapshot = await _firestore
           .collection('crossSellSuggestions')
@@ -155,9 +148,7 @@ class CrossSellService {
   }
 
   /// Получить кросс-селл предложения для специалиста
-  Future<List<CrossSellSuggestion>> getSpecialistSuggestions(
-    String specialistId,
-  ) async {
+  Future<List<CrossSellSuggestion>> getSpecialistSuggestions(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('crossSellSuggestions')
@@ -167,9 +158,7 @@ class CrossSellService {
 
       return snapshot.docs.map(CrossSellSuggestion.fromDocument).toList();
     } catch (e) {
-      throw Exception(
-        'Ошибка получения кросс-селл предложений специалиста: $e',
-      );
+      throw Exception('Ошибка получения кросс-селл предложений специалиста: $e');
     }
   }
 
@@ -295,17 +284,12 @@ class CrossSellService {
 
       await _firestore.collection('bookings').add(booking);
     } catch (e) {
-      throw Exception(
-        'Ошибка создания бронирования из кросс-селл предложения: $e',
-      );
+      throw Exception('Ошибка создания бронирования из кросс-селл предложения: $e');
     }
   }
 
   /// Отправить уведомление о кросс-селл предложении
-  Future<void> _sendCrossSellNotification(
-    String customerId,
-    CrossSellSuggestion suggestion,
-  ) async {
+  Future<void> _sendCrossSellNotification(String customerId, CrossSellSuggestion suggestion) async {
     try {
       // Получаем FCM токены клиента
       final customerDoc = await _firestore.collection('users').doc(customerId).get();
@@ -386,9 +370,7 @@ class CrossSellService {
         }
       }
     } catch (e) {
-      debugPrint(
-        'Ошибка отправки уведомления о принятии кросс-селл предложения: $e',
-      );
+      debugPrint('Ошибка отправки уведомления о принятии кросс-селл предложения: $e');
     }
   }
 
@@ -411,11 +393,7 @@ class CrossSellService {
       final notification = {
         'title': 'Кросс-селл предложение отклонено',
         'body': 'Клиент отклонил ваше предложение дополнительных услуг',
-        'data': {
-          'type': 'cross_sell_rejected',
-          'suggestionId': suggestion.id,
-          'reason': reason,
-        },
+        'data': {'type': 'cross_sell_rejected', 'suggestionId': suggestion.id, 'reason': reason},
       };
 
       for (final token in fcmTokens) {
@@ -433,18 +411,12 @@ class CrossSellService {
         }
       }
     } catch (e) {
-      debugPrint(
-        'Ошибка отправки уведомления об отклонении кросс-селл предложения: $e',
-      );
+      debugPrint('Ошибка отправки уведомления об отклонении кросс-селл предложения: $e');
     }
   }
 
   /// Логировать действие с кросс-селл предложением
-  Future<void> _logCrossSellAction(
-    String suggestionId,
-    String action,
-    String userId,
-  ) async {
+  Future<void> _logCrossSellAction(String suggestionId, String action, String userId) async {
     try {
       await _firestore.collection('crossSellLogs').add({
         'suggestionId': suggestionId,

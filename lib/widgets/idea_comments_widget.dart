@@ -7,10 +7,7 @@ import '../services/event_idea_service.dart';
 
 /// Виджет комментариев к идее
 class IdeaCommentsWidget extends ConsumerStatefulWidget {
-  const IdeaCommentsWidget({
-    super.key,
-    required this.ideaId,
-  });
+  const IdeaCommentsWidget({super.key, required this.ideaId});
 
   final String ideaId;
 
@@ -85,20 +82,14 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Комментарий добавлен'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Комментарий добавлен'), backgroundColor: Colors.green),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       setState(() {
@@ -109,66 +100,60 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              'Комментарии (${_comments.length})',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Заголовок
+      Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          'Комментарии (${_comments.length})',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+      ),
 
-          // Поле ввода комментария
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _commentController,
-                    decoration: const InputDecoration(
-                      hintText: 'Добавить комментарий...',
-                      border: OutlineInputBorder(),
-                    ),
-                    maxLines: null,
-                    textInputAction: TextInputAction.send,
-                    onSubmitted: (_) => _submitComment(),
-                  ),
+      // Поле ввода комментария
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _commentController,
+                decoration: const InputDecoration(
+                  hintText: 'Добавить комментарий...',
+                  border: OutlineInputBorder(),
                 ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: _isSubmitting ? null : _submitComment,
-                  icon: _isSubmitting
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.send),
-                  tooltip: 'Отправить',
-                ),
-              ],
+                maxLines: null,
+                textInputAction: TextInputAction.send,
+                onSubmitted: (_) => _submitComment(),
+              ),
             ),
-          ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: _isSubmitting ? null : _submitComment,
+              icon: _isSubmitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.send),
+              tooltip: 'Отправить',
+            ),
+          ],
+        ),
+      ),
 
-          const SizedBox(height: 16),
+      const SizedBox(height: 16),
 
-          // Список комментариев
-          Expanded(
-            child: _buildCommentsList(),
-          ),
-        ],
-      );
+      // Список комментариев
+      Expanded(child: _buildCommentsList()),
+    ],
+  );
 
   Widget _buildCommentsList() {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -197,75 +182,52 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
   }
 
   Widget _buildErrorState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 48,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки комментариев',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _error!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadComments,
-              child: const Text('Повторить'),
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
+        const SizedBox(height: 16),
+        Text('Ошибка загрузки комментариев', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        Text(
+          _error!,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+          textAlign: TextAlign.center,
         ),
-      );
+        const SizedBox(height: 16),
+        ElevatedButton(onPressed: _loadComments, child: const Text('Повторить')),
+      ],
+    ),
+  );
 
   Widget _buildEmptyState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.comment_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Пока нет комментариев',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Будьте первым, кто оставит комментарий!',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[500],
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.comment_outlined, size: 64, color: Colors.grey[400]),
+        const SizedBox(height: 16),
+        Text(
+          'Пока нет комментариев',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
         ),
-      );
+        const SizedBox(height: 8),
+        Text(
+          'Будьте первым, кто оставит комментарий!',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
 
   Future<void> _likeComment(IdeaComment comment) async {
     try {
       await _ideaService.likeComment(comment.id);
       await _loadComments();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -280,12 +242,7 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
 
 /// Карточка комментария
 class CommentCard extends StatelessWidget {
-  const CommentCard({
-    super.key,
-    required this.comment,
-    this.onLike,
-    this.onReply,
-  });
+  const CommentCard({super.key, required this.comment, this.onLike, this.onReply});
 
   final IdeaComment comment;
   final VoidCallback? onLike;
@@ -293,138 +250,116 @@ class CommentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        margin: const EdgeInsets.only(bottom: 8),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    margin: const EdgeInsets.only(bottom: 8),
+    child: Padding(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Заголовок комментария
+          Row(
             children: [
-              // Заголовок комментария
-              Row(
-                children: [
-                  // Аватар
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                    backgroundImage:
-                        comment.authorAvatar != null ? NetworkImage(comment.authorAvatar!) : null,
-                    child: comment.authorAvatar == null
-                        ? Text(
-                            (comment.authorName ?? 'П').isNotEmpty
-                                ? (comment.authorName ?? 'П')[0].toUpperCase()
-                                : '?',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          )
-                        : null,
-                  ),
-                  const SizedBox(width: 8),
-
-                  // Имя и время
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          comment.authorName ?? 'Пользователь',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+              // Аватар
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                backgroundImage: comment.authorAvatar != null
+                    ? NetworkImage(comment.authorAvatar!)
+                    : null,
+                child: comment.authorAvatar == null
+                    ? Text(
+                        (comment.authorName ?? 'П').isNotEmpty
+                            ? (comment.authorName ?? 'П')[0].toUpperCase()
+                            : '?',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
-                        Text(
-                          comment.timeAgo,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                      )
+                    : null,
               ),
+              const SizedBox(width: 8),
 
-              const SizedBox(height: 8),
-
-              // Текст комментария
-              Text(
-                comment.text,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-
-              const SizedBox(height: 8),
-
-              // Действия
-              Row(
-                children: [
-                  // Лайк
-                  GestureDetector(
-                    onTap: onLike,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.favorite_border,
-                          size: 16,
-                          color: Colors.grey[600],
-                        ),
-                        if (comment.likes > 0) ...[
-                          const SizedBox(width: 4),
-                          Text(
-                            comment.likes.toString(),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(width: 16),
-
-                  // Ответ
-                  if (onReply != null)
-                    GestureDetector(
-                      onTap: onReply,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.reply,
-                            size: 16,
-                            color: Colors.grey[600],
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Ответить',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                  const Spacer(),
-
-                  // Количество ответов
-                  if (comment.replies > 0)
+              // Имя и время
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      '${comment.replies} ответов',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[500],
-                      ),
+                      comment.authorName ?? 'Пользователь',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                     ),
-                ],
+                    Text(
+                      comment.timeAgo,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-      );
+
+          const SizedBox(height: 8),
+
+          // Текст комментария
+          Text(comment.text, style: Theme.of(context).textTheme.bodyMedium),
+
+          const SizedBox(height: 8),
+
+          // Действия
+          Row(
+            children: [
+              // Лайк
+              GestureDetector(
+                onTap: onLike,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.favorite_border, size: 16, color: Colors.grey[600]),
+                    if (comment.likes > 0) ...[
+                      const SizedBox(width: 4),
+                      Text(
+                        comment.likes.toString(),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 16),
+
+              // Ответ
+              if (onReply != null)
+                GestureDetector(
+                  onTap: onReply,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.reply, size: 16, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Text('Ответить', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                    ],
+                  ),
+                ),
+
+              const Spacer(),
+
+              // Количество ответов
+              if (comment.replies > 0)
+                Text(
+                  '${comment.replies} ответов',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }

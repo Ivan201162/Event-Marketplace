@@ -30,19 +30,11 @@ class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: widget.begin,
       end: widget.end,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     if (widget.delay == Duration.zero) {
       _controller.forward();
@@ -62,10 +54,7 @@ class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderSt
   }
 
   @override
-  Widget build(BuildContext context) => FadeTransition(
-        opacity: _animation,
-        child: widget.child,
-      );
+  Widget build(BuildContext context) => FadeTransition(opacity: _animation, child: widget.child);
 }
 
 /// Виджет для плавного появления с масштабированием
@@ -98,19 +87,11 @@ class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: widget.begin,
       end: widget.end,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     if (widget.delay == Duration.zero) {
       _controller.forward();
@@ -130,10 +111,7 @@ class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => ScaleTransition(
-        scale: _animation,
-        child: widget.child,
-      );
+  Widget build(BuildContext context) => ScaleTransition(scale: _animation, child: widget.child);
 }
 
 /// Виджет для плавного появления с движением
@@ -166,21 +144,13 @@ class _SlideInWidgetState extends State<SlideInWidget> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     final beginOffset = _getBeginOffset();
     _animation = Tween<Offset>(
       begin: beginOffset,
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     if (widget.delay == Duration.zero) {
       _controller.forward();
@@ -213,19 +183,11 @@ class _SlideInWidgetState extends State<SlideInWidget> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => SlideTransition(
-        position: _animation,
-        child: widget.child,
-      );
+  Widget build(BuildContext context) => SlideTransition(position: _animation, child: widget.child);
 }
 
 /// Направления для анимации слайда
-enum SlideDirection {
-  fromTop,
-  fromBottom,
-  fromLeft,
-  fromRight,
-}
+enum SlideDirection { fromTop, fromBottom, fromLeft, fromRight }
 
 /// Виджет для комбинированной анимации
 class AnimatedEntranceWidget extends StatefulWidget {
@@ -266,41 +228,23 @@ class _AnimatedEntranceWidgetState extends State<AnimatedEntranceWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     _scaleAnimation = Tween<double>(
       begin: widget.scaleBegin,
       end: widget.scaleEnd,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     final beginOffset = _getBeginOffset();
     _slideAnimation = Tween<Offset>(
       begin: beginOffset,
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     if (widget.delay == Duration.zero) {
       _controller.forward();
@@ -338,48 +282,30 @@ class _AnimatedEntranceWidgetState extends State<AnimatedEntranceWidget>
 
     switch (widget.animationType) {
       case AnimationType.fadeIn:
-        animatedChild = FadeTransition(
-          opacity: _fadeAnimation,
-          child: animatedChild,
-        );
+        animatedChild = FadeTransition(opacity: _fadeAnimation, child: animatedChild);
         break;
       case AnimationType.scaleIn:
-        animatedChild = ScaleTransition(
-          scale: _scaleAnimation,
-          child: animatedChild,
-        );
+        animatedChild = ScaleTransition(scale: _scaleAnimation, child: animatedChild);
         break;
       case AnimationType.slideIn:
-        animatedChild = SlideTransition(
-          position: _slideAnimation,
-          child: animatedChild,
-        );
+        animatedChild = SlideTransition(position: _slideAnimation, child: animatedChild);
         break;
       case AnimationType.fadeScaleIn:
         animatedChild = FadeTransition(
           opacity: _fadeAnimation,
-          child: ScaleTransition(
-            scale: _scaleAnimation,
-            child: animatedChild,
-          ),
+          child: ScaleTransition(scale: _scaleAnimation, child: animatedChild),
         );
         break;
       case AnimationType.fadeSlideIn:
         animatedChild = FadeTransition(
           opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: animatedChild,
-          ),
+          child: SlideTransition(position: _slideAnimation, child: animatedChild),
         );
         break;
       case AnimationType.scaleSlideIn:
         animatedChild = ScaleTransition(
           scale: _scaleAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: animatedChild,
-          ),
+          child: SlideTransition(position: _slideAnimation, child: animatedChild),
         );
         break;
       case AnimationType.allIn:
@@ -387,10 +313,7 @@ class _AnimatedEntranceWidgetState extends State<AnimatedEntranceWidget>
           opacity: _fadeAnimation,
           child: ScaleTransition(
             scale: _scaleAnimation,
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: animatedChild,
-            ),
+            child: SlideTransition(position: _slideAnimation, child: animatedChild),
           ),
         );
         break;
@@ -401,15 +324,7 @@ class _AnimatedEntranceWidgetState extends State<AnimatedEntranceWidget>
 }
 
 /// Типы анимаций
-enum AnimationType {
-  fadeIn,
-  scaleIn,
-  slideIn,
-  fadeScaleIn,
-  fadeSlideIn,
-  scaleSlideIn,
-  allIn,
-}
+enum AnimationType { fadeIn, scaleIn, slideIn, fadeScaleIn, fadeSlideIn, scaleSlideIn, allIn }
 
 /// Виджет для анимации появления списка элементов
 class AnimatedListWidget extends StatefulWidget {
@@ -439,23 +354,21 @@ class AnimatedListWidget extends StatefulWidget {
 class _AnimatedListWidgetState extends State<AnimatedListWidget> {
   @override
   Widget build(BuildContext context) => Column(
-        children: widget.children.asMap().entries.map((entry) {
-          final index = entry.key;
-          final child = entry.value;
+    children: widget.children.asMap().entries.map((entry) {
+      final index = entry.key;
+      final child = entry.value;
 
-          return AnimatedEntranceWidget(
-            duration: widget.duration,
-            delay: Duration(
-              milliseconds: widget.delay.inMilliseconds * index,
-            ),
-            curve: widget.curve,
-            animationType: widget.animationType,
-            slideDirection: widget.slideDirection,
-            slideOffset: widget.slideOffset,
-            child: child,
-          );
-        }).toList(),
+      return AnimatedEntranceWidget(
+        duration: widget.duration,
+        delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
+        curve: widget.curve,
+        animationType: widget.animationType,
+        slideDirection: widget.slideDirection,
+        slideOffset: widget.slideOffset,
+        child: child,
       );
+    }).toList(),
+  );
 }
 
 /// Виджет для анимации нажатия
@@ -486,19 +399,11 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _animation = Tween<double>(
       begin: 1,
       end: widget.scale,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
   }
 
   @override
@@ -521,15 +426,12 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTapDown: widget.onPressed != null ? _onTapDown : null,
-        onTapUp: widget.onPressed != null ? _onTapUp : null,
-        onTapCancel: widget.onPressed != null ? _onTapCancel : null,
-        onTap: widget.onPressed,
-        child: ScaleTransition(
-          scale: _animation,
-          child: widget.child,
-        ),
-      );
+    onTapDown: widget.onPressed != null ? _onTapDown : null,
+    onTapUp: widget.onPressed != null ? _onTapUp : null,
+    onTapCancel: widget.onPressed != null ? _onTapCancel : null,
+    onTap: widget.onPressed,
+    child: ScaleTransition(scale: _animation, child: widget.child),
+  );
 }
 
 /// Виджет для анимации появления с задержкой
@@ -560,21 +462,19 @@ class StaggeredAnimationWidget extends StatefulWidget {
 class _StaggeredAnimationWidgetState extends State<StaggeredAnimationWidget> {
   @override
   Widget build(BuildContext context) => Column(
-        children: widget.children.asMap().entries.map((entry) {
-          final index = entry.key;
-          final child = entry.value;
+    children: widget.children.asMap().entries.map((entry) {
+      final index = entry.key;
+      final child = entry.value;
 
-          return AnimatedEntranceWidget(
-            duration: widget.duration,
-            delay: Duration(
-              milliseconds: widget.delay.inMilliseconds * index,
-            ),
-            curve: widget.curve,
-            animationType: widget.animationType,
-            slideDirection: widget.slideDirection,
-            slideOffset: widget.slideOffset,
-            child: child,
-          );
-        }).toList(),
+      return AnimatedEntranceWidget(
+        duration: widget.duration,
+        delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
+        curve: widget.curve,
+        animationType: widget.animationType,
+        slideDirection: widget.slideDirection,
+        slideOffset: widget.slideOffset,
+        child: child,
       );
+    }).toList(),
+  );
 }

@@ -65,9 +65,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -79,9 +77,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                 Expanded(
                   child: Text(
                     widget.proposal.title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 _buildStatusChip(),
@@ -108,9 +104,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                     children: [
                       Text(
                         widget.proposal.organizerName ?? 'Организатор',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       Text(
                         widget.proposal.timeAgo,
@@ -126,28 +120,20 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
             const SizedBox(height: 12),
 
             // Описание
-            Text(
-              widget.proposal.description,
-              style: theme.textTheme.bodyMedium,
-            ),
+            Text(widget.proposal.description, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 16),
 
             // Специалисты
             if (_specialists != null) ...[
               Text(
                 'Предложенные специалисты (${_specialists!.length}):',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
               ...(_specialists!.map(_buildSpecialistItem)),
             ] else if (_isLoading) ...[
               const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: CircularProgressIndicator(),
-                ),
+                child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
               ),
             ],
             const SizedBox(height: 16),
@@ -191,11 +177,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                      size: 20,
-                    ),
+                    const Icon(Icons.check_circle, color: Colors.green, size: 20),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -300,16 +282,15 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundImage:
-                specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
+            backgroundImage: specialist.avatarUrl != null
+                ? NetworkImage(specialist.avatarUrl!)
+                : null,
             child: specialist.avatarUrl == null ? const Icon(Icons.person) : null,
           ),
           const SizedBox(width: 12),
@@ -319,9 +300,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
               children: [
                 Text(
                   specialist.displayName,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),
                 if (specialist.specialization.isNotEmpty)
                   Text(
@@ -337,9 +316,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                       const SizedBox(width: 4),
                       Text(
                         specialist.rating.toStringAsFixed(1),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -372,9 +349,9 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
             children: [
               Text(
                 'Выберите специалиста',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               Expanded(
@@ -398,11 +375,7 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
                           if (specialist.rating > 0)
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.star,
-                                  size: 16,
-                                  color: Colors.amber,
-                                ),
+                                const Icon(Icons.star, size: 16, color: Colors.amber),
                                 const SizedBox(width: 4),
                                 Text(specialist.rating.toStringAsFixed(1)),
                               ],
@@ -437,20 +410,14 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
         Navigator.of(context).pop(); // Закрыть модальное окно
         widget.onAccept();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Предложение принято!'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Предложение принято!'), backgroundColor: Colors.green),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {
@@ -492,20 +459,14 @@ class _SpecialistProposalCardState extends State<SpecialistProposalCard> {
         if (mounted) {
           widget.onReject();
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Предложение отклонено'),
-              backgroundColor: Colors.orange,
-            ),
+            const SnackBar(content: Text('Предложение отклонено'), backgroundColor: Colors.orange),
           );
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Ошибка: $e'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
         }
       } finally {
         if (mounted) {

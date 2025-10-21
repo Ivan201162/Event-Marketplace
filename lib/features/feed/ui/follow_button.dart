@@ -6,11 +6,7 @@ import '../providers/feed_providers.dart';
 
 /// Кнопка подписки/отписки
 class FollowButton extends ConsumerWidget {
-  const FollowButton({
-    super.key,
-    required this.targetUserId,
-    this.size = FollowButtonSize.medium,
-  });
+  const FollowButton({super.key, required this.targetUserId, this.size = FollowButtonSize.medium});
 
   final String targetUserId;
   final FollowButtonSize size;
@@ -27,91 +23,72 @@ class FollowButton extends ConsumerWidget {
   }
 
   Widget _buildButton(BuildContext context, WidgetRef ref, bool isFollowing) => ElevatedButton(
-        onPressed: () => _handleFollow(context, ref, isFollowing),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isFollowing ? Colors.grey[300] : Colors.blue,
-          foregroundColor: isFollowing ? Colors.grey[700] : Colors.white,
-          padding: _getPadding(),
-          minimumSize: _getMinimumSize(),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        child: Text(
-          isFollowing ? 'Отписаться' : 'Подписаться',
-          style: TextStyle(
-            fontSize: _getFontSize(),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      );
+    onPressed: () => _handleFollow(context, ref, isFollowing),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: isFollowing ? Colors.grey[300] : Colors.blue,
+      foregroundColor: isFollowing ? Colors.grey[700] : Colors.white,
+      padding: _getPadding(),
+      minimumSize: _getMinimumSize(),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    child: Text(
+      isFollowing ? 'Отписаться' : 'Подписаться',
+      style: TextStyle(fontSize: _getFontSize(), fontWeight: FontWeight.w600),
+    ),
+  );
 
   Widget _buildLoadingButton() => ElevatedButton(
-        onPressed: null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.grey[300],
-          padding: _getPadding(),
-          minimumSize: _getMinimumSize(),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        child: SizedBox(
-          width: _getFontSize(),
-          height: _getFontSize(),
-          child: const CircularProgressIndicator(strokeWidth: 2),
-        ),
-      );
+    onPressed: null,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.grey[300],
+      padding: _getPadding(),
+      minimumSize: _getMinimumSize(),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    child: SizedBox(
+      width: _getFontSize(),
+      height: _getFontSize(),
+      child: const CircularProgressIndicator(strokeWidth: 2),
+    ),
+  );
 
   Widget _buildErrorButton(BuildContext context, WidgetRef ref) => ElevatedButton(
-        onPressed: () => ref.invalidate(isFollowingProvider(targetUserId)),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red[100],
-          foregroundColor: Colors.red[700],
-          padding: _getPadding(),
-          minimumSize: _getMinimumSize(),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        child: Text(
-          'Ошибка',
-          style: TextStyle(
-            fontSize: _getFontSize(),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      );
+    onPressed: () => ref.invalidate(isFollowingProvider(targetUserId)),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.red[100],
+      foregroundColor: Colors.red[700],
+      padding: _getPadding(),
+      minimumSize: _getMinimumSize(),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    ),
+    child: Text(
+      'Ошибка',
+      style: TextStyle(fontSize: _getFontSize(), fontWeight: FontWeight.w600),
+    ),
+  );
 
-  Future<void> _handleFollow(
-    BuildContext context,
-    WidgetRef ref,
-    bool isFollowing,
-  ) async {
+  Future<void> _handleFollow(BuildContext context, WidgetRef ref, bool isFollowing) async {
     try {
       if (isFollowing) {
         await ref.read(unfollowUserProvider(targetUserId).future);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Вы отписались')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Вы отписались')));
         }
       } else {
         await ref.read(followUserProvider(targetUserId).future);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Вы подписались')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Вы подписались')));
         }
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -151,18 +128,11 @@ class FollowButton extends ConsumerWidget {
 }
 
 /// Размеры кнопки подписки
-enum FollowButtonSize {
-  small,
-  medium,
-  large,
-}
+enum FollowButtonSize { small, medium, large }
 
 /// Кнопка подписки для карточки поста
 class PostFollowButton extends ConsumerWidget {
-  const PostFollowButton({
-    super.key,
-    required this.authorId,
-  });
+  const PostFollowButton({super.key, required this.authorId});
 
   final String authorId;
 
@@ -176,10 +146,7 @@ class PostFollowButton extends ConsumerWidget {
           return const SizedBox.shrink();
         }
 
-        return FollowButton(
-          targetUserId: authorId,
-          size: FollowButtonSize.small,
-        );
+        return FollowButton(targetUserId: authorId, size: FollowButtonSize.small);
       },
       loading: () => const SizedBox.shrink(),
       error: (_, __) => const SizedBox.shrink(),

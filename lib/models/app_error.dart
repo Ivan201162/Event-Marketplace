@@ -52,8 +52,8 @@ class AppError {
       resolved: safeData['resolved'] as bool? ?? false,
       timestamp: safeData['timestamp'] != null
           ? (safeData['timestamp'] is Timestamp
-              ? (safeData['timestamp'] as Timestamp).toDate()
-              : DateTime.parse(safeData['timestamp'].toString()))
+                ? (safeData['timestamp'] as Timestamp).toDate()
+                : DateTime.parse(safeData['timestamp'].toString()))
           : DateTime.now(),
       metadata: safeData['metadata'] != null
           ? Map<String, dynamic>.from(safeData['metadata'] as Map)
@@ -63,18 +63,17 @@ class AppError {
 
   /// Создать из Map
   factory AppError.fromMap(Map<String, dynamic> data) => AppError(
-        id: data['id'] as String? ?? '',
-        userId: data['userId'] as String?,
-        device: data['device'] as String? ?? '',
-        screen: data['screen'] as String? ?? '',
-        errorMessage: data['errorMessage'] as String? ?? '',
-        stackTrace: data['stackTrace'] as String?,
-        errorType: data['errorType'] as String? ?? 'unknown',
-        resolved: data['resolved'] as bool? ?? false,
-        timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        metadata:
-            data['metadata'] != null ? Map<String, dynamic>.from(data['metadata'] as Map) : null,
-      );
+    id: data['id'] as String? ?? '',
+    userId: data['userId'] as String?,
+    device: data['device'] as String? ?? '',
+    screen: data['screen'] as String? ?? '',
+    errorMessage: data['errorMessage'] as String? ?? '',
+    stackTrace: data['stackTrace'] as String?,
+    errorType: data['errorType'] as String? ?? 'unknown',
+    resolved: data['resolved'] as bool? ?? false,
+    timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata'] as Map) : null,
+  );
   final String id;
   final String? userId;
   final String device;
@@ -88,16 +87,16 @@ class AppError {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'device': device,
-        'screen': screen,
-        'errorMessage': errorMessage,
-        'stackTrace': stackTrace,
-        'errorType': errorType,
-        'resolved': resolved,
-        'timestamp': Timestamp.fromDate(timestamp),
-        'metadata': metadata,
-      };
+    'userId': userId,
+    'device': device,
+    'screen': screen,
+    'errorMessage': errorMessage,
+    'stackTrace': stackTrace,
+    'errorType': errorType,
+    'resolved': resolved,
+    'timestamp': Timestamp.fromDate(timestamp),
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   AppError copyWith({
@@ -111,19 +110,18 @@ class AppError {
     bool? resolved,
     DateTime? timestamp,
     Map<String, dynamic>? metadata,
-  }) =>
-      AppError(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        device: device ?? this.device,
-        screen: screen ?? this.screen,
-        errorMessage: errorMessage ?? this.errorMessage,
-        stackTrace: stackTrace ?? this.stackTrace,
-        errorType: errorType ?? this.errorType,
-        resolved: resolved ?? this.resolved,
-        timestamp: timestamp ?? this.timestamp,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => AppError(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    device: device ?? this.device,
+    screen: screen ?? this.screen,
+    errorMessage: errorMessage ?? this.errorMessage,
+    stackTrace: stackTrace ?? this.stackTrace,
+    errorType: errorType ?? this.errorType,
+    resolved: resolved ?? this.resolved,
+    timestamp: timestamp ?? this.timestamp,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Получить краткое описание ошибки
   String get shortDescription {
@@ -179,29 +177,24 @@ class AppError {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        userId,
-        device,
-        screen,
-        errorMessage,
-        stackTrace,
-        errorType,
-        resolved,
-        timestamp,
-        metadata,
-      );
+    id,
+    userId,
+    device,
+    screen,
+    errorMessage,
+    stackTrace,
+    errorType,
+    resolved,
+    timestamp,
+    metadata,
+  );
 
   @override
   String toString() => 'AppError(id: $id, errorType: $errorType, resolved: $resolved)';
 }
 
 /// Уровень критичности ошибки
-enum ErrorSeverity {
-  low,
-  medium,
-  high,
-  critical,
-}
+enum ErrorSeverity { low, medium, high, critical }
 
 /// Расширение для уровня критичности ошибки
 extension ErrorSeverityExtension on ErrorSeverity {

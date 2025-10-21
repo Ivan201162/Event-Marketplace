@@ -16,8 +16,8 @@ final citiesProvider = FutureProvider<List<CityRegion>>((ref) async {
 /// Провайдер для получения городов с фильтрами (мигрирован с StateNotifierProvider)
 final filteredCitiesProvider =
     NotifierProvider<FilteredCitiesNotifier, AsyncValue<List<CityRegion>>>(() {
-  return FilteredCitiesNotifier();
-});
+      return FilteredCitiesNotifier();
+    });
 
 /// Провайдер для поиска городов по названию (мигрирован с StateNotifierProvider)
 final citySearchProvider = NotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>(() {
@@ -43,17 +43,19 @@ final currentLocationProvider = FutureProvider<Position?>((ref) async {
 });
 
 /// Провайдер для получения ближайших городов (мигрирован с StateNotifierProvider)
-final nearbyCitiesProvider =
-    NotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>(() {
-  return NearbyCitiesNotifier();
-});
+final nearbyCitiesProvider = NotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>(
+  () {
+    return NearbyCitiesNotifier();
+  },
+);
 
 /// Провайдер для выбранного города
 final selectedCityProvider = StateProvider<CityRegion?>((ref) => null);
 
 /// Провайдер для фильтров поиска городов
-final citySearchFiltersProvider =
-    StateProvider<CitySearchFilters>((ref) => const CitySearchFilters());
+final citySearchFiltersProvider = StateProvider<CitySearchFilters>(
+  (ref) => const CitySearchFilters(),
+);
 
 /// Провайдер для состояния инициализации городов
 final citiesInitializationProvider = FutureProvider<bool>((ref) async {
@@ -198,10 +200,7 @@ class NearbyCitiesNotifier extends Notifier<AsyncValue<List<CityRegion>>> {
     try {
       final position = await _service.getCurrentLocation();
       if (position != null) {
-        await getNearbyCities(
-          latitude: position.latitude,
-          longitude: position.longitude,
-        );
+        await getNearbyCities(latitude: position.latitude, longitude: position.longitude);
       } else {
         state = const AsyncValue.error('Не удалось получить местоположение', null);
       }
@@ -217,8 +216,10 @@ class NearbyCitiesNotifier extends Notifier<AsyncValue<List<CityRegion>>> {
 }
 
 /// Провайдер для получения городов по региону
-final citiesByRegionProvider =
-    FutureProvider.family<List<CityRegion>, String>((ref, regionName) async {
+final citiesByRegionProvider = FutureProvider.family<List<CityRegion>, String>((
+  ref,
+  regionName,
+) async {
   final service = ref.read(cityRegionServiceProvider);
   return service.getCitiesByRegion(regionName: regionName);
 });
@@ -230,8 +231,10 @@ final cityByIdProvider = FutureProvider.family<CityRegion?, String>((ref, cityId
 });
 
 /// Провайдер для получения города по координатам
-final cityByCoordinatesProvider =
-    FutureProvider.family<CityRegion?, Map<String, double>>((ref, coordinates) async {
+final cityByCoordinatesProvider = FutureProvider.family<CityRegion?, Map<String, double>>((
+  ref,
+  coordinates,
+) async {
   final service = ref.read(cityRegionServiceProvider);
   return service.getCityByCoordinates(
     latitude: coordinates['latitude']!,
@@ -240,8 +243,10 @@ final cityByCoordinatesProvider =
 });
 
 /// Провайдер для статистики специалистов в городе
-final citySpecialistStatsProvider =
-    FutureProvider.family<Map<String, dynamic>, String>((ref, cityId) async {
+final citySpecialistStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((
+  ref,
+  cityId,
+) async {
   final service = ref.read(cityRegionServiceProvider);
   final city = await service.getCityById(cityId);
 
@@ -253,11 +258,7 @@ final citySpecialistStatsProvider =
     };
   }
 
-  return {
-    'totalSpecialists': 0,
-    'avgRating': 0.0,
-    'categories': <String>[],
-  };
+  return {'totalSpecialists': 0, 'avgRating': 0.0, 'categories': <String>[]};
 });
 
 /// Провайдер для проверки доступности геолокации
@@ -271,19 +272,24 @@ final requestLocationPermissionProvider = FutureProvider<LocationPermission>(
 );
 
 /// Провайдер для проверки включенности служб геолокации
-final locationServiceEnabledProvider =
-    FutureProvider<bool>((ref) async => Geolocator.isLocationServiceEnabled());
+final locationServiceEnabledProvider = FutureProvider<bool>(
+  (ref) async => Geolocator.isLocationServiceEnabled(),
+);
 
 /// Провайдер для потока городов с фильтрами
-final citiesStreamProvider =
-    StreamProvider.family<List<CityRegion>, CitySearchFilters>((ref, filters) {
+final citiesStreamProvider = StreamProvider.family<List<CityRegion>, CitySearchFilters>((
+  ref,
+  filters,
+) {
   final service = ref.read(cityRegionServiceProvider);
   return service.getCitiesStream(filters: filters);
 });
 
 /// Провайдер для популярных городов в регионе
-final popularCitiesInRegionProvider =
-    FutureProvider.family<List<CityRegion>, String>((ref, regionName) async {
+final popularCitiesInRegionProvider = FutureProvider.family<List<CityRegion>, String>((
+  ref,
+  regionName,
+) async {
   final service = ref.read(cityRegionServiceProvider);
   final cities = await service.getCitiesByRegion(regionName: regionName);
 
@@ -293,8 +299,10 @@ final popularCitiesInRegionProvider =
 });
 
 /// Провайдер для городов с специалистами определенной категории
-final citiesWithSpecialistsProvider =
-    FutureProvider.family<List<CityRegion>, String>((ref, category) async {
+final citiesWithSpecialistsProvider = FutureProvider.family<List<CityRegion>, String>((
+  ref,
+  category,
+) async {
   final service = ref.read(cityRegionServiceProvider);
   final filters = CitySearchFilters(
     hasSpecialists: true,

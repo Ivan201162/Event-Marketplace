@@ -8,32 +8,21 @@ void main() {
     testWidgets('should display empty state when no bookings', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
 
       // Assert
       expect(find.text('Заявки на бронирование'), findsOneWidget);
-      expect(
-        find.text('У вас пока нет заявок на бронирование'),
-        findsOneWidget,
-      );
+      expect(find.text('У вас пока нет заявок на бронирование'), findsOneWidget);
       expect(find.byIcon(Icons.event_available), findsOneWidget);
     });
 
     testWidgets('should display loading state initially', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       // Assert
@@ -43,11 +32,7 @@ void main() {
     testWidgets('should display error state when error occurs', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -61,11 +46,7 @@ void main() {
     testWidgets('should display booking requests when available', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -77,11 +58,7 @@ void main() {
     testWidgets('should display filter button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -93,11 +70,7 @@ void main() {
     testWidgets('should show filter dialog when filter button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -117,11 +90,7 @@ void main() {
     testWidgets('should show booking details when booking card tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -140,11 +109,7 @@ void main() {
     testWidgets('should show confirm dialog when confirm button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -157,10 +122,7 @@ void main() {
 
         // Assert
         expect(find.text('Подтвердить заявку'), findsOneWidget);
-        expect(
-          find.text('Вы уверены, что хотите подтвердить эту заявку?'),
-          findsOneWidget,
-        );
+        expect(find.text('Вы уверены, что хотите подтвердить эту заявку?'), findsOneWidget);
         expect(find.text('Подтвердить'), findsOneWidget);
         expect(find.text('Отмена'), findsOneWidget);
       }
@@ -169,11 +131,7 @@ void main() {
     testWidgets('should show reject dialog when reject button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -186,10 +144,7 @@ void main() {
 
         // Assert
         expect(find.text('Отклонить заявку'), findsOneWidget);
-        expect(
-          find.text('Вы уверены, что хотите отклонить эту заявку?'),
-          findsOneWidget,
-        );
+        expect(find.text('Вы уверены, что хотите отклонить эту заявку?'), findsOneWidget);
         expect(find.text('Отклонить'), findsOneWidget);
         expect(find.text('Отмена'), findsOneWidget);
       }
@@ -198,11 +153,7 @@ void main() {
     testWidgets('should display booking status correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -214,11 +165,7 @@ void main() {
     testWidgets('should display booking date correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -230,11 +177,7 @@ void main() {
     testWidgets('should display customer information correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -246,11 +189,7 @@ void main() {
     testWidgets('should display event details correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -262,11 +201,7 @@ void main() {
     testWidgets('should display pricing information correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -278,11 +213,7 @@ void main() {
     testWidgets('should display action buttons correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -294,11 +225,7 @@ void main() {
     testWidgets('should handle booking status updates correctly', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -317,11 +244,7 @@ void main() {
     testWidgets('should handle booking rejection correctly', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -340,11 +263,7 @@ void main() {
     testWidgets('should display booking statistics correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -356,11 +275,7 @@ void main() {
     testWidgets('should handle empty state correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();
@@ -372,11 +287,7 @@ void main() {
     testWidgets('should handle error state correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: BookingRequestsScreen(),
-          ),
-        ),
+        const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
       );
 
       await tester.pumpAndSettle();

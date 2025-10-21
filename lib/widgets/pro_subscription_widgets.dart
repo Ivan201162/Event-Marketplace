@@ -7,11 +7,7 @@ import '../providers/pro_subscription_providers.dart';
 
 /// Виджет планов подписки
 class SubscriptionPlansWidget extends ConsumerWidget {
-  const SubscriptionPlansWidget({
-    super.key,
-    required this.userId,
-    required this.onPlanSelected,
-  });
+  const SubscriptionPlansWidget({super.key, required this.userId, required this.onPlanSelected});
   final String userId;
   final void Function(SubscriptionPlan) onPlanSelected;
 
@@ -25,10 +21,7 @@ class SubscriptionPlansWidget extends ConsumerWidget {
       children: [
         const Text(
           'Выберите план подписки',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         subscriptionAsync.when(
@@ -44,13 +37,14 @@ class SubscriptionPlansWidget extends ConsumerWidget {
                     color: isCurrentPlan
                         ? Theme.of(context).primaryColor
                         : isPopular
-                            ? Colors.orange
-                            : Colors.grey.shade300,
+                        ? Colors.orange
+                        : Colors.grey.shade300,
                     width: isCurrentPlan || isPopular ? 2 : 1,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  color:
-                      isCurrentPlan ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : null,
+                  color: isCurrentPlan
+                      ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                      : null,
                 ),
                 child: Column(
                   children: [
@@ -85,17 +79,11 @@ class SubscriptionPlansWidget extends ConsumerWidget {
                             children: [
                               Text(
                                 plan.displayName,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                               if (isCurrentPlan)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).primaryColor,
                                     borderRadius: BorderRadius.circular(12),
@@ -126,17 +114,10 @@ class SubscriptionPlansWidget extends ConsumerWidget {
                               padding: const EdgeInsets.only(bottom: 8),
                               child: Row(
                                 children: [
-                                  const Icon(
-                                    Icons.check_circle,
-                                    color: Colors.green,
-                                    size: 20,
-                                  ),
+                                  const Icon(Icons.check_circle, color: Colors.green, size: 20),
                                   const SizedBox(width: 8),
                                   Expanded(
-                                    child: Text(
-                                      feature,
-                                      style: const TextStyle(fontSize: 14),
-                                    ),
+                                    child: Text(feature, style: const TextStyle(fontSize: 14)),
                                   ),
                                 ],
                               ),
@@ -148,8 +129,9 @@ class SubscriptionPlansWidget extends ConsumerWidget {
                             child: ElevatedButton(
                               onPressed: isCurrentPlan ? null : () => onPlanSelected(plan),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    isCurrentPlan ? Colors.grey : Theme.of(context).primaryColor,
+                                backgroundColor: isCurrentPlan
+                                    ? Colors.grey
+                                    : Theme.of(context).primaryColor,
                                 foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(vertical: 12),
                                 shape: RoundedRectangleBorder(
@@ -158,10 +140,7 @@ class SubscriptionPlansWidget extends ConsumerWidget {
                               ),
                               child: Text(
                                 isCurrentPlan ? 'Текущий план' : 'Выбрать план',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                               ),
                             ),
                           ),
@@ -183,16 +162,12 @@ class SubscriptionPlansWidget extends ConsumerWidget {
 
 /// Виджет текущей подписки
 class CurrentSubscriptionWidget extends ConsumerWidget {
-  const CurrentSubscriptionWidget({
-    super.key,
-    required this.userId,
-  });
+  const CurrentSubscriptionWidget({super.key, required this.userId});
   final String userId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final subscriptionAsync = ref.watch(userSubscriptionProvider(userId));
-    final subscriptionState = ref.watch(subscriptionStateProvider);
 
     return Card(
       child: Padding(
@@ -202,18 +177,11 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
             if (subscription == null) {
               return Column(
                 children: [
-                  const Icon(
-                    Icons.star_outline,
-                    size: 48,
-                    color: Colors.grey,
-                  ),
+                  const Icon(Icons.star_outline, size: 48, color: Colors.grey),
                   const SizedBox(height: 16),
                   const Text(
                     'У вас нет активной подписки',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 8),
                   const Text(
@@ -240,16 +208,10 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
                   children: [
                     Text(
                       subscription.plan.displayName,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: _getStatusColor(subscription.status),
                         borderRadius: BorderRadius.circular(12),
@@ -279,10 +241,7 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
                     'Пробный период до',
                     DateFormat('dd.MM.yyyy').format(subscription.trialEndDate!),
                   ),
-                _buildInfoRow(
-                  'Автопродление',
-                  subscription.autoRenew ? 'Включено' : 'Отключено',
-                ),
+                _buildInfoRow('Автопродление', subscription.autoRenew ? 'Включено' : 'Отключено'),
                 const SizedBox(height: 16),
                 Row(
                   children: [
@@ -320,27 +279,15 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
   }
 
   Widget _buildInfoRow(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-            ),
-            Text(
-              value,
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+      ],
+    ),
+  );
 
   Color _getStatusColor(SubscriptionStatus status) {
     switch (status) {
@@ -357,11 +304,7 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
     }
   }
 
-  void _showCancelDialog(
-    BuildContext context,
-    WidgetRef ref,
-    String subscriptionId,
-  ) {
+  void _showCancelDialog(BuildContext context, WidgetRef ref, String subscriptionId) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -371,10 +314,7 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
           'Доступ к PRO функциям будет прекращен в конце текущего периода.',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               ref.read(subscriptionStateProvider.notifier).cancelSubscription(subscriptionId);
@@ -394,10 +334,7 @@ class CurrentSubscriptionWidget extends ConsumerWidget {
 
 /// Виджет истории платежей
 class PaymentHistoryWidget extends ConsumerWidget {
-  const PaymentHistoryWidget({
-    super.key,
-    required this.subscriptionId,
-  });
+  const PaymentHistoryWidget({super.key, required this.subscriptionId});
   final String subscriptionId;
 
   @override
@@ -407,22 +344,13 @@ class PaymentHistoryWidget extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'История платежей',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('История платежей', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         paymentHistoryAsync.when(
           data: (payments) {
             if (payments.isEmpty) {
               return const Center(
-                child: Text(
-                  'История платежей пуста',
-                  style: TextStyle(color: Colors.grey),
-                ),
+                child: Text('История платежей пуста', style: TextStyle(color: Colors.grey)),
               );
             }
 
@@ -442,14 +370,9 @@ class PaymentHistoryWidget extends ConsumerWidget {
                     title: Text(
                       '${NumberFormat.currency(locale: 'ru', symbol: '₽', decimalDigits: 0).format(payment.amount)} ${payment.currency.toUpperCase()}',
                     ),
-                    subtitle: Text(
-                      DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
-                    ),
+                    subtitle: Text(DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt)),
                     trailing: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: _getPaymentColor(payment.status),
                         borderRadius: BorderRadius.circular(12),
@@ -518,10 +441,7 @@ class SubscriptionStatsWidget extends ConsumerWidget {
           children: [
             const Text(
               'Статистика подписок',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             statsAsync.when(
@@ -565,40 +485,20 @@ class SubscriptionStatsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatRow(
-    String label,
-    String value,
-    IconData icon, [
-    Color? color,
-  ]) =>
-      Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: color ?? Colors.grey,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-          ],
+  Widget _buildStatRow(String label, String value, IconData icon, [Color? color]) => Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Row(
+      children: [
+        Icon(icon, color: color ?? Colors.grey, size: 24),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(label, style: const TextStyle(fontSize: 16, color: Colors.grey)),
         ),
-      );
+        Text(
+          value,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+        ),
+      ],
+    ),
+  );
 }

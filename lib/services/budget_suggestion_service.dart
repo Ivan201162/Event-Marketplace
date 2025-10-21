@@ -30,9 +30,7 @@ class BudgetSuggestionService {
         status: BudgetSuggestionStatus.pending,
         message: message,
         createdAt: now,
-        metadata: {
-          'expiresAt': now.add(const Duration(hours: 24)).toIso8601String(),
-        },
+        metadata: {'expiresAt': now.add(const Duration(hours: 24)).toIso8601String()},
       );
 
       final docRef = await _firestore.collection('budgetSuggestions').add(suggestion.toMap());
@@ -64,8 +62,10 @@ class BudgetSuggestionService {
       });
 
       // Получаем данные предложения
-      final suggestionDoc =
-          await _firestore.collection('budgetSuggestions').doc(suggestionId).get();
+      final suggestionDoc = await _firestore
+          .collection('budgetSuggestions')
+          .doc(suggestionId)
+          .get();
       if (!suggestionDoc.exists) throw Exception('Предложение не найдено');
 
       final suggestion = BudgetSuggestion.fromDocument(suggestionDoc);
@@ -78,10 +78,7 @@ class BudgetSuggestionService {
       }
 
       // Отправляем уведомление специалисту
-      await _sendBudgetSuggestionAcceptedNotification(
-        suggestion.specialistId,
-        suggestion,
-      );
+      await _sendBudgetSuggestionAcceptedNotification(suggestion.specialistId, suggestion);
 
       // Логируем принятие предложения
       await _logBudgetSuggestionAction(suggestionId, 'accepted', customerId);
@@ -107,18 +104,16 @@ class BudgetSuggestionService {
       });
 
       // Получаем данные предложения
-      final suggestionDoc =
-          await _firestore.collection('budgetSuggestions').doc(suggestionId).get();
+      final suggestionDoc = await _firestore
+          .collection('budgetSuggestions')
+          .doc(suggestionId)
+          .get();
       if (!suggestionDoc.exists) throw Exception('Предложение не найдено');
 
       final suggestion = BudgetSuggestion.fromDocument(suggestionDoc);
 
       // Отправляем уведомление специалисту
-      await _sendBudgetSuggestionRejectedNotification(
-        suggestion.specialistId,
-        suggestion,
-        reason,
-      );
+      await _sendBudgetSuggestionRejectedNotification(suggestion.specialistId, suggestion, reason);
 
       // Логируем отклонение предложения
       await _logBudgetSuggestionAction(suggestionId, 'rejected', customerId);
@@ -140,9 +135,7 @@ class BudgetSuggestionService {
   }
 
   /// Получить предложения по бюджету для клиента
-  Future<List<BudgetSuggestion>> getCustomerSuggestions(
-    String customerId,
-  ) async {
+  Future<List<BudgetSuggestion>> getCustomerSuggestions(String customerId) async {
     try {
       final snapshot = await _firestore
           .collection('budgetSuggestions')
@@ -157,9 +150,7 @@ class BudgetSuggestionService {
   }
 
   /// Получить предложения по бюджету для специалиста
-  Future<List<BudgetSuggestion>> getSpecialistSuggestions(
-    String specialistId,
-  ) async {
+  Future<List<BudgetSuggestion>> getSpecialistSuggestions(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('budgetSuggestions')
@@ -169,9 +160,7 @@ class BudgetSuggestionService {
 
       return snapshot.docs.map(BudgetSuggestion.fromDocument).toList();
     } catch (e) {
-      throw Exception(
-        'Ошибка получения предложений по бюджету специалиста: $e',
-      );
+      throw Exception('Ошибка получения предложений по бюджету специалиста: $e');
     }
   }
 
@@ -225,9 +214,7 @@ class BudgetSuggestionService {
   }
 
   /// Получить статистику предложений по бюджету
-  Future<Map<String, dynamic>> getBudgetSuggestionStats(
-    String specialistId,
-  ) async {
+  Future<Map<String, dynamic>> getBudgetSuggestionStats(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('budgetSuggestions')
@@ -301,9 +288,7 @@ class BudgetSuggestionService {
 
       await _firestore.collection('bookings').add(booking);
     } catch (e) {
-      throw Exception(
-        'Ошибка создания бронирования из предложения по бюджету: $e',
-      );
+      throw Exception('Ошибка создания бронирования из предложения по бюджету: $e');
     }
   }
 
@@ -393,9 +378,7 @@ class BudgetSuggestionService {
         }
       }
     } catch (e) {
-      debugPrint(
-        'Ошибка отправки уведомления о принятии предложения по бюджету: $e',
-      );
+      debugPrint('Ошибка отправки уведомления о принятии предложения по бюджету: $e');
     }
   }
 
@@ -440,18 +423,12 @@ class BudgetSuggestionService {
         }
       }
     } catch (e) {
-      debugPrint(
-        'Ошибка отправки уведомления об отклонении предложения по бюджету: $e',
-      );
+      debugPrint('Ошибка отправки уведомления об отклонении предложения по бюджету: $e');
     }
   }
 
   /// Логировать действие с предложением по бюджету
-  Future<void> _logBudgetSuggestionAction(
-    String suggestionId,
-    String action,
-    String userId,
-  ) async {
+  Future<void> _logBudgetSuggestionAction(String suggestionId, String action, String userId) async {
     try {
       await _firestore.collection('budgetSuggestionLogs').add({
         'suggestionId': suggestionId,
@@ -495,11 +472,9 @@ class BudgetSuggestionService {
         'missingCategories': missingCategories,
         'reasons': reasons,
         'currentBudget': currentBudget,
-        'recommendedBudget': currentBudget +
-            missingCategories.fold(
-              0,
-              (sum, cat) => sum + (categoryPrices[cat] ?? 0),
-            ),
+        'recommendedBudget':
+            currentBudget +
+            missingCategories.fold(0, (sum, cat) => sum + (categoryPrices[cat] ?? 0)),
       };
     } catch (e) {
       throw Exception('Ошибка анализа бюджета: $e');
@@ -592,10 +567,7 @@ class BudgetSuggestionService {
   }
 
   /// Получить рекомендуемого специалиста
-  Future<Specialist?> _getRecommendedSpecialist(
-    String categoryId,
-    String? location,
-  ) async {
+  Future<Specialist?> _getRecommendedSpecialist(String categoryId, String? location) async {
     try {
       var query = _firestore
           .collection('specialists')

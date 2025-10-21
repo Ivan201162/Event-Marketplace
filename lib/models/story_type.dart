@@ -1,12 +1,5 @@
 /// Тип истории
-enum StoryType {
-  photo,
-  video,
-  text,
-  poll,
-  quiz,
-  image,
-}
+enum StoryType { photo, video, text, poll, quiz, image }
 
 /// Расширение для StoryType
 extension StoryTypeExtension on StoryType {

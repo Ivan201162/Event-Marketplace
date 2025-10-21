@@ -13,14 +13,9 @@ class PricingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Рассчитать среднюю цену по услугам для специалиста
-  Future<Map<String, double>> calculateAveragePricesByService(
-    String specialistId,
-  ) async {
+  Future<Map<String, double>> calculateAveragePricesByService(String specialistId) async {
     try {
-      AppLogger.logI(
-        'Расчет средних цен для специалиста: $specialistId',
-        'pricing_service',
-      );
+      AppLogger.logI('Расчет средних цен для специалиста: $specialistId', 'pricing_service');
 
       // Получаем все завершенные бронирования специалиста
       final bookingsSnapshot = await _firestore
@@ -30,10 +25,7 @@ class PricingService {
           .get();
 
       if (bookingsSnapshot.docs.isEmpty) {
-        AppLogger.logI(
-          'Нет завершенных бронирований для расчета',
-          'pricing_service',
-        );
+        AppLogger.logI('Нет завершенных бронирований для расчета', 'pricing_service');
         return {};
       }
 
@@ -58,18 +50,10 @@ class PricingService {
         }
       });
 
-      AppLogger.logI(
-        'Средние цены рассчитаны: $averagePrices',
-        'pricing_service',
-      );
+      AppLogger.logI('Средние цены рассчитаны: $averagePrices', 'pricing_service');
       return averagePrices;
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка расчета средних цен',
-        'pricing_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка расчета средних цен', 'pricing_service', e, stackTrace);
       return {};
     }
   }
@@ -77,10 +61,7 @@ class PricingService {
   /// Обновить средние цены специалиста
   Future<void> updateSpecialistAveragePrices(String specialistId) async {
     try {
-      AppLogger.logI(
-        'Обновление средних цен специалиста: $specialistId',
-        'pricing_service',
-      );
+      AppLogger.logI('Обновление средних цен специалиста: $specialistId', 'pricing_service');
 
       final averagePrices = await calculateAveragePricesByService(specialistId);
 
@@ -90,27 +71,16 @@ class PricingService {
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
-      AppLogger.logI(
-        'Средние цены обновлены для специалиста: $specialistId',
-        'pricing_service',
-      );
+      AppLogger.logI('Средние цены обновлены для специалиста: $specialistId', 'pricing_service');
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка обновления средних цен',
-        'pricing_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка обновления средних цен', 'pricing_service', e, stackTrace);
     }
   }
 
   /// Получить среднюю цену по категории специалистов
   Future<double> getAveragePriceByCategory(SpecialistCategory category) async {
     try {
-      AppLogger.logI(
-        'Получение средней цены по категории: ${category.name}',
-        'pricing_service',
-      );
+      AppLogger.logI('Получение средней цены по категории: ${category.name}', 'pricing_service');
 
       final specialistsSnapshot = await _firestore
           .collection('specialists')
@@ -150,14 +120,9 @@ class PricingService {
   }
 
   /// Получить диапазон цен по категории
-  Future<Map<String, double>> getPriceRangeByCategory(
-    SpecialistCategory category,
-  ) async {
+  Future<Map<String, double>> getPriceRangeByCategory(SpecialistCategory category) async {
     try {
-      AppLogger.logI(
-        'Получение диапазона цен по категории: ${category.name}',
-        'pricing_service',
-      );
+      AppLogger.logI('Получение диапазона цен по категории: ${category.name}', 'pricing_service');
 
       final specialistsSnapshot = await _firestore
           .collection('specialists')
@@ -188,18 +153,9 @@ class PricingService {
         'Диапазон цен по категории ${category.name}: min=$minPrice, max=$maxPrice, avg=$avgPrice',
         'pricing_service',
       );
-      return {
-        'min': minPrice,
-        'max': maxPrice,
-        'avg': avgPrice,
-      };
+      return {'min': minPrice, 'max': maxPrice, 'avg': avgPrice};
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка получения диапазона цен',
-        'pricing_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка получения диапазона цен', 'pricing_service', e, stackTrace);
       return {'min': 0.0, 'max': 0.0, 'avg': 0.0};
     }
   }
@@ -236,18 +192,10 @@ class PricingService {
       }
 
       final recommendedPrice = basePrice * experienceMultiplier;
-      AppLogger.logI(
-        'Рекомендуемая цена: $recommendedPrice',
-        'pricing_service',
-      );
+      AppLogger.logI('Рекомендуемая цена: $recommendedPrice', 'pricing_service');
       return recommendedPrice;
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка получения рекомендуемой цены',
-        'pricing_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка получения рекомендуемой цены', 'pricing_service', e, stackTrace);
       return 0.0;
     }
   }
@@ -255,10 +203,7 @@ class PricingService {
   /// Обновить цены всех специалистов (для batch операций)
   Future<void> updateAllSpecialistsAveragePrices() async {
     try {
-      AppLogger.logI(
-        'Обновление средних цен всех специалистов',
-        'pricing_service',
-      );
+      AppLogger.logI('Обновление средних цен всех специалистов', 'pricing_service');
 
       final specialistsSnapshot = await _firestore.collection('specialists').get();
 
@@ -280,10 +225,7 @@ class PricingService {
       }
 
       await batch.commit();
-      AppLogger.logI(
-        'Обновлено средних цен для $updatedCount специалистов',
-        'pricing_service',
-      );
+      AppLogger.logI('Обновлено средних цен для $updatedCount специалистов', 'pricing_service');
     } catch (e, stackTrace) {
       AppLogger.logE(
         'Ошибка обновления средних цен всех специалистов',
@@ -297,10 +239,7 @@ class PricingService {
   /// Получить статистику цен по всем категориям
   Future<Map<String, Map<String, double>>> getAllCategoriesPriceStats() async {
     try {
-      AppLogger.logI(
-        'Получение статистики цен по всем категориям',
-        'pricing_service',
-      );
+      AppLogger.logI('Получение статистики цен по всем категориям', 'pricing_service');
 
       final stats = <String, Map<String, double>>{};
 
@@ -309,18 +248,10 @@ class PricingService {
         stats[category.name] = priceRange;
       }
 
-      AppLogger.logI(
-        'Статистика цен получена для ${stats.length} категорий',
-        'pricing_service',
-      );
+      AppLogger.logI('Статистика цен получена для ${stats.length} категорий', 'pricing_service');
       return stats;
     } catch (e, stackTrace) {
-      AppLogger.logE(
-        'Ошибка получения статистики цен',
-        'pricing_service',
-        e,
-        stackTrace,
-      );
+      AppLogger.logE('Ошибка получения статистики цен', 'pricing_service', e, stackTrace);
       return {};
     }
   }

@@ -31,12 +31,7 @@ class ImagePicker {
 
 /// Заглушка для XFile
 class XFile {
-  const XFile(
-    this.path, {
-    this.name = '',
-    this.length,
-    this.mimeType,
-  });
+  const XFile(this.path, {this.name = '', this.length, this.mimeType});
   final String path;
   final String name;
   final int? length;
@@ -48,7 +43,4 @@ class XFile {
 }
 
 /// Источник изображения
-enum ImageSource {
-  camera,
-  gallery,
-}
+enum ImageSource { camera, gallery }

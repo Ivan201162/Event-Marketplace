@@ -272,10 +272,7 @@ class EventIdeaService {
   }
 
   /// Получить комментарии к идее
-  Future<List<IdeaComment>> getIdeaComments(
-    String ideaId, {
-    int limit = 20,
-  }) async {
+  Future<List<IdeaComment>> getIdeaComments(String ideaId, {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection('idea_comments')
@@ -321,8 +318,10 @@ class EventIdeaService {
   /// Получить популярные теги
   Future<List<String>> getPopularTags({int limit = 20}) async {
     try {
-      final snapshot =
-          await _firestore.collection('event_ideas').where('isPublic', isEqualTo: true).get();
+      final snapshot = await _firestore
+          .collection('event_ideas')
+          .where('isPublic', isEqualTo: true)
+          .get();
 
       final tagCounts = <String, int>{};
 

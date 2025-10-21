@@ -25,10 +25,7 @@ class BadgeService {
   }
 
   /// Проверить и выдать бейджи после создания бронирования
-  Future<void> checkBookingBadges(
-    String customerId,
-    String specialistId,
-  ) async {
+  Future<void> checkBookingBadges(String customerId, String specialistId) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerBookingBadges(customerId);
@@ -41,11 +38,7 @@ class BadgeService {
   }
 
   /// Проверить и выдать бейджи после создания отзыва
-  Future<void> checkReviewBadges(
-    String customerId,
-    String specialistId,
-    int rating,
-  ) async {
+  Future<void> checkReviewBadges(String customerId, String specialistId, int rating) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerReviewBadges(customerId);
@@ -60,8 +53,10 @@ class BadgeService {
   /// Проверить бейджи заказчика после бронирования
   Future<void> _checkCustomerBookingBadges(String customerId) async {
     // Получаем количество бронирований заказчика
-    final bookingsSnapshot =
-        await _db.collection('bookings').where('customerId', isEqualTo: customerId).get();
+    final bookingsSnapshot = await _db
+        .collection('bookings')
+        .where('customerId', isEqualTo: customerId)
+        .get();
 
     final bookingCount = bookingsSnapshot.docs.length;
 
@@ -108,8 +103,10 @@ class BadgeService {
     }
 
     // Проверяем бейдж "Популярный специалист"
-    final uniqueCustomers =
-        bookingsSnapshot.docs.map((doc) => doc.data()['customerId'] as String).toSet().length;
+    final uniqueCustomers = bookingsSnapshot.docs
+        .map((doc) => doc.data()['customerId'] as String)
+        .toSet()
+        .length;
 
     if (uniqueCustomers >= 20) {
       await _awardBadge(specialistId, BadgeType.popularSpecialist);
@@ -119,8 +116,10 @@ class BadgeService {
   /// Проверить бейджи заказчика после отзыва
   Future<void> _checkCustomerReviewBadges(String customerId) async {
     // Получаем количество отзывов заказчика
-    final reviewsSnapshot =
-        await _db.collection('reviews').where('customerId', isEqualTo: customerId).get();
+    final reviewsSnapshot = await _db
+        .collection('reviews')
+        .where('customerId', isEqualTo: customerId)
+        .get();
 
     final reviewCount = reviewsSnapshot.docs.length;
 
@@ -131,18 +130,18 @@ class BadgeService {
   }
 
   /// Проверить бейджи специалиста после отзыва
-  Future<void> _checkSpecialistReviewBadges(
-    String specialistId,
-    int rating,
-  ) async {
+  Future<void> _checkSpecialistReviewBadges(String specialistId, int rating) async {
     // Получаем средний рейтинг специалиста
-    final reviewsSnapshot =
-        await _db.collection('reviews').where('specialistId', isEqualTo: specialistId).get();
+    final reviewsSnapshot = await _db
+        .collection('reviews')
+        .where('specialistId', isEqualTo: specialistId)
+        .get();
 
     if (reviewsSnapshot.docs.isEmpty) return;
 
-    final totalRating =
-        reviewsSnapshot.docs.map((doc) => doc.data()['rating'] as int).reduce((a, b) => a + b);
+    final totalRating = reviewsSnapshot.docs
+        .map((doc) => doc.data()['rating'] as int)
+        .reduce((a, b) => a + b);
 
     final averageRating = totalRating / reviewsSnapshot.docs.length;
 
@@ -168,8 +167,10 @@ class BadgeService {
 
   /// Получить количество повторных клиентов
   Future<int> _getRepeatCustomers(String specialistId) async {
-    final bookingsSnapshot =
-        await _db.collection('bookings').where('specialistId', isEqualTo: specialistId).get();
+    final bookingsSnapshot = await _db
+        .collection('bookings')
+        .where('specialistId', isEqualTo: specialistId)
+        .get();
 
     final customerBookings = <String, int>{};
 
@@ -243,9 +244,7 @@ class BadgeService {
   }
 
   /// Получить топ пользователей по бейджам
-  Future<List<BadgeLeaderboardEntry>> getBadgeLeaderboard({
-    int limit = 10,
-  }) async {
+  Future<List<BadgeLeaderboardEntry>> getBadgeLeaderboard({int limit = 10}) async {
     try {
       // Получаем всех пользователей с бейджами
       final badgesSnapshot = await _db.collection('badges').get();
@@ -295,9 +294,7 @@ class BadgeService {
   /// Скрыть/показать бейдж
   Future<void> toggleBadgeVisibility(String badgeId, bool isVisible) async {
     try {
-      await _db.collection('badges').doc(badgeId).update({
-        'isVisible': isVisible,
-      });
+      await _db.collection('badges').doc(badgeId).update({'isVisible': isVisible});
     } catch (e) {
       debugPrint('Error toggling badge visibility: $e');
     }

@@ -32,9 +32,7 @@ class ProductionFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
-        throw UnsupportedError(
-          'ProductionFirebaseOptions are not supported for this platform.',
-        );
+        throw UnsupportedError('ProductionFirebaseOptions are not supported for this platform.');
     }
   }
 

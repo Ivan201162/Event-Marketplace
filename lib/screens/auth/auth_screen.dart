@@ -143,7 +143,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       }
     } catch (e) {
       String errorMessage = 'Ошибка входа через Google';
-      
+
       if (e is FirebaseAuthException) {
         switch (e.code) {
           case 'account-exists-with-different-credential':
@@ -181,7 +181,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       } else {
         errorMessage = 'Ошибка входа через Google: ${e.toString()}';
       }
-      
+
       setState(() {
         _errorMessage = errorMessage;
       });
@@ -228,13 +228,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Email уже используется'),
-        content:
-            const Text('Этот email уже зарегистрирован через Google. Хотите войти через Google?'),
+        content: const Text(
+          'Этот email уже зарегистрирован через Google. Хотите войти через Google?',
+        ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -275,11 +273,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           color: theme.primaryColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Icon(
-                          Icons.event,
-                          size: 40,
-                          color: Colors.white,
-                        ),
+                        child: const Icon(Icons.event, size: 40, color: Colors.white),
                       ),
 
                       const SizedBox(height: 24),
@@ -297,9 +291,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
                       Text(
                         'Найдите идеального специалиста для вашего события',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                        style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                         textAlign: TextAlign.center,
                       ),
 
@@ -490,10 +482,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           const Expanded(child: Divider()),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              'или',
-                              style: TextStyle(color: Colors.grey[600]),
-                            ),
+                            child: Text('или', style: TextStyle(color: Colors.grey[600])),
                           ),
                           const Expanded(child: Divider()),
                         ],

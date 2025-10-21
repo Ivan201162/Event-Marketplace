@@ -3,14 +3,15 @@ import '../models/recommendation_interaction.dart';
 import '../services/recommendation_service.dart';
 
 /// Провайдер сервиса рекомендаций
-final recommendationServiceProvider =
-    Provider<RecommendationService>((ref) => RecommendationService());
+final recommendationServiceProvider = Provider<RecommendationService>(
+  (ref) => RecommendationService(),
+);
 
 /// Провайдер для взаимодействий с рекомендациями
 final recommendationInteractionProvider =
     NotifierProvider<RecommendationInteractionNotifier, RecommendationInteractionState>(
-  (ref) => RecommendationInteractionNotifier(),
-);
+      (ref) => RecommendationInteractionNotifier(),
+    );
 
 /// Состояние взаимодействий с рекомендациями
 class RecommendationInteractionState {
@@ -27,12 +28,11 @@ class RecommendationInteractionState {
     Map<String, List<RecommendationInteraction>>? interactions,
     bool? isLoading,
     String? error,
-  }) =>
-      RecommendationInteractionState(
-        interactions: interactions ?? this.interactions,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-      );
+  }) => RecommendationInteractionState(
+    interactions: interactions ?? this.interactions,
+    isLoading: isLoading ?? this.isLoading,
+    error: error ?? this.error,
+  );
 }
 
 /// Нотификатор для взаимодействий с рекомендациями
@@ -40,8 +40,9 @@ class RecommendationInteractionNotifier extends Notifier<RecommendationInteracti
   RecommendationInteractionNotifier() : super();
 
   void addInteraction(RecommendationInteraction interaction) {
-    final updatedInteractions =
-        Map<String, List<RecommendationInteraction>>.from(state.interactions);
+    final updatedInteractions = Map<String, List<RecommendationInteraction>>.from(
+      state.interactions,
+    );
     final userId = interaction.userId;
     final userInteractions = updatedInteractions[userId] ?? [];
     updatedInteractions[userId] = [...userInteractions, interaction];
@@ -49,8 +50,9 @@ class RecommendationInteractionNotifier extends Notifier<RecommendationInteracti
   }
 
   void removeInteraction(String userId, String interactionId) {
-    final updatedInteractions =
-        Map<String, List<RecommendationInteraction>>.from(state.interactions);
+    final updatedInteractions = Map<String, List<RecommendationInteraction>>.from(
+      state.interactions,
+    );
     final userInteractions = updatedInteractions[userId] ?? [];
     updatedInteractions[userId] = userInteractions.where((i) => i.id != interactionId).toList();
     state = state.copyWith(interactions: updatedInteractions);
@@ -66,8 +68,10 @@ class RecommendationInteractionNotifier extends Notifier<RecommendationInteracti
 }
 
 /// Провайдер для похожих специалистов
-final similarSpecialistsRecommendationsProvider =
-    FutureProvider.family<List<Specialist>, String>((ref, specialistId) async {
+final similarSpecialistsRecommendationsProvider = FutureProvider.family<List<Specialist>, String>((
+  ref,
+  specialistId,
+) async {
   final recommendationService = ref.read(recommendationServiceProvider);
   return recommendationService.getSimilarSpecialists(specialistId);
 });

@@ -66,18 +66,18 @@ class SpecialistProfileForm extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        email,
-        phone,
-        city,
-        category,
-        description,
-        experience,
-        hourlyRate,
-        services,
-        portfolio,
-        isAvailable,
-        avatarUrl,
-      ];
+    id,
+    name,
+    email,
+    phone,
+    city,
+    category,
+    description,
+    experience,
+    hourlyRate,
+    services,
+    portfolio,
+    isAvailable,
+    avatarUrl,
+  ];
 }

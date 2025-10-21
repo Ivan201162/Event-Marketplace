@@ -5,11 +5,7 @@ import '../../models/host_profile.dart';
 
 /// Компонент блока с отзывами
 class ReviewsBlock extends StatelessWidget {
-  const ReviewsBlock({
-    super.key,
-    required this.reviews,
-    this.onViewAllReviews,
-  });
+  const ReviewsBlock({super.key, required this.reviews, this.onViewAllReviews});
   final List<Review> reviews;
   final VoidCallback? onViewAllReviews;
 
@@ -67,7 +63,9 @@ class ReviewsBlock extends StatelessWidget {
           if (reviews.isEmpty)
             _buildEmptyReviews(context)
           else
-            ...reviews.take(3).map(
+            ...reviews
+                .take(3)
+                .map(
                   (review) => Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: _buildReviewCard(context, review),
@@ -86,9 +84,7 @@ class ReviewsBlock extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -127,9 +123,7 @@ class ReviewsBlock extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.1),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,9 +137,7 @@ class ReviewsBlock extends StatelessWidget {
                 height: isMobile ? 32 : 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                  ),
+                  border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
                 ),
                 child: ClipOval(
                   child: review.userPhotoUrl != null

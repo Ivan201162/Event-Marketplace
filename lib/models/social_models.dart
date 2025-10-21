@@ -191,11 +191,7 @@ class Message {
       'sender_id': senderId,
       'text': text,
       'created_at': createdAt.toIso8601String(),
-      'profiles': {
-        'username': senderUsername,
-        'name': senderName,
-        'avatar_url': senderAvatarUrl,
-      },
+      'profiles': {'username': senderUsername, 'name': senderName, 'avatar_url': senderAvatarUrl},
     };
   }
 

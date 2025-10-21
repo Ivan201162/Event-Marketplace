@@ -82,10 +82,7 @@ class RequestCard extends StatelessWidget {
     return Row(
       children: [
         // Category icon
-        Text(
-          request.categoryIcon,
-          style: const TextStyle(fontSize: 24),
-        ),
+        Text(request.categoryIcon, style: const TextStyle(fontSize: 24)),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -93,18 +90,9 @@ class RequestCard extends StatelessWidget {
             children: [
               Text(
                 request.category,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              Text(
-                request.city,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-              ),
+              Text(request.city, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
             ],
           ),
         ),
@@ -114,17 +102,12 @@ class RequestCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: _getStatusColor(request.status).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: _getStatusColor(request.status).withValues(alpha: 0.3),
-            ),
+            border: Border.all(color: _getStatusColor(request.status).withValues(alpha: 0.3)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                request.statusIcon,
-                style: const TextStyle(fontSize: 12),
-              ),
+              Text(request.statusIcon, style: const TextStyle(fontSize: 12)),
               const SizedBox(width: 4),
               Text(
                 request.statusText,
@@ -161,18 +144,9 @@ class RequestCard extends StatelessWidget {
             children: [
               Text(
                 request.fromUserName ?? 'Неизвестный пользователь',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              Text(
-                request.timeAgo,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
-              ),
+              Text(request.timeAgo, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
             ],
           ),
         ),
@@ -196,10 +170,7 @@ class RequestCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 'Дата: ${_formatDate(request.date)}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
               ),
             ],
           ),
@@ -226,10 +197,7 @@ class RequestCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   'Гостей: ${request.guestCount}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                 ),
               ],
             ),
@@ -243,10 +211,7 @@ class RequestCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'Место: ${request.location}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
                 ),
               ],
@@ -263,11 +228,7 @@ class RequestCard extends StatelessWidget {
       children: [
         Text(
           'Требования:',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[700],
-          ),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[700]),
         ),
         const SizedBox(height: 8),
         Wrap(
@@ -333,11 +294,7 @@ class RequestCard extends StatelessWidget {
       children: [
         Text(
           request.formattedDate,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-          ),
+          style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.w500),
         ),
         const Spacer(),
         if (request.eventType != null && request.eventType!.isNotEmpty)
@@ -389,7 +346,7 @@ class RequestCard extends StatelessWidget {
       'сен',
       'окт',
       'ноя',
-      'дек'
+      'дек',
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }

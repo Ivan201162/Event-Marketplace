@@ -54,18 +54,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               ref.invalidate(userNotificationsProvider);
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.mark_email_read),
-            onPressed: () => _markAllAsRead(),
-          ),
+          IconButton(icon: const Icon(Icons.mark_email_read), onPressed: () => _markAllAsRead()),
         ],
       ),
       body: currentUser.when(
         data: (user) {
           if (user == null) {
-            return const Center(
-              child: Text('Пользователь не найден'),
-            );
+            return const Center(child: Text('Пользователь не найден'));
           }
 
           return TabBarView(
@@ -272,9 +267,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               // By Type
               Text(
                 'По типам',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               ..._buildTypeStats(stats['notificationsByType'] ?? {}),
@@ -282,9 +277,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               // By Priority
               Text(
                 'По приоритету',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               ..._buildPriorityStats(stats['notificationsByPriority'] ?? {}),
@@ -307,18 +302,15 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
             const SizedBox(height: 8),
             Text(
               title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 4),
             Text(
               count.toString(),
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -332,16 +324,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       return Card(
         margin: const EdgeInsets.only(bottom: 8),
         child: ListTile(
-          leading: Text(
-            _getTypeIcon(type),
-            style: const TextStyle(fontSize: 24),
-          ),
+          leading: Text(_getTypeIcon(type), style: const TextStyle(fontSize: 24)),
           title: Text(type.displayName),
           trailing: Text(
             count.toString(),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
       );
@@ -354,16 +341,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       return Card(
         margin: const EdgeInsets.only(bottom: 8),
         child: ListTile(
-          leading: Icon(
-            _getPriorityIcon(priority),
-            color: _getPriorityColor(priority),
-          ),
+          leading: Icon(_getPriorityIcon(priority), color: _getPriorityColor(priority)),
           title: Text(priority.displayName),
           trailing: Text(
             count.toString(),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
       );
@@ -381,16 +363,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
         children: [
           Icon(icon, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
+          Text(title, style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
             textAlign: TextAlign.center,
           ),
         ],
@@ -409,9 +386,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
           const SizedBox(height: 8),
           Text(
             error.toString(),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey,
-                ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -439,9 +414,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     final success = await service.markAsRead(notificationId);
 
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Уведомление отмечено как прочитанное')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Уведомление отмечено как прочитанное')));
     }
   }
 
@@ -453,9 +428,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     final success = await service.markAllAsRead(currentUser.id);
 
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Все уведомления отмечены как прочитанные')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Все уведомления отмечены как прочитанные')));
     }
   }
 
@@ -464,9 +439,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     final success = await service.deleteNotification(notificationId);
 
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Уведомление удалено')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Уведомление удалено')));
     }
   }
 
@@ -522,10 +497,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
 class NotificationDetailsSheet extends StatelessWidget {
   final PushNotification notification;
 
-  const NotificationDetailsSheet({
-    super.key,
-    required this.notification,
-  });
+  const NotificationDetailsSheet({super.key, required this.notification});
 
   @override
   Widget build(BuildContext context) {
@@ -562,25 +534,19 @@ class NotificationDetailsSheet extends StatelessWidget {
                         color: _getTypeColor(notification.type).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
-                        notification.typeIcon,
-                        style: const TextStyle(fontSize: 24),
-                      ),
+                      child: Text(notification.typeIcon, style: const TextStyle(fontSize: 24)),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            notification.title,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
+                          Text(notification.title, style: Theme.of(context).textTheme.titleLarge),
                           Text(
                             notification.type.displayName,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.grey[600],
-                                ),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -609,10 +575,7 @@ class NotificationDetailsSheet extends StatelessWidget {
                   controller: scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
-                    Text(
-                      notification.body,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
+                    Text(notification.body, style: Theme.of(context).textTheme.bodyLarge),
                     const SizedBox(height: 16),
                     _buildDetailRow('ID уведомления', notification.id),
                     _buildDetailRow('Тип', notification.type.displayName),
@@ -648,17 +611,11 @@ class NotificationDetailsSheet extends StatelessWidget {
             width: 120,
             child: Text(
               label,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
+            child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
           ),
         ],
       ),

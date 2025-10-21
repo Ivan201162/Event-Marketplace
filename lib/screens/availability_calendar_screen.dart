@@ -6,10 +6,7 @@ import '../models/availability_calendar.dart';
 import '../services/availability_service.dart';
 
 class AvailabilityCalendarScreen extends ConsumerStatefulWidget {
-  const AvailabilityCalendarScreen({
-    super.key,
-    required this.specialistId,
-  });
+  const AvailabilityCalendarScreen({super.key, required this.specialistId});
   final String specialistId;
 
   @override
@@ -59,145 +56,128 @@ class _AvailabilityCalendarScreenState extends ConsumerState<AvailabilityCalenda
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e')));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Календарь доступности'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: _showAddBusyDateDialog,
-              tooltip: 'Добавить занятую дату',
-            ),
-          ],
+    appBar: AppBar(
+      title: const Text('Календарь доступности'),
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: _showAddBusyDateDialog,
+          tooltip: 'Добавить занятую дату',
         ),
-        body: Column(
-          children: [
-            // Календарь
-            _buildCalendar(),
+      ],
+    ),
+    body: Column(
+      children: [
+        // Календарь
+        _buildCalendar(),
 
-            // Детали выбранного дня
-            if (_selectedDay != null) _buildSelectedDayDetails(),
-          ],
-        ),
-      );
+        // Детали выбранного дня
+        if (_selectedDay != null) _buildSelectedDayDetails(),
+      ],
+    ),
+  );
 
   Widget _buildCalendar() => Card(
-        margin: const EdgeInsets.all(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+    margin: const EdgeInsets.all(16),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          // Заголовок календаря
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Заголовок календаря
+              Text(
+                '${_getMonthName(_focusedDay.month)} ${_focusedDay.year}',
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '${_getMonthName(_focusedDay.month)} ${_focusedDay.year}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  IconButton(
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: () {
+                      setState(() {
+                        _focusedDay = DateTime(_focusedDay.year, _focusedDay.month - 1);
+                      });
+                      _loadAvailabilityData();
+                    },
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.chevron_left),
-                        onPressed: () {
-                          setState(() {
-                            _focusedDay = DateTime(
-                              _focusedDay.year,
-                              _focusedDay.month - 1,
-                            );
-                          });
-                          _loadAvailabilityData();
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.chevron_right),
-                        onPressed: () {
-                          setState(() {
-                            _focusedDay = DateTime(
-                              _focusedDay.year,
-                              _focusedDay.month + 1,
-                            );
-                          });
-                          _loadAvailabilityData();
-                        },
-                      ),
-                    ],
+                  IconButton(
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: () {
+                      setState(() {
+                        _focusedDay = DateTime(_focusedDay.year, _focusedDay.month + 1);
+                      });
+                      _loadAvailabilityData();
+                    },
                   ),
                 ],
               ),
-
-              const SizedBox(height: 16),
-
-              // Календарь
-              TableCalendar<AvailabilityCalendar>(
-                firstDay: DateTime.utc(2020),
-                lastDay: DateTime.utc(2030, 12, 31),
-                focusedDay: _focusedDay,
-                calendarFormat: _calendarFormat,
-                eventLoader: _getEventsForDay,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                calendarStyle: const CalendarStyle(
-                  outsideDaysVisible: false,
-                  markersMaxCount: 1,
-                  markerDecoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                ),
-                onDaySelected: (selectedDay, focusedDay) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                },
-                onFormatChanged: (format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                },
-                onPageChanged: (focusedDay) {
-                  setState(() {
-                    _focusedDay = focusedDay;
-                  });
-                  _loadAvailabilityData();
-                },
-                calendarBuilders: CalendarBuilders(
-                  markerBuilder: (context, day, events) {
-                    if (events.isEmpty) return null;
-
-                    final availability = events.first;
-                    return Container(
-                      margin: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: availability.isAvailable ? Colors.green : Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      width: 8,
-                      height: 8,
-                    );
-                  },
-                ),
-              ),
             ],
           ),
-        ),
-      );
+
+          const SizedBox(height: 16),
+
+          // Календарь
+          TableCalendar<AvailabilityCalendar>(
+            firstDay: DateTime.utc(2020),
+            lastDay: DateTime.utc(2030, 12, 31),
+            focusedDay: _focusedDay,
+            calendarFormat: _calendarFormat,
+            eventLoader: _getEventsForDay,
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            calendarStyle: const CalendarStyle(
+              outsideDaysVisible: false,
+              markersMaxCount: 1,
+              markerDecoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+            ),
+            headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+            },
+            onFormatChanged: (format) {
+              setState(() {
+                _calendarFormat = format;
+              });
+            },
+            onPageChanged: (focusedDay) {
+              setState(() {
+                _focusedDay = focusedDay;
+              });
+              _loadAvailabilityData();
+            },
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, day, events) {
+                if (events.isEmpty) return null;
+
+                final availability = events.first;
+                return Container(
+                  margin: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: availability.isAvailable ? Colors.green : Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  width: 8,
+                  height: 8,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildSelectedDayDetails() {
     final selectedDate = _selectedDay!;
@@ -223,100 +203,89 @@ class _AvailabilityCalendarScreenState extends ConsumerState<AvailabilityCalenda
   }
 
   Widget _buildAvailableDay() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
         children: [
-          Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.green),
-              const SizedBox(width: 8),
-              const Text('Доступен'),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: () => _markDayAsBusy(_selectedDay!),
-                icon: const Icon(Icons.block),
-                label: const Text('Заблокировать'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Стандартные рабочие часы: 9:00 - 18:00',
-            style: TextStyle(color: Colors.grey),
+          const Icon(Icons.check_circle, color: Colors.green),
+          const SizedBox(width: 8),
+          const Text('Доступен'),
+          const Spacer(),
+          ElevatedButton.icon(
+            onPressed: () => _markDayAsBusy(_selectedDay!),
+            icon: const Icon(Icons.block),
+            label: const Text('Заблокировать'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
           ),
         ],
-      );
+      ),
+      const SizedBox(height: 16),
+      const Text('Стандартные рабочие часы: 9:00 - 18:00', style: TextStyle(color: Colors.grey)),
+    ],
+  );
 
   Widget _buildBusyDay(AvailabilityCalendar availability) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
         children: [
-          Row(
-            children: [
-              const Icon(Icons.block, color: Colors.red),
-              const SizedBox(width: 8),
-              const Text('Занят'),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: () => _unmarkDayAsBusy(_selectedDay!),
-                icon: const Icon(Icons.check),
-                label: const Text('Освободить'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-            ],
-          ),
-          if (availability.note != null) ...[
-            const SizedBox(height: 8),
-            Text('Примечание: ${availability.note}'),
-          ],
-          if (availability.timeSlots.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            const Text(
-              'Временные слоты:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+          const Icon(Icons.block, color: Colors.red),
+          const SizedBox(width: 8),
+          const Text('Занят'),
+          const Spacer(),
+          ElevatedButton.icon(
+            onPressed: () => _unmarkDayAsBusy(_selectedDay!),
+            icon: const Icon(Icons.check),
+            label: const Text('Освободить'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
             ),
-            const SizedBox(height: 8),
-            ...availability.timeSlots.map(_buildTimeSlot),
-          ],
+          ),
         ],
-      );
+      ),
+      if (availability.note != null) ...[
+        const SizedBox(height: 8),
+        Text('Примечание: ${availability.note}'),
+      ],
+      if (availability.timeSlots.isNotEmpty) ...[
+        const SizedBox(height: 16),
+        const Text('Временные слоты:', style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        ...availability.timeSlots.map(_buildTimeSlot),
+      ],
+    ],
+  );
 
   Widget _buildTimeSlot(TimeSlot slot) => Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: slot.isAvailable ? Colors.green.shade50 : Colors.red.shade50,
-          border: Border.all(
-            color: slot.isAvailable ? Colors.green : Colors.red,
-          ),
-          borderRadius: BorderRadius.circular(8),
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: slot.isAvailable ? Colors.green.shade50 : Colors.red.shade50,
+      border: Border.all(color: slot.isAvailable ? Colors.green : Colors.red),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Row(
+      children: [
+        Icon(
+          slot.isAvailable ? Icons.check_circle : Icons.block,
+          color: slot.isAvailable ? Colors.green : Colors.red,
+          size: 20,
         ),
-        child: Row(
-          children: [
-            Icon(
-              slot.isAvailable ? Icons.check_circle : Icons.block,
-              color: slot.isAvailable ? Colors.green : Colors.red,
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '${_formatTime(slot.startTime)} - ${_formatTime(slot.endTime)}',
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-            const Spacer(),
-            if (slot.note != null)
-              Text(
-                slot.note!,
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-          ],
+        const SizedBox(width: 8),
+        Text(
+          '${_formatTime(slot.startTime)} - ${_formatTime(slot.endTime)}',
+          style: const TextStyle(fontWeight: FontWeight.w500),
         ),
-      );
+        const Spacer(),
+        if (slot.note != null)
+          Text(slot.note!, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+      ],
+    ),
+  );
 
   List<AvailabilityCalendar> _getEventsForDay(DateTime day) =>
       _availabilityData.where((availability) {
@@ -358,56 +327,47 @@ class _AvailabilityCalendarScreenState extends ConsumerState<AvailabilityCalenda
   void _showAddBusyDateDialog() {
     showDialog<void>(
       context: context,
-      builder: (context) => _AddBusyDateDialog(
-        specialistId: widget.specialistId,
-        onDateAdded: _loadAvailabilityData,
-      ),
+      builder: (context) =>
+          _AddBusyDateDialog(specialistId: widget.specialistId, onDateAdded: _loadAvailabilityData),
     );
   }
 
   Future<void> _markDayAsBusy(DateTime date) async {
     final note = await _showNoteDialog('Добавить примечание (необязательно)');
 
-    final success = await _availabilityService.addBusyDate(
-      widget.specialistId,
-      date,
-      note: note,
-    );
+    final success = await _availabilityService.addBusyDate(widget.specialistId, date, note: note);
 
     if (success) {
       _loadAvailabilityData();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Дата заблокирована')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Дата заблокирована')));
       }
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка блокировки даты')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка блокировки даты')));
       }
     }
   }
 
   Future<void> _unmarkDayAsBusy(DateTime date) async {
-    final success = await _availabilityService.removeBusyDate(
-      widget.specialistId,
-      date,
-    );
+    final success = await _availabilityService.removeBusyDate(widget.specialistId, date);
 
     if (success) {
       _loadAvailabilityData();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Дата освобождена')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Дата освобождена')));
       }
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка освобождения даты')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка освобождения даты')));
       }
     }
   }
@@ -428,10 +388,7 @@ class _AvailabilityCalendarScreenState extends ConsumerState<AvailabilityCalenda
           maxLines: 3,
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('Добавить'),
@@ -443,10 +400,7 @@ class _AvailabilityCalendarScreenState extends ConsumerState<AvailabilityCalenda
 }
 
 class _AddBusyDateDialog extends StatefulWidget {
-  const _AddBusyDateDialog({
-    required this.specialistId,
-    required this.onDateAdded,
-  });
+  const _AddBusyDateDialog({required this.specialistId, required this.onDateAdded});
   final String specialistId;
   final VoidCallback onDateAdded;
 
@@ -468,50 +422,48 @@ class _AddBusyDateDialogState extends State<_AddBusyDateDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Добавить занятую дату'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Выбор даты
-            ListTile(
-              leading: const Icon(Icons.calendar_today),
-              title: const Text('Дата'),
-              subtitle: Text(
-                '${_selectedDate.day}.${_selectedDate.month}.${_selectedDate.year}',
-              ),
-              onTap: _selectDate,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Примечание
-            TextField(
-              controller: _noteController,
-              decoration: const InputDecoration(
-                labelText: 'Примечание (необязательно)',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-          ],
+    title: const Text('Добавить занятую дату'),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Выбор даты
+        ListTile(
+          leading: const Icon(Icons.calendar_today),
+          title: const Text('Дата'),
+          subtitle: Text('${_selectedDate.day}.${_selectedDate.month}.${_selectedDate.year}'),
+          onTap: _selectDate,
         ),
-        actions: [
-          TextButton(
-            onPressed: _isLoading ? null : () => Navigator.pop(context),
-            child: const Text('Отмена'),
+
+        const SizedBox(height: 16),
+
+        // Примечание
+        TextField(
+          controller: _noteController,
+          decoration: const InputDecoration(
+            labelText: 'Примечание (необязательно)',
+            border: OutlineInputBorder(),
           ),
-          ElevatedButton(
-            onPressed: _isLoading ? null : _addBusyDate,
-            child: _isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text('Добавить'),
-          ),
-        ],
-      );
+          maxLines: 3,
+        ),
+      ],
+    ),
+    actions: [
+      TextButton(
+        onPressed: _isLoading ? null : () => Navigator.pop(context),
+        child: const Text('Отмена'),
+      ),
+      ElevatedButton(
+        onPressed: _isLoading ? null : _addBusyDate,
+        child: _isLoading
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Text('Добавить'),
+      ),
+    ],
+  );
 
   Future<void> _selectDate() async {
     final date = await showDatePicker(
@@ -544,15 +496,15 @@ class _AddBusyDateDialogState extends State<_AddBusyDateDialog> {
         widget.onDateAdded();
         if (mounted) {
           Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Дата добавлена')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Дата добавлена')));
         }
       } else {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Ошибка добавления даты')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Ошибка добавления даты')));
         }
       }
     } finally {

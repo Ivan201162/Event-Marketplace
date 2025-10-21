@@ -3,14 +3,15 @@ import '../models/specialist.dart';
 import '../services/specialist_pricing_service.dart';
 
 /// Провайдер сервиса цен специалистов
-final specialistPricingServiceProvider =
-    Provider<SpecialistPricingService>((ref) => SpecialistPricingService());
+final specialistPricingServiceProvider = Provider<SpecialistPricingService>(
+  (ref) => SpecialistPricingService(),
+);
 
 /// Провайдер состояния цен специалиста (мигрирован с StateNotifierProvider)
 final specialistPricingProvider =
     NotifierProvider<SpecialistPricingNotifier, SpecialistPricingState>(() {
-  return SpecialistPricingNotifier();
-});
+      return SpecialistPricingNotifier();
+    });
 
 /// Состояние цен специалиста
 class SpecialistPricingState {
@@ -34,14 +35,13 @@ class SpecialistPricingState {
     bool? isLoading,
     String? error,
     DateTime? lastUpdated,
-  }) =>
-      SpecialistPricingState(
-        stats: stats ?? this.stats,
-        history: history ?? this.history,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-        lastUpdated: lastUpdated ?? this.lastUpdated,
-      );
+  }) => SpecialistPricingState(
+    stats: stats ?? this.stats,
+    history: history ?? this.history,
+    isLoading: isLoading ?? this.isLoading,
+    error: error ?? this.error,
+    lastUpdated: lastUpdated ?? this.lastUpdated,
+  );
 }
 
 /// Notifier для управления ценами специалиста (мигрирован с StateNotifier)
@@ -60,16 +60,9 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
     try {
       final stats = await _service.getSpecialistPricingStats(specialistId);
 
-      state = state.copyWith(
-        stats: stats,
-        isLoading: false,
-        lastUpdated: DateTime.now(),
-      );
+      state = state.copyWith(stats: stats, isLoading: false, lastUpdated: DateTime.now());
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -80,16 +73,9 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
     try {
       final history = await _service.getSpecialistPriceHistory(specialistId);
 
-      state = state.copyWith(
-        history: history,
-        isLoading: false,
-        lastUpdated: DateTime.now(),
-      );
+      state = state.copyWith(history: history, isLoading: false, lastUpdated: DateTime.now());
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -108,10 +94,7 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
         lastUpdated: DateTime.now(),
       );
     } on Exception catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -153,36 +136,42 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
 
   /// Очистить данные
   void clearData() {
-    state = state.copyWith(
-      history: [],
-    );
+    state = state.copyWith(history: []);
   }
 }
 
 /// Провайдер для получения статистики цен специалиста
-final specialistPricingStatsProvider =
-    FutureProvider.family<SpecialistPricingStats, String>((ref, specialistId) async {
+final specialistPricingStatsProvider = FutureProvider.family<SpecialistPricingStats, String>((
+  ref,
+  specialistId,
+) async {
   final service = ref.watch(specialistPricingServiceProvider);
   return service.getSpecialistPricingStats(specialistId);
 });
 
 /// Провайдер для получения среднего прайса специалиста
-final specialistAveragePriceProvider =
-    FutureProvider.family<double, String>((ref, specialistId) async {
+final specialistAveragePriceProvider = FutureProvider.family<double, String>((
+  ref,
+  specialistId,
+) async {
   final service = ref.watch(specialistPricingServiceProvider);
   return service.getAveragePriceForSpecialist(specialistId);
 });
 
 /// Провайдер для получения среднего прайса по категории
-final categoryAveragePriceProvider =
-    FutureProvider.family<double, SpecialistCategory>((ref, category) async {
+final categoryAveragePriceProvider = FutureProvider.family<double, SpecialistCategory>((
+  ref,
+  category,
+) async {
   final service = ref.watch(specialistPricingServiceProvider);
   return service.getAveragePriceForCategory(category);
 });
 
 /// Провайдер для получения истории цен специалиста
-final specialistPriceHistoryProvider =
-    FutureProvider.family<List<PriceHistoryEntry>, String>((ref, specialistId) async {
+final specialistPriceHistoryProvider = FutureProvider.family<List<PriceHistoryEntry>, String>((
+  ref,
+  specialistId,
+) async {
   final service = ref.watch(specialistPricingServiceProvider);
   return service.getSpecialistPriceHistory(specialistId);
 });

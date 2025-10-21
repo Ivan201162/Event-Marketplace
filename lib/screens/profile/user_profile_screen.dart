@@ -10,10 +10,7 @@ import '../../widgets/profile_edit_dialog.dart';
 class UserProfileScreen extends ConsumerStatefulWidget {
   final String? userId;
 
-  const UserProfileScreen({
-    super.key,
-    this.userId,
-  });
+  const UserProfileScreen({super.key, this.userId});
 
   @override
   ConsumerState<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -46,9 +43,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               icon: const Icon(Icons.settings),
               onPressed: () {
                 // TODO: Navigate to settings
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Настройки пока не реализованы')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Настройки пока не реализованы')));
               },
             ),
           ],
@@ -57,9 +54,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       body: currentUserAsync.when(
         data: (user) {
           if (user == null) {
-            return const Center(
-              child: Text('Пользователь не найден'),
-            );
+            return const Center(child: Text('Пользователь не найден'));
           }
 
           return SingleChildScrollView(
@@ -88,9 +83,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             ),
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -126,10 +119,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7),
-          ],
+          colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColor.withOpacity(0.7)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -140,11 +130,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           // Avatar
           Stack(
             children: [
-              AvatarWidget(
-                imageUrl: user.avatarUrl,
-                name: user.name,
-                size: 100,
-              ),
+              AvatarWidget(imageUrl: user.avatarUrl, name: user.name, size: 100),
               if (_isEditing)
                 Positioned(
                   bottom: 0,
@@ -175,22 +161,12 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           // Name and Status
           Text(
             user.name,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
           ),
 
           const SizedBox(height: 8),
 
-          Text(
-            user.city,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white70,
-            ),
-          ),
+          Text(user.city, style: const TextStyle(fontSize: 16, color: Colors.white70)),
 
           const SizedBox(height: 8),
 
@@ -203,10 +179,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             ),
             child: Text(
               user.type.displayName,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
           ),
         ],
@@ -221,13 +194,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Информация',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            const Text('Информация', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             _buildInfoRow(
               icon: Icons.person,
@@ -286,30 +253,13 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
+                    Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                     const SizedBox(height: 2),
-                    Text(
-                      value,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                   ],
                 ),
               ),
-              if (onTap != null)
-                Icon(
-                  Icons.edit,
-                  size: 16,
-                  color: Colors.grey[400],
-                ),
+              if (onTap != null) Icon(Icons.edit, size: 16, color: Colors.grey[400]),
             ],
           ),
         ),
@@ -324,13 +274,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Статистика',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            const Text('Статистика', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -342,18 +286,10 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                   ),
                 ),
                 Expanded(
-                  child: _buildStatItem(
-                    icon: Icons.star,
-                    label: 'Рейтинг',
-                    value: '4.8',
-                  ),
+                  child: _buildStatItem(icon: Icons.star, label: 'Рейтинг', value: '4.8'),
                 ),
                 Expanded(
-                  child: _buildStatItem(
-                    icon: Icons.work,
-                    label: 'Заказы',
-                    value: '12',
-                  ),
+                  child: _buildStatItem(icon: Icons.work, label: 'Заказы', value: '12'),
                 ),
               ],
             ),
@@ -363,29 +299,13 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     );
   }
 
-  Widget _buildStatItem({
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
+  Widget _buildStatItem({required IconData icon, required String label, required String value}) {
     return Column(
       children: [
         Icon(icon, size: 32, color: Theme.of(context).primaryColor),
         const SizedBox(height: 8),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-        ),
+        Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
       ],
     );
   }
@@ -397,22 +317,16 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Действия',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            const Text('Действия', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             _buildActionButton(
               icon: Icons.favorite,
               label: 'Избранные специалисты',
               onTap: () {
                 // TODO: Navigate to favorites
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Избранные пока не реализованы')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Избранные пока не реализованы')));
               },
             ),
             _buildActionButton(
@@ -430,9 +344,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               label: 'Способы оплаты',
               onTap: () {
                 // TODO: Navigate to payment methods
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Способы оплаты пока не реализованы')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Способы оплаты пока не реализованы')));
               },
             ),
             _buildActionButton(
@@ -440,9 +354,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
               label: 'Помощь и поддержка',
               onTap: () {
                 // TODO: Navigate to help
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Помощь пока не реализована')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Помощь пока не реализована')));
               },
             ),
           ],
@@ -466,19 +380,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             Icon(icon, size: 24, color: Colors.grey[600]),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              child: Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
           ],
         ),
       ),
@@ -495,16 +399,14 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
     setState(() {
       _isEditing = false;
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Профиль сохранен')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Профиль сохранен')));
   }
 
   void _changeAvatar() {
     // TODO: Implement avatar change
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Смена аватара пока не реализована')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Смена аватара пока не реализована')));
   }
 
   void _editField(String field, String currentValue) {
@@ -515,9 +417,9 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         currentValue: currentValue,
         onSave: (newValue) {
           // TODO: Update user profile
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('$field обновлен: $newValue')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('$field обновлен: $newValue')));
         },
       ),
     );

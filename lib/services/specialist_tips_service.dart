@@ -430,9 +430,7 @@ class SpecialistTipsService {
 
       if (querySnapshot.docs.isNotEmpty) {
         await batch.commit();
-        debugPrint(
-          'Удалено ${querySnapshot.docs.length} старых выполненных советов',
-        );
+        debugPrint('Удалено ${querySnapshot.docs.length} старых выполненных советов');
       }
 
       return querySnapshot.docs.length;

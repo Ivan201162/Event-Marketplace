@@ -30,10 +30,10 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     if (value == null || value.isEmpty) {
       return 'Введите номер телефона';
     }
-    
+
     // Убираем все символы кроме цифр
     final digitsOnly = value.replaceAll(RegExp(r'[^\d]'), '');
-    
+
     // Проверяем формат +7XXXXXXXXXX или 8XXXXXXXXXX
     if (digitsOnly.startsWith('8') && digitsOnly.length == 11) {
       return null; // 8XXXXXXXXXX
@@ -42,7 +42,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     } else if (digitsOnly.length == 10) {
       return null; // XXXXXXXXXX (будем добавлять +7)
     }
-    
+
     return 'Введите корректный номер телефона (+7XXXXXXXXXX)';
   }
 
@@ -60,7 +60,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
 
     try {
       String phoneNumber = _phoneController.text.trim();
-      
+
       // Нормализуем номер телефона
       if (phoneNumber.startsWith('8')) {
         phoneNumber = '+7${phoneNumber.substring(1)}';
@@ -84,14 +84,11 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
 
       if (mounted) {
         // Переходим на экран ввода кода
-        context.push(
-          '/phone-verification',
-          extra: phoneNumber,
-        );
+        context.push('/phone-verification', extra: phoneNumber);
       }
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'Ошибка отправки SMS';
-      
+
       switch (e.code) {
         case 'invalid-phone-number':
           errorMessage = 'Неверный формат номера телефона';
@@ -111,17 +108,17 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
         default:
           errorMessage = 'Ошибка отправки SMS: ${e.message ?? e.code}';
       }
-      
+
       // Обновляем состояние ошибки
       ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
-      
+
       setState(() {
         _errorMessage = errorMessage;
       });
     } catch (e) {
       // Обновляем состояние ошибки
       ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
-      
+
       setState(() {
         _errorMessage = 'Произошла ошибка: ${e.toString()}';
       });
@@ -139,10 +136,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Вход по телефону'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -153,36 +147,26 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 40),
-                
+
                 // Иконка телефона
-                const Icon(
-                  Icons.phone_android,
-                  size: 80,
-                  color: Colors.blue,
-                ),
+                const Icon(Icons.phone_android, size: 80, color: Colors.blue),
                 const SizedBox(height: 24),
-                
+
                 // Заголовок
                 const Text(
                   'Введите номер телефона',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                
+
                 const Text(
                   'Мы отправим SMS с кодом подтверждения',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Поле ввода номера
                 TextFormField(
                   controller: _phoneController,
@@ -200,7 +184,9 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                       if (value.startsWith('8')) {
                         _phoneController.value = _phoneController.value.copyWith(
                           text: '+7${value.substring(1)}',
-                          selection: TextSelection.collapsed(offset: '+7${value.substring(1)}'.length),
+                          selection: TextSelection.collapsed(
+                            offset: '+7${value.substring(1)}'.length,
+                          ),
                         );
                       } else if (value.startsWith('7')) {
                         _phoneController.value = _phoneController.value.copyWith(
@@ -212,7 +198,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Кнопка отправки
                 SizedBox(
                   height: 56,
@@ -224,14 +210,11 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            'Отправить код',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                        : const Text('Отправить код', style: TextStyle(fontSize: 16)),
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Сообщение об ошибке
                 if (_errorMessage != null)
                   Container(
@@ -246,24 +229,18 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                         Icon(Icons.error_outline, color: Colors.red.shade700),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(
-                            _errorMessage!,
-                            style: TextStyle(color: Colors.red.shade700),
-                          ),
+                          child: Text(_errorMessage!, style: TextStyle(color: Colors.red.shade700)),
                         ),
                       ],
                     ),
                   ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Информация о конфиденциальности
                 const Text(
                   'Нажимая "Отправить код", вы соглашаетесь с условиями использования и политикой конфиденциальности',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
                   textAlign: TextAlign.center,
                 ),
               ],

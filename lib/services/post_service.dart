@@ -13,8 +13,10 @@ class PostService {
   /// Get all posts with pagination
   Future<List<Post>> getPosts({int limit = 20, DocumentSnapshot? lastDocument}) async {
     try {
-      Query query =
-          _firestore.collection(_collection).orderBy('createdAt', descending: true).limit(limit);
+      Query query = _firestore
+          .collection(_collection)
+          .orderBy('createdAt', descending: true)
+          .limit(limit);
 
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
@@ -319,10 +321,7 @@ class PostService {
       final doc = await _firestore.collection(_collection).doc(postId).get();
       if (doc.exists) {
         final data = doc.data()!;
-        return {
-          'likes': data['likesCount'] ?? 0,
-          'comments': data['commentsCount'] ?? 0,
-        };
+        return {'likes': data['likesCount'] ?? 0, 'comments': data['commentsCount'] ?? 0};
       }
       return {'likes': 0, 'comments': 0};
     } catch (e) {

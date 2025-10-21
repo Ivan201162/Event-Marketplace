@@ -175,13 +175,16 @@ class SettingsService {
   /// Получить настройки по категории
   Future<List<AppSettings>> getSettingsByCategory(String category) async {
     try {
-      final settings =
-          _settingsCache.values.where((setting) => setting.category == category).toList();
+      final settings = _settingsCache.values
+          .where((setting) => setting.category == category)
+          .toList();
 
       if (settings.isEmpty) {
         // Загружаем из Firestore
-        final snapshot =
-            await _firestore.collection('appSettings').where('category', isEqualTo: category).get();
+        final snapshot = await _firestore
+            .collection('appSettings')
+            .where('category', isEqualTo: category)
+            .get();
 
         for (final doc in snapshot.docs) {
           final setting = AppSettings.fromDocument(doc);
@@ -207,8 +210,10 @@ class SettingsService {
 
       if (settings.isEmpty) {
         // Загружаем из Firestore
-        final snapshot =
-            await _firestore.collection('appSettings').where('isPublic', isEqualTo: true).get();
+        final snapshot = await _firestore
+            .collection('appSettings')
+            .where('isPublic', isEqualTo: true)
+            .get();
 
         for (final doc in snapshot.docs) {
           final setting = AppSettings.fromDocument(doc);
@@ -269,10 +274,7 @@ class SettingsService {
   }
 
   /// Активировать конфигурацию
-  Future<void> activateConfiguration(
-    String configId, {
-    String? activatedBy,
-  }) async {
+  Future<void> activateConfiguration(String configId, {String? activatedBy}) async {
     try {
       // Деактивируем все конфигурации того же типа
       final configuration = _configurationsCache[configId];
@@ -281,9 +283,7 @@ class SettingsService {
       }
 
       final sameTypeConfigs = _configurationsCache.values
-          .where(
-            (config) => config.type == configuration.type && config.isActive,
-          )
+          .where((config) => config.type == configuration.type && config.isActive)
           .toList();
 
       for (final config in sameTypeConfigs) {
@@ -334,10 +334,7 @@ class SettingsService {
       _configurationsCache.values.where((config) => config.type == type).toList();
 
   /// Получить историю изменений настроек
-  Future<List<SettingsHistory>> getSettingsHistory(
-    String settingKey, {
-    int limit = 50,
-  }) async {
+  Future<List<SettingsHistory>> getSettingsHistory(String settingKey, {int limit = 50}) async {
     try {
       final snapshot = await _firestore
           .collection('settingsHistory')
@@ -358,8 +355,9 @@ class SettingsService {
   /// Экспортировать настройки
   Future<Map<String, dynamic>> exportSettings({String? category}) async {
     try {
-      final settings =
-          category != null ? await getSettingsByCategory(category) : _settingsCache.values.toList();
+      final settings = category != null
+          ? await getSettingsByCategory(category)
+          : _settingsCache.values.toList();
 
       final export = <String, dynamic>{};
       for (final setting in settings) {

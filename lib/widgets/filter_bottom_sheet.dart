@@ -85,10 +85,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
             child: Row(
               children: [
                 if (category != null) ...[
-                  Text(
-                    category.emoji,
-                    style: const TextStyle(fontSize: 24),
-                  ),
+                  Text(category.emoji, style: const TextStyle(fontSize: 24)),
                   const SizedBox(width: 12),
                 ],
                 Expanded(
@@ -97,9 +94,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                     children: [
                       Text(
                         'Фильтры',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       if (category != null)
                         Text(
@@ -162,276 +157,233 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
   }
 
   Widget _buildSearchSection(ThemeData theme) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Поиск',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Поиск по имени или описанию...',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              filled: true,
-              fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            ),
-            onChanged: (value) {
-              setState(() {
-                _currentFilters = _currentFilters.copyWith(
-                  searchQuery: value.isEmpty ? null : value,
-                );
-              });
-            },
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Поиск', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          hintText: 'Поиск по имени или описанию...',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          filled: true,
+          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        ),
+        onChanged: (value) {
+          setState(() {
+            _currentFilters = _currentFilters.copyWith(searchQuery: value.isEmpty ? null : value);
+          });
+        },
+      ),
+    ],
+  );
 
   Widget _buildPriceFilter(ThemeData theme) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Ценовой диапазон',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'от ${_priceRangeValues.start.toInt()} ₽ до ${_priceRangeValues.end.toInt()} ₽',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          RangeSlider(
-            values: _priceRangeValues,
-            max: 100000,
-            divisions: 100,
-            labels: RangeLabels(
-              '${_priceRangeValues.start.toInt()} ₽',
-              '${_priceRangeValues.end.toInt()} ₽',
-            ),
-            onChanged: (values) {
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Ценовой диапазон',
+        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        'от ${_priceRangeValues.start.toInt()} ₽ до ${_priceRangeValues.end.toInt()} ₽',
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.primary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      const SizedBox(height: 8),
+      RangeSlider(
+        values: _priceRangeValues,
+        max: 100000,
+        divisions: 100,
+        labels: RangeLabels(
+          '${_priceRangeValues.start.toInt()} ₽',
+          '${_priceRangeValues.end.toInt()} ₽',
+        ),
+        onChanged: (values) {
+          setState(() {
+            _priceRangeValues = values;
+            _currentFilters = _currentFilters.copyWith(
+              minPrice: values.start,
+              maxPrice: values.end,
+            );
+          });
+        },
+      ),
+      // Быстрые опции цены
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: PriceFilterOption.options.map((option) {
+          final isSelected =
+              _currentFilters.minPrice == option.minPrice &&
+              _currentFilters.maxPrice == option.maxPrice;
+          return FilterChip(
+            label: Text(option.label),
+            selected: isSelected,
+            onSelected: (selected) {
               setState(() {
-                _priceRangeValues = values;
-                _currentFilters = _currentFilters.copyWith(
-                  minPrice: values.start,
-                  maxPrice: values.end,
-                );
+                if (selected) {
+                  _currentFilters = _currentFilters.copyWith(
+                    minPrice: option.minPrice,
+                    maxPrice: option.maxPrice,
+                  );
+                  _priceRangeValues = RangeValues(option.minPrice ?? 0, option.maxPrice ?? 100000);
+                } else {
+                  _currentFilters = _currentFilters.copyWith();
+                  _priceRangeValues = const RangeValues(0, 100000);
+                }
               });
             },
-          ),
-          // Быстрые опции цены
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: PriceFilterOption.options.map((option) {
-              final isSelected = _currentFilters.minPrice == option.minPrice &&
-                  _currentFilters.maxPrice == option.maxPrice;
-              return FilterChip(
-                label: Text(option.label),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _currentFilters = _currentFilters.copyWith(
-                        minPrice: option.minPrice,
-                        maxPrice: option.maxPrice,
-                      );
-                      _priceRangeValues = RangeValues(
-                        option.minPrice ?? 0,
-                        option.maxPrice ?? 100000,
-                      );
-                    } else {
-                      _currentFilters = _currentFilters.copyWith();
-                      _priceRangeValues = const RangeValues(0, 100000);
-                    }
-                  });
-                },
-              );
-            }).toList(),
-          ),
-        ],
-      );
+          );
+        }).toList(),
+      ),
+    ],
+  );
 
   Widget _buildRatingFilter(ThemeData theme) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Рейтинг',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Рейтинг', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      Text(
+        'от ${_ratingRangeValues.start.toStringAsFixed(1)} до ${_ratingRangeValues.end.toStringAsFixed(1)} звезд',
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: theme.colorScheme.primary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      const SizedBox(height: 8),
+      RangeSlider(
+        values: _ratingRangeValues,
+        min: 1,
+        max: 5,
+        divisions: 8,
+        labels: RangeLabels(
+          _ratingRangeValues.start.toStringAsFixed(1),
+          _ratingRangeValues.end.toStringAsFixed(1),
+        ),
+        onChanged: (values) {
+          setState(() {
+            _ratingRangeValues = values;
+            _currentFilters = _currentFilters.copyWith(
+              minRating: values.start,
+              maxRating: values.end,
+            );
+          });
+        },
+      ),
+      // Быстрые опции рейтинга
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: RatingFilterOption.options.map((option) {
+          final isSelected = _currentFilters.minRating == option.minRating;
+          return FilterChip(
+            label: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.star, size: 16, color: Colors.amber),
+                const SizedBox(width: 4),
+                Text(option.label),
+              ],
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'от ${_ratingRangeValues.start.toStringAsFixed(1)} до ${_ratingRangeValues.end.toStringAsFixed(1)} звезд',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.primary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          RangeSlider(
-            values: _ratingRangeValues,
-            min: 1,
-            max: 5,
-            divisions: 8,
-            labels: RangeLabels(
-              _ratingRangeValues.start.toStringAsFixed(1),
-              _ratingRangeValues.end.toStringAsFixed(1),
-            ),
-            onChanged: (values) {
+            selected: isSelected,
+            onSelected: (selected) {
               setState(() {
-                _ratingRangeValues = values;
-                _currentFilters = _currentFilters.copyWith(
-                  minRating: values.start,
-                  maxRating: values.end,
-                );
+                if (selected) {
+                  _currentFilters = _currentFilters.copyWith(minRating: option.minRating);
+                  _ratingRangeValues = RangeValues(option.minRating, 5);
+                } else {
+                  _currentFilters = _currentFilters.copyWith();
+                  _ratingRangeValues = const RangeValues(1, 5);
+                }
               });
             },
-          ),
-          // Быстрые опции рейтинга
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: RatingFilterOption.options.map((option) {
-              final isSelected = _currentFilters.minRating == option.minRating;
-              return FilterChip(
-                label: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.star, size: 16, color: Colors.amber),
-                    const SizedBox(width: 4),
-                    Text(option.label),
-                  ],
-                ),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _currentFilters = _currentFilters.copyWith(
-                        minRating: option.minRating,
-                      );
-                      _ratingRangeValues = RangeValues(option.minRating, 5);
-                    } else {
-                      _currentFilters = _currentFilters.copyWith();
-                      _ratingRangeValues = const RangeValues(1, 5);
-                    }
-                  });
-                },
-              );
-            }).toList(),
-          ),
-        ],
-      );
+          );
+        }).toList(),
+      ),
+    ],
+  );
 
   Widget _buildDateFilter(ThemeData theme) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Доступная дата',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Доступная дата',
+        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 8),
+      InkWell(
+        onTap: () async {
+          final selectedDate = await showDatePicker(
+            context: context,
+            initialDate: _currentFilters.availableDate ?? DateTime.now(),
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 365)),
+          );
+          if (selectedDate != null) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(availableDate: selectedDate);
+            });
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            border: Border.all(color: theme.colorScheme.outline),
+            borderRadius: BorderRadius.circular(12),
           ),
-          const SizedBox(height: 8),
-          InkWell(
-            onTap: () async {
-              final selectedDate = await showDatePicker(
-                context: context,
-                initialDate: _currentFilters.availableDate ?? DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime.now().add(const Duration(days: 365)),
-              );
-              if (selectedDate != null) {
-                setState(() {
-                  _currentFilters = _currentFilters.copyWith(availableDate: selectedDate);
-                });
-              }
-            },
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: theme.colorScheme.outline),
-                borderRadius: BorderRadius.circular(12),
+          child: Row(
+            children: [
+              Icon(Icons.calendar_today, color: theme.colorScheme.primary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  _currentFilters.availableDate != null
+                      ? DateFormat('dd.MM.yyyy').format(_currentFilters.availableDate!)
+                      : 'Выберите дату',
+                  style: theme.textTheme.bodyLarge,
+                ),
               ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      _currentFilters.availableDate != null
-                          ? DateFormat('dd.MM.yyyy').format(_currentFilters.availableDate!)
-                          : 'Выберите дату',
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                  ),
-                  if (_currentFilters.availableDate != null)
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _currentFilters = _currentFilters.copyWith();
-                        });
-                      },
-                      icon: const Icon(Icons.clear),
-                    ),
-                ],
-              ),
-            ),
+              if (_currentFilters.availableDate != null)
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _currentFilters = _currentFilters.copyWith();
+                    });
+                  },
+                  icon: const Icon(Icons.clear),
+                ),
+            ],
           ),
-        ],
-      );
+        ),
+      ),
+    ],
+  );
 
   Widget _buildCityFilter(ThemeData theme) {
-    final cities = [
-      'Москва',
-      'Санкт-Петербург',
-      'Новосибирск',
-      'Екатеринбург',
-      'Казань',
-    ];
+    final cities = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань'];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Город',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        Text('Город', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _currentFilters.city,
           hint: const Text('Все города'),
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
             fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           ),
           items: [
             const DropdownMenuItem(child: Text('Все города')),
-            ...cities.map(
-              (city) => DropdownMenuItem(
-                value: city,
-                child: Text(city),
-              ),
-            ),
+            ...cities.map((city) => DropdownMenuItem(value: city, child: Text(city))),
           ],
           onChanged: (value) {
             setState(() {
@@ -444,70 +396,60 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
   }
 
   Widget _buildAdditionalFilters(ThemeData theme) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Дополнительно',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          CheckboxListTile(
-            title: const Text('Только верифицированные'),
-            subtitle: const Text('Показать только проверенных специалистов'),
-            value: _currentFilters.isVerified ?? false,
-            onChanged: (value) {
-              setState(() {
-                _currentFilters = _currentFilters.copyWith(
-                  isVerified: value,
-                );
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-          ),
-          CheckboxListTile(
-            title: const Text('Только доступные'),
-            subtitle: const Text('Показать только свободных специалистов'),
-            value: _currentFilters.isAvailable ?? false,
-            onChanged: (value) {
-              setState(() {
-                _currentFilters = _currentFilters.copyWith(
-                  isAvailable: value,
-                );
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Дополнительно',
+        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(height: 8),
+      CheckboxListTile(
+        title: const Text('Только верифицированные'),
+        subtitle: const Text('Показать только проверенных специалистов'),
+        value: _currentFilters.isVerified ?? false,
+        onChanged: (value) {
+          setState(() {
+            _currentFilters = _currentFilters.copyWith(isVerified: value);
+          });
+        },
+        controlAffinity: ListTileControlAffinity.leading,
+      ),
+      CheckboxListTile(
+        title: const Text('Только доступные'),
+        subtitle: const Text('Показать только свободных специалистов'),
+        value: _currentFilters.isAvailable ?? false,
+        onChanged: (value) {
+          setState(() {
+            _currentFilters = _currentFilters.copyWith(isAvailable: value);
+          });
+        },
+        controlAffinity: ListTileControlAffinity.leading,
+      ),
+    ],
+  );
 
   Widget _buildActionButtons(ThemeData theme) => Row(
-        children: [
-          Expanded(
-            child: OutlinedButton.icon(
-              onPressed: _resetFilters,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Сбросить'),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: ElevatedButton.icon(
-              onPressed: () {
-                _applyFilters();
-                Navigator.of(context).pop();
-              },
-              icon: const Icon(Icons.check),
-              label: const Text('Применить'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-            ),
-          ),
-        ],
-      );
+    children: [
+      Expanded(
+        child: OutlinedButton.icon(
+          onPressed: _resetFilters,
+          icon: const Icon(Icons.refresh),
+          label: const Text('Сбросить'),
+          style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+        ),
+      ),
+      const SizedBox(width: 16),
+      Expanded(
+        child: ElevatedButton.icon(
+          onPressed: () {
+            _applyFilters();
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.check),
+          label: const Text('Применить'),
+          style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+        ),
+      ),
+    ],
+  );
 }

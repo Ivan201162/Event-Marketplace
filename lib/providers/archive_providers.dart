@@ -37,13 +37,12 @@ class ArchiveUploadState {
     String? error,
     double? progress,
     EventArchive? uploadedArchive,
-  }) =>
-      ArchiveUploadState(
-        isUploading: isUploading ?? this.isUploading,
-        error: error,
-        progress: progress,
-        uploadedArchive: uploadedArchive ?? this.uploadedArchive,
-      );
+  }) => ArchiveUploadState(
+    isUploading: isUploading ?? this.isUploading,
+    error: error,
+    progress: progress,
+    uploadedArchive: uploadedArchive ?? this.uploadedArchive,
+  );
 }
 
 /// Провайдер состояния загрузки архива (мигрирован с StateNotifierProvider)
@@ -76,21 +75,12 @@ class ArchiveUploadNotifier extends Notifier<ArchiveUploadState> {
       );
 
       if (archive != null) {
-        state = state.copyWith(
-          isUploading: false,
-          uploadedArchive: archive,
-        );
+        state = state.copyWith(isUploading: false, uploadedArchive: archive);
       } else {
-        state = state.copyWith(
-          isUploading: false,
-          error: 'Файл не выбран',
-        );
+        state = state.copyWith(isUploading: false, error: 'Файл не выбран');
       }
     } on Exception catch (e) {
-      state = state.copyWith(
-        isUploading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isUploading: false, error: e.toString());
     }
   }
 
@@ -110,21 +100,12 @@ class ArchiveUploadNotifier extends Notifier<ArchiveUploadState> {
       );
 
       if (archive != null) {
-        state = state.copyWith(
-          isUploading: false,
-          uploadedArchive: archive,
-        );
+        state = state.copyWith(isUploading: false, uploadedArchive: archive);
       } else {
-        state = state.copyWith(
-          isUploading: false,
-          error: 'Файл не выбран',
-        );
+        state = state.copyWith(isUploading: false, error: 'Файл не выбран');
       }
     } on Exception catch (e) {
-      state = state.copyWith(
-        isUploading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isUploading: false, error: e.toString());
     }
   }
 
@@ -135,27 +116,18 @@ class ArchiveUploadNotifier extends Notifier<ArchiveUploadState> {
       await _archiveService.deleteArchive(archiveId);
       state = state.copyWith(isUploading: false);
     } on Exception catch (e) {
-      state = state.copyWith(
-        isUploading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isUploading: false, error: e.toString());
     }
   }
 
   /// Обновить описание архива
-  Future<void> updateArchiveDescription(
-    String archiveId,
-    String description,
-  ) async {
+  Future<void> updateArchiveDescription(String archiveId, String description) async {
     state = state.copyWith(isUploading: true);
     try {
       await _archiveService.updateArchiveDescription(archiveId, description);
       state = state.copyWith(isUploading: false);
     } on Exception catch (e) {
-      state = state.copyWith(
-        isUploading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isUploading: false, error: e.toString());
     }
   }
 

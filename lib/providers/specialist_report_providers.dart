@@ -35,8 +35,10 @@ final activityReportProvider = FutureProvider((ref) async {
 });
 
 /// Провайдер для получения детального отчета по специалисту
-final specialistDetailReportProvider =
-    FutureProvider.family<SpecialistDetailReport, String>((ref, specialistId) async {
+final specialistDetailReportProvider = FutureProvider.family<SpecialistDetailReport, String>((
+  ref,
+  specialistId,
+) async {
   final reportService = ref.read(specialistReportServiceProvider);
   return reportService.generateSpecialistDetailReport(specialistId);
 });

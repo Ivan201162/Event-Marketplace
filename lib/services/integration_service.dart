@@ -165,9 +165,7 @@ class IntegrationService {
       // Добавляем аутентификацию
       _addAuthentication(headers, integration);
 
-      final response = await http.get(url, headers: headers).timeout(
-            const Duration(seconds: 30),
-          );
+      final response = await http.get(url, headers: headers).timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
         throw Exception('HTTP ${response.statusCode}: ${response.body}');
@@ -178,10 +176,7 @@ class IntegrationService {
   }
 
   /// Добавить аутентификацию в заголовки
-  void _addAuthentication(
-    Map<String, String> headers,
-    ExternalIntegration integration,
-  ) {
+  void _addAuthentication(Map<String, String> headers, ExternalIntegration integration) {
     switch (integration.authType) {
       case AuthenticationType.apiKey:
         final apiKey = integration.credentials['apiKey'];
@@ -698,10 +693,7 @@ class IntegrationService {
   }
 
   /// Получить статистику синхронизации
-  Future<List<DataSync>> getSyncHistory(
-    String integrationId, {
-    int limit = 50,
-  }) async {
+  Future<List<DataSync>> getSyncHistory(String integrationId, {int limit = 50}) async {
     try {
       final snapshot = await _firestore
           .collection('dataSyncs')
@@ -731,8 +723,10 @@ class IntegrationService {
   /// Получить доступные интеграции
   Future<List<ExternalIntegration>> getAvailableIntegrations() async {
     try {
-      final snapshot =
-          await _firestore.collection('integrations').where('isActive', isEqualTo: true).get();
+      final snapshot = await _firestore
+          .collection('integrations')
+          .where('isActive', isEqualTo: true)
+          .get();
       return snapshot.docs.map(ExternalIntegration.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения доступных интеграций: $e');
@@ -742,8 +736,10 @@ class IntegrationService {
   /// Получить интеграции пользователя
   Future<List<ExternalIntegration>> getUserIntegrations(String userId) async {
     try {
-      final snapshot =
-          await _firestore.collection('user_integrations').where('userId', isEqualTo: userId).get();
+      final snapshot = await _firestore
+          .collection('user_integrations')
+          .where('userId', isEqualTo: userId)
+          .get();
       return snapshot.docs.map(ExternalIntegration.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения интеграций пользователя: $e');
@@ -762,14 +758,7 @@ class IntegrationService {
           .where('integrationId', isEqualTo: integrationId)
           .orderBy('timestamp', descending: true)
           .get();
-      return snapshot.docs
-          .map(
-            (doc) => {
-              'id': doc.id,
-              ...doc.data(),
-            },
-          )
-          .toList();
+      return snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
     } catch (e) {
       throw Exception('Ошибка получения событий интеграции: $e');
     }
@@ -801,10 +790,7 @@ class IntegrationService {
     try {
       // Заглушка для получения местоположения
       // В реальном приложении здесь будет использоваться geolocator
-      return {
-        'latitude': 55.7558,
-        'longitude': 37.6176,
-      };
+      return {'latitude': 55.7558, 'longitude': 37.6176};
     } catch (e) {
       throw Exception('Ошибка получения местоположения: $e');
     }
@@ -903,10 +889,7 @@ class IntegrationService {
   }
 
   /// Получить адрес по координатам
-  Future<String> getAddressFromCoordinates(
-    double latitude,
-    double longitude,
-  ) async {
+  Future<String> getAddressFromCoordinates(double latitude, double longitude) async {
     try {
       // Заглушка для получения адреса по координатам
       // В реальном приложении здесь будет использоваться geocoding
@@ -917,11 +900,7 @@ class IntegrationService {
   }
 
   /// Поделиться контентом
-  Future<void> shareContent({
-    required String content,
-    String? subject,
-    String? title,
-  }) async {
+  Future<void> shareContent({required String content, String? subject, String? title}) async {
     try {
       // Заглушка для шаринга контента
       // В реальном приложении здесь будет использоваться share_plus
@@ -947,13 +926,13 @@ class IntegrationService {
 
   /// Создать мок VK профиль
   Map<String, dynamic> createMockVKProfile(String url) => {
-        'id': '123456789',
-        'firstName': 'Иван',
-        'lastName': 'Петров',
-        'photoUrl': 'https://via.placeholder.com/100',
-        'url': url,
-        'followersCount': 150,
-        'postsCount': 25,
-        'isVerified': false,
-      };
+    'id': '123456789',
+    'firstName': 'Иван',
+    'lastName': 'Петров',
+    'photoUrl': 'https://via.placeholder.com/100',
+    'url': url,
+    'followersCount': 150,
+    'postsCount': 25,
+    'isVerified': false,
+  };
 }

@@ -8,10 +8,7 @@ import '../widgets/message_input_widget.dart';
 
 /// Расширенный экран чата
 class EnhancedChatScreen extends ConsumerStatefulWidget {
-  const EnhancedChatScreen({
-    super.key,
-    required this.chatId,
-  });
+  const EnhancedChatScreen({super.key, required this.chatId});
 
   final String chatId;
 
@@ -76,39 +73,37 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
   }
 
   EnhancedChat _createMockChat() => EnhancedChat(
-        id: widget.chatId,
-        type: ChatType.direct,
-        members: [
-          ChatMember(
-            userId: 'user_1',
-            role: ChatMemberRole.member,
-            joinedAt: DateTime.now().subtract(const Duration(days: 1)),
-            isOnline: true,
-          ),
-          ChatMember(
-            userId: 'user_2',
-            role: ChatMemberRole.member,
-            joinedAt: DateTime.now().subtract(const Duration(days: 1)),
-            lastSeen: DateTime.now().subtract(const Duration(minutes: 30)),
-          ),
-        ],
-        createdAt: DateTime.now().subtract(const Duration(days: 1)),
-        name: 'Тестовый чат',
-        lastMessage: ChatLastMessage(
-          id: '1',
-          senderId: 'user_1',
-          text: 'Привет! Как дела?',
-          type: MessageType.text,
-          createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
-        ),
-      );
+    id: widget.chatId,
+    type: ChatType.direct,
+    members: [
+      ChatMember(
+        userId: 'user_1',
+        role: ChatMemberRole.member,
+        joinedAt: DateTime.now().subtract(const Duration(days: 1)),
+        isOnline: true,
+      ),
+      ChatMember(
+        userId: 'user_2',
+        role: ChatMemberRole.member,
+        joinedAt: DateTime.now().subtract(const Duration(days: 1)),
+        lastSeen: DateTime.now().subtract(const Duration(minutes: 30)),
+      ),
+    ],
+    createdAt: DateTime.now().subtract(const Duration(days: 1)),
+    name: 'Тестовый чат',
+    lastMessage: ChatLastMessage(
+      id: '1',
+      senderId: 'user_1',
+      text: 'Привет! Как дела?',
+      type: MessageType.text,
+      createdAt: DateTime.now().subtract(const Duration(minutes: 5)),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_error != null) {
@@ -147,9 +142,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
       body: Column(
         children: [
           // Список сообщений
-          Expanded(
-            child: _buildMessagesList(),
-          ),
+          Expanded(child: _buildMessagesList()),
 
           // Индикатор печати
           if (_isTyping) _buildTypingIndicator(),
@@ -171,89 +164,65 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
   }
 
   PreferredSizeWidget _buildAppBar() => AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.grey[300],
-              child: const Icon(Icons.person, size: 16),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _chat!.name ?? 'Чат',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  if (_chat!.type == ChatType.direct) ...[
-                    Text(
-                      _getOnlineStatus(),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ],
+    title: Row(
+      children: [
+        CircleAvatar(
+          radius: 16,
+          backgroundColor: Colors.grey[300],
+          child: const Icon(Icons.person, size: 16),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.videocam),
-            onPressed: _startVideoCall,
-            tooltip: 'Видеозвонок',
-          ),
-          IconButton(
-            icon: const Icon(Icons.phone),
-            onPressed: _startVoiceCall,
-            tooltip: 'Голосовой звонок',
-          ),
-          PopupMenuButton<String>(
-            onSelected: _handleMenuAction,
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'search',
-                child: ListTile(
-                  leading: Icon(Icons.search),
-                  title: Text('Поиск'),
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'media',
-                child: ListTile(
-                  leading: Icon(Icons.photo_library),
-                  title: Text('Медиафайлы'),
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'settings',
-                child: ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Настройки'),
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'pin',
-                child: ListTile(
-                  leading: Icon(Icons.push_pin),
-                  title: Text('Закрепить'),
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'mute',
-                child: ListTile(
-                  leading: Icon(Icons.volume_off),
-                  title: Text('Заглушить'),
-                ),
-              ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(_chat!.name ?? 'Чат', style: const TextStyle(fontSize: 16)),
+              if (_chat!.type == ChatType.direct) ...[
+                Text(_getOnlineStatus(), style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              ],
             ],
           ),
+        ),
+      ],
+    ),
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.videocam),
+        onPressed: _startVideoCall,
+        tooltip: 'Видеозвонок',
+      ),
+      IconButton(
+        icon: const Icon(Icons.phone),
+        onPressed: _startVoiceCall,
+        tooltip: 'Голосовой звонок',
+      ),
+      PopupMenuButton<String>(
+        onSelected: _handleMenuAction,
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+            value: 'search',
+            child: ListTile(leading: Icon(Icons.search), title: Text('Поиск')),
+          ),
+          const PopupMenuItem(
+            value: 'media',
+            child: ListTile(leading: Icon(Icons.photo_library), title: Text('Медиафайлы')),
+          ),
+          const PopupMenuItem(
+            value: 'settings',
+            child: ListTile(leading: Icon(Icons.settings), title: Text('Настройки')),
+          ),
+          const PopupMenuItem(
+            value: 'pin',
+            child: ListTile(leading: Icon(Icons.push_pin), title: Text('Закрепить')),
+          ),
+          const PopupMenuItem(
+            value: 'mute',
+            child: ListTile(leading: Icon(Icons.volume_off), title: Text('Заглушить')),
+          ),
         ],
-      );
+      ),
+    ],
+  );
 
   Widget _buildMessagesList() {
     if (_messages.isEmpty) {
@@ -263,21 +232,9 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
           children: [
             Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text(
-              'Начните общение',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
+            Text('Начните общение', style: TextStyle(fontSize: 18, color: Colors.grey)),
             SizedBox(height: 8),
-            Text(
-              'Отправьте первое сообщение',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
-            ),
+            Text('Отправьте первое сообщение', style: TextStyle(fontSize: 14, color: Colors.grey)),
           ],
         ),
       );
@@ -311,41 +268,35 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
   }
 
   Widget _buildTypingIndicator() => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            const SizedBox(width: 40), // Отступ для выравнивания с сообщениями
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(18),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    child: Row(
+      children: [
+        const SizedBox(width: 40), // Отступ для выравнивания с сообщениями
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Печатает', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+              const SizedBox(width: 8),
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[400]!),
+                ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Печатает',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.grey[400]!),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 
   String _getOnlineStatus() {
     final otherMember = _chat!.members.firstWhere(
@@ -403,66 +354,63 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
   }
 
   Widget _buildMessageActionsSheet(EnhancedMessage message) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.reply),
-              title: const Text('Ответить'),
-              onTap: () {
-                Navigator.pop(context);
-                _replyToMessage(message);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.forward),
-              title: const Text('Переслать'),
-              onTap: () {
-                Navigator.pop(context);
-                _forwardMessage(message);
-              },
-            ),
-            if (message.senderId == 'current_user') ...[
-              // TODO: Получить из провайдера
-              ListTile(
-                leading: const Icon(Icons.edit),
-                title: const Text('Редактировать'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _editMessage(message);
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.delete, color: Colors.red),
-                title: const Text('Удалить', style: TextStyle(color: Colors.red)),
-                onTap: () {
-                  Navigator.pop(context);
-                  _deleteMessage(message);
-                },
-              ),
-            ],
-            ListTile(
-              leading: const Icon(Icons.copy),
-              title: const Text('Копировать'),
-              onTap: () {
-                Navigator.pop(context);
-                _copyMessage(message);
-              },
-            ),
-          ],
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          leading: const Icon(Icons.reply),
+          title: const Text('Ответить'),
+          onTap: () {
+            Navigator.pop(context);
+            _replyToMessage(message);
+          },
         ),
-      );
+        ListTile(
+          leading: const Icon(Icons.forward),
+          title: const Text('Переслать'),
+          onTap: () {
+            Navigator.pop(context);
+            _forwardMessage(message);
+          },
+        ),
+        if (message.senderId == 'current_user') ...[
+          // TODO: Получить из провайдера
+          ListTile(
+            leading: const Icon(Icons.edit),
+            title: const Text('Редактировать'),
+            onTap: () {
+              Navigator.pop(context);
+              _editMessage(message);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete, color: Colors.red),
+            title: const Text('Удалить', style: TextStyle(color: Colors.red)),
+            onTap: () {
+              Navigator.pop(context);
+              _deleteMessage(message);
+            },
+          ),
+        ],
+        ListTile(
+          leading: const Icon(Icons.copy),
+          title: const Text('Копировать'),
+          onTap: () {
+            Navigator.pop(context);
+            _copyMessage(message);
+          },
+        ),
+      ],
+    ),
+  );
 
   void _sendTextMessage(String text) {
     // TODO: Реализовать отправку текстового сообщения
     debugPrint('Отправка текстового сообщения: $text');
   }
 
-  void _sendMediaMessage(
-    List<MessageAttachment> attachments, {
-    String? caption,
-  }) {
+  void _sendMediaMessage(List<MessageAttachment> attachments, {String? caption}) {
     // TODO: Реализовать отправку медиа сообщения
     debugPrint('Отправка медиа сообщения: ${attachments.length} файлов');
   }
@@ -511,10 +459,7 @@ class _EnhancedChatScreenState extends ConsumerState<EnhancedChatScreen> {
         title: const Text('Удалить сообщение'),
         content: const Text('Вы уверены, что хотите удалить это сообщение?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.pop(context);

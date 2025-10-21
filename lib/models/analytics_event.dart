@@ -34,17 +34,17 @@ class AnalyticsEvent {
 
   /// Создать из Map
   factory AnalyticsEvent.fromMap(Map<String, dynamic> data) => AnalyticsEvent(
-        id: data['id'] as String? ?? '',
-        userId: data['userId'] as String?,
-        eventName: data['eventName'] as String? ?? '',
-        screen: data['screen'] as String? ?? '',
-        parameters: Map<String, dynamic>.from(data['parameters'] as Map? ?? {}),
-        timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        sessionId: data['sessionId'] as String? ?? '',
-        deviceId: data['deviceId'] as String? ?? '',
-        appVersion: data['appVersion'] as String? ?? '',
-        platform: data['platform'] as String? ?? '',
-      );
+    id: data['id'] as String? ?? '',
+    userId: data['userId'] as String?,
+    eventName: data['eventName'] as String? ?? '',
+    screen: data['screen'] as String? ?? '',
+    parameters: Map<String, dynamic>.from(data['parameters'] as Map? ?? {}),
+    timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    sessionId: data['sessionId'] as String? ?? '',
+    deviceId: data['deviceId'] as String? ?? '',
+    appVersion: data['appVersion'] as String? ?? '',
+    platform: data['platform'] as String? ?? '',
+  );
   final String id;
   final String? userId;
   final String eventName;
@@ -58,16 +58,16 @@ class AnalyticsEvent {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'eventName': eventName,
-        'screen': screen,
-        'parameters': parameters,
-        'timestamp': Timestamp.fromDate(timestamp),
-        'sessionId': sessionId,
-        'deviceId': deviceId,
-        'appVersion': appVersion,
-        'platform': platform,
-      };
+    'userId': userId,
+    'eventName': eventName,
+    'screen': screen,
+    'parameters': parameters,
+    'timestamp': Timestamp.fromDate(timestamp),
+    'sessionId': sessionId,
+    'deviceId': deviceId,
+    'appVersion': appVersion,
+    'platform': platform,
+  };
 
   /// Создать копию с изменениями
   AnalyticsEvent copyWith({
@@ -81,19 +81,18 @@ class AnalyticsEvent {
     String? deviceId,
     String? appVersion,
     String? platform,
-  }) =>
-      AnalyticsEvent(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        eventName: eventName ?? this.eventName,
-        screen: screen ?? this.screen,
-        parameters: parameters ?? this.parameters,
-        timestamp: timestamp ?? this.timestamp,
-        sessionId: sessionId ?? this.sessionId,
-        deviceId: deviceId ?? this.deviceId,
-        appVersion: appVersion ?? this.appVersion,
-        platform: platform ?? this.platform,
-      );
+  }) => AnalyticsEvent(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    eventName: eventName ?? this.eventName,
+    screen: screen ?? this.screen,
+    parameters: parameters ?? this.parameters,
+    timestamp: timestamp ?? this.timestamp,
+    sessionId: sessionId ?? this.sessionId,
+    deviceId: deviceId ?? this.deviceId,
+    appVersion: appVersion ?? this.appVersion,
+    platform: platform ?? this.platform,
+  );
 
   /// Получить категорию события
   EventCategory get category {
@@ -166,17 +165,17 @@ class AnalyticsEvent {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        userId,
-        eventName,
-        screen,
-        parameters,
-        timestamp,
-        sessionId,
-        deviceId,
-        appVersion,
-        platform,
-      );
+    id,
+    userId,
+    eventName,
+    screen,
+    parameters,
+    timestamp,
+    sessionId,
+    deviceId,
+    appVersion,
+    platform,
+  );
 
   @override
   String toString() => 'AnalyticsEvent(id: $id, eventName: $eventName, screen: $screen)';
@@ -196,11 +195,7 @@ enum EventCategory {
 }
 
 /// Важность событий
-enum EventImportance {
-  low,
-  medium,
-  high,
-}
+enum EventImportance { low, medium, high }
 
 /// Статистика аналитики
 class AnalyticsStatistics {
@@ -294,17 +289,17 @@ class UserSession {
 
   /// Создать из Map
   factory UserSession.fromMap(Map<String, dynamic> data) => UserSession(
-        sessionId: data['sessionId'] as String? ?? '',
-        userId: data['userId'] as String?,
-        deviceId: data['deviceId'] as String? ?? '',
-        startTime: (data['startTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        endTime: data['endTime'] != null ? (data['endTime'] as Timestamp?)?.toDate() : null,
-        platform: data['platform'] as String? ?? '',
-        appVersion: data['appVersion'] as String? ?? '',
-        screens: List<String>.from(data['screens'] as List? ?? []),
-        eventCount: data['eventCount'] as int? ?? 0,
-        duration: data['duration'] != null ? Duration(seconds: data['duration'] as int) : null,
-      );
+    sessionId: data['sessionId'] as String? ?? '',
+    userId: data['userId'] as String?,
+    deviceId: data['deviceId'] as String? ?? '',
+    startTime: (data['startTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    endTime: data['endTime'] != null ? (data['endTime'] as Timestamp?)?.toDate() : null,
+    platform: data['platform'] as String? ?? '',
+    appVersion: data['appVersion'] as String? ?? '',
+    screens: List<String>.from(data['screens'] as List? ?? []),
+    eventCount: data['eventCount'] as int? ?? 0,
+    duration: data['duration'] != null ? Duration(seconds: data['duration'] as int) : null,
+  );
   final String sessionId;
   final String? userId;
   final String deviceId;
@@ -318,16 +313,16 @@ class UserSession {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'deviceId': deviceId,
-        'startTime': Timestamp.fromDate(startTime),
-        'endTime': endTime != null ? Timestamp.fromDate(endTime!) : null,
-        'platform': platform,
-        'appVersion': appVersion,
-        'screens': screens,
-        'eventCount': eventCount,
-        'duration': duration?.inSeconds,
-      };
+    'userId': userId,
+    'deviceId': deviceId,
+    'startTime': Timestamp.fromDate(startTime),
+    'endTime': endTime != null ? Timestamp.fromDate(endTime!) : null,
+    'platform': platform,
+    'appVersion': appVersion,
+    'screens': screens,
+    'eventCount': eventCount,
+    'duration': duration?.inSeconds,
+  };
 
   /// Проверить, активна ли сессия
   bool get isActive => endTime == null;

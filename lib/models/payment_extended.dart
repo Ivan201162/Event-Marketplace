@@ -39,7 +39,8 @@ class PaymentExtended {
         (t) => t.name == data['type'],
         orElse: () => PaymentType.full,
       ),
-      installments: (data['installments'] as List<dynamic>?)
+      installments:
+          (data['installments'] as List<dynamic>?)
               ?.map((e) => PaymentInstallment.fromMap(e))
               .toList() ??
           [],
@@ -67,22 +68,22 @@ class PaymentExtended {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'bookingId': bookingId,
-        'customerId': customerId,
-        'specialistId': specialistId,
-        'totalAmount': totalAmount,
-        'paidAmount': paidAmount,
-        'remainingAmount': remainingAmount,
-        'status': status.name,
-        'type': type.name,
-        'installments': installments.map((e) => e.toMap()).toList(),
-        'receiptPdfUrl': receiptPdfUrl,
-        'invoicePdfUrl': invoicePdfUrl,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'metadata': metadata,
-      };
+    'id': id,
+    'bookingId': bookingId,
+    'customerId': customerId,
+    'specialistId': specialistId,
+    'totalAmount': totalAmount,
+    'paidAmount': paidAmount,
+    'remainingAmount': remainingAmount,
+    'status': status.name,
+    'type': type.name,
+    'installments': installments.map((e) => e.toMap()).toList(),
+    'receiptPdfUrl': receiptPdfUrl,
+    'invoicePdfUrl': invoicePdfUrl,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'metadata': metadata,
+  };
 
   PaymentExtended copyWith({
     String? id,
@@ -100,24 +101,23 @@ class PaymentExtended {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      PaymentExtended(
-        id: id ?? this.id,
-        bookingId: bookingId ?? this.bookingId,
-        customerId: customerId ?? this.customerId,
-        specialistId: specialistId ?? this.specialistId,
-        totalAmount: totalAmount ?? this.totalAmount,
-        paidAmount: paidAmount ?? this.paidAmount,
-        remainingAmount: remainingAmount ?? this.remainingAmount,
-        status: status ?? this.status,
-        type: type ?? this.type,
-        installments: installments ?? this.installments,
-        receiptPdfUrl: receiptPdfUrl ?? this.receiptPdfUrl,
-        invoicePdfUrl: invoicePdfUrl ?? this.invoicePdfUrl,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => PaymentExtended(
+    id: id ?? this.id,
+    bookingId: bookingId ?? this.bookingId,
+    customerId: customerId ?? this.customerId,
+    specialistId: specialistId ?? this.specialistId,
+    totalAmount: totalAmount ?? this.totalAmount,
+    paidAmount: paidAmount ?? this.paidAmount,
+    remainingAmount: remainingAmount ?? this.remainingAmount,
+    status: status ?? this.status,
+    type: type ?? this.type,
+    installments: installments ?? this.installments,
+    receiptPdfUrl: receiptPdfUrl ?? this.receiptPdfUrl,
+    invoicePdfUrl: invoicePdfUrl ?? this.invoicePdfUrl,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, полностью ли оплачен платеж
   bool get isFullyPaid => remainingAmount <= 0;
@@ -134,13 +134,14 @@ class PaymentExtended {
   /// Получить следующий платеж к оплате
   PaymentInstallment? get nextPayment {
     final now = DateTime.now();
-    final pendingInstallments = installments
-        .where(
-          (installment) =>
-              installment.dueDate.isAfter(now) && installment.status == PaymentStatus.pending,
-        )
-        .toList()
-      ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
+    final pendingInstallments =
+        installments
+            .where(
+              (installment) =>
+                  installment.dueDate.isAfter(now) && installment.status == PaymentStatus.pending,
+            )
+            .toList()
+          ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
 
     return pendingInstallments.isNotEmpty ? pendingInstallments.first : null;
   }
@@ -150,14 +151,7 @@ class PaymentExtended {
 }
 
 /// Статус платежа
-enum PaymentStatus {
-  pending,
-  processing,
-  completed,
-  failed,
-  cancelled,
-  refunded,
-}
+enum PaymentStatus { pending, processing, completed, failed, cancelled, refunded }
 
 /// Тип платежа
 enum PaymentType {
@@ -181,18 +175,18 @@ class PaymentInstallment {
   });
 
   factory PaymentInstallment.fromMap(Map<String, dynamic> map) => PaymentInstallment(
-        id: map['id'] ?? '',
-        amount: (map['amount'] ?? 0.0).toDouble(),
-        dueDate: (map['dueDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        status: PaymentStatus.values.firstWhere(
-          (s) => s.name == map['status'],
-          orElse: () => PaymentStatus.pending,
-        ),
-        paidAt: (map['paidAt'] as Timestamp?)?.toDate(),
-        transactionId: map['transactionId'],
-        receiptPdfUrl: map['receiptPdfUrl'],
-        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-      );
+    id: map['id'] ?? '',
+    amount: (map['amount'] ?? 0.0).toDouble(),
+    dueDate: (map['dueDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    status: PaymentStatus.values.firstWhere(
+      (s) => s.name == map['status'],
+      orElse: () => PaymentStatus.pending,
+    ),
+    paidAt: (map['paidAt'] as Timestamp?)?.toDate(),
+    transactionId: map['transactionId'],
+    receiptPdfUrl: map['receiptPdfUrl'],
+    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+  );
   final String id;
   final double amount;
   final DateTime dueDate;
@@ -203,15 +197,15 @@ class PaymentInstallment {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'amount': amount,
-        'dueDate': Timestamp.fromDate(dueDate),
-        'status': status.name,
-        'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
-        'transactionId': transactionId,
-        'receiptPdfUrl': receiptPdfUrl,
-        'metadata': metadata,
-      };
+    'id': id,
+    'amount': amount,
+    'dueDate': Timestamp.fromDate(dueDate),
+    'status': status.name,
+    'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
+    'transactionId': transactionId,
+    'receiptPdfUrl': receiptPdfUrl,
+    'metadata': metadata,
+  };
 
   PaymentInstallment copyWith({
     String? id,
@@ -222,17 +216,16 @@ class PaymentInstallment {
     String? transactionId,
     String? receiptPdfUrl,
     Map<String, dynamic>? metadata,
-  }) =>
-      PaymentInstallment(
-        id: id ?? this.id,
-        amount: amount ?? this.amount,
-        dueDate: dueDate ?? this.dueDate,
-        status: status ?? this.status,
-        paidAt: paidAt ?? this.paidAt,
-        transactionId: transactionId ?? this.transactionId,
-        receiptPdfUrl: receiptPdfUrl ?? this.receiptPdfUrl,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => PaymentInstallment(
+    id: id ?? this.id,
+    amount: amount ?? this.amount,
+    dueDate: dueDate ?? this.dueDate,
+    status: status ?? this.status,
+    paidAt: paidAt ?? this.paidAt,
+    transactionId: transactionId ?? this.transactionId,
+    receiptPdfUrl: receiptPdfUrl ?? this.receiptPdfUrl,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, просрочен ли платеж
   bool get isOverdue => dueDate.isBefore(DateTime.now()) && status != PaymentStatus.completed;
@@ -250,15 +243,13 @@ class AdvancePaymentSettings {
   });
 
   factory AdvancePaymentSettings.fromMap(Map<String, dynamic> map) => AdvancePaymentSettings(
-        availablePercentages: List<double>.from(
-          map['availablePercentages'] ?? [10.0, 30.0, 50.0],
-        ),
-        minAdvanceAmount: (map['minAdvanceAmount'] ?? 1000.0).toDouble(),
-        maxAdvanceAmount: (map['maxAdvanceAmount'] ?? 100000.0).toDouble(),
-        allowCustomAmount: map['allowCustomAmount'] ?? true,
-        maxInstallments: map['maxInstallments'] ?? 12,
-        defaultInstallments: map['defaultInstallments'] ?? 3,
-      );
+    availablePercentages: List<double>.from(map['availablePercentages'] ?? [10.0, 30.0, 50.0]),
+    minAdvanceAmount: (map['minAdvanceAmount'] ?? 1000.0).toDouble(),
+    maxAdvanceAmount: (map['maxAdvanceAmount'] ?? 100000.0).toDouble(),
+    allowCustomAmount: map['allowCustomAmount'] ?? true,
+    maxInstallments: map['maxInstallments'] ?? 12,
+    defaultInstallments: map['defaultInstallments'] ?? 3,
+  );
   final List<double> availablePercentages;
   final double minAdvanceAmount;
   final double maxAdvanceAmount;
@@ -267,13 +258,13 @@ class AdvancePaymentSettings {
   final int defaultInstallments;
 
   Map<String, dynamic> toMap() => {
-        'availablePercentages': availablePercentages,
-        'minAdvanceAmount': minAdvanceAmount,
-        'maxAdvanceAmount': maxAdvanceAmount,
-        'allowCustomAmount': allowCustomAmount,
-        'maxInstallments': maxInstallments,
-        'defaultInstallments': defaultInstallments,
-      };
+    'availablePercentages': availablePercentages,
+    'minAdvanceAmount': minAdvanceAmount,
+    'maxAdvanceAmount': maxAdvanceAmount,
+    'allowCustomAmount': allowCustomAmount,
+    'maxInstallments': maxInstallments,
+    'defaultInstallments': defaultInstallments,
+  };
 }
 
 /// PDF документ
@@ -290,18 +281,18 @@ class PaymentDocument {
   });
 
   factory PaymentDocument.fromMap(Map<String, dynamic> map) => PaymentDocument(
-        id: map['id'] ?? '',
-        paymentId: map['paymentId'] ?? '',
-        type: DocumentType.values.firstWhere(
-          (t) => t.name == map['type'],
-          orElse: () => DocumentType.receipt,
-        ),
-        url: map['url'] ?? '',
-        fileName: map['fileName'] ?? '',
-        fileSize: map['fileSize'] ?? 0,
-        createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-      );
+    id: map['id'] ?? '',
+    paymentId: map['paymentId'] ?? '',
+    type: DocumentType.values.firstWhere(
+      (t) => t.name == map['type'],
+      orElse: () => DocumentType.receipt,
+    ),
+    url: map['url'] ?? '',
+    fileName: map['fileName'] ?? '',
+    fileSize: map['fileSize'] ?? 0,
+    createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+  );
   final String id;
   final String paymentId;
   final DocumentType type;
@@ -312,15 +303,15 @@ class PaymentDocument {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'paymentId': paymentId,
-        'type': type.name,
-        'url': url,
-        'fileName': fileName,
-        'fileSize': fileSize,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'metadata': metadata,
-      };
+    'id': id,
+    'paymentId': paymentId,
+    'type': type.name,
+    'url': url,
+    'fileName': fileName,
+    'fileSize': fileSize,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'metadata': metadata,
+  };
 }
 
 /// Тип документа
@@ -347,17 +338,17 @@ class PaymentStats {
   });
 
   factory PaymentStats.empty() => PaymentStats(
-        totalPayments: 0,
-        completedPayments: 0,
-        pendingPayments: 0,
-        failedPayments: 0,
-        totalAmount: 0,
-        paidAmount: 0,
-        pendingAmount: 0,
-        paymentsByType: {},
-        paymentsByStatus: {},
-        lastUpdated: DateTime.now(),
-      );
+    totalPayments: 0,
+    completedPayments: 0,
+    pendingPayments: 0,
+    failedPayments: 0,
+    totalAmount: 0,
+    paidAmount: 0,
+    pendingAmount: 0,
+    paymentsByType: {},
+    paymentsByStatus: {},
+    lastUpdated: DateTime.now(),
+  );
   final int totalPayments;
   final int completedPayments;
   final int pendingPayments;

@@ -122,10 +122,7 @@ class ChatDataGenerator {
       },
       'lastMessage': '',
       'lastMessageTime': null,
-      'unreadCount': {
-        customer.id: 0,
-        specialist.id: 0,
-      },
+      'unreadCount': {customer.id: 0, specialist.id: 0},
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
       'bookingId': booking?.id,
@@ -175,8 +172,11 @@ class ChatDataGenerator {
       // Сохраняем сообщения
       final batch = _firestore.batch();
       for (final message in messages) {
-        final messageRef =
-            _firestore.collection('chats').doc(chatId).collection('messages').doc(message['id']);
+        final messageRef = _firestore
+            .collection('chats')
+            .doc(chatId)
+            .collection('messages')
+            .doc(message['id']);
         batch.set(messageRef, message);
       }
       await batch.commit();
@@ -186,11 +186,7 @@ class ChatDataGenerator {
   }
 
   /// Генерация сообщения в зависимости от номера и контекста
-  String _generateMessage(
-    int messageIndex,
-    bool isFromCustomer,
-    bool hasBooking,
-  ) {
+  String _generateMessage(int messageIndex, bool isFromCustomer, bool hasBooking) {
     if (messageIndex == 0) {
       // Первое сообщение - приветствие от заказчика
       return greetingMessages[_random.nextInt(greetingMessages.length)];

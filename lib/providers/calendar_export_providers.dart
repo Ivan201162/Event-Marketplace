@@ -6,8 +6,9 @@ import '../core/feature_flags.dart';
 final calendarExportAvailableProvider = Provider<bool>((ref) => FeatureFlags.calendarExportEnabled);
 
 /// Провайдер для получения информации о поддерживаемых форматах
-final supportedCalendarFormatsProvider =
-    Provider<List<String>>((ref) => IcsExportService.supportedFormats);
+final supportedCalendarFormatsProvider = Provider<List<String>>(
+  (ref) => IcsExportService.supportedFormats,
+);
 
 /// Провайдер для получения максимального количества событий для экспорта
 final maxEventsPerExportProvider = Provider<int>((ref) => IcsExportService.maxEventsPerExport);
@@ -39,8 +40,10 @@ final exportEventsProvider = FutureProvider.family<String?, List<String>>((ref, 
 });
 
 /// Провайдер для экспорта нескольких бронирований
-final exportBookingsProvider =
-    FutureProvider.family<String?, List<String>>((ref, bookingIds) async {
+final exportBookingsProvider = FutureProvider.family<String?, List<String>>((
+  ref,
+  bookingIds,
+) async {
   // Здесь можно добавить логику получения бронирований по ID
   // Пока возвращаем null, так как нужны объекты Booking
   return null;
@@ -57,8 +60,9 @@ class ExportStatusNotifier extends Notifier<String> {
 }
 
 /// Провайдер для проверки статуса экспорта
-final exportStatusProvider =
-    NotifierProvider<ExportStatusNotifier, String>(ExportStatusNotifier.new);
+final exportStatusProvider = NotifierProvider<ExportStatusNotifier, String>(
+  ExportStatusNotifier.new,
+);
 
 /// Нотификатор для отслеживания прогресса экспорта
 class ExportProgressNotifier extends Notifier<double> {
@@ -139,16 +143,15 @@ class ExportSettings {
     int? reminderMinutes,
     String? defaultDuration,
     bool? autoShare,
-  }) =>
-      ExportSettings(
-        includeDescription: includeDescription ?? this.includeDescription,
-        includeLocation: includeLocation ?? this.includeLocation,
-        includeAttendees: includeAttendees ?? this.includeAttendees,
-        includeReminders: includeReminders ?? this.includeReminders,
-        reminderMinutes: reminderMinutes ?? this.reminderMinutes,
-        defaultDuration: defaultDuration ?? this.defaultDuration,
-        autoShare: autoShare ?? this.autoShare,
-      );
+  }) => ExportSettings(
+    includeDescription: includeDescription ?? this.includeDescription,
+    includeLocation: includeLocation ?? this.includeLocation,
+    includeAttendees: includeAttendees ?? this.includeAttendees,
+    includeReminders: includeReminders ?? this.includeReminders,
+    reminderMinutes: reminderMinutes ?? this.reminderMinutes,
+    defaultDuration: defaultDuration ?? this.defaultDuration,
+    autoShare: autoShare ?? this.autoShare,
+  );
 }
 
 /// Нотификатор для настроек экспорта
@@ -193,12 +196,12 @@ class ExportSettingsNotifier extends Notifier<ExportSettings> {
 class ExportStatsNotifier extends Notifier<Map<String, int>> {
   @override
   Map<String, int> build() => {
-        'totalExports': 0,
-        'successfulExports': 0,
-        'failedExports': 0,
-        'eventsExported': 0,
-        'bookingsExported': 0,
-      };
+    'totalExports': 0,
+    'successfulExports': 0,
+    'failedExports': 0,
+    'eventsExported': 0,
+    'bookingsExported': 0,
+  };
 
   void incrementStat(String key) {
     state = {...state, key: (state[key] ?? 0) + 1};

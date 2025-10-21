@@ -5,10 +5,7 @@ import '../services/ai_chat_service.dart';
 
 /// Экран AI-чата
 class AiChatScreen extends ConsumerStatefulWidget {
-  const AiChatScreen({
-    super.key,
-    this.sessionId,
-  });
+  const AiChatScreen({super.key, this.sessionId});
   final String? sessionId;
 
   @override
@@ -34,9 +31,10 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _initializeChat();
   }
@@ -78,9 +76,9 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка инициализации чата: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка инициализации чата: $e')));
       }
     }
   }
@@ -96,11 +94,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
       const userId = 'current_user'; // TODO: Получать из аутентификации
 
       // Отправляем сообщение пользователя
-      final userMessage = await _aiChatService.sendUserMessage(
-        _currentSessionId!,
-        userId,
-        message,
-      );
+      final userMessage = await _aiChatService.sendUserMessage(_currentSessionId!, userId, message);
 
       if (userMessage != null) {
         setState(() {
@@ -114,11 +108,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
         _isTyping = true;
       });
 
-      final aiResponse = await _aiChatService.getAiResponse(
-        _currentSessionId!,
-        userId,
-        message,
-      );
+      final aiResponse = await _aiChatService.getAiResponse(_currentSessionId!, userId, message);
 
       if (aiResponse != null) {
         setState(() {
@@ -137,9 +127,9 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
         _isTyping = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка отправки сообщения: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка отправки сообщения: $e')));
       }
     }
   }
@@ -158,63 +148,54 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(
-                  Icons.smart_toy,
-                  color: Colors.blue.shade600,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Text('AI-помощник'),
-            ],
-          ),
-          elevation: 0,
-          backgroundColor: Colors.blue.shade50,
-          foregroundColor: Colors.blue.shade800,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: _initializeChat,
+    appBar: AppBar(
+      title: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: Colors.blue.shade100,
+              borderRadius: BorderRadius.circular(16),
             ),
-          ],
-        ),
-        body: _isLoading && _messages.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : FadeTransition(
-                opacity: _fadeAnimation,
-                child: Column(
-                  children: [
-                    // Список сообщений
-                    Expanded(
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _messages.length + (_isTyping ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index == _messages.length && _isTyping) {
-                            return _buildTypingIndicator();
-                          }
-                          return _buildMessageBubble(_messages[index]);
-                        },
-                      ),
-                    ),
-
-                    // Поле ввода
-                    _buildInputArea(),
-                  ],
+            child: Icon(Icons.smart_toy, color: Colors.blue.shade600, size: 20),
+          ),
+          const SizedBox(width: 12),
+          const Text('AI-помощник'),
+        ],
+      ),
+      elevation: 0,
+      backgroundColor: Colors.blue.shade50,
+      foregroundColor: Colors.blue.shade800,
+      actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _initializeChat)],
+    ),
+    body: _isLoading && _messages.isEmpty
+        ? const Center(child: CircularProgressIndicator())
+        : FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              children: [
+                // Список сообщений
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _messages.length + (_isTyping ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == _messages.length && _isTyping) {
+                        return _buildTypingIndicator();
+                      }
+                      return _buildMessageBubble(_messages[index]);
+                    },
+                  ),
                 ),
-              ),
-      );
+
+                // Поле ввода
+                _buildInputArea(),
+              ],
+            ),
+          ),
+  );
 
   Widget _buildMessageBubble(ChatMessage message) {
     final isUser = message.isUser;
@@ -233,19 +214,13 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
                 color: Colors.blue.shade100,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Icon(
-                Icons.smart_toy,
-                color: Colors.blue.shade600,
-                size: 20,
-              ),
+              child: Icon(Icons.smart_toy, color: Colors.blue.shade600, size: 20),
             ),
             const SizedBox(width: 8),
           ],
           Flexible(
             child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.75,
-              ),
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: isUser ? Colors.blue.shade600 : Colors.grey.shade100,
@@ -262,10 +237,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
                   else
                     Text(
                       message.content,
-                      style: TextStyle(
-                        color: isUser ? Colors.white : Colors.black87,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(color: isUser ? Colors.white : Colors.black87, fontSize: 16),
                     ),
                   if (message.metadata?['quickReplies'] != null)
                     _buildQuickReplies(message.metadata!['quickReplies']),
@@ -282,11 +254,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
                 color: Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(
-                Icons.person,
-                color: Colors.white,
-                size: 20,
-              ),
+              child: const Icon(Icons.person, color: Colors.white, size: 20),
             ),
           ],
         ],
@@ -302,10 +270,7 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Рекомендуемые специалисты:',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+        const Text('Рекомендуемые специалисты:', style: TextStyle(fontWeight: FontWeight.w600)),
         const SizedBox(height: 8),
         ...specialists.map(
           (specialist) => _buildSpecialistCard(specialist as Map<String, dynamic>),
@@ -315,220 +280,188 @@ class _AiChatScreenState extends ConsumerState<AiChatScreen> with TickerProvider
   }
 
   Widget _buildSpecialistCard(Map<String, dynamic> specialist) => Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: Colors.grey.shade300),
+    ),
+    child: Row(
+      children: [
+        CircleAvatar(
+          radius: 20,
+          backgroundImage: specialist['photoUrl'] != null
+              ? NetworkImage(specialist['photoUrl'])
+              : null,
+          child: specialist['photoUrl'] == null ? const Icon(Icons.person, size: 20) : null,
         ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage:
-                  specialist['photoUrl'] != null ? NetworkImage(specialist['photoUrl']) : null,
-              child: specialist['photoUrl'] == null ? const Icon(Icons.person, size: 20) : null,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                specialist['name'],
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+              ),
+              Text(
+                specialist['category'],
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+              ),
+              Row(
                 children: [
+                  Icon(Icons.star, size: 12, color: Colors.amber.shade600),
+                  const SizedBox(width: 4),
+                  Text(specialist['rating'].toString(), style: const TextStyle(fontSize: 12)),
+                  const Spacer(),
                   Text(
-                    specialist['name'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Text(
-                    specialist['category'],
+                    '${specialist['price']} ₽',
                     style: TextStyle(
-                      color: Colors.grey.shade600,
+                      color: Colors.green.shade600,
+                      fontWeight: FontWeight.w600,
                       fontSize: 12,
                     ),
                   ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        size: 12,
-                        color: Colors.amber.shade600,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        specialist['rating'].toString(),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const Spacer(),
-                      Text(
-                        '${specialist['price']} ₽',
-                        style: TextStyle(
-                          color: Colors.green.shade600,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildQuickReplies(List<dynamic> quickReplies) => Container(
-        margin: const EdgeInsets.only(top: 8),
-        child: Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: quickReplies.map((reply) {
-            final quickReply = QuickReply.fromJson(reply);
-            return GestureDetector(
-              onTap: () => _sendMessage(quickReply.value),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.blue.shade200),
-                ),
-                child: Text(
-                  quickReply.text,
-                  style: TextStyle(
-                    color: Colors.blue.shade700,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      );
-
-  Widget _buildTypingIndicator() => Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Row(
-          children: [
-            Container(
-              width: 32,
-              height: 32,
-              decoration: BoxDecoration(
-                color: Colors.blue.shade100,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(
-                Icons.smart_toy,
-                color: Colors.blue.shade600,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: const Radius.circular(4),
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildTypingDot(0),
-                  const SizedBox(width: 4),
-                  _buildTypingDot(1),
-                  const SizedBox(width: 4),
-                  _buildTypingDot(2),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildTypingDot(int index) => AnimatedBuilder(
-        animation: _animationController,
-        builder: (context, child) {
-          final delay = index * 0.2;
-          final animationValue = (_animationController.value - delay).clamp(0.0, 1.0);
-          return Opacity(
-            opacity: animationValue,
-            child: Container(
-              width: 6,
-              height: 6,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade600,
-                shape: BoxShape.circle,
-              ),
-            ),
-          );
-        },
-      );
-
-  Widget _buildInputArea() => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Colors.grey.shade200),
+            ],
           ),
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _messageController,
-                decoration: InputDecoration(
-                  hintText: 'Напишите сообщение...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.grey.shade300),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Colors.blue.shade600),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-                maxLines: null,
-                textInputAction: TextInputAction.send,
-                onSubmitted: (value) {
-                  if (value.trim().isNotEmpty) {
-                    _sendMessage(value);
-                    _messageController.clear();
-                  }
-                },
-              ),
+      ],
+    ),
+  );
+
+  Widget _buildQuickReplies(List<dynamic> quickReplies) => Container(
+    margin: const EdgeInsets.only(top: 8),
+    child: Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: quickReplies.map((reply) {
+        final quickReply = QuickReply.fromJson(reply);
+        return GestureDetector(
+          onTap: () => _sendMessage(quickReply.value),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.blue.shade50,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.blue.shade200),
             ),
-            const SizedBox(width: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.blue.shade600,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.send, color: Colors.white),
-                onPressed: _isLoading
-                    ? null
-                    : () {
-                        if (_messageController.text.trim().isNotEmpty) {
-                          _sendMessage(_messageController.text);
-                          _messageController.clear();
-                        }
-                      },
-              ),
+            child: Text(
+              quickReply.text,
+              style: TextStyle(color: Colors.blue.shade700, fontSize: 12),
             ),
-          ],
+          ),
+        );
+      }).toList(),
+    ),
+  );
+
+  Widget _buildTypingIndicator() => Container(
+    margin: const EdgeInsets.only(bottom: 16),
+    child: Row(
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: Colors.blue.shade100,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(Icons.smart_toy, color: Colors.blue.shade600, size: 20),
+        ),
+        const SizedBox(width: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(20).copyWith(bottomLeft: const Radius.circular(4)),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildTypingDot(0),
+              const SizedBox(width: 4),
+              _buildTypingDot(1),
+              const SizedBox(width: 4),
+              _buildTypingDot(2),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildTypingDot(int index) => AnimatedBuilder(
+    animation: _animationController,
+    builder: (context, child) {
+      final delay = index * 0.2;
+      final animationValue = (_animationController.value - delay).clamp(0.0, 1.0);
+      return Opacity(
+        opacity: animationValue,
+        child: Container(
+          width: 6,
+          height: 6,
+          decoration: BoxDecoration(color: Colors.grey.shade600, shape: BoxShape.circle),
         ),
       );
+    },
+  );
+
+  Widget _buildInputArea() => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      border: Border(top: BorderSide(color: Colors.grey.shade200)),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _messageController,
+            decoration: InputDecoration(
+              hintText: 'Напишите сообщение...',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide(color: Colors.grey.shade300),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(24),
+                borderSide: BorderSide(color: Colors.blue.shade600),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
+            maxLines: null,
+            textInputAction: TextInputAction.send,
+            onSubmitted: (value) {
+              if (value.trim().isNotEmpty) {
+                _sendMessage(value);
+                _messageController.clear();
+              }
+            },
+          ),
+        ),
+        const SizedBox(width: 8),
+        Container(
+          decoration: BoxDecoration(color: Colors.blue.shade600, shape: BoxShape.circle),
+          child: IconButton(
+            icon: const Icon(Icons.send, color: Colors.white),
+            onPressed: _isLoading
+                ? null
+                : () {
+                    if (_messageController.text.trim().isNotEmpty) {
+                      _sendMessage(_messageController.text);
+                      _messageController.clear();
+                    }
+                  },
+          ),
+        ),
+      ],
+    ),
+  );
 }

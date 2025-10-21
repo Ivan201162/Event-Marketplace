@@ -34,18 +34,17 @@ class EventFilter {
     bool? isPublic,
     EventStatus? status,
     String? organizerId,
-  }) =>
-      EventFilter(
-        searchQuery: searchQuery ?? this.searchQuery,
-        categories: categories ?? this.categories,
-        minPrice: minPrice ?? this.minPrice,
-        maxPrice: maxPrice ?? this.maxPrice,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-        isPublic: isPublic ?? this.isPublic,
-        status: status ?? this.status,
-        organizerId: organizerId ?? this.organizerId,
-      );
+  }) => EventFilter(
+    searchQuery: searchQuery ?? this.searchQuery,
+    categories: categories ?? this.categories,
+    minPrice: minPrice ?? this.minPrice,
+    maxPrice: maxPrice ?? this.maxPrice,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    isPublic: isPublic ?? this.isPublic,
+    status: status ?? this.status,
+    organizerId: organizerId ?? this.organizerId,
+  );
 
   /// Проверить, есть ли активные фильтры
   bool get hasActiveFilters =>
@@ -129,16 +128,16 @@ class EventFilter {
 
   @override
   int get hashCode => Object.hash(
-        searchQuery,
-        categories,
-        minPrice,
-        maxPrice,
-        startDate,
-        endDate,
-        isPublic,
-        status,
-        organizerId,
-      );
+    searchQuery,
+    categories,
+    minPrice,
+    maxPrice,
+    startDate,
+    endDate,
+    isPublic,
+    status,
+    organizerId,
+  );
 
   /// Сравнить два списка на равенство
   bool _listEquals<T>(List<T>? a, List<T>? b) {

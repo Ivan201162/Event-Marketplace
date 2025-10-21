@@ -7,11 +7,7 @@ class SpecialistCard extends StatelessWidget {
   final Specialist specialist;
   final VoidCallback? onTap;
 
-  const SpecialistCard({
-    super.key,
-    required this.specialist,
-    this.onTap,
-  });
+  const SpecialistCard({super.key, required this.specialist, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +25,9 @@ class SpecialistCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage:
-                        specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
+                    backgroundImage: specialist.avatarUrl != null
+                        ? NetworkImage(specialist.avatarUrl!)
+                        : null,
                     child: specialist.avatarUrl == null
                         ? Text(specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?')
                         : null,
@@ -42,10 +39,7 @@ class SpecialistCard extends StatelessWidget {
                       children: [
                         Text(
                           specialist.name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Row(
@@ -59,10 +53,7 @@ class SpecialistCard extends StatelessWidget {
                             const SizedBox(width: 8),
                             Text(
                               '(${specialist.reviewCount} отзывов)',
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                              ),
+                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
                             ),
                           ],
                         ),
@@ -90,10 +81,7 @@ class SpecialistCard extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 specialist.description,
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: Colors.grey[700], fontSize: 14),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

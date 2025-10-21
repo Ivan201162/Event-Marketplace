@@ -139,22 +139,22 @@ class CalendarTestData {
 
   /// Получить список тестовых специалистов
   static List<Specialist> getTestSpecialists() => [
-        createTestSpecialistWithBusyDates(
-          id: 'specialist_1',
-          name: 'Анна Петрова',
-          category: SpecialistCategory.photographer,
-        ),
-        createTestSpecialistWithBusyDates(
-          id: 'specialist_2',
-          name: 'Михаил Иванов',
-          category: SpecialistCategory.videographer,
-        ),
-        createTestSpecialistWithBusyDates(
-          id: 'specialist_3',
-          name: 'Елена Сидорова',
-          category: SpecialistCategory.dj,
-        ),
-      ];
+    createTestSpecialistWithBusyDates(
+      id: 'specialist_1',
+      name: 'Анна Петрова',
+      category: SpecialistCategory.photographer,
+    ),
+    createTestSpecialistWithBusyDates(
+      id: 'specialist_2',
+      name: 'Михаил Иванов',
+      category: SpecialistCategory.videographer,
+    ),
+    createTestSpecialistWithBusyDates(
+      id: 'specialist_3',
+      name: 'Елена Сидорова',
+      category: SpecialistCategory.dj,
+    ),
+  ];
 
   /// Очистить тестовые данные
   static Future<void> clearTestData(String specialistId) async {

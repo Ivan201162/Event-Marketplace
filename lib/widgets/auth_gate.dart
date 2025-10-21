@@ -7,8 +7,9 @@ import '../data/repositories/user_repository.dart';
 import '../screens/main_navigation_screen.dart';
 import '../screens/modern_auth_screen.dart';
 
-final firebaseUserProvider =
-    StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
+final firebaseUserProvider = StreamProvider<User?>(
+  (ref) => FirebaseAuth.instance.authStateChanges(),
+);
 
 final currentUserProvider = StreamProvider<UpUser?>((ref) {
   final fbUserAsync = ref.watch(firebaseUserProvider);

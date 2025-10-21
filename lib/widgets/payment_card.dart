@@ -7,11 +7,7 @@ class PaymentCard extends StatelessWidget {
   final Payment payment;
   final VoidCallback? onTap;
 
-  const PaymentCard({
-    super.key,
-    required this.payment,
-    this.onTap,
-  });
+  const PaymentCard({super.key, required this.payment, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -47,16 +43,16 @@ class PaymentCard extends StatelessWidget {
                       children: [
                         Text(
                           payment.description ?? 'Платеж',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           payment.type.displayName,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -67,9 +63,9 @@ class PaymentCard extends StatelessWidget {
                       Text(
                         payment.formattedAmount,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: _getStatusColor(payment.status),
-                              fontWeight: FontWeight.bold,
-                            ),
+                          color: _getStatusColor(payment.status),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 2),
                       Container(
@@ -95,30 +91,18 @@ class PaymentCard extends StatelessWidget {
               // Details
               Row(
                 children: [
-                  Icon(
-                    Icons.payment,
-                    size: 16,
-                    color: Colors.grey[600],
-                  ),
+                  Icon(Icons.payment, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text(
                     payment.method.displayName,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                   ),
                   const Spacer(),
-                  Icon(
-                    Icons.access_time,
-                    size: 16,
-                    color: Colors.grey[600],
-                  ),
+                  Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text(
                     _formatDateTime(payment.createdAt),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -133,11 +117,7 @@ class PaymentCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.percent,
-                        size: 16,
-                        color: Colors.orange[700],
-                      ),
+                      Icon(Icons.percent, size: 16, color: Colors.orange[700]),
                       const SizedBox(width: 4),
                       Text(
                         'Комиссия: ${(double.tryParse(payment.commission ?? '0') ?? 0).toStringAsFixed(2)} ₽',
@@ -165,17 +145,13 @@ class PaymentCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(
-                      Icons.timer,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
+                    Icon(Icons.timer, size: 16, color: Colors.grey[600]),
                     const SizedBox(width: 4),
                     Text(
                       'Обработано за ${payment.formattedDuration}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -191,19 +167,12 @@ class PaymentCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 16,
-                        color: Colors.red[700],
-                      ),
+                      Icon(Icons.error_outline, size: 16, color: Colors.red[700]),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           payment.failureReason!,
-                          style: TextStyle(
-                            color: Colors.red[700],
-                            fontSize: 12,
-                          ),
+                          style: TextStyle(color: Colors.red[700], fontSize: 12),
                         ),
                       ),
                     ],

@@ -276,8 +276,10 @@ class AdvancePaymentService {
 
   Future<List<Payment>> _getAllPayments(String bookingId) async {
     try {
-      final snapshot =
-          await _firestore.collection('payments').where('bookingId', isEqualTo: bookingId).get();
+      final snapshot = await _firestore
+          .collection('payments')
+          .where('bookingId', isEqualTo: bookingId)
+          .get();
 
       return snapshot.docs.map(Payment.fromDocument).toList();
     } catch (e) {

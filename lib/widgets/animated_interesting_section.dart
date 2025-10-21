@@ -37,20 +37,14 @@ class _AnimatedInterestingSectionState extends State<AnimatedInterestingSection>
       return Tween<double>(
         begin: 0.0,
         end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeOutBack,
-      ));
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
     }).toList();
 
     _cardSlideAnimations = _cardControllers.map((controller) {
       return Tween<Offset>(
         begin: const Offset(0.0, 0.5),
         end: Offset.zero,
-      ).animate(CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeOutBack,
-      ));
+      ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutBack));
     }).toList();
 
     _animationController.forward();
@@ -85,9 +79,7 @@ class _AnimatedInterestingSectionState extends State<AnimatedInterestingSection>
         children: [
           Text(
             'Интересное',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           Row(
@@ -191,10 +183,7 @@ class _InterestingCardState extends State<_InterestingCard> with SingleTickerPro
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.05,
-    ).animate(CurvedAnimation(
-      parent: _hoverController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut));
   }
 
   @override
@@ -205,70 +194,66 @@ class _InterestingCardState extends State<_InterestingCard> with SingleTickerPro
 
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: InkWell(
-              onTap: widget.onTap,
-              onTapDown: (_) {
-                setState(() => _isHovered = true);
-                _hoverController.forward();
-              },
-              onTapUp: (_) {
-                setState(() => _isHovered = false);
-                _hoverController.reverse();
-              },
-              onTapCancel: () {
-                setState(() => _isHovered = false);
-                _hoverController.reverse();
-              },
+    animation: _scaleAnimation,
+    builder: (context, child) {
+      return Transform.scale(
+        scale: _scaleAnimation.value,
+        child: InkWell(
+          onTap: widget.onTap,
+          onTapDown: (_) {
+            setState(() => _isHovered = true);
+            _hoverController.forward();
+          },
+          onTapUp: (_) {
+            setState(() => _isHovered = false);
+            _hoverController.reverse();
+          },
+          onTapCancel: () {
+            setState(() => _isHovered = false);
+            _hoverController.reverse();
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: widget.color.withValues(alpha: _isHovered ? 0.15 : 0.1),
               borderRadius: BorderRadius.circular(16),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: widget.color.withValues(alpha: _isHovered ? 0.15 : 0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: widget.color.withValues(alpha: _isHovered ? 0.4 : 0.3),
-                    width: _isHovered ? 2 : 1,
-                  ),
-                  boxShadow: _isHovered
-                      ? [
-                          BoxShadow(
-                            color: widget.color.withValues(alpha: 0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Column(
-                  children: [
-                    AnimatedScale(
-                      scale: _isHovered ? 1.1 : 1.0,
-                      duration: const Duration(milliseconds: 200),
-                      child: Icon(
-                        widget.icon,
-                        color: widget.color,
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                        color: widget.color,
-                        fontWeight: _isHovered ? FontWeight.bold : FontWeight.w500,
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+              border: Border.all(
+                color: widget.color.withValues(alpha: _isHovered ? 0.4 : 0.3),
+                width: _isHovered ? 2 : 1,
               ),
+              boxShadow: _isHovered
+                  ? [
+                      BoxShadow(
+                        color: widget.color.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ]
+                  : null,
             ),
-          );
-        },
+            child: Column(
+              children: [
+                AnimatedScale(
+                  scale: _isHovered ? 1.1 : 1.0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(widget.icon, color: widget.color, size: 32),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  widget.title,
+                  style: TextStyle(
+                    color: widget.color,
+                    fontWeight: _isHovered ? FontWeight.bold : FontWeight.w500,
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
       );
+    },
+  );
 }

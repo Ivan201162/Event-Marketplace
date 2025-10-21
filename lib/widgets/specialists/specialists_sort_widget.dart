@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Виджет сортировки специалистов
 class SpecialistsSortWidget extends StatelessWidget {
-  const SpecialistsSortWidget({
-    super.key,
-    required this.selectedSort,
-    required this.onSortChanged,
-  });
+  const SpecialistsSortWidget({super.key, required this.selectedSort, required this.onSortChanged});
 
   final String selectedSort;
   final ValueChanged<String> onSortChanged;
@@ -29,9 +25,7 @@ class SpecialistsSortWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: theme.dividerColor,
-        ),
+        border: Border.all(color: theme.dividerColor),
       ),
       child: Row(
         children: [
@@ -43,9 +37,7 @@ class SpecialistsSortWidget extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             'Сортировка:',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+            style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -57,10 +49,7 @@ class SpecialistsSortWidget extends StatelessWidget {
                     .map(
                       (option) => DropdownMenuItem(
                         value: option,
-                        child: Text(
-                          option,
-                          style: theme.textTheme.bodyMedium,
-                        ),
+                        child: Text(option, style: theme.textTheme.bodyMedium),
                       ),
                     )
                     .toList(),

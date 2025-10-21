@@ -39,9 +39,10 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _profileAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _profileAnimationController, curve: Curves.easeInOut),
-    );
+    _profileAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _profileAnimationController, curve: Curves.easeInOut));
 
     _scrollController.addListener(_onScroll);
     _loadCurrentProfile();
@@ -94,9 +95,7 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
 
   Future<void> _loadWeeklyLeaders() async {
     try {
-      final leaders = await SupabaseService.getWeeklyLeaders(
-        city: _selectedCity,
-      );
+      final leaders = await SupabaseService.getWeeklyLeaders(city: _selectedCity);
       setState(() {
         _weeklyLeaders = leaders;
         _isLoadingLeaders = false;
@@ -111,10 +110,8 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
   Future<void> _showFiltersDialog() async {
     final result = await showDialog<Map<String, String?>>(
       context: context,
-      builder: (context) => FiltersDialog(
-        selectedCity: _selectedCity,
-        selectedCategory: _selectedCategory,
-      ),
+      builder: (context) =>
+          FiltersDialog(selectedCity: _selectedCity, selectedCategory: _selectedCategory),
     );
 
     if (result != null) {
@@ -142,20 +139,14 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
             flexibleSpace: FlexibleSpaceBar(
               title: const Text(
                 'Event Marketplace',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
               background: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      theme.primaryColor,
-                      theme.primaryColor.withValues(alpha: 0.8),
-                    ],
+                    colors: [theme.primaryColor, theme.primaryColor.withValues(alpha: 0.8)],
                   ),
                 ),
               ),
@@ -179,39 +170,26 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
               builder: (context, child) {
                 return Transform.translate(
                   offset: Offset(0, -50 * (1 - _profileAnimation.value)),
-                  child: Opacity(
-                    opacity: _profileAnimation.value,
-                    child: _buildProfileBanner(),
-                  ),
+                  child: Opacity(opacity: _profileAnimation.value, child: _buildProfileBanner()),
                 );
               },
             ),
           ),
 
           // Search Section
-          SliverToBoxAdapter(
-            child: _buildSearchSection(),
-          ),
+          SliverToBoxAdapter(child: _buildSearchSection()),
 
           // Quick Actions
-          SliverToBoxAdapter(
-            child: _buildQuickActions(),
-          ),
+          SliverToBoxAdapter(child: _buildQuickActions()),
 
           // Weekly Leaders Section
-          SliverToBoxAdapter(
-            child: _buildWeeklyLeadersSection(),
-          ),
+          SliverToBoxAdapter(child: _buildWeeklyLeadersSection()),
 
           // Ideas Feed
-          SliverToBoxAdapter(
-            child: _buildIdeasFeed(),
-          ),
+          SliverToBoxAdapter(child: _buildIdeasFeed()),
 
           // Bottom padding
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 100),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
         ],
       ),
     );
@@ -222,13 +200,8 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
       return Container(
         height: 120,
         margin: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(16)),
+        child: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -249,11 +222,7 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
               const SizedBox(height: 8),
               const Text(
                 'Создайте профиль',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey),
               ),
               const SizedBox(height: 4),
               TextButton(
@@ -280,10 +249,7 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
         children: [
           const Text(
             'Найти специалистов',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           TextField(
@@ -291,13 +257,8 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
             decoration: InputDecoration(
               hintText: 'Поиск по имени, навыкам, городу...',
               prefixIcon: const Icon(Icons.search),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.tune),
-                onPressed: _showFiltersDialog,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+              suffixIcon: IconButton(icon: const Icon(Icons.tune), onPressed: _showFiltersDialog),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
               fillColor: Colors.grey[50],
             ),
@@ -320,10 +281,7 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
         children: [
           const Text(
             'Быстрые действия',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           Row(
@@ -402,20 +360,10 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
             const SizedBox(height: 8),
             Text(
               title,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: color,
-              ),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: color),
             ),
             const SizedBox(height: 2),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 12,
-                color: color.withValues(alpha: 0.7),
-              ),
-            ),
+            Text(subtitle, style: TextStyle(fontSize: 12, color: color.withValues(alpha: 0.7))),
           ],
         ),
       ),
@@ -433,15 +381,9 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
             children: [
               const Text(
                 'Топ специалистов недели',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              TextButton(
-                onPressed: () => context.push('/specialists'),
-                child: const Text('Все'),
-              ),
+              TextButton(onPressed: () => context.push('/specialists'), child: const Text('Все')),
             ],
           ),
           const SizedBox(height: 12),
@@ -461,10 +403,7 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
                   children: [
                     Icon(Icons.people_outline, size: 32, color: Colors.grey),
                     SizedBox(height: 8),
-                    Text(
-                      'Пока нет данных',
-                      style: TextStyle(color: Colors.grey),
-                    ),
+                    Text('Пока нет данных', style: TextStyle(color: Colors.grey)),
                   ],
                 ),
               ),
@@ -490,15 +429,9 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
             children: [
               const Text(
                 'Последние идеи',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              TextButton(
-                onPressed: () => context.push('/ideas'),
-                child: const Text('Все'),
-              ),
+              TextButton(onPressed: () => context.push('/ideas'), child: const Text('Все')),
             ],
           ),
           const SizedBox(height: 12),
@@ -515,10 +448,7 @@ class _EnhancedSocialHomeScreenState extends ConsumerState<EnhancedSocialHomeScr
                 children: [
                   Icon(Icons.lightbulb_outline, size: 32, color: Colors.grey),
                   SizedBox(height: 8),
-                  Text(
-                    'Идеи появятся здесь',
-                    style: TextStyle(color: Colors.grey),
-                  ),
+                  Text('Идеи появятся здесь', style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ),

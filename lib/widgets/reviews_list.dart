@@ -6,11 +6,7 @@ class ReviewsList extends ConsumerStatefulWidget {
   final String specialistId;
   final VoidCallback onWriteReview;
 
-  const ReviewsList({
-    super.key,
-    required this.specialistId,
-    required this.onWriteReview,
-  });
+  const ReviewsList({super.key, required this.specialistId, required this.onWriteReview});
 
   @override
   ConsumerState<ReviewsList> createState() => _ReviewsListState();
@@ -32,10 +28,7 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
             children: [
               Text(
                 'Отзывы (${reviews.length})',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
                 onPressed: widget.onWriteReview,
@@ -75,17 +68,10 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
           SizedBox(height: 16),
           Text(
             'Пока нет отзывов',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 8),
-          Text(
-            'Будьте первым, кто оставит отзыв!',
-            style: TextStyle(color: Colors.grey),
-          ),
+          Text('Будьте первым, кто оставит отзыв!', style: TextStyle(color: Colors.grey)),
         ],
       ),
     );
@@ -104,10 +90,12 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage:
-                      review.userAvatarUrl != null ? NetworkImage(review.userAvatarUrl!) : null,
-                  child:
-                      review.userAvatarUrl == null ? Text(review.userName.substring(0, 1)) : null,
+                  backgroundImage: review.userAvatarUrl != null
+                      ? NetworkImage(review.userAvatarUrl!)
+                      : null,
+                  child: review.userAvatarUrl == null
+                      ? Text(review.userName.substring(0, 1))
+                      : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -116,17 +104,11 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                     children: [
                       Text(
                         review.userName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
                         _formatDate(review.date),
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
                       ),
                     ],
                   ),
@@ -138,10 +120,7 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
             const SizedBox(height: 12),
 
             // Review text
-            Text(
-              review.text,
-              style: const TextStyle(fontSize: 14),
-            ),
+            Text(review.text, style: const TextStyle(fontSize: 14)),
 
             if (review.images.isNotEmpty) ...[
               const SizedBox(height: 12),
@@ -161,17 +140,14 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                   ),
                   onPressed: () {
                     // TODO: Toggle like
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Лайк пока не реализован')),
-                    );
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(const SnackBar(content: Text('Лайк пока не реализован')));
                   },
                 ),
                 Text(
                   '${review.likesCount}',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
                 ),
                 const SizedBox(width: 16),
                 IconButton(
@@ -183,10 +159,7 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                     );
                   },
                 ),
-                const Text(
-                  'Ответить',
-                  style: TextStyle(fontSize: 12),
-                ),
+                const Text('Ответить', style: TextStyle(fontSize: 12)),
               ],
             ),
           ],

@@ -66,7 +66,8 @@ class DynamicPricingService {
       );
 
       debugPrint(
-          'INFO: [DynamicPricingService] Price calculated: $finalPrice for $serviceType in $region');
+        'INFO: [DynamicPricingService] Price calculated: $finalPrice for $serviceType in $region',
+      );
       return finalPrice;
     } catch (e) {
       debugPrint('ERROR: [DynamicPricingService] Failed to get current price: $e');
@@ -305,7 +306,8 @@ class DynamicPricingService {
       await _firestore.collection('demand_metrics').doc(metrics.id).set(metrics.toMap());
 
       debugPrint(
-          'INFO: [DynamicPricingService] Demand metrics updated for $serviceType in $region');
+        'INFO: [DynamicPricingService] Demand metrics updated for $serviceType in $region',
+      );
     } catch (e) {
       debugPrint('ERROR: [DynamicPricingService] Failed to update demand metrics: $e');
     }
@@ -387,7 +389,8 @@ class DynamicPricingService {
       final double maxPrice = prices.reduce((a, b) => a > b ? a : b);
 
       // Расчет волатильности (стандартное отклонение)
-      final double variance = prices
+      final double variance =
+          prices
               .map((price) => (price - averagePrice) * (price - averagePrice))
               .reduce((a, b) => a + b) /
           prices.length;

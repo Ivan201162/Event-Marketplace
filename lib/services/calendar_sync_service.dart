@@ -165,9 +165,9 @@ class CalendarSyncService {
 
   /// Получить статус синхронизации
   Future<Map<String, dynamic>> getSyncStatus() async => {
-        'enabled': FeatureFlags.calendarSyncEnabled,
-        'googleConnected': false, // TODO(developer): Проверить реальное подключение
-        'outlookConnected': false, // TODO(developer): Проверить реальное подключение
-        'lastSync': null, // TODO(developer): Получить время последней синхронизации
-      };
+    'enabled': FeatureFlags.calendarSyncEnabled,
+    'googleConnected': false, // TODO(developer): Проверить реальное подключение
+    'outlookConnected': false, // TODO(developer): Проверить реальное подключение
+    'lastSync': null, // TODO(developer): Получить время последней синхронизации
+  };
 }

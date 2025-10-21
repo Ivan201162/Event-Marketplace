@@ -127,17 +127,17 @@ class SearchFilters extends Equatable {
 
   @override
   List<Object?> get props => [
-        query,
-        city,
-        specialization,
-        minRating,
-        minPrice,
-        maxPrice,
-        isAvailable,
-        services,
-        sortBy,
-        sortAscending,
-      ];
+    query,
+    city,
+    specialization,
+    minRating,
+    minPrice,
+    maxPrice,
+    isAvailable,
+    services,
+    sortBy,
+    sortAscending,
+  ];
 
   @override
   String toString() {

@@ -65,10 +65,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка загрузки данных: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка загрузки данных: $e'), backgroundColor: Colors.red),
         );
       }
     }
@@ -79,7 +76,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final bookingsSnapshot = await _firestore
         .collection('bookings')
         .where('specialistId', isEqualTo: specialistId)
-        .where('status', whereIn: ['confirmed', 'pending']).get();
+        .where('status', whereIn: ['confirmed', 'pending'])
+        .get();
 
     _bookedDates = bookingsSnapshot.docs
         .map((doc) {
@@ -92,8 +90,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         .toList();
 
     // Загружаем доступные даты
-    final availabilityDoc =
-        await _firestore.collection('specialist_availability').doc(specialistId).get();
+    final availabilityDoc = await _firestore
+        .collection('specialist_availability')
+        .doc(specialistId)
+        .get();
 
     if (availabilityDoc.exists) {
       final data = availabilityDoc.data()!;
@@ -150,131 +150,107 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) => BackButtonHandler(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(_isSpecialist ? 'Календарь специалиста' : 'Мой календарь'),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => context.pop(),
+    child: Scaffold(
+      appBar: AppBar(
+        title: Text(_isSpecialist ? 'Календарь специалиста' : 'Мой календарь'),
+        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+        actions: [
+          if (_isSpecialist)
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: _editAvailability,
+              tooltip: 'Редактировать доступность',
             ),
-            actions: [
-              if (_isSpecialist)
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: _editAvailability,
-                  tooltip: 'Редактировать доступность',
-                ),
-              IconButton(
-                icon: const Icon(Icons.today),
-                onPressed: () {
-                  setState(() {
-                    _selectedDate = DateTime.now();
-                    _focusedDate = DateTime.now();
-                  });
-                },
-              ),
-            ],
+          IconButton(
+            icon: const Icon(Icons.today),
+            onPressed: () {
+              setState(() {
+                _selectedDate = DateTime.now();
+                _focusedDate = DateTime.now();
+              });
+            },
           ),
-          body: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : Column(
-                  children: [
-                    // Календарь
-                    _buildTableCalendar(),
+        ],
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                // Календарь
+                _buildTableCalendar(),
 
-                    // Легенда
-                    _buildLegend(),
+                // Легенда
+                _buildLegend(),
 
-                    // Список событий на выбранную дату
-                    _buildSelectedDateEvents(),
-                  ],
-                ),
-        ),
-      );
+                // Список событий на выбранную дату
+                _buildSelectedDateEvents(),
+              ],
+            ),
+    ),
+  );
 
   Widget _buildTableCalendar() => TableCalendar<Booking>(
-        firstDay: DateTime.utc(2020),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: _focusedDate,
-        calendarFormat: _calendarFormat,
-        eventLoader: _getEventsForDay,
-        startingDayOfWeek: StartingDayOfWeek.monday,
-        calendarStyle: CalendarStyle(
-          outsideDaysVisible: false,
-          markersMaxCount: 3,
-          markerDecoration: const BoxDecoration(
-            color: Colors.blue,
-            shape: BoxShape.circle,
-          ),
-          selectedDecoration: const BoxDecoration(
-            color: Colors.blue,
-            shape: BoxShape.circle,
-          ),
-          todayDecoration: BoxDecoration(
-            color: Colors.blue.shade100,
-            shape: BoxShape.circle,
-          ),
-          weekendTextStyle: const TextStyle(
-            color: Colors.red,
-          ),
-        ),
-        headerStyle: const HeaderStyle(
-          titleCentered: true,
-          formatButtonShowsNext: false,
-          formatButtonDecoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-          ),
-          formatButtonTextStyle: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        onDaySelected: (selectedDay, focusedDay) {
-          if (!isSameDay(_selectedDate, selectedDay)) {
-            setState(() {
-              _selectedDate = selectedDay;
-              _focusedDate = focusedDay;
-            });
-          }
-        },
-        onFormatChanged: (format) {
-          if (_calendarFormat != format) {
-            setState(() {
-              _calendarFormat = format;
-            });
-          }
-        },
-        onPageChanged: (focusedDay) {
+    firstDay: DateTime.utc(2020),
+    lastDay: DateTime.utc(2030, 12, 31),
+    focusedDay: _focusedDate,
+    calendarFormat: _calendarFormat,
+    eventLoader: _getEventsForDay,
+    startingDayOfWeek: StartingDayOfWeek.monday,
+    calendarStyle: CalendarStyle(
+      outsideDaysVisible: false,
+      markersMaxCount: 3,
+      markerDecoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+      selectedDecoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+      todayDecoration: BoxDecoration(color: Colors.blue.shade100, shape: BoxShape.circle),
+      weekendTextStyle: const TextStyle(color: Colors.red),
+    ),
+    headerStyle: const HeaderStyle(
+      titleCentered: true,
+      formatButtonShowsNext: false,
+      formatButtonDecoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+      ),
+      formatButtonTextStyle: TextStyle(color: Colors.white),
+    ),
+    onDaySelected: (selectedDay, focusedDay) {
+      if (!isSameDay(_selectedDate, selectedDay)) {
+        setState(() {
+          _selectedDate = selectedDay;
           _focusedDate = focusedDay;
-        },
-        selectedDayPredicate: (day) => isSameDay(_selectedDate, day),
-        calendarBuilders: CalendarBuilders(
-          markerBuilder: (context, day, events) {
-            if (_isSpecialist) {
-              if (_bookedDates.any((date) => isSameDay(date, day))) {
-                return Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  child: const Icon(
-                    Icons.event,
-                    color: Colors.red,
-                    size: 16,
-                  ),
-                );
-              } else if (_availableDates.any((date) => isSameDay(date, day))) {
-                return Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  child: const Icon(
-                    Icons.check_circle,
-                    color: Colors.green,
-                    size: 16,
-                  ),
-                );
-              }
-            }
-            return null;
-          },
-        ),
-      );
+        });
+      }
+    },
+    onFormatChanged: (format) {
+      if (_calendarFormat != format) {
+        setState(() {
+          _calendarFormat = format;
+        });
+      }
+    },
+    onPageChanged: (focusedDay) {
+      _focusedDate = focusedDay;
+    },
+    selectedDayPredicate: (day) => isSameDay(_selectedDate, day),
+    calendarBuilders: CalendarBuilders(
+      markerBuilder: (context, day, events) {
+        if (_isSpecialist) {
+          if (_bookedDates.any((date) => isSameDay(date, day))) {
+            return Container(
+              margin: const EdgeInsets.only(top: 5),
+              child: const Icon(Icons.event, color: Colors.red, size: 16),
+            );
+          } else if (_availableDates.any((date) => isSameDay(date, day))) {
+            return Container(
+              margin: const EdgeInsets.only(top: 5),
+              child: const Icon(Icons.check_circle, color: Colors.green, size: 16),
+            );
+          }
+        }
+        return null;
+      },
+    ),
+  );
 
   List<Booking> _getEventsForDay(DateTime day) => _getBookingsForDate(day);
 
@@ -295,16 +271,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   Widget _buildLegendItem(IconData icon, Color color, String label) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 16),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12),
-          ),
-        ],
-      );
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(icon, color: color, size: 16),
+      const SizedBox(width: 4),
+      Text(label, style: const TextStyle(fontSize: 12)),
+    ],
+  );
 
   void _editAvailability() {
     showDialog<void>(
@@ -315,10 +288,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           'Функция редактирования доступности будет добавлена в следующей версии.',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK')),
         ],
       ),
     );
@@ -334,19 +304,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
-        border: Border(
-          top: BorderSide(color: Colors.grey.shade300),
-        ),
+        border: Border(top: BorderSide(color: Colors.grey.shade300)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'События на ${_selectedDate.day}.${_selectedDate.month}.${_selectedDate.year}',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           if (_isSpecialist) ...[
@@ -387,10 +352,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           if (selectedBookings.isEmpty)
             const Expanded(
               child: Center(
-                child: Text(
-                  'На эту дату событий нет',
-                  style: TextStyle(color: Colors.grey),
-                ),
+                child: Text('На эту дату событий нет', style: TextStyle(color: Colors.grey)),
               ),
             )
           else
@@ -420,27 +382,19 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           Text(booking.specialistName ?? 'Специалист'),
                           Text(
                             '${booking.eventDate.hour.toString().padLeft(2, '0')}:${booking.eventDate.minute.toString().padLeft(2, '0')} - ${_getStatusText(booking.status)}',
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 12,
-                            ),
+                            style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                           ),
                         ],
                       ),
                       trailing: Text(
                         '${booking.totalPrice.toInt() ?? 0}₽',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
                       ),
                       onTap: () {
                         // TODO(developer): Показать детали заявки
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Детали заявки в разработке'),
-                          ),
-                        );
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(const SnackBar(content: Text('Детали заявки в разработке')));
                       },
                     ),
                   );

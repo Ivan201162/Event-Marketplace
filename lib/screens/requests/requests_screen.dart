@@ -19,12 +19,7 @@ class RequestsScreen extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
-          children: [
-            _MyRequestsTab(),
-            _IncomingRequestsTab(),
-          ],
-        ),
+        body: const TabBarView(children: [_MyRequestsTab(), _IncomingRequestsTab()]),
       ),
     );
   }
@@ -37,16 +32,13 @@ void _showCancelDialog(BuildContext context, int requestIndex) {
       title: const Text('Отменить заявку'),
       content: const Text('Вы уверены, что хотите отменить эту заявку?'),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Нет'),
-        ),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Нет')),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Заявка $requestIndex отменена')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Заявка $requestIndex отменена')));
           },
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
           child: const Text('Да, отменить'),
@@ -63,16 +55,13 @@ void _showAcceptDialog(BuildContext context, int requestIndex) {
       title: const Text('Принять заявку'),
       content: const Text('Вы хотите принять эту заявку?'),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Заявка $requestIndex принята')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Заявка $requestIndex принята')));
           },
           style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
           child: const Text('Принять'),
@@ -89,16 +78,13 @@ void _showRejectDialog(BuildContext context, int requestIndex) {
       title: const Text('Отклонить заявку'),
       content: const Text('Вы уверены, что хотите отклонить эту заявку?'),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Заявка $requestIndex отклонена')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Заявка $requestIndex отклонена')));
           },
           style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
           child: const Text('Отклонить'),
@@ -126,10 +112,7 @@ class _MyRequestsTab extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 20,
-                      child: Icon(Icons.person),
-                    ),
+                    const CircleAvatar(radius: 20, child: Icon(Icons.person)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -137,25 +120,14 @@ class _MyRequestsTab extends StatelessWidget {
                         children: [
                           Text(
                             'Специалист ${index + 1}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            'Москва',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                            ),
-                          ),
+                          Text('Москва', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                         ],
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.orange.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -174,18 +146,10 @@ class _MyRequestsTab extends StatelessWidget {
                 const SizedBox(height: 12),
                 const Text(
                   'Свадьба 15 июня',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  'Бюджет: 50,000 ₽',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                  ),
-                ),
+                Text('Бюджет: 50,000 ₽', style: TextStyle(color: Colors.grey[600])),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -203,9 +167,7 @@ class _MyRequestsTab extends StatelessWidget {
                         onPressed: () {
                           _showCancelDialog(context, index);
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                        ),
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                         child: const Text('Отменить'),
                       ),
                     ),
@@ -238,10 +200,7 @@ class _IncomingRequestsTab extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 20,
-                      child: Icon(Icons.person),
-                    ),
+                    const CircleAvatar(radius: 20, child: Icon(Icons.person)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -249,25 +208,17 @@ class _IncomingRequestsTab extends StatelessWidget {
                         children: [
                           Text(
                             'Клиент ${index + 1}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
                             'Санкт-Петербург',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                            ),
+                            style: TextStyle(color: Colors.grey[600], fontSize: 12),
                           ),
                         ],
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.blue.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -286,18 +237,10 @@ class _IncomingRequestsTab extends StatelessWidget {
                 const SizedBox(height: 12),
                 const Text(
                   'Корпоратив 20 июня',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  'Бюджет: 30,000 ₽',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                  ),
-                ),
+                Text('Бюджет: 30,000 ₽', style: TextStyle(color: Colors.grey[600])),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -306,9 +249,7 @@ class _IncomingRequestsTab extends StatelessWidget {
                         onPressed: () {
                           _showAcceptDialog(context, index);
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                        ),
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                         child: const Text('Принять'),
                       ),
                     ),

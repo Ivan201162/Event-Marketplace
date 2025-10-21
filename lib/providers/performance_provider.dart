@@ -38,33 +38,23 @@ class PerformanceState {
     int? batteryLevel,
     ConnectionSpeed? connectionSpeed,
     OptimizationLevel? optimizationLevel,
-  }) =>
-      PerformanceState(
-        isLowMemory: isLowMemory ?? this.isLowMemory,
-        isLowBattery: isLowBattery ?? this.isLowBattery,
-        isSlowConnection: isSlowConnection ?? this.isSlowConnection,
-        fps: fps ?? this.fps,
-        memoryUsage: memoryUsage ?? this.memoryUsage,
-        batteryLevel: batteryLevel ?? this.batteryLevel,
-        connectionSpeed: connectionSpeed ?? this.connectionSpeed,
-        optimizationLevel: optimizationLevel ?? this.optimizationLevel,
-      );
+  }) => PerformanceState(
+    isLowMemory: isLowMemory ?? this.isLowMemory,
+    isLowBattery: isLowBattery ?? this.isLowBattery,
+    isSlowConnection: isSlowConnection ?? this.isSlowConnection,
+    fps: fps ?? this.fps,
+    memoryUsage: memoryUsage ?? this.memoryUsage,
+    batteryLevel: batteryLevel ?? this.batteryLevel,
+    connectionSpeed: connectionSpeed ?? this.connectionSpeed,
+    optimizationLevel: optimizationLevel ?? this.optimizationLevel,
+  );
 }
 
 /// Скорость соединения
-enum ConnectionSpeed {
-  slow,
-  medium,
-  fast,
-}
+enum ConnectionSpeed { slow, medium, fast }
 
 /// Уровень оптимизации
-enum OptimizationLevel {
-  low,
-  normal,
-  high,
-  maximum,
-}
+enum OptimizationLevel { low, normal, high, maximum }
 
 /// Нотификатор производительности
 class PerformanceNotifier extends ChangeNotifier {
@@ -110,10 +100,7 @@ class PerformanceNotifier extends ChangeNotifier {
     const isLowMemory = memoryUsage > 80;
 
     if (memoryUsage != _state.memoryUsage || isLowMemory != _state.isLowMemory) {
-      _state = _state.copyWith(
-        memoryUsage: memoryUsage,
-        isLowMemory: isLowMemory,
-      );
+      _state = _state.copyWith(memoryUsage: memoryUsage, isLowMemory: isLowMemory);
       notifyListeners();
     }
   }
@@ -126,10 +113,7 @@ class PerformanceNotifier extends ChangeNotifier {
     const isLowBattery = batteryLevel < 20;
 
     if (batteryLevel != _state.batteryLevel || isLowBattery != _state.isLowBattery) {
-      _state = _state.copyWith(
-        batteryLevel: batteryLevel,
-        isLowBattery: isLowBattery,
-      );
+      _state = _state.copyWith(batteryLevel: batteryLevel, isLowBattery: isLowBattery);
       notifyListeners();
     }
   }
@@ -224,15 +208,11 @@ class PerformanceNotifier extends ChangeNotifier {
     }
 
     if (state.isLowBattery) {
-      recommendations.add(
-        'Низкий заряд батареи: рекомендуется снизить качество изображений',
-      );
+      recommendations.add('Низкий заряд батареи: рекомендуется снизить качество изображений');
     }
 
     if (state.isSlowConnection) {
-      recommendations.add(
-        'Медленное соединение: рекомендуется использовать сжатые изображения',
-      );
+      recommendations.add('Медленное соединение: рекомендуется использовать сжатые изображения');
     }
 
     if (state.fps < 30) {

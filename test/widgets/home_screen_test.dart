@@ -7,13 +7,7 @@ void main() {
   group('HomeScreen', () {
     testWidgets('should display home screen title', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -23,32 +17,17 @@ void main() {
 
     testWidgets('should display welcome message', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
       // Assert
-      expect(
-        find.text('Добро пожаловать в Event Marketplace!'),
-        findsOneWidget,
-      );
+      expect(find.text('Добро пожаловать в Event Marketplace!'), findsOneWidget);
     });
 
     testWidgets('should display featured specialists section', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -58,13 +37,7 @@ void main() {
 
     testWidgets('should display recent bookings section', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -74,13 +47,7 @@ void main() {
 
     testWidgets('should display quick actions section', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -90,13 +57,7 @@ void main() {
 
     testWidgets('should display search button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -106,13 +67,7 @@ void main() {
 
     testWidgets('should display my bookings button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -122,13 +77,7 @@ void main() {
 
     testWidgets('should display calendar button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -138,13 +87,7 @@ void main() {
 
     testWidgets('should display payments button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -154,13 +97,7 @@ void main() {
 
     testWidgets('should display notifications button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -170,13 +107,7 @@ void main() {
 
     testWidgets('should display reviews button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -186,13 +117,7 @@ void main() {
 
     testWidgets('should display analytics button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -202,13 +127,7 @@ void main() {
 
     testWidgets('should display profile button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -218,13 +137,7 @@ void main() {
 
     testWidgets('should display settings button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -234,13 +147,7 @@ void main() {
 
     testWidgets('should display help button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -250,13 +157,7 @@ void main() {
 
     testWidgets('should display about button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -266,13 +167,7 @@ void main() {
 
     testWidgets('should display contact button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -282,13 +177,7 @@ void main() {
 
     testWidgets('should display privacy button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -298,13 +187,7 @@ void main() {
 
     testWidgets('should display terms button', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 
@@ -314,13 +197,7 @@ void main() {
 
     testWidgets('should display version info', (tester) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: HomeScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(const ProviderScope(child: MaterialApp(home: HomeScreen())));
 
       await tester.pumpAndSettle();
 

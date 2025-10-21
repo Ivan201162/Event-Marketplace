@@ -29,9 +29,7 @@ class HomeScreen extends ConsumerWidget {
       body: authState.when(
         data: (user) {
           if (user == null) {
-            return const Center(
-              child: Text('Пользователь не найден'),
-            );
+            return const Center(child: Text('Пользователь не найден'));
           }
 
           return SingleChildScrollView(
@@ -55,7 +53,11 @@ class HomeScreen extends ConsumerWidget {
                 _buildTopSpecialistsSection(context, ref, 'Топ-10 недели по России', true),
                 const SizedBox(height: 24),
                 _buildTopSpecialistsSection(
-                    context, ref, 'Топ-10 недели по городу ${user.city ?? ''}', false),
+                  context,
+                  ref,
+                  'Топ-10 недели по городу ${user.city ?? ''}',
+                  false,
+                ),
                 const SizedBox(height: 24),
 
                 // Quick actions
@@ -64,12 +66,8 @@ class HomeScreen extends ConsumerWidget {
             ),
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        error: (error, stack) => Center(
-          child: Text('Ошибка: $error'),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('Ошибка: $error')),
       ),
     );
   }
@@ -92,30 +90,15 @@ class HomeScreen extends ConsumerWidget {
                 children: [
                   Text(
                     user.name,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   if (user.city != null) ...[
                     const SizedBox(height: 4),
-                    Text(
-                      user.city!,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
+                    Text(user.city!, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
                   ],
                   if (user.status != null) ...[
                     const SizedBox(height: 4),
-                    Text(
-                      user.status!,
-                      style: TextStyle(
-                        color: Colors.blue[600],
-                        fontSize: 14,
-                      ),
-                    ),
+                    Text(user.status!, style: TextStyle(color: Colors.blue[600], fontSize: 14)),
                   ],
                 ],
               ),
@@ -143,10 +126,7 @@ class HomeScreen extends ConsumerWidget {
           children: [
             const Text(
               'Поиск специалистов',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -182,18 +162,13 @@ class HomeScreen extends ConsumerWidget {
       children: [
         const Text(
           'Популярные категории',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         specializationsAsync.when(
           data: (specializations) {
             if (specializations.isEmpty) {
-              return const Center(
-                child: Text('Нет категорий'),
-              );
+              return const Center(child: Text('Нет категорий'));
             }
             return GridView.builder(
               shrinkWrap: true,
@@ -217,25 +192,16 @@ class HomeScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: color.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: color.withOpacity(0.3),
-                      ),
+                      border: Border.all(color: color.withOpacity(0.3)),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          iconData,
-                          size: 36,
-                          color: color,
-                        ),
+                        Icon(iconData, size: 36, color: color),
                         const SizedBox(height: 8),
                         Text(
                           specialization,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -247,12 +213,8 @@ class HomeScreen extends ConsumerWidget {
               },
             );
           },
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          error: (error, stack) => Center(
-            child: Text('Ошибка: $error'),
-          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('Ошибка: $error')),
         ),
       ],
     );
@@ -323,7 +285,11 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _buildTopSpecialistsSection(
-      BuildContext context, WidgetRef ref, String title, bool isCountryWide) {
+    BuildContext context,
+    WidgetRef ref,
+    String title,
+    bool isCountryWide,
+  ) {
     final currentUser = ref.watch(currentUserProvider).value;
     final specialistsAsync = isCountryWide
         ? ref.watch(topSpecialistsRuProvider)
@@ -334,13 +300,7 @@ class HomeScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -354,9 +314,7 @@ class HomeScreen extends ConsumerWidget {
         specialistsAsync.when(
           data: (specialists) {
             if (specialists.isEmpty) {
-              return const Center(
-                child: Text('Нет специалистов'),
-              );
+              return const Center(child: Text('Нет специалистов'));
             }
             return SizedBox(
               height: 200,
@@ -379,12 +337,8 @@ class HomeScreen extends ConsumerWidget {
               ),
             );
           },
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          error: (error, stack) => Center(
-            child: Text('Ошибка: $error'),
-          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('Ошибка: $error')),
         ),
       ],
     );
@@ -394,13 +348,7 @@ class HomeScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Быстрые действия',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        const Text('Быстрые действия', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         Row(
           children: [

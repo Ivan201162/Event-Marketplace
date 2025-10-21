@@ -75,9 +75,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
                     },
                   )
                 : null,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
             fillColor: theme.cardColor,
           ),
@@ -120,45 +118,42 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
   }
 
   Widget _buildQuickSuggestions() => Consumer(
-        builder: (context, ref, child) {
-          final popularCitiesState = ref.watch(popularCitiesProvider);
+    builder: (context, ref, child) {
+      final popularCitiesState = ref.watch(popularCitiesProvider);
 
-          return popularCitiesState.when(
-            data: (cities) => Container(
-              constraints: const BoxConstraints(maxHeight: 200),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Text(
-                      'Популярные города',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                    ),
+      return popularCitiesState.when(
+        data: (cities) => Container(
+          constraints: const BoxConstraints(maxHeight: 200),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  'Популярные города',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: cities.take(5).length,
-                      itemBuilder: (context, index) {
-                        final city = cities[index];
-                        return _buildCityTile(city);
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-            loading: () => const SizedBox.shrink(),
-            error: (error, stack) => const SizedBox.shrink(),
-          );
-        },
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: cities.take(5).length,
+                  itemBuilder: (context, index) {
+                    final city = cities[index];
+                    return _buildCityTile(city);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        loading: () => const SizedBox.shrink(),
+        error: (error, stack) => const SizedBox.shrink(),
       );
+    },
+  );
 
   Widget _buildSearchSuggestions(List<CityRegion> cities) {
     if (cities.isEmpty) {
@@ -201,39 +196,25 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-        child: Text(
-          city.citySize.icon,
-          style: const TextStyle(fontSize: 16),
-        ),
+        child: Text(city.citySize.icon, style: const TextStyle(fontSize: 16)),
       ),
-      title: Text(
-        city.cityName,
-        style: theme.textTheme.titleMedium,
-      ),
+      title: Text(city.cityName, style: theme.textTheme.titleMedium),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             city.regionName,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
+            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
           if (city.population > 0)
             Text(
               '${_formatPopulation(city.population)} жителей',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
         ],
       ),
       trailing: city.isCapital
-          ? Icon(
-              Icons.star,
-              color: theme.colorScheme.primary,
-              size: 20,
-            )
+          ? Icon(Icons.star, color: theme.colorScheme.primary, size: 20)
           : null,
       onTap: () {
         widget.onCitySelected?.call(city);

@@ -35,47 +35,41 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        appBar: AppBar(title: const Text('Управление релизами')),
-        body: Column(
-          children: [
-            // Вкладки
-            _buildTabs(),
+    appBar: AppBar(title: const Text('Управление релизами')),
+    body: Column(
+      children: [
+        // Вкладки
+        _buildTabs(),
 
-            // Поиск и фильтры
-            _buildSearchAndFilters(),
+        // Поиск и фильтры
+        _buildSearchAndFilters(),
 
-            // Анализ
-            _buildAnalysis(),
+        // Анализ
+        _buildAnalysis(),
 
-            // Контент
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : _selectedTab == 'releases'
-                      ? _buildReleasesTab()
-                      : _selectedTab == 'plans'
-                          ? _buildPlansTab()
-                          : _buildDeploymentsTab(),
-            ),
-          ],
+        // Контент
+        Expanded(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _selectedTab == 'releases'
+              ? _buildReleasesTab()
+              : _selectedTab == 'plans'
+              ? _buildPlansTab()
+              : _buildDeploymentsTab(),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildTabs() => ResponsiveCard(
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildTabButton('releases', 'Релизы', Icons.rocket_launch),
-            ),
-            Expanded(
-              child: _buildTabButton('plans', 'Планы', Icons.assignment),
-            ),
-            Expanded(
-              child: _buildTabButton('deployments', 'Деплои', Icons.cloud_upload),
-            ),
-          ],
-        ),
-      );
+    child: Row(
+      children: [
+        Expanded(child: _buildTabButton('releases', 'Релизы', Icons.rocket_launch)),
+        Expanded(child: _buildTabButton('plans', 'Планы', Icons.assignment)),
+        Expanded(child: _buildTabButton('deployments', 'Деплои', Icons.cloud_upload)),
+      ],
+    ),
+  );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -90,17 +84,11 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              color: isSelected ? Colors.blue : Colors.grey,
-              size: 24,
-            ),
+            Icon(icon, color: isSelected ? Colors.blue : Colors.grey, size: 24),
             const SizedBox(height: 8),
             Text(
               title,
@@ -116,91 +104,84 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
   }
 
   Widget _buildSearchAndFilters() => ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Поиск и фильтры',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Поиск и фильтры', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 16),
 
-            // Поиск
-            TextField(
-              decoration: const InputDecoration(
-                hintText: 'Поиск по версии, названию или описанию...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
+        // Поиск
+        TextField(
+          decoration: const InputDecoration(
+            hintText: 'Поиск по версии, названию или описанию...',
+            prefixIcon: Icon(Icons.search),
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) {
+            setState(() {
+              _searchQuery = value;
+            });
+          },
+        ),
+
+        const SizedBox(height: 16),
+
+        // Фильтры
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            // Фильтр по типу
+            DropdownButton<ReleaseType?>(
+              value: _selectedType,
+              hint: const Text('Все типы'),
+              items: [
+                const DropdownMenuItem<ReleaseType?>(child: Text('Все типы')),
+                ...ReleaseType.values.map(
+                  (type) => DropdownMenuItem<ReleaseType?>(
+                    value: type,
+                    child: Text('${type.icon} ${type.displayName}'),
+                  ),
+                ),
+              ],
               onChanged: (value) {
                 setState(() {
-                  _searchQuery = value;
+                  _selectedType = value;
                 });
               },
             ),
 
-            const SizedBox(height: 16),
-
-            // Фильтры
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                // Фильтр по типу
-                DropdownButton<ReleaseType?>(
-                  value: _selectedType,
-                  hint: const Text('Все типы'),
-                  items: [
-                    const DropdownMenuItem<ReleaseType?>(
-                      child: Text('Все типы'),
-                    ),
-                    ...ReleaseType.values.map(
-                      (type) => DropdownMenuItem<ReleaseType?>(
-                        value: type,
-                        child: Text('${type.icon} ${type.displayName}'),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedType = value;
-                    });
-                  },
-                ),
-
-                // Фильтр по статусу
-                DropdownButton<ReleaseStatus?>(
-                  value: _selectedStatus,
-                  hint: const Text('Все статусы'),
-                  items: [
-                    const DropdownMenuItem<ReleaseStatus?>(
-                      child: Text('Все статусы'),
-                    ),
-                    ...ReleaseStatus.values.map(
-                      (status) => DropdownMenuItem<ReleaseStatus?>(
-                        value: status,
-                        child: Text('${status.icon} ${status.displayName}'),
-                      ),
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedStatus = value;
-                    });
-                  },
-                ),
-
-                // Кнопка сброса фильтров
-                ElevatedButton.icon(
-                  onPressed: _resetFilters,
-                  icon: const Icon(Icons.clear),
-                  label: const Text('Сбросить'),
+            // Фильтр по статусу
+            DropdownButton<ReleaseStatus?>(
+              value: _selectedStatus,
+              hint: const Text('Все статусы'),
+              items: [
+                const DropdownMenuItem<ReleaseStatus?>(child: Text('Все статусы')),
+                ...ReleaseStatus.values.map(
+                  (status) => DropdownMenuItem<ReleaseStatus?>(
+                    value: status,
+                    child: Text('${status.icon} ${status.displayName}'),
+                  ),
                 ),
               ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedStatus = value;
+                });
+              },
+            ),
+
+            // Кнопка сброса фильтров
+            ElevatedButton.icon(
+              onPressed: _resetFilters,
+              icon: const Icon(Icons.clear),
+              label: const Text('Сбросить'),
             ),
           ],
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildAnalysis() {
     if (_analysis.isEmpty) return const SizedBox.shrink();
@@ -209,10 +190,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Анализ релизов',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('Анализ релизов', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -258,81 +236,64 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
     );
   }
 
-  Widget _buildAnalysisCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) =>
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color),
+  Widget _buildAnalysisCard(String title, String value, IconData icon, Color color) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: color),
+    ),
+    child: Column(
+      children: [
+        Icon(icon, color: color, size: 32),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
         ),
-        child: Column(
+        const SizedBox(height: 4),
+        Text(title, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+      ],
+    ),
+  );
+
+  Widget _buildReleasesTab() => Column(
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
           children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+            Text('Релизы', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _showCreateReleaseDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать'),
             ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 12),
-              textAlign: TextAlign.center,
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
           ],
         ),
-      );
+      ),
 
-  Widget _buildReleasesTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'Релизы',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _showCreateReleaseDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Создать'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
-            ),
-          ),
-
-          // Список релизов
-          Expanded(
-            child: _getFilteredReleases().isEmpty
-                ? const Center(child: Text('Релизы не найдены'))
-                : ListView.builder(
-                    itemCount: _getFilteredReleases().length,
-                    itemBuilder: (context, index) {
-                      final release = _getFilteredReleases()[index];
-                      return _buildReleaseCard(release);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список релизов
+      Expanded(
+        child: _getFilteredReleases().isEmpty
+            ? const Center(child: Text('Релизы не найдены'))
+            : ListView.builder(
+                itemCount: _getFilteredReleases().length,
+                itemBuilder: (context, index) {
+                  final release = _getFilteredReleases()[index];
+                  return _buildReleaseCard(release);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildReleaseCard(Release release) {
     final typeColor = _getTypeColor(release.type);
@@ -345,10 +306,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
           // Заголовок
           Row(
             children: [
-              Text(
-                release.type.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
+              Text(release.type.icon, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -356,17 +314,11 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                   children: [
                     Text(
                       release.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Text(
                       'v${release.version}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'monospace',
-                      ),
+                      style: const TextStyle(fontSize: 14, fontFamily: 'monospace'),
                     ),
                     if (release.description != null)
                       Text(
@@ -387,11 +339,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                 ),
                 child: Text(
                   release.type.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: typeColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: typeColor, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 8),
@@ -404,11 +352,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                 ),
                 child: Text(
                   release.status.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: statusColor, fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -416,32 +360,20 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Редактировать'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
                   ),
                   if (release.status == ReleaseStatus.draft)
                     const PopupMenuItem(
                       value: 'publish',
-                      child: ListTile(
-                        leading: Icon(Icons.publish),
-                        title: Text('Опубликовать'),
-                      ),
+                      child: ListTile(leading: Icon(Icons.publish), title: Text('Опубликовать')),
                     ),
                   const PopupMenuItem(
                     value: 'deploy',
-                    child: ListTile(
-                      leading: Icon(Icons.cloud_upload),
-                      title: Text('Деплой'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.cloud_upload), title: Text('Деплой')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -455,25 +387,13 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
           Row(
             children: [
               if (release.features.isNotEmpty)
-                _buildInfoChip(
-                  'Функции',
-                  '${release.features.length}',
-                  Colors.blue,
-                ),
+                _buildInfoChip('Функции', '${release.features.length}', Colors.blue),
               const SizedBox(width: 8),
               if (release.bugFixes.isNotEmpty)
-                _buildInfoChip(
-                  'Исправления',
-                  '${release.bugFixes.length}',
-                  Colors.green,
-                ),
+                _buildInfoChip('Исправления', '${release.bugFixes.length}', Colors.green),
               const SizedBox(width: 8),
               if (release.breakingChanges.isNotEmpty)
-                _buildInfoChip(
-                  'Breaking',
-                  '${release.breakingChanges.length}',
-                  Colors.red,
-                ),
+                _buildInfoChip('Breaking', '${release.breakingChanges.length}', Colors.red),
             ],
           ),
 
@@ -487,18 +407,12 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
               children: release.tags
                   .map(
                     (tag) => Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Text(
-                        tag,
-                        style: const TextStyle(fontSize: 10),
-                      ),
+                      child: Text(tag, style: const TextStyle(fontSize: 10)),
                     ),
                   )
                   .toList(),
@@ -532,45 +446,42 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
   }
 
   Widget _buildPlansTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'Планы релизов',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _showCreatePlanDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Создать'),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
+          children: [
+            Text('Планы релизов', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _showCreatePlanDialog,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать'),
             ),
-          ),
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
+            ),
+          ],
+        ),
+      ),
 
-          // Список планов
-          Expanded(
-            child: _plans.isEmpty
-                ? const Center(child: Text('Планы не найдены'))
-                : ListView.builder(
-                    itemCount: _plans.length,
-                    itemBuilder: (context, index) {
-                      final plan = _plans[index];
-                      return _buildPlanCard(plan);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список планов
+      Expanded(
+        child: _plans.isEmpty
+            ? const Center(child: Text('Планы не найдены'))
+            : ListView.builder(
+                itemCount: _plans.length,
+                itemBuilder: (context, index) {
+                  final plan = _plans[index];
+                  return _buildPlanCard(plan);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildPlanCard(ReleasePlan plan) {
     final typeColor = _getTypeColor(plan.type);
@@ -583,10 +494,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
           // Заголовок
           Row(
             children: [
-              Text(
-                plan.type.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
+              Text(plan.type.icon, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -594,17 +502,11 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                   children: [
                     Text(
                       plan.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Text(
                       'v${plan.version}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontFamily: 'monospace',
-                      ),
+                      style: const TextStyle(fontSize: 14, fontFamily: 'monospace'),
                     ),
                     Text(
                       plan.description,
@@ -624,11 +526,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                 ),
                 child: Text(
                   plan.type.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: typeColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: typeColor, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 8),
@@ -641,11 +539,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                 ),
                 child: Text(
                   plan.status.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: statusColor, fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -653,17 +547,11 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Редактировать'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -676,17 +564,9 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
           // Метаданные
           Row(
             children: [
-              _buildInfoChip(
-                'Релизы',
-                '${plan.releaseIds.length}',
-                Colors.blue,
-              ),
+              _buildInfoChip('Релизы', '${plan.releaseIds.length}', Colors.blue),
               const SizedBox(width: 8),
-              _buildInfoChip(
-                'Этапы',
-                '${plan.milestones.length}',
-                Colors.green,
-              ),
+              _buildInfoChip('Этапы', '${plan.milestones.length}', Colors.green),
             ],
           ),
 
@@ -718,39 +598,36 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
   }
 
   Widget _buildDeploymentsTab() => Column(
-        children: [
-          // Заголовок
-          ResponsiveCard(
-            child: Row(
-              children: [
-                Text(
-                  'Деплои',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _loadData,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Обновить'),
-                ),
-              ],
+    children: [
+      // Заголовок
+      ResponsiveCard(
+        child: Row(
+          children: [
+            Text('Деплои', style: Theme.of(context).textTheme.titleMedium),
+            const Spacer(),
+            ElevatedButton.icon(
+              onPressed: _loadData,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Обновить'),
             ),
-          ),
+          ],
+        ),
+      ),
 
-          // Список деплоев
-          Expanded(
-            child: _deployments.isEmpty
-                ? const Center(child: Text('Деплои не найдены'))
-                : ListView.builder(
-                    itemCount: _deployments.length,
-                    itemBuilder: (context, index) {
-                      final deployment = _deployments[index];
-                      return _buildDeploymentCard(deployment);
-                    },
-                  ),
-          ),
-        ],
-      );
+      // Список деплоев
+      Expanded(
+        child: _deployments.isEmpty
+            ? const Center(child: Text('Деплои не найдены'))
+            : ListView.builder(
+                itemCount: _deployments.length,
+                itemBuilder: (context, index) {
+                  final deployment = _deployments[index];
+                  return _buildDeploymentCard(deployment);
+                },
+              ),
+      ),
+    ],
+  );
 
   Widget _buildDeploymentCard(Deployment deployment) {
     final statusColor = _getDeploymentStatusColor(deployment.status);
@@ -763,10 +640,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
           // Заголовок
           Row(
             children: [
-              Text(
-                deployment.status.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
+              Text(deployment.status.icon, style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -774,10 +648,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                   children: [
                     Text(
                       deployment.environment,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     if (release != null)
                       Text(
@@ -796,11 +667,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                 ),
                 child: Text(
                   deployment.status.displayName,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: statusColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 12, color: statusColor, fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -808,18 +675,12 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
-                    ),
+                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
                   ),
                   if (deployment.status == DeploymentStatus.pending)
                     const PopupMenuItem(
                       value: 'start',
-                      child: ListTile(
-                        leading: Icon(Icons.play_arrow),
-                        title: Text('Запустить'),
-                      ),
+                      child: ListTile(leading: Icon(Icons.play_arrow), title: Text('Запустить')),
                     ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -835,17 +696,9 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
               _buildInfoChip('Логи', '${deployment.logs.length}', Colors.blue),
               const SizedBox(width: 8),
               if (deployment.startedAt != null)
-                _buildInfoChip(
-                  'Начат',
-                  _formatDateTime(deployment.startedAt!),
-                  Colors.green,
-                ),
+                _buildInfoChip('Начат', _formatDateTime(deployment.startedAt!), Colors.green),
               if (deployment.completedAt != null)
-                _buildInfoChip(
-                  'Завершен',
-                  _formatDateTime(deployment.completedAt!),
-                  Colors.orange,
-                ),
+                _buildInfoChip('Завершен', _formatDateTime(deployment.completedAt!), Colors.orange),
             ],
           ),
 
@@ -868,21 +721,17 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
   }
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color),
-        ),
-        child: Text(
-          '$label: $value',
-          style: TextStyle(
-            fontSize: 12,
-            color: color,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color),
+    ),
+    child: Text(
+      '$label: $value',
+      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+    ),
+  );
 
   Color _getTypeColor(ReleaseType type) {
     switch (type) {
@@ -1002,10 +851,7 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
       _analysis = await _releaseService.analyzeReleases();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка загрузки данных: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка загрузки данных: $e'), backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -1098,19 +944,15 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
 
   void _viewRelease(Release release) {
     // TODO(developer): Реализовать просмотр релиза
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Просмотр релиза "${release.name}" будет реализован'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Просмотр релиза "${release.name}" будет реализован')));
   }
 
   void _editRelease(Release release) {
     // TODO(developer): Реализовать редактирование релиза
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Редактирование релиза "${release.name}" будет реализовано'),
-      ),
+      SnackBar(content: Text('Редактирование релиза "${release.name}" будет реализовано')),
     );
   }
 
@@ -1130,20 +972,14 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
       _loadData();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка публикации релиза: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка публикации релиза: $e'), backgroundColor: Colors.red),
       );
     }
   }
 
   Future<void> _deployRelease(Release release) async {
     try {
-      await _releaseService.createDeployment(
-        releaseId: release.id,
-        environment: 'production',
-      );
+      await _releaseService.createDeployment(releaseId: release.id, environment: 'production');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Деплой релиза "${release.name}" создан'),
@@ -1153,76 +989,57 @@ class _ReleaseManagementScreenState extends ConsumerState<ReleaseManagementScree
       _loadData();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка создания деплоя: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка создания деплоя: $e'), backgroundColor: Colors.red),
       );
     }
   }
 
   void _viewPlan(ReleasePlan plan) {
     // TODO(developer): Реализовать просмотр плана
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Просмотр плана "${plan.name}" будет реализован'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Просмотр плана "${plan.name}" будет реализован')));
   }
 
   void _editPlan(ReleasePlan plan) {
     // TODO(developer): Реализовать редактирование плана
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Редактирование плана "${plan.name}" будет реализовано'),
-      ),
+      SnackBar(content: Text('Редактирование плана "${plan.name}" будет реализовано')),
     );
   }
 
   void _viewDeployment(Deployment deployment) {
     // TODO(developer): Реализовать просмотр деплоя
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Просмотр деплоя будет реализован'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Просмотр деплоя будет реализован')));
   }
 
   Future<void> _startDeployment(Deployment deployment) async {
     try {
       await _releaseService.startDeployment(deployment.id);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Деплой запущен'),
-          backgroundColor: Colors.green,
-        ),
+        const SnackBar(content: Text('Деплой запущен'), backgroundColor: Colors.green),
       );
       _loadData();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка запуска деплоя: $e'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text('Ошибка запуска деплоя: $e'), backgroundColor: Colors.red),
       );
     }
   }
 
   void _showCreateReleaseDialog() {
     // TODO(developer): Реализовать диалог создания релиза
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Создание релиза будет реализовано'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Создание релиза будет реализовано')));
   }
 
   void _showCreatePlanDialog() {
     // TODO(developer): Реализовать диалог создания плана
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Создание плана будет реализовано'),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Создание плана будет реализовано')));
   }
 }

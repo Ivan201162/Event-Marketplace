@@ -8,11 +8,7 @@ import '../services/availability_service.dart';
 class SpecialistAvailabilityWidget extends ConsumerStatefulWidget {
   // Является ли текущий пользователь владельцем профиля
 
-  const SpecialistAvailabilityWidget({
-    super.key,
-    required this.specialistId,
-    this.isOwner = false,
-  });
+  const SpecialistAvailabilityWidget({super.key, required this.specialistId, this.isOwner = false});
   final String specialistId;
   final bool isOwner;
 
@@ -61,121 +57,118 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
 
   @override
   Widget build(BuildContext context) => Card(
-        margin: const EdgeInsets.all(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    margin: const EdgeInsets.all(16),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Заголовок
+          Row(
             children: [
-              // Заголовок
-              Row(
-                children: [
-                  const Icon(Icons.calendar_today),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Календарь доступности',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const Spacer(),
-                  if (widget.isOwner)
-                    IconButton(
-                      icon: const Icon(Icons.settings),
-                      onPressed: _openCalendarSettings,
-                      tooltip: 'Настройки календаря',
-                    ),
-                ],
+              const Icon(Icons.calendar_today),
+              const SizedBox(width: 8),
+              const Text(
+                'Календарь доступности',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-
-              const SizedBox(height: 16),
-
-              // Календарь
-              if (_isLoading)
-                const Center(child: CircularProgressIndicator())
-              else
-                _buildCompactCalendar(),
+              const Spacer(),
+              if (widget.isOwner)
+                IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: _openCalendarSettings,
+                  tooltip: 'Настройки календаря',
+                ),
             ],
           ),
-        ),
-      );
+
+          const SizedBox(height: 16),
+
+          // Календарь
+          if (_isLoading)
+            const Center(child: CircularProgressIndicator())
+          else
+            _buildCompactCalendar(),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildCompactCalendar() => TableCalendar<AvailabilityCalendar>(
-        firstDay: DateTime.utc(2020),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: _focusedDay,
-        eventLoader: _getEventsForDay,
-        startingDayOfWeek: StartingDayOfWeek.monday,
-        calendarStyle: const CalendarStyle(
-          outsideDaysVisible: false,
-          markersMaxCount: 1,
-          markerDecoration: BoxDecoration(
-            color: Colors.red,
+    firstDay: DateTime.utc(2020),
+    lastDay: DateTime.utc(2030, 12, 31),
+    focusedDay: _focusedDay,
+    eventLoader: _getEventsForDay,
+    startingDayOfWeek: StartingDayOfWeek.monday,
+    calendarStyle: const CalendarStyle(
+      outsideDaysVisible: false,
+      markersMaxCount: 1,
+      markerDecoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+      cellMargin: EdgeInsets.all(2),
+      cellPadding: EdgeInsets.all(4),
+    ),
+    headerStyle: const HeaderStyle(
+      formatButtonVisible: false,
+      titleCentered: true,
+      leftChevronIcon: Icon(Icons.chevron_left, size: 20),
+      rightChevronIcon: Icon(Icons.chevron_right, size: 20),
+      titleTextStyle: TextStyle(fontSize: 16),
+    ),
+    onDaySelected: (selectedDay, focusedDay) {
+      setState(() {
+        _focusedDay = focusedDay;
+      });
+      _showDayDetails(selectedDay);
+    },
+    onPageChanged: (focusedDay) {
+      setState(() {
+        _focusedDay = focusedDay;
+      });
+      _loadAvailabilityData();
+    },
+    calendarBuilders: CalendarBuilders(
+      markerBuilder: (context, day, events) {
+        if (events.isEmpty) {
+          return null;
+        }
+
+        final availability = events.first;
+        return Container(
+          margin: const EdgeInsets.all(1),
+          decoration: BoxDecoration(
+            color: availability.isAvailable ? Colors.green : Colors.red,
             shape: BoxShape.circle,
           ),
-          cellMargin: EdgeInsets.all(2),
-          cellPadding: EdgeInsets.all(4),
-        ),
-        headerStyle: const HeaderStyle(
-          formatButtonVisible: false,
-          titleCentered: true,
-          leftChevronIcon: Icon(Icons.chevron_left, size: 20),
-          rightChevronIcon: Icon(Icons.chevron_right, size: 20),
-          titleTextStyle: TextStyle(fontSize: 16),
-        ),
-        onDaySelected: (selectedDay, focusedDay) {
-          setState(() {
-            _focusedDay = focusedDay;
-          });
-          _showDayDetails(selectedDay);
-        },
-        onPageChanged: (focusedDay) {
-          setState(() {
-            _focusedDay = focusedDay;
-          });
-          _loadAvailabilityData();
-        },
-        calendarBuilders: CalendarBuilders(
-          markerBuilder: (context, day, events) {
-            if (events.isEmpty) {
-              return null;
-            }
+          width: 6,
+          height: 6,
+        );
+      },
+      todayBuilder: (context, day, focusedDay) {
+        final isToday = isSameDay(day, DateTime.now());
+        if (!isToday) {
+          return null;
+        }
 
-            final availability = events.first;
-            return Container(
-              margin: const EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: availability.isAvailable ? Colors.green : Colors.red,
-                shape: BoxShape.circle,
+        return Container(
+          margin: const EdgeInsets.all(2),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              '${day.day}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
               ),
-              width: 6,
-              height: 6,
-            );
-          },
-          todayBuilder: (context, day, focusedDay) {
-            final isToday = isSameDay(day, DateTime.now());
-            if (!isToday) {
-              return null;
-            }
-
-            return Container(
-              margin: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  '${day.day}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      );
+            ),
+          ),
+        );
+      },
+    ),
+  );
 
   List<AvailabilityCalendar> _getEventsForDay(DateTime day) =>
       _availabilityData.where((availability) {
@@ -230,10 +223,7 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
               ],
               if (availability.timeSlots.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                const Text(
-                  'Временные слоты:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                const Text('Временные слоты:', style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 ...availability.timeSlots.map(_buildTimeSlotInfo),
               ],
@@ -241,10 +231,7 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
           if (widget.isOwner) ...[
             if (availability == null)
               ElevatedButton(
@@ -277,37 +264,32 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
   }
 
   Widget _buildTimeSlotInfo(TimeSlot slot) => Container(
-        margin: const EdgeInsets.only(bottom: 4),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: slot.isAvailable ? Colors.green.shade50 : Colors.red.shade50,
-          border: Border.all(
-            color: slot.isAvailable ? Colors.green : Colors.red,
-          ),
-          borderRadius: BorderRadius.circular(4),
+    margin: const EdgeInsets.only(bottom: 4),
+    padding: const EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      color: slot.isAvailable ? Colors.green.shade50 : Colors.red.shade50,
+      border: Border.all(color: slot.isAvailable ? Colors.green : Colors.red),
+      borderRadius: BorderRadius.circular(4),
+    ),
+    child: Row(
+      children: [
+        Icon(
+          slot.isAvailable ? Icons.check_circle : Icons.block,
+          color: slot.isAvailable ? Colors.green : Colors.red,
+          size: 16,
         ),
-        child: Row(
-          children: [
-            Icon(
-              slot.isAvailable ? Icons.check_circle : Icons.block,
-              color: slot.isAvailable ? Colors.green : Colors.red,
-              size: 16,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '${_formatTime(slot.startTime)} - ${_formatTime(slot.endTime)}',
-              style: const TextStyle(fontSize: 12),
-            ),
-            if (slot.note != null) ...[
-              const Spacer(),
-              Text(
-                slot.note!,
-                style: const TextStyle(color: Colors.grey, fontSize: 10),
-              ),
-            ],
-          ],
+        const SizedBox(width: 8),
+        Text(
+          '${_formatTime(slot.startTime)} - ${_formatTime(slot.endTime)}',
+          style: const TextStyle(fontSize: 12),
         ),
-      );
+        if (slot.note != null) ...[
+          const Spacer(),
+          Text(slot.note!, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+        ],
+      ],
+    ),
+  );
 
   void _openCalendarSettings() {
     Navigator.push(
@@ -315,9 +297,7 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
       MaterialPageRoute<void>(
         builder: (context) => Scaffold(
           appBar: AppBar(title: const Text('Календарь доступности')),
-          body: const Center(
-            child: Text('Календарь доступности в разработке'),
-          ),
+          body: const Center(child: Text('Календарь доступности в разработке')),
         ),
       ),
     );
@@ -326,46 +306,39 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
   Future<void> _markDayAsBusy(DateTime date) async {
     final note = await _showNoteDialog('Добавить примечание (необязательно)');
 
-    final success = await _availabilityService.addBusyDate(
-      widget.specialistId,
-      date,
-      note: note,
-    );
+    final success = await _availabilityService.addBusyDate(widget.specialistId, date, note: note);
 
     if (success) {
       await _loadAvailabilityData();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Дата заблокирована')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Дата заблокирована')));
       }
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка блокировки даты')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка блокировки даты')));
       }
     }
   }
 
   Future<void> _unmarkDayAsBusy(DateTime date) async {
-    final success = await _availabilityService.removeBusyDate(
-      widget.specialistId,
-      date,
-    );
+    final success = await _availabilityService.removeBusyDate(widget.specialistId, date);
 
     if (success) {
       await _loadAvailabilityData();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Дата освобождена')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Дата освобождена')));
       }
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка освобождения даты')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка освобождения даты')));
       }
     }
   }
@@ -386,10 +359,7 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
           maxLines: 3,
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('Добавить'),

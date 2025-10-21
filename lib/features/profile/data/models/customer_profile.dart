@@ -46,13 +46,13 @@ class CustomerProfile {
       contacts: safeData['contacts'] != null ? Map<String, String>.from(safeData['contacts']) : {},
       createdAt: safeData['createdAt'] != null
           ? (safeData['createdAt'] is Timestamp
-              ? (safeData['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(safeData['createdAt'].toString()))
+                ? (safeData['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(safeData['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: safeData['updatedAt'] != null
           ? (safeData['updatedAt'] is Timestamp
-              ? (safeData['updatedAt'] as Timestamp).toDate()
-              : DateTime.parse(safeData['updatedAt'].toString()))
+                ? (safeData['updatedAt'] as Timestamp).toDate()
+                : DateTime.parse(safeData['updatedAt'].toString()))
           : DateTime.now(),
     );
   }
@@ -70,18 +70,18 @@ class CustomerProfile {
   final DateTime updatedAt;
 
   Map<String, dynamic> toFirestore() => {
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'bio': bio,
-        'location': location,
-        'companyName': companyName,
-        'website': website,
-        'avatarUrl': avatarUrl,
-        'contacts': contacts,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'name': name,
+    'email': email,
+    'phone': phone,
+    'bio': bio,
+    'location': location,
+    'companyName': companyName,
+    'website': website,
+    'avatarUrl': avatarUrl,
+    'contacts': contacts,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   CustomerProfile copyWith({
     String? id,
@@ -96,21 +96,20 @@ class CustomerProfile {
     Map<String, String>? contacts,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      CustomerProfile(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        email: email ?? this.email,
-        phone: phone ?? this.phone,
-        bio: bio ?? this.bio,
-        location: location ?? this.location,
-        companyName: companyName ?? this.companyName,
-        website: website ?? this.website,
-        avatarUrl: avatarUrl ?? this.avatarUrl,
-        contacts: contacts ?? this.contacts,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => CustomerProfile(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    email: email ?? this.email,
+    phone: phone ?? this.phone,
+    bio: bio ?? this.bio,
+    location: location ?? this.location,
+    companyName: companyName ?? this.companyName,
+    website: website ?? this.website,
+    avatarUrl: avatarUrl ?? this.avatarUrl,
+    contacts: contacts ?? this.contacts,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 }
 
 /// Форма для редактирования профиля заказчика
@@ -128,16 +127,16 @@ class CustomerProfileForm {
   });
 
   factory CustomerProfileForm.fromProfile(CustomerProfile profile) => CustomerProfileForm(
-        name: profile.name,
-        email: profile.email,
-        phone: profile.phone,
-        bio: profile.bio,
-        location: profile.location,
-        companyName: profile.companyName,
-        website: profile.website,
-        avatarUrl: profile.avatarUrl,
-        contacts: profile.contacts,
-      );
+    name: profile.name,
+    email: profile.email,
+    phone: profile.phone,
+    bio: profile.bio,
+    location: profile.location,
+    companyName: profile.companyName,
+    website: profile.website,
+    avatarUrl: profile.avatarUrl,
+    contacts: profile.contacts,
+  );
   final String name;
   final String email;
   final String? phone;
@@ -149,19 +148,19 @@ class CustomerProfileForm {
   final Map<String, String> contacts;
 
   CustomerProfile toProfile(String id) => CustomerProfile(
-        id: id,
-        name: name,
-        email: email,
-        phone: phone,
-        bio: bio,
-        location: location,
-        companyName: companyName,
-        website: website,
-        avatarUrl: avatarUrl,
-        contacts: contacts,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+    id: id,
+    name: name,
+    email: email,
+    phone: phone,
+    bio: bio,
+    location: location,
+    companyName: companyName,
+    website: website,
+    avatarUrl: avatarUrl,
+    contacts: contacts,
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 
   CustomerProfileForm copyWith({
     String? name,
@@ -173,16 +172,15 @@ class CustomerProfileForm {
     String? website,
     String? avatarUrl,
     Map<String, String>? contacts,
-  }) =>
-      CustomerProfileForm(
-        name: name ?? this.name,
-        email: email ?? this.email,
-        phone: phone ?? this.phone,
-        bio: bio ?? this.bio,
-        location: location ?? this.location,
-        companyName: companyName ?? this.companyName,
-        website: website ?? this.website,
-        avatarUrl: avatarUrl ?? this.avatarUrl,
-        contacts: contacts ?? this.contacts,
-      );
+  }) => CustomerProfileForm(
+    name: name ?? this.name,
+    email: email ?? this.email,
+    phone: phone ?? this.phone,
+    bio: bio ?? this.bio,
+    location: location ?? this.location,
+    companyName: companyName ?? this.companyName,
+    website: website ?? this.website,
+    avatarUrl: avatarUrl ?? this.avatarUrl,
+    contacts: contacts ?? this.contacts,
+  );
 }

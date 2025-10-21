@@ -10,10 +10,7 @@ import '../widgets/faq_item_widget.dart';
 
 /// Экран управления FAQ специалиста
 class SpecialistFAQScreen extends ConsumerStatefulWidget {
-  const SpecialistFAQScreen({
-    super.key,
-    required this.specialistId,
-  });
+  const SpecialistFAQScreen({super.key, required this.specialistId});
   final String specialistId;
 
   @override
@@ -56,14 +53,8 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: _showSearchDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
+          IconButton(icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
         ],
       ),
       body: Column(
@@ -79,11 +70,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [
-                _buildAllFAQTab(faqAsync),
-                _buildPublishedFAQTab(),
-                _buildCategoriesTab(),
-              ],
+              children: [_buildAllFAQTab(faqAsync), _buildPublishedFAQTab(), _buildCategoriesTab()],
             ),
           ),
         ],
@@ -96,84 +83,66 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   }
 
   Widget _buildStatsCard(SpecialistProfileStats stats) => Card(
-        margin: const EdgeInsets.all(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatItem(
-                'Всего вопросов',
-                stats.totalFAQItems,
-                Icons.help_outline,
-              ),
-              _buildStatItem(
-                'Опубликованных',
-                stats.publishedFAQItems,
-                Icons.public,
-              ),
-              _buildStatItem(
-                'Категорий',
-                _getCategoriesCount(),
-                Icons.category,
-              ),
-            ],
-          ),
-        ),
-      );
+    margin: const EdgeInsets.all(8),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildStatItem('Всего вопросов', stats.totalFAQItems, Icons.help_outline),
+          _buildStatItem('Опубликованных', stats.publishedFAQItems, Icons.public),
+          _buildStatItem('Категорий', _getCategoriesCount(), Icons.category),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildStatItem(String label, int value, IconData icon) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 24),
-          const SizedBox(height: 4),
-          Text(
-            value.toString(),
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
-          ),
-        ],
-      );
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(icon, size: 24),
+      const SizedBox(height: 4),
+      Text(value.toString(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+    ],
+  );
 
   Widget _buildAllFAQTab(AsyncValue<List<FAQItem>> faqAsync) => faqAsync.when(
-        data: (faqItems) {
-          if (faqItems.isEmpty) {
-            return _buildEmptyState(
-              'Нет вопросов',
-              'Добавьте часто задаваемые вопросы, чтобы помочь клиентам',
-              Icons.help_outline,
-            );
-          }
+    data: (faqItems) {
+      if (faqItems.isEmpty) {
+        return _buildEmptyState(
+          'Нет вопросов',
+          'Добавьте часто задаваемые вопросы, чтобы помочь клиентам',
+          Icons.help_outline,
+        );
+      }
 
-          // Сортируем по категории и порядку
-          final sortedFAQ = List<FAQItem>.from(faqItems);
-          sortedFAQ.sort((a, b) {
-            final categoryCompare = a.category.compareTo(b.category);
-            if (categoryCompare != 0) return categoryCompare;
-            return a.order.compareTo(b.order);
-          });
+      // Сортируем по категории и порядку
+      final sortedFAQ = List<FAQItem>.from(faqItems);
+      sortedFAQ.sort((a, b) {
+        final categoryCompare = a.category.compareTo(b.category);
+        if (categoryCompare != 0) return categoryCompare;
+        return a.order.compareTo(b.order);
+      });
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: sortedFAQ.length,
-            itemBuilder: (context, index) {
-              final faqItem = sortedFAQ[index];
-              return FAQItemWidget(
-                faqItem: faqItem,
-                onTap: () => _showFAQDetails(faqItem),
-                onEdit: () => _showEditFAQDialog(faqItem),
-                onDelete: () => _deleteFAQ(faqItem),
-                onTogglePublish: () => _togglePublish(faqItem),
-              );
-            },
+      return ListView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: sortedFAQ.length,
+        itemBuilder: (context, index) {
+          final faqItem = sortedFAQ[index];
+          return FAQItemWidget(
+            faqItem: faqItem,
+            onTap: () => _showFAQDetails(faqItem),
+            onEdit: () => _showEditFAQDialog(faqItem),
+            onDelete: () => _deleteFAQ(faqItem),
+            onTogglePublish: () => _togglePublish(faqItem),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => _buildErrorState(error.toString()),
       );
+    },
+    loading: () => const Center(child: CircularProgressIndicator()),
+    error: (error, stack) => _buildErrorState(error.toString()),
+  );
 
   Widget _buildPublishedFAQTab() {
     final faqAsync = ref.watch(specialistFAQProvider(widget.specialistId));
@@ -262,40 +231,37 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   }
 
   Widget _buildEmptyState(String title, String subtitle, IconData icon) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              subtitle,
-              style: const TextStyle(color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, size: 64, color: Colors.grey),
+        const SizedBox(height: 16),
+        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Text(
+          subtitle,
+          style: const TextStyle(color: Colors.grey),
+          textAlign: TextAlign.center,
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildErrorState(String error) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка: $error'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => ref.refresh(specialistFAQProvider(widget.specialistId)),
-              child: const Text('Повторить'),
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(Icons.error_outline, size: 64, color: Colors.red),
+        const SizedBox(height: 16),
+        Text('Ошибка: $error'),
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () => ref.refresh(specialistFAQProvider(widget.specialistId)),
+          child: const Text('Повторить'),
         ),
-      );
+      ],
+    ),
+  );
 
   void _showAddFAQDialog() {
     showDialog<void>(
@@ -323,10 +289,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               final query = _searchController.text.trim();
@@ -387,10 +350,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        faqItem.answer,
-                        style: const TextStyle(fontSize: 16),
-                      ),
+                      Text(faqItem.answer, style: const TextStyle(fontSize: 16)),
                       const SizedBox(height: 16),
                       Row(
                         children: [
@@ -401,10 +361,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                           const SizedBox(width: 8),
                           Text(
                             'Порядок: ${faqItem.order}',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12,
-                            ),
+                            style: const TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                         ],
                       ),
@@ -413,19 +370,13 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                         children: [
                           Text(
                             'Создано: ${_formatDate(faqItem.createdAt)}',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12,
-                            ),
+                            style: const TextStyle(color: Colors.grey, fontSize: 12),
                           ),
                           if (faqItem.updatedAt != faqItem.createdAt) ...[
                             const SizedBox(width: 16),
                             Text(
                               'Обновлено: ${_formatDate(faqItem.updatedAt)}',
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
-                              ),
+                              style: const TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                           ],
                         ],
@@ -462,10 +413,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
         title: const Text('Удалить вопрос?'),
         content: const Text('Это действие нельзя отменить.'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -494,10 +442,8 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => FAQByCategoryScreen(
-          specialistId: widget.specialistId,
-          category: category,
-        ),
+        builder: (context) =>
+            FAQByCategoryScreen(specialistId: widget.specialistId, category: category),
       ),
     );
   }
@@ -506,10 +452,8 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => FAQSearchResultsScreen(
-          specialistId: widget.specialistId,
-          query: query,
-        ),
+        builder: (context) =>
+            FAQSearchResultsScreen(specialistId: widget.specialistId, query: query),
       ),
     );
   }
@@ -547,11 +491,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
 
 /// Экран FAQ по категории
 class FAQByCategoryScreen extends ConsumerWidget {
-  const FAQByCategoryScreen({
-    super.key,
-    required this.specialistId,
-    required this.category,
-  });
+  const FAQByCategoryScreen({super.key, required this.specialistId, required this.category});
   final String specialistId;
   final String category;
 
@@ -560,15 +500,11 @@ class FAQByCategoryScreen extends ConsumerWidget {
     final faqAsync = ref.watch(specialistFAQByCategoryProvider((specialistId, category)));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('FAQ: ${_getCategoryDisplayName(category)}'),
-      ),
+      appBar: AppBar(title: Text('FAQ: ${_getCategoryDisplayName(category)}')),
       body: faqAsync.when(
         data: (faqItems) {
           if (faqItems.isEmpty) {
-            return const Center(
-              child: Text('Нет вопросов в этой категории'),
-            );
+            return const Center(child: Text('Нет вопросов в этой категории'));
           }
 
           return ListView.builder(
@@ -587,9 +523,7 @@ class FAQByCategoryScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Ошибка: $error'),
-        ),
+        error: (error, stack) => Center(child: Text('Ошибка: $error')),
       ),
     );
   }
@@ -617,11 +551,7 @@ class FAQByCategoryScreen extends ConsumerWidget {
     // TODO(developer): Показать детали FAQ
   }
 
-  void _showEditFAQDialog(
-    BuildContext context,
-    WidgetRef ref,
-    FAQItem faqItem,
-  ) {
+  void _showEditFAQDialog(BuildContext context, WidgetRef ref, FAQItem faqItem) {
     // TODO(developer): Редактировать FAQ
   }
 
@@ -636,11 +566,7 @@ class FAQByCategoryScreen extends ConsumerWidget {
 
 /// Экран результатов поиска FAQ
 class FAQSearchResultsScreen extends ConsumerWidget {
-  const FAQSearchResultsScreen({
-    super.key,
-    required this.specialistId,
-    required this.query,
-  });
+  const FAQSearchResultsScreen({super.key, required this.specialistId, required this.query});
   final String specialistId;
   final String query;
 
@@ -649,15 +575,11 @@ class FAQSearchResultsScreen extends ConsumerWidget {
     final faqAsync = ref.watch(specialistFAQSearchProvider((specialistId, query)));
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Результаты поиска: $query'),
-      ),
+      appBar: AppBar(title: Text('Результаты поиска: $query')),
       body: faqAsync.when(
         data: (faqItems) {
           if (faqItems.isEmpty) {
-            return const Center(
-              child: Text('Ничего не найдено'),
-            );
+            return const Center(child: Text('Ничего не найдено'));
           }
 
           return ListView.builder(
@@ -676,9 +598,7 @@ class FAQSearchResultsScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Ошибка: $error'),
-        ),
+        error: (error, stack) => Center(child: Text('Ошибка: $error')),
       ),
     );
   }
@@ -687,11 +607,7 @@ class FAQSearchResultsScreen extends ConsumerWidget {
     // TODO(developer): Показать детали FAQ
   }
 
-  void _showEditFAQDialog(
-    BuildContext context,
-    WidgetRef ref,
-    FAQItem faqItem,
-  ) {
+  void _showEditFAQDialog(BuildContext context, WidgetRef ref, FAQItem faqItem) {
     // TODO(developer): Редактировать FAQ
   }
 

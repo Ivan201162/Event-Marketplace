@@ -75,9 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   Text(
                     'Найдите идеального специалиста',
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
 
@@ -87,9 +85,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     decoration: InputDecoration(
                       hintText: 'Поиск по имени или специализации...',
                       prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       filled: true,
                       fillColor: theme.colorScheme.surface,
                     ),
@@ -108,18 +104,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           initialValue: _selectedCategory,
                           decoration: InputDecoration(
                             labelText: 'Категория',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                             filled: true,
                             fillColor: theme.colorScheme.surface,
                           ),
                           items: _categories
                               .map(
-                                (category) => DropdownMenuItem(
-                                  value: category,
-                                  child: Text(category),
-                                ),
+                                (category) =>
+                                    DropdownMenuItem(value: category, child: Text(category)),
                               )
                               .toList(),
                           onChanged: (value) {
@@ -163,13 +155,10 @@ class _SearchScreenState extends State<SearchScreen> {
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final specialist = _specialists[index];
-                  return _buildSpecialistCard(specialist, theme);
-                },
-                childCount: _specialists.length,
-              ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final specialist = _specialists[index];
+                return _buildSpecialistCard(specialist, theme);
+              }, childCount: _specialists.length),
             ),
           ),
         ],
@@ -177,110 +166,88 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildSpecialistCard(
-    Map<String, dynamic> specialist,
-    ThemeData theme,
-  ) =>
-      Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        elevation: 2,
-        child: InkWell(
-          onTap: () {
-            _showSpecialistDetails(specialist);
-          },
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
+  Widget _buildSpecialistCard(Map<String, dynamic> specialist, ThemeData theme) => Card(
+    margin: const EdgeInsets.only(bottom: 16),
+    elevation: 2,
+    child: InkWell(
+      onTap: () {
+        _showSpecialistDetails(specialist);
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            // Аватар
+            Stack(
               children: [
-                // Аватар
-                Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage(specialist['avatar']),
+                CircleAvatar(radius: 30, backgroundImage: NetworkImage(specialist['avatar'])),
+                if (specialist['isVerified'])
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.verified, color: Colors.white, size: 16),
                     ),
-                    if (specialist['isVerified'])
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Icon(
-                            Icons.verified,
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+                  ),
+              ],
+            ),
 
-                const SizedBox(width: 16),
+            const SizedBox(width: 16),
 
-                // Информация
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            // Информация
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    specialist['name'],
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    specialist['category'],
+                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.primary),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
                     children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 4),
+                      Text(specialist['rating'].toString(), style: theme.textTheme.bodyMedium),
+                      const SizedBox(width: 16),
                       Text(
-                        specialist['name'],
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        specialist['category'],
+                        '${specialist['price']}₽/час',
                         style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
                           color: theme.colorScheme.primary,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            specialist['rating'].toString(),
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                          const SizedBox(width: 16),
-                          Text(
-                            '${specialist['price']}₽/час',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
-                ),
-
-                // Кнопка действия
-                IconButton(
-                  onPressed: () {
-                    context.push(
-                      '/specialist/${specialist['name'].toLowerCase().replaceAll(' ', '_')}',
-                    );
-                  },
-                  icon: const Icon(Icons.arrow_forward_ios),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+
+            // Кнопка действия
+            IconButton(
+              onPressed: () {
+                context.push(
+                  '/specialist/${specialist['name'].toLowerCase().replaceAll(' ', '_')}',
+                );
+              },
+              icon: const Icon(Icons.arrow_forward_ios),
+            ),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   void _showSpecialistDetails(Map<String, dynamic> specialist) {
     showModalBottomSheet(
@@ -298,10 +265,7 @@ class _SearchScreenState extends State<SearchScreen> {
               // Заголовок
               Row(
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(specialist['avatar']),
-                  ),
+                  CircleAvatar(radius: 30, backgroundImage: NetworkImage(specialist['avatar'])),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
@@ -309,15 +273,15 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: [
                         Text(
                           specialist['name'],
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         Text(
                           specialist['category'],
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                       ],
                     ),
@@ -338,11 +302,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Заявка отправлена!'),
-                          ),
-                        );
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(const SnackBar(content: Text('Заявка отправлена!')));
                       },
                       icon: const Icon(Icons.send),
                       label: const Text('Отправить заявку'),
@@ -353,11 +315,9 @@ class _SearchScreenState extends State<SearchScreen> {
                     child: OutlinedButton.icon(
                       onPressed: () {
                         Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Чат открыт!'),
-                          ),
-                        );
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(const SnackBar(content: Text('Чат открыт!')));
                       },
                       icon: const Icon(Icons.chat),
                       label: const Text('Написать'),

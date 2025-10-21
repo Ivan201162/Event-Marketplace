@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/chat.dart';
-import '../models/chat_message.dart' as chat_message;
 
 /// Виджет для отображения сообщения в чате
 class MessageBubble extends StatelessWidget {
@@ -11,99 +10,91 @@ class MessageBubble extends StatelessWidget {
     this.onTap,
     this.onLongPress,
   });
-  final ChatMessage message;
+  final Message message;
   final bool isFromCurrentUser;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 4),
-          child: Row(
-            mainAxisAlignment: isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              if (!isFromCurrentUser) ...[
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.grey[300],
-                  child: Text(
-                    message.senderName?.isNotEmpty ?? false
-                        ? message.senderName![0].toUpperCase()
-                        : '?',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-                const SizedBox(width: 8),
-              ],
-              Flexible(
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.7,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isFromCurrentUser ? Theme.of(context).primaryColor : Colors.grey[200],
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(20),
-                      topRight: const Radius.circular(20),
-                      bottomLeft: Radius.circular(isFromCurrentUser ? 20 : 4),
-                      bottomRight: Radius.circular(isFromCurrentUser ? 4 : 20),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (!isFromCurrentUser)
-                        Text(
-                          message.senderName ?? 'Пользователь',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      if (!isFromCurrentUser) const SizedBox(height: 4),
-                      _buildMessageContent(context),
-                      const SizedBox(height: 4),
-                      _buildMessageFooter(context),
-                    ],
-                  ),
+    onTap: onTap,
+    onLongPress: onLongPress,
+    child: Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (!isFromCurrentUser) ...[
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: Colors.grey[300],
+              child: Text(
+                message.senderName?.isNotEmpty ?? false
+                    ? message.senderName![0].toUpperCase()
+                    : '?',
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: isFromCurrentUser ? Theme.of(context).primaryColor : Colors.grey[200],
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(20),
+                  topRight: const Radius.circular(20),
+                  bottomLeft: Radius.circular(isFromCurrentUser ? 20 : 4),
+                  bottomRight: Radius.circular(isFromCurrentUser ? 4 : 20),
                 ),
               ),
-              if (isFromCurrentUser) ...[
-                const SizedBox(width: 8),
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.grey[300],
-                  child: Text(
-                    message.senderName?.isNotEmpty ?? false
-                        ? message.senderName![0].toUpperCase()
-                        : '?',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-              ],
-            ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!isFromCurrentUser)
+                    Text(
+                      message.senderName ?? 'Пользователь',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  if (!isFromCurrentUser) const SizedBox(height: 4),
+                  _buildMessageContent(context),
+                  const SizedBox(height: 4),
+                  _buildMessageFooter(context),
+                ],
+              ),
+            ),
           ),
-        ),
-      );
+          if (isFromCurrentUser) ...[
+            const SizedBox(width: 8),
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: Colors.grey[300],
+              child: Text(
+                message.senderName?.isNotEmpty ?? false
+                    ? message.senderName![0].toUpperCase()
+                    : '?',
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
 
   Widget _buildMessageContent(BuildContext context) {
     switch (message.type) {
       case MessageType.text:
         return Text(
-          message.content,
-          style: TextStyle(
-            color: isFromCurrentUser ? Colors.white : Colors.black87,
-            fontSize: 16,
-          ),
+          message.text ?? '',
+          style: TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 16),
         );
       case MessageType.image:
         return _buildImageMessage(context);
@@ -123,265 +114,198 @@ class MessageBubble extends StatelessWidget {
   }
 
   Widget _buildImageMessage(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (message.fileUrl != null)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                message.fileUrl!,
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 200,
-                  height: 200,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.broken_image),
-                ),
-              ),
-            ),
-          if (message.content.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text(
-              message.content,
-              style: TextStyle(
-                color: isFromCurrentUser ? Colors.white : Colors.black87,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ],
-      );
-
-  Widget _buildVideoMessage(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (message.fileUrl != null)
-            Container(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (message.mediaUrl != null)
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            message.mediaUrl!,
+            width: 200,
+            height: 200,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
               width: 200,
-              height: 150,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Icon(
-                      Icons.play_circle_filled,
-                      size: 48,
-                      color: Colors.white.withValues(alpha: 0.8),
-                    ),
-                  ),
-                  if (message.thumbnailUrl != null)
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        message.thumbnailUrl!,
-                        width: 200,
-                        height: 150,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          if (message.content.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text(
-              message.content,
-              style: TextStyle(
-                color: isFromCurrentUser ? Colors.white : Colors.black87,
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ],
-      );
-
-  Widget _buildAudioMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.play_arrow,
-              color: isFromCurrentUser ? Colors.white : Colors.black87,
-            ),
-            const SizedBox(width: 8),
-            Icon(
-              Icons.audiotrack,
-              color: isFromCurrentUser ? Colors.white : Colors.black87,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              message.content,
-              style: TextStyle(
-                color: isFromCurrentUser ? Colors.white : Colors.black87,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildFileMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              _getFileIcon(),
-              color: isFromCurrentUser ? Colors.white : Colors.black87,
-            ),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    message.fileName ?? message.content,
-                    style: TextStyle(
-                      color: isFromCurrentUser ? Colors.white : Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (message.fileSize != null)
-                    Text(
-                      message.formattedFileSize,
-                      style: TextStyle(
-                        color: isFromCurrentUser ? Colors.white70 : Colors.grey[600],
-                        fontSize: 12,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildLocationMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.location_on,
-              color: isFromCurrentUser ? Colors.white : Colors.black87,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              message.content,
-              style: TextStyle(
-                color: isFromCurrentUser ? Colors.white : Colors.black87,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildSystemMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.blue[50],
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.blue[200]!),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.info,
-              color: Colors.blue[600],
-              size: 16,
-            ),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                message.content,
-                style: TextStyle(
-                  color: Colors.blue[800],
-                  fontSize: 14,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildAttachmentMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.attachment,
-              color: isFromCurrentUser ? Colors.white : Colors.black87,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              message.content,
-              style: TextStyle(
-                color: isFromCurrentUser ? Colors.white : Colors.black87,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildMessageFooter(BuildContext context) => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            _formatTime(message.timestamp ?? message.createdAt),
-            style: TextStyle(
-              color: isFromCurrentUser ? Colors.white70 : Colors.grey[600],
-              fontSize: 12,
+              height: 200,
+              color: Colors.grey[300],
+              child: const Icon(Icons.broken_image),
             ),
           ),
-          if (isFromCurrentUser) ...[
-            const SizedBox(width: 4),
-            Icon(
-              _getStatusIcon(),
-              size: 16,
-              color: _getStatusColor(),
-            ),
-          ],
-          if (message.isEdited) ...[
-            const SizedBox(width: 4),
-            Text(
-              'изменено',
-              style: TextStyle(
-                color: isFromCurrentUser ? Colors.white70 : Colors.grey[600],
-                fontSize: 10,
-                fontStyle: FontStyle.italic,
+        ),
+      if ((message.text ?? '').isNotEmpty) ...[
+        const SizedBox(height: 8),
+        Text(
+          message.text ?? '',
+          style: TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 16),
+        ),
+      ],
+    ],
+  );
+
+  Widget _buildVideoMessage(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (message.mediaUrl != null)
+        Container(
+          width: 200,
+          height: 150,
+          decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8)),
+          child: Stack(
+            children: [
+              Center(
+                child: Icon(
+                  Icons.play_circle_filled,
+                  size: 48,
+                  color: Colors.white.withValues(alpha: 0.8),
+                ),
               ),
-            ),
-          ],
-        ],
-      );
+              if (message.thumbnailUrl != null)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    message.thumbnailUrl!,
+                    width: 200,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      if ((message.text ?? '').isNotEmpty) ...[
+        const SizedBox(height: 8),
+        Text(
+          message.text ?? '',
+          style: TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 16),
+        ),
+      ],
+    ],
+  );
+
+  Widget _buildAudioMessage(BuildContext context) => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.play_arrow, color: isFromCurrentUser ? Colors.white : Colors.black87),
+        const SizedBox(width: 8),
+        Icon(Icons.audiotrack, color: isFromCurrentUser ? Colors.white : Colors.black87),
+        const SizedBox(width: 8),
+        Text(
+          message.text ?? '',
+          style: TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 14),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildFileMessage(BuildContext context) => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(_getFileIcon(), color: isFromCurrentUser ? Colors.white : Colors.black87),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                message.fileName ?? message.content,
+                style: TextStyle(
+                  color: isFromCurrentUser ? Colors.white : Colors.black87,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (message.fileSize != null)
+                Text(
+                  message.formattedFileSize,
+                  style: TextStyle(
+                    color: isFromCurrentUser ? Colors.white70 : Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildLocationMessage(BuildContext context) => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.location_on, color: isFromCurrentUser ? Colors.white : Colors.black87),
+        const SizedBox(width: 8),
+        Text(
+          message.text ?? '',
+          style: TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 14),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildSystemMessage(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    decoration: BoxDecoration(
+      color: Colors.blue[50],
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(color: Colors.blue[200]!),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.info, color: Colors.blue[600], size: 16),
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            message.text ?? '',
+            style: TextStyle(color: Colors.blue[800], fontSize: 14, fontStyle: FontStyle.italic),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildAttachmentMessage(BuildContext context) => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.attachment, color: isFromCurrentUser ? Colors.white : Colors.black87),
+        const SizedBox(width: 8),
+        Text(
+          message.text ?? '',
+          style: TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 14),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildMessageFooter(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Text(
+        _formatTime(message.createdAt),
+        style: TextStyle(
+          color: isFromCurrentUser ? Colors.white70 : Colors.grey[600],
+          fontSize: 12,
+        ),
+      ),
+      if (isFromCurrentUser) ...[
+        const SizedBox(width: 4),
+        Icon(_getStatusIcon(), size: 16, color: _getStatusColor()),
+      ],
+      // TODO: Add edited status if needed
+    ],
+  );
 
   IconData _getFileIcon() {
     final fileName = message.fileName?.toLowerCase() ?? '';
@@ -405,37 +329,13 @@ class MessageBubble extends StatelessWidget {
   }
 
   IconData _getStatusIcon() {
-    switch (message.status) {
-      case chat_message.MessageStatus.sending:
-        return Icons.access_time;
-      case chat_message.MessageStatus.sent:
-        return Icons.done;
-      case chat_message.MessageStatus.delivered:
-        return Icons.done_all;
-      case chat_message.MessageStatus.read:
-        return Icons.done_all;
-      case chat_message.MessageStatus.failed:
-        return Icons.error;
-      default:
-        return Icons.done;
-    }
+    // TODO: Implement message status logic
+    return Icons.done;
   }
 
   Color _getStatusColor() {
-    switch (message.status) {
-      case chat_message.MessageStatus.sending:
-        return Colors.grey;
-      case chat_message.MessageStatus.sent:
-        return Colors.grey;
-      case chat_message.MessageStatus.delivered:
-        return Colors.grey;
-      case chat_message.MessageStatus.read:
-        return Colors.blue;
-      case chat_message.MessageStatus.failed:
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
+    // TODO: Implement message status logic
+    return Colors.grey;
   }
 
   String _formatTime(DateTime time) {

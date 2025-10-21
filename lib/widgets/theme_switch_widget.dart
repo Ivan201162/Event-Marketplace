@@ -4,11 +4,7 @@ import '../providers/theme_provider.dart';
 
 /// Виджет для переключения темы
 class ThemeSwitchWidget extends ConsumerWidget {
-  const ThemeSwitchWidget({
-    super.key,
-    this.showLabel = true,
-    this.compact = false,
-  });
+  const ThemeSwitchWidget({super.key, this.showLabel = true, this.compact = false});
 
   final bool showLabel;
   final bool compact;
@@ -29,18 +25,13 @@ class ThemeSwitchWidget extends ConsumerWidget {
     BuildContext context,
     ThemeMode themeMode,
     ThemeNotifier themeNotifier,
-  ) =>
-      IconButton(
-        onPressed: () => themeNotifier.toggleTheme(),
-        icon: Icon(_getThemeIcon(themeMode)),
-        tooltip: _getThemeTooltip(themeMode),
-      );
+  ) => IconButton(
+    onPressed: () => themeNotifier.toggleTheme(),
+    icon: Icon(_getThemeIcon(themeMode)),
+    tooltip: _getThemeTooltip(themeMode),
+  );
 
-  Widget _buildFullSwitch(
-    BuildContext context,
-    ThemeMode themeMode,
-    ThemeNotifier themeNotifier,
-  ) =>
+  Widget _buildFullSwitch(BuildContext context, ThemeMode themeMode, ThemeNotifier themeNotifier) =>
       Card(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -50,15 +41,9 @@ class ThemeSwitchWidget extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  Icon(
-                    _getThemeIcon(themeMode),
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  Icon(_getThemeIcon(themeMode), color: Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 12),
-                  Text(
-                    'Тема',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+                  Text('Тема', style: Theme.of(context).textTheme.titleMedium),
                 ],
               ),
               const SizedBox(height: 16),
@@ -66,8 +51,8 @@ class ThemeSwitchWidget extends ConsumerWidget {
                 Text(
                   _getThemeDescription(themeMode),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -157,10 +142,7 @@ class ThemeToggleButton extends ConsumerWidget {
       onPressed: themeNotifier.toggleTheme,
       icon: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
-        child: Icon(
-          _getThemeIcon(themeMode),
-          key: ValueKey(themeMode),
-        ),
+        child: Icon(_getThemeIcon(themeMode), key: ValueKey(themeMode)),
       ),
       tooltip: _getThemeTooltip(themeMode),
     );
@@ -216,8 +198,8 @@ class ThemeIndicator extends ConsumerWidget {
           Text(
             _getThemeLabel(themeMode),
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
           ),
         ],
       ),

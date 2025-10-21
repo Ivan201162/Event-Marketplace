@@ -65,10 +65,8 @@ class AppNavigator {
   }
 
   /// Создание правильной стрелки "Назад" для AppBar
-  static Widget? buildBackButton(BuildContext context) => IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => handleBackPress(context),
-      );
+  static Widget? buildBackButton(BuildContext context) =>
+      IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => handleBackPress(context));
 
   /// Создание AppBar с правильной навигацией
   static AppBar buildAppBar(
@@ -79,30 +77,25 @@ class AppNavigator {
     Color? backgroundColor,
     Color? foregroundColor,
     double? elevation,
-  }) =>
-      AppBar(
-        title: Text(title),
-        leading: automaticallyImplyLeading ? buildBackButton(context) : null,
-        actions: actions,
-        backgroundColor: backgroundColor ?? Colors.transparent,
-        foregroundColor: foregroundColor,
-        elevation: elevation ?? 0,
-      );
+  }) => AppBar(
+    title: Text(title),
+    leading: automaticallyImplyLeading ? buildBackButton(context) : null,
+    actions: actions,
+    backgroundColor: backgroundColor ?? Colors.transparent,
+    foregroundColor: foregroundColor,
+    elevation: elevation ?? 0,
+  );
 
   /// Создание PopScope с правильной обработкой
-  static Widget buildPopScope({
-    required Widget child,
-    required BuildContext context,
-  }) =>
-      PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (didPop, result) async {
-          if (!didPop) {
-            await handleBackPress(context);
-          }
-        },
-        child: child,
-      );
+  static Widget buildPopScope({required Widget child, required BuildContext context}) => PopScope(
+    canPop: false,
+    onPopInvokedWithResult: (didPop, result) async {
+      if (!didPop) {
+        await handleBackPress(context);
+      }
+    },
+    child: child,
+  );
 
   /// Безопасная навигация назад
   static Future<void> safeBack(BuildContext context) async {

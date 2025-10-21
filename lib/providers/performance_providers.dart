@@ -23,14 +23,13 @@ class PerformanceState {
     int? cpuUsage,
     bool? isOptimized,
     List<String>? optimizations,
-  }) =>
-      PerformanceState(
-        fps: fps ?? this.fps,
-        memoryUsage: memoryUsage ?? this.memoryUsage,
-        cpuUsage: cpuUsage ?? this.cpuUsage,
-        isOptimized: isOptimized ?? this.isOptimized,
-        optimizations: optimizations ?? this.optimizations,
-      );
+  }) => PerformanceState(
+    fps: fps ?? this.fps,
+    memoryUsage: memoryUsage ?? this.memoryUsage,
+    cpuUsage: cpuUsage ?? this.cpuUsage,
+    isOptimized: isOptimized ?? this.isOptimized,
+    optimizations: optimizations ?? this.optimizations,
+  );
 }
 
 /// Провайдер производительности

@@ -87,8 +87,9 @@ class PushNotificationService {
       );
 
       // Save to Firestore
-      final docRef =
-          await _firestore.collection('push_notifications').add(notification.toFirestore());
+      final docRef = await _firestore
+          .collection('push_notifications')
+          .add(notification.toFirestore());
 
       final notificationId = docRef.id;
       debugPrint('Push notification created with ID: $notificationId');
@@ -220,10 +221,7 @@ class PushNotificationService {
 
       final batch = _firestore.batch();
       for (final doc in querySnapshot.docs) {
-        batch.update(doc.reference, {
-          'read': true,
-          'readAt': Timestamp.now(),
-        });
+        batch.update(doc.reference, {'read': true, 'readAt': Timestamp.now()});
       }
 
       await batch.commit();
@@ -275,7 +273,8 @@ class PushNotificationService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
-            (snapshot) => snapshot.docs.map((doc) => PushNotification.fromFirestore(doc)).toList());
+          (snapshot) => snapshot.docs.map((doc) => PushNotification.fromFirestore(doc)).toList(),
+        );
   }
 
   /// Get unread count stream
@@ -376,11 +375,7 @@ class PushNotificationService {
       body: 'Платеж $amount за "$serviceName" успешно обработан',
       type: PushNotificationType.payment,
       priority: PushNotificationPriority.high,
-      data: {
-        'paymentId': paymentId,
-        'amount': amount,
-        'serviceName': serviceName,
-      },
+      data: {'paymentId': paymentId, 'amount': amount, 'serviceName': serviceName},
       actionUrl: '/payments/$paymentId',
     );
   }
@@ -396,11 +391,7 @@ class PushNotificationService {
       title: 'Новое сообщение от $senderName',
       body: messageText,
       type: PushNotificationType.message,
-      data: {
-        'chatId': chatId,
-        'senderName': senderName,
-        'messageText': messageText,
-      },
+      data: {'chatId': chatId, 'senderName': senderName, 'messageText': messageText},
       actionUrl: '/chats/$chatId',
     );
   }
@@ -416,11 +407,7 @@ class PushNotificationService {
       title: 'Новый отзыв',
       body: '$reviewerName оставил отзыв с оценкой $rating ⭐',
       type: PushNotificationType.review,
-      data: {
-        'reviewId': reviewId,
-        'reviewerName': reviewerName,
-        'rating': rating,
-      },
+      data: {'reviewId': reviewId, 'reviewerName': reviewerName, 'rating': rating},
       actionUrl: '/reviews/$reviewId',
     );
   }

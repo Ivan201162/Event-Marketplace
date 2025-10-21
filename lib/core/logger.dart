@@ -29,12 +29,7 @@ class AppLogger {
   }
 
   /// Логирование ошибок
-  static void logE(
-    String message, [
-    String? tag,
-    Object? error,
-    StackTrace? stackTrace,
-  ]) {
+  static void logE(String message, [String? tag, Object? error, StackTrace? stackTrace]) {
     if (_isDebugMode) {
       final tagStr = tag != null ? '[$tag] ' : '';
       debugPrint('ERROR: $tagStr$message');

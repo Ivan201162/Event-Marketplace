@@ -12,10 +12,7 @@ class ThemeSwitcherWidget extends ConsumerWidget {
     final themeNotifier = ref.read(themeProvider.notifier);
 
     return PopupMenuButton<ThemeMode>(
-      icon: Icon(
-        _getThemeIcon(themeMode),
-        color: Theme.of(context).colorScheme.onSurface,
-      ),
+      icon: Icon(_getThemeIcon(themeMode), color: Theme.of(context).colorScheme.onSurface),
       tooltip: 'Переключить тему',
       onSelected: (mode) {
         switch (mode) {

@@ -128,10 +128,7 @@ class PortfolioService {
   }
 
   /// Добавить элемент портфолио в профиль специалиста
-  Future<void> _addPortfolioItemToProfile(
-    String userId,
-    PortfolioItem item,
-  ) async {
+  Future<void> _addPortfolioItemToProfile(String userId, PortfolioItem item) async {
     try {
       final profileRef = _firestore.collection('specialist_profiles').doc(userId);
 
@@ -188,10 +185,7 @@ class PortfolioService {
   }
 
   /// Обновить элемент портфолио
-  Future<void> updatePortfolioItem(
-    String userId,
-    PortfolioItem updatedItem,
-  ) async {
+  Future<void> updatePortfolioItem(String userId, PortfolioItem updatedItem) async {
     try {
       final profileRef = _firestore.collection('specialist_profiles').doc(userId);
 

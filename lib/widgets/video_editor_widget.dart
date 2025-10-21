@@ -59,201 +59,184 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
 
   @override
   Widget build(BuildContext context) => Dialog(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
-          child: Column(
-            children: [
-              AppBar(
-                title: Text(
-                  widget.existingVideo == null ? 'Новое видео' : 'Редактировать видео',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: _isSaving ? null : _saveVideo,
-                    child: _isSaving
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : const Text('Сохранить'),
-                  ),
-                ],
+    child: Container(
+      constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
+      child: Column(
+        children: [
+          AppBar(
+            title: Text(widget.existingVideo == null ? 'Новое видео' : 'Редактировать видео'),
+            actions: [
+              TextButton(
+                onPressed: _isSaving ? null : _saveVideo,
+                child: _isSaving
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Сохранить'),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            ],
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Заголовок
+                  TextField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      labelText: 'Название видео *',
+                      border: OutlineInputBorder(),
+                      hintText: 'Введите название видео',
+                    ),
+                    textCapitalization: TextCapitalization.sentences,
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Описание
+                  TextField(
+                    controller: _descriptionController,
+                    decoration: const InputDecoration(
+                      labelText: 'Описание *',
+                      border: OutlineInputBorder(),
+                      hintText: 'Введите описание видео',
+                      alignLabelWithHint: true,
+                    ),
+                    maxLines: 4,
+                    textCapitalization: TextCapitalization.sentences,
+                  ),
+                  const SizedBox(height: 16),
+
+                  // URL и платформа
+                  Row(
                     children: [
-                      // Заголовок
-                      TextField(
-                        controller: _titleController,
-                        decoration: const InputDecoration(
-                          labelText: 'Название видео *',
-                          border: OutlineInputBorder(),
-                          hintText: 'Введите название видео',
+                      Expanded(
+                        flex: 2,
+                        child: TextField(
+                          controller: _urlController,
+                          decoration: const InputDecoration(
+                            labelText: 'URL видео *',
+                            border: OutlineInputBorder(),
+                            hintText: 'https://...',
+                          ),
                         ),
-                        textCapitalization: TextCapitalization.sentences,
                       ),
-                      const SizedBox(height: 16),
-
-                      // Описание
-                      TextField(
-                        controller: _descriptionController,
-                        decoration: const InputDecoration(
-                          labelText: 'Описание *',
-                          border: OutlineInputBorder(),
-                          hintText: 'Введите описание видео',
-                          alignLabelWithHint: true,
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          initialValue: _selectedPlatform,
+                          decoration: const InputDecoration(
+                            labelText: 'Платформа',
+                            border: OutlineInputBorder(),
+                          ),
+                          items: const [
+                            DropdownMenuItem(value: 'youtube', child: Text('YouTube')),
+                            DropdownMenuItem(value: 'vimeo', child: Text('Vimeo')),
+                            DropdownMenuItem(value: 'direct', child: Text('Прямая загрузка')),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedPlatform = value!;
+                            });
+                          },
                         ),
-                        maxLines: 4,
-                        textCapitalization: TextCapitalization.sentences,
                       ),
-                      const SizedBox(height: 16),
-
-                      // URL и платформа
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: TextField(
-                              controller: _urlController,
-                              decoration: const InputDecoration(
-                                labelText: 'URL видео *',
-                                border: OutlineInputBorder(),
-                                hintText: 'https://...',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: DropdownButtonFormField<String>(
-                              initialValue: _selectedPlatform,
-                              decoration: const InputDecoration(
-                                labelText: 'Платформа',
-                                border: OutlineInputBorder(),
-                              ),
-                              items: const [
-                                DropdownMenuItem(
-                                  value: 'youtube',
-                                  child: Text('YouTube'),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'vimeo',
-                                  child: Text('Vimeo'),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'direct',
-                                  child: Text('Прямая загрузка'),
-                                ),
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedPlatform = value!;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Превью и длительность
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: TextField(
-                              controller: _thumbnailUrlController,
-                              decoration: const InputDecoration(
-                                labelText: 'URL превью',
-                                border: OutlineInputBorder(),
-                                hintText: 'https://...',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: TextField(
-                              controller: _durationController,
-                              decoration: const InputDecoration(
-                                labelText: 'Длительность',
-                                border: OutlineInputBorder(),
-                                hintText: '3:45',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Теги
-                      _buildTagsSection(),
-                      const SizedBox(height: 16),
-
-                      // Настройки
-                      _buildSettingsSection(),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 16),
+
+                  // Превью и длительность
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: TextField(
+                          controller: _thumbnailUrlController,
+                          decoration: const InputDecoration(
+                            labelText: 'URL превью',
+                            border: OutlineInputBorder(),
+                            hintText: 'https://...',
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextField(
+                          controller: _durationController,
+                          decoration: const InputDecoration(
+                            labelText: 'Длительность',
+                            border: OutlineInputBorder(),
+                            hintText: '3:45',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Теги
+                  _buildTagsSection(),
+                  const SizedBox(height: 16),
+
+                  // Настройки
+                  _buildSettingsSection(),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   Widget _buildTagsSection() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Теги', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+
+      // Поле ввода тегов
+      Row(
         children: [
-          const Text(
-            'Теги',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-
-          // Поле ввода тегов
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _tagsController,
-                  decoration: const InputDecoration(
-                    hintText: 'Введите тег и нажмите Enter',
-                    border: OutlineInputBorder(),
-                  ),
-                  onSubmitted: _addTag,
-                ),
+          Expanded(
+            child: TextField(
+              controller: _tagsController,
+              decoration: const InputDecoration(
+                hintText: 'Введите тег и нажмите Enter',
+                border: OutlineInputBorder(),
               ),
-              const SizedBox(width: 8),
-              IconButton(
-                onPressed: () => _addTag(_tagsController.text),
-                icon: const Icon(Icons.add),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-
-          // Список тегов
-          if (_tags.isNotEmpty)
-            Wrap(
-              spacing: 4,
-              runSpacing: 4,
-              children: _tags
-                  .map(
-                    (tag) => Chip(
-                      label: Text(tag),
-                      deleteIcon: const Icon(Icons.close, size: 16),
-                      onDeleted: () => _removeTag(tag),
-                    ),
-                  )
-                  .toList(),
+              onSubmitted: _addTag,
             ),
-
-          // Предложенные теги
-          _buildSuggestedTags(),
+          ),
+          const SizedBox(width: 8),
+          IconButton(onPressed: () => _addTag(_tagsController.text), icon: const Icon(Icons.add)),
         ],
-      );
+      ),
+      const SizedBox(height: 8),
+
+      // Список тегов
+      if (_tags.isNotEmpty)
+        Wrap(
+          spacing: 4,
+          runSpacing: 4,
+          children: _tags
+              .map(
+                (tag) => Chip(
+                  label: Text(tag),
+                  deleteIcon: const Icon(Icons.close, size: 16),
+                  onDeleted: () => _removeTag(tag),
+                ),
+              )
+              .toList(),
+        ),
+
+      // Предложенные теги
+      _buildSuggestedTags(),
+    ],
+  );
 
   Widget _buildSuggestedTags() {
     final suggestedTags = [
@@ -278,10 +261,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 8),
-        const Text(
-          'Предложенные теги:',
-          style: TextStyle(fontSize: 12, color: Colors.grey),
-        ),
+        const Text('Предложенные теги:', style: TextStyle(fontSize: 12, color: Colors.grey)),
         const SizedBox(height: 4),
         Wrap(
           spacing: 4,
@@ -302,25 +282,22 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
   }
 
   Widget _buildSettingsSection() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Настройки',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          SwitchListTile(
-            title: const Text('Публичное видео'),
-            subtitle: const Text('Клиенты смогут видеть это видео'),
-            value: _isPublic,
-            onChanged: (value) {
-              setState(() {
-                _isPublic = value;
-              });
-            },
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Настройки', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 8),
+      SwitchListTile(
+        title: const Text('Публичное видео'),
+        subtitle: const Text('Клиенты смогут видеть это видео'),
+        value: _isPublic,
+        onChanged: (value) {
+          setState(() {
+            _isPublic = value;
+          });
+        },
+      ),
+    ],
+  );
 
   void _addTag(String tag) {
     final trimmedTag = tag.trim().toLowerCase();
@@ -346,9 +323,9 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
     // final duration = _durationController.text.trim(); // Unused variable
 
     if (title.isEmpty || description.isEmpty || url.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Заполните обязательные поля')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Заполните обязательные поля')));
       return;
     }
 
@@ -395,15 +372,11 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            widget.existingVideo == null ? 'Видео добавлено' : 'Видео обновлено',
-          ),
+          content: Text(widget.existingVideo == null ? 'Видео добавлено' : 'Видео обновлено'),
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка сохранения: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка сохранения: $e')));
     } finally {
       setState(() {
         _isSaving = false;

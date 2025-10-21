@@ -32,10 +32,7 @@ class AvatarWidget extends StatelessWidget {
         shape: BoxShape.circle,
         color: backgroundColor,
         border: showBorder
-            ? Border.all(
-                color: borderColor ?? Theme.of(context).primaryColor,
-                width: 2,
-              )
+            ? Border.all(color: borderColor ?? Theme.of(context).primaryColor, width: 2)
             : null,
       ),
       child: imageUrl != null && imageUrl!.isNotEmpty
@@ -53,10 +50,7 @@ class AvatarWidget extends StatelessWidget {
     );
 
     if (onTap != null) {
-      avatar = GestureDetector(
-        onTap: onTap,
-        child: avatar,
-      );
+      avatar = GestureDetector(onTap: onTap, child: avatar);
     }
 
     return avatar;
@@ -66,11 +60,7 @@ class AvatarWidget extends StatelessWidget {
     return Center(
       child: Text(
         initials,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: size * 0.4,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(color: Colors.white, fontSize: size * 0.4, fontWeight: FontWeight.bold),
       ),
     );
   }

@@ -25,14 +25,8 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFiltersDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.download),
-            onPressed: _exportLogs,
-          ),
+          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFiltersDialog),
+          IconButton(icon: const Icon(Icons.download), onPressed: _exportLogs),
         ],
       ),
       body: Column(
@@ -57,9 +51,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
 
                 final logs = snapshot.data ?? [];
                 if (logs.isEmpty) {
-                  return const Center(
-                    child: Text('Нет логов для отображения'),
-                  );
+                  return const Center(child: Text('Нет логов для отображения'));
                 }
 
                 return ListView.builder(
@@ -72,11 +64,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: _getActionColor(log.action),
-                          child: Icon(
-                            _getActionIcon(log.action),
-                            color: Colors.white,
-                            size: 20,
-                          ),
+                          child: Icon(_getActionIcon(log.action), color: Colors.white, size: 20),
                         ),
                         title: Text(
                           log.description ?? '${_getActionName(log.action)} ${log.target}',
@@ -87,7 +75,8 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                           children: [
                             Text('Администратор: ${log.adminEmail}'),
                             Text(
-                                'Цель: ${log.target}${log.targetId != null ? ' (${log.targetId})' : ''}'),
+                              'Цель: ${log.target}${log.targetId != null ? ' (${log.targetId})' : ''}',
+                            ),
                             Text('Время: ${_formatTimestamp(log.timestamp)}'),
                             if (log.metadata != null && log.metadata!.isNotEmpty)
                               Text('Детали: ${log.metadata.toString()}'),
@@ -135,9 +124,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.grey[100],
-        border: Border(
-          bottom: BorderSide(color: Colors.grey[300]!),
-        ),
+        border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
       ),
       child: Row(
         children: [
@@ -162,10 +149,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
               onDeleted: () => setState(() => _endDate = null),
             ),
           const Spacer(),
-          TextButton(
-            onPressed: _clearFilters,
-            child: const Text('Очистить'),
-          ),
+          TextButton(onPressed: _clearFilters, child: const Text('Очистить')),
         ],
       ),
     );
@@ -203,10 +187,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                 border: OutlineInputBorder(),
               ),
               items: AdminAction.values.map((action) {
-                return DropdownMenuItem(
-                  value: action,
-                  child: Text(_getActionName(action)),
-                );
+                return DropdownMenuItem(value: action, child: Text(_getActionName(action)));
               }).toList(),
               onChanged: (value) {
                 setState(() {
@@ -230,10 +211,7 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -276,20 +254,18 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
 
   Future<void> _exportLogs() async {
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Экспорт логов в CSV...')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Экспорт логов в CSV...')));
 
       // Simulate export delay
       await Future.delayed(const Duration(seconds: 2));
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Логи экспортированы успешно')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Логи экспортированы успешно')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка экспорта: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e')));
     }
   }
 

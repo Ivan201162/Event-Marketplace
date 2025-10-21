@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PremiumBadge extends StatelessWidget {
-  const PremiumBadge({
-    super.key,
-    required this.type,
-    this.isActive = true,
-  });
+  const PremiumBadge({super.key, required this.type, this.isActive = true});
   final PremiumType type;
   final bool isActive;
 
@@ -35,19 +31,11 @@ class PremiumBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.star,
-            color: Colors.white,
-            size: 12,
-          ),
+          const Icon(Icons.star, color: Colors.white, size: 12),
           const SizedBox(width: 4),
           Text(
             _getBadgeText(),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -66,8 +54,4 @@ class PremiumBadge extends StatelessWidget {
   }
 }
 
-enum PremiumType {
-  topBanner,
-  highlight,
-  prioritySearch,
-}
+enum PremiumType { topBanner, highlight, prioritySearch }

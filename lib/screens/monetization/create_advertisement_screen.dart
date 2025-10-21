@@ -60,10 +60,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _saveAdvertisement,
-            child: const Text(
-              'Сохранить',
-              style: TextStyle(color: Colors.white),
-            ),
+            child: const Text('Сохранить', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -116,10 +113,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                   border: OutlineInputBorder(),
                 ),
                 items: AdType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(_getTypeText(type)),
-                  );
+                  return DropdownMenuItem(value: type, child: Text(_getTypeText(type)));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -221,10 +215,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                   border: OutlineInputBorder(),
                 ),
                 items: _regions.map((region) {
-                  return DropdownMenuItem(
-                    value: region,
-                    child: Text(region),
-                  );
+                  return DropdownMenuItem(value: region, child: Text(region));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -236,15 +227,9 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
 
               DropdownButtonFormField<String>(
                 initialValue: _selectedCity,
-                decoration: const InputDecoration(
-                  labelText: 'Город',
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(labelText: 'Город', border: OutlineInputBorder()),
                 items: _cities.map((city) {
-                  return DropdownMenuItem(
-                    value: city,
-                    child: Text(city),
-                  );
+                  return DropdownMenuItem(value: city, child: Text(city));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -261,10 +246,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                   border: OutlineInputBorder(),
                 ),
                 items: _categories.map((category) {
-                  return DropdownMenuItem(
-                    value: category,
-                    child: Text(category),
-                  );
+                  return DropdownMenuItem(value: category, child: Text(category));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -281,10 +263,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                   border: OutlineInputBorder(),
                 ),
                 items: _targetAudiences.map((audience) {
-                  return DropdownMenuItem(
-                    value: audience,
-                    child: Text(audience),
-                  );
+                  return DropdownMenuItem(value: audience, child: Text(audience));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -321,10 +300,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                          'Создать рекламу',
-                          style: TextStyle(fontSize: 16),
-                        ),
+                      : const Text('Создать рекламу', style: TextStyle(fontSize: 16)),
                 ),
               ),
             ],
@@ -341,9 +317,7 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
         const SizedBox(width: 8),
         Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -429,8 +403,9 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
       }
 
       final price = double.parse(_priceController.text);
-      final budget =
-          _budgetController.text.isNotEmpty ? double.parse(_budgetController.text) : null;
+      final budget = _budgetController.text.isNotEmpty
+          ? double.parse(_budgetController.text)
+          : null;
 
       final adId = await _advertisementService.createAdvertisement(
         userId: userId,
@@ -464,12 +439,9 @@ class _CreateAdvertisementScreenState extends State<CreateAdvertisementScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {

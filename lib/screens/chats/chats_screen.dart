@@ -26,15 +26,10 @@ class ChatsScreen extends StatelessWidget {
           return Card(
             margin: const EdgeInsets.only(bottom: 8),
             child: ListTile(
-              leading: const CircleAvatar(
-                radius: 25,
-                child: Icon(Icons.person),
-              ),
+              leading: const CircleAvatar(radius: 25, child: Icon(Icons.person)),
               title: Text(
                 'Пользователь ${index + 1}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
                 'Последнее сообщение в чате ${index + 1}',
@@ -44,22 +39,13 @@ class ChatsScreen extends StatelessWidget {
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '12:${30 + index}',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
-                  ),
+                  Text('12:${30 + index}', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                   if (index < 3) ...[
                     const SizedBox(height: 4),
                     Container(
                       width: 20,
                       height: 20,
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
                       child: Center(
                         child: Text(
                           '${index + 1}',
@@ -95,9 +81,7 @@ class ChatsScreen extends StatelessWidget {
         builder: (context, scrollController) => Container(
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
@@ -117,10 +101,7 @@ class ChatsScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 20,
-                      child: Icon(Icons.person),
-                    ),
+                    const CircleAvatar(radius: 20, child: Icon(Icons.person)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -128,17 +109,9 @@ class ChatsScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Пользователь $chatId',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            'В сети',
-                            style: TextStyle(
-                              color: Colors.green[600],
-                              fontSize: 12,
-                            ),
-                          ),
+                          Text('В сети', style: TextStyle(color: Colors.green[600], fontSize: 12)),
                         ],
                       ),
                     ),
@@ -166,19 +139,14 @@ class ChatsScreen extends StatelessWidget {
                       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
                           color: isMe ? Colors.blue : Colors.grey[200],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           'Сообщение ${index + 1}',
-                          style: TextStyle(
-                            color: isMe ? Colors.white : Colors.black,
-                          ),
+                          style: TextStyle(color: isMe ? Colors.white : Colors.black),
                         ),
                       ),
                     );
@@ -191,9 +159,7 @@ class ChatsScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[200]!),
-                  ),
+                  border: Border(top: BorderSide(color: Colors.grey[200]!)),
                 ),
                 child: Row(
                   children: [
@@ -201,13 +167,8 @@ class ChatsScreen extends StatelessWidget {
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Введите сообщение...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         ),
                       ),
                     ),
@@ -249,9 +210,9 @@ class ChatsScreen extends StatelessWidget {
               title: const Text('Отключить уведомления'),
               onTap: () {
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Уведомления отключены')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Уведомления отключены')));
               },
             ),
             ListTile(
@@ -283,16 +244,13 @@ class ChatsScreen extends StatelessWidget {
         title: const Text('Заблокировать пользователя'),
         content: const Text('Вы уверены, что хотите заблокировать этого пользователя?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Пользователь $chatId заблокирован')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Пользователь $chatId заблокирован')));
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Заблокировать'),
@@ -309,16 +267,13 @@ class ChatsScreen extends StatelessWidget {
         title: const Text('Удалить чат'),
         content: const Text('Вы уверены, что хотите удалить этот чат?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Чат $chatId удален')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Чат $chatId удален')));
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Удалить'),
@@ -329,8 +284,8 @@ class ChatsScreen extends StatelessWidget {
   }
 
   void _sendMessage(BuildContext context, int chatId) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Сообщение отправлено в чат $chatId')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('Сообщение отправлено в чат $chatId')));
   }
 }

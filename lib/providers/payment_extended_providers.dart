@@ -3,12 +3,15 @@ import '../models/payment_extended.dart';
 import '../services/payment_extended_service.dart';
 
 /// Провайдер для сервиса расширенных платежей
-final paymentExtendedServiceProvider =
-    Provider<PaymentExtendedService>((ref) => PaymentExtendedService());
+final paymentExtendedServiceProvider = Provider<PaymentExtendedService>(
+  (ref) => PaymentExtendedService(),
+);
 
 /// Провайдер для платежей пользователя
-final userPaymentsProvider =
-    StreamProvider.family<List<PaymentExtended>, (String, bool)>((ref, params) {
+final userPaymentsProvider = StreamProvider.family<List<PaymentExtended>, (String, bool)>((
+  ref,
+  params,
+) {
   final (userId, isCustomer) = params;
   final service = ref.read(paymentExtendedServiceProvider);
   return service.getUserPayments(userId, isCustomer: isCustomer);
@@ -34,10 +37,14 @@ final advancePaymentSettingsProvider = FutureProvider<AdvancePaymentSettings>((r
 });
 
 /// Провайдер для ожидающих платежей
-final pendingPaymentsProvider =
-    StreamProvider.family<List<PaymentExtended>, (String, bool)>((ref, params) {
+final pendingPaymentsProvider = StreamProvider.family<List<PaymentExtended>, (String, bool)>((
+  ref,
+  params,
+) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
         data: (payments) => Stream.value(
           payments
               .where(
@@ -51,26 +58,31 @@ final pendingPaymentsProvider =
 });
 
 /// Провайдер для завершенных платежей
-final completedPaymentsProvider =
-    StreamProvider.family<List<PaymentExtended>, (String, bool)>((ref, params) {
+final completedPaymentsProvider = StreamProvider.family<List<PaymentExtended>, (String, bool)>((
+  ref,
+  params,
+) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
-        data: (payments) => Stream.value(
-          payments.where((p) => p.status == PaymentStatus.completed).toList(),
-        ),
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
+        data: (payments) =>
+            Stream.value(payments.where((p) => p.status == PaymentStatus.completed).toList()),
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
       );
 });
 
 /// Провайдер для платежей с просрочкой
-final overduePaymentsProvider =
-    StreamProvider.family<List<PaymentExtended>, (String, bool)>((ref, params) {
+final overduePaymentsProvider = StreamProvider.family<List<PaymentExtended>, (String, bool)>((
+  ref,
+  params,
+) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
-        data: (payments) => Stream.value(
-          payments.where((p) => p.hasOverduePayments).toList(),
-        ),
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
+        data: (payments) => Stream.value(payments.where((p) => p.hasOverduePayments).toList()),
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
       );
@@ -79,36 +91,36 @@ final overduePaymentsProvider =
 /// Провайдер для платежей по типу
 final paymentsByTypeProvider =
     StreamProvider.family<List<PaymentExtended>, (String, bool, PaymentType)>((ref, params) {
-  final (userId, isCustomer, type) = params;
-  return ref.watch(userPaymentsProvider((userId, isCustomer))).when(
-        data: (payments) => Stream.value(
-          payments.where((p) => p.type == type).toList(),
-        ),
-        loading: () => Stream.value([]),
-        error: (_, __) => Stream.value([]),
-      );
-});
+      final (userId, isCustomer, type) = params;
+      return ref
+          .watch(userPaymentsProvider((userId, isCustomer)))
+          .when(
+            data: (payments) => Stream.value(payments.where((p) => p.type == type).toList()),
+            loading: () => Stream.value([]),
+            error: (_, __) => Stream.value([]),
+          );
+    });
 
 /// Провайдер для платежей по статусу
 final paymentsByStatusProvider =
     StreamProvider.family<List<PaymentExtended>, (String, bool, PaymentStatus)>((ref, params) {
-  final (userId, isCustomer, status) = params;
-  return ref.watch(userPaymentsProvider((userId, isCustomer))).when(
-        data: (payments) => Stream.value(
-          payments.where((p) => p.status == status).toList(),
-        ),
-        loading: () => Stream.value([]),
-        error: (_, __) => Stream.value([]),
-      );
-});
+      final (userId, isCustomer, status) = params;
+      return ref
+          .watch(userPaymentsProvider((userId, isCustomer)))
+          .when(
+            data: (payments) => Stream.value(payments.where((p) => p.status == status).toList()),
+            loading: () => Stream.value([]),
+            error: (_, __) => Stream.value([]),
+          );
+    });
 
 /// Провайдер для общей суммы платежей
 final totalPaymentsAmountProvider = StreamProvider.family<double, (String, bool)>((ref, params) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
-        data: (payments) => Stream.value(
-          payments.fold(0, (sum, p) => sum + p.totalAmount),
-        ),
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
+        data: (payments) => Stream.value(payments.fold(0, (sum, p) => sum + p.totalAmount)),
         loading: () => Stream.value(0),
         error: (_, __) => Stream.value(0),
       );
@@ -117,10 +129,10 @@ final totalPaymentsAmountProvider = StreamProvider.family<double, (String, bool)
 /// Провайдер для оплаченной суммы
 final paidAmountProvider = StreamProvider.family<double, (String, bool)>((ref, params) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
-        data: (payments) => Stream.value(
-          payments.fold(0, (sum, p) => sum + p.paidAmount),
-        ),
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
+        data: (payments) => Stream.value(payments.fold(0, (sum, p) => sum + p.paidAmount)),
         loading: () => Stream.value(0),
         error: (_, __) => Stream.value(0),
       );
@@ -129,10 +141,10 @@ final paidAmountProvider = StreamProvider.family<double, (String, bool)>((ref, p
 /// Провайдер для оставшейся суммы
 final remainingAmountProvider = StreamProvider.family<double, (String, bool)>((ref, params) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
-        data: (payments) => Stream.value(
-          payments.fold(0, (sum, p) => sum + p.remainingAmount),
-        ),
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
+        data: (payments) => Stream.value(payments.fold(0, (sum, p) => sum + p.remainingAmount)),
         loading: () => Stream.value(0),
         error: (_, __) => Stream.value(0),
       );
@@ -141,7 +153,9 @@ final remainingAmountProvider = StreamProvider.family<double, (String, bool)>((r
 /// Провайдер для процента оплаты
 final paymentProgressProvider = StreamProvider.family<double, (String, bool)>((ref, params) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
         data: (payments) {
           final totalAmount = payments.fold(0, (sum, p) => sum + p.totalAmount);
           final paidAmount = payments.fold(0, (sum, p) => sum + p.paidAmount);
@@ -156,7 +170,9 @@ final paymentProgressProvider = StreamProvider.family<double, (String, bool)>((r
 /// Провайдер для количества платежей
 final paymentsCountProvider = StreamProvider.family<int, (String, bool)>((ref, params) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
         data: (payments) => Stream.value(payments.length),
         loading: () => Stream.value(0),
         error: (_, __) => Stream.value(0),
@@ -166,7 +182,9 @@ final paymentsCountProvider = StreamProvider.family<int, (String, bool)>((ref, p
 /// Провайдер для следующего платежа
 final nextPaymentProvider = StreamProvider.family<PaymentExtended?, (String, bool)>((ref, params) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
         data: (payments) {
           final pendingPayments = payments
               .where(
@@ -196,10 +214,14 @@ final nextPaymentProvider = StreamProvider.family<PaymentExtended?, (String, boo
 });
 
 /// Провайдер для уведомлений о платежах
-final paymentNotificationsProvider =
-    StreamProvider.family<List<PaymentExtended>, (String, bool)>((ref, params) {
+final paymentNotificationsProvider = StreamProvider.family<List<PaymentExtended>, (String, bool)>((
+  ref,
+  params,
+) {
   final (userId, isCustomer) = params;
-  return ref.watch(userPaymentsProvider(params)).when(
+  return ref
+      .watch(userPaymentsProvider(params))
+      .when(
         data: (payments) {
           final now = DateTime.now();
           final notifications = payments.where((p) {
@@ -226,61 +248,63 @@ final paymentNotificationsProvider =
 /// Провайдер для фильтрации платежей
 final filteredPaymentsProvider =
     StreamProvider.family<List<PaymentExtended>, (String, bool, PaymentFilter)>((ref, params) {
-  final (userId, isCustomer, filter) = params;
-  return ref.watch(userPaymentsProvider((userId, isCustomer))).when(
-        data: (payments) {
-          var filtered = payments;
+      final (userId, isCustomer, filter) = params;
+      return ref
+          .watch(userPaymentsProvider((userId, isCustomer)))
+          .when(
+            data: (payments) {
+              var filtered = payments;
 
-          // Фильтр по типу
-          if (filter.type != null) {
-            filtered = filtered.where((p) => p.type == filter.type).toList();
-          }
+              // Фильтр по типу
+              if (filter.type != null) {
+                filtered = filtered.where((p) => p.type == filter.type).toList();
+              }
 
-          // Фильтр по статусу
-          if (filter.status != null) {
-            filtered = filtered.where((p) => p.status == filter.status).toList();
-          }
+              // Фильтр по статусу
+              if (filter.status != null) {
+                filtered = filtered.where((p) => p.status == filter.status).toList();
+              }
 
-          // Фильтр по дате
-          if (filter.startDate != null) {
-            filtered = filtered.where((p) => p.createdAt.isAfter(filter.startDate!)).toList();
-          }
+              // Фильтр по дате
+              if (filter.startDate != null) {
+                filtered = filtered.where((p) => p.createdAt.isAfter(filter.startDate!)).toList();
+              }
 
-          if (filter.endDate != null) {
-            filtered = filtered.where((p) => p.createdAt.isBefore(filter.endDate!)).toList();
-          }
+              if (filter.endDate != null) {
+                filtered = filtered.where((p) => p.createdAt.isBefore(filter.endDate!)).toList();
+              }
 
-          // Фильтр по сумме
-          if (filter.minAmount != null) {
-            filtered = filtered.where((p) => p.totalAmount >= filter.minAmount!).toList();
-          }
+              // Фильтр по сумме
+              if (filter.minAmount != null) {
+                filtered = filtered.where((p) => p.totalAmount >= filter.minAmount!).toList();
+              }
 
-          if (filter.maxAmount != null) {
-            filtered = filtered.where((p) => p.totalAmount <= filter.maxAmount!).toList();
-          }
+              if (filter.maxAmount != null) {
+                filtered = filtered.where((p) => p.totalAmount <= filter.maxAmount!).toList();
+              }
 
-          // Сортировка
-          switch (filter.sortBy) {
-            case PaymentSortBy.date:
-              filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-              break;
-            case PaymentSortBy.amount:
-              filtered.sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
-              break;
-            case PaymentSortBy.status:
-              filtered.sort((a, b) => a.status.name.compareTo(b.status.name));
-              break;
-            case PaymentSortBy.type:
-              filtered.sort((a, b) => a.type.name.compareTo(b.type.name));
-              break;
-          }
+              // Сортировка
+              switch (filter.sortBy) {
+                case PaymentSortBy.date:
+                  filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+                  break;
+                case PaymentSortBy.amount:
+                  filtered.sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
+                  break;
+                case PaymentSortBy.status:
+                  filtered.sort((a, b) => a.status.name.compareTo(b.status.name));
+                  break;
+                case PaymentSortBy.type:
+                  filtered.sort((a, b) => a.type.name.compareTo(b.type.name));
+                  break;
+              }
 
-          return Stream.value(filtered);
-        },
-        loading: () => Stream.value([]),
-        error: (_, __) => Stream.value([]),
-      );
-});
+              return Stream.value(filtered);
+            },
+            loading: () => Stream.value([]),
+            error: (_, __) => Stream.value([]),
+          );
+    });
 
 /// Фильтр для платежей
 class PaymentFilter {
@@ -309,25 +333,19 @@ class PaymentFilter {
     double? minAmount,
     double? maxAmount,
     PaymentSortBy? sortBy,
-  }) =>
-      PaymentFilter(
-        type: type ?? this.type,
-        status: status ?? this.status,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-        minAmount: minAmount ?? this.minAmount,
-        maxAmount: maxAmount ?? this.maxAmount,
-        sortBy: sortBy ?? this.sortBy,
-      );
+  }) => PaymentFilter(
+    type: type ?? this.type,
+    status: status ?? this.status,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    minAmount: minAmount ?? this.minAmount,
+    maxAmount: maxAmount ?? this.maxAmount,
+    sortBy: sortBy ?? this.sortBy,
+  );
 }
 
 /// Сортировка платежей
-enum PaymentSortBy {
-  date,
-  amount,
-  status,
-  type,
-}
+enum PaymentSortBy { date, amount, status, type }
 
 /// Нотификатор для фильтра платежей
 class PaymentFilterNotifier extends Notifier<PaymentFilter> {
@@ -349,10 +367,14 @@ final paymentFilterProvider = NotifierProvider<PaymentFilterNotifier, PaymentFil
 );
 
 /// Провайдер для поиска платежей
-final paymentSearchProvider =
-    StreamProvider.family<List<PaymentExtended>, (String, bool, String)>((ref, params) {
+final paymentSearchProvider = StreamProvider.family<List<PaymentExtended>, (String, bool, String)>((
+  ref,
+  params,
+) {
   final (userId, isCustomer, query) = params;
-  return ref.watch(userPaymentsProvider((userId, isCustomer))).when(
+  return ref
+      .watch(userPaymentsProvider((userId, isCustomer)))
+      .when(
         data: (payments) {
           if (query.isEmpty) return Stream.value(payments);
 

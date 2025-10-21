@@ -123,9 +123,7 @@ class TaxCalculationService {
         'totalTaxAmount': totalTaxAmount,
         'totalNetAmount': totalNetAmount,
         'averageTaxRate': totalGrossAmount > 0 ? (totalTaxAmount / totalGrossAmount) * 100 : 0,
-        'taxStatusCounts': taxStatusCounts.map(
-          (key, value) => MapEntry(key.name, value),
-        ),
+        'taxStatusCounts': taxStatusCounts.map((key, value) => MapEntry(key.name, value)),
         'calculationsCount': calculations.length,
       };
     } catch (e) {

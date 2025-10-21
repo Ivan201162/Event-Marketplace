@@ -38,7 +38,8 @@ class RevenueAnalyticsService {
       await _updateAggregatedStats(stats);
 
       debugPrint(
-          'INFO: [RevenueAnalyticsService] Revenue recorded: $amount $currency from $sourceType');
+        'INFO: [RevenueAnalyticsService] Revenue recorded: $amount $currency from $sourceType',
+      );
     } catch (e) {
       debugPrint('ERROR: [RevenueAnalyticsService] Failed to record revenue: $e');
     }
@@ -62,11 +63,11 @@ class RevenueAnalyticsService {
           .collection('revenue_aggregates')
           .doc('source_${stats.sourceType.toString().split('.').last}')
           .set({
-        'sourceType': stats.sourceType.toString().split('.').last,
-        'totalRevenue': FieldValue.increment(stats.amount),
-        'transactionCount': FieldValue.increment(1),
-        'lastUpdated': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+            'sourceType': stats.sourceType.toString().split('.').last,
+            'totalRevenue': FieldValue.increment(stats.amount),
+            'transactionCount': FieldValue.increment(1),
+            'lastUpdated': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
 
       // Обновляем статистику по регионам
       await _firestore.collection('revenue_aggregates').doc('region_${stats.region}').set({
@@ -99,8 +100,10 @@ class RevenueAnalyticsService {
           .get();
 
       // Получаем статистику за предыдущий период для расчета роста
-      final DateTime prevPeriodStart =
-          _getPeriodStart(periodStart.subtract(const Duration(days: 1)), period);
+      final DateTime prevPeriodStart = _getPeriodStart(
+        periodStart.subtract(const Duration(days: 1)),
+        period,
+      );
       final DateTime prevPeriodEnd = periodStart.subtract(const Duration(days: 1));
 
       final QuerySnapshot prevRevenueSnapshot = await _firestore
@@ -136,20 +139,26 @@ class RevenueAnalyticsService {
         prevTotalRevenue += stats.amount;
       }
 
-      final double growthRate =
-          prevTotalRevenue > 0 ? ((totalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100 : 0.0;
+      final double growthRate = prevTotalRevenue > 0
+          ? ((totalRevenue - prevTotalRevenue) / prevTotalRevenue) * 100
+          : 0.0;
 
       // Рассчитываем средний чек
-      final double averageOrderValue =
-          totalTransactions > 0 ? totalRevenue / totalTransactions : 0.0;
+      final double averageOrderValue = totalTransactions > 0
+          ? totalRevenue / totalTransactions
+          : 0.0;
 
       // Получаем дневную статистику
-      final List<Map<String, dynamic>> dailyRevenue =
-          await _getDailyRevenue(periodStart, periodEnd);
+      final List<Map<String, dynamic>> dailyRevenue = await _getDailyRevenue(
+        periodStart,
+        periodEnd,
+      );
 
       // Получаем месячную статистику
-      final List<Map<String, dynamic>> monthlyRevenue =
-          await _getMonthlyRevenue(periodStart, periodEnd);
+      final List<Map<String, dynamic>> monthlyRevenue = await _getMonthlyRevenue(
+        periodStart,
+        periodEnd,
+      );
 
       // Рассчитываем LTV и CAC
       final double ltv = await _calculateLTV();
@@ -233,7 +242,9 @@ class RevenueAnalyticsService {
 
   /// Получение месячной статистики доходов
   Future<List<Map<String, dynamic>>> _getMonthlyRevenue(
-      DateTime startDate, DateTime endDate) async {
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
     try {
       final List<Map<String, dynamic>> monthlyRevenue = [];
       final DateTime current = DateTime(startDate.year, startDate.month);
@@ -297,8 +308,9 @@ class RevenueAnalyticsService {
       // Получаем статистику по рефералам и партнерским программам
       final QuerySnapshot referralsSnapshot = await _firestore.collection('referral_rewards').get();
 
-      final QuerySnapshot partnershipsSnapshot =
-          await _firestore.collection('partner_transactions').get();
+      final QuerySnapshot partnershipsSnapshot = await _firestore
+          .collection('partner_transactions')
+          .get();
 
       double totalAcquisitionCost = 0.0;
       int totalAcquisitions = 0;
@@ -383,8 +395,9 @@ class RevenueAnalyticsService {
 
       // Рассчитываем частоту покупок (покупок в месяц)
       final int daysSinceFirst = DateTime.now().difference(firstPurchaseDate).inDays;
-      final double purchaseFrequency =
-          daysSinceFirst > 0 ? (totalTransactions / daysSinceFirst) * 30 : 0.0;
+      final double purchaseFrequency = daysSinceFirst > 0
+          ? (totalTransactions / daysSinceFirst) * 30
+          : 0.0;
 
       // Рассчитываем retention rate (упрощенно)
       final double retentionRate = _calculateRetentionRate(userId);

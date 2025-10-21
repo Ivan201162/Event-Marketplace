@@ -69,19 +69,14 @@ class PriorityService {
   }
 
   /// Сортировка пользователей по приоритету
-  Future<List<Map<String, dynamic>>> sortUsersByPriority(
-    List<Map<String, dynamic>> users,
-  ) async {
+  Future<List<Map<String, dynamic>>> sortUsersByPriority(List<Map<String, dynamic>> users) async {
     try {
       final usersWithPriority = <Map<String, dynamic>>[];
 
       for (final user in users) {
         final userId = user['id'] as String;
         final priority = await getUserPriority(userId);
-        usersWithPriority.add({
-          ...user,
-          'priority': priority,
-        });
+        usersWithPriority.add({...user, 'priority': priority});
       }
 
       // Сортируем по приоритету (убывание)
@@ -121,10 +116,7 @@ class PriorityService {
       final snapshot = await query.limit(limit * 2).get(); // Берем больше для сортировки
 
       final users = snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              })
+          .map((doc) => {'id': doc.id, ...doc.data() as Map<String, dynamic>})
           .toList();
 
       // Сортируем по приоритету
@@ -245,7 +237,8 @@ class PriorityService {
         'subscriptions': subscriptionStats,
         'promotions': promotionStats,
         'advertisements': advertisementStats,
-        'totalRevenue': (subscriptionStats['totalRevenue'] as double? ?? 0.0) +
+        'totalRevenue':
+            (subscriptionStats['totalRevenue'] as double? ?? 0.0) +
             (promotionStats['totalRevenue'] as double? ?? 0.0) +
             (advertisementStats['totalRevenue'] as double? ?? 0.0),
       };

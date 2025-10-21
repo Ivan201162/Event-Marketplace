@@ -57,10 +57,7 @@ class BuildOptimizations {
   /// Оптимизация анимаций
   static void _optimizeAnimations() {
     // Отключаем системные анимации для лучшей производительности
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
-      overlays: [SystemUiOverlay.top],
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
   }
 
   /// Оптимизация для разных платформ
@@ -153,11 +150,7 @@ class BuildOptimizations {
 
 /// Оптимизированный виджет для release сборки
 class OptimizedWidget extends StatelessWidget {
-  const OptimizedWidget({
-    super.key,
-    required this.child,
-    this.enableOptimizations = true,
-  });
+  const OptimizedWidget({super.key, required this.child, this.enableOptimizations = true});
 
   final Widget child;
   final bool enableOptimizations;
@@ -166,9 +159,7 @@ class OptimizedWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (enableOptimizations) {
       // Применяем оптимизации
-      return RepaintBoundary(
-        child: child,
-      );
+      return RepaintBoundary(child: child);
     }
     return child;
   }
@@ -197,14 +188,14 @@ class OptimizedListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.separated(
-        controller: scrollController,
-        physics: physics,
-        padding: padding,
-        cacheExtent: cacheExtent,
-        itemCount: itemCount,
-        separatorBuilder: separatorBuilder ?? (context, index) => const SizedBox.shrink(),
-        itemBuilder: itemBuilder,
-      );
+    controller: scrollController,
+    physics: physics,
+    padding: padding,
+    cacheExtent: cacheExtent,
+    itemCount: itemCount,
+    separatorBuilder: separatorBuilder ?? (context, index) => const SizedBox.shrink(),
+    itemBuilder: itemBuilder,
+  );
 }
 
 /// Оптимизированный виджет для сетки
@@ -236,17 +227,17 @@ class OptimizedGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GridView.builder(
-        controller: scrollController,
-        physics: physics,
-        padding: padding,
-        cacheExtent: cacheExtent,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          crossAxisSpacing: crossAxisSpacing,
-          mainAxisSpacing: mainAxisSpacing,
-          childAspectRatio: childAspectRatio,
-        ),
-        itemCount: itemCount,
-        itemBuilder: itemBuilder,
-      );
+    controller: scrollController,
+    physics: physics,
+    padding: padding,
+    cacheExtent: cacheExtent,
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: crossAxisCount,
+      crossAxisSpacing: crossAxisSpacing,
+      mainAxisSpacing: mainAxisSpacing,
+      childAspectRatio: childAspectRatio,
+    ),
+    itemCount: itemCount,
+    itemBuilder: itemBuilder,
+  );
 }

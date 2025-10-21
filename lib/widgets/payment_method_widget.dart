@@ -13,35 +13,25 @@ class PaymentMethodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Способ оплаты',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              ...PaymentMethod.values.map(
-                (method) => _buildPaymentMethodTile(
-                  context,
-                  method,
-                  selectedMethod == method,
-                ),
-              ),
-            ],
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Способ оплаты',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
-        ),
-      );
+          const SizedBox(height: 16),
+          ...PaymentMethod.values.map(
+            (method) => _buildPaymentMethodTile(context, method, selectedMethod == method),
+          ),
+        ],
+      ),
+    ),
+  );
 
-  Widget _buildPaymentMethodTile(
-    BuildContext context,
-    PaymentMethod method,
-    bool isSelected,
-  ) =>
+  Widget _buildPaymentMethodTile(BuildContext context, PaymentMethod method, bool isSelected) =>
       Container(
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
@@ -67,18 +57,10 @@ class PaymentMethodWidget extends StatelessWidget {
             ),
           ),
           trailing: isSelected
-              ? Icon(
-                  Icons.check_circle,
-                  color: Theme.of(context).primaryColor,
-                )
-              : Icon(
-                  Icons.radio_button_unchecked,
-                  color: Colors.grey.shade400,
-                ),
+              ? Icon(Icons.check_circle, color: Theme.of(context).primaryColor)
+              : Icon(Icons.radio_button_unchecked, color: Colors.grey.shade400),
           onTap: () => onMethodChanged(method),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       );
 }

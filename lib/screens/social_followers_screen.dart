@@ -9,10 +9,7 @@ import '../services/supabase_service.dart';
 class SocialFollowersScreen extends ConsumerStatefulWidget {
   final String username;
 
-  const SocialFollowersScreen({
-    super.key,
-    required this.username,
-  });
+  const SocialFollowersScreen({super.key, required this.username});
 
   @override
   ConsumerState<SocialFollowersScreen> createState() => _SocialFollowersScreenState();
@@ -66,18 +63,14 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Подписчики ${_profile?.name ?? ''}'),
-      ),
+      appBar: AppBar(title: Text('Подписчики ${_profile?.name ?? ''}')),
       body: _buildBody(),
     );
   }
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -85,16 +78,9 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red.shade400,
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
             const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Ошибка загрузки', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -102,10 +88,7 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadData,
-              child: const Text('Повторить'),
-            ),
+            ElevatedButton(onPressed: _loadData, child: const Text('Повторить')),
           ],
         ),
       );
@@ -122,16 +105,13 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
               color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Нет подписчиков',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('Нет подписчиков', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
               'У ${_profile?.name ?? 'пользователя'} пока нет подписчиков',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).textTheme.bodySmall?.color,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color),
               textAlign: TextAlign.center,
             ),
           ],
@@ -155,14 +135,12 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
     return ListTile(
       leading: CircleAvatar(
         radius: 24,
-        backgroundImage:
-            follower.avatarUrl != null ? CachedNetworkImageProvider(follower.avatarUrl!) : null,
+        backgroundImage: follower.avatarUrl != null
+            ? CachedNetworkImageProvider(follower.avatarUrl!)
+            : null,
         child: follower.avatarUrl == null ? const Icon(Icons.person) : null,
       ),
-      title: Text(
-        follower.name,
-        style: const TextStyle(fontWeight: FontWeight.w500),
-      ),
+      title: Text(follower.name, style: const TextStyle(fontWeight: FontWeight.w500)),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -176,10 +154,7 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
                   color: Theme.of(context).textTheme.bodySmall?.color,
                 ),
                 const SizedBox(width: 4),
-                Text(
-                  follower.city!,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(follower.city!, style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
         ],
@@ -233,14 +208,12 @@ class _SocialFollowersScreenState extends ConsumerState<SocialFollowersScreen> {
           // Обновляем список, чтобы отразить изменения
         });
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка обновления подписки')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Ошибка обновления подписки')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 }

@@ -1,21 +1,8 @@
 /// Тип сортировки специалистов
-enum SortBy {
-  rating,
-  price,
-  distance,
-  availability,
-  experience,
-  reviews,
-  popularity,
-  newest,
-  name,
-}
+enum SortBy { rating, price, distance, availability, experience, reviews, popularity, newest, name }
 
 /// Порядок сортировки
-enum SortOrder {
-  ascending,
-  descending,
-}
+enum SortOrder { ascending, descending }
 
 /// Расширение для SortBy
 extension SortByExtension on SortBy {
@@ -114,17 +101,13 @@ class SortingSettings {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'sortBy': sortBy.name,
-        'sortOrder': sortOrder.name,
-        'isCustom': isCustom,
-      };
+    'sortBy': sortBy.name,
+    'sortOrder': sortOrder.name,
+    'isCustom': isCustom,
+  };
 
   /// Копировать с изменениями
-  SortingSettings copyWith({
-    SortBy? sortBy,
-    SortOrder? sortOrder,
-    bool? isCustom,
-  }) =>
+  SortingSettings copyWith({SortBy? sortBy, SortOrder? sortOrder, bool? isCustom}) =>
       SortingSettings(
         sortBy: sortBy ?? this.sortBy,
         sortOrder: sortOrder ?? this.sortOrder,

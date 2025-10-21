@@ -35,9 +35,7 @@ class Backup {
         orElse: () => BackupStatus.pending,
       ),
       collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
-      filters: Map<String, dynamic>.from(
-        data['filters'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      filters: Map<String, dynamic>.from(data['filters'] as Map<dynamic, dynamic>? ?? {}),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
@@ -52,34 +50,29 @@ class Backup {
 
   /// Создать из Map
   factory Backup.fromMap(Map<String, dynamic> data) => Backup(
-        id: data['id'] as String? ?? '',
-        name: data['name'] as String? ?? '',
-        description: data['description'] as String? ?? '',
-        type: BackupType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => BackupType.full,
-        ),
-        status: BackupStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == data['status'],
-          orElse: () => BackupStatus.pending,
-        ),
-        collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
-        filters: Map<String, dynamic>.from(
-          data['filters'] as Map<dynamic, dynamic>? ?? {},
-        ),
-        createdBy: data['createdBy'] as String?,
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        completedAt:
-            data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
-        fileUrl: data['fileUrl'] as String?,
-        fileSize: data['fileSize'] as int?,
-        errorMessage: data['errorMessage'] as String?,
-        metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>,
-              )
-            : null,
-      );
+    id: data['id'] as String? ?? '',
+    name: data['name'] as String? ?? '',
+    description: data['description'] as String? ?? '',
+    type: BackupType.values.firstWhere(
+      (e) => e.toString().split('.').last == data['type'],
+      orElse: () => BackupType.full,
+    ),
+    status: BackupStatus.values.firstWhere(
+      (e) => e.toString().split('.').last == data['status'],
+      orElse: () => BackupStatus.pending,
+    ),
+    collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
+    filters: Map<String, dynamic>.from(data['filters'] as Map<dynamic, dynamic>? ?? {}),
+    createdBy: data['createdBy'] as String?,
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+    completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+    fileUrl: data['fileUrl'] as String?,
+    fileSize: data['fileSize'] as int?,
+    errorMessage: data['errorMessage'] as String?,
+    metadata: data['metadata'] != null
+        ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
+        : null,
+  );
   final String id;
   final String name;
   final String description;
@@ -97,20 +90,20 @@ class Backup {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'type': type.toString().split('.').last,
-        'status': status.toString().split('.').last,
-        'collections': collections,
-        'filters': filters,
-        'createdBy': createdBy,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-        'fileUrl': fileUrl,
-        'fileSize': fileSize,
-        'errorMessage': errorMessage,
-        'metadata': metadata,
-      };
+    'name': name,
+    'description': description,
+    'type': type.toString().split('.').last,
+    'status': status.toString().split('.').last,
+    'collections': collections,
+    'filters': filters,
+    'createdBy': createdBy,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+    'fileUrl': fileUrl,
+    'fileSize': fileSize,
+    'errorMessage': errorMessage,
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   Backup copyWith({
@@ -128,23 +121,22 @@ class Backup {
     int? fileSize,
     String? errorMessage,
     Map<String, dynamic>? metadata,
-  }) =>
-      Backup(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        collections: collections ?? this.collections,
-        filters: filters ?? this.filters,
-        createdBy: createdBy ?? this.createdBy,
-        createdAt: createdAt ?? this.createdAt,
-        completedAt: completedAt ?? this.completedAt,
-        fileUrl: fileUrl ?? this.fileUrl,
-        fileSize: fileSize ?? this.fileSize,
-        errorMessage: errorMessage ?? this.errorMessage,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => Backup(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    collections: collections ?? this.collections,
+    filters: filters ?? this.filters,
+    createdBy: createdBy ?? this.createdBy,
+    createdAt: createdAt ?? this.createdAt,
+    completedAt: completedAt ?? this.completedAt,
+    fileUrl: fileUrl ?? this.fileUrl,
+    fileSize: fileSize ?? this.fileSize,
+    errorMessage: errorMessage ?? this.errorMessage,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, завершен ли бэкап
   bool get isCompleted => status == BackupStatus.completed && fileUrl != null;
@@ -199,42 +191,31 @@ class Backup {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        name,
-        description,
-        type,
-        status,
-        collections,
-        filters,
-        createdBy,
-        createdAt,
-        completedAt,
-        fileUrl,
-        fileSize,
-        errorMessage,
-        metadata,
-      );
+    id,
+    name,
+    description,
+    type,
+    status,
+    collections,
+    filters,
+    createdBy,
+    createdAt,
+    completedAt,
+    fileUrl,
+    fileSize,
+    errorMessage,
+    metadata,
+  );
 
   @override
   String toString() => 'Backup(id: $id, name: $name, status: $status)';
 }
 
 /// Типы бэкапов
-enum BackupType {
-  full,
-  incremental,
-  differential,
-  selective,
-}
+enum BackupType { full, incremental, differential, selective }
 
 /// Статусы бэкапов
-enum BackupStatus {
-  pending,
-  inProgress,
-  completed,
-  failed,
-  cancelled,
-}
+enum BackupStatus { pending, inProgress, completed, failed, cancelled }
 
 /// Модель восстановления
 class Restore {
@@ -271,9 +252,7 @@ class Restore {
         orElse: () => RestoreStatus.pending,
       ),
       collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
-      options: Map<String, dynamic>.from(
-        data['options'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      options: Map<String, dynamic>.from(data['options'] as Map<dynamic, dynamic>? ?? {}),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
@@ -286,33 +265,28 @@ class Restore {
 
   /// Создать из Map
   factory Restore.fromMap(Map<String, dynamic> data) => Restore(
-        id: data['id'] as String? ?? '',
-        backupId: data['backupId'] as String? ?? '',
-        name: data['name'] as String? ?? '',
-        description: data['description'] as String? ?? '',
-        type: RestoreType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => RestoreType.full,
-        ),
-        status: RestoreStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == data['status'],
-          orElse: () => RestoreStatus.pending,
-        ),
-        collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
-        options: Map<String, dynamic>.from(
-          data['options'] as Map<dynamic, dynamic>? ?? {},
-        ),
-        createdBy: data['createdBy'] as String?,
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        completedAt:
-            data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
-        errorMessage: data['errorMessage'] as String?,
-        metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(
-                data['metadata'] as Map<dynamic, dynamic>,
-              )
-            : null,
-      );
+    id: data['id'] as String? ?? '',
+    backupId: data['backupId'] as String? ?? '',
+    name: data['name'] as String? ?? '',
+    description: data['description'] as String? ?? '',
+    type: RestoreType.values.firstWhere(
+      (e) => e.toString().split('.').last == data['type'],
+      orElse: () => RestoreType.full,
+    ),
+    status: RestoreStatus.values.firstWhere(
+      (e) => e.toString().split('.').last == data['status'],
+      orElse: () => RestoreStatus.pending,
+    ),
+    collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
+    options: Map<String, dynamic>.from(data['options'] as Map<dynamic, dynamic>? ?? {}),
+    createdBy: data['createdBy'] as String?,
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+    completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+    errorMessage: data['errorMessage'] as String?,
+    metadata: data['metadata'] != null
+        ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
+        : null,
+  );
   final String id;
   final String backupId;
   final String name;
@@ -329,19 +303,19 @@ class Restore {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'backupId': backupId,
-        'name': name,
-        'description': description,
-        'type': type.toString().split('.').last,
-        'status': status.toString().split('.').last,
-        'collections': collections,
-        'options': options,
-        'createdBy': createdBy,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-        'errorMessage': errorMessage,
-        'metadata': metadata,
-      };
+    'backupId': backupId,
+    'name': name,
+    'description': description,
+    'type': type.toString().split('.').last,
+    'status': status.toString().split('.').last,
+    'collections': collections,
+    'options': options,
+    'createdBy': createdBy,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+    'errorMessage': errorMessage,
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   Restore copyWith({
@@ -358,22 +332,21 @@ class Restore {
     DateTime? completedAt,
     String? errorMessage,
     Map<String, dynamic>? metadata,
-  }) =>
-      Restore(
-        id: id ?? this.id,
-        backupId: backupId ?? this.backupId,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        collections: collections ?? this.collections,
-        options: options ?? this.options,
-        createdBy: createdBy ?? this.createdBy,
-        createdAt: createdAt ?? this.createdAt,
-        completedAt: completedAt ?? this.completedAt,
-        errorMessage: errorMessage ?? this.errorMessage,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => Restore(
+    id: id ?? this.id,
+    backupId: backupId ?? this.backupId,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    collections: collections ?? this.collections,
+    options: options ?? this.options,
+    createdBy: createdBy ?? this.createdBy,
+    createdAt: createdAt ?? this.createdAt,
+    completedAt: completedAt ?? this.completedAt,
+    errorMessage: errorMessage ?? this.errorMessage,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, завершено ли восстановление
   bool get isCompleted => status == RestoreStatus.completed;
@@ -411,40 +384,30 @@ class Restore {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        backupId,
-        name,
-        description,
-        type,
-        status,
-        collections,
-        options,
-        createdBy,
-        createdAt,
-        completedAt,
-        errorMessage,
-        metadata,
-      );
+    id,
+    backupId,
+    name,
+    description,
+    type,
+    status,
+    collections,
+    options,
+    createdBy,
+    createdAt,
+    completedAt,
+    errorMessage,
+    metadata,
+  );
 
   @override
   String toString() => 'Restore(id: $id, name: $name, status: $status)';
 }
 
 /// Типы восстановления
-enum RestoreType {
-  full,
-  selective,
-  pointInTime,
-}
+enum RestoreType { full, selective, pointInTime }
 
 /// Статусы восстановления
-enum RestoreStatus {
-  pending,
-  inProgress,
-  completed,
-  failed,
-  cancelled,
-}
+enum RestoreStatus { pending, inProgress, completed, failed, cancelled }
 
 /// Статистика бэкапов
 class BackupStatistics {

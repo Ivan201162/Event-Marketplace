@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PromotedPostBadge extends StatelessWidget {
-  const PromotedPostBadge({
-    super.key,
-    required this.isPromoted,
-  });
+  const PromotedPostBadge({super.key, required this.isPromoted});
   final bool isPromoted;
 
   @override
@@ -33,19 +30,11 @@ class PromotedPostBadge extends StatelessWidget {
       child: const Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.trending_up,
-            color: Colors.white,
-            size: 12,
-          ),
+          Icon(Icons.trending_up, color: Colors.white, size: 12),
           SizedBox(width: 4),
           Text(
             'РЕКЛАМА',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
           ),
         ],
       ),

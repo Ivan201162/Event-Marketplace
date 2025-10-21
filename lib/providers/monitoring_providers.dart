@@ -35,15 +35,14 @@ class MonitoringState {
     List<String>? activeTraces,
     String? lastError,
     DateTime? lastErrorTime,
-  }) =>
-      MonitoringState(
-        isInitialized: isInitialized ?? this.isInitialized,
-        isEnabled: isEnabled ?? this.isEnabled,
-        metrics: metrics ?? this.metrics,
-        activeTraces: activeTraces ?? this.activeTraces,
-        lastError: lastError ?? this.lastError,
-        lastErrorTime: lastErrorTime ?? this.lastErrorTime,
-      );
+  }) => MonitoringState(
+    isInitialized: isInitialized ?? this.isInitialized,
+    isEnabled: isEnabled ?? this.isEnabled,
+    metrics: metrics ?? this.metrics,
+    activeTraces: activeTraces ?? this.activeTraces,
+    lastError: lastError ?? this.lastError,
+    lastErrorTime: lastErrorTime ?? this.lastErrorTime,
+  );
 }
 
 /// Нотификатор состояния мониторинга
@@ -65,10 +64,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
         isEnabled: monitoringService.isAvailable,
       );
     } catch (e) {
-      state = state.copyWith(
-        lastError: e.toString(),
-        lastErrorTime: DateTime.now(),
-      );
+      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -82,37 +78,21 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
   }) async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
-      await monitoringService.recordError(
-        error,
-        stackTrace,
-        context: reason,
-      );
+      await monitoringService.recordError(error, stackTrace, context: reason);
 
-      state = state.copyWith(
-        lastError: error.toString(),
-        lastErrorTime: DateTime.now(),
-      );
+      state = state.copyWith(lastError: error.toString(), lastErrorTime: DateTime.now());
     } catch (e) {
-      state = state.copyWith(
-        lastError: e.toString(),
-        lastErrorTime: DateTime.now(),
-      );
+      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
   /// Запись пользовательского действия
-  Future<void> logUserAction(
-    String action, {
-    Map<String, dynamic>? parameters,
-  }) async {
+  Future<void> logUserAction(String action, {Map<String, dynamic>? parameters}) async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
       await monitoringService.logUserAction('', action, parameters);
     } catch (e) {
-      state = state.copyWith(
-        lastError: e.toString(),
-        lastErrorTime: DateTime.now(),
-      );
+      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -125,10 +105,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final updatedTraces = List<String>.from(state.activeTraces)..add(traceName);
       state = state.copyWith(activeTraces: updatedTraces);
     } catch (e) {
-      state = state.copyWith(
-        lastError: e.toString(),
-        lastErrorTime: DateTime.now(),
-      );
+      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -141,10 +118,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final updatedTraces = List<String>.from(state.activeTraces)..remove(traceName);
       state = state.copyWith(activeTraces: updatedTraces);
     } catch (e) {
-      state = state.copyWith(
-        lastError: e.toString(),
-        lastErrorTime: DateTime.now(),
-      );
+      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -155,10 +129,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final metrics = await monitoringService.getAppMetrics();
       state = state.copyWith(metrics: metrics);
     } catch (e) {
-      state = state.copyWith(
-        lastError: e.toString(),
-        lastErrorTime: DateTime.now(),
-      );
+      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -168,10 +139,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final monitoringService = ref.read(monitoringServiceProvider);
       monitoringService.setUserId(userId);
     } catch (e) {
-      state = state.copyWith(
-        lastError: e.toString(),
-        lastErrorTime: DateTime.now(),
-      );
+      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -181,15 +149,9 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final monitoringService = ref.read(monitoringServiceProvider);
       monitoringService.clearData();
 
-      state = state.copyWith(
-        metrics: {},
-        activeTraces: [],
-      );
+      state = state.copyWith(metrics: {}, activeTraces: []);
     } catch (e) {
-      state = state.copyWith(
-        lastError: e.toString(),
-        lastErrorTime: DateTime.now(),
-      );
+      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 }

@@ -203,8 +203,10 @@ class MarketingAdminService {
       stats['totalReferrals'] = referralsSnapshot.docs.length;
 
       // Активные рефералы
-      final activeReferralsSnapshot =
-          await _firestore.collection('referrals').where('status', isEqualTo: 'completed').get();
+      final activeReferralsSnapshot = await _firestore
+          .collection('referrals')
+          .where('status', isEqualTo: 'completed')
+          .get();
       stats['activeReferrals'] = activeReferralsSnapshot.docs.length;
 
       // Статистика по месяцам
@@ -251,8 +253,10 @@ class MarketingAdminService {
       stats['totalPartners'] = partnersSnapshot.docs.length;
 
       // Активные партнёры
-      final activePartnersSnapshot =
-          await _firestore.collection('partners').where('isActive', isEqualTo: true).get();
+      final activePartnersSnapshot = await _firestore
+          .collection('partners')
+          .where('isActive', isEqualTo: true)
+          .get();
       stats['activePartners'] = activePartnersSnapshot.docs.length;
 
       // Общая сумма комиссий
@@ -277,10 +281,7 @@ class MarketingAdminService {
 
       stats['topPartners'] = sortedPartners
           .take(10)
-          .map((entry) => {
-                'partnerId': entry.key,
-                'totalEarnings': entry.value,
-              })
+          .map((entry) => {'partnerId': entry.key, 'totalEarnings': entry.value})
           .toList();
 
       return stats;
@@ -392,8 +393,9 @@ class MarketingAdminService {
         .collection('marketing_campaigns')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => MarketingCampaign.fromMap(doc.data())).toList());
+        .map(
+          (snapshot) => snapshot.docs.map((doc) => MarketingCampaign.fromMap(doc.data())).toList(),
+        );
   }
 
   /// Получение всех рассылок
@@ -402,8 +404,10 @@ class MarketingAdminService {
         .collection('marketing_newsletters')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => MarketingNewsletter.fromMap(doc.data())).toList());
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => MarketingNewsletter.fromMap(doc.data())).toList(),
+        );
   }
 
   /// Получение всех сегментов пользователей
@@ -440,7 +444,8 @@ class MarketingAdminService {
       );
 
       debugPrint(
-          'INFO: [MarketingAdminService] Campaign status changed: $campaignId to ${newStatus.name}');
+        'INFO: [MarketingAdminService] Campaign status changed: $campaignId to ${newStatus.name}',
+      );
       return true;
     } catch (e) {
       debugPrint('ERROR: [MarketingAdminService] Failed to toggle campaign status: $e');

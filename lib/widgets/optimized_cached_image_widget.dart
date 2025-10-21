@@ -34,8 +34,6 @@ class OptimizedCachedImageWidget extends StatefulWidget {
 
 class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
     with AutomaticKeepAliveClientMixin {
-  final bool _isLoading = true;
-  bool _hasError = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -51,10 +49,7 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
   Future<void> _preloadImage() async {
     try {
       await precacheImage(
-        CachedNetworkImageProvider(
-          widget.imageUrl,
-          cacheManager: widget.cacheManager,
-        ),
+        CachedNetworkImageProvider(widget.imageUrl, cacheManager: widget.cacheManager),
         context,
       );
     } catch (e) {
@@ -65,33 +60,27 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
   }
 
   Widget _buildShimmerPlaceholder() => Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: Container(
-          width: widget.width,
-          height: widget.height,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: widget.borderRadius,
-          ),
-        ),
-      );
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: Container(
+      width: widget.width,
+      height: widget.height,
+      decoration: BoxDecoration(color: Colors.white, borderRadius: widget.borderRadius),
+    ),
+  );
 
   Widget _buildErrorWidget() => Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: widget.borderRadius,
-        ),
-        child: Icon(
-          Icons.error_outline,
-          color: Colors.grey[400],
-          size: (widget.width != null && widget.height != null)
-              ? (widget.width! < widget.height! ? widget.width! * 0.3 : widget.height! * 0.3)
-              : 24,
-        ),
-      );
+    width: widget.width,
+    height: widget.height,
+    decoration: BoxDecoration(color: Colors.grey[200], borderRadius: widget.borderRadius),
+    child: Icon(
+      Icons.error_outline,
+      color: Colors.grey[400],
+      size: (widget.width != null && widget.height != null)
+          ? (widget.width! < widget.height! ? widget.width! * 0.3 : widget.height! * 0.3)
+          : 24,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -116,16 +105,10 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
     );
 
     if (widget.borderRadius != null) {
-      imageWidget = ClipRRect(
-        borderRadius: widget.borderRadius!,
-        child: imageWidget,
-      );
+      imageWidget = ClipRRect(borderRadius: widget.borderRadius!, child: imageWidget);
     }
 
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      child: imageWidget,
-    );
+    return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: imageWidget);
   }
 }
 
@@ -148,34 +131,24 @@ class CachedAvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: borderColor != null ? Border.all(color: borderColor!, width: borderWidth) : null,
-        ),
-        child: CircleAvatar(
-          radius: radius,
-          backgroundColor: Colors.grey[200],
-          child: imageUrl.isNotEmpty
-              ? OptimizedCachedImageWidget(
-                  imageUrl: imageUrl,
-                  width: radius * 2,
-                  height: radius * 2,
-                  borderRadius: BorderRadius.circular(radius),
-                  placeholder: placeholder ??
-                      Icon(
-                        Icons.person,
-                        size: radius,
-                        color: Colors.grey[400],
-                      ),
-                )
-              : placeholder ??
-                  Icon(
-                    Icons.person,
-                    size: radius,
-                    color: Colors.grey[400],
-                  ),
-        ),
-      );
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: borderColor != null ? Border.all(color: borderColor!, width: borderWidth) : null,
+    ),
+    child: CircleAvatar(
+      radius: radius,
+      backgroundColor: Colors.grey[200],
+      child: imageUrl.isNotEmpty
+          ? OptimizedCachedImageWidget(
+              imageUrl: imageUrl,
+              width: radius * 2,
+              height: radius * 2,
+              borderRadius: BorderRadius.circular(radius),
+              placeholder: placeholder ?? Icon(Icons.person, size: radius, color: Colors.grey[400]),
+            )
+          : placeholder ?? Icon(Icons.person, size: radius, color: Colors.grey[400]),
+    ),
+  );
 }
 
 /// Виджет для карточки изображения с кэшированием
@@ -199,39 +172,36 @@ class CachedImageCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(borderRadius),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+    onTap: onTap,
+    child: Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(borderRadius),
-            child: Stack(
-              children: [
-                OptimizedCachedImageWidget(
-                  imageUrl: imageUrl,
-                  width: width,
-                  height: height,
-                  borderRadius: BorderRadius.circular(borderRadius),
-                ),
-                if (child != null)
-                  Positioned.fill(
-                    child: child!,
-                  ),
-              ],
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: Stack(
+          children: [
+            OptimizedCachedImageWidget(
+              imageUrl: imageUrl,
+              width: width,
+              height: height,
+              borderRadius: BorderRadius.circular(borderRadius),
             ),
-          ),
+            if (child != null) Positioned.fill(child: child!),
+          ],
         ),
-      );
+      ),
+    ),
+  );
 }
 
 /// Виджет для сетки изображений с кэшированием
@@ -255,24 +225,24 @@ class CachedImageGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          crossAxisSpacing: crossAxisSpacing,
-          mainAxisSpacing: mainAxisSpacing,
-          childAspectRatio: aspectRatio,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: crossAxisCount,
+      crossAxisSpacing: crossAxisSpacing,
+      mainAxisSpacing: mainAxisSpacing,
+      childAspectRatio: aspectRatio,
+    ),
+    itemCount: imageUrls.length,
+    itemBuilder: (context, index) {
+      final imageUrl = imageUrls[index];
+      return GestureDetector(
+        onTap: () => onImageTap?.call(imageUrl, index),
+        child: OptimizedCachedImageWidget(
+          imageUrl: imageUrl,
+          borderRadius: BorderRadius.circular(8),
         ),
-        itemCount: imageUrls.length,
-        itemBuilder: (context, index) {
-          final imageUrl = imageUrls[index];
-          return GestureDetector(
-            onTap: () => onImageTap?.call(imageUrl, index),
-            child: OptimizedCachedImageWidget(
-              imageUrl: imageUrl,
-              borderRadius: BorderRadius.circular(8),
-            ),
-          );
-        },
       );
+    },
+  );
 }

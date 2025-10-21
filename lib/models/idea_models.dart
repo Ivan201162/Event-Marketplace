@@ -1,24 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Статус идеи
-enum IdeaStatus {
-  draft,
-  published,
-  archived,
-  deleted,
-}
+enum IdeaStatus { draft, published, archived, deleted }
 
 /// Тип идеи
-enum IdeaType {
-  event,
-  decoration,
-  entertainment,
-  catering,
-  photography,
-  music,
-  venue,
-  other,
-}
+enum IdeaType { event, decoration, entertainment, catering, photography, music, venue, other }
 
 /// Модель идеи
 class Idea {
@@ -143,28 +129,28 @@ class Idea {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       publishedAt: data['publishedAt'] != null
           ? (data['publishedAt'] is Timestamp
-              ? (data['publishedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['publishedAt'].toString()))
+                ? (data['publishedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['publishedAt'].toString()))
           : null,
       archivedAt: data['archivedAt'] != null
           ? (data['archivedAt'] is Timestamp
-              ? (data['archivedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['archivedAt'].toString()))
+                ? (data['archivedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['archivedAt'].toString()))
           : null,
       deletedAt: data['deletedAt'] != null
           ? (data['deletedAt'] is Timestamp
-              ? (data['deletedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['deletedAt'].toString()))
+                ? (data['deletedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['deletedAt'].toString()))
           : null,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -176,53 +162,50 @@ class Idea {
       throw Exception('Document data is null');
     }
 
-    return Idea.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return Idea.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'authorId': authorId,
-        'title': title,
-        'description': description,
-        'type': type.name,
-        'status': status.name,
-        'category': category,
-        'tags': tags,
-        'images': images,
-        'videos': videos,
-        'attachments': attachments,
-        'budget': budget,
-        'duration': duration?.inMilliseconds,
-        'difficulty': difficulty,
-        'materials': materials,
-        'tools': tools,
-        'steps': steps,
-        'tips': tips,
-        'warnings': warnings,
-        'source': source,
-        'credits': credits,
-        'license': license,
-        'views': views,
-        'likes': likes,
-        'saves': saves,
-        'shares': shares,
-        'comments': comments,
-        'isLiked': isLiked,
-        'isSaved': isSaved,
-        'isShared': isShared,
-        'isPublic': isPublic,
-        'isFeatured': isFeatured,
-        'isVerified': isVerified,
-        'metadata': metadata,
-        'publishedAt': publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
-        'archivedAt': archivedAt != null ? Timestamp.fromDate(archivedAt!) : null,
-        'deletedAt': deletedAt != null ? Timestamp.fromDate(deletedAt!) : null,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      };
+    'authorId': authorId,
+    'title': title,
+    'description': description,
+    'type': type.name,
+    'status': status.name,
+    'category': category,
+    'tags': tags,
+    'images': images,
+    'videos': videos,
+    'attachments': attachments,
+    'budget': budget,
+    'duration': duration?.inMilliseconds,
+    'difficulty': difficulty,
+    'materials': materials,
+    'tools': tools,
+    'steps': steps,
+    'tips': tips,
+    'warnings': warnings,
+    'source': source,
+    'credits': credits,
+    'license': license,
+    'views': views,
+    'likes': likes,
+    'saves': saves,
+    'shares': shares,
+    'comments': comments,
+    'isLiked': isLiked,
+    'isSaved': isSaved,
+    'isShared': isShared,
+    'isPublic': isPublic,
+    'isFeatured': isFeatured,
+    'isVerified': isVerified,
+    'metadata': metadata,
+    'publishedAt': publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
+    'archivedAt': archivedAt != null ? Timestamp.fromDate(archivedAt!) : null,
+    'deletedAt': deletedAt != null ? Timestamp.fromDate(deletedAt!) : null,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
   /// Копировать с изменениями
   Idea copyWith({
@@ -265,48 +248,47 @@ class Idea {
     DateTime? deletedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      Idea(
-        id: id ?? this.id,
-        authorId: authorId ?? this.authorId,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        category: category ?? this.category,
-        tags: tags ?? this.tags,
-        images: images ?? this.images,
-        videos: videos ?? this.videos,
-        attachments: attachments ?? this.attachments,
-        budget: budget ?? this.budget,
-        duration: duration ?? this.duration,
-        difficulty: difficulty ?? this.difficulty,
-        materials: materials ?? this.materials,
-        tools: tools ?? this.tools,
-        steps: steps ?? this.steps,
-        tips: tips ?? this.tips,
-        warnings: warnings ?? this.warnings,
-        source: source ?? this.source,
-        credits: credits ?? this.credits,
-        license: license ?? this.license,
-        views: views ?? this.views,
-        likes: likes ?? this.likes,
-        saves: saves ?? this.saves,
-        shares: shares ?? this.shares,
-        comments: comments ?? this.comments,
-        isLiked: isLiked ?? this.isLiked,
-        isSaved: isSaved ?? this.isSaved,
-        isShared: isShared ?? this.isShared,
-        isPublic: isPublic ?? this.isPublic,
-        isFeatured: isFeatured ?? this.isFeatured,
-        isVerified: isVerified ?? this.isVerified,
-        metadata: metadata ?? this.metadata,
-        publishedAt: publishedAt ?? this.publishedAt,
-        archivedAt: archivedAt ?? this.archivedAt,
-        deletedAt: deletedAt ?? this.deletedAt,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => Idea(
+    id: id ?? this.id,
+    authorId: authorId ?? this.authorId,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    category: category ?? this.category,
+    tags: tags ?? this.tags,
+    images: images ?? this.images,
+    videos: videos ?? this.videos,
+    attachments: attachments ?? this.attachments,
+    budget: budget ?? this.budget,
+    duration: duration ?? this.duration,
+    difficulty: difficulty ?? this.difficulty,
+    materials: materials ?? this.materials,
+    tools: tools ?? this.tools,
+    steps: steps ?? this.steps,
+    tips: tips ?? this.tips,
+    warnings: warnings ?? this.warnings,
+    source: source ?? this.source,
+    credits: credits ?? this.credits,
+    license: license ?? this.license,
+    views: views ?? this.views,
+    likes: likes ?? this.likes,
+    saves: saves ?? this.saves,
+    shares: shares ?? this.shares,
+    comments: comments ?? this.comments,
+    isLiked: isLiked ?? this.isLiked,
+    isSaved: isSaved ?? this.isSaved,
+    isShared: isShared ?? this.isShared,
+    isPublic: isPublic ?? this.isPublic,
+    isFeatured: isFeatured ?? this.isFeatured,
+    isVerified: isVerified ?? this.isVerified,
+    metadata: metadata ?? this.metadata,
+    publishedAt: publishedAt ?? this.publishedAt,
+    archivedAt: archivedAt ?? this.archivedAt,
+    deletedAt: deletedAt ?? this.deletedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Парсинг типа из строки
   static IdeaType _parseType(String? type) {

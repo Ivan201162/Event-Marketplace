@@ -3,11 +3,7 @@ class PriceRange {
   final double max;
   final String currency;
 
-  const PriceRange({
-    required this.min,
-    required this.max,
-    this.currency = 'RUB',
-  });
+  const PriceRange({required this.min, required this.max, this.currency = 'RUB'});
 
   factory PriceRange.fromMap(Map<String, dynamic> map) {
     return PriceRange(
@@ -18,11 +14,7 @@ class PriceRange {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'min': min,
-      'max': max,
-      'currency': currency,
-    };
+    return {'min': min, 'max': max, 'currency': currency};
   }
 
   bool contains(double price) {
@@ -47,11 +39,7 @@ class PriceRange {
   double get minPrice => min;
   double get maxPrice => max;
 
-  PriceRange copyWith({
-    double? min,
-    double? max,
-    String? currency,
-  }) {
+  PriceRange copyWith({double? min, double? max, String? currency}) {
     return PriceRange(
       min: min ?? this.min,
       max: max ?? this.max,

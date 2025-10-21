@@ -71,7 +71,8 @@ class AutomatedPromotionsService {
       });
 
       debugPrint(
-          'INFO: [AutomatedPromotionsService] Automated promotion deactivated: $promotionId');
+        'INFO: [AutomatedPromotionsService] Automated promotion deactivated: $promotionId',
+      );
     } catch (e) {
       debugPrint('ERROR: [AutomatedPromotionsService] Failed to deactivate promotion: $e');
     }
@@ -79,7 +80,10 @@ class AutomatedPromotionsService {
 
   /// Проверка и выполнение автоматических промо-кампаний
   Future<void> checkAndExecutePromotions(
-      String userId, String eventType, Map<String, dynamic> eventData) async {
+    String userId,
+    String eventType,
+    Map<String, dynamic> eventData,
+  ) async {
     try {
       // Получаем все активные автоматические промо-кампании
       final QuerySnapshot promotionsSnapshot = await _firestore
@@ -90,8 +94,9 @@ class AutomatedPromotionsService {
           .get();
 
       for (final doc in promotionsSnapshot.docs) {
-        final AutomatedPromotion promotion =
-            AutomatedPromotion.fromMap(doc.data() as Map<String, dynamic>);
+        final AutomatedPromotion promotion = AutomatedPromotion.fromMap(
+          doc.data() as Map<String, dynamic>,
+        );
 
         // Проверяем, соответствует ли событие триггеру
         if (_matchesTrigger(promotion.trigger, eventType, eventData)) {
@@ -225,7 +230,8 @@ class AutomatedPromotionsService {
       await _recordPromotionApplication(userId, promotion.id);
 
       debugPrint(
-          'INFO: [AutomatedPromotionsService] Promotion executed: ${promotion.name} for user $userId');
+        'INFO: [AutomatedPromotionsService] Promotion executed: ${promotion.name} for user $userId',
+      );
     } catch (e) {
       debugPrint('ERROR: [AutomatedPromotionsService] Failed to execute promotion: $e');
     }
@@ -257,19 +263,13 @@ class AutomatedPromotionsService {
         name: 'Вернись к нам!',
         description: 'Специальное предложение для неактивных пользователей',
         trigger: PromotionTrigger.inactivity,
-        conditions: {
-          'inactivity_days': 7,
-        },
+        conditions: {'inactivity_days': 7},
         actions: {
           'send_notification': {
             'title': 'Мы скучаем!',
             'message': 'Вернись и получи скидку 50% на Premium!',
           },
-          'apply_discount': {
-            'type': 'percentage',
-            'value': 50.0,
-            'duration_days': 7,
-          },
+          'apply_discount': {'type': 'percentage', 'value': 50.0, 'duration_days': 7},
         },
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 365)),
@@ -281,19 +281,13 @@ class AutomatedPromotionsService {
         name: 'Продли подписку!',
         description: 'Специальное предложение перед истечением подписки',
         trigger: PromotionTrigger.subscriptionExpiry,
-        conditions: {
-          'subscription_type': 'premium',
-        },
+        conditions: {'subscription_type': 'premium'},
         actions: {
           'send_notification': {
             'title': 'Подписка истекает!',
             'message': 'Продли Premium со скидкой 30%!',
           },
-          'apply_discount': {
-            'type': 'percentage',
-            'value': 30.0,
-            'duration_days': 3,
-          },
+          'apply_discount': {'type': 'percentage', 'value': 30.0, 'duration_days': 3},
         },
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 365)),
@@ -311,11 +305,7 @@ class AutomatedPromotionsService {
             'title': 'Праздничная скидка!',
             'message': 'Получите скидку 25% на все тарифы!',
           },
-          'apply_discount': {
-            'type': 'percentage',
-            'value': 25.0,
-            'duration_days': 7,
-          },
+          'apply_discount': {'type': 'percentage', 'value': 25.0, 'duration_days': 7},
         },
         startDate: DateTime.now(),
         endDate: DateTime.now().add(const Duration(days: 365)),
@@ -327,9 +317,7 @@ class AutomatedPromotionsService {
         name: 'Мастер рефералов',
         description: 'Бонус за приглашение 10 друзей',
         trigger: PromotionTrigger.milestone,
-        conditions: {
-          'referral_count': 10,
-        },
+        conditions: {'referral_count': 10},
         actions: {
           'send_notification': {
             'title': 'Поздравляем!',
@@ -435,7 +423,10 @@ class AutomatedPromotionsService {
 
   /// Вспомогательные методы для выполнения действий
   Future<void> _sendPromotionNotification(
-      String userId, AutomatedPromotion promotion, Map<String, dynamic> notificationData) async {
+    String userId,
+    AutomatedPromotion promotion,
+    Map<String, dynamic> notificationData,
+  ) async {
     // Логика отправки уведомления
     debugPrint('INFO: [AutomatedPromotionsService] Sending promotion notification to user $userId');
   }
@@ -461,7 +452,10 @@ class AutomatedPromotionsService {
   }
 
   Future<void> _sendPromotionEmail(
-      String userId, AutomatedPromotion promotion, Map<String, dynamic> emailData) async {
+    String userId,
+    AutomatedPromotion promotion,
+    Map<String, dynamic> emailData,
+  ) async {
     // Логика отправки email
     debugPrint('INFO: [AutomatedPromotionsService] Sending promotion email to user $userId');
   }

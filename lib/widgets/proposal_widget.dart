@@ -8,7 +8,6 @@ class ProposalWidget extends StatelessWidget {
   const ProposalWidget({super.key});
 
   @override
-  Widget build(BuildContext context) => const Center(
-        child: Text('ProposalWidget временно отключен'),
-      );
+  Widget build(BuildContext context) =>
+      const Center(child: Text('ProposalWidget временно отключен'));
 }

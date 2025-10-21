@@ -45,30 +45,17 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.animationDuration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
 
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.1,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: widget.curve,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
   }
 
   @override
@@ -169,11 +156,7 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
 
 /// Элемент нижнего меню
 class BottomNavigationItem {
-  const BottomNavigationItem({
-    required this.icon,
-    required this.activeIcon,
-    required this.label,
-  });
+  const BottomNavigationItem({required this.icon, required this.activeIcon, required this.label});
 
   final IconData icon;
   final IconData activeIcon;
@@ -273,20 +256,12 @@ class _FloatingBottomNavigationState extends State<FloatingBottomNavigation>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.animationDuration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
 
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.2,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.elasticOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
   }
 
   @override

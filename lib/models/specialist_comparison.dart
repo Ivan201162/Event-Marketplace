@@ -2,16 +2,11 @@ import '../models/specialist.dart';
 
 /// Модель для сравнения специалистов
 class SpecialistComparison {
-  const SpecialistComparison({
-    required this.specialists,
-    required this.createdAt,
-  });
+  const SpecialistComparison({required this.specialists, required this.createdAt});
 
   /// Создать пустое сравнение
-  factory SpecialistComparison.empty() => SpecialistComparison(
-        specialists: [],
-        createdAt: DateTime.now(),
-      );
+  factory SpecialistComparison.empty() =>
+      SpecialistComparison(specialists: [], createdAt: DateTime.now());
   final List<Specialist> specialists;
   final DateTime createdAt;
 
@@ -21,26 +16,21 @@ class SpecialistComparison {
   /// Добавить специалиста для сравнения
   SpecialistComparison addSpecialist(Specialist specialist) {
     if (specialists.length >= maxSpecialists) {
-      throw Exception(
-        'Максимальное количество специалистов для сравнения: $maxSpecialists',
-      );
+      throw Exception('Максимальное количество специалистов для сравнения: $maxSpecialists');
     }
 
     if (specialists.any((s) => s.id == specialist.id)) {
       throw Exception('Специалист уже добавлен для сравнения');
     }
 
-    return SpecialistComparison(
-      specialists: [...specialists, specialist],
-      createdAt: createdAt,
-    );
+    return SpecialistComparison(specialists: [...specialists, specialist], createdAt: createdAt);
   }
 
   /// Удалить специалиста из сравнения
   SpecialistComparison removeSpecialist(String specialistId) => SpecialistComparison(
-        specialists: specialists.where((s) => s.id != specialistId).toList(),
-        createdAt: createdAt,
-      );
+    specialists: specialists.where((s) => s.id != specialistId).toList(),
+    createdAt: createdAt,
+  );
 
   /// Очистить сравнение
   SpecialistComparison clear() => SpecialistComparison.empty();
@@ -72,10 +62,7 @@ class SpecialistComparison {
     final prices = specialists.map((s) => s.hourlyRate).toList();
     prices.sort();
 
-    return PriceRange(
-      min: prices.first,
-      max: prices.last,
-    );
+    return PriceRange(min: prices.first, max: prices.last);
   }
 
   /// Получить диапазон опыта
@@ -85,10 +72,7 @@ class SpecialistComparison {
     final experiences = specialists.map((s) => s.yearsOfExperience).toList();
     experiences.sort();
 
-    return ExperienceRange(
-      min: experiences.first,
-      max: experiences.last,
-    );
+    return ExperienceRange(min: experiences.first, max: experiences.last);
   }
 
   /// Получить общие категории
@@ -120,22 +104,19 @@ class SpecialistComparison {
 
   /// Получить статистику сравнения
   ComparisonStats get stats => ComparisonStats(
-        totalSpecialists: specialists.length,
-        averageRating: averageRating,
-        priceRange: priceRange,
-        experienceRange: experienceRange,
-        commonCategories: commonCategories,
-        commonServices: commonServices,
-        commonLocations: commonLocations,
-      );
+    totalSpecialists: specialists.length,
+    averageRating: averageRating,
+    priceRange: priceRange,
+    experienceRange: experienceRange,
+    commonCategories: commonCategories,
+    commonServices: commonServices,
+    commonLocations: commonLocations,
+  );
 }
 
 /// Диапазон цен
 class PriceRange {
-  const PriceRange({
-    required this.min,
-    required this.max,
-  });
+  const PriceRange({required this.min, required this.max});
   final double min;
   final double max;
 
@@ -156,10 +137,7 @@ class PriceRange {
 
 /// Диапазон опыта
 class ExperienceRange {
-  const ExperienceRange({
-    required this.min,
-    required this.max,
-  });
+  const ExperienceRange({required this.min, required this.max});
   final int min;
   final int max;
 
@@ -250,11 +228,7 @@ enum ComparisonCriteria {
 
 /// Результат сравнения по критерию
 class ComparisonResult {
-  const ComparisonResult({
-    required this.criteria,
-    required this.values,
-    this.winner,
-  });
+  const ComparisonResult({required this.criteria, required this.values, this.winner});
   final ComparisonCriteria criteria;
   final Map<String, dynamic> values;
   final String? winner;

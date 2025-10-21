@@ -35,79 +35,75 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
 
   @override
   Widget build(BuildContext context) => Column(
-        children: [
-          // Поиск и фильтры
-          _buildSearchAndFilters(),
+    children: [
+      // Поиск и фильтры
+      _buildSearchAndFilters(),
 
-          // Табы
-          TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Все чаты'),
-              Tab(text: 'Активные'),
-              Tab(text: 'Закреплённые'),
-            ],
-          ),
-
-          // Список чатов
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildChatsList('all'),
-                _buildChatsList('active'),
-                _buildChatsList('pinned'),
-              ],
-            ),
-          ),
+      // Табы
+      TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(text: 'Все чаты'),
+          Tab(text: 'Активные'),
+          Tab(text: 'Закреплённые'),
         ],
-      );
+      ),
+
+      // Список чатов
+      Expanded(
+        child: TabBarView(
+          controller: _tabController,
+          children: [_buildChatsList('all'), _buildChatsList('active'), _buildChatsList('pinned')],
+        ),
+      ),
+    ],
+  );
 
   Widget _buildSearchAndFilters() => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      children: [
+        // Поиск
+        ChatSearchWidget(
+          onSearchChanged: (query) {
+            setState(() {
+              _searchQuery = query;
+            });
+          },
+        ),
+
+        const SizedBox(height: 12),
+
+        // Фильтры
+        Row(
           children: [
-            // Поиск
-            ChatSearchWidget(
-              onSearchChanged: (query) {
+            FilterChip(
+              selected: _showOnlineOnly,
+              onSelected: (selected) {
                 setState(() {
-                  _searchQuery = query;
+                  _showOnlineOnly = selected;
                 });
               },
+              label: const Text('Только онлайн'),
+              avatar: Icon(
+                Icons.circle,
+                size: 12,
+                color: _showOnlineOnly ? Colors.green : Colors.grey,
+              ),
             ),
-
-            const SizedBox(height: 12),
-
-            // Фильтры
-            Row(
-              children: [
-                FilterChip(
-                  selected: _showOnlineOnly,
-                  onSelected: (selected) {
-                    setState(() {
-                      _showOnlineOnly = selected;
-                    });
-                  },
-                  label: const Text('Только онлайн'),
-                  avatar: Icon(
-                    Icons.circle,
-                    size: 12,
-                    color: _showOnlineOnly ? Colors.green : Colors.grey,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                FilterChip(
-                  onSelected: (selected) {
-                    // TODO: Показать только непрочитанные
-                  },
-                  label: const Text('Непрочитанные'),
-                  avatar: const Icon(Icons.mark_email_unread, size: 16),
-                ),
-              ],
+            const SizedBox(width: 8),
+            FilterChip(
+              onSelected: (selected) {
+                // TODO: Показать только непрочитанные
+              },
+              label: const Text('Непрочитанные'),
+              avatar: const Icon(Icons.mark_email_unread, size: 16),
             ),
           ],
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildChatsList(String type) {
     // Тестовые данные чатов
@@ -164,26 +160,16 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 64,
-            color: Colors.grey[400],
-          ),
+          Icon(icon, size: 64, color: Colors.grey[400]),
           const SizedBox(height: 16),
           Text(
             title,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: TextStyle(
-              color: Colors.grey[500],
-            ),
+            style: TextStyle(color: Colors.grey[500]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -312,11 +298,7 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
 
     switch (type) {
       case 'active':
-        return allChats
-            .where(
-              (chat) => chat.members.any((member) => member.isOnline),
-            )
-            .toList();
+        return allChats.where((chat) => chat.members.any((member) => member.isOnline)).toList();
       case 'pinned':
         return allChats.where((chat) => chat.isPinned).toList();
       default:
@@ -330,13 +312,9 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
 
   void _togglePin(EnhancedChat chat) {
     // TODO: Реализовать закрепление/открепление чата
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          chat.isPinned ? 'Чат откреплён' : 'Чат закреплён',
-        ),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(chat.isPinned ? 'Чат откреплён' : 'Чат закреплён')));
   }
 
   void _deleteChat(EnhancedChat chat) {
@@ -346,17 +324,14 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
         title: const Text('Удалить чат'),
         content: const Text('Вы уверены, что хотите удалить этот чат?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               // TODO: Удалить чат
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Чат удалён')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Чат удалён')));
             },
             child: const Text('Удалить'),
           ),
@@ -367,8 +342,8 @@ class _EnhancedChatsScreenState extends ConsumerState<EnhancedChatsScreen>
 
   void _startNewChat() {
     // TODO: Реализовать создание нового чата
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Создание нового чата будет реализовано')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Создание нового чата будет реализовано')));
   }
 }

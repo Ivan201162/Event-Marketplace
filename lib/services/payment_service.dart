@@ -76,18 +76,12 @@ class PaymentService {
         await Stripe.instance.confirmPayment(
           paymentIntentId,
           const PaymentMethodParams.card(
-            paymentMethodData: PaymentMethodData(
-              billingDetails: BillingDetails(),
-            ),
+            paymentMethodData: PaymentMethodData(billingDetails: BillingDetails()),
           ),
         );
 
         // Update payment status to completed
-        await _updatePaymentStatus(
-          paymentId,
-          PaymentStatus.completed,
-          completedAt: DateTime.now(),
-        );
+        await _updatePaymentStatus(paymentId, PaymentStatus.completed, completedAt: DateTime.now());
 
         // Create transaction record
         await _createTransaction(
@@ -195,11 +189,7 @@ class PaymentService {
 
       // In real app, this would call Stripe refund API
       // For now, we'll just update the status
-      await _updatePaymentStatus(
-        paymentId,
-        PaymentStatus.refunded,
-        updatedAt: DateTime.now(),
-      );
+      await _updatePaymentStatus(paymentId, PaymentStatus.refunded, updatedAt: DateTime.now());
 
       // Create refund transaction
       await _createTransaction(
@@ -265,8 +255,9 @@ class PaymentService {
       final totalPayments = payments.length;
       final successfulPayments = payments.where((p) => p.isSuccessful).length;
       final totalAmount = payments.where((p) => p.isSuccessful).fold(0, (sum, p) => sum + p.amount);
-      final totalCommission =
-          payments.where((p) => p.isSuccessful).fold(0, (sum, p) => sum + p.commission);
+      final totalCommission = payments
+          .where((p) => p.isSuccessful)
+          .fold(0, (sum, p) => sum + p.commission);
 
       final incomeTransactions = transactions.where((t) => t.isIncome).toList();
       final expenseTransactions = transactions.where((t) => t.isExpense).toList();
@@ -298,10 +289,7 @@ class PaymentService {
     DateTime? failedAt,
   }) async {
     try {
-      final updateData = <String, dynamic>{
-        'status': status.name,
-        'updatedAt': Timestamp.now(),
-      };
+      final updateData = <String, dynamic>{'status': status.name, 'updatedAt': Timestamp.now()};
 
       if (failureReason != null) {
         updateData['failureReason'] = failureReason;

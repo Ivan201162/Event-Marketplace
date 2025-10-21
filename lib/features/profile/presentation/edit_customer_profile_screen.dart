@@ -12,11 +12,7 @@ import '../data/repositories/customer_profile_repository.dart';
 
 /// Экран редактирования профиля заказчика
 class EditCustomerProfileScreen extends ConsumerStatefulWidget {
-  const EditCustomerProfileScreen({
-    super.key,
-    required this.customerId,
-    this.isCreating = false,
-  });
+  const EditCustomerProfileScreen({super.key, required this.customerId, this.isCreating = false});
   final String customerId;
   final bool isCreating;
 
@@ -109,9 +105,9 @@ class _EditCustomerProfileScreenState extends ConsumerState<EditCustomerProfileS
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка выбора изображения: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка выбора изображения: $e')));
     }
   }
 
@@ -134,8 +130,9 @@ class _EditCustomerProfileScreenState extends ConsumerState<EditCustomerProfileS
         email: _emailController.text.trim(),
         phone: _phoneController.text.trim().isNotEmpty ? _phoneController.text.trim() : null,
         bio: _bioController.text.trim().isNotEmpty ? _bioController.text.trim() : null,
-        location:
-            _locationController.text.trim().isNotEmpty ? _locationController.text.trim() : null,
+        location: _locationController.text.trim().isNotEmpty
+            ? _locationController.text.trim()
+            : null,
         companyName: _companyNameController.text.trim().isNotEmpty
             ? _companyNameController.text.trim()
             : null,
@@ -172,10 +169,7 @@ class _EditCustomerProfileScreenState extends ConsumerState<EditCustomerProfileS
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка сохранения: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка сохранения: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -187,201 +181,193 @@ class _EditCustomerProfileScreenState extends ConsumerState<EditCustomerProfileS
 
   @override
   Widget build(BuildContext context) => BackButtonHandler(
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Редактирование профиля'),
-            actions: [
-              TextButton(
-                onPressed: _isSaving ? null : _saveProfile,
-                child: _isSaving
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Сохранить'),
-              ),
-            ],
+    child: Scaffold(
+      appBar: AppBar(
+        title: const Text('Редактирование профиля'),
+        actions: [
+          TextButton(
+            onPressed: _isSaving ? null : _saveProfile,
+            child: _isSaving
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Сохранить'),
           ),
-          body: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Аватар
-                        Center(
-                          child: Stack(
-                            children: [
-                              CircleAvatar(
-                                radius: 60,
-                                backgroundImage: _selectedImage != null
-                                    ? FileImage(_selectedImage!)
-                                    : (_imageUrl != null ? NetworkImage(_imageUrl!) : null)
-                                        as ImageProvider?,
-                                child: _selectedImage == null && _imageUrl == null
-                                    ? const Icon(Icons.person, size: 60)
-                                    : null,
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: FloatingActionButton.small(
-                                  onPressed: _pickImage,
-                                  child: const Icon(Icons.camera_alt),
-                                ),
-                              ),
-                            ],
+        ],
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Аватар
+                    Center(
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage: _selectedImage != null
+                                ? FileImage(_selectedImage!)
+                                : (_imageUrl != null ? NetworkImage(_imageUrl!) : null)
+                                      as ImageProvider?,
+                            child: _selectedImage == null && _imageUrl == null
+                                ? const Icon(Icons.person, size: 60)
+                                : null,
                           ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Основная информация
-                        Text(
-                          'Основная информация',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 16),
-
-                        TextFormField(
-                          controller: _nameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Имя',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: FormValidators.required,
-                        ),
-                        const SizedBox(height: 16),
-
-                        TextFormField(
-                          controller: _emailController,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          validator: FormValidators.email,
-                        ),
-                        const SizedBox(height: 16),
-
-                        TextFormField(
-                          controller: _phoneController,
-                          decoration: const InputDecoration(
-                            labelText: 'Телефон',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.phone,
-                          validator: FormValidators.phone,
-                        ),
-                        const SizedBox(height: 16),
-
-                        TextFormField(
-                          controller: _bioController,
-                          decoration: const InputDecoration(
-                            labelText: 'О себе',
-                            border: OutlineInputBorder(),
-                          ),
-                          maxLines: 3,
-                        ),
-                        const SizedBox(height: 16),
-
-                        TextFormField(
-                          controller: _locationController,
-                          decoration: const InputDecoration(
-                            labelText: 'Город',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Дополнительная информация
-                        Text(
-                          'Дополнительная информация',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 16),
-
-                        TextFormField(
-                          controller: _companyNameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Название компании',
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        TextFormField(
-                          controller: _websiteController,
-                          decoration: const InputDecoration(
-                            labelText: 'Веб-сайт',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.url,
-                          validator: FormValidators.url,
-                        ),
-                        const SizedBox(height: 32),
-
-                        // Сообщения об ошибках и успехе
-                        if (_errorMessage != null)
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.red.shade50,
-                              border: Border.all(color: Colors.red.shade200),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              _errorMessage!,
-                              style: TextStyle(color: Colors.red.shade700),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: FloatingActionButton.small(
+                              onPressed: _pickImage,
+                              child: const Icon(Icons.camera_alt),
                             ),
                           ),
-
-                        if (_successMessage != null)
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade50,
-                              border: Border.all(color: Colors.green.shade200),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              _successMessage!,
-                              style: TextStyle(color: Colors.green.shade700),
-                            ),
-                          ),
-
-                        const SizedBox(height: 16),
-
-                        // Кнопка сохранения
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _isSaving ? null : _saveProfile,
-                            child: _isSaving
-                                ? const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                        ),
-                                      ),
-                                      SizedBox(width: 12),
-                                      Text('Сохранение...'),
-                                    ],
-                                  )
-                                : const Text('Сохранить профиль'),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 24),
+
+                    // Основная информация
+                    Text('Основная информация', style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Имя',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: FormValidators.required,
+                    ),
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: FormValidators.email,
+                    ),
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: _phoneController,
+                      decoration: const InputDecoration(
+                        labelText: 'Телефон',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.phone,
+                      validator: FormValidators.phone,
+                    ),
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: _bioController,
+                      decoration: const InputDecoration(
+                        labelText: 'О себе',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: _locationController,
+                      decoration: const InputDecoration(
+                        labelText: 'Город',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Дополнительная информация
+                    Text(
+                      'Дополнительная информация',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: _companyNameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Название компании',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    TextFormField(
+                      controller: _websiteController,
+                      decoration: const InputDecoration(
+                        labelText: 'Веб-сайт',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.url,
+                      validator: FormValidators.url,
+                    ),
+                    const SizedBox(height: 32),
+
+                    // Сообщения об ошибках и успехе
+                    if (_errorMessage != null)
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade50,
+                          border: Border.all(color: Colors.red.shade200),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(_errorMessage!, style: TextStyle(color: Colors.red.shade700)),
+                      ),
+
+                    if (_successMessage != null)
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade50,
+                          border: Border.all(color: Colors.green.shade200),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          _successMessage!,
+                          style: TextStyle(color: Colors.green.shade700),
+                        ),
+                      ),
+
+                    const SizedBox(height: 16),
+
+                    // Кнопка сохранения
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _isSaving ? null : _saveProfile,
+                        child: _isSaving
+                            ? const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  ),
+                                  SizedBox(width: 12),
+                                  Text('Сохранение...'),
+                                ],
+                              )
+                            : const Text('Сохранить профиль'),
+                      ),
+                    ),
+                  ],
                 ),
-        ),
-      );
+              ),
+            ),
+    ),
+  );
 }

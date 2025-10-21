@@ -46,11 +46,9 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('SMS код отправлен на ваш номер'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('SMS код отправлен на ваш номер')));
       }
     } on Exception catch (e) {
       authError.setError(e.toString().replaceFirst('Exception: ', ''));
@@ -61,11 +59,9 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
 
   Future<void> _verifyCode() async {
     if (_codeController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Введите код из SMS'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Введите код из SMS')));
       return;
     }
 
@@ -112,9 +108,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
             // Заголовок
             Text(
               _isCodeSent ? 'Подтвердите номер' : 'Вход по телефону',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
@@ -139,9 +133,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                   labelText: 'Номер телефона',
                   hintText: '+7 (999) 123-45-67',
                   prefixIcon: const Icon(Icons.phone_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 textInputAction: TextInputAction.done,
                 validator: (value) {
@@ -165,16 +157,11 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                   backgroundColor: theme.primaryColor,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: const Text(
                   'Отправить код',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
             ] else ...[
@@ -187,9 +174,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                   labelText: 'SMS код',
                   hintText: '123456',
                   prefixIcon: const Icon(Icons.sms_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   counterText: '',
                 ),
                 textInputAction: TextInputAction.done,
@@ -213,16 +198,11 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                   backgroundColor: theme.primaryColor,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: const Text(
                   'Подтвердить код',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(height: 16),
@@ -232,10 +212,7 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
                 onPressed: _resendCode,
                 child: Text(
                   'Отправить код повторно',
-                  style: TextStyle(
-                    color: theme.primaryColor,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.w500),
                 ),
               ),
             ],
@@ -248,24 +225,16 @@ class _PhoneAuthWidgetState extends ConsumerState<PhoneAuthWidget> {
               decoration: BoxDecoration(
                 color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: theme.primaryColor.withValues(alpha: 0.3),
-                ),
+                border: Border.all(color: theme.primaryColor.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.security,
-                    color: theme.primaryColor,
-                    size: 20,
-                  ),
+                  Icon(Icons.security, color: theme.primaryColor, size: 20),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Ваши данные защищены. Код действителен 5 минут.',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.primaryColor,
-                      ),
+                      style: theme.textTheme.bodySmall?.copyWith(color: theme.primaryColor),
                     ),
                   ),
                 ],

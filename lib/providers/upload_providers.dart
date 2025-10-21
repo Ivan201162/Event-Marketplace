@@ -27,14 +27,14 @@ final videoUploadProvider = FutureProvider.family<UploadResult?, ImageSource>((r
 });
 
 /// Провайдер для загрузки файла
-final fileUploadProvider =
-    FutureProvider.family<UploadResult?, List<String>?>((ref, allowedExtensions) async {
+final fileUploadProvider = FutureProvider.family<UploadResult?, List<String>?>((
+  ref,
+  allowedExtensions,
+) async {
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
 
-  return uploadService.pickAndUploadFile(
-    allowedExtensions: allowedExtensions,
-  );
+  return uploadService.pickAndUploadFile(allowedExtensions: allowedExtensions);
 });
 
 /// Провайдер для получения максимального размера файла

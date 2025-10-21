@@ -34,10 +34,7 @@ class FavoritesPage extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           '$count',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
                     );
@@ -53,9 +50,7 @@ class FavoritesPage extends ConsumerWidget {
       body: currentUser.when(
         data: (user) {
           if (user == null) {
-            return const Center(
-              child: Text('Пользователь не авторизован'),
-            );
+            return const Center(child: Text('Пользователь не авторизован'));
           }
 
           final userFavorites = ref.watch(userFavoritesProvider(user.id));
@@ -114,37 +109,28 @@ class FavoritesPage extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Ошибка: $error'),
-        ),
+        error: (error, stack) => Center(child: Text('Ошибка: $error')),
       ),
     );
   }
 
   Widget _buildEmptyState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.favorite_border,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'У вас нет избранных событий',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Добавляйте интересные мероприятия в избранное',
-              style: TextStyle(color: Colors.grey[500]),
-              textAlign: TextAlign.center,
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.favorite_border, size: 64, color: Colors.grey[400]),
+        const SizedBox(height: 16),
+        Text(
+          'У вас нет избранных событий',
+          style: TextStyle(fontSize: 18, color: Colors.grey[600]),
         ),
-      );
+        const SizedBox(height: 8),
+        Text(
+          'Добавляйте интересные мероприятия в избранное',
+          style: TextStyle(color: Colors.grey[500]),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
 }

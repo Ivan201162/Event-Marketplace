@@ -1,23 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Статус платежа
-enum PaymentStatus {
-  pending,
-  processing,
-  completed,
-  failed,
-  cancelled,
-  refunded,
-}
+enum PaymentStatus { pending, processing, completed, failed, cancelled, refunded }
 
 /// Тип платежного метода
-enum PaymentMethodType {
-  card,
-  bankTransfer,
-  digitalWallet,
-  cash,
-  other,
-}
+enum PaymentMethodType { card, bankTransfer, digitalWallet, cash, other }
 
 /// Информация о платежном методе
 class PaymentMethodInfo {
@@ -58,29 +45,29 @@ class PaymentMethodInfo {
       isActive: data['isActive'] as bool? ?? true,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'type': type.name,
-        'name': name,
-        'cardLast4': cardLast4,
-        'cardBrand': cardBrand,
-        'isDefault': isDefault,
-        'isActive': isActive,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      };
+    'userId': userId,
+    'type': type.name,
+    'name': name,
+    'cardLast4': cardLast4,
+    'cardBrand': cardBrand,
+    'isDefault': isDefault,
+    'isActive': isActive,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
   /// Копировать с изменениями
   PaymentMethodInfo copyWith({
@@ -94,19 +81,18 @@ class PaymentMethodInfo {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      PaymentMethodInfo(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        type: type ?? this.type,
-        name: name ?? this.name,
-        cardLast4: cardLast4 ?? this.cardLast4,
-        cardBrand: cardBrand ?? this.cardBrand,
-        isDefault: isDefault ?? this.isDefault,
-        isActive: isActive ?? this.isActive,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => PaymentMethodInfo(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    type: type ?? this.type,
+    name: name ?? this.name,
+    cardLast4: cardLast4 ?? this.cardLast4,
+    cardBrand: cardBrand ?? this.cardBrand,
+    isDefault: isDefault ?? this.isDefault,
+    isActive: isActive ?? this.isActive,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Парсинг типа из строки
   static PaymentMethodType _parseType(String? type) {
@@ -188,13 +174,13 @@ class PaymentMethod {
       isActive: data['isActive'] as bool? ?? true,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -206,24 +192,21 @@ class PaymentMethod {
       throw Exception('Document data is null');
     }
 
-    return PaymentMethod.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return PaymentMethod.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'type': type.name,
-        'name': name,
-        'cardLast4': cardLast4,
-        'cardBrand': cardBrand,
-        'isDefault': isDefault,
-        'isActive': isActive,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      };
+    'userId': userId,
+    'type': type.name,
+    'name': name,
+    'cardLast4': cardLast4,
+    'cardBrand': cardBrand,
+    'isDefault': isDefault,
+    'isActive': isActive,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
   /// Копировать с изменениями
   PaymentMethod copyWith({
@@ -237,19 +220,18 @@ class PaymentMethod {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      PaymentMethod(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        type: type ?? this.type,
-        name: name ?? this.name,
-        cardLast4: cardLast4 ?? this.cardLast4,
-        cardBrand: cardBrand ?? this.cardBrand,
-        isDefault: isDefault ?? this.isDefault,
-        isActive: isActive ?? this.isActive,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => PaymentMethod(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    type: type ?? this.type,
+    name: name ?? this.name,
+    cardLast4: cardLast4 ?? this.cardLast4,
+    cardBrand: cardBrand ?? this.cardBrand,
+    isDefault: isDefault ?? this.isDefault,
+    isActive: isActive ?? this.isActive,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Парсинг типа из строки
   static PaymentMethodType _parseType(String? type) {
@@ -347,18 +329,18 @@ class Payment {
       failureReason: data['failureReason'] as String?,
       processedAt: data['processedAt'] != null
           ? (data['processedAt'] is Timestamp
-              ? (data['processedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['processedAt'].toString()))
+                ? (data['processedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['processedAt'].toString()))
           : null,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -370,29 +352,26 @@ class Payment {
       throw Exception('Document data is null');
     }
 
-    return Payment.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return Payment.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'amount': amount,
-        'currency': currency,
-        'status': status.name,
-        'paymentMethodId': paymentMethodId,
-        'paymentMethod': paymentMethod?.toMap(),
-        'externalTransactionId': externalTransactionId,
-        'provider': provider,
-        'description': description,
-        'metadata': metadata,
-        'failureReason': failureReason,
-        'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      };
+    'userId': userId,
+    'amount': amount,
+    'currency': currency,
+    'status': status.name,
+    'paymentMethodId': paymentMethodId,
+    'paymentMethod': paymentMethod?.toMap(),
+    'externalTransactionId': externalTransactionId,
+    'provider': provider,
+    'description': description,
+    'metadata': metadata,
+    'failureReason': failureReason,
+    'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
   /// Копировать с изменениями
   Payment copyWith({
@@ -411,24 +390,23 @@ class Payment {
     DateTime? processedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      Payment(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        amount: amount ?? this.amount,
-        currency: currency ?? this.currency,
-        status: status ?? this.status,
-        paymentMethodId: paymentMethodId ?? this.paymentMethodId,
-        paymentMethod: paymentMethod ?? this.paymentMethod,
-        externalTransactionId: externalTransactionId ?? this.externalTransactionId,
-        provider: provider ?? this.provider,
-        description: description ?? this.description,
-        metadata: metadata ?? this.metadata,
-        failureReason: failureReason ?? this.failureReason,
-        processedAt: processedAt ?? this.processedAt,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => Payment(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    amount: amount ?? this.amount,
+    currency: currency ?? this.currency,
+    status: status ?? this.status,
+    paymentMethodId: paymentMethodId ?? this.paymentMethodId,
+    paymentMethod: paymentMethod ?? this.paymentMethod,
+    externalTransactionId: externalTransactionId ?? this.externalTransactionId,
+    provider: provider ?? this.provider,
+    description: description ?? this.description,
+    metadata: metadata ?? this.metadata,
+    failureReason: failureReason ?? this.failureReason,
+    processedAt: processedAt ?? this.processedAt,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Парсинг статуса из строки
   static PaymentStatus _parseStatus(String? status) {
@@ -519,8 +497,8 @@ class PaymentStats {
       averageTransactionAmount: (data['averageTransactionAmount'] as num?)?.toDouble() ?? 0.0,
       lastTransactionAt: data['lastTransactionAt'] != null
           ? (data['lastTransactionAt'] is Timestamp
-              ? (data['lastTransactionAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['lastTransactionAt'].toString()))
+                ? (data['lastTransactionAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['lastTransactionAt'].toString()))
           : null,
       period: data['period'] as String?,
     );
@@ -528,17 +506,16 @@ class PaymentStats {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'totalAmount': totalAmount,
-        'totalTransactions': totalTransactions,
-        'successfulTransactions': successfulTransactions,
-        'failedTransactions': failedTransactions,
-        'pendingTransactions': pendingTransactions,
-        'averageTransactionAmount': averageTransactionAmount,
-        'lastTransactionAt':
-            lastTransactionAt != null ? Timestamp.fromDate(lastTransactionAt!) : null,
-        'period': period,
-      };
+    'userId': userId,
+    'totalAmount': totalAmount,
+    'totalTransactions': totalTransactions,
+    'successfulTransactions': successfulTransactions,
+    'failedTransactions': failedTransactions,
+    'pendingTransactions': pendingTransactions,
+    'averageTransactionAmount': averageTransactionAmount,
+    'lastTransactionAt': lastTransactionAt != null ? Timestamp.fromDate(lastTransactionAt!) : null,
+    'period': period,
+  };
 
   /// Копировать с изменениями
   PaymentStats copyWith({
@@ -551,18 +528,17 @@ class PaymentStats {
     double? averageTransactionAmount,
     DateTime? lastTransactionAt,
     String? period,
-  }) =>
-      PaymentStats(
-        userId: userId ?? this.userId,
-        totalAmount: totalAmount ?? this.totalAmount,
-        totalTransactions: totalTransactions ?? this.totalTransactions,
-        successfulTransactions: successfulTransactions ?? this.successfulTransactions,
-        failedTransactions: failedTransactions ?? this.failedTransactions,
-        pendingTransactions: pendingTransactions ?? this.pendingTransactions,
-        averageTransactionAmount: averageTransactionAmount ?? this.averageTransactionAmount,
-        lastTransactionAt: lastTransactionAt ?? this.lastTransactionAt,
-        period: period ?? this.period,
-      );
+  }) => PaymentStats(
+    userId: userId ?? this.userId,
+    totalAmount: totalAmount ?? this.totalAmount,
+    totalTransactions: totalTransactions ?? this.totalTransactions,
+    successfulTransactions: successfulTransactions ?? this.successfulTransactions,
+    failedTransactions: failedTransactions ?? this.failedTransactions,
+    pendingTransactions: pendingTransactions ?? this.pendingTransactions,
+    averageTransactionAmount: averageTransactionAmount ?? this.averageTransactionAmount,
+    lastTransactionAt: lastTransactionAt ?? this.lastTransactionAt,
+    period: period ?? this.period,
+  );
 
   /// Получить процент успешных транзакций
   double get successRate {

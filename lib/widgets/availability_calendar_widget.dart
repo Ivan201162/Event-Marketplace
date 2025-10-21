@@ -38,133 +38,95 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Легенда
-          _buildLegend(),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      // Легенда
+      _buildLegend(),
 
-          const SizedBox(height: 16),
+      const SizedBox(height: 16),
 
-          // Календарь
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.1),
-                  spreadRadius: 1,
-                  blurRadius: 3,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
-            child: TableCalendar<DateTime>(
-              firstDay: DateTime.utc(2020),
-              lastDay: DateTime.utc(2030, 12, 31),
-              focusedDay: _focusedDay,
-              selectedDayPredicate: (day) => _selectedDay != null && isSameDay(_selectedDay, day),
-              onDaySelected: (selectedDay, focusedDay) {
-                if (!widget.isReadOnly) {
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                  widget.onDateSelected?.call(selectedDay);
-                }
-              },
-              onPageChanged: (focusedDay) {
-                _focusedDay = focusedDay;
-              },
-              calendarStyle: CalendarStyle(
-                outsideDaysVisible: false,
-                weekendTextStyle: const TextStyle(color: Colors.red),
-                holidayTextStyle: const TextStyle(color: Colors.red),
-                selectedDecoration: const BoxDecoration(
-                  color: Colors.blue,
-                  shape: BoxShape.circle,
-                ),
-                todayDecoration: BoxDecoration(
-                  color: Colors.blue.shade200,
-                  shape: BoxShape.circle,
-                ),
-                markerDecoration: const BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              headerStyle: const HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true,
-              ),
-              calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, day, focusedDay) => _buildDayCell(day),
-                todayBuilder: (context, day, focusedDay) => _buildDayCell(day, isToday: true),
-                selectedBuilder: (context, day, focusedDay) => _buildDayCell(day, isSelected: true),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Статистика
-          _buildStatistics(),
-        ],
-      );
-
-  Widget _buildLegend() => Container(
-        padding: const EdgeInsets.all(12),
+      // Календарь
+      Container(
         decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildLegendItem(
-              color: Colors.green,
-              label: 'Свободен',
-            ),
-            _buildLegendItem(
-              color: Colors.red,
-              label: 'Занят',
-            ),
-            _buildLegendItem(
-              color: Colors.blue,
-              label: 'Выбран',
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.1),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: const Offset(0, 1),
             ),
           ],
         ),
-      );
-
-  Widget _buildLegendItem({
-    required Color color,
-    required String label,
-  }) =>
-      Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 12,
-            height: 12,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+        child: TableCalendar<DateTime>(
+          firstDay: DateTime.utc(2020),
+          lastDay: DateTime.utc(2030, 12, 31),
+          focusedDay: _focusedDay,
+          selectedDayPredicate: (day) => _selectedDay != null && isSameDay(_selectedDay, day),
+          onDaySelected: (selectedDay, focusedDay) {
+            if (!widget.isReadOnly) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+              widget.onDateSelected?.call(selectedDay);
+            }
+          },
+          onPageChanged: (focusedDay) {
+            _focusedDay = focusedDay;
+          },
+          calendarStyle: CalendarStyle(
+            outsideDaysVisible: false,
+            weekendTextStyle: const TextStyle(color: Colors.red),
+            holidayTextStyle: const TextStyle(color: Colors.red),
+            selectedDecoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+            todayDecoration: BoxDecoration(color: Colors.blue.shade200, shape: BoxShape.circle),
+            markerDecoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
           ),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12),
+          headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+          calendarBuilders: CalendarBuilders(
+            defaultBuilder: (context, day, focusedDay) => _buildDayCell(day),
+            todayBuilder: (context, day, focusedDay) => _buildDayCell(day, isToday: true),
+            selectedBuilder: (context, day, focusedDay) => _buildDayCell(day, isSelected: true),
           ),
-        ],
-      );
+        ),
+      ),
 
-  Widget _buildDayCell(
-    DateTime day, {
-    bool isToday = false,
-    bool isSelected = false,
-  }) {
+      const SizedBox(height: 16),
+
+      // Статистика
+      _buildStatistics(),
+    ],
+  );
+
+  Widget _buildLegend() => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(color: Colors.grey.shade50, borderRadius: BorderRadius.circular(8)),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildLegendItem(color: Colors.green, label: 'Свободен'),
+        _buildLegendItem(color: Colors.red, label: 'Занят'),
+        _buildLegendItem(color: Colors.blue, label: 'Выбран'),
+      ],
+    ),
+  );
+
+  Widget _buildLegendItem({required Color color, required String label}) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        width: 12,
+        height: 12,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      ),
+      const SizedBox(width: 4),
+      Text(label, style: const TextStyle(fontSize: 12)),
+    ],
+  );
+
+  Widget _buildDayCell(DateTime day, {bool isToday = false, bool isSelected = false}) {
     final isBusy = _isDateBusy(day);
     final isAvailable = _isDateAvailable(day);
 
@@ -187,10 +149,7 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
 
     return Container(
       margin: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
       child: Center(
         child: Text(
           '${day.day}',
@@ -204,8 +163,9 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
   }
 
   Widget _buildStatistics() {
-    final totalDays =
-        DateTime.now().difference(DateTime.now().subtract(const Duration(days: 30))).inDays;
+    final totalDays = DateTime.now()
+        .difference(DateTime.now().subtract(const Duration(days: 30)))
+        .inDays;
     final busyDays = widget.busyDates.length;
     final availableDays = widget.availableDates.length;
     final freeDays = totalDays - busyDays;
@@ -222,28 +182,13 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
         children: [
           const Text(
             'Статистика за последние 30 дней',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(
-                child: _buildStatItem(
-                  'Занятых дней',
-                  busyDays,
-                  Colors.red,
-                ),
-              ),
-              Expanded(
-                child: _buildStatItem(
-                  'Свободных дней',
-                  freeDays,
-                  Colors.green,
-                ),
-              ),
+              Expanded(child: _buildStatItem('Занятых дней', busyDays, Colors.red)),
+              Expanded(child: _buildStatItem('Свободных дней', freeDays, Colors.green)),
             ],
           ),
         ],
@@ -252,36 +197,29 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
   }
 
   Widget _buildStatItem(String label, int value, Color color) => Column(
-        children: [
-          Text(
-            '$value',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
+    children: [
+      Text(
+        '$value',
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
+      ),
+      const SizedBox(height: 4),
+      Text(
+        label,
+        style: const TextStyle(fontSize: 12, color: Colors.grey),
+        textAlign: TextAlign.center,
+      ),
+    ],
+  );
 
   bool _isDateBusy(DateTime date) => widget.busyDates.any(
-        (busyDate) =>
-            busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day,
-      );
+    (busyDate) =>
+        busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day,
+  );
 
   bool _isDateAvailable(DateTime date) => widget.availableDates.any(
-        (availableDate) =>
-            availableDate.year == date.year &&
-            availableDate.month == date.month &&
-            availableDate.day == date.day,
-      );
+    (availableDate) =>
+        availableDate.year == date.year &&
+        availableDate.month == date.month &&
+        availableDate.day == date.day,
+  );
 }

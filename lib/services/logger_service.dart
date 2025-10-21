@@ -2,13 +2,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 
 /// Уровни логирования
-enum LogLevel {
-  debug,
-  info,
-  warning,
-  error,
-  fatal,
-}
+enum LogLevel { debug, info, warning, error, fatal }
 
 /// Сервис для логирования приложения
 class LoggerService {
@@ -135,14 +129,7 @@ class LoggerService {
     StackTrace? stackTrace,
     Map<String, dynamic>? data,
   }) {
-    _log(
-      LogLevel.error,
-      message,
-      tag: tag,
-      error: error,
-      stackTrace: stackTrace,
-      data: data,
-    );
+    _log(LogLevel.error, message, tag: tag, error: error, stackTrace: stackTrace, data: data);
   }
 
   /// Логирование критических ошибок
@@ -153,23 +140,11 @@ class LoggerService {
     StackTrace? stackTrace,
     Map<String, dynamic>? data,
   }) {
-    _log(
-      LogLevel.fatal,
-      message,
-      tag: tag,
-      error: error,
-      stackTrace: stackTrace,
-      data: data,
-    );
+    _log(LogLevel.fatal, message, tag: tag, error: error, stackTrace: stackTrace, data: data);
   }
 
   /// Логирование производительности
-  void performance(
-    String operation,
-    Duration duration, {
-    String? tag,
-    Map<String, dynamic>? data,
-  }) {
+  void performance(String operation, Duration duration, {String? tag, Map<String, dynamic>? data}) {
     final message = 'Performance: $operation took ${duration.inMilliseconds}ms';
     _log(LogLevel.info, message, tag: tag ?? 'PERFORMANCE', data: data);
   }
@@ -203,12 +178,7 @@ class LoggerService {
   }
 
   /// Логирование API ответов
-  void apiResponse(
-    String method,
-    String url,
-    int statusCode, {
-    Map<String, dynamic>? data,
-  }) {
+  void apiResponse(String method, String url, int statusCode, {Map<String, dynamic>? data}) {
     final message = 'API Response: $method $url - $statusCode';
     final responseData = <String, dynamic>{
       'method': method,
@@ -220,40 +190,22 @@ class LoggerService {
   }
 
   /// Логирование ошибок API
-  void apiError(
-    String method,
-    String url,
-    Object error, {
-    StackTrace? stackTrace,
-  }) {
+  void apiError(String method, String url, Object error, {StackTrace? stackTrace}) {
     final message = 'API Error: $method $url';
-    _log(
-      LogLevel.error,
-      message,
-      tag: 'API_ERROR',
-      error: error,
-      stackTrace: stackTrace,
-    );
+    _log(LogLevel.error, message, tag: 'API_ERROR', error: error, stackTrace: stackTrace);
   }
 
   /// Логирование навигации
   void navigation(String from, String to, {Map<String, dynamic>? data}) {
     final message = 'Navigation: $from -> $to';
-    final navData = <String, dynamic>{
-      'from': from,
-      'to': to,
-      if (data != null) ...data,
-    };
+    final navData = <String, dynamic>{'from': from, 'to': to, if (data != null) ...data};
     _log(LogLevel.info, message, tag: 'NAVIGATION', data: navData);
   }
 
   /// Логирование состояния приложения
   void appState(String state, {Map<String, dynamic>? data}) {
     final message = 'App State: $state';
-    final stateData = <String, dynamic>{
-      'state': state,
-      if (data != null) ...data,
-    };
+    final stateData = <String, dynamic>{'state': state, if (data != null) ...data};
     _log(LogLevel.info, message, tag: 'APP_STATE', data: stateData);
   }
 
@@ -309,12 +261,7 @@ class LoggerService {
   }
 
   /// Логирование ошибок аутентификации
-  void authError(
-    String action,
-    Object error, {
-    String? userId,
-    StackTrace? stackTrace,
-  }) {
+  void authError(String action, Object error, {String? userId, StackTrace? stackTrace}) {
     final message = 'Auth Error: $action';
     _log(
       LogLevel.error,
@@ -322,20 +269,12 @@ class LoggerService {
       tag: 'AUTH_ERROR',
       error: error,
       stackTrace: stackTrace,
-      data: {
-        'action': action,
-        if (userId != null) 'userId': userId,
-      },
+      data: {'action': action, if (userId != null) 'userId': userId},
     );
   }
 
   /// Логирование платежей
-  void payment(
-    String action, {
-    String? paymentId,
-    String? amount,
-    Map<String, dynamic>? data,
-  }) {
+  void payment(String action, {String? paymentId, String? amount, Map<String, dynamic>? data}) {
     final message = 'Payment: $action';
     final paymentData = <String, dynamic>{
       'action': action,
@@ -347,12 +286,7 @@ class LoggerService {
   }
 
   /// Логирование ошибок платежей
-  void paymentError(
-    String action,
-    Object error, {
-    String? paymentId,
-    StackTrace? stackTrace,
-  }) {
+  void paymentError(String action, Object error, {String? paymentId, StackTrace? stackTrace}) {
     final message = 'Payment Error: $action';
     _log(
       LogLevel.error,
@@ -360,10 +294,7 @@ class LoggerService {
       tag: 'PAYMENT_ERROR',
       error: error,
       stackTrace: stackTrace,
-      data: {
-        'action': action,
-        if (paymentId != null) 'paymentId': paymentId,
-      },
+      data: {'action': action, if (paymentId != null) 'paymentId': paymentId},
     );
   }
 
@@ -398,10 +329,7 @@ class LoggerService {
       tag: 'NOTIFICATION_ERROR',
       error: error,
       stackTrace: stackTrace,
-      data: {
-        'action': action,
-        if (notificationId != null) 'notificationId': notificationId,
-      },
+      data: {'action': action, if (notificationId != null) 'notificationId': notificationId},
     );
   }
 
@@ -423,12 +351,7 @@ class LoggerService {
   }
 
   /// Логирование ошибок календаря
-  void calendarError(
-    String action,
-    Object error, {
-    String? specialistId,
-    StackTrace? stackTrace,
-  }) {
+  void calendarError(String action, Object error, {String? specialistId, StackTrace? stackTrace}) {
     final message = 'Calendar Error: $action';
     _log(
       LogLevel.error,
@@ -436,10 +359,7 @@ class LoggerService {
       tag: 'CALENDAR_ERROR',
       error: error,
       stackTrace: stackTrace,
-      data: {
-        'action': action,
-        if (specialistId != null) 'specialistId': specialistId,
-      },
+      data: {'action': action, if (specialistId != null) 'specialistId': specialistId},
     );
   }
 
@@ -463,12 +383,7 @@ class LoggerService {
   }
 
   /// Логирование ошибок чатов
-  void chatError(
-    String action,
-    Object error, {
-    String? chatId,
-    StackTrace? stackTrace,
-  }) {
+  void chatError(String action, Object error, {String? chatId, StackTrace? stackTrace}) {
     final message = 'Chat Error: $action';
     _log(
       LogLevel.error,
@@ -476,10 +391,7 @@ class LoggerService {
       tag: 'CHAT_ERROR',
       error: error,
       stackTrace: stackTrace,
-      data: {
-        'action': action,
-        if (chatId != null) 'chatId': chatId,
-      },
+      data: {'action': action, if (chatId != null) 'chatId': chatId},
     );
   }
 
@@ -503,12 +415,7 @@ class LoggerService {
   }
 
   /// Логирование ошибок отзывов
-  void reviewError(
-    String action,
-    Object error, {
-    String? reviewId,
-    StackTrace? stackTrace,
-  }) {
+  void reviewError(String action, Object error, {String? reviewId, StackTrace? stackTrace}) {
     final message = 'Review Error: $action';
     _log(
       LogLevel.error,
@@ -516,19 +423,12 @@ class LoggerService {
       tag: 'REVIEW_ERROR',
       error: error,
       stackTrace: stackTrace,
-      data: {
-        'action': action,
-        if (reviewId != null) 'reviewId': reviewId,
-      },
+      data: {'action': action, if (reviewId != null) 'reviewId': reviewId},
     );
   }
 
   /// Логирование аналитики
-  void analytics(
-    String action, {
-    String? metricName,
-    Map<String, dynamic>? data,
-  }) {
+  void analytics(String action, {String? metricName, Map<String, dynamic>? data}) {
     final message = 'Analytics: $action';
     final analyticsData = <String, dynamic>{
       'action': action,
@@ -539,12 +439,7 @@ class LoggerService {
   }
 
   /// Логирование ошибок аналитики
-  void analyticsError(
-    String action,
-    Object error, {
-    String? metricName,
-    StackTrace? stackTrace,
-  }) {
+  void analyticsError(String action, Object error, {String? metricName, StackTrace? stackTrace}) {
     final message = 'Analytics Error: $action';
     _log(
       LogLevel.error,
@@ -552,10 +447,7 @@ class LoggerService {
       tag: 'ANALYTICS_ERROR',
       error: error,
       stackTrace: stackTrace,
-      data: {
-        'action': action,
-        if (metricName != null) 'metricName': metricName,
-      },
+      data: {'action': action, if (metricName != null) 'metricName': metricName},
     );
   }
 
@@ -577,12 +469,7 @@ class LoggerService {
   }
 
   /// Логирование ошибок поиска
-  void searchError(
-    String action,
-    Object error, {
-    String? query,
-    StackTrace? stackTrace,
-  }) {
+  void searchError(String action, Object error, {String? query, StackTrace? stackTrace}) {
     final message = 'Search Error: $action';
     _log(
       LogLevel.error,
@@ -590,10 +477,7 @@ class LoggerService {
       tag: 'SEARCH_ERROR',
       error: error,
       stackTrace: stackTrace,
-      data: {
-        'action': action,
-        if (query != null) 'query': query,
-      },
+      data: {'action': action, if (query != null) 'query': query},
     );
   }
 
@@ -617,12 +501,7 @@ class LoggerService {
   }
 
   /// Логирование ошибок бронирований
-  void bookingError(
-    String action,
-    Object error, {
-    String? bookingId,
-    StackTrace? stackTrace,
-  }) {
+  void bookingError(String action, Object error, {String? bookingId, StackTrace? stackTrace}) {
     final message = 'Booking Error: $action';
     _log(
       LogLevel.error,
@@ -630,10 +509,7 @@ class LoggerService {
       tag: 'BOOKING_ERROR',
       error: error,
       stackTrace: stackTrace,
-      data: {
-        'action': action,
-        if (bookingId != null) 'bookingId': bookingId,
-      },
+      data: {'action': action, if (bookingId != null) 'bookingId': bookingId},
     );
   }
 }

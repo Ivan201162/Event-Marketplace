@@ -15,10 +15,7 @@ import '../widgets/specialist_badges_widget.dart';
 class EnhancedProfileScreen extends ConsumerStatefulWidget {
   // Если null, то показываем профиль текущего пользователя
 
-  const EnhancedProfileScreen({
-    super.key,
-    this.specialistId,
-  });
+  const EnhancedProfileScreen({super.key, this.specialistId});
   final String? specialistId;
 
   @override
@@ -63,14 +60,8 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
               onPressed: () => context.push('/settings'),
             ),
           ] else ...[
-            IconButton(
-              icon: const Icon(Icons.share),
-              onPressed: _shareProfile,
-            ),
-            IconButton(
-              icon: const Icon(Icons.favorite_border),
-              onPressed: _toggleFavorite,
-            ),
+            IconButton(icon: const Icon(Icons.share), onPressed: _shareProfile),
+            IconButton(icon: const Icon(Icons.favorite_border), onPressed: _toggleFavorite),
           ],
         ],
       ),
@@ -115,166 +106,135 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
   }
 
   Widget _buildProfileHeader(currentUser, bool isOwnProfile) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue[400]!, Colors.blue[600]!],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Column(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [Colors.blue[400]!, Colors.blue[600]!],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+    ),
+    child: Column(
+      children: [
+        // Аватар с онлайн статусом
+        Stack(
           children: [
-            // Аватар с онлайн статусом
-            Stack(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage:
-                      currentUser?.photoURL != null ? NetworkImage(currentUser!.photoURL!) : null,
-                  child: currentUser?.photoURL == null
-                      ? Text(
-                          currentUser?.displayName?.substring(0, 1).toUpperCase() ?? '?',
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : null,
-                ),
-                if (_isOnline)
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 20,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                    ),
-                  ),
-              ],
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: currentUser?.photoURL != null
+                  ? NetworkImage(currentUser!.photoURL!)
+                  : null,
+              child: currentUser?.photoURL == null
+                  ? Text(
+                      currentUser?.displayName?.substring(0, 1).toUpperCase() ?? '?',
+                      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                    )
+                  : null,
             ),
-
-            const SizedBox(height: 16),
-
-            // Имя и статус
-            Text(
-              currentUser?.displayName ?? 'Без имени',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 4),
-
-            Text(
-              currentUser?.email ?? 'Email не указан',
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // Город
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.location_on, color: Colors.white70, size: 16),
-                const SizedBox(width: 4),
-                Text(
-                  currentUser?.city?.trim().isNotEmpty == true
-                      ? currentUser!.city!
-                      : 'Город не указан',
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 14,
+            if (_isOnline)
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
                   ),
                 ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // Кнопки действий
-            if (isOwnProfile)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildActionButton(
-                    icon: Icons.edit,
-                    label: 'Редактировать',
-                    onPressed: _toggleEditMode,
-                  ),
-                  _buildActionButton(
-                    icon: Icons.calendar_today,
-                    label: 'Календарь',
-                    onPressed: _openCalendar,
-                  ),
-                  _buildActionButton(
-                    icon: Icons.analytics,
-                    label: 'Аналитика',
-                    onPressed: _openAnalytics,
-                  ),
-                ],
-              )
-            else
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildActionButton(
-                    icon: Icons.message,
-                    label: 'Написать',
-                    onPressed: _sendMessage,
-                  ),
-                  _buildActionButton(
-                    icon: Icons.assignment,
-                    label: 'Заказать',
-                    onPressed: _createOrder,
-                  ),
-                  _buildActionButton(
-                    icon: Icons.phone,
-                    label: 'Позвонить',
-                    onPressed: _makeCall,
-                  ),
-                ],
               ),
           ],
         ),
-      );
+
+        const SizedBox(height: 16),
+
+        // Имя и статус
+        Text(
+          currentUser?.displayName ?? 'Без имени',
+          style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+
+        const SizedBox(height: 4),
+
+        Text(
+          currentUser?.email ?? 'Email не указан',
+          style: const TextStyle(color: Colors.white70, fontSize: 16),
+        ),
+
+        const SizedBox(height: 8),
+
+        // Город
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.location_on, color: Colors.white70, size: 16),
+            const SizedBox(width: 4),
+            Text(
+              currentUser?.city?.trim().isNotEmpty == true ? currentUser!.city! : 'Город не указан',
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        // Кнопки действий
+        if (isOwnProfile)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildActionButton(
+                icon: Icons.edit,
+                label: 'Редактировать',
+                onPressed: _toggleEditMode,
+              ),
+              _buildActionButton(
+                icon: Icons.calendar_today,
+                label: 'Календарь',
+                onPressed: _openCalendar,
+              ),
+              _buildActionButton(
+                icon: Icons.analytics,
+                label: 'Аналитика',
+                onPressed: _openAnalytics,
+              ),
+            ],
+          )
+        else
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildActionButton(icon: Icons.message, label: 'Написать', onPressed: _sendMessage),
+              _buildActionButton(
+                icon: Icons.assignment,
+                label: 'Заказать',
+                onPressed: _createOrder,
+              ),
+              _buildActionButton(icon: Icons.phone, label: 'Позвонить', onPressed: _makeCall),
+            ],
+          ),
+      ],
+    ),
+  );
 
   Widget _buildActionButton({
     required IconData icon,
     required String label,
     required VoidCallback onPressed,
-  }) =>
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            onPressed: onPressed,
-            icon: Icon(icon, color: Colors.white),
-            style: IconButton.styleFrom(
-              backgroundColor: Colors.white.withValues(alpha: 0.2),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      );
+  }) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      IconButton(
+        onPressed: onPressed,
+        icon: Icon(icon, color: Colors.white),
+        style: IconButton.styleFrom(backgroundColor: Colors.white.withValues(alpha: 0.2)),
+      ),
+      const SizedBox(height: 4),
+      Text(label, style: const TextStyle(color: Colors.white, fontSize: 12)),
+    ],
+  );
 
   Widget _buildBadgesSection() {
     // Тестовые бейджи
@@ -306,84 +266,65 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
   }
 
   Widget _buildStatisticsSection() => Container(
-        padding: const EdgeInsets.all(16),
-        child: const ProfileStatisticsWidget(
-          statistics: ProfileStatistics(
-            views: 1250,
-            likes: 89,
-            rating: 4.8,
-            reviewsCount: 127,
-            averagePrice: 15000,
-            completedOrders: 89,
-            responseTime: 2.5,
-            onlineStatus: true,
-            portfolioItems: 15,
-            socialLinks: 3,
-            pinnedPosts: 5,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.all(16),
+    child: const ProfileStatisticsWidget(
+      statistics: ProfileStatistics(
+        views: 1250,
+        likes: 89,
+        rating: 4.8,
+        reviewsCount: 127,
+        averagePrice: 15000,
+        completedOrders: 89,
+        responseTime: 2.5,
+        onlineStatus: true,
+        portfolioItems: 15,
+        socialLinks: 3,
+        pinnedPosts: 5,
+      ),
+    ),
+  );
 
   Widget _buildAboutTab() => SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'О специалисте',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Профессиональный фотограф с 5-летним опытом работы. '
-              'Специализируюсь на свадебной и портретной съёмке. '
-              'Работаю в Москве и области. Готов к выездным съёмкам.',
-              style: TextStyle(fontSize: 16, height: 1.5),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Специализация',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                'Свадебная съёмка',
-                'Портретная съёмка',
-                'Семейная съёмка',
-                'Корпоративные мероприятия',
-              ]
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('О специалисте', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 16),
+        const Text(
+          'Профессиональный фотограф с 5-летним опытом работы. '
+          'Специализируюсь на свадебной и портретной съёмке. '
+          'Работаю в Москве и области. Готов к выездным съёмкам.',
+          style: TextStyle(fontSize: 16, height: 1.5),
+        ),
+        const SizedBox(height: 24),
+        const Text('Специализация', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children:
+              [
+                    'Свадебная съёмка',
+                    'Портретная съёмка',
+                    'Семейная съёмка',
+                    'Корпоративные мероприятия',
+                  ]
                   .map(
-                    (specialization) => Chip(
-                      label: Text(specialization),
-                      backgroundColor: Colors.blue[50],
-                    ),
+                    (specialization) =>
+                        Chip(label: Text(specialization), backgroundColor: Colors.blue[50]),
                   )
                   .toList(),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Опыт работы',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text('5 лет в сфере фотографии'),
-            const Text('Более 200 успешных проектов'),
-            const Text('Работа с известными брендами'),
-          ],
         ),
-      );
+        const SizedBox(height: 24),
+        const Text('Опыт работы', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        const Text('5 лет в сфере фотографии'),
+        const Text('Более 200 успешных проектов'),
+        const Text('Работа с известными брендами'),
+      ],
+    ),
+  );
 
   Widget _buildPortfolioTab() {
     // Тестовые данные для портфолио
@@ -422,72 +363,52 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
       ),
     ];
 
-    return PortfolioWidget(
-      portfolioItems: portfolioItems,
-    );
+    return PortfolioWidget(portfolioItems: portfolioItems);
   }
 
   Widget _buildReviewsTab() => SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Отзывы',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text('Все отзывы'),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // Рейтинг
-            Row(
-              children: [
-                const Text(
-                  '4.8',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: List.generate(
-                        5,
-                        (index) => Icon(
-                          Icons.star,
-                          color: index < 4 ? Colors.amber : Colors.grey,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                    const Text('127 отзывов'),
-                  ],
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // Список отзывов
-            ...List.generate(3, _buildReviewCard),
+            const Text('Отзывы', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            TextButton(onPressed: () {}, child: const Text('Все отзывы')),
           ],
         ),
-      );
+
+        const SizedBox(height: 16),
+
+        // Рейтинг
+        Row(
+          children: [
+            const Text('4.8', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: List.generate(
+                    5,
+                    (index) =>
+                        Icon(Icons.star, color: index < 4 ? Colors.amber : Colors.grey, size: 20),
+                  ),
+                ),
+                const Text('127 отзывов'),
+              ],
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 24),
+
+        // Список отзывов
+        ...List.generate(3, _buildReviewCard),
+      ],
+    ),
+  );
 
   Widget _buildReviewCard(int index) {
     final reviews = [
@@ -536,9 +457,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
                     children: [
                       Text(
                         review['name']! as String,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Row(
                         children: [
@@ -555,10 +474,7 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
                           const SizedBox(width: 8),
                           Text(
                             review['date']! as String,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                            ),
+                            style: TextStyle(color: Colors.grey[600], fontSize: 12),
                           ),
                         ],
                       ),
@@ -576,114 +492,104 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
   }
 
   Widget _buildContactsTab() => SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Контакты',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Контакты', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 16),
+
+        // Социальные сети
+        SocialLinksWidget(
+          socialLinks: [
+            SocialLink(
+              id: '1',
+              specialistId: widget.specialistId ?? 'current_user',
+              platform: SocialPlatform.instagram,
+              url: 'https://instagram.com/photographer',
+              username: 'photographer',
+              isVerified: true,
+              isPublic: true,
+              followersCount: 1250,
+              createdAt: DateTime.now().subtract(const Duration(days: 30)),
             ),
-            const SizedBox(height: 16),
-
-            // Социальные сети
-            SocialLinksWidget(
-              socialLinks: [
-                SocialLink(
-                  id: '1',
-                  specialistId: widget.specialistId ?? 'current_user',
-                  platform: SocialPlatform.instagram,
-                  url: 'https://instagram.com/photographer',
-                  username: 'photographer',
-                  isVerified: true,
-                  isPublic: true,
-                  followersCount: 1250,
-                  createdAt: DateTime.now().subtract(const Duration(days: 30)),
-                ),
-                SocialLink(
-                  id: '2',
-                  specialistId: widget.specialistId ?? 'current_user',
-                  platform: SocialPlatform.vk,
-                  url: 'https://vk.com/photographer',
-                  username: 'photographer',
-                  isVerified: false,
-                  isPublic: true,
-                  followersCount: 890,
-                  createdAt: DateTime.now().subtract(const Duration(days: 60)),
-                ),
-                SocialLink(
-                  id: '3',
-                  specialistId: widget.specialistId ?? 'current_user',
-                  platform: SocialPlatform.telegram,
-                  url: 'https://t.me/photographer',
-                  username: 'photographer',
-                  isVerified: true,
-                  isPublic: true,
-                  followersCount: 450,
-                  createdAt: DateTime.now().subtract(const Duration(days: 15)),
-                ),
-              ],
+            SocialLink(
+              id: '2',
+              specialistId: widget.specialistId ?? 'current_user',
+              platform: SocialPlatform.vk,
+              url: 'https://vk.com/photographer',
+              username: 'photographer',
+              isVerified: false,
+              isPublic: true,
+              followersCount: 890,
+              createdAt: DateTime.now().subtract(const Duration(days: 60)),
             ),
-
-            const SizedBox(height: 24),
-
-            // Контактная информация
-            const Text(
-              'Контактная информация',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            _buildContactItem(
-              icon: Icons.email,
-              title: 'Email',
-              value: 'photographer@example.com',
-              onTap: () {},
-            ),
-
-            _buildContactItem(
-              icon: Icons.phone,
-              title: 'Телефон',
-              value: '+7 (999) 123-45-67',
-              onTap: () {},
-            ),
-
-            _buildContactItem(
-              icon: Icons.location_on,
-              title: 'Адрес',
-              value: 'Москва, ул. Тверская, 1',
-              onTap: () {},
-            ),
-
-            _buildContactItem(
-              icon: Icons.schedule,
-              title: 'Время работы',
-              value: 'Пн-Пт: 9:00-18:00',
-              onTap: () {},
+            SocialLink(
+              id: '3',
+              specialistId: widget.specialistId ?? 'current_user',
+              platform: SocialPlatform.telegram,
+              url: 'https://t.me/photographer',
+              username: 'photographer',
+              isVerified: true,
+              isPublic: true,
+              followersCount: 450,
+              createdAt: DateTime.now().subtract(const Duration(days: 15)),
             ),
           ],
         ),
-      );
+
+        const SizedBox(height: 24),
+
+        // Контактная информация
+        const Text(
+          'Контактная информация',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+
+        _buildContactItem(
+          icon: Icons.email,
+          title: 'Email',
+          value: 'photographer@example.com',
+          onTap: () {},
+        ),
+
+        _buildContactItem(
+          icon: Icons.phone,
+          title: 'Телефон',
+          value: '+7 (999) 123-45-67',
+          onTap: () {},
+        ),
+
+        _buildContactItem(
+          icon: Icons.location_on,
+          title: 'Адрес',
+          value: 'Москва, ул. Тверская, 1',
+          onTap: () {},
+        ),
+
+        _buildContactItem(
+          icon: Icons.schedule,
+          title: 'Время работы',
+          value: 'Пн-Пт: 9:00-18:00',
+          onTap: () {},
+        ),
+      ],
+    ),
+  );
 
   Widget _buildContactItem({
     required IconData icon,
     required String title,
     required String value,
     required VoidCallback onTap,
-  }) =>
-      ListTile(
-        leading: Icon(icon),
-        title: Text(title),
-        subtitle: Text(value),
-        trailing: const Icon(Icons.arrow_forward_ios),
-        onTap: onTap,
-      );
+  }) => ListTile(
+    leading: Icon(icon),
+    title: Text(title),
+    subtitle: Text(value),
+    trailing: const Icon(Icons.arrow_forward_ios),
+    onTap: onTap,
+  );
 
   Widget? _buildFloatingActionButton(bool isOwnProfile) {
     if (!isOwnProfile) return null;
@@ -704,30 +610,30 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
 
   void _shareProfile() {
     // TODO: Реализовать шаринг профиля
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Функция шаринга будет добавлена')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Функция шаринга будет добавлена')));
   }
 
   void _toggleFavorite() {
     // TODO: Реализовать добавление в избранное
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Добавлено в избранное')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Добавлено в избранное')));
   }
 
   void _openCalendar() {
     // TODO: Реализовать открытие календаря
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Календарь будет добавлен')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Календарь будет добавлен')));
   }
 
   void _openAnalytics() {
     // TODO: Реализовать открытие аналитики
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Аналитика будет добавлена')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Аналитика будет добавлена')));
   }
 
   void _sendMessage() {
@@ -742,8 +648,8 @@ class _EnhancedProfileScreenState extends ConsumerState<EnhancedProfileScreen>
 
   void _makeCall() {
     // TODO: Реализовать звонок
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Функция звонков будет добавлена')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Функция звонков будет добавлена')));
   }
 }

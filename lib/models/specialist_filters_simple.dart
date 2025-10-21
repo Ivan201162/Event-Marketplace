@@ -86,19 +86,18 @@ class SpecialistFilters {
     List<String>? subcategories,
     bool? isVerified,
     bool? isAvailable,
-  }) =>
-      SpecialistFilters(
-        minPrice: minPrice ?? this.minPrice,
-        maxPrice: maxPrice ?? this.maxPrice,
-        minRating: minRating ?? this.minRating,
-        maxRating: maxRating ?? this.maxRating,
-        availableDate: availableDate ?? this.availableDate,
-        city: city ?? this.city,
-        searchQuery: searchQuery ?? this.searchQuery,
-        subcategories: subcategories ?? this.subcategories,
-        isVerified: isVerified ?? this.isVerified,
-        isAvailable: isAvailable ?? this.isAvailable,
-      );
+  }) => SpecialistFilters(
+    minPrice: minPrice ?? this.minPrice,
+    maxPrice: maxPrice ?? this.maxPrice,
+    minRating: minRating ?? this.minRating,
+    maxRating: maxRating ?? this.maxRating,
+    availableDate: availableDate ?? this.availableDate,
+    city: city ?? this.city,
+    searchQuery: searchQuery ?? this.searchQuery,
+    subcategories: subcategories ?? this.subcategories,
+    isVerified: isVerified ?? this.isVerified,
+    isAvailable: isAvailable ?? this.isAvailable,
+  );
 
   @override
   bool operator ==(Object other) {

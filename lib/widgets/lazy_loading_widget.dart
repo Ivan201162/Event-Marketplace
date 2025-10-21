@@ -131,22 +131,19 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
   }
 
   Widget _buildShimmerLoading() => Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: Column(
-          children: List.generate(
-            5,
-            (index) => Container(
-              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              height: 100,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-          ),
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: Column(
+      children: List.generate(
+        5,
+        (index) => Container(
+          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          height: 100,
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _buildLoadingWidget() => widget.loadingWidget ?? _buildShimmerLoading();
 
@@ -156,35 +153,19 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки данных',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Ошибка загрузки данных', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             if (_errorMessage != null) ...[
               const SizedBox(height: 8),
               Text(
                 _errorMessage!,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[500],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                 textAlign: TextAlign.center,
               ),
             ],
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadInitialData,
-              child: const Text('Повторить'),
-            ),
+            ElevatedButton(onPressed: _loadInitialData, child: const Text('Повторить')),
           ],
         ),
       );
@@ -195,26 +176,13 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.inbox_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.inbox_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Нет данных',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Нет данных', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Попробуйте обновить страницу',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             ),
           ],
         ),
@@ -225,9 +193,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      child: const Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -258,10 +224,7 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
     );
 
     if (widget.enablePullToRefresh) {
-      listView = RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: listView,
-      );
+      listView = RefreshIndicator(onRefresh: _onRefresh, child: listView);
     }
 
     return listView;
@@ -404,26 +367,23 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
   }
 
   Widget _buildShimmerLoading() => Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: widget.crossAxisCount,
-            crossAxisSpacing: widget.crossAxisSpacing,
-            mainAxisSpacing: widget.mainAxisSpacing,
-            childAspectRatio: widget.childAspectRatio,
-          ),
-          itemCount: 6,
-          itemBuilder: (context, index) => Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-      );
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: widget.crossAxisCount,
+        crossAxisSpacing: widget.crossAxisSpacing,
+        mainAxisSpacing: widget.mainAxisSpacing,
+        childAspectRatio: widget.childAspectRatio,
+      ),
+      itemCount: 6,
+      itemBuilder: (context, index) => Container(
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+      ),
+    ),
+  );
 
   Widget _buildLoadingWidget() => widget.loadingWidget ?? _buildShimmerLoading();
 
@@ -433,35 +393,19 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки данных',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Ошибка загрузки данных', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             if (_errorMessage != null) ...[
               const SizedBox(height: 8),
               Text(
                 _errorMessage!,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[500],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                 textAlign: TextAlign.center,
               ),
             ],
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadInitialData,
-              child: const Text('Повторить'),
-            ),
+            ElevatedButton(onPressed: _loadInitialData, child: const Text('Повторить')),
           ],
         ),
       );
@@ -472,26 +416,13 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.inbox_outlined,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.inbox_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Нет данных',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Нет данных', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Попробуйте обновить страницу',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             ),
           ],
         ),
@@ -502,9 +433,7 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      child: const Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -540,10 +469,7 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
     );
 
     if (widget.enablePullToRefresh) {
-      gridView = RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: gridView,
-      );
+      gridView = RefreshIndicator(onRefresh: _onRefresh, child: gridView);
     }
 
     return gridView;

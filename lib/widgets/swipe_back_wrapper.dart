@@ -96,11 +96,11 @@ mixin SwipeBackMixin<T extends StatefulWidget> on State<T> {
 
   /// Обернуть виджет в SwipeBackWrapper
   Widget wrapWithSwipeBack(Widget child) => SwipeBackWrapper(
-        enableSwipeBack: _isSwipeBackEnabled,
-        swipeThreshold: _swipeThreshold,
-        onSwipeBack: handleSwipeBack,
-        child: child,
-      );
+    enableSwipeBack: _isSwipeBackEnabled,
+    swipeThreshold: _swipeThreshold,
+    onSwipeBack: handleSwipeBack,
+    child: child,
+  );
 }
 
 /// Виджет для быстрого возврата на главную
@@ -118,33 +118,29 @@ class QuickHomeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FloatingActionButton(
-        onPressed: () {
-          context.go('/main');
-        },
-        tooltip: tooltip,
-        child: Icon(icon),
-      );
+    onPressed: () {
+      context.go('/main');
+    },
+    tooltip: tooltip,
+    child: Icon(icon),
+  );
 }
 
 /// Виджет для быстрого доступа к профилю
 class QuickProfileButton extends StatelessWidget {
-  const QuickProfileButton({
-    super.key,
-    this.icon = Icons.person,
-    this.tooltip = 'Профиль',
-  });
+  const QuickProfileButton({super.key, this.icon = Icons.person, this.tooltip = 'Профиль'});
 
   final IconData icon;
   final String tooltip;
 
   @override
   Widget build(BuildContext context) => IconButton(
-        onPressed: () {
-          context.push('/profile');
-        },
-        icon: Icon(icon),
-        tooltip: tooltip,
-      );
+    onPressed: () {
+      context.push('/profile');
+    },
+    icon: Icon(icon),
+    tooltip: tooltip,
+  );
 }
 
 /// Виджет для навигационной панели с быстрыми действиями
@@ -164,82 +160,71 @@ class QuickNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        height: 60,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, -2),
-            ),
-          ],
+    height: 60,
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surface,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.1),
+          blurRadius: 4,
+          offset: const Offset(0, -2),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            if (showHome)
-              _buildQuickAction(
+      ],
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        if (showHome)
+          _buildQuickAction(
+            context,
+            icon: Icons.home,
+            label: 'Главная',
+            onTap: () => context.go('/main'),
+          ),
+        if (showSearch)
+          _buildQuickAction(
+            context,
+            icon: Icons.search,
+            label: 'Поиск',
+            onTap: () => context.push('/home'),
+          ),
+        if (showNotifications)
+          _buildQuickAction(
+            context,
+            icon: Icons.notifications,
+            label: 'Уведомления',
+            onTap: () {
+              // TODO: Переход к уведомлениям
+              ScaffoldMessenger.of(
                 context,
-                icon: Icons.home,
-                label: 'Главная',
-                onTap: () => context.go('/main'),
-              ),
-            if (showSearch)
-              _buildQuickAction(
-                context,
-                icon: Icons.search,
-                label: 'Поиск',
-                onTap: () => context.push('/home'),
-              ),
-            if (showNotifications)
-              _buildQuickAction(
-                context,
-                icon: Icons.notifications,
-                label: 'Уведомления',
-                onTap: () {
-                  // TODO: Переход к уведомлениям
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Уведомления')),
-                  );
-                },
-              ),
-            if (showProfile)
-              _buildQuickAction(
-                context,
-                icon: Icons.person,
-                label: 'Профиль',
-                onTap: () => context.push('/profile'),
-              ),
-          ],
-        ),
-      );
+              ).showSnackBar(const SnackBar(content: Text('Уведомления')));
+            },
+          ),
+        if (showProfile)
+          _buildQuickAction(
+            context,
+            icon: Icons.person,
+            label: 'Профиль',
+            onTap: () => context.push('/profile'),
+          ),
+      ],
+    ),
+  );
 
   Widget _buildQuickAction(
     BuildContext context, {
     required IconData icon,
     required String label,
     required VoidCallback onTap,
-  }) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 24,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          ],
-        ),
-      );
+  }) => GestureDetector(
+    onTap: onTap,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, size: 24, color: Theme.of(context).colorScheme.onSurface),
+        const SizedBox(height: 4),
+        Text(label, style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface)),
+      ],
+    ),
+  );
 }

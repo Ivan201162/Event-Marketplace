@@ -28,22 +28,28 @@ final topSpecialistsRuProvider = FutureProvider<List<Specialist>>((ref) async {
 });
 
 /// Top specialists by city provider
-final topSpecialistsCityProvider =
-    FutureProvider.family<List<Specialist>, String>((ref, city) async {
+final topSpecialistsCityProvider = FutureProvider.family<List<Specialist>, String>((
+  ref,
+  city,
+) async {
   final service = ref.read(specialistServiceProvider);
   return await service.getTopSpecialistsByCity(city);
 });
 
 /// Specialists by city provider
-final specialistsByCityProvider =
-    FutureProvider.family<List<Specialist>, String>((ref, city) async {
+final specialistsByCityProvider = FutureProvider.family<List<Specialist>, String>((
+  ref,
+  city,
+) async {
   final service = ref.read(specialistServiceProvider);
   return await service.getSpecialistsByCity(city);
 });
 
 /// Specialists by specialization provider
-final specialistsBySpecializationProvider =
-    FutureProvider.family<List<Specialist>, String>((ref, specialization) async {
+final specialistsBySpecializationProvider = FutureProvider.family<List<Specialist>, String>((
+  ref,
+  specialization,
+) async {
   final service = ref.read(specialistServiceProvider);
   return await service.getSpecialistsBySpecialization(specialization);
 });
@@ -54,8 +60,10 @@ final searchFiltersProvider = StateProvider<SearchFilters>((ref) {
 });
 
 /// Search results provider
-final searchResultsProvider =
-    FutureProvider.family<List<Specialist>, SearchFilters>((ref, filters) async {
+final searchResultsProvider = FutureProvider.family<List<Specialist>, SearchFilters>((
+  ref,
+  filters,
+) async {
   final service = ref.read(specialistServiceProvider);
   return await service.searchSpecialists(filters);
 });
@@ -91,8 +99,10 @@ final specialistsStreamProvider = StreamProvider<List<Specialist>>((ref) {
 });
 
 /// Stream of specialists by city provider
-final specialistsByCityStreamProvider =
-    StreamProvider.family<List<Specialist>, String>((ref, city) {
+final specialistsByCityStreamProvider = StreamProvider.family<List<Specialist>, String>((
+  ref,
+  city,
+) {
   final service = ref.read(specialistServiceProvider);
   return service.getSpecialistsByCityStream(city);
 });

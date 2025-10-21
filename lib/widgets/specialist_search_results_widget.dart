@@ -90,42 +90,38 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
   }
 
   Widget _buildSearchStats(AsyncValue<AdvancedSearchState> searchState) => searchState.when(
-        data: (state) {
-          if (state.results.isEmpty && !state.isLoading) {
-            return const SizedBox.shrink();
-          }
+    data: (state) {
+      if (state.results.isEmpty && !state.isLoading) {
+        return const SizedBox.shrink();
+      }
 
-          return Container(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.search,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Найдено ${state.totalCount} специалистов',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                ),
-                const Spacer(),
-                if (state.searchTime > 0)
-                  Text(
-                    'за ${state.searchTime}мс',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                  ),
-              ],
+      return Container(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Icon(Icons.search, size: 20, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 8),
+            Text(
+              'Найдено ${state.totalCount} специалистов',
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
-          );
-        },
-        loading: () => const SizedBox.shrink(),
-        error: (error, stack) => const SizedBox.shrink(),
+            const Spacer(),
+            if (state.searchTime > 0)
+              Text(
+                'за ${state.searchTime}мс',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+          ],
+        ),
       );
+    },
+    loading: () => const SizedBox.shrink(),
+    error: (error, stack) => const SizedBox.shrink(),
+  );
 
   Widget _buildResults(AdvancedSearchState state) {
     if (state.results.isEmpty && !state.isLoading) {
@@ -174,14 +170,13 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-                    backgroundImage:
-                        specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
+                    backgroundImage: specialist.avatarUrl != null
+                        ? NetworkImage(specialist.avatarUrl!)
+                        : null,
                     child: specialist.avatarUrl == null
                         ? Text(
                             specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              color: theme.primaryColor,
-                            ),
+                            style: theme.textTheme.titleLarge?.copyWith(color: theme.primaryColor),
                           )
                         : null,
                   ),
@@ -195,9 +190,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                       children: [
                         Text(
                           specialist.name,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -239,11 +232,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
-                            Icons.star,
-                            size: 16,
-                            color: Colors.amber,
-                          ),
+                          const Icon(Icons.star, size: 16, color: Colors.amber),
                           const SizedBox(width: 4),
                           Text(
                             specialist.rating.toStringAsFixed(1),
@@ -262,11 +251,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                       ),
                       if (specialist.isVerified) ...[
                         const SizedBox(height: 4),
-                        const Icon(
-                          Icons.verified,
-                          size: 16,
-                          color: Colors.blue,
-                        ),
+                        const Icon(Icons.verified, size: 16, color: Colors.blue),
                       ],
                     ],
                   ),
@@ -295,10 +280,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                       .take(3)
                       .map(
                         (category) => Chip(
-                          label: Text(
-                            category,
-                            style: theme.textTheme.bodySmall,
-                          ),
+                          label: Text(category, style: theme.textTheme.bodySmall),
                           backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
@@ -346,9 +328,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                         ),
                         Text(
                           '${specialist.yearsOfExperience} лет',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -413,83 +393,63 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
   }
 
   Widget _buildLoadingState() => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Поиск специалистов...'),
-          ],
-        ),
-      );
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Поиск специалистов...')],
+    ),
+  );
 
   Widget _buildErrorState(Object error) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Ошибка поиска',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref
-                    .read<AdvancedSearchNotifier>(
-                      advancedSearchProvider.notifier,
-                    )
-                    .searchSpecialists(widget.filters);
-              },
-              child: const Text('Повторить'),
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
+        const SizedBox(height: 16),
+        Text('Ошибка поиска', style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 8),
+        Text(
+          error.toString(),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          textAlign: TextAlign.center,
         ),
-      );
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () {
+            ref
+                .read<AdvancedSearchNotifier>(advancedSearchProvider.notifier)
+                .searchSpecialists(widget.filters);
+          },
+          child: const Text('Повторить'),
+        ),
+      ],
+    ),
+  );
 
   Widget _buildEmptyState() => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Специалисты не найдены',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Попробуйте изменить параметры поиска',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                widget.onFiltersChanged?.call(const AdvancedSearchFilters());
-              },
-              child: const Text('Сбросить фильтры'),
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.search_off, size: 64, color: Theme.of(context).colorScheme.onSurfaceVariant),
+        const SizedBox(height: 16),
+        Text('Специалисты не найдены', style: Theme.of(context).textTheme.titleLarge),
+        const SizedBox(height: 8),
+        Text(
+          'Попробуйте изменить параметры поиска',
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          textAlign: TextAlign.center,
         ),
-      );
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: () {
+            widget.onFiltersChanged?.call(const AdvancedSearchFilters());
+          },
+          child: const Text('Сбросить фильтры'),
+        ),
+      ],
+    ),
+  );
 }

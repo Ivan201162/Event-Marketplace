@@ -49,18 +49,18 @@ class SecuritySettings {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'twoFactorEnabled': twoFactorEnabled,
-        'biometricEnabled': biometricEnabled,
-        'pinCodeEnabled': pinCodeEnabled,
-        'sessionTimeout': sessionTimeout,
-        'loginNotifications': loginNotifications,
-        'securityAlerts': securityAlerts,
-        'dataEncryption': dataEncryption,
-        'auditLogging': auditLogging,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'userId': userId,
+    'twoFactorEnabled': twoFactorEnabled,
+    'biometricEnabled': biometricEnabled,
+    'pinCodeEnabled': pinCodeEnabled,
+    'sessionTimeout': sessionTimeout,
+    'loginNotifications': loginNotifications,
+    'securityAlerts': securityAlerts,
+    'dataEncryption': dataEncryption,
+    'auditLogging': auditLogging,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   SecuritySettings copyWith({
     String? id,
@@ -75,21 +75,20 @@ class SecuritySettings {
     bool? auditLogging,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      SecuritySettings(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
-        biometricEnabled: biometricEnabled ?? this.biometricEnabled,
-        pinCodeEnabled: pinCodeEnabled ?? this.pinCodeEnabled,
-        sessionTimeout: sessionTimeout ?? this.sessionTimeout,
-        loginNotifications: loginNotifications ?? this.loginNotifications,
-        securityAlerts: securityAlerts ?? this.securityAlerts,
-        dataEncryption: dataEncryption ?? this.dataEncryption,
-        auditLogging: auditLogging ?? this.auditLogging,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => SecuritySettings(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
+    biometricEnabled: biometricEnabled ?? this.biometricEnabled,
+    pinCodeEnabled: pinCodeEnabled ?? this.pinCodeEnabled,
+    sessionTimeout: sessionTimeout ?? this.sessionTimeout,
+    loginNotifications: loginNotifications ?? this.loginNotifications,
+    securityAlerts: securityAlerts ?? this.securityAlerts,
+    dataEncryption: dataEncryption ?? this.dataEncryption,
+    auditLogging: auditLogging ?? this.auditLogging,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 }
 
 /// Устройство безопасности
@@ -150,21 +149,21 @@ class SecurityDevice {
   final bool isBlocked;
 
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'deviceId': deviceId,
-        'deviceName': deviceName,
-        'deviceType': deviceType,
-        'platform': platform,
-        'isTrusted': isTrusted,
-        'lastSeen': Timestamp.fromDate(lastSeen),
-        'createdAt': Timestamp.fromDate(createdAt),
-        'metadata': metadata,
-        'osVersion': osVersion,
-        'appVersion': appVersion,
-        'firstSeen': firstSeen != null ? Timestamp.fromDate(firstSeen!) : null,
-        'lastIpAddress': lastIpAddress,
-        'isBlocked': isBlocked,
-      };
+    'userId': userId,
+    'deviceId': deviceId,
+    'deviceName': deviceName,
+    'deviceType': deviceType,
+    'platform': platform,
+    'isTrusted': isTrusted,
+    'lastSeen': Timestamp.fromDate(lastSeen),
+    'createdAt': Timestamp.fromDate(createdAt),
+    'metadata': metadata,
+    'osVersion': osVersion,
+    'appVersion': appVersion,
+    'firstSeen': firstSeen != null ? Timestamp.fromDate(firstSeen!) : null,
+    'lastIpAddress': lastIpAddress,
+    'isBlocked': isBlocked,
+  };
 
   SecurityDevice copyWith({
     String? id,
@@ -177,28 +176,22 @@ class SecurityDevice {
     DateTime? lastSeen,
     DateTime? createdAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      SecurityDevice(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        deviceId: deviceId ?? this.deviceId,
-        deviceName: deviceName ?? this.deviceName,
-        deviceType: deviceType ?? this.deviceType,
-        platform: platform ?? this.platform,
-        isTrusted: isTrusted ?? this.isTrusted,
-        lastSeen: lastSeen ?? this.lastSeen,
-        createdAt: createdAt ?? this.createdAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => SecurityDevice(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    deviceId: deviceId ?? this.deviceId,
+    deviceName: deviceName ?? this.deviceName,
+    deviceType: deviceType ?? this.deviceType,
+    platform: platform ?? this.platform,
+    isTrusted: isTrusted ?? this.isTrusted,
+    lastSeen: lastSeen ?? this.lastSeen,
+    createdAt: createdAt ?? this.createdAt,
+    metadata: metadata ?? this.metadata,
+  );
 }
 
 /// Сила пароля
-enum SecurityPasswordStrength {
-  weak,
-  medium,
-  strong,
-  veryStrong,
-}
+enum SecurityPasswordStrength { weak, medium, strong, veryStrong }
 
 /// Расширение для SecurityPasswordStrength
 extension SecurityPasswordStrengthExtension on SecurityPasswordStrength {

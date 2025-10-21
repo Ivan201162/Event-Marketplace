@@ -31,55 +31,45 @@ class ABTest {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => ABTestStatus.draft,
       ),
-      variants: (data['variants'] as List<dynamic>?)
+      variants:
+          (data['variants'] as List<dynamic>?)
               ?.map((v) => ABTestVariant.fromMap(v as Map<String, dynamic>))
               .toList() ??
           [],
-      targeting: ABTestTargeting.fromMap(
-        (data['targeting'] as Map<String, dynamic>?) ?? {},
-      ),
-      metrics: ABTestMetrics.fromMap(
-        (data['metrics'] as Map<String, dynamic>?) ?? {},
-      ),
+      targeting: ABTestTargeting.fromMap((data['targeting'] as Map<String, dynamic>?) ?? {}),
+      metrics: ABTestMetrics.fromMap((data['metrics'] as Map<String, dynamic>?) ?? {}),
       startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       endDate: data['endDate'] != null ? (data['endDate'] as Timestamp?)?.toDate() : null,
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      metadata: Map<String, dynamic>.from(
-        (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
-      ),
+      metadata: Map<String, dynamic>.from((data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
     );
   }
 
   /// Создать из Map
   factory ABTest.fromMap(Map<String, dynamic> data) => ABTest(
-        id: (data['id'] as String?) ?? '',
-        name: (data['name'] as String?) ?? '',
-        description: (data['description'] as String?) ?? '',
-        status: ABTestStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == data['status'],
-          orElse: () => ABTestStatus.draft,
-        ),
-        variants: (data['variants'] as List<dynamic>?)
-                ?.map((v) => ABTestVariant.fromMap(v as Map<String, dynamic>))
-                .toList() ??
-            [],
-        targeting: ABTestTargeting.fromMap(
-          (data['targeting'] as Map<String, dynamic>?) ?? {},
-        ),
-        metrics: ABTestMetrics.fromMap(
-          (data['metrics'] as Map<String, dynamic>?) ?? {},
-        ),
-        startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        endDate: data['endDate'] != null ? (data['endDate'] as Timestamp?)?.toDate() : null,
-        createdBy: data['createdBy'] as String?,
-        createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        metadata: Map<String, dynamic>.from(
-          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
-        ),
-      );
+    id: (data['id'] as String?) ?? '',
+    name: (data['name'] as String?) ?? '',
+    description: (data['description'] as String?) ?? '',
+    status: ABTestStatus.values.firstWhere(
+      (e) => e.toString().split('.').last == data['status'],
+      orElse: () => ABTestStatus.draft,
+    ),
+    variants:
+        (data['variants'] as List<dynamic>?)
+            ?.map((v) => ABTestVariant.fromMap(v as Map<String, dynamic>))
+            .toList() ??
+        [],
+    targeting: ABTestTargeting.fromMap((data['targeting'] as Map<String, dynamic>?) ?? {}),
+    metrics: ABTestMetrics.fromMap((data['metrics'] as Map<String, dynamic>?) ?? {}),
+    startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    endDate: data['endDate'] != null ? (data['endDate'] as Timestamp?)?.toDate() : null,
+    createdBy: data['createdBy'] as String?,
+    createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    metadata: Map<String, dynamic>.from((data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+  );
   final String id;
   final String name;
   final String description;
@@ -96,19 +86,19 @@ class ABTest {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'status': status.toString().split('.').last,
-        'variants': variants.map((v) => v.toMap()).toList(),
-        'targeting': targeting.toMap(),
-        'metrics': metrics.toMap(),
-        'startDate': Timestamp.fromDate(startDate),
-        'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
-        'createdBy': createdBy,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'metadata': metadata,
-      };
+    'name': name,
+    'description': description,
+    'status': status.toString().split('.').last,
+    'variants': variants.map((v) => v.toMap()).toList(),
+    'targeting': targeting.toMap(),
+    'metrics': metrics.toMap(),
+    'startDate': Timestamp.fromDate(startDate),
+    'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
+    'createdBy': createdBy,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   ABTest copyWith({
@@ -125,22 +115,21 @@ class ABTest {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      ABTest(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        status: status ?? this.status,
-        variants: variants ?? this.variants,
-        targeting: targeting ?? this.targeting,
-        metrics: metrics ?? this.metrics,
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-        createdBy: createdBy ?? this.createdBy,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => ABTest(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    status: status ?? this.status,
+    variants: variants ?? this.variants,
+    targeting: targeting ?? this.targeting,
+    metrics: metrics ?? this.metrics,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    createdBy: createdBy ?? this.createdBy,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, активен ли тест
   bool get isActive => status == ABTestStatus.running;
@@ -186,20 +175,20 @@ class ABTest {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        name,
-        description,
-        status,
-        variants,
-        targeting,
-        metrics,
-        startDate,
-        endDate,
-        createdBy,
-        createdAt,
-        updatedAt,
-        metadata,
-      );
+    id,
+    name,
+    description,
+    status,
+    variants,
+    targeting,
+    metrics,
+    startDate,
+    endDate,
+    createdBy,
+    createdAt,
+    updatedAt,
+    metadata,
+  );
 
   @override
   String toString() => 'ABTest(id: $id, name: $name, status: $status)';
@@ -220,14 +209,14 @@ class ABTestVariant {
 
   /// Создать из Map
   factory ABTestVariant.fromMap(Map<String, dynamic> data) => ABTestVariant(
-        id: data['id'] as String? ?? '',
-        name: data['name'] as String? ?? '',
-        description: data['description'] as String? ?? '',
-        trafficPercentage: (data['trafficPercentage'] as num?)?.toDouble() ?? 0.0,
-        configuration: Map<String, dynamic>.from(data['configuration'] as Map? ?? {}),
-        isControl: data['isControl'] as bool? ?? false,
-        createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      );
+    id: data['id'] as String? ?? '',
+    name: data['name'] as String? ?? '',
+    description: data['description'] as String? ?? '',
+    trafficPercentage: (data['trafficPercentage'] as num?)?.toDouble() ?? 0.0,
+    configuration: Map<String, dynamic>.from(data['configuration'] as Map? ?? {}),
+    isControl: data['isControl'] as bool? ?? false,
+    createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+  );
   final String id;
   final String name;
   final String description;
@@ -238,14 +227,14 @@ class ABTestVariant {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'name': name,
-        'description': description,
-        'trafficPercentage': trafficPercentage,
-        'configuration': configuration,
-        'isControl': isControl,
-        'createdAt': Timestamp.fromDate(createdAt),
-      };
+    'id': id,
+    'name': name,
+    'description': description,
+    'trafficPercentage': trafficPercentage,
+    'configuration': configuration,
+    'isControl': isControl,
+    'createdAt': Timestamp.fromDate(createdAt),
+  };
 
   /// Создать копию с изменениями
   ABTestVariant copyWith({
@@ -256,16 +245,15 @@ class ABTestVariant {
     Map<String, dynamic>? configuration,
     bool? isControl,
     DateTime? createdAt,
-  }) =>
-      ABTestVariant(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        trafficPercentage: trafficPercentage ?? this.trafficPercentage,
-        configuration: configuration ?? this.configuration,
-        isControl: isControl ?? this.isControl,
-        createdAt: createdAt ?? this.createdAt,
-      );
+  }) => ABTestVariant(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    trafficPercentage: trafficPercentage ?? this.trafficPercentage,
+    configuration: configuration ?? this.configuration,
+    isControl: isControl ?? this.isControl,
+    createdAt: createdAt ?? this.createdAt,
+  );
 
   @override
   bool operator ==(Object other) {
@@ -281,15 +269,8 @@ class ABTestVariant {
   }
 
   @override
-  int get hashCode => Object.hash(
-        id,
-        name,
-        description,
-        trafficPercentage,
-        configuration,
-        isControl,
-        createdAt,
-      );
+  int get hashCode =>
+      Object.hash(id, name, description, trafficPercentage, configuration, isControl, createdAt);
 
   @override
   String toString() =>
@@ -312,15 +293,15 @@ class ABTestTargeting {
 
   /// Создать из Map
   factory ABTestTargeting.fromMap(Map<String, dynamic> data) => ABTestTargeting(
-        userIds: List<String>.from(data['userIds'] as List? ?? []),
-        userSegments: List<String>.from(data['userSegments'] as List? ?? []),
-        platforms: List<String>.from(data['platforms'] as List? ?? []),
-        appVersions: List<String>.from(data['appVersions'] as List? ?? []),
-        customFilters: Map<String, dynamic>.from(data['customFilters'] as Map? ?? {}),
-        trafficPercentage: (data['trafficPercentage'] as num?)?.toDouble() ?? 100.0,
-        startTime: data['startTime'] != null ? (data['startTime'] as Timestamp?)?.toDate() : null,
-        endTime: data['endTime'] != null ? (data['endTime'] as Timestamp?)?.toDate() : null,
-      );
+    userIds: List<String>.from(data['userIds'] as List? ?? []),
+    userSegments: List<String>.from(data['userSegments'] as List? ?? []),
+    platforms: List<String>.from(data['platforms'] as List? ?? []),
+    appVersions: List<String>.from(data['appVersions'] as List? ?? []),
+    customFilters: Map<String, dynamic>.from(data['customFilters'] as Map? ?? {}),
+    trafficPercentage: (data['trafficPercentage'] as num?)?.toDouble() ?? 100.0,
+    startTime: data['startTime'] != null ? (data['startTime'] as Timestamp?)?.toDate() : null,
+    endTime: data['endTime'] != null ? (data['endTime'] as Timestamp?)?.toDate() : null,
+  );
   final List<String> userIds;
   final List<String> userSegments;
   final List<String> platforms;
@@ -332,15 +313,15 @@ class ABTestTargeting {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'userIds': userIds,
-        'userSegments': userSegments,
-        'platforms': platforms,
-        'appVersions': appVersions,
-        'customFilters': customFilters,
-        'trafficPercentage': trafficPercentage,
-        'startTime': startTime != null ? Timestamp.fromDate(startTime!) : null,
-        'endTime': endTime != null ? Timestamp.fromDate(endTime!) : null,
-      };
+    'userIds': userIds,
+    'userSegments': userSegments,
+    'platforms': platforms,
+    'appVersions': appVersions,
+    'customFilters': customFilters,
+    'trafficPercentage': trafficPercentage,
+    'startTime': startTime != null ? Timestamp.fromDate(startTime!) : null,
+    'endTime': endTime != null ? Timestamp.fromDate(endTime!) : null,
+  };
 
   /// Создать копию с изменениями
   ABTestTargeting copyWith({
@@ -352,17 +333,16 @@ class ABTestTargeting {
     double? trafficPercentage,
     DateTime? startTime,
     DateTime? endTime,
-  }) =>
-      ABTestTargeting(
-        userIds: userIds ?? this.userIds,
-        userSegments: userSegments ?? this.userSegments,
-        platforms: platforms ?? this.platforms,
-        appVersions: appVersions ?? this.appVersions,
-        customFilters: customFilters ?? this.customFilters,
-        trafficPercentage: trafficPercentage ?? this.trafficPercentage,
-        startTime: startTime ?? this.startTime,
-        endTime: endTime ?? this.endTime,
-      );
+  }) => ABTestTargeting(
+    userIds: userIds ?? this.userIds,
+    userSegments: userSegments ?? this.userSegments,
+    platforms: platforms ?? this.platforms,
+    appVersions: appVersions ?? this.appVersions,
+    customFilters: customFilters ?? this.customFilters,
+    trafficPercentage: trafficPercentage ?? this.trafficPercentage,
+    startTime: startTime ?? this.startTime,
+    endTime: endTime ?? this.endTime,
+  );
 
   @override
   bool operator ==(Object other) {
@@ -380,15 +360,15 @@ class ABTestTargeting {
 
   @override
   int get hashCode => Object.hash(
-        userIds,
-        userSegments,
-        platforms,
-        appVersions,
-        customFilters,
-        trafficPercentage,
-        startTime,
-        endTime,
-      );
+    userIds,
+    userSegments,
+    platforms,
+    appVersions,
+    customFilters,
+    trafficPercentage,
+    startTime,
+    endTime,
+  );
 
   @override
   String toString() =>
@@ -410,14 +390,14 @@ class ABTestMetrics {
 
   /// Создать из Map
   factory ABTestMetrics.fromMap(Map<String, dynamic> data) => ABTestMetrics(
-        primaryMetric: data['primaryMetric'] as String? ?? '',
-        secondaryMetrics: List<String>.from(data['secondaryMetrics'] as List? ?? []),
-        minimumDetectableEffect: (data['minimumDetectableEffect'] as num?)?.toDouble() ?? 0.05,
-        significanceLevel: (data['significanceLevel'] as num?)?.toDouble() ?? 0.05,
-        power: (data['power'] as num?)?.toDouble() ?? 0.8,
-        minimumSampleSize: data['minimumSampleSize'] as int? ?? 1000,
-        customMetrics: Map<String, dynamic>.from(data['customMetrics'] as Map? ?? {}),
-      );
+    primaryMetric: data['primaryMetric'] as String? ?? '',
+    secondaryMetrics: List<String>.from(data['secondaryMetrics'] as List? ?? []),
+    minimumDetectableEffect: (data['minimumDetectableEffect'] as num?)?.toDouble() ?? 0.05,
+    significanceLevel: (data['significanceLevel'] as num?)?.toDouble() ?? 0.05,
+    power: (data['power'] as num?)?.toDouble() ?? 0.8,
+    minimumSampleSize: data['minimumSampleSize'] as int? ?? 1000,
+    customMetrics: Map<String, dynamic>.from(data['customMetrics'] as Map? ?? {}),
+  );
   final String primaryMetric;
   final List<String> secondaryMetrics;
   final double minimumDetectableEffect;
@@ -428,14 +408,14 @@ class ABTestMetrics {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-        'primaryMetric': primaryMetric,
-        'secondaryMetrics': secondaryMetrics,
-        'minimumDetectableEffect': minimumDetectableEffect,
-        'significanceLevel': significanceLevel,
-        'power': power,
-        'minimumSampleSize': minimumSampleSize,
-        'customMetrics': customMetrics,
-      };
+    'primaryMetric': primaryMetric,
+    'secondaryMetrics': secondaryMetrics,
+    'minimumDetectableEffect': minimumDetectableEffect,
+    'significanceLevel': significanceLevel,
+    'power': power,
+    'minimumSampleSize': minimumSampleSize,
+    'customMetrics': customMetrics,
+  };
 
   /// Создать копию с изменениями
   ABTestMetrics copyWith({
@@ -446,16 +426,15 @@ class ABTestMetrics {
     double? power,
     int? minimumSampleSize,
     Map<String, dynamic>? customMetrics,
-  }) =>
-      ABTestMetrics(
-        primaryMetric: primaryMetric ?? this.primaryMetric,
-        secondaryMetrics: secondaryMetrics ?? this.secondaryMetrics,
-        minimumDetectableEffect: minimumDetectableEffect ?? this.minimumDetectableEffect,
-        significanceLevel: significanceLevel ?? this.significanceLevel,
-        power: power ?? this.power,
-        minimumSampleSize: minimumSampleSize ?? this.minimumSampleSize,
-        customMetrics: customMetrics ?? this.customMetrics,
-      );
+  }) => ABTestMetrics(
+    primaryMetric: primaryMetric ?? this.primaryMetric,
+    secondaryMetrics: secondaryMetrics ?? this.secondaryMetrics,
+    minimumDetectableEffect: minimumDetectableEffect ?? this.minimumDetectableEffect,
+    significanceLevel: significanceLevel ?? this.significanceLevel,
+    power: power ?? this.power,
+    minimumSampleSize: minimumSampleSize ?? this.minimumSampleSize,
+    customMetrics: customMetrics ?? this.customMetrics,
+  );
 
   @override
   bool operator ==(Object other) {
@@ -472,14 +451,14 @@ class ABTestMetrics {
 
   @override
   int get hashCode => Object.hash(
-        primaryMetric,
-        secondaryMetrics,
-        minimumDetectableEffect,
-        significanceLevel,
-        power,
-        minimumSampleSize,
-        customMetrics,
-      );
+    primaryMetric,
+    secondaryMetrics,
+    minimumDetectableEffect,
+    significanceLevel,
+    power,
+    minimumSampleSize,
+    customMetrics,
+  );
 
   @override
   String toString() =>
@@ -509,8 +488,9 @@ class ABTestParticipation {
       userId: data['userId'] as String? ?? '',
       variantId: data['variantId'] as String? ?? '',
       assignedAt: (data['assignedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      convertedAt:
-          data['convertedAt'] != null ? (data['convertedAt'] as Timestamp?)?.toDate() : null,
+      convertedAt: data['convertedAt'] != null
+          ? (data['convertedAt'] as Timestamp?)?.toDate()
+          : null,
       events: Map<String, dynamic>.from(data['events'] as Map? ?? {}),
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
@@ -518,16 +498,15 @@ class ABTestParticipation {
 
   /// Создать из Map
   factory ABTestParticipation.fromMap(Map<String, dynamic> data) => ABTestParticipation(
-        id: data['id'] as String? ?? '',
-        testId: data['testId'] as String? ?? '',
-        userId: data['userId'] as String? ?? '',
-        variantId: data['variantId'] as String? ?? '',
-        assignedAt: (data['assignedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        convertedAt:
-            data['convertedAt'] != null ? (data['convertedAt'] as Timestamp?)?.toDate() : null,
-        events: Map<String, dynamic>.from(data['events'] as Map? ?? {}),
-        metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
-      );
+    id: data['id'] as String? ?? '',
+    testId: data['testId'] as String? ?? '',
+    userId: data['userId'] as String? ?? '',
+    variantId: data['variantId'] as String? ?? '',
+    assignedAt: (data['assignedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    convertedAt: data['convertedAt'] != null ? (data['convertedAt'] as Timestamp?)?.toDate() : null,
+    events: Map<String, dynamic>.from(data['events'] as Map? ?? {}),
+    metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+  );
   final String id;
   final String testId;
   final String userId;
@@ -539,14 +518,14 @@ class ABTestParticipation {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'testId': testId,
-        'userId': userId,
-        'variantId': variantId,
-        'assignedAt': Timestamp.fromDate(assignedAt),
-        'convertedAt': convertedAt != null ? Timestamp.fromDate(convertedAt!) : null,
-        'events': events,
-        'metadata': metadata,
-      };
+    'testId': testId,
+    'userId': userId,
+    'variantId': variantId,
+    'assignedAt': Timestamp.fromDate(assignedAt),
+    'convertedAt': convertedAt != null ? Timestamp.fromDate(convertedAt!) : null,
+    'events': events,
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   ABTestParticipation copyWith({
@@ -558,17 +537,16 @@ class ABTestParticipation {
     DateTime? convertedAt,
     Map<String, dynamic>? events,
     Map<String, dynamic>? metadata,
-  }) =>
-      ABTestParticipation(
-        id: id ?? this.id,
-        testId: testId ?? this.testId,
-        userId: userId ?? this.userId,
-        variantId: variantId ?? this.variantId,
-        assignedAt: assignedAt ?? this.assignedAt,
-        convertedAt: convertedAt ?? this.convertedAt,
-        events: events ?? this.events,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => ABTestParticipation(
+    id: id ?? this.id,
+    testId: testId ?? this.testId,
+    userId: userId ?? this.userId,
+    variantId: variantId ?? this.variantId,
+    assignedAt: assignedAt ?? this.assignedAt,
+    convertedAt: convertedAt ?? this.convertedAt,
+    events: events ?? this.events,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, конвертирован ли пользователь
   bool get isConverted => convertedAt != null;
@@ -594,29 +572,15 @@ class ABTestParticipation {
   }
 
   @override
-  int get hashCode => Object.hash(
-        id,
-        testId,
-        userId,
-        variantId,
-        assignedAt,
-        convertedAt,
-        events,
-        metadata,
-      );
+  int get hashCode =>
+      Object.hash(id, testId, userId, variantId, assignedAt, convertedAt, events, metadata);
 
   @override
   String toString() => 'ABTestParticipation(id: $id, testId: $testId, variantId: $variantId)';
 }
 
 /// Статусы A/B тестов
-enum ABTestStatus {
-  draft,
-  running,
-  paused,
-  completed,
-  cancelled,
-}
+enum ABTestStatus { draft, running, paused, completed, cancelled }
 
 /// Расширение для статусов
 extension ABTestStatusExtension on ABTestStatus {

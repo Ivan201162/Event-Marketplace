@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/payment.dart';
 
 class PaymentSummaryWidget extends StatelessWidget {
-  const PaymentSummaryWidget({
-    super.key,
-    required this.payment,
-    required this.taxStatus,
-  });
+  const PaymentSummaryWidget({super.key, required this.payment, required this.taxStatus});
   final Payment payment;
   final TaxStatus taxStatus;
 
@@ -17,9 +13,7 @@ class PaymentSummaryWidget extends StatelessWidget {
 
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -28,35 +22,21 @@ class PaymentSummaryWidget extends StatelessWidget {
             // Header
             Row(
               children: [
-                Icon(
-                  Icons.receipt_long,
-                  color: theme.colorScheme.primary,
-                  size: 24,
-                ),
+                Icon(Icons.receipt_long, color: theme.colorScheme.primary, size: 24),
                 const SizedBox(width: 12),
                 Text(
                   'Сводка платежа',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             const SizedBox(height: 20),
 
             // Payment details
-            _buildDetailRow(
-              context,
-              'Тип платежа',
-              payment.typeDisplayName ?? 'Не указан',
-            ),
+            _buildDetailRow(context, 'Тип платежа', payment.typeDisplayName ?? 'Не указан'),
             const SizedBox(height: 12),
 
-            _buildDetailRow(
-              context,
-              'Способ оплаты',
-              payment.methodDisplayName ?? 'Не указан',
-            ),
+            _buildDetailRow(context, 'Способ оплаты', payment.methodDisplayName ?? 'Не указан'),
             const SizedBox(height: 12),
 
             _buildDetailRow(
@@ -75,12 +55,7 @@ class PaymentSummaryWidget extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _buildAmountRow(
-                    context,
-                    'Сумма к оплате',
-                    payment.amount,
-                    isTotal: true,
-                  ),
+                  _buildAmountRow(context, 'Сумма к оплате', payment.amount, isTotal: true),
                   if ((payment.taxAmount ?? 0.0) > 0) ...[
                     const SizedBox(height: 8),
                     _buildAmountRow(
@@ -90,12 +65,7 @@ class PaymentSummaryWidget extends StatelessWidget {
                       isTax: true,
                     ),
                     const SizedBox(height: 8),
-                    _buildAmountRow(
-                      context,
-                      'К получению',
-                      payment.netAmount ?? 0.0,
-                      isNet: true,
-                    ),
+                    _buildAmountRow(context, 'К получению', payment.netAmount ?? 0.0, isNet: true),
                   ],
                 ],
               ),
@@ -113,11 +83,7 @@ class PaymentSummaryWidget extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: theme.colorScheme.primary,
-                      size: 20,
-                    ),
+                    Icon(Icons.info_outline, color: theme.colorScheme.primary, size: 20),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -148,12 +114,7 @@ class PaymentSummaryWidget extends StatelessWidget {
             color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
-        Text(
-          value,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(value, style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
       ],
     );
   }

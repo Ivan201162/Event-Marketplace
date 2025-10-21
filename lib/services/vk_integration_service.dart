@@ -148,8 +148,8 @@ class VkIntegrationService {
 
   /// Получить примеры валидных URL плейлистов
   List<String> getExampleUrls() => [
-        'https://vk.com/audio?playlist_id=123456789',
-        'https://vk.com/audio?owner_id=123456789&playlist_id=987654321',
-        'https://m.vk.com/audio?playlist_id=123456789',
-      ];
+    'https://vk.com/audio?playlist_id=123456789',
+    'https://vk.com/audio?owner_id=123456789&playlist_id=987654321',
+    'https://m.vk.com/audio?playlist_id=123456789',
+  ];
 }

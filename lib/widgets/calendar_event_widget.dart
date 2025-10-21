@@ -17,205 +17,172 @@ class CalendarEventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                // Цветовая полоса
-                Container(
-                  width: 4,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: event.eventColor,
-                    borderRadius: BorderRadius.circular(2),
+    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            // Цветовая полоса
+            Container(
+              width: 4,
+              height: 60,
+              decoration: BoxDecoration(
+                color: event.eventColor,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            // Иконка события
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: event.eventColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Icon(event.eventIcon, color: event.eventColor, size: 20),
+            ),
+
+            const SizedBox(width: 12),
+
+            // Основная информация
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Заголовок
+                  Text(
+                    event.title,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
 
-                const SizedBox(width: 12),
+                  const SizedBox(height: 4),
 
-                // Иконка события
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: event.eventColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Icon(
-                    event.eventIcon,
-                    color: event.eventColor,
-                    size: 20,
-                  ),
-                ),
-
-                const SizedBox(width: 12),
-
-                // Основная информация
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  // Время
+                  Row(
                     children: [
-                      // Заголовок
+                      Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
                       Text(
-                        event.title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-
-                      const SizedBox(height: 4),
-
-                      // Время
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.access_time,
-                            size: 14,
-                            color: Colors.grey[600],
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            _formatTime(event.startTime, event.endTime),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Место
-                      if (event.location.isNotEmpty) ...[
-                        const SizedBox(height: 2),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 14,
-                              color: Colors.grey[600],
-                            ),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                event.location,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[600],
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-
-                      // Статус
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _getStatusColor(event.status).withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: _getStatusColor(event.status).withValues(alpha: 0.3),
-                              ),
-                            ),
-                            child: Text(
-                              _getStatusText(event.status),
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: _getStatusColor(event.status),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          if (event.isAllDay)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.blue.withValues(alpha: 0.3),
-                                ),
-                              ),
-                              child: const Text(
-                                'Весь день',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                        ],
+                        _formatTime(event.startTime, event.endTime),
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                     ],
                   ),
-                ),
 
-                // Действия
-                if (onEdit != null || onDelete != null) ...[
-                  const SizedBox(width: 8),
-                  PopupMenuButton<String>(
-                    onSelected: (value) {
-                      switch (value) {
-                        case 'edit':
-                          onEdit?.call();
-                          break;
-                        case 'delete':
-                          onDelete?.call();
-                          break;
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      if (onEdit != null)
-                        const PopupMenuItem(
-                          value: 'edit',
-                          child: Row(
-                            children: [
-                              Icon(Icons.edit),
-                              SizedBox(width: 8),
-                              Text('Редактировать'),
-                            ],
+                  // Место
+                  if (event.location.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, size: 14, color: Colors.grey[600]),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            event.location,
+                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                      if (onDelete != null)
-                        const PopupMenuItem(
-                          value: 'delete',
-                          child: Row(
-                            children: [
-                              Icon(Icons.delete, color: Colors.red),
-                              SizedBox(width: 8),
-                              Text('Удалить'),
-                            ],
+                      ],
+                    ),
+                  ],
+
+                  // Статус
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: _getStatusColor(event.status).withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: _getStatusColor(event.status).withValues(alpha: 0.3),
+                          ),
+                        ),
+                        child: Text(
+                          _getStatusText(event.status),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _getStatusColor(event.status),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      if (event.isAllDay)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+                          ),
+                          child: const Text(
+                            'Весь день',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                     ],
                   ),
                 ],
-              ],
+              ),
             ),
-          ),
+
+            // Действия
+            if (onEdit != null || onDelete != null) ...[
+              const SizedBox(width: 8),
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  switch (value) {
+                    case 'edit':
+                      onEdit?.call();
+                      break;
+                    case 'delete':
+                      onDelete?.call();
+                      break;
+                  }
+                },
+                itemBuilder: (context) => [
+                  if (onEdit != null)
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Row(
+                        children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')],
+                      ),
+                    ),
+                  if (onDelete != null)
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.red),
+                          SizedBox(width: 8),
+                          Text('Удалить'),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ],
         ),
-      );
+      ),
+    ),
+  );
 
   String _formatTime(DateTime startTime, DateTime endTime) {
     if (startTime.day == endTime.day) {
@@ -274,94 +241,81 @@ class CalendarEventListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        leading: Container(
-          width: 40,
-          height: 40,
+    leading: Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: event.eventColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Icon(event.eventIcon, color: event.eventColor, size: 20),
+    ),
+    title: Text(event.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+    subtitle: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(_formatTime(event.startTime, event.endTime)),
+        if (event.location.isNotEmpty) Text(event.location),
+      ],
+    ),
+    trailing: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           decoration: BoxDecoration(
-            color: event.eventColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(20),
+            color: _getStatusColor(event.status).withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: _getStatusColor(event.status).withValues(alpha: 0.3)),
           ),
-          child: Icon(
-            event.eventIcon,
-            color: event.eventColor,
-            size: 20,
-          ),
-        ),
-        title: Text(
-          event.title,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(_formatTime(event.startTime, event.endTime)),
-            if (event.location.isNotEmpty) Text(event.location),
-          ],
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: _getStatusColor(event.status).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: _getStatusColor(event.status).withValues(alpha: 0.3),
-                ),
-              ),
-              child: Text(
-                _getStatusText(event.status),
-                style: TextStyle(
-                  fontSize: 12,
-                  color: _getStatusColor(event.status),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+          child: Text(
+            _getStatusText(event.status),
+            style: TextStyle(
+              fontSize: 12,
+              color: _getStatusColor(event.status),
+              fontWeight: FontWeight.w500,
             ),
-            if (onEdit != null || onDelete != null) ...[
-              const SizedBox(width: 8),
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  switch (value) {
-                    case 'edit':
-                      onEdit?.call();
-                      break;
-                    case 'delete':
-                      onDelete?.call();
-                      break;
-                  }
-                },
-                itemBuilder: (context) => [
-                  if (onEdit != null)
-                    const PopupMenuItem(
-                      value: 'edit',
-                      child: Row(
-                        children: [
-                          Icon(Icons.edit),
-                          SizedBox(width: 8),
-                          Text('Редактировать'),
-                        ],
-                      ),
-                    ),
-                  if (onDelete != null)
-                    const PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete, color: Colors.red),
-                          SizedBox(width: 8),
-                          Text('Удалить'),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ],
+          ),
         ),
-        onTap: onTap,
-      );
+        if (onEdit != null || onDelete != null) ...[
+          const SizedBox(width: 8),
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                case 'edit':
+                  onEdit?.call();
+                  break;
+                case 'delete':
+                  onDelete?.call();
+                  break;
+              }
+            },
+            itemBuilder: (context) => [
+              if (onEdit != null)
+                const PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')],
+                  ),
+                ),
+              if (onDelete != null)
+                const PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete, color: Colors.red),
+                      SizedBox(width: 8),
+                      Text('Удалить'),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ],
+    ),
+    onTap: onTap,
+  );
 
   String _formatTime(DateTime startTime, DateTime endTime) {
     if (startTime.day == endTime.day) {
@@ -404,34 +358,23 @@ class CalendarEventListTile extends StatelessWidget {
 
 /// Виджет для отображения события в календаре
 class CalendarEventMarker extends StatelessWidget {
-  const CalendarEventMarker({
-    super.key,
-    required this.event,
-    this.onTap,
-  });
+  const CalendarEventMarker({super.key, required this.event, this.onTap});
   final CalendarEvent event;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          decoration: BoxDecoration(
-            color: event.eventColor,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            event.title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      );
+    onTap: onTap,
+    child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      decoration: BoxDecoration(color: event.eventColor, borderRadius: BorderRadius.circular(4)),
+      child: Text(
+        event.title,
+        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+    ),
+  );
 }

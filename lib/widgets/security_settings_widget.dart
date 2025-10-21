@@ -20,17 +20,9 @@ class SecuritySettingsWidget extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(
-                Icons.security,
-                color: Color(securityState.statusColor),
-              ),
+              Icon(Icons.security, color: Color(securityState.statusColor)),
               const SizedBox(width: 12),
-              const Expanded(
-                child: ResponsiveText(
-                  'Настройки безопасности',
-                  isTitle: true,
-                ),
-              ),
+              const Expanded(child: ResponsiveText('Настройки безопасности', isTitle: true)),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => ref.read(securityProvider.notifier).refresh(),
@@ -72,11 +64,10 @@ class SecuritySettingsWidget extends ConsumerWidget {
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed:
-                      securityState.isLoading ? null : () => _showEncryptionDialog(context, ref),
-                  icon: Icon(
-                    securityState.isEncryptionEnabled ? Icons.lock_open : Icons.lock,
-                  ),
+                  onPressed: securityState.isLoading
+                      ? null
+                      : () => _showEncryptionDialog(context, ref),
+                  icon: Icon(securityState.isEncryptionEnabled ? Icons.lock_open : Icons.lock),
                   label: Text(
                     securityState.isEncryptionEnabled
                         ? 'Отключить шифрование'
@@ -131,24 +122,18 @@ class SecuritySettingsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatusRow(String label, String value, Color color) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ResponsiveText(
-              label,
-              isSubtitle: true,
-            ),
-            ResponsiveText(
-              value,
-              style: TextStyle(
-                color: color,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ResponsiveText(label, isSubtitle: true),
+        ResponsiveText(
+          value,
+          style: TextStyle(color: color, fontWeight: FontWeight.w500),
         ),
-      );
+      ],
+    ),
+  );
 
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
@@ -180,10 +165,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
               : 'Включение шифрования повысит безопасность ваших данных. Это действие нельзя отменить.',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -197,9 +179,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
               backgroundColor: securityState.isEncryptionEnabled ? Colors.red : Colors.green,
               foregroundColor: Colors.white,
             ),
-            child: Text(
-              securityState.isEncryptionEnabled ? 'Отключить' : 'Включить',
-            ),
+            child: Text(securityState.isEncryptionEnabled ? 'Отключить' : 'Включить'),
           ),
         ],
       ),
@@ -215,10 +195,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
           'Обновление ключа шифрования перешифрует все ваши данные. Это может занять некоторое время.',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -259,9 +236,7 @@ class PasswordValidationWidget extends ConsumerWidget {
             labelText: label ?? 'Пароль',
             hintText: hint ?? 'Введите пароль',
             suffixIcon: IconButton(
-              icon: Icon(
-                passwordState.isVisible ? Icons.visibility : Icons.visibility_off,
-              ),
+              icon: Icon(passwordState.isVisible ? Icons.visibility : Icons.visibility_off),
               onPressed: () => ref.read(passwordValidationProvider.notifier).toggleVisibility(),
             ),
             border: const OutlineInputBorder(),
@@ -288,20 +263,10 @@ class PasswordValidationWidget extends ConsumerWidget {
               padding: const EdgeInsets.only(bottom: 4),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    size: 16,
-                    color: Colors.red,
-                  ),
+                  const Icon(Icons.error_outline, size: 16, color: Colors.red),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      error,
-                      style: const TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                      ),
-                    ),
+                    child: Text(error, style: const TextStyle(color: Colors.red, fontSize: 12)),
                   ),
                 ],
               ),
@@ -313,38 +278,35 @@ class PasswordValidationWidget extends ConsumerWidget {
   }
 
   Widget _buildStrengthIndicator(PasswordValidationState state) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: state.strengthProgress,
-                  backgroundColor: Colors.grey[300],
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                state.strengthDescription,
-                style: TextStyle(
-                  color: Color(state.strengthColor),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                ),
-              ),
-            ],
+          Expanded(
+            child: LinearProgressIndicator(
+              value: state.strengthProgress,
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
+            ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(width: 8),
           Text(
-            'Сила пароля: ${state.validation!.strength.score}/5',
-            style: const TextStyle(
+            state.strengthDescription,
+            style: TextStyle(
+              color: Color(state.strengthColor),
+              fontWeight: FontWeight.w500,
               fontSize: 12,
-              color: Colors.grey,
             ),
           ),
         ],
-      );
+      ),
+      const SizedBox(height: 4),
+      Text(
+        'Сила пароля: ${state.validation!.strength.score}/5',
+        style: const TextStyle(fontSize: 12, color: Colors.grey),
+      ),
+    ],
+  );
 }
 
 /// Виджет для отображения статистики безопасности
@@ -363,10 +325,7 @@ class SecurityStatsWidget extends ConsumerWidget {
             children: [
               Icon(Icons.analytics),
               SizedBox(width: 12),
-              ResponsiveText(
-                'Статистика безопасности',
-                isTitle: true,
-              ),
+              ResponsiveText('Статистика безопасности', isTitle: true),
             ],
           ),
           const SizedBox(height: 16),
@@ -408,46 +367,25 @@ class SecurityStatsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatRow(
-    String label,
-    String value,
-    IconData icon,
-    Color color,
-  ) =>
-      Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: color,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ResponsiveText(
-                label,
-                isSubtitle: true,
-              ),
-            ),
-            ResponsiveText(
-              value,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: color,
-              ),
-            ),
-          ],
+  Widget _buildStatRow(String label, String value, IconData icon, Color color) => Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Row(
+      children: [
+        Icon(icon, size: 20, color: color),
+        const SizedBox(width: 12),
+        Expanded(child: ResponsiveText(label, isSubtitle: true)),
+        ResponsiveText(
+          value,
+          style: TextStyle(fontWeight: FontWeight.w500, color: color),
         ),
-      );
+      ],
+    ),
+  );
 }
 
 /// Виджет для отображения рекомендаций по безопасности
 class SecurityRecommendationsWidget extends ConsumerWidget {
-  const SecurityRecommendationsWidget({
-    super.key,
-    required this.dataType,
-  });
+  const SecurityRecommendationsWidget({super.key, required this.dataType});
   final String dataType;
 
   @override
@@ -462,17 +400,9 @@ class SecurityRecommendationsWidget extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(
-                _getSecurityIcon(securityLevel),
-                color: _getSecurityColor(securityLevel),
-              ),
+              Icon(_getSecurityIcon(securityLevel), color: _getSecurityColor(securityLevel)),
               const SizedBox(width: 12),
-              const Expanded(
-                child: ResponsiveText(
-                  'Рекомендации по безопасности',
-                  isTitle: true,
-                ),
-              ),
+              const Expanded(child: ResponsiveText('Рекомендации по безопасности', isTitle: true)),
             ],
           ),
           const SizedBox(height: 16),
@@ -504,18 +434,9 @@ class SecurityRecommendationsWidget extends ConsumerWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.check_circle_outline,
-                    size: 16,
-                    color: Colors.green,
-                  ),
+                  const Icon(Icons.check_circle_outline, size: 16, color: Colors.green),
                   const SizedBox(width: 8),
-                  Expanded(
-                    child: ResponsiveText(
-                      recommendation,
-                      isSubtitle: true,
-                    ),
-                  ),
+                  Expanded(child: ResponsiveText(recommendation, isSubtitle: true)),
                 ],
               ),
             ),

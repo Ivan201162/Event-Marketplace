@@ -73,37 +73,29 @@ final chatMessagesProvider = StreamProvider.family<QuerySnapshot, String>(
 
 /// Провайдер для получения профиля пользователя с оптимизацией
 final userProfileProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, userId) => Stream.fromFuture(
-    OptimizedFirestoreService.getDocument('users', userId),
-  ),
+  (ref, userId) => Stream.fromFuture(OptimizedFirestoreService.getDocument('users', userId)),
 );
 
 /// Провайдер для получения профиля специалиста с оптимизацией
 final specialistProfileProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, specialistId) => Stream.fromFuture(
-    OptimizedFirestoreService.getDocument('specialists', specialistId),
-  ),
+  (ref, specialistId) =>
+      Stream.fromFuture(OptimizedFirestoreService.getDocument('specialists', specialistId)),
 );
 
 /// Провайдер для получения деталей события с оптимизацией
 final eventDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, eventId) => Stream.fromFuture(
-    OptimizedFirestoreService.getDocument('events', eventId),
-  ),
+  (ref, eventId) => Stream.fromFuture(OptimizedFirestoreService.getDocument('events', eventId)),
 );
 
 /// Провайдер для получения деталей идеи с оптимизацией
 final ideaDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, ideaId) => Stream.fromFuture(
-    OptimizedFirestoreService.getDocument('ideas', ideaId),
-  ),
+  (ref, ideaId) => Stream.fromFuture(OptimizedFirestoreService.getDocument('ideas', ideaId)),
 );
 
 /// Провайдер для получения деталей бронирования с оптимизацией
 final bookingDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, bookingId) => Stream.fromFuture(
-    OptimizedFirestoreService.getDocument('bookings', bookingId),
-  ),
+  (ref, bookingId) =>
+      Stream.fromFuture(OptimizedFirestoreService.getDocument('bookings', bookingId)),
 );
 
 /// Провайдер для поиска специалистов с оптимизацией
@@ -114,9 +106,7 @@ final searchSpecialistsProvider = StreamProvider.family<QuerySnapshot, String>((
 
   return OptimizedFirestoreService.getCollectionStream(
     'specialists',
-    where: [
-      QueryFilter(field: 'name', value: query),
-    ],
+    where: [QueryFilter(field: 'name', value: query)],
     orderBy: [const QueryOrder(field: 'rating', descending: true)],
   );
 });
@@ -129,9 +119,7 @@ final searchEventsProvider = StreamProvider.family<QuerySnapshot, String>((ref, 
 
   return OptimizedFirestoreService.getCollectionStream(
     'events',
-    where: [
-      QueryFilter(field: 'title', value: query),
-    ],
+    where: [QueryFilter(field: 'title', value: query)],
     orderBy: [const QueryOrder(field: 'date')],
   );
 });
@@ -144,9 +132,7 @@ final searchIdeasProvider = StreamProvider.family<QuerySnapshot, String>((ref, q
 
   return OptimizedFirestoreService.getCollectionStream(
     'ideas',
-    where: [
-      QueryFilter(field: 'title', value: query),
-    ],
+    where: [QueryFilter(field: 'title', value: query)],
     orderBy: [const QueryOrder(field: 'likes', descending: true)],
   );
 });

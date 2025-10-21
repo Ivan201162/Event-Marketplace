@@ -83,31 +83,21 @@ class ResponsiveScaffold extends StatelessWidget {
   }
 
   Widget _buildDesktopLayout(BuildContext context) => Scaffold(
-        appBar: appBar,
-        body: Row(
-          children: [
-            // Боковая панель навигации
-            if (drawer != null)
-              SizedBox(
-                width: 280,
-                child: drawer,
-              ),
-            // Основной контент
-            Expanded(
-              child: body,
-            ),
-            // Правая панель (если есть)
-            if (endDrawer != null)
-              SizedBox(
-                width: 280,
-                child: endDrawer,
-              ),
-          ],
-        ),
-        floatingActionButton: floatingActionButton,
-        floatingActionButtonLocation: floatingActionButtonLocation,
-        backgroundColor: backgroundColor,
-      );
+    appBar: appBar,
+    body: Row(
+      children: [
+        // Боковая панель навигации
+        if (drawer != null) SizedBox(width: 280, child: drawer),
+        // Основной контент
+        Expanded(child: body),
+        // Правая панель (если есть)
+        if (endDrawer != null) SizedBox(width: 280, child: endDrawer),
+      ],
+    ),
+    floatingActionButton: floatingActionButton,
+    floatingActionButtonLocation: floatingActionButtonLocation,
+    backgroundColor: backgroundColor,
+  );
 }
 
 /// Адаптивная навигационная панель
@@ -140,47 +130,34 @@ class ResponsiveNavigationBar extends StatelessWidget {
   }
 
   Widget _buildBottomNavigationBar(BuildContext context) => BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: onTap,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: backgroundColor,
-        selectedItemColor: selectedItemColor,
-        unselectedItemColor: unselectedItemColor,
-        items: items
-            .map(
-              (item) => BottomNavigationBarItem(
-                icon: item.icon,
-                label: item.label,
-              ),
-            )
-            .toList(),
-      );
+    currentIndex: currentIndex,
+    onTap: onTap,
+    type: BottomNavigationBarType.fixed,
+    backgroundColor: backgroundColor,
+    selectedItemColor: selectedItemColor,
+    unselectedItemColor: unselectedItemColor,
+    items: items
+        .map((item) => BottomNavigationBarItem(icon: item.icon, label: item.label))
+        .toList(),
+  );
 
   Widget _buildNavigationRail(BuildContext context) => NavigationRail(
-        selectedIndex: currentIndex,
-        onDestinationSelected: onTap,
-        backgroundColor: backgroundColor,
-        selectedIconTheme: IconThemeData(color: selectedItemColor),
-        unselectedIconTheme: IconThemeData(color: unselectedItemColor),
-        selectedLabelTextStyle: TextStyle(color: selectedItemColor),
-        unselectedLabelTextStyle: TextStyle(color: unselectedItemColor),
-        destinations: items
-            .map(
-              (item) => NavigationRailDestination(
-                icon: item.icon,
-                label: Text(item.label),
-              ),
-            )
-            .toList(),
-      );
+    selectedIndex: currentIndex,
+    onDestinationSelected: onTap,
+    backgroundColor: backgroundColor,
+    selectedIconTheme: IconThemeData(color: selectedItemColor),
+    unselectedIconTheme: IconThemeData(color: unselectedItemColor),
+    selectedLabelTextStyle: TextStyle(color: selectedItemColor),
+    unselectedLabelTextStyle: TextStyle(color: unselectedItemColor),
+    destinations: items
+        .map((item) => NavigationRailDestination(icon: item.icon, label: Text(item.label)))
+        .toList(),
+  );
 }
 
 /// Элемент навигации
 class NavigationBarItem {
-  const NavigationBarItem({
-    required this.icon,
-    required this.label,
-  });
+  const NavigationBarItem({required this.icon, required this.label});
   final Widget icon;
   final String label;
 }
@@ -257,22 +234,14 @@ class ResponsiveCard extends StatelessWidget {
                 ),
               ],
       ),
-      child: Padding(
-        padding: effectivePadding,
-        child: child,
-      ),
+      child: Padding(padding: effectivePadding, child: child),
     );
   }
 }
 
 /// Адаптивный список
 class ResponsiveList extends StatelessWidget {
-  const ResponsiveList({
-    super.key,
-    required this.children,
-    this.padding,
-    this.spacing,
-  });
+  const ResponsiveList({super.key, required this.children, this.padding, this.spacing});
   final List<Widget> children;
   final EdgeInsets? padding;
   final double? spacing;
@@ -288,10 +257,7 @@ class ResponsiveList extends StatelessWidget {
       child: Column(
         children: children
             .expand(
-              (child) => [
-                child,
-                if (child != children.last) SizedBox(height: effectiveSpacing),
-              ],
+              (child) => [child, if (child != children.last) SizedBox(height: effectiveSpacing)],
             )
             .toList(),
       ),
@@ -341,7 +307,8 @@ class ResponsiveButton extends StatelessWidget {
 
     return ElevatedButton(
       onPressed: onPressed,
-      style: style?.copyWith(
+      style:
+          style?.copyWith(
             padding: WidgetStateProperty.all(effectivePadding),
             textStyle: WidgetStateProperty.all(TextStyle(fontSize: fontSize)),
           ) ??
@@ -403,24 +370,15 @@ class ResponsiveDialog extends StatelessWidget {
             if (title != null)
               Padding(
                 padding: effectiveContentPadding,
-                child: Text(
-                  title!,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
+                child: Text(title!, style: Theme.of(context).textTheme.headlineSmall),
               ),
             Flexible(
-              child: Padding(
-                padding: effectiveContentPadding,
-                child: child,
-              ),
+              child: Padding(padding: effectiveContentPadding, child: child),
             ),
             if (actions != null)
               Padding(
                 padding: effectiveContentPadding,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: actions!,
-                ),
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: actions!),
               ),
           ],
         ),

@@ -36,18 +36,18 @@ class BookingDiscount {
 
   /// Создать из Map
   factory BookingDiscount.fromMap(Map<String, dynamic> data) => BookingDiscount(
-        isOffered: data['isOffered'] as bool? ?? false,
-        percent: (data['percent'] as num?)?.toDouble(),
-        oldPrice: (data['oldPrice'] as num?)?.toDouble(),
-        newPrice: (data['newPrice'] as num?)?.toDouble(),
-        offeredAt: data['offeredAt'] != null ? (data['offeredAt'] as Timestamp).toDate() : null,
-        expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
-        offeredBy: data['offeredBy'] as String? ?? 'specialist',
-        reason: data['reason'] as String?,
-        isAccepted: data['isAccepted'] as bool? ?? false,
-        acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
-        acceptedBy: data['acceptedBy'] as String?,
-      );
+    isOffered: data['isOffered'] as bool? ?? false,
+    percent: (data['percent'] as num?)?.toDouble(),
+    oldPrice: (data['oldPrice'] as num?)?.toDouble(),
+    newPrice: (data['newPrice'] as num?)?.toDouble(),
+    offeredAt: data['offeredAt'] != null ? (data['offeredAt'] as Timestamp).toDate() : null,
+    expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
+    offeredBy: data['offeredBy'] as String? ?? 'specialist',
+    reason: data['reason'] as String?,
+    isAccepted: data['isAccepted'] as bool? ?? false,
+    acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
+    acceptedBy: data['acceptedBy'] as String?,
+  );
   final bool isOffered;
   final double? percent;
   final double? oldPrice;
@@ -62,18 +62,18 @@ class BookingDiscount {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'isOffered': isOffered,
-        'percent': percent,
-        'oldPrice': oldPrice,
-        'newPrice': newPrice,
-        'offeredAt': offeredAt != null ? Timestamp.fromDate(offeredAt!) : null,
-        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-        'offeredBy': offeredBy,
-        'reason': reason,
-        'isAccepted': isAccepted,
-        'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
-        'acceptedBy': acceptedBy,
-      };
+    'isOffered': isOffered,
+    'percent': percent,
+    'oldPrice': oldPrice,
+    'newPrice': newPrice,
+    'offeredAt': offeredAt != null ? Timestamp.fromDate(offeredAt!) : null,
+    'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+    'offeredBy': offeredBy,
+    'reason': reason,
+    'isAccepted': isAccepted,
+    'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
+    'acceptedBy': acceptedBy,
+  };
 
   /// Создать копию с изменениями
   BookingDiscount copyWith({
@@ -88,20 +88,19 @@ class BookingDiscount {
     bool? isAccepted,
     DateTime? acceptedAt,
     String? acceptedBy,
-  }) =>
-      BookingDiscount(
-        isOffered: isOffered ?? this.isOffered,
-        percent: percent ?? this.percent,
-        oldPrice: oldPrice ?? this.oldPrice,
-        newPrice: newPrice ?? this.newPrice,
-        offeredAt: offeredAt ?? this.offeredAt,
-        expiresAt: expiresAt ?? this.expiresAt,
-        offeredBy: offeredBy ?? this.offeredBy,
-        reason: reason ?? this.reason,
-        isAccepted: isAccepted ?? this.isAccepted,
-        acceptedAt: acceptedAt ?? this.acceptedAt,
-        acceptedBy: acceptedBy ?? this.acceptedBy,
-      );
+  }) => BookingDiscount(
+    isOffered: isOffered ?? this.isOffered,
+    percent: percent ?? this.percent,
+    oldPrice: oldPrice ?? this.oldPrice,
+    newPrice: newPrice ?? this.newPrice,
+    offeredAt: offeredAt ?? this.offeredAt,
+    expiresAt: expiresAt ?? this.expiresAt,
+    offeredBy: offeredBy ?? this.offeredBy,
+    reason: reason ?? this.reason,
+    isAccepted: isAccepted ?? this.isAccepted,
+    acceptedAt: acceptedAt ?? this.acceptedAt,
+    acceptedBy: acceptedBy ?? this.acceptedBy,
+  );
 
   /// Проверить, активна ли скидка
   bool get isActive {
@@ -164,30 +163,25 @@ class BookingDiscount {
 
   @override
   int get hashCode => Object.hash(
-        isOffered,
-        percent,
-        oldPrice,
-        newPrice,
-        offeredAt,
-        expiresAt,
-        offeredBy,
-        reason,
-        isAccepted,
-        acceptedAt,
-        acceptedBy,
-      );
+    isOffered,
+    percent,
+    oldPrice,
+    newPrice,
+    offeredAt,
+    expiresAt,
+    offeredBy,
+    reason,
+    isAccepted,
+    acceptedAt,
+    acceptedBy,
+  );
 
   @override
   String toString() => 'BookingDiscount(isOffered: $isOffered, percent: $percent, status: $status)';
 }
 
 /// Статус скидки
-enum DiscountStatus {
-  notOffered,
-  pending,
-  accepted,
-  expired,
-}
+enum DiscountStatus { notOffered, pending, accepted, expired }
 
 /// Расширение для статуса скидки
 extension DiscountStatusExtension on DiscountStatus {

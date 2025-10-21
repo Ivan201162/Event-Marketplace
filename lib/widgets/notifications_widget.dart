@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/app_notification.dart';
 import '../providers/auth_providers.dart';
 import '../providers/notification_providers.dart';
 
@@ -40,9 +41,7 @@ class NotificationsWidget extends ConsumerWidget {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text(
-                                'Все уведомления отмечены как прочитанные',
-                              ),
+                              content: Text('Все уведомления отмечены как прочитанные'),
                               backgroundColor: Colors.green,
                             ),
                           );
@@ -50,10 +49,7 @@ class NotificationsWidget extends ConsumerWidget {
                       } on Exception catch (e) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Ошибка: $e'),
-                              backgroundColor: Colors.red,
-                            ),
+                            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),
                           );
                         }
                       }
@@ -93,60 +89,44 @@ class NotificationsWidget extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.notifications_none,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Нет уведомлений',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Здесь будут появляться уведомления о новых заявках, отзывах и других событиях',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[500],
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.notifications_none, size: 64, color: Colors.grey[400]),
+        const SizedBox(height: 16),
+        Text(
+          'Нет уведомлений',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
         ),
-      );
+        const SizedBox(height: 8),
+        Text(
+          'Здесь будут появляться уведомления о новых заявках, отзывах и других событиях',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
 
   Widget _buildErrorState(BuildContext context, Object error) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки уведомлений',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.red[600],
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.red[500],
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
+        const SizedBox(height: 16),
+        Text(
+          'Ошибка загрузки уведомлений',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.red[600]),
         ),
-      );
+        const SizedBox(height: 8),
+        Text(
+          error.toString(),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red[500]),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
 
   void _handleNotificationTap(
     BuildContext context,
@@ -155,34 +135,23 @@ class NotificationsWidget extends ConsumerWidget {
   ) {
     // Отмечаем как прочитанное, если еще не прочитано
     if (notification['isRead'] != true) {
-      ref.read(
-        markNotificationAsReadProvider(notification['id'].toString()).future,
-      );
+      ref.read(markNotificationAsReadProvider(notification['id'].toString()).future);
     }
 
     // Обрабатываем нажатие в зависимости от типа уведомления
     switch (notification['type']) {
       case 'new_booking':
         // Переходим к заявке
-        _navigateToBooking(
-          context,
-          notification['data']?['bookingId']?.toString() ?? '',
-        );
+        _navigateToBooking(context, notification['data']?['bookingId']?.toString() ?? '');
         break;
       case 'booking_confirmed':
       case 'booking_rejected':
         // Переходим к заявке
-        _navigateToBooking(
-          context,
-          notification['data']?['bookingId']?.toString() ?? '',
-        );
+        _navigateToBooking(context, notification['data']?['bookingId']?.toString() ?? '');
         break;
       case 'chat_message':
         // Переходим к чату
-        _navigateToChat(
-          context,
-          notification['data']?['chatId']?.toString() ?? '',
-        );
+        _navigateToChat(context, notification['data']?['chatId']?.toString() ?? '');
         break;
       case 'system':
         // Показываем детали уведомления
@@ -210,17 +179,12 @@ class NotificationsWidget extends ConsumerWidget {
         title: const Text('Удалить уведомление'),
         content: const Text('Вы уверены, что хотите удалить это уведомление?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
               try {
-                await ref.read(
-                  deleteNotificationProvider(notification['id'].toString()).future,
-                );
+                await ref.read(deleteNotificationProvider(notification['id'].toString()).future);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -232,10 +196,7 @@ class NotificationsWidget extends ConsumerWidget {
               } on Exception catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Ошибка удаления: $e'),
-                      backgroundColor: Colors.red,
-                    ),
+                    SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red),
                   );
                 }
               }
@@ -250,43 +211,40 @@ class NotificationsWidget extends ConsumerWidget {
   void _navigateToBooking(BuildContext context, String? bookingId) {
     if (bookingId != null) {
       // TODO(developer): Реализовать навигацию к заявке
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Переход к заявке: $bookingId')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Переход к заявке: $bookingId')));
     }
   }
 
   void _navigateToReview(BuildContext context, String? reviewId) {
     if (reviewId != null) {
       // TODO(developer): Реализовать навигацию к отзыву
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Переход к отзыву: $reviewId')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Переход к отзыву: $reviewId')));
     }
   }
 
   void _navigateToChat(BuildContext context, String? chatId) {
     if (chatId != null) {
       // TODO(developer): Реализовать навигацию к чату
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Переход к чату: $chatId')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Переход к чату: $chatId')));
     }
   }
 
   void _navigateToPayment(BuildContext context, String? paymentId) {
     if (paymentId != null) {
       // TODO(developer): Реализовать навигацию к платежу
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Переход к платежу: $paymentId')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Переход к платежу: $paymentId')));
     }
   }
 
-  void _showNotificationDetails(
-    BuildContext context,
-    Map<String, dynamic> notification,
-  ) {
+  void _showNotificationDetails(BuildContext context, Map<String, dynamic> notification) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -300,18 +258,13 @@ class NotificationsWidget extends ConsumerWidget {
               const SizedBox(height: 16),
               Text(
                 'Дата: ${_formatDate(DateTime.parse(notification['createdAt'].toString()))}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -348,53 +301,49 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        child: ListTile(
-          leading: _buildNotificationIcon(context),
-          title: Text(
-            notification.title ?? 'Уведомление',
-            style: TextStyle(
-              fontWeight: notification.isRead == true ? FontWeight.normal : FontWeight.bold,
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+    child: ListTile(
+      leading: _buildNotificationIcon(context),
+      title: Text(
+        notification.title ?? 'Уведомление',
+        style: TextStyle(
+          fontWeight: notification.isRead == true ? FontWeight.normal : FontWeight.bold,
+        ),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(notification.message ?? ''),
+          const SizedBox(height: 4),
+          Text(
+            _formatDate(notification.createdAt),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+          ),
+        ],
+      ),
+      trailing: PopupMenuButton(
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+            value: 'delete',
+            child: Row(
+              children: [
+                Icon(Icons.delete, color: Colors.red),
+                SizedBox(width: 8),
+                Text('Удалить'),
+              ],
             ),
           ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(notification.message ?? ''),
-              const SizedBox(height: 4),
-              Text(
-                _formatDate(
-                  notification.createdAt,
-                ),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-              ),
-            ],
-          ),
-          trailing: PopupMenuButton(
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    Icon(Icons.delete, color: Colors.red),
-                    SizedBox(width: 8),
-                    Text('Удалить'),
-                  ],
-                ),
-              ),
-            ],
-            onSelected: (value) {
-              if (value == 'delete') {
-                onDelete();
-              }
-            },
-          ),
-          onTap: onTap,
-          tileColor: notification.isRead == true ? null : Colors.blue.withValues(alpha: 0.05),
-        ),
-      );
+        ],
+        onSelected: (value) {
+          if (value == 'delete') {
+            onDelete();
+          }
+        },
+      ),
+      onTap: onTap,
+      tileColor: notification.isRead == true ? null : Colors.blue.withValues(alpha: 0.05),
+    ),
+  );
 
   Widget _buildNotificationIcon(BuildContext context) {
     var iconData = Icons.notifications;
@@ -426,15 +375,8 @@ class NotificationItem extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: iconColor.withValues(alpha: 0.1),
-        shape: BoxShape.circle,
-      ),
-      child: Icon(
-        iconData,
-        color: iconColor,
-        size: 20,
-      ),
+      decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.1), shape: BoxShape.circle),
+      child: Icon(iconData, color: iconColor, size: 20),
     );
   }
 

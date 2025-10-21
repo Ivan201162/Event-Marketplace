@@ -76,10 +76,7 @@ class AppOptimizationService {
         stackTrace: stackTrace.toString(),
         action: 'clear_cache',
       );
-      return {
-        'success': false,
-        'error': e.toString(),
-      };
+      return {'success': false, 'error': e.toString()};
     }
   }
 
@@ -107,20 +104,14 @@ class AppOptimizationService {
         additionalData: optimizations,
       );
 
-      return {
-        'success': true,
-        'optimizations': optimizations,
-      };
+      return {'success': true, 'optimizations': optimizations};
     } catch (e, stackTrace) {
       await _errorLogger.logError(
         error: 'Failed to optimize app settings: $e',
         stackTrace: stackTrace.toString(),
         action: 'optimize_settings',
       );
-      return {
-        'success': false,
-        'error': e.toString(),
-      };
+      return {'success': false, 'error': e.toString()};
     }
   }
 
@@ -201,9 +192,7 @@ class AppOptimizationService {
   }
 
   /// Применить рекомендацию по оптимизации
-  Future<Map<String, dynamic>> applyOptimizationRecommendation(
-    String action,
-  ) async {
+  Future<Map<String, dynamic>> applyOptimizationRecommendation(String action) async {
     try {
       switch (action) {
         case 'clear_cache':
@@ -216,10 +205,7 @@ class AppOptimizationService {
           final prefs = await SharedPreferences.getInstance();
           return await _optimizeNotificationSettings(prefs);
         default:
-          return {
-            'success': false,
-            'error': 'Unknown optimization action: $action',
-          };
+          return {'success': false, 'error': 'Unknown optimization action: $action'};
       }
     } catch (e, stackTrace) {
       await _errorLogger.logError(
@@ -228,10 +214,7 @@ class AppOptimizationService {
         action: 'apply_recommendation',
         additionalData: {'recommendationAction': action},
       );
-      return {
-        'success': false,
-        'error': e.toString(),
-      };
+      return {'success': false, 'error': e.toString()};
     }
   }
 
@@ -283,52 +266,35 @@ class AppOptimizationService {
   }
 
   /// Оптимизировать настройки изображений
-  Future<Map<String, dynamic>> _optimizeImageSettings(
-    SharedPreferences prefs,
-  ) async {
+  Future<Map<String, dynamic>> _optimizeImageSettings(SharedPreferences prefs) async {
     try {
       // Устанавливаем оптимальное качество изображений
       await prefs.setInt('image_quality', 80);
       await prefs.setBool('compress_images', true);
-      await prefs.setInt(
-        'max_image_size',
-        1024,
-      ); // Максимальный размер в пикселях
+      await prefs.setInt('max_image_size', 1024); // Максимальный размер в пикселях
 
-      return {
-        'imageQuality': 80,
-        'compressImages': true,
-        'maxImageSize': 1024,
-      };
+      return {'imageQuality': 80, 'compressImages': true, 'maxImageSize': 1024};
     } catch (e) {
       return {'error': e.toString()};
     }
   }
 
   /// Оптимизировать настройки кэширования
-  Future<Map<String, dynamic>> _optimizeCacheSettings(
-    SharedPreferences prefs,
-  ) async {
+  Future<Map<String, dynamic>> _optimizeCacheSettings(SharedPreferences prefs) async {
     try {
       // Устанавливаем оптимальные настройки кэширования
       await prefs.setInt('cache_duration_hours', 24);
       await prefs.setInt('max_cache_size_mb', 50);
       await prefs.setBool('auto_clear_cache', true);
 
-      return {
-        'cacheDurationHours': 24,
-        'maxCacheSizeMB': 50,
-        'autoClearCache': true,
-      };
+      return {'cacheDurationHours': 24, 'maxCacheSizeMB': 50, 'autoClearCache': true};
     } catch (e) {
       return {'error': e.toString()};
     }
   }
 
   /// Оптимизировать настройки уведомлений
-  Future<Map<String, dynamic>> _optimizeNotificationSettings(
-    SharedPreferences prefs,
-  ) async {
+  Future<Map<String, dynamic>> _optimizeNotificationSettings(SharedPreferences prefs) async {
     try {
       // Устанавливаем оптимальные настройки уведомлений
       await prefs.setString('notification_frequency', 'important');
@@ -346,9 +312,7 @@ class AppOptimizationService {
   }
 
   /// Оптимизировать настройки синхронизации
-  Future<Map<String, dynamic>> _optimizeSyncSettings([
-    SharedPreferences? prefs,
-  ]) async {
+  Future<Map<String, dynamic>> _optimizeSyncSettings([SharedPreferences? prefs]) async {
     try {
       final prefsInstance = prefs ?? await SharedPreferences.getInstance();
 
@@ -357,11 +321,7 @@ class AppOptimizationService {
       await prefsInstance.setInt('sync_interval_hours', 6);
       await prefsInstance.setBool('sync_on_wifi_only', true);
 
-      return {
-        'autoSync': false,
-        'syncIntervalHours': 6,
-        'syncOnWifiOnly': true,
-      };
+      return {'autoSync': false, 'syncIntervalHours': 6, 'syncOnWifiOnly': true};
     } catch (e) {
       return {'error': e.toString()};
     }
@@ -374,16 +334,9 @@ class AppOptimizationService {
       await prefs.setInt('image_quality', 70);
       await prefs.setBool('compress_images', true);
 
-      return {
-        'success': true,
-        'newImageQuality': 70,
-        'compressImages': true,
-      };
+      return {'success': true, 'newImageQuality': 70, 'compressImages': true};
     } catch (e) {
-      return {
-        'success': false,
-        'error': e.toString(),
-      };
+      return {'success': false, 'error': e.toString()};
     }
   }
 

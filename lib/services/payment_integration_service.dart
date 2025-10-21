@@ -125,11 +125,7 @@ class PaymentIntegrationService {
       await _paymentService.cancelPayment(paymentId);
 
       // Update booking status
-      await _updateBookingStatus(
-        payment.bookingId,
-        payment.type,
-        isCancelled: true,
-      );
+      await _updateBookingStatus(payment.bookingId, payment.type, isCancelled: true);
 
       debugPrint('Booking payment cancelled: $paymentId');
     } catch (e) {
@@ -155,9 +151,7 @@ class PaymentIntegrationService {
   }
 
   /// Gets payment summary for a booking
-  Future<BookingPaymentSummary> getBookingPaymentSummary(
-    String bookingId,
-  ) async {
+  Future<BookingPaymentSummary> getBookingPaymentSummary(String bookingId) async {
     try {
       final payments = await getBookingPayments(bookingId);
       final booking = await _getBooking(bookingId);
@@ -245,10 +239,7 @@ class PaymentIntegrationService {
   }
 
   /// Updates contract status
-  Future<void> updateContractStatus(
-    String contractId,
-    ContractStatus status,
-  ) async {
+  Future<void> updateContractStatus(String contractId, ContractStatus status) async {
     try {
       await _firestore.collection('contracts').doc(contractId).update({
         'status': status.toString().split('.').last,
@@ -338,15 +329,9 @@ class PaymentIntegrationService {
     }
   }
 
-  Future<void> _updateBookingPayment(
-    String bookingId,
-    String paymentId,
-    PaymentType type,
-  ) async {
+  Future<void> _updateBookingPayment(String bookingId, String paymentId, PaymentType type) async {
     try {
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      };
+      final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
 
       switch (type) {
         case PaymentType.prepayment:
@@ -372,9 +357,7 @@ class PaymentIntegrationService {
     bool isCancelled = false,
   }) async {
     try {
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      };
+      final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
 
       if (isCancelled) {
         updateData['status'] = 'cancelled';
@@ -473,19 +456,19 @@ class Contract {
   });
 
   factory Contract.fromMap(Map<String, dynamic> map) => Contract(
-        id: map['id'] as String,
-        bookingId: map['bookingId'] as String,
-        customerId: map['customerId'] as String,
-        specialistId: map['specialistId'] as String,
-        totalAmount: (map['totalAmount'] as num).toDouble(),
-        prepaymentAmount: (map['prepaymentAmount'] as num).toDouble(),
-        postpaymentAmount: (map['postpaymentAmount'] as num).toDouble(),
-        status: ContractStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == map['status'] as String,
-        ),
-        createdAt: (map['createdAt'] as Timestamp).toDate(),
-        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-      );
+    id: map['id'] as String,
+    bookingId: map['bookingId'] as String,
+    customerId: map['customerId'] as String,
+    specialistId: map['specialistId'] as String,
+    totalAmount: (map['totalAmount'] as num).toDouble(),
+    prepaymentAmount: (map['prepaymentAmount'] as num).toDouble(),
+    postpaymentAmount: (map['postpaymentAmount'] as num).toDouble(),
+    status: ContractStatus.values.firstWhere(
+      (e) => e.toString().split('.').last == map['status'] as String,
+    ),
+    createdAt: (map['createdAt'] as Timestamp).toDate(),
+    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+  );
   final String id;
   final String bookingId;
   final String customerId;
@@ -498,17 +481,17 @@ class Contract {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'bookingId': bookingId,
-        'customerId': customerId,
-        'specialistId': specialistId,
-        'totalAmount': totalAmount,
-        'prepaymentAmount': prepaymentAmount,
-        'postpaymentAmount': postpaymentAmount,
-        'status': status.toString().split('.').last,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'id': id,
+    'bookingId': bookingId,
+    'customerId': customerId,
+    'specialistId': specialistId,
+    'totalAmount': totalAmount,
+    'prepaymentAmount': prepaymentAmount,
+    'postpaymentAmount': postpaymentAmount,
+    'status': status.toString().split('.').last,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 }
 
 /// Contract status

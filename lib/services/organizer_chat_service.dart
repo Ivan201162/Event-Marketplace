@@ -95,9 +95,7 @@ class OrganizerChatService {
       .where('customerId', isEqualTo: customerId)
       .orderBy('lastMessageAt', descending: true)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(OrganizerChat.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(OrganizerChat.fromDocument).toList());
 
   /// Поток чатов организатора
   Stream<List<OrganizerChat>> getOrganizerChatsStream(String organizerId) => _firestore
@@ -105,9 +103,7 @@ class OrganizerChatService {
       .where('organizerId', isEqualTo: organizerId)
       .orderBy('lastMessageAt', descending: true)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(OrganizerChat.fromDocument).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map(OrganizerChat.fromDocument).toList());
 
   /// Получить чат по ID
   Future<OrganizerChat?> getChatById(String chatId) async {
@@ -292,10 +288,7 @@ class OrganizerChatService {
   }
 
   /// Обновить статус чата
-  Future<void> updateChatStatus(
-    String chatId,
-    OrganizerChatStatus status,
-  ) async {
+  Future<void> updateChatStatus(String chatId, OrganizerChatStatus status) async {
     try {
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'status': status.name,
@@ -329,16 +322,16 @@ class OrganizerChatService {
       .where('chatId', isEqualTo: chatId)
       .orderBy('createdAt', descending: false)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map((doc) => OrganizerMessage.fromMap(doc.data())).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map((doc) => OrganizerMessage.fromMap(doc.data())).toList());
 
   /// Удалить чат
   Future<void> deleteChat(String chatId) async {
     try {
       // Удаляем все сообщения чата
-      final messagesSnapshot =
-          await _firestore.collection(_messagesCollection).where('chatId', isEqualTo: chatId).get();
+      final messagesSnapshot = await _firestore
+          .collection(_messagesCollection)
+          .where('chatId', isEqualTo: chatId)
+          .get();
 
       final batch = _firestore.batch();
       for (final doc in messagesSnapshot.docs) {

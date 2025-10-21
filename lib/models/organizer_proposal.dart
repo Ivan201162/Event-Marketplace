@@ -50,8 +50,9 @@ class OrganizerProposal {
         (e) => e.name == data['status'],
         orElse: () => ProposalStatus.pending,
       ),
-      createdAt:
-          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
       updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
       customerResponse: data['customerResponse'] as String?,
       customerResponseAt: data['customerResponseAt'] != null
@@ -81,24 +82,25 @@ class OrganizerProposal {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'organizerId': organizerId,
-        'customerId': customerId,
-        'eventId': eventId,
-        'title': title,
-        'description': description,
-        'proposedBudget': proposedBudget,
-        'teamMembers': teamMembers,
-        'services': services,
-        'timeline': timeline,
-        'terms': terms,
-        'status': status.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-        'customerResponse': customerResponse,
-        'customerResponseAt':
-            customerResponseAt != null ? Timestamp.fromDate(customerResponseAt!) : null,
-        'notes': notes,
-      };
+    'organizerId': organizerId,
+    'customerId': customerId,
+    'eventId': eventId,
+    'title': title,
+    'description': description,
+    'proposedBudget': proposedBudget,
+    'teamMembers': teamMembers,
+    'services': services,
+    'timeline': timeline,
+    'terms': terms,
+    'status': status.name,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+    'customerResponse': customerResponse,
+    'customerResponseAt': customerResponseAt != null
+        ? Timestamp.fromDate(customerResponseAt!)
+        : null,
+    'notes': notes,
+  };
 
   /// Создать копию с изменениями
   OrganizerProposal copyWith({
@@ -119,26 +121,25 @@ class OrganizerProposal {
     String? customerResponse,
     DateTime? customerResponseAt,
     String? notes,
-  }) =>
-      OrganizerProposal(
-        id: id ?? this.id,
-        organizerId: organizerId ?? this.organizerId,
-        customerId: customerId ?? this.customerId,
-        eventId: eventId ?? this.eventId,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        proposedBudget: proposedBudget ?? this.proposedBudget,
-        teamMembers: teamMembers ?? this.teamMembers,
-        services: services ?? this.services,
-        timeline: timeline ?? this.timeline,
-        terms: terms ?? this.terms,
-        status: status ?? this.status,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        customerResponse: customerResponse ?? this.customerResponse,
-        customerResponseAt: customerResponseAt ?? this.customerResponseAt,
-        notes: notes ?? this.notes,
-      );
+  }) => OrganizerProposal(
+    id: id ?? this.id,
+    organizerId: organizerId ?? this.organizerId,
+    customerId: customerId ?? this.customerId,
+    eventId: eventId ?? this.eventId,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    proposedBudget: proposedBudget ?? this.proposedBudget,
+    teamMembers: teamMembers ?? this.teamMembers,
+    services: services ?? this.services,
+    timeline: timeline ?? this.timeline,
+    terms: terms ?? this.terms,
+    status: status ?? this.status,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    customerResponse: customerResponse ?? this.customerResponse,
+    customerResponseAt: customerResponseAt ?? this.customerResponseAt,
+    notes: notes ?? this.notes,
+  );
 
   /// Получить отображаемое название статуса
   String get statusDisplayName {

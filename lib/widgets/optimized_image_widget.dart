@@ -64,62 +64,54 @@ class OptimizedImage extends StatelessWidget {
           borderRadius: borderRadius,
           border: border,
           boxShadow: shadow,
-          image: DecorationImage(
-            image: imageProvider,
-            fit: fit,
-          ),
+          image: DecorationImage(image: imageProvider, fit: fit),
         ),
       ),
     );
 
     if (borderRadius != null) {
-      return ClipRRect(
-        borderRadius: borderRadius!,
-        child: imageWidget,
-      );
+      return ClipRRect(borderRadius: borderRadius!, child: imageWidget);
     }
 
     return imageWidget;
   }
 
   Widget _buildDefaultPlaceholder(ThemeData theme) => Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: borderRadius,
-          border: border,
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+      color: theme.colorScheme.surfaceContainerHighest,
+      borderRadius: borderRadius,
+      border: border,
+    ),
+    child: Center(
+      child: SizedBox(
+        width: (width ?? 100) * 0.3,
+        height: (height ?? 100) * 0.3,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
         ),
-        child: Center(
-          child: SizedBox(
-            width: (width ?? 100) * 0.3,
-            height: (height ?? 100) * 0.3,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                theme.colorScheme.primary,
-              ),
-            ),
-          ),
-        ),
-      );
+      ),
+    ),
+  );
 
   Widget _buildDefaultErrorWidget(ThemeData theme) => Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.errorContainer,
-          borderRadius: borderRadius,
-          border: border,
-        ),
-        child: Center(
-          child: Icon(
-            Icons.error_outline,
-            color: theme.colorScheme.onErrorContainer,
-            size: (width ?? 100) * 0.3,
-          ),
-        ),
-      );
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+      color: theme.colorScheme.errorContainer,
+      borderRadius: borderRadius,
+      border: border,
+    ),
+    child: Center(
+      child: Icon(
+        Icons.error_outline,
+        color: theme.colorScheme.onErrorContainer,
+        size: (width ?? 100) * 0.3,
+      ),
+    ),
+  );
 }
 
 /// Оптимизированный аватар с кэшированием
@@ -165,15 +157,9 @@ class OptimizedAvatar extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: effectiveBorderRadius,
           border: showBorder
-              ? (border ??
-                  Border.all(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                  ))
+              ? (border ?? Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)))
               : null,
-          image: DecorationImage(
-            image: imageProvider,
-            fit: BoxFit.cover,
-          ),
+          image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
         ),
       ),
       placeholder: (context, url) => ProfileImagePlaceholder(
@@ -210,10 +196,7 @@ class OptimizedAvatar extends StatelessWidget {
         onTap: onTap,
       );
     } else if (onTap != null) {
-      avatarWidget = GestureDetector(
-        onTap: onTap,
-        child: avatarWidget,
-      );
+      avatarWidget = GestureDetector(onTap: onTap, child: avatarWidget);
     }
 
     return avatarWidget;
@@ -271,13 +254,13 @@ class OptimizedImageGallery extends StatelessWidget {
   }
 
   Widget _buildImageItem(BuildContext context, String imageUrl, int index) => GestureDetector(
-        onTap: () => onImageTap?.call(imageUrl, index),
-        child: OptimizedImage(
-          imageUrl: imageUrl,
-          borderRadius: borderRadius,
-          fadeInDuration: const Duration(milliseconds: 200),
-        ),
-      );
+    onTap: () => onImageTap?.call(imageUrl, index),
+    child: OptimizedImage(
+      imageUrl: imageUrl,
+      borderRadius: borderRadius,
+      fadeInDuration: const Duration(milliseconds: 200),
+    ),
+  );
 
   Widget _buildMoreIndicator(BuildContext context, int remainingCount) {
     final theme = Theme.of(context);
@@ -291,11 +274,7 @@ class OptimizedImageGallery extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.more_horiz,
-              color: theme.colorScheme.onSurfaceVariant,
-              size: 24,
-            ),
+            Icon(Icons.more_horiz, color: theme.colorScheme.onSurfaceVariant, size: 24),
             Text(
               '+$remainingCount',
               style: theme.textTheme.bodySmall?.copyWith(
@@ -370,47 +349,44 @@ class _LazyImageState extends State<LazyImage> {
 
   @override
   Widget build(BuildContext context) => VisibilityDetector(
-        key: Key(widget.imageUrl),
-        onVisibilityChanged: (visibilityInfo) {
-          if (visibilityInfo.visibleFraction > widget.intersectionThreshold) {
-            setState(() {
-              _isVisible = true;
-            });
-          }
-        },
-        child: _isVisible
-            ? OptimizedImage(
-                imageUrl: widget.imageUrl,
-                width: widget.width,
-                height: widget.height,
-                fit: widget.fit,
-                placeholder: widget.placeholder,
-                errorWidget: widget.errorWidget,
-                borderRadius: widget.borderRadius,
-                border: widget.border,
-                shadow: widget.shadow,
-                fadeInDuration: widget.fadeInDuration,
-              )
-            : widget.placeholder ?? _buildDefaultPlaceholder(),
-      );
+    key: Key(widget.imageUrl),
+    onVisibilityChanged: (visibilityInfo) {
+      if (visibilityInfo.visibleFraction > widget.intersectionThreshold) {
+        setState(() {
+          _isVisible = true;
+        });
+      }
+    },
+    child: _isVisible
+        ? OptimizedImage(
+            imageUrl: widget.imageUrl,
+            width: widget.width,
+            height: widget.height,
+            fit: widget.fit,
+            placeholder: widget.placeholder,
+            errorWidget: widget.errorWidget,
+            borderRadius: widget.borderRadius,
+            border: widget.border,
+            shadow: widget.shadow,
+            fadeInDuration: widget.fadeInDuration,
+          )
+        : widget.placeholder ?? _buildDefaultPlaceholder(),
+  );
 
   Widget _buildDefaultPlaceholder() => Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: widget.borderRadius,
-          border: widget.border,
-        ),
-      );
+    width: widget.width,
+    height: widget.height,
+    decoration: BoxDecoration(
+      color: Colors.grey[300],
+      borderRadius: widget.borderRadius,
+      border: widget.border,
+    ),
+  );
 }
 
 /// Простой IntersectionObserver для Flutter
 class IntersectionObserver {
-  IntersectionObserver({
-    required this.threshold,
-    required this.callback,
-  });
+  IntersectionObserver({required this.threshold, required this.callback});
   final double threshold;
   final Function(List<IntersectionObserverEntry>) callback;
 
@@ -420,21 +396,14 @@ class IntersectionObserver {
 }
 
 class IntersectionObserverEntry {
-  IntersectionObserverEntry({
-    required this.isIntersecting,
-    required this.intersectionRatio,
-  });
+  IntersectionObserverEntry({required this.isIntersecting, required this.intersectionRatio});
   final bool isIntersecting;
   final double intersectionRatio;
 }
 
 /// Простой VisibilityDetector для Flutter
 class VisibilityDetector extends StatefulWidget {
-  const VisibilityDetector({
-    super.key,
-    required this.onVisibilityChanged,
-    required this.child,
-  });
+  const VisibilityDetector({super.key, required this.onVisibilityChanged, required this.child});
   final Function(VisibilityInfo) onVisibilityChanged;
   final Widget child;
 

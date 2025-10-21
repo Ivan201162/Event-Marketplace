@@ -81,16 +81,16 @@ class SpecialistCategory extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        displayName,
-        description,
-        icon,
-        color,
-        subcategories,
-        isActive,
-        sortOrder,
-      ];
+    id,
+    name,
+    displayName,
+    description,
+    icon,
+    color,
+    subcategories,
+    isActive,
+    sortOrder,
+  ];
 
   @override
   String toString() {

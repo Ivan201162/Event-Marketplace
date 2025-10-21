@@ -4,12 +4,7 @@ import 'package:intl/intl.dart';
 import '../services/payment_integration_service.dart';
 
 class ContractCard extends StatelessWidget {
-  const ContractCard({
-    super.key,
-    required this.contract,
-    this.onTap,
-    this.onStatusUpdate,
-  });
+  const ContractCard({super.key, required this.contract, this.onTap, this.onStatusUpdate});
   final Contract contract;
   final VoidCallback? onTap;
   final Function(ContractStatus)? onStatusUpdate;
@@ -21,9 +16,7 @@ class ContractCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -53,9 +46,7 @@ class ContractCard extends StatelessWidget {
                       children: [
                         Text(
                           'Контракт #${contract.id.substring(0, 8)}',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 2),
                         Text(
@@ -177,9 +168,7 @@ class ContractCard extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => onStatusUpdate?.call(ContractStatus.cancelled),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: theme.colorScheme.error,
-                        ),
+                        style: OutlinedButton.styleFrom(foregroundColor: theme.colorScheme.error),
                         child: const Text('Отменить'),
                       ),
                     ),
@@ -193,34 +182,19 @@ class ContractCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentInfo(
-    ThemeData theme,
-    String label,
-    String value,
-    IconData icon,
-  ) =>
-      Column(
-        children: [
-          Icon(
-            icon,
-            size: 16,
-            color: theme.colorScheme.primary,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
-          ),
-          Text(
-            value,
-            style: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      );
+  Widget _buildPaymentInfo(ThemeData theme, String label, String value, IconData icon) => Column(
+    children: [
+      Icon(icon, size: 16, color: theme.colorScheme.primary),
+      const SizedBox(height: 4),
+      Text(
+        label,
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+        ),
+      ),
+      Text(value, style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600)),
+    ],
+  );
 
   Color _getStatusColor(ContractStatus status) {
     switch (status) {

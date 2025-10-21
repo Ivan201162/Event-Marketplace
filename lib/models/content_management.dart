@@ -38,9 +38,7 @@ class MediaContent {
       thumbnailUrl: data['thumbnailUrl'] as String?,
       fileSize: data['fileSize'] as int? ?? 0,
       mimeType: data['mimeType'] as String? ?? '',
-      metadata: Map<String, dynamic>.from(
-        data['metadata'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
       uploadedBy: data['uploadedBy'] as String?,
       specialistId: data['specialistId'] as String?,
       eventId: data['eventId'] as String?,
@@ -60,37 +58,33 @@ class MediaContent {
 
   /// Создать из Map
   factory MediaContent.fromMap(Map<String, dynamic> data) => MediaContent(
-        id: data['id'] as String? ?? '',
-        title: data['title'] as String? ?? '',
-        description: data['description'] as String?,
-        type: MediaType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => MediaType.image,
-        ),
-        url: data['url'] as String? ?? '',
-        thumbnailUrl: data['thumbnailUrl'] as String?,
-        fileSize: data['fileSize'] as int? ?? 0,
-        mimeType: data['mimeType'] as String? ?? '',
-        metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {},
-        ),
-        uploadedBy: data['uploadedBy'] as String?,
-        specialistId: data['specialistId'] as String?,
-        eventId: data['eventId'] as String?,
-        status: ContentStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == data['status'],
-          orElse: () => ContentStatus.uploaded,
-        ),
-        uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
-        processedAt:
-            data['processedAt'] != null ? (data['processedAt'] as Timestamp).toDate() : null,
-        publishedAt:
-            data['publishedAt'] != null ? (data['publishedAt'] as Timestamp).toDate() : null,
-        tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
-        processingInfo: Map<String, dynamic>.from(
-          data['processingInfo'] as Map<dynamic, dynamic>? ?? {},
-        ),
-      );
+    id: data['id'] as String? ?? '',
+    title: data['title'] as String? ?? '',
+    description: data['description'] as String?,
+    type: MediaType.values.firstWhere(
+      (e) => e.toString().split('.').last == data['type'],
+      orElse: () => MediaType.image,
+    ),
+    url: data['url'] as String? ?? '',
+    thumbnailUrl: data['thumbnailUrl'] as String?,
+    fileSize: data['fileSize'] as int? ?? 0,
+    mimeType: data['mimeType'] as String? ?? '',
+    metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+    uploadedBy: data['uploadedBy'] as String?,
+    specialistId: data['specialistId'] as String?,
+    eventId: data['eventId'] as String?,
+    status: ContentStatus.values.firstWhere(
+      (e) => e.toString().split('.').last == data['status'],
+      orElse: () => ContentStatus.uploaded,
+    ),
+    uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
+    processedAt: data['processedAt'] != null ? (data['processedAt'] as Timestamp).toDate() : null,
+    publishedAt: data['publishedAt'] != null ? (data['publishedAt'] as Timestamp).toDate() : null,
+    tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
+    processingInfo: Map<String, dynamic>.from(
+      data['processingInfo'] as Map<dynamic, dynamic>? ?? {},
+    ),
+  );
   final String id;
   final String title;
   final String? description;
@@ -112,24 +106,24 @@ class MediaContent {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'title': title,
-        'description': description,
-        'type': type.toString().split('.').last,
-        'url': url,
-        'thumbnailUrl': thumbnailUrl,
-        'fileSize': fileSize,
-        'mimeType': mimeType,
-        'metadata': metadata,
-        'uploadedBy': uploadedBy,
-        'specialistId': specialistId,
-        'eventId': eventId,
-        'status': status.toString().split('.').last,
-        'uploadedAt': Timestamp.fromDate(uploadedAt),
-        'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
-        'publishedAt': publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
-        'tags': tags,
-        'processingInfo': processingInfo,
-      };
+    'title': title,
+    'description': description,
+    'type': type.toString().split('.').last,
+    'url': url,
+    'thumbnailUrl': thumbnailUrl,
+    'fileSize': fileSize,
+    'mimeType': mimeType,
+    'metadata': metadata,
+    'uploadedBy': uploadedBy,
+    'specialistId': specialistId,
+    'eventId': eventId,
+    'status': status.toString().split('.').last,
+    'uploadedAt': Timestamp.fromDate(uploadedAt),
+    'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
+    'publishedAt': publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
+    'tags': tags,
+    'processingInfo': processingInfo,
+  };
 
   /// Создать копию с изменениями
   MediaContent copyWith({
@@ -151,27 +145,26 @@ class MediaContent {
     DateTime? publishedAt,
     List<String>? tags,
     Map<String, dynamic>? processingInfo,
-  }) =>
-      MediaContent(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        type: type ?? this.type,
-        url: url ?? this.url,
-        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-        fileSize: fileSize ?? this.fileSize,
-        mimeType: mimeType ?? this.mimeType,
-        metadata: metadata ?? this.metadata,
-        uploadedBy: uploadedBy ?? this.uploadedBy,
-        specialistId: specialistId ?? this.specialistId,
-        eventId: eventId ?? this.eventId,
-        status: status ?? this.status,
-        uploadedAt: uploadedAt ?? this.uploadedAt,
-        processedAt: processedAt ?? this.processedAt,
-        publishedAt: publishedAt ?? this.publishedAt,
-        tags: tags ?? this.tags,
-        processingInfo: processingInfo ?? this.processingInfo,
-      );
+  }) => MediaContent(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    type: type ?? this.type,
+    url: url ?? this.url,
+    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+    fileSize: fileSize ?? this.fileSize,
+    mimeType: mimeType ?? this.mimeType,
+    metadata: metadata ?? this.metadata,
+    uploadedBy: uploadedBy ?? this.uploadedBy,
+    specialistId: specialistId ?? this.specialistId,
+    eventId: eventId ?? this.eventId,
+    status: status ?? this.status,
+    uploadedAt: uploadedAt ?? this.uploadedAt,
+    processedAt: processedAt ?? this.processedAt,
+    publishedAt: publishedAt ?? this.publishedAt,
+    tags: tags ?? this.tags,
+    processingInfo: processingInfo ?? this.processingInfo,
+  );
 
   /// Проверить, обработан ли контент
   bool get isProcessed => status == ContentStatus.processed;
@@ -226,25 +219,25 @@ class MediaContent {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        title,
-        description,
-        type,
-        url,
-        thumbnailUrl,
-        fileSize,
-        mimeType,
-        metadata,
-        uploadedBy,
-        specialistId,
-        eventId,
-        status,
-        uploadedAt,
-        processedAt,
-        publishedAt,
-        tags,
-        processingInfo,
-      );
+    id,
+    title,
+    description,
+    type,
+    url,
+    thumbnailUrl,
+    fileSize,
+    mimeType,
+    metadata,
+    uploadedBy,
+    specialistId,
+    eventId,
+    status,
+    uploadedAt,
+    processedAt,
+    publishedAt,
+    tags,
+    processingInfo,
+  );
 
   @override
   String toString() => 'MediaContent(id: $id, title: $title, type: $type, status: $status)';
@@ -285,32 +278,28 @@ class ContentGallery {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       createdBy: data['createdBy'] as String?,
-      settings: Map<String, dynamic>.from(
-        data['settings'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      settings: Map<String, dynamic>.from(data['settings'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
   /// Создать из Map
   factory ContentGallery.fromMap(Map<String, dynamic> data) => ContentGallery(
-        id: data['id'] as String? ?? '',
-        name: data['name'] as String? ?? '',
-        description: data['description'] as String?,
-        specialistId: data['specialistId'] as String?,
-        eventId: data['eventId'] as String?,
-        mediaIds: List<String>.from(data['mediaIds'] as List<dynamic>? ?? []),
-        type: GalleryType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => GalleryType.portfolio,
-        ),
-        isPublic: data['isPublic'] as bool? ?? false,
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        createdBy: data['createdBy'] as String?,
-        settings: Map<String, dynamic>.from(
-          data['settings'] as Map<dynamic, dynamic>? ?? {},
-        ),
-      );
+    id: data['id'] as String? ?? '',
+    name: data['name'] as String? ?? '',
+    description: data['description'] as String?,
+    specialistId: data['specialistId'] as String?,
+    eventId: data['eventId'] as String?,
+    mediaIds: List<String>.from(data['mediaIds'] as List<dynamic>? ?? []),
+    type: GalleryType.values.firstWhere(
+      (e) => e.toString().split('.').last == data['type'],
+      orElse: () => GalleryType.portfolio,
+    ),
+    isPublic: data['isPublic'] as bool? ?? false,
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
+    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+    createdBy: data['createdBy'] as String?,
+    settings: Map<String, dynamic>.from(data['settings'] as Map<dynamic, dynamic>? ?? {}),
+  );
   final String id;
   final String name;
   final String? description;
@@ -326,18 +315,18 @@ class ContentGallery {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'specialistId': specialistId,
-        'eventId': eventId,
-        'mediaIds': mediaIds,
-        'type': type.toString().split('.').last,
-        'isPublic': isPublic,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'createdBy': createdBy,
-        'settings': settings,
-      };
+    'name': name,
+    'description': description,
+    'specialistId': specialistId,
+    'eventId': eventId,
+    'mediaIds': mediaIds,
+    'type': type.toString().split('.').last,
+    'isPublic': isPublic,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'createdBy': createdBy,
+    'settings': settings,
+  };
 
   /// Создать копию с изменениями
   ContentGallery copyWith({
@@ -353,21 +342,20 @@ class ContentGallery {
     DateTime? updatedAt,
     String? createdBy,
     Map<String, dynamic>? settings,
-  }) =>
-      ContentGallery(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description: description ?? this.description,
-        specialistId: specialistId ?? this.specialistId,
-        eventId: eventId ?? this.eventId,
-        mediaIds: mediaIds ?? this.mediaIds,
-        type: type ?? this.type,
-        isPublic: isPublic ?? this.isPublic,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        createdBy: createdBy ?? this.createdBy,
-        settings: settings ?? this.settings,
-      );
+  }) => ContentGallery(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    description: description ?? this.description,
+    specialistId: specialistId ?? this.specialistId,
+    eventId: eventId ?? this.eventId,
+    mediaIds: mediaIds ?? this.mediaIds,
+    type: type ?? this.type,
+    isPublic: isPublic ?? this.isPublic,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    createdBy: createdBy ?? this.createdBy,
+    settings: settings ?? this.settings,
+  );
 
   /// Получить количество медиа
   int get mediaCount => mediaIds.length;
@@ -395,19 +383,19 @@ class ContentGallery {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        name,
-        description,
-        specialistId,
-        eventId,
-        mediaIds,
-        type,
-        isPublic,
-        createdAt,
-        updatedAt,
-        createdBy,
-        settings,
-      );
+    id,
+    name,
+    description,
+    specialistId,
+    eventId,
+    mediaIds,
+    type,
+    isPublic,
+    createdAt,
+    updatedAt,
+    createdBy,
+    settings,
+  );
 
   @override
   String toString() => 'ContentGallery(id: $id, name: $name, type: $type, mediaCount: $mediaCount)';
@@ -442,43 +430,34 @@ class MediaProcessing {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => ProcessingStatus.pending,
       ),
-      parameters: Map<String, dynamic>.from(
-        data['parameters'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      parameters: Map<String, dynamic>.from(data['parameters'] as Map<dynamic, dynamic>? ?? {}),
       resultUrl: data['resultUrl'] as String?,
       errorMessage: data['errorMessage'] as String?,
       startedAt: (data['startedAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
-      metadata: Map<String, dynamic>.from(
-        data['metadata'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
   /// Создать из Map
   factory MediaProcessing.fromMap(Map<String, dynamic> data) => MediaProcessing(
-        id: data['id'] as String? ?? '',
-        mediaId: data['mediaId'] as String? ?? '',
-        type: ProcessingType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => ProcessingType.thumbnail,
-        ),
-        status: ProcessingStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == data['status'],
-          orElse: () => ProcessingStatus.pending,
-        ),
-        parameters: Map<String, dynamic>.from(
-          data['parameters'] as Map<dynamic, dynamic>? ?? {},
-        ),
-        resultUrl: data['resultUrl'] as String?,
-        errorMessage: data['errorMessage'] as String?,
-        startedAt: (data['startedAt'] as Timestamp).toDate(),
-        completedAt:
-            data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
-        metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {},
-        ),
-      );
+    id: data['id'] as String? ?? '',
+    mediaId: data['mediaId'] as String? ?? '',
+    type: ProcessingType.values.firstWhere(
+      (e) => e.toString().split('.').last == data['type'],
+      orElse: () => ProcessingType.thumbnail,
+    ),
+    status: ProcessingStatus.values.firstWhere(
+      (e) => e.toString().split('.').last == data['status'],
+      orElse: () => ProcessingStatus.pending,
+    ),
+    parameters: Map<String, dynamic>.from(data['parameters'] as Map<dynamic, dynamic>? ?? {}),
+    resultUrl: data['resultUrl'] as String?,
+    errorMessage: data['errorMessage'] as String?,
+    startedAt: (data['startedAt'] as Timestamp).toDate(),
+    completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+    metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+  );
   final String id;
   final String mediaId;
   final ProcessingType type;
@@ -492,16 +471,16 @@ class MediaProcessing {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'mediaId': mediaId,
-        'type': type.toString().split('.').last,
-        'status': status.toString().split('.').last,
-        'parameters': parameters,
-        'resultUrl': resultUrl,
-        'errorMessage': errorMessage,
-        'startedAt': Timestamp.fromDate(startedAt),
-        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-        'metadata': metadata,
-      };
+    'mediaId': mediaId,
+    'type': type.toString().split('.').last,
+    'status': status.toString().split('.').last,
+    'parameters': parameters,
+    'resultUrl': resultUrl,
+    'errorMessage': errorMessage,
+    'startedAt': Timestamp.fromDate(startedAt),
+    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+    'metadata': metadata,
+  };
 
   /// Создать копию с изменениями
   MediaProcessing copyWith({
@@ -515,19 +494,18 @@ class MediaProcessing {
     DateTime? startedAt,
     DateTime? completedAt,
     Map<String, dynamic>? metadata,
-  }) =>
-      MediaProcessing(
-        id: id ?? this.id,
-        mediaId: mediaId ?? this.mediaId,
-        type: type ?? this.type,
-        status: status ?? this.status,
-        parameters: parameters ?? this.parameters,
-        resultUrl: resultUrl ?? this.resultUrl,
-        errorMessage: errorMessage ?? this.errorMessage,
-        startedAt: startedAt ?? this.startedAt,
-        completedAt: completedAt ?? this.completedAt,
-        metadata: metadata ?? this.metadata,
-      );
+  }) => MediaProcessing(
+    id: id ?? this.id,
+    mediaId: mediaId ?? this.mediaId,
+    type: type ?? this.type,
+    status: status ?? this.status,
+    parameters: parameters ?? this.parameters,
+    resultUrl: resultUrl ?? this.resultUrl,
+    errorMessage: errorMessage ?? this.errorMessage,
+    startedAt: startedAt ?? this.startedAt,
+    completedAt: completedAt ?? this.completedAt,
+    metadata: metadata ?? this.metadata,
+  );
 
   /// Проверить, завершена ли обработка
   bool get isCompleted => status == ProcessingStatus.completed;
@@ -562,30 +540,24 @@ class MediaProcessing {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        mediaId,
-        type,
-        status,
-        parameters,
-        resultUrl,
-        errorMessage,
-        startedAt,
-        completedAt,
-        metadata,
-      );
+    id,
+    mediaId,
+    type,
+    status,
+    parameters,
+    resultUrl,
+    errorMessage,
+    startedAt,
+    completedAt,
+    metadata,
+  );
 
   @override
   String toString() => 'MediaProcessing(id: $id, mediaId: $mediaId, type: $type, status: $status)';
 }
 
 /// Типы медиа
-enum MediaType {
-  image,
-  video,
-  audio,
-  document,
-  other,
-}
+enum MediaType { image, video, audio, document, other }
 
 /// Расширение для типов медиа
 extension MediaTypeExtension on MediaType {
@@ -636,14 +608,7 @@ extension MediaTypeExtension on MediaType {
 }
 
 /// Статусы контента
-enum ContentStatus {
-  uploaded,
-  processing,
-  processed,
-  published,
-  archived,
-  error,
-}
+enum ContentStatus { uploaded, processing, processed, published, archived, error }
 
 /// Расширение для статусов контента
 extension ContentStatusExtension on ContentStatus {
@@ -683,13 +648,7 @@ extension ContentStatusExtension on ContentStatus {
 }
 
 /// Типы галерей
-enum GalleryType {
-  portfolio,
-  event,
-  showcase,
-  archive,
-  temporary,
-}
+enum GalleryType { portfolio, event, showcase, archive, temporary }
 
 /// Расширение для типов галерей
 extension GalleryTypeExtension on GalleryType {
@@ -725,16 +684,7 @@ extension GalleryTypeExtension on GalleryType {
 }
 
 /// Типы обработки
-enum ProcessingType {
-  thumbnail,
-  resize,
-  compress,
-  watermark,
-  filter,
-  crop,
-  rotate,
-  convert,
-}
+enum ProcessingType { thumbnail, resize, compress, watermark, filter, crop, rotate, convert }
 
 /// Расширение для типов обработки
 extension ProcessingTypeExtension on ProcessingType {
@@ -761,13 +711,7 @@ extension ProcessingTypeExtension on ProcessingType {
 }
 
 /// Статусы обработки
-enum ProcessingStatus {
-  pending,
-  inProgress,
-  completed,
-  failed,
-  cancelled,
-}
+enum ProcessingStatus { pending, inProgress, completed, failed, cancelled }
 
 /// Расширение для статусов обработки
 extension ProcessingStatusExtension on ProcessingStatus {

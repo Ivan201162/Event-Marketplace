@@ -1,31 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Статус тикета поддержки
-enum TicketStatus {
-  open,
-  inProgress,
-  waitingForUser,
-  resolved,
-  closed,
-}
+enum TicketStatus { open, inProgress, waitingForUser, resolved, closed }
 
 /// Приоритет тикета поддержки
-enum TicketPriority {
-  low,
-  medium,
-  high,
-  urgent,
-}
+enum TicketPriority { low, medium, high, urgent }
 
 /// Категория тикета поддержки
-enum TicketCategory {
-  technical,
-  billing,
-  account,
-  feature,
-  bug,
-  other,
-}
+enum TicketCategory { technical, billing, account, feature, bug, other }
 
 /// Модель сообщения поддержки
 class SupportMessage {
@@ -63,13 +45,13 @@ class SupportMessage {
       isRead: data['isRead'] as bool? ?? false,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -81,23 +63,20 @@ class SupportMessage {
       throw Exception('Document data is null');
     }
 
-    return SupportMessage.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return SupportMessage.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'ticketId': ticketId,
-        'senderId': senderId,
-        'senderType': senderType,
-        'message': message,
-        'attachments': attachments,
-        'isRead': isRead,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      };
+    'ticketId': ticketId,
+    'senderId': senderId,
+    'senderType': senderType,
+    'message': message,
+    'attachments': attachments,
+    'isRead': isRead,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
   /// Копировать с изменениями
   SupportMessage copyWith({
@@ -110,18 +89,17 @@ class SupportMessage {
     bool? isRead,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      SupportMessage(
-        id: id ?? this.id,
-        ticketId: ticketId ?? this.ticketId,
-        senderId: senderId ?? this.senderId,
-        senderType: senderType ?? this.senderType,
-        message: message ?? this.message,
-        attachments: attachments ?? this.attachments,
-        isRead: isRead ?? this.isRead,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => SupportMessage(
+    id: id ?? this.id,
+    ticketId: ticketId ?? this.ticketId,
+    senderId: senderId ?? this.senderId,
+    senderType: senderType ?? this.senderType,
+    message: message ?? this.message,
+    attachments: attachments ?? this.attachments,
+    isRead: isRead ?? this.isRead,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Проверить, является ли сообщение от пользователя
   bool get isFromUser => senderType == 'user';
@@ -172,13 +150,13 @@ class FAQItem {
       order: data['order'] as int? ?? 0,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -190,24 +168,21 @@ class FAQItem {
       throw Exception('Document data is null');
     }
 
-    return FAQItem.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+    return FAQItem.fromMap({'id': doc.id, ...data});
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'question': question,
-        'answer': answer,
-        'category': category,
-        'tags': tags,
-        'views': views,
-        'isPublished': isPublished,
-        'order': order,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      };
+    'question': question,
+    'answer': answer,
+    'category': category,
+    'tags': tags,
+    'views': views,
+    'isPublished': isPublished,
+    'order': order,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
   /// Копировать с изменениями
   FAQItem copyWith({
@@ -221,19 +196,18 @@ class FAQItem {
     int? order,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      FAQItem(
-        id: id ?? this.id,
-        question: question ?? this.question,
-        answer: answer ?? this.answer,
-        category: category ?? this.category,
-        tags: tags ?? this.tags,
-        views: views ?? this.views,
-        isPublished: isPublished ?? this.isPublished,
-        order: order ?? this.order,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => FAQItem(
+    id: id ?? this.id,
+    question: question ?? this.question,
+    answer: answer ?? this.answer,
+    category: category ?? this.category,
+    tags: tags ?? this.tags,
+    views: views ?? this.views,
+    isPublished: isPublished ?? this.isPublished,
+    order: order ?? this.order,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Проверить, опубликован ли элемент FAQ
   bool get isPublished => isPublished;
@@ -278,8 +252,8 @@ class SupportStats {
       satisfactionRating: (data['satisfactionRating'] as num?)?.toDouble() ?? 0.0,
       lastTicketAt: data['lastTicketAt'] != null
           ? (data['lastTicketAt'] is Timestamp
-              ? (data['lastTicketAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['lastTicketAt'].toString()))
+                ? (data['lastTicketAt'] as Timestamp).toDate()
+                : DateTime.tryParse(data['lastTicketAt'].toString()))
           : null,
       period: data['period'] as String?,
     );
@@ -287,16 +261,16 @@ class SupportStats {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'totalTickets': totalTickets,
-        'openTickets': openTickets,
-        'resolvedTickets': resolvedTickets,
-        'closedTickets': closedTickets,
-        'averageResponseTime': averageResponseTime,
-        'satisfactionRating': satisfactionRating,
-        'lastTicketAt': lastTicketAt != null ? Timestamp.fromDate(lastTicketAt!) : null,
-        'period': period,
-      };
+    'userId': userId,
+    'totalTickets': totalTickets,
+    'openTickets': openTickets,
+    'resolvedTickets': resolvedTickets,
+    'closedTickets': closedTickets,
+    'averageResponseTime': averageResponseTime,
+    'satisfactionRating': satisfactionRating,
+    'lastTicketAt': lastTicketAt != null ? Timestamp.fromDate(lastTicketAt!) : null,
+    'period': period,
+  };
 
   /// Копировать с изменениями
   SupportStats copyWith({
@@ -309,18 +283,17 @@ class SupportStats {
     double? satisfactionRating,
     DateTime? lastTicketAt,
     String? period,
-  }) =>
-      SupportStats(
-        userId: userId ?? this.userId,
-        totalTickets: totalTickets ?? this.totalTickets,
-        openTickets: openTickets ?? this.openTickets,
-        resolvedTickets: resolvedTickets ?? this.resolvedTickets,
-        closedTickets: closedTickets ?? this.closedTickets,
-        averageResponseTime: averageResponseTime ?? this.averageResponseTime,
-        satisfactionRating: satisfactionRating ?? this.satisfactionRating,
-        lastTicketAt: lastTicketAt ?? this.lastTicketAt,
-        period: period ?? this.period,
-      );
+  }) => SupportStats(
+    userId: userId ?? this.userId,
+    totalTickets: totalTickets ?? this.totalTickets,
+    openTickets: openTickets ?? this.openTickets,
+    resolvedTickets: resolvedTickets ?? this.resolvedTickets,
+    closedTickets: closedTickets ?? this.closedTickets,
+    averageResponseTime: averageResponseTime ?? this.averageResponseTime,
+    satisfactionRating: satisfactionRating ?? this.satisfactionRating,
+    lastTicketAt: lastTicketAt ?? this.lastTicketAt,
+    period: period ?? this.period,
+  );
 
   /// Получить процент решенных тикетов
   double get resolutionRate {

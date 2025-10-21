@@ -38,11 +38,7 @@ class AvailabilityBlock extends StatelessWidget {
           // Заголовок
           Row(
             children: [
-              Icon(
-                Icons.calendar_today,
-                color: theme.primaryColor,
-                size: 24,
-              ),
+              Icon(Icons.calendar_today, color: theme.primaryColor, size: 24),
               const SizedBox(width: 8),
               Text(
                 'Свободные даты',
@@ -71,9 +67,7 @@ class AvailabilityBlock extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [

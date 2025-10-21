@@ -21,8 +21,10 @@ class UserChatsParams {
 }
 
 /// Провайдер для сообщений чата
-final chatMessagesProvider =
-    StreamProvider.family<List<chat_message.ChatMessage>, String>((ref, chatId) {
+final chatMessagesProvider = StreamProvider.family<List<chat_message.ChatMessage>, String>((
+  ref,
+  chatId,
+) {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getChatMessages(chatId);
 });
@@ -56,13 +58,12 @@ class MessageFormState {
     List<String>? attachments,
     bool? isSending,
     String? error,
-  }) =>
-      MessageFormState(
-        text: text ?? this.text,
-        attachments: attachments ?? this.attachments,
-        isSending: isSending ?? this.isSending,
-        error: error ?? this.error,
-      );
+  }) => MessageFormState(
+    text: text ?? this.text,
+    attachments: attachments ?? this.attachments,
+    isSending: isSending ?? this.isSending,
+    error: error ?? this.error,
+  );
 }
 
 /// Нотификатор для формы сообщения
@@ -118,13 +119,12 @@ class ChatState {
     Map<String, List<chat_message.ChatMessage>>? messages,
     bool? isLoading,
     String? error,
-  }) =>
-      ChatState(
-        chats: chats ?? this.chats,
-        messages: messages ?? this.messages,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-      );
+  }) => ChatState(
+    chats: chats ?? this.chats,
+    messages: messages ?? this.messages,
+    isLoading: isLoading ?? this.isLoading,
+    error: error ?? this.error,
+  );
 }
 
 /// Нотификатор для состояния чата
@@ -156,11 +156,7 @@ class ChatStateNotifier extends Notifier<ChatState> {
     state = state.copyWith(error: error);
   }
 
-  Future<void> sendMessage(
-    String chatId,
-    String text, {
-    ChatAttachment? attachment,
-  }) async {
+  Future<void> sendMessage(String chatId, String text, {ChatAttachment? attachment}) async {
     try {
       setLoading(true);
       final chatService = ref.read(chatServiceProvider);

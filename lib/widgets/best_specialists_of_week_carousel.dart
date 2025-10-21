@@ -22,14 +22,11 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
             children: [
               Text(
                 'Лучшие специалисты недели',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-              TextButton(
-                onPressed: () => context.push('/search'),
-                child: const Text('Все'),
-              ),
+              TextButton(onPressed: () => context.push('/search'), child: const Text('Все')),
             ],
           ),
         ),
@@ -39,9 +36,7 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
           child: specialistsAsync.when(
             data: (specialists) {
               if (specialists.isEmpty) {
-                return const Center(
-                  child: Text('Специалисты не найдены'),
-                );
+                return const Center(child: Text('Специалисты не найдены'));
               }
 
               // Берем первые 10 специалистов как "лучших недели"
@@ -57,136 +52,111 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                 },
               );
             },
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            error: (error, stack) => Center(
-              child: Text('Ошибка загрузки: $error'),
-            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(child: Text('Ошибка загрузки: $error')),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSpecialistCard(
-    BuildContext context,
-    Map<String, dynamic> specialist,
-  ) =>
-      Container(
-        width: 160,
-        margin: const EdgeInsets.only(right: 12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+  Widget _buildSpecialistCard(BuildContext context, Map<String, dynamic> specialist) => Container(
+    width: 160,
+    margin: const EdgeInsets.only(right: 12),
+    decoration: BoxDecoration(
+      color: Theme.of(context).colorScheme.surface,
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.1),
+          blurRadius: 4,
+          offset: const Offset(0, 2),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Фото специалиста
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: Container(
-                height: 100,
-                width: double.infinity,
-                color: Colors.grey[300],
-                child: specialist['avatar'] != null
-                    ? Image.network(
-                        specialist['avatar'] as String,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => const Icon(
-                          Icons.person,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                      )
-                    : const Icon(
-                        Icons.person,
-                        size: 40,
-                        color: Colors.grey,
-                      ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Фото специалиста
+        ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+          child: Container(
+            height: 100,
+            width: double.infinity,
+            color: Colors.grey[300],
+            child: specialist['avatar'] != null
+                ? Image.network(
+                    specialist['avatar'] as String,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.person, size: 40, color: Colors.grey),
+                  )
+                : const Icon(Icons.person, size: 40, color: Colors.grey),
+          ),
+        ),
+        // Информация о специалисте
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                specialist['name'] as String? ?? 'Специалист',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-            // Информация о специалисте
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 4),
+              Text(
+                specialist['category'] as String? ?? 'Категория',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                  fontSize: 12,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Row(
                 children: [
+                  const Icon(Icons.star, color: Colors.amber, size: 14),
+                  const SizedBox(width: 4),
                   Text(
-                    specialist['name'] as String? ?? 'Специалист',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    (specialist['rating'] as double? ?? 0.0).toStringAsFixed(1),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                   ),
-                  const SizedBox(height: 4),
+                  const Spacer(),
                   Text(
-                    specialist['category'] as String? ?? 'Категория',
+                    '${specialist['price'] as int? ?? 0} ₽',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 12,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                        size: 14,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        (specialist['rating'] as double? ?? 0.0).toStringAsFixed(1),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        '${specialist['price'] as int? ?? 0} ₽',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final specialistId = specialist['id'] as String?;
-                        if (specialistId != null) {
-                          context.push('/specialist/$specialistId');
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        textStyle: const TextStyle(fontSize: 12),
-                      ),
-                      child: const Text('Посмотреть'),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    final specialistId = specialist['id'] as String?;
+                    if (specialistId != null) {
+                      context.push('/specialist/$specialistId');
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    textStyle: const TextStyle(fontSize: 12),
+                  ),
+                  child: const Text('Посмотреть'),
+                ),
+              ),
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }

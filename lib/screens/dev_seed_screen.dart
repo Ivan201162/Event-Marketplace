@@ -26,10 +26,7 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
       return Scaffold(
         appBar: BackUtils.buildAppBar(context, title: 'Тестовые данные'),
         body: const Center(
-          child: Text(
-            'Этот экран доступен только в debug режиме',
-            style: TextStyle(fontSize: 16),
-          ),
+          child: Text('Этот экран доступен только в debug режиме', style: TextStyle(fontSize: 16)),
         ),
       );
     }
@@ -95,15 +92,11 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
                       ? Colors.red.withValues(alpha: 0.1)
                       : Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: _isError ? Colors.red : Colors.green,
-                  ),
+                  border: Border.all(color: _isError ? Colors.red : Colors.green),
                 ),
                 child: Text(
                   _statusMessage!,
-                  style: TextStyle(
-                    color: _isError ? Colors.red : Colors.green,
-                  ),
+                  style: TextStyle(color: _isError ? Colors.red : Colors.green),
                 ),
               ),
 
@@ -144,9 +137,7 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
                 onPressed: _checkStatus,
                 icon: const Icon(Icons.info_outline),
                 label: const Text('Проверить статус'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.all(16),
-                ),
+                style: OutlinedButton.styleFrom(padding: const EdgeInsets.all(16)),
               ),
             ],
 
@@ -161,10 +152,7 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
                   children: [
                     const Text(
                       'Что создается:',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
                     _buildDataItem('👥', '10 специалистов разных категорий'),
@@ -191,10 +179,7 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
                     Expanded(
                       child: Text(
                         'Внимание: Тестовые данные создаются в реальной базе данных Firebase',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.orange[700],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.orange[700]),
                       ),
                     ),
                   ],
@@ -208,15 +193,15 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
   }
 
   Widget _buildDataItem(String icon, String text) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          children: [
-            Text(icon, style: const TextStyle(fontSize: 16)),
-            const SizedBox(width: 8),
-            Expanded(child: Text(text)),
-          ],
-        ),
-      );
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      children: [
+        Text(icon, style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 8),
+        Expanded(child: Text(text)),
+      ],
+    ),
+  );
 
   Future<void> _createTestData() async {
     setState(() {
@@ -304,8 +289,9 @@ class _DevSeedScreenState extends State<DevSeedScreen> {
       // final hasData = await _seedService._checkExistingTestData();
       const hasData = false; // Заглушка для теста
       setState(() {
-        _statusMessage =
-            hasData ? '✅ Тестовые данные уже созданы' : 'ℹ️ Тестовые данные не созданы';
+        _statusMessage = hasData
+            ? '✅ Тестовые данные уже созданы'
+            : 'ℹ️ Тестовые данные не созданы';
         _isError = false;
       });
     } catch (e) {

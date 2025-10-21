@@ -16,8 +16,10 @@ final busyDatesProvider = FutureProvider.family<List<DateTime>, String>((ref, sp
 });
 
 /// Провайдер занятых дат с временными интервалами
-final busyDateRangesProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, String>((ref, specialistId) {
+final busyDateRangesProvider = FutureProvider.family<List<Map<String, dynamic>>, String>((
+  ref,
+  specialistId,
+) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.getBusyDateRanges(specialistId);
 });
@@ -62,8 +64,10 @@ class BookingConflictParams {
 }
 
 // Провайдер для получения бронирований по специалисту
-final bookingsBySpecialistProvider =
-    FutureProvider.family<List<Booking>, String>((ref, specialistId) {
+final bookingsBySpecialistProvider = FutureProvider.family<List<Booking>, String>((
+  ref,
+  specialistId,
+) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.getBookingsBySpecialist(specialistId);
 });

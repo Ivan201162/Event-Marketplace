@@ -50,14 +50,13 @@ class WorkAct {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
       workDescription: data['workDescription'] as String?,
-      workStartDate:
-          data['workStartDate'] != null ? (data['workStartDate'] as Timestamp).toDate() : null,
+      workStartDate: data['workStartDate'] != null
+          ? (data['workStartDate'] as Timestamp).toDate()
+          : null,
       workEndDate: data['workEndDate'] != null ? (data['workEndDate'] as Timestamp).toDate() : null,
       customerSignature: data['customerSignature'] as String?,
       specialistSignature: data['specialistSignature'] as String?,
-      metadata: Map<String, dynamic>.from(
-        data['metadata'] as Map<dynamic, dynamic>? ?? {},
-      ),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
       currency: data['currency'] as String? ?? 'RUB',
     );
   }
@@ -83,24 +82,24 @@ class WorkAct {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'actNumber': actNumber,
-        'bookingId': bookingId,
-        'customerId': customerId,
-        'specialistId': specialistId,
-        'status': status.name,
-        'title': title,
-        'totalAmount': totalAmount,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-        'workDescription': workDescription,
-        'workStartDate': workStartDate != null ? Timestamp.fromDate(workStartDate!) : null,
-        'workEndDate': workEndDate != null ? Timestamp.fromDate(workEndDate!) : null,
-        'customerSignature': customerSignature,
-        'specialistSignature': specialistSignature,
-        'metadata': metadata,
-        'currency': currency,
-      };
+    'actNumber': actNumber,
+    'bookingId': bookingId,
+    'customerId': customerId,
+    'specialistId': specialistId,
+    'status': status.name,
+    'title': title,
+    'totalAmount': totalAmount,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+    'workDescription': workDescription,
+    'workStartDate': workStartDate != null ? Timestamp.fromDate(workStartDate!) : null,
+    'workEndDate': workEndDate != null ? Timestamp.fromDate(workEndDate!) : null,
+    'customerSignature': customerSignature,
+    'specialistSignature': specialistSignature,
+    'metadata': metadata,
+    'currency': currency,
+  };
 
   /// Создать копию с изменениями
   WorkAct copyWith({
@@ -122,27 +121,26 @@ class WorkAct {
     String? specialistSignature,
     Map<String, dynamic>? metadata,
     String? currency,
-  }) =>
-      WorkAct(
-        id: id ?? this.id,
-        actNumber: actNumber ?? this.actNumber,
-        bookingId: bookingId ?? this.bookingId,
-        customerId: customerId ?? this.customerId,
-        specialistId: specialistId ?? this.specialistId,
-        status: status ?? this.status,
-        title: title ?? this.title,
-        totalAmount: totalAmount ?? this.totalAmount,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        completedAt: completedAt ?? this.completedAt,
-        workDescription: workDescription ?? this.workDescription,
-        workStartDate: workStartDate ?? this.workStartDate,
-        workEndDate: workEndDate ?? this.workEndDate,
-        customerSignature: customerSignature ?? this.customerSignature,
-        specialistSignature: specialistSignature ?? this.specialistSignature,
-        metadata: metadata ?? this.metadata,
-        currency: currency ?? this.currency,
-      );
+  }) => WorkAct(
+    id: id ?? this.id,
+    actNumber: actNumber ?? this.actNumber,
+    bookingId: bookingId ?? this.bookingId,
+    customerId: customerId ?? this.customerId,
+    specialistId: specialistId ?? this.specialistId,
+    status: status ?? this.status,
+    title: title ?? this.title,
+    totalAmount: totalAmount ?? this.totalAmount,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    completedAt: completedAt ?? this.completedAt,
+    workDescription: workDescription ?? this.workDescription,
+    workStartDate: workStartDate ?? this.workStartDate,
+    workEndDate: workEndDate ?? this.workEndDate,
+    customerSignature: customerSignature ?? this.customerSignature,
+    specialistSignature: specialistSignature ?? this.specialistSignature,
+    metadata: metadata ?? this.metadata,
+    currency: currency ?? this.currency,
+  );
 
   /// Проверить, подписан ли акт обеими сторонами
   bool get isFullySigned => customerSignature != null && specialistSignature != null;

@@ -6,11 +6,7 @@ import '../services/voice_message_service.dart';
 
 /// Виджет для воспроизведения голосовых сообщений
 class VoicePlayerWidget extends ConsumerStatefulWidget {
-  const VoicePlayerWidget({
-    super.key,
-    required this.message,
-    this.isOwnMessage = false,
-  });
+  const VoicePlayerWidget({super.key, required this.message, this.isOwnMessage = false});
   final ChatMessageExtended message;
   final bool isOwnMessage;
 
@@ -40,12 +36,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
     _waveformAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(
-      CurvedAnimation(
-        parent: _waveformController,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _waveformController, curve: Curves.easeInOut));
 
     _totalDuration = Duration(seconds: widget.message.audioDuration ?? 0);
   }
@@ -58,112 +49,104 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: widget.isOwnMessage
-              ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-              : Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: widget.isOwnMessage
-                ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
-                : Colors.grey.withValues(alpha: 0.3),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: widget.isOwnMessage
+          ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+          : Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: widget.isOwnMessage
+            ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
+            : Colors.grey.withValues(alpha: 0.3),
+      ),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Заголовок голосового сообщения
+        Row(
           children: [
-            // Заголовок голосового сообщения
-            Row(
-              children: [
-                Icon(
-                  Icons.mic,
-                  size: 16,
-                  color: widget.isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[600],
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Голосовое сообщение',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: widget.isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[600],
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  _formatDuration(_totalDuration),
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
+            Icon(
+              Icons.mic,
+              size: 16,
+              color: widget.isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[600],
             ),
-            const SizedBox(height: 8),
-
-            // Контролы воспроизведения
-            Row(
-              children: [
-                // Кнопка воспроизведения/паузы
-                GestureDetector(
-                  onTap: _togglePlayback,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color:
-                          widget.isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[600],
-                      shape: BoxShape.circle,
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : Icon(
-                            _isPlaying ? Icons.pause : Icons.play_arrow,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-
-                // Waveform и прогресс
-                Expanded(
-                  child: Column(
-                    children: [
-                      _buildWaveform(),
-                      const SizedBox(height: 4),
-                      _buildProgressBar(),
-                    ],
-                  ),
-                ),
-              ],
+            const SizedBox(width: 8),
+            Text(
+              'Голосовое сообщение',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: widget.isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[600],
+              ),
+            ),
+            const Spacer(),
+            Text(
+              _formatDuration(_totalDuration),
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
             ),
           ],
         ),
-      );
+        const SizedBox(height: 8),
+
+        // Контролы воспроизведения
+        Row(
+          children: [
+            // Кнопка воспроизведения/паузы
+            GestureDetector(
+              onTap: _togglePlayback,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: widget.isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[600],
+                  shape: BoxShape.circle,
+                ),
+                child: _isLoading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : Icon(
+                        _isPlaying ? Icons.pause : Icons.play_arrow,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+              ),
+            ),
+            const SizedBox(width: 12),
+
+            // Waveform и прогресс
+            Expanded(
+              child: Column(
+                children: [_buildWaveform(), const SizedBox(height: 4), _buildProgressBar()],
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 
   Widget _buildWaveform() => SizedBox(
-        height: 30,
-        child: AnimatedBuilder(
-          animation: _waveformAnimation,
-          builder: (context, child) => CustomPaint(
-            painter: WaveformPainter(
-              progress: _waveformAnimation.value,
-              isPlaying: _isPlaying,
-              isOwnMessage: widget.isOwnMessage,
-            ),
-            size: Size.infinite,
-          ),
+    height: 30,
+    child: AnimatedBuilder(
+      animation: _waveformAnimation,
+      builder: (context, child) => CustomPaint(
+        painter: WaveformPainter(
+          progress: _waveformAnimation.value,
+          isPlaying: _isPlaying,
+          isOwnMessage: widget.isOwnMessage,
         ),
-      );
+        size: Size.infinite,
+      ),
+    ),
+  );
 
   Widget _buildProgressBar() {
     final progress = _totalDuration.inMilliseconds > 0
@@ -224,9 +207,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
         await Future<void>.delayed(const Duration(milliseconds: 100));
         // TODO(developer): Получать реальную позицию воспроизведения
         setState(() {
-          _currentPosition = Duration(
-            milliseconds: _currentPosition.inMilliseconds + 100,
-          );
+          _currentPosition = Duration(milliseconds: _currentPosition.inMilliseconds + 100);
         });
         return true;
       }
@@ -241,22 +222,15 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
   }
 
   void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 }
 
 /// Кастомный painter для отрисовки waveform
 class WaveformPainter extends CustomPainter {
-  WaveformPainter({
-    required this.progress,
-    required this.isPlaying,
-    required this.isOwnMessage,
-  });
+  WaveformPainter({required this.progress, required this.isPlaying, required this.isOwnMessage});
   final double progress;
   final bool isPlaying;
   final bool isOwnMessage;
@@ -264,8 +238,9 @@ class WaveformPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color =
-          isOwnMessage ? Colors.blue.withValues(alpha: 0.7) : Colors.grey.withValues(alpha: 0.7)
+      ..color = isOwnMessage
+          ? Colors.blue.withValues(alpha: 0.7)
+          : Colors.grey.withValues(alpha: 0.7)
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;
 
@@ -286,11 +261,7 @@ class WaveformPainter extends CustomPainter {
 
       final currentPaint = i < activeBarCount ? activePaint : paint;
 
-      canvas.drawLine(
-        Offset(x, y),
-        Offset(x, y + height),
-        currentPaint,
-      );
+      canvas.drawLine(Offset(x, y), Offset(x, y + height), currentPaint);
     }
   }
 

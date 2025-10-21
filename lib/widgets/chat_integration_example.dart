@@ -26,16 +26,10 @@ class ChatWithProposalButton extends StatelessWidget {
       children: [
         // Кнопка предложения специалистов (только для организаторов)
         if (currentUser != null && _isOrganizer(currentUser.uid))
-          ProposeSpecialistsButton(
-            customerId: customerId,
-            eventId: eventId,
-            message: message,
-          ),
+          ProposeSpecialistsButton(customerId: customerId, eventId: eventId, message: message),
 
         // Основной чат
-        Expanded(
-          child: chatMessages,
-        ),
+        Expanded(child: chatMessages),
       ],
     );
   }
@@ -51,40 +45,36 @@ class ChatWithProposalButton extends StatelessWidget {
 
 /// Пример интеграции бейджа уведомлений в AppBar
 class ChatAppBarWithNotifications extends StatelessWidget implements PreferredSizeWidget {
-  const ChatAppBarWithNotifications({
-    super.key,
-    required this.title,
-    this.userId,
-  });
+  const ChatAppBarWithNotifications({super.key, required this.title, this.userId});
   final String title;
   final String? userId;
 
   @override
   Widget build(BuildContext context) => AppBar(
-        title: Text(title),
-        actions: [
-          // Бейдж уведомлений
-          NotificationBadge(
-            userId: userId,
-            child: IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/notifications');
-              },
-              icon: const Icon(Icons.notifications),
-            ),
-          ),
+    title: Text(title),
+    actions: [
+      // Бейдж уведомлений
+      NotificationBadge(
+        userId: userId,
+        child: IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/notifications');
+          },
+          icon: const Icon(Icons.notifications),
+        ),
+      ),
 
-          // Кнопка предложений (только для организаторов)
-          if (_isOrganizer(userId))
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/organizer-proposals');
-              },
-              icon: const Icon(Icons.people_alt),
-              tooltip: 'Мои предложения',
-            ),
-        ],
-      );
+      // Кнопка предложений (только для организаторов)
+      if (_isOrganizer(userId))
+        IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/organizer-proposals');
+          },
+          icon: const Icon(Icons.people_alt),
+          tooltip: 'Мои предложения',
+        ),
+    ],
+  );
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -97,31 +87,25 @@ class ChatAppBarWithNotifications extends StatelessWidget implements PreferredSi
 
 /// Пример использования в экране чата
 class ChatScreenExample extends StatelessWidget {
-  const ChatScreenExample({
-    super.key,
-    required this.customerId,
-    required this.eventId,
-  });
+  const ChatScreenExample({super.key, required this.customerId, required this.eventId});
   final String customerId;
   final String eventId;
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: ChatAppBarWithNotifications(
-          title: 'Чат с заказчиком',
-          userId: FirebaseAuth.instance.currentUser?.uid,
-        ),
-        body: ChatWithProposalButton(
-          customerId: customerId,
-          eventId: eventId,
-          chatMessages: _buildChatMessages(),
-        ),
-      );
+    appBar: ChatAppBarWithNotifications(
+      title: 'Чат с заказчиком',
+      userId: FirebaseAuth.instance.currentUser?.uid,
+    ),
+    body: ChatWithProposalButton(
+      customerId: customerId,
+      eventId: eventId,
+      chatMessages: _buildChatMessages(),
+    ),
+  );
 
   Widget _buildChatMessages() {
     // Здесь должен быть ваш существующий виджет чата
-    return const Center(
-      child: Text('Здесь будет ваш чат'),
-    );
+    return const Center(child: Text('Здесь будет ваш чат'));
   }
 }

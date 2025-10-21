@@ -25,9 +25,7 @@ class FeedService {
       .orderBy('createdAt', descending: true)
       .limit(50)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
 
   /// Получение постов от подписанных пользователей
   Stream<List<FeedPost>> getPostsBySubscriptions(List<String> followedIds) {
@@ -41,9 +39,7 @@ class FeedService {
         .orderBy('createdAt', descending: true)
         .limit(50)
         .snapshots()
-        .map(
-          (snapshot) => snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList(),
-        );
+        .map((snapshot) => snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
   }
 
   /// Комбинированный поток постов (город + подписки)
@@ -54,28 +50,24 @@ class FeedService {
     final cityPosts = getPostsByCity(city);
     final followedPosts = getPostsBySubscriptions(followedIds);
 
-    return Rx.combineLatest2(
-      cityPosts,
-      followedPosts,
-      (city, followed) {
-        // Объединяем посты и убираем дубликаты
-        final allPosts = <String, FeedPost>{};
+    return Rx.combineLatest2(cityPosts, followedPosts, (city, followed) {
+      // Объединяем посты и убираем дубликаты
+      final allPosts = <String, FeedPost>{};
 
-        for (final post in city) {
-          allPosts[post.id] = post;
-        }
+      for (final post in city) {
+        allPosts[post.id] = post;
+      }
 
-        for (final post in followed) {
-          allPosts[post.id] = post;
-        }
+      for (final post in followed) {
+        allPosts[post.id] = post;
+      }
 
-        // Сортируем по дате создания
-        final sortedPosts = allPosts.values.toList()
-          ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      // Сортируем по дате создания
+      final sortedPosts = allPosts.values.toList()
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-        return sortedPosts;
-      },
-    );
+      return sortedPosts;
+    });
   }
 
   /// Получение постов с фильтрацией
@@ -92,14 +84,14 @@ class FeedService {
         baseStream = getPostsBySubscriptions(followedIds);
         break;
       case FeedFilter.photos:
-        baseStream = getPostsByCity(city).map(
-          (posts) => posts.where((post) => post.type == PostType.photo).toList(),
-        );
+        baseStream = getPostsByCity(
+          city,
+        ).map((posts) => posts.where((post) => post.type == PostType.photo).toList());
         break;
       case FeedFilter.videos:
-        baseStream = getPostsByCity(city).map(
-          (posts) => posts.where((post) => post.type == PostType.video).toList(),
-        );
+        baseStream = getPostsByCity(
+          city,
+        ).map((posts) => posts.where((post) => post.type == PostType.video).toList());
         break;
       case FeedFilter.categories:
         if (category != null) {
@@ -146,10 +138,7 @@ class FeedService {
         }
 
         finalLikedBy = likedBy;
-        final updatedPost = post.copyWith(
-          likes: likedBy.length,
-          likedBy: likedBy,
-        );
+        final updatedPost = post.copyWith(likes: likedBy.length, likedBy: likedBy);
 
         transaction.update(postRef, updatedPost.toMap());
       });
@@ -191,10 +180,7 @@ class FeedService {
         final comments = List<FeedComment>.from(post.comments);
         comments.add(comment);
 
-        final updatedPost = post.copyWith(
-          comments: comments,
-          commentsCount: comments.length,
-        );
+        final updatedPost = post.copyWith(comments: comments, commentsCount: comments.length);
 
         transaction.update(postRef, updatedPost.toMap());
       });
@@ -356,7 +342,5 @@ class FeedService {
       .where('authorId', isEqualTo: userId)
       .orderBy('createdAt', descending: true)
       .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList(),
-      );
+      .map((snapshot) => snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
 }

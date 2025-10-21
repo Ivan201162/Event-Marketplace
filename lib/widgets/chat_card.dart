@@ -125,11 +125,7 @@ class ChatCard extends StatelessWidget {
           backgroundColor: Colors.grey[200],
           backgroundImage: avatarUrl != null ? CachedNetworkImageProvider(avatarUrl) : null,
           child: avatarUrl == null
-              ? Icon(
-                  isGroup ? Icons.group : Icons.person,
-                  size: 24,
-                  color: Colors.grey[600],
-                )
+              ? Icon(isGroup ? Icons.group : Icons.person, size: 24, color: Colors.grey[600])
               : null,
         ),
         // Online indicator (placeholder for future implementation)

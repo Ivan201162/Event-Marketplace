@@ -20,8 +20,10 @@ class EnhancedFeedService {
     DocumentSnapshot? lastDocument,
   }) async {
     try {
-      Query query =
-          _firestore.collection('feed').orderBy('createdAt', descending: true).limit(limit);
+      Query query = _firestore
+          .collection('feed')
+          .orderBy('createdAt', descending: true)
+          .limit(limit);
 
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
@@ -141,9 +143,7 @@ class EnhancedFeedService {
     bool? isArchived,
   }) async {
     try {
-      final updates = <String, dynamic>{
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
+      final updates = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
 
       if (content != null) updates['content'] = content;
       if (tags != null) updates['tags'] = tags;
@@ -393,9 +393,7 @@ class EnhancedFeedService {
         // Фильтр по тексту (на клиенте, так как Firestore не поддерживает полнотекстовый поиск)
         if (query.isEmpty ||
             post.content.toLowerCase().contains(query.toLowerCase()) ||
-            post.tags.any(
-              (tag) => tag.toLowerCase().contains(query.toLowerCase()),
-            )) {
+            post.tags.any((tag) => tag.toLowerCase().contains(query.toLowerCase()))) {
           posts.add(post);
         }
       }
@@ -530,8 +528,11 @@ class EnhancedFeedService {
   Future<List<EnhancedFeedPost>> getFollowingFeed(String userId) async {
     try {
       // Получаем список подписок пользователя
-      final followingSnapshot =
-          await _firestore.collection('users').doc(userId).collection('following').get();
+      final followingSnapshot = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('following')
+          .get();
 
       final followingIds = followingSnapshot.docs.map((doc) => doc.id).toList();
 
@@ -621,18 +622,14 @@ class EnhancedFeedService {
           .doc(userId)
           .collection('following')
           .doc(targetUserId)
-          .set({
-        'followedAt': FieldValue.serverTimestamp(),
-      });
+          .set({'followedAt': FieldValue.serverTimestamp()});
 
       await _firestore
           .collection('users')
           .doc(targetUserId)
           .collection('followers')
           .doc(userId)
-          .set({
-        'followedAt': FieldValue.serverTimestamp(),
-      });
+          .set({'followedAt': FieldValue.serverTimestamp()});
     } catch (e) {
       throw Exception('Ошибка подписки: $e');
     }

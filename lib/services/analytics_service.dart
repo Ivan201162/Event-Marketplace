@@ -309,16 +309,9 @@ class AnalyticsService {
   }
 
   /// Отслеживание входа в раздел монетизации
-  static Future<void> trackMonetizationHubView({
-    required String userId,
-  }) async {
+  static Future<void> trackMonetizationHubView({required String userId}) async {
     try {
-      await _analytics.logEvent(
-        name: 'monetization_hub_view',
-        parameters: {
-          'user_id': userId,
-        },
-      );
+      await _analytics.logEvent(name: 'monetization_hub_view', parameters: {'user_id': userId});
 
       debugPrint('INFO: [AnalyticsService] Monetization hub view tracked');
     } catch (e) {
@@ -327,16 +320,9 @@ class AnalyticsService {
   }
 
   /// Отслеживание просмотра планов подписки
-  static Future<void> trackSubscriptionPlansView({
-    required String userId,
-  }) async {
+  static Future<void> trackSubscriptionPlansView({required String userId}) async {
     try {
-      await _analytics.logEvent(
-        name: 'subscription_plans_view',
-        parameters: {
-          'user_id': userId,
-        },
-      );
+      await _analytics.logEvent(name: 'subscription_plans_view', parameters: {'user_id': userId});
 
       debugPrint('INFO: [AnalyticsService] Subscription plans view tracked');
     } catch (e) {
@@ -345,16 +331,9 @@ class AnalyticsService {
   }
 
   /// Отслеживание просмотра пакетов продвижения
-  static Future<void> trackPromotionPackagesView({
-    required String userId,
-  }) async {
+  static Future<void> trackPromotionPackagesView({required String userId}) async {
     try {
-      await _analytics.logEvent(
-        name: 'promotion_packages_view',
-        parameters: {
-          'user_id': userId,
-        },
-      );
+      await _analytics.logEvent(name: 'promotion_packages_view', parameters: {'user_id': userId});
 
       debugPrint('INFO: [AnalyticsService] Promotion packages view tracked');
     } catch (e) {
@@ -363,15 +342,11 @@ class AnalyticsService {
   }
 
   /// Отслеживание просмотра рекламных кампаний
-  static Future<void> trackAdvertisementCampaignsView({
-    required String userId,
-  }) async {
+  static Future<void> trackAdvertisementCampaignsView({required String userId}) async {
     try {
       await _analytics.logEvent(
         name: 'advertisement_campaigns_view',
-        parameters: {
-          'user_id': userId,
-        },
+        parameters: {'user_id': userId},
       );
 
       debugPrint('INFO: [AnalyticsService] Advertisement campaigns view tracked');
@@ -402,8 +377,10 @@ class AnalyticsService {
   /// Получение статистики пользователя
   static Future<Map<String, dynamic>> getUserAnalytics(String userId) async {
     try {
-      final QuerySnapshot snapshot =
-          await _firestore.collection('analytics_events').where('userId', isEqualTo: userId).get();
+      final QuerySnapshot snapshot = await _firestore
+          .collection('analytics_events')
+          .where('userId', isEqualTo: userId)
+          .get();
 
       final Map<String, int> eventCounts = {};
       double totalSpent = 0.0;
@@ -482,10 +459,7 @@ class AnalyticsService {
     try {
       await _analytics.logEvent(
         name: 'theme_changed',
-        parameters: {
-          'theme_name': themeName,
-          'timestamp': DateTime.now().millisecondsSinceEpoch,
-        },
+        parameters: {'theme_name': themeName, 'timestamp': DateTime.now().millisecondsSinceEpoch},
       );
       debugPrint('INFO: [AnalyticsService] Theme change logged: $themeName');
     } catch (e) {

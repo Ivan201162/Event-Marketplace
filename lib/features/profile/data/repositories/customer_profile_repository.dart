@@ -25,10 +25,10 @@ class CustomerProfileRepository {
   /// Сохранить профиль заказчика
   Future<bool> saveProfile(CustomerProfile profile) async {
     try {
-      await _firestore.collection(_collection).doc(profile.id).set(
-            profile.toFirestore(),
-            SetOptions(merge: true),
-          );
+      await _firestore
+          .collection(_collection)
+          .doc(profile.id)
+          .set(profile.toFirestore(), SetOptions(merge: true));
       return true;
     } on Exception catch (e) {
       debugPrint('Ошибка сохранения профиля: $e');
@@ -37,10 +37,7 @@ class CustomerProfileRepository {
   }
 
   /// Обновить профиль заказчика
-  Future<bool> updateProfile(
-    String customerId,
-    Map<String, dynamic> updates,
-  ) async {
+  Future<bool> updateProfile(String customerId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection(_collection).doc(customerId).update(updates);

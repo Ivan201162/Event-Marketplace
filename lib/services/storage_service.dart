@@ -20,10 +20,7 @@ class StorageService {
   }
 
   /// Загрузить PDF договора в Firebase Storage
-  Future<String> uploadContractPdf(
-    String contractId,
-    Uint8List pdfBytes,
-  ) async {
+  Future<String> uploadContractPdf(String contractId, Uint8List pdfBytes) async {
     try {
       final ref = _s.ref().child('contracts').child('$contractId.pdf');
 
@@ -223,11 +220,7 @@ class StorageService {
   }
 
   /// Загрузить изображение
-  Future<String> uploadImage(
-    String path,
-    Uint8List imageBytes,
-    String fileName,
-  ) async {
+  Future<String> uploadImage(String path, Uint8List imageBytes, String fileName) async {
     try {
       final ref = _s.ref().child(path).child(fileName);
 
@@ -235,10 +228,7 @@ class StorageService {
         imageBytes,
         SettableMetadata(
           contentType: 'image/jpeg',
-          customMetadata: {
-            'type': 'image',
-            'uploadedAt': DateTime.now().toIso8601String(),
-          },
+          customMetadata: {'type': 'image', 'uploadedAt': DateTime.now().toIso8601String()},
         ),
       );
 
@@ -265,10 +255,7 @@ class StorageService {
         documentBytes,
         SettableMetadata(
           contentType: contentType,
-          customMetadata: {
-            'type': 'document',
-            'uploadedAt': DateTime.now().toIso8601String(),
-          },
+          customMetadata: {'type': 'document', 'uploadedAt': DateTime.now().toIso8601String()},
         ),
       );
 

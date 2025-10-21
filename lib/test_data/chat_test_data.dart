@@ -122,9 +122,7 @@ class ChatTestDataGenerator {
         'type': 'text',
         'content': 'Здравствуйте! Меня интересует проведение свадьбы на 50 человек.',
         'status': 'read',
-        'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(hours: 2)),
-        ),
+        'timestamp': Timestamp.fromDate(DateTime.now().subtract(const Duration(hours: 2))),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -188,9 +186,7 @@ class ChatTestDataGenerator {
         'fileSize': 15728640, // 15 MB
         'thumbnailUrl': 'https://via.placeholder.com/200x150/FF6B6B/FFFFFF?text=Video+Thumb',
         'status': 'read',
-        'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(minutes: 45)),
-        ),
+        'timestamp': Timestamp.fromDate(DateTime.now().subtract(const Duration(minutes: 45))),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -205,9 +201,7 @@ class ChatTestDataGenerator {
     await _firestore.collection('chats').doc(chatId).update({
       'lastMessageContent': 'Видео с предыдущей свадьбы',
       'lastMessageType': 'video',
-      'lastMessageTime': Timestamp.fromDate(
-        DateTime.now().subtract(const Duration(minutes: 45)),
-      ),
+      'lastMessageTime': Timestamp.fromDate(DateTime.now().subtract(const Duration(minutes: 45))),
       'lastMessageSenderId': specialistId,
       'updatedAt': FieldValue.serverTimestamp(),
     });
@@ -229,9 +223,7 @@ class ChatTestDataGenerator {
         'type': 'text',
         'content': 'Привет! Нужен фотограф на свадьбу 15 июня.',
         'status': 'read',
-        'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(hours: 3)),
-        ),
+        'timestamp': Timestamp.fromDate(DateTime.now().subtract(const Duration(hours: 3))),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -296,9 +288,7 @@ class ChatTestDataGenerator {
         'fileSize': 25165824, // 24 MB
         'thumbnailUrl': 'https://via.placeholder.com/200x150/96CEB4/FFFFFF?text=Shooting+Thumb',
         'status': 'read',
-        'timestamp': Timestamp.fromDate(
-          DateTime.now().subtract(const Duration(minutes: 30)),
-        ),
+        'timestamp': Timestamp.fromDate(DateTime.now().subtract(const Duration(minutes: 30))),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -313,9 +303,7 @@ class ChatTestDataGenerator {
     await _firestore.collection('chats').doc(chatId).update({
       'lastMessageContent': 'Свадебная съемка - пример',
       'lastMessageType': 'video',
-      'lastMessageTime': Timestamp.fromDate(
-        DateTime.now().subtract(const Duration(minutes: 30)),
-      ),
+      'lastMessageTime': Timestamp.fromDate(DateTime.now().subtract(const Duration(minutes: 30))),
       'lastMessageSenderId': specialistId,
       'updatedAt': FieldValue.serverTimestamp(),
     });
@@ -334,8 +322,10 @@ class ChatTestDataGenerator {
 
       for (final doc in chatsSnapshot.docs) {
         // Удаляем сообщения чата
-        final messagesSnapshot =
-            await _firestore.collection('messages').where('chatId', isEqualTo: doc.id).get();
+        final messagesSnapshot = await _firestore
+            .collection('messages')
+            .where('chatId', isEqualTo: doc.id)
+            .get();
 
         for (final messageDoc in messagesSnapshot.docs) {
           await messageDoc.reference.delete();
@@ -346,11 +336,7 @@ class ChatTestDataGenerator {
       }
 
       // Удаляем тестовых пользователей
-      final testUserIds = [
-        'test_customer_001',
-        'test_specialist_001',
-        'test_specialist_002',
-      ];
+      final testUserIds = ['test_customer_001', 'test_specialist_001', 'test_specialist_002'];
       for (final userId in testUserIds) {
         await _firestore.collection('users').doc(userId).delete();
       }
@@ -362,11 +348,7 @@ class ChatTestDataGenerator {
   }
 
   /// Создать дополнительные тестовые сообщения
-  Future<void> addMoreTestMessages(
-    String chatId,
-    String senderId,
-    String senderName,
-  ) async {
+  Future<void> addMoreTestMessages(String chatId, String senderId, String senderName) async {
     final additionalMessages = [
       {
         'chatId': chatId,

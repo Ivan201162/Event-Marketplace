@@ -83,8 +83,8 @@ final searchFiltersProvider = NotifierProvider<SearchFiltersNotifier, filters.Sp
 /// Провайдер для сортировки (мигрирован)
 final searchSortingProvider =
     NotifierProvider<SearchSortingNotifier, sorting_utils.SpecialistSorting>(
-  SearchSortingNotifier.new,
-);
+      SearchSortingNotifier.new,
+    );
 
 /// Провайдер для сервиса специалистов
 final specialistServiceProvider = Provider<SpecialistService>((ref) => SpecialistService());
@@ -196,18 +196,8 @@ final searchStatsProvider = Provider<Map<String, int>>((ref) {
         'categories': specialists.map((s) => s.category).toSet().length,
       };
     },
-    loading: () => const {
-      'total': 0,
-      'filtered': 0,
-      'available': 0,
-      'categories': 0,
-    },
-    error: (_, __) => const {
-      'total': 0,
-      'filtered': 0,
-      'available': 0,
-      'categories': 0,
-    },
+    loading: () => const {'total': 0, 'filtered': 0, 'available': 0, 'categories': 0},
+    error: (_, __) => const {'total': 0, 'filtered': 0, 'available': 0, 'categories': 0},
   );
 });
 
@@ -247,10 +237,7 @@ final priceRangeProvider = Provider<PriceRange>((ref) {
       final prices = specialists.map((s) => s.pricePerHour ?? s.hourlyRate).toList();
       prices.sort();
 
-      return PriceRange(
-        min: prices.first,
-        max: prices.last,
-      );
+      return PriceRange(min: prices.first, max: prices.last);
     },
     loading: () => const PriceRange(min: 0, max: 1000),
     error: (_, __) => const PriceRange(min: 0, max: 1000),
@@ -272,10 +259,7 @@ final searchSettingsProvider = Provider<Map<String, dynamic>>((ref) {
       'minRating': filters.minRating,
       'isAvailable': filters.isAvailable,
     },
-    'sorting': {
-      'sortOption': sorting.sortOption.toString(),
-      'isAscending': sorting.isAscending,
-    },
+    'sorting': {'sortOption': sorting.sortOption.toString(), 'isAscending': sorting.isAscending},
     'searchQuery': searchQuery,
   };
 });

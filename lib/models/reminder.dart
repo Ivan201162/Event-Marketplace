@@ -57,8 +57,9 @@ class Reminder {
       ),
       eventId: data['eventId'] as String?,
       bookingId: data['bookingId'] as String?,
-      anniversaryDate:
-          data['anniversaryDate'] != null ? (data['anniversaryDate'] as Timestamp).toDate() : null,
+      anniversaryDate: data['anniversaryDate'] != null
+          ? (data['anniversaryDate'] as Timestamp).toDate()
+          : null,
       isRecurring: data['isRecurring'] as bool? ?? false,
       recurrenceInterval: data['recurrenceInterval'] as int?,
       metadata: data['metadata'] as Map<String, dynamic>?,
@@ -87,22 +88,22 @@ class Reminder {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'userId': userId,
-        'type': type.name,
-        'title': title,
-        'message': message,
-        'scheduledTime': Timestamp.fromDate(scheduledTime),
-        'status': status.name,
-        'eventId': eventId,
-        'bookingId': bookingId,
-        'anniversaryDate': anniversaryDate != null ? Timestamp.fromDate(anniversaryDate!) : null,
-        'isRecurring': isRecurring,
-        'recurrenceInterval': recurrenceInterval,
-        'metadata': metadata,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'sentAt': sentAt != null ? Timestamp.fromDate(sentAt!) : null,
-        'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
-      };
+    'userId': userId,
+    'type': type.name,
+    'title': title,
+    'message': message,
+    'scheduledTime': Timestamp.fromDate(scheduledTime),
+    'status': status.name,
+    'eventId': eventId,
+    'bookingId': bookingId,
+    'anniversaryDate': anniversaryDate != null ? Timestamp.fromDate(anniversaryDate!) : null,
+    'isRecurring': isRecurring,
+    'recurrenceInterval': recurrenceInterval,
+    'metadata': metadata,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'sentAt': sentAt != null ? Timestamp.fromDate(sentAt!) : null,
+    'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+  };
 
   /// Создать копию с изменениями
   Reminder copyWith({
@@ -122,25 +123,24 @@ class Reminder {
     DateTime? createdAt,
     DateTime? sentAt,
     DateTime? cancelledAt,
-  }) =>
-      Reminder(
-        id: id ?? this.id,
-        userId: userId ?? this.userId,
-        type: type ?? this.type,
-        title: title ?? this.title,
-        message: message ?? this.message,
-        scheduledTime: scheduledTime ?? this.scheduledTime,
-        status: status ?? this.status,
-        eventId: eventId ?? this.eventId,
-        bookingId: bookingId ?? this.bookingId,
-        anniversaryDate: anniversaryDate ?? this.anniversaryDate,
-        isRecurring: isRecurring ?? this.isRecurring,
-        recurrenceInterval: recurrenceInterval ?? this.recurrenceInterval,
-        metadata: metadata ?? this.metadata,
-        createdAt: createdAt ?? this.createdAt,
-        sentAt: sentAt ?? this.sentAt,
-        cancelledAt: cancelledAt ?? this.cancelledAt,
-      );
+  }) => Reminder(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    type: type ?? this.type,
+    title: title ?? this.title,
+    message: message ?? this.message,
+    scheduledTime: scheduledTime ?? this.scheduledTime,
+    status: status ?? this.status,
+    eventId: eventId ?? this.eventId,
+    bookingId: bookingId ?? this.bookingId,
+    anniversaryDate: anniversaryDate ?? this.anniversaryDate,
+    isRecurring: isRecurring ?? this.isRecurring,
+    recurrenceInterval: recurrenceInterval ?? this.recurrenceInterval,
+    metadata: metadata ?? this.metadata,
+    createdAt: createdAt ?? this.createdAt,
+    sentAt: sentAt ?? this.sentAt,
+    cancelledAt: cancelledAt ?? this.cancelledAt,
+  );
 
   /// Проверить, является ли напоминание активным
   bool get isActive => status == ReminderStatus.scheduled;
@@ -232,10 +232,12 @@ class ReminderSettings {
       weekBeforeReminder: data['weekBeforeReminder'] as bool? ?? true,
       dayBeforeReminder: data['dayBeforeReminder'] as bool? ?? true,
       customRemindersEnabled: data['customRemindersEnabled'] as bool? ?? true,
-      quietHoursStart:
-          data['quietHoursStart'] != null ? (data['quietHoursStart'] as Timestamp).toDate() : null,
-      quietHoursEnd:
-          data['quietHoursEnd'] != null ? (data['quietHoursEnd'] as Timestamp).toDate() : null,
+      quietHoursStart: data['quietHoursStart'] != null
+          ? (data['quietHoursStart'] as Timestamp).toDate()
+          : null,
+      quietHoursEnd: data['quietHoursEnd'] != null
+          ? (data['quietHoursEnd'] as Timestamp).toDate()
+          : null,
       timezone: data['timezone'] as String? ?? 'Europe/Moscow',
       language: data['language'] as String? ?? 'ru',
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -256,17 +258,17 @@ class ReminderSettings {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'eventRemindersEnabled': eventRemindersEnabled,
-        'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
-        'weekBeforeReminder': weekBeforeReminder,
-        'dayBeforeReminder': dayBeforeReminder,
-        'customRemindersEnabled': customRemindersEnabled,
-        'quietHoursStart': quietHoursStart != null ? Timestamp.fromDate(quietHoursStart!) : null,
-        'quietHoursEnd': quietHoursEnd != null ? Timestamp.fromDate(quietHoursEnd!) : null,
-        'timezone': timezone,
-        'language': language,
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'eventRemindersEnabled': eventRemindersEnabled,
+    'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
+    'weekBeforeReminder': weekBeforeReminder,
+    'dayBeforeReminder': dayBeforeReminder,
+    'customRemindersEnabled': customRemindersEnabled,
+    'quietHoursStart': quietHoursStart != null ? Timestamp.fromDate(quietHoursStart!) : null,
+    'quietHoursEnd': quietHoursEnd != null ? Timestamp.fromDate(quietHoursEnd!) : null,
+    'timezone': timezone,
+    'language': language,
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 
   /// Создать копию с изменениями
   ReminderSettings copyWith({
@@ -281,21 +283,19 @@ class ReminderSettings {
     String? timezone,
     String? language,
     DateTime? updatedAt,
-  }) =>
-      ReminderSettings(
-        userId: userId ?? this.userId,
-        eventRemindersEnabled: eventRemindersEnabled ?? this.eventRemindersEnabled,
-        anniversaryRemindersEnabled:
-            anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
-        weekBeforeReminder: weekBeforeReminder ?? this.weekBeforeReminder,
-        dayBeforeReminder: dayBeforeReminder ?? this.dayBeforeReminder,
-        customRemindersEnabled: customRemindersEnabled ?? this.customRemindersEnabled,
-        quietHoursStart: quietHoursStart ?? this.quietHoursStart,
-        quietHoursEnd: quietHoursEnd ?? this.quietHoursEnd,
-        timezone: timezone ?? this.timezone,
-        language: language ?? this.language,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => ReminderSettings(
+    userId: userId ?? this.userId,
+    eventRemindersEnabled: eventRemindersEnabled ?? this.eventRemindersEnabled,
+    anniversaryRemindersEnabled: anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
+    weekBeforeReminder: weekBeforeReminder ?? this.weekBeforeReminder,
+    dayBeforeReminder: dayBeforeReminder ?? this.dayBeforeReminder,
+    customRemindersEnabled: customRemindersEnabled ?? this.customRemindersEnabled,
+    quietHoursStart: quietHoursStart ?? this.quietHoursStart,
+    quietHoursEnd: quietHoursEnd ?? this.quietHoursEnd,
+    timezone: timezone ?? this.timezone,
+    language: language ?? this.language,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 
   /// Проверить, разрешены ли напоминания в текущее время
   bool isReminderAllowed(DateTime time) {

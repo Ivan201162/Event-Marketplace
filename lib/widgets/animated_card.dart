@@ -30,19 +30,11 @@ class _AnimatedCardState extends State<AnimatedCard> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 0.95,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -53,23 +45,20 @@ class _AnimatedCardState extends State<AnimatedCard> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: widget.onTap,
-        onTapDown: (_) => _controller.forward(),
-        onTapUp: (_) => _controller.reverse(),
-        onTapCancel: () => _controller.reverse(),
-        child: AnimatedBuilder(
-          animation: _scaleAnimation,
-          builder: (context, child) => Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Card(
-              elevation: widget.elevation,
-              margin: widget.margin,
-              child: Padding(
-                padding: widget.padding ?? const EdgeInsets.all(16),
-                child: widget.child,
-              ),
-            ),
-          ),
+    onTap: widget.onTap,
+    onTapDown: (_) => _controller.forward(),
+    onTapUp: (_) => _controller.reverse(),
+    onTapCancel: () => _controller.reverse(),
+    child: AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) => Transform.scale(
+        scale: _scaleAnimation.value,
+        child: Card(
+          elevation: widget.elevation,
+          margin: widget.margin,
+          child: Padding(padding: widget.padding ?? const EdgeInsets.all(16), child: widget.child),
         ),
-      );
+      ),
+    ),
+  );
 }

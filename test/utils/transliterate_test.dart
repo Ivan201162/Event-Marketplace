@@ -42,8 +42,9 @@ void main() {
     });
 
     test('transliterateNameToUsername - длинное имя', () {
-      final result =
-          TransliterateUtils.transliterateNameToUsername('ОченьДлинноеИмяКотороеПревышаетЛимит');
+      final result = TransliterateUtils.transliterateNameToUsername(
+        'ОченьДлинноеИмяКотороеПревышаетЛимит',
+      );
       expect(result, matches(RegExp(r'^[a-z_]{1,15}_\d{4}$')));
     });
 

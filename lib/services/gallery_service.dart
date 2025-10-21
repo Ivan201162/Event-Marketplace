@@ -95,8 +95,9 @@ class GalleryService {
       String? thumbnailUrl;
 
       if (thumbnailPath != null) {
-        final thumbnailRef =
-            storage.ref().child('gallery/$specialistId/thumbnails/${fileName}_thumb.jpg');
+        final thumbnailRef = storage.ref().child(
+          'gallery/$specialistId/thumbnails/${fileName}_thumb.jpg',
+        );
         final thumbnailUploadTask = thumbnailRef.putFile(File(thumbnailPath));
         final thumbnailSnapshot = await thumbnailUploadTask;
         thumbnailUrl = await thumbnailSnapshot.ref.getDownloadURL();
@@ -176,9 +177,7 @@ class GalleryService {
     bool? isPublic,
   }) async {
     try {
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      };
+      final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
 
       if (title != null) updateData['title'] = title;
       if (description != null) updateData['description'] = description;
@@ -305,12 +304,7 @@ class GalleryService {
       };
     } catch (e) {
       debugPrint('Error getting video info: $e');
-      return {
-        'duration': null,
-        'width': null,
-        'height': null,
-        'fileSize': null,
-      };
+      return {'duration': null, 'width': null, 'height': null, 'fileSize': null};
     }
   }
 

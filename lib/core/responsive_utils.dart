@@ -188,12 +188,7 @@ class ResponsiveUtils {
 }
 
 /// Типы экранов
-enum ScreenType {
-  mobile,
-  tablet,
-  desktop,
-  largeDesktop,
-}
+enum ScreenType { mobile, tablet, desktop, largeDesktop }
 
 /// Виджет для адаптивного контейнера
 class ResponsiveContainer extends StatelessWidget {
@@ -218,9 +213,7 @@ class ResponsiveContainer extends StatelessWidget {
     return Align(
       alignment: alignment,
       child: Container(
-        constraints: BoxConstraints(
-          maxWidth: effectiveMaxWidth,
-        ),
+        constraints: BoxConstraints(maxWidth: effectiveMaxWidth),
         padding: effectivePadding,
         child: child,
       ),
@@ -312,12 +305,7 @@ class ResponsiveText extends StatelessWidget {
 
 /// Виджет для адаптивной иконки
 class ResponsiveIcon extends StatelessWidget {
-  const ResponsiveIcon(
-    this.icon, {
-    super.key,
-    this.color,
-    this.size,
-  });
+  const ResponsiveIcon(this.icon, {super.key, this.color, this.size});
   final IconData icon;
   final Color? color;
   final double? size;
@@ -327,22 +315,13 @@ class ResponsiveIcon extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final effectiveSize = size ?? ResponsiveUtils.getIconSize(screenWidth);
 
-    return Icon(
-      icon,
-      size: effectiveSize,
-      color: color,
-    );
+    return Icon(icon, size: effectiveSize, color: color);
   }
 }
 
 /// Виджет для адаптивного отступа
 class ResponsivePadding extends StatelessWidget {
-  const ResponsivePadding({
-    super.key,
-    required this.child,
-    this.padding,
-    this.multiplier = 1.0,
-  });
+  const ResponsivePadding({super.key, required this.child, this.padding, this.multiplier = 1.0});
   final Widget child;
   final EdgeInsets? padding;
   final double? multiplier;
@@ -353,10 +332,7 @@ class ResponsivePadding extends StatelessWidget {
     final basePadding = ResponsiveUtils.getScreenPadding(screenWidth);
     final effectivePadding = padding ?? basePadding * multiplier!;
 
-    return Padding(
-      padding: effectivePadding,
-      child: child,
-    );
+    return Padding(padding: effectivePadding, child: child);
   }
 }
 

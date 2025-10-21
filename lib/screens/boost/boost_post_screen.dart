@@ -4,12 +4,7 @@ import '../../services/payment_service.dart';
 import '../../widgets/boost/boost_plan_card.dart';
 
 class BoostPostScreen extends ConsumerStatefulWidget {
-  const BoostPostScreen({
-    super.key,
-    required this.postId,
-    required this.postTitle,
-    this.postImage,
-  });
+  const BoostPostScreen({super.key, required this.postId, required this.postTitle, this.postImage});
   final String postId;
   final String postTitle;
   final String? postImage;
@@ -25,275 +20,219 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
   double? _selectedPrice;
 
   // Boost plans: days -> price
-  final Map<int, double> _boostPlans = {
-    1: 199.0,
-    3: 499.0,
-    7: 999.0,
-    14: 1799.0,
-  };
+  final Map<int, double> _boostPlans = {1: 199.0, 3: 499.0, 7: 999.0, 14: 1799.0};
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Продвинуть пост'),
-          backgroundColor: Colors.orange,
-          foregroundColor: Colors.white,
+    appBar: AppBar(
+      title: const Text('Продвинуть пост'),
+      backgroundColor: Colors.orange,
+      foregroundColor: Colors.white,
+    ),
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Post Info
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Colors.orange, Colors.deepOrange],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.white.withValues(alpha: 0.2),
+                  ),
+                  child: widget.postImage != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(widget.postImage!, fit: BoxFit.cover),
+                        )
+                      : const Icon(Icons.image, color: Colors.white, size: 30),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Продвижение поста',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.postTitle,
+                        style: const TextStyle(color: Colors.white70, fontSize: 14),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.trending_up, color: Colors.white, size: 24),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Benefits
+          const Text(
+            'Что даёт продвижение:',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          _buildBenefitItem(
+            Icons.visibility,
+            'Больше просмотров',
+            'Пост будет показываться чаще в ленте',
+          ),
+          _buildBenefitItem(
+            Icons.touch_app,
+            'Больше взаимодействий',
+            'Увеличение лайков, комментариев и репостов',
+          ),
+          _buildBenefitItem(
+            Icons.people,
+            'Новая аудитория',
+            'Достижение пользователей, которые не подписаны',
+          ),
+          _buildBenefitItem(
+            Icons.analytics,
+            'Подробная статистика',
+            'Аналитика показов, кликов и конверсий',
+          ),
+
+          const SizedBox(height: 32),
+
+          // Boost Plans
+          const Text(
+            'Выберите период продвижения:',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+
+          // Boost Plan Cards
+          ..._boostPlans.entries.map((entry) {
+            final days = entry.key;
+            final price = entry.value;
+            final isSelected = _selectedDays == days;
+
+            return BoostPlanCard(
+              days: days,
+              price: price,
+              isSelected: isSelected,
+              onTap: () {
+                setState(() {
+                  _selectedDays = days;
+                  _selectedPrice = price;
+                });
+              },
+            );
+          }),
+
+          const SizedBox(height: 32),
+
+          // Purchase Button
+          SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: _selectedDays != null && !_isLoading ? _processBoost : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: _isLoading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : Text(
+                      'Продвинуть за ${_selectedPrice?.toInt() ?? 0} ₽',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Info
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.blue.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.info, color: Colors.blue, size: 20),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Продвигаемый пост будет отображаться в ленте каждые 5-7 обычных постов '
+                    'с пометкой "Реклама". Статистика показов доступна в профиле.',
+                    style: TextStyle(color: Colors.blue[700], fontSize: 14),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Terms
+          Text(
+            'Продвижение начинается сразу после оплаты. '
+            'Оплата производится через защищенный сервис Stripe.',
+            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildBenefitItem(IconData icon, String title, String description) => Padding(
+    padding: const EdgeInsets.only(bottom: 16),
+    child: Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.orange.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: Colors.orange, size: 24),
         ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+        const SizedBox(width: 16),
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Post Info
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Colors.orange, Colors.deepOrange],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.white.withValues(alpha: 0.2),
-                      ),
-                      child: widget.postImage != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                widget.postImage!,
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : const Icon(
-                              Icons.image,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Продвижение поста',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            widget.postTitle,
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Icon(
-                      Icons.trending_up,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Benefits
-              const Text(
-                'Что даёт продвижение:',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildBenefitItem(
-                Icons.visibility,
-                'Больше просмотров',
-                'Пост будет показываться чаще в ленте',
-              ),
-              _buildBenefitItem(
-                Icons.touch_app,
-                'Больше взаимодействий',
-                'Увеличение лайков, комментариев и репостов',
-              ),
-              _buildBenefitItem(
-                Icons.people,
-                'Новая аудитория',
-                'Достижение пользователей, которые не подписаны',
-              ),
-              _buildBenefitItem(
-                Icons.analytics,
-                'Подробная статистика',
-                'Аналитика показов, кликов и конверсий',
-              ),
-
-              const SizedBox(height: 32),
-
-              // Boost Plans
-              const Text(
-                'Выберите период продвижения:',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Boost Plan Cards
-              ..._boostPlans.entries.map((entry) {
-                final days = entry.key;
-                final price = entry.value;
-                final isSelected = _selectedDays == days;
-
-                return BoostPlanCard(
-                  days: days,
-                  price: price,
-                  isSelected: isSelected,
-                  onTap: () {
-                    setState(() {
-                      _selectedDays = days;
-                      _selectedPrice = price;
-                    });
-                  },
-                );
-              }),
-
-              const SizedBox(height: 32),
-
-              // Purchase Button
-              SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: _selectedDays != null && !_isLoading ? _processBoost : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          'Продвинуть за ${_selectedPrice?.toInt() ?? 0} ₽',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Info
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.info,
-                      color: Colors.blue,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Продвигаемый пост будет отображаться в ленте каждые 5-7 обычных постов '
-                        'с пометкой "Реклама". Статистика показов доступна в профиле.',
-                        style: TextStyle(
-                          color: Colors.blue[700],
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Terms
-              Text(
-                'Продвижение начинается сразу после оплаты. '
-                'Оплата производится через защищенный сервис Stripe.',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
-                textAlign: TextAlign.center,
-              ),
+              Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              Text(description, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
             ],
           ),
         ),
-      );
-
-  Widget _buildBenefitItem(IconData icon, String title, String description) => Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                icon,
-                color: Colors.orange,
-                size: 24,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 
   Future<void> _processBoost() async {
     if (_selectedDays == null || _selectedPrice == null) return;
@@ -371,10 +310,7 @@ class _BoostPostScreenState extends ConsumerState<BoostPostScreen> {
           'Попробуйте еще раз или обратитесь в поддержку.',
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Понятно'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Понятно')),
         ],
       ),
     );

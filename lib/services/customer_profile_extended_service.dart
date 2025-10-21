@@ -88,8 +88,9 @@ class CustomerProfileExtendedService {
         lastUpdated: DateTime.now(),
       );
 
-      final docRef =
-          await _db.collection('customer_profiles_extended').add(extendedProfile.toMap());
+      final docRef = await _db
+          .collection('customer_profiles_extended')
+          .add(extendedProfile.toMap());
 
       return extendedProfile.copyWith(id: docRef.id);
     } catch (e) {
@@ -174,8 +175,9 @@ class CustomerProfileExtendedService {
       }
 
       // Удаляем из профиля
-      final updatedPhotos =
-          profile.inspirationPhotos.where((photo) => photo.id != photoId).toList();
+      final updatedPhotos = profile.inspirationPhotos
+          .where((photo) => photo.id != photoId)
+          .toList();
 
       final updatedProfile = profile.copyWith(inspirationPhotos: updatedPhotos);
       await updateExtendedProfile(updatedProfile);
@@ -280,8 +282,9 @@ class CustomerProfileExtendedService {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
 
-      final updatedFavorites =
-          profile.favoriteSpecialists.where((id) => id != specialistId).toList();
+      final updatedFavorites = profile.favoriteSpecialists
+          .where((id) => id != specialistId)
+          .toList();
 
       final updatedProfile = profile.copyWith(favoriteSpecialists: updatedFavorites);
       await updateExtendedProfile(updatedProfile);
@@ -323,10 +326,7 @@ class CustomerProfileExtendedService {
   }
 
   /// Обновить предпочтения
-  Future<void> updatePreferences(
-    String userId,
-    CustomerPreferences preferences,
-  ) async {
+  Future<void> updatePreferences(String userId, CustomerPreferences preferences) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
@@ -362,10 +362,7 @@ class CustomerProfileExtendedService {
   }
 
   /// Получить фото по тегу
-  Future<List<InspirationPhoto>> getPhotosByTag(
-    String userId,
-    String tag,
-  ) async {
+  Future<List<InspirationPhoto>> getPhotosByTag(String userId, String tag) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];
@@ -399,10 +396,7 @@ class CustomerProfileExtendedService {
   }
 
   /// Поиск по фото
-  Future<List<InspirationPhoto>> searchPhotos(
-    String userId,
-    String query,
-  ) async {
+  Future<List<InspirationPhoto>> searchPhotos(String userId, String query) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];
@@ -460,15 +454,15 @@ class CustomerProfileStats {
   });
 
   factory CustomerProfileStats.empty() => CustomerProfileStats(
-        totalPhotos: 0,
-        publicPhotos: 0,
-        totalNotes: 0,
-        pinnedNotes: 0,
-        favoriteSpecialists: 0,
-        savedEvents: 0,
-        totalTags: 0,
-        lastActivity: DateTime.now(),
-      );
+    totalPhotos: 0,
+    publicPhotos: 0,
+    totalNotes: 0,
+    pinnedNotes: 0,
+    favoriteSpecialists: 0,
+    savedEvents: 0,
+    totalTags: 0,
+    lastActivity: DateTime.now(),
+  );
   final int totalPhotos;
   final int publicPhotos;
   final int totalNotes;

@@ -63,10 +63,7 @@ class DiscountRecommendationService {
   }
 
   /// Отправляет уведомление с рекомендациями по увеличению бюджета
-  Future<void> sendBudgetRecommendation(
-    Booking booking,
-    List<String> suggestions,
-  ) async {
+  Future<void> sendBudgetRecommendation(Booking booking, List<String> suggestions) async {
     if (suggestions.isNotEmpty) {
       await _notificationService.sendNotification(
         booking.customerId,

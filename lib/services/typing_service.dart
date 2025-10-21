@@ -18,22 +18,19 @@ class TypingService {
           .collection('typing')
           .doc(userId)
           .set({
-        'userId': userId,
-        'userName': userName,
-        'isTyping': true,
-        'startedAt': Timestamp.fromDate(DateTime.now()),
-        'lastActivity': Timestamp.fromDate(DateTime.now()),
-      });
+            'userId': userId,
+            'userName': userName,
+            'isTyping': true,
+            'startedAt': Timestamp.fromDate(DateTime.now()),
+            'lastActivity': Timestamp.fromDate(DateTime.now()),
+          });
     } catch (e) {
       debugPrint('Ошибка начала индикации печатания: $e');
     }
   }
 
   /// Остановить индикацию печатания
-  Future<void> stopTyping({
-    required String chatId,
-    required String userId,
-  }) async {
+  Future<void> stopTyping({required String chatId, required String userId}) async {
     try {
       await _firestore
           .collection(_typingCollection)
@@ -47,26 +44,25 @@ class TypingService {
   }
 
   /// Получить поток пользователей, которые печатают
-  Stream<List<TypingUser>> getTypingUsers(String chatId) =>
-      _firestore.collection(_typingCollection).doc(chatId).collection('typing').snapshots().map(
-            (snapshot) =>
-                snapshot.docs.map(TypingUser.fromDocument).where((user) => user.isTyping).toList(),
-          );
+  Stream<List<TypingUser>> getTypingUsers(String chatId) => _firestore
+      .collection(_typingCollection)
+      .doc(chatId)
+      .collection('typing')
+      .snapshots()
+      .map(
+        (snapshot) =>
+            snapshot.docs.map(TypingUser.fromDocument).where((user) => user.isTyping).toList(),
+      );
 
   /// Обновить активность печатания (для поддержания индикации)
-  Future<void> updateTypingActivity({
-    required String chatId,
-    required String userId,
-  }) async {
+  Future<void> updateTypingActivity({required String chatId, required String userId}) async {
     try {
       await _firestore
           .collection(_typingCollection)
           .doc(chatId)
           .collection('typing')
           .doc(userId)
-          .update({
-        'lastActivity': Timestamp.fromDate(DateTime.now()),
-      });
+          .update({'lastActivity': Timestamp.fromDate(DateTime.now())});
     } catch (e) {
       debugPrint('Ошибка обновления активности печатания: $e');
     }

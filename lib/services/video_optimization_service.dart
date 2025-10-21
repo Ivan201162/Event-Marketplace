@@ -29,10 +29,7 @@ class VideoOptimizationService {
         fileSize: fileSize,
         duration: const Duration(), // TODO(developer): Получить реальную длительность
         format: fileExtension,
-        resolution: const Size(
-          1920,
-          1080,
-        ), // TODO(developer): Получить реальное разрешение
+        resolution: const Size(1920, 1080), // TODO(developer): Получить реальное разрешение
       );
     } on Exception catch (e) {
       debugPrint('Ошибка получения информации о видео: $e');
@@ -92,10 +89,7 @@ class VideoOptimizationService {
   }
 
   /// Сохранить видео локально
-  static Future<String> saveVideoLocally(
-    Uint8List videoBytes,
-    String fileName,
-  ) async {
+  static Future<String> saveVideoLocally(Uint8List videoBytes, String fileName) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final videosDir = Directory(path.join(directory.path, 'videos'));
@@ -262,12 +256,7 @@ class VideoInfo {
 
 /// Настройки сжатия видео
 class CompressionSettings {
-  const CompressionSettings({
-    this.maxWidth,
-    this.maxHeight,
-    this.bitrate,
-    this.frameRate,
-  });
+  const CompressionSettings({this.maxWidth, this.maxHeight, this.bitrate, this.frameRate});
   final int? maxWidth;
   final int? maxHeight;
   final int? bitrate;
@@ -354,17 +343,12 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
         // Сохраняем в кэш
         if (widget.enableCaching) {
           final fileName = _getCacheFileName();
-          _localVideoPath = await VideoOptimizationService.saveVideoLocally(
-            videoBytes,
-            fileName,
-          );
+          _localVideoPath = await VideoOptimizationService.saveVideoLocally(videoBytes, fileName);
         }
 
         // Создаем миниатюру
         if (_localVideoPath != null) {
-          _thumbnail = await VideoOptimizationService.createVideoThumbnail(
-            _localVideoPath!,
-          );
+          _thumbnail = await VideoOptimizationService.createVideoThumbnail(_localVideoPath!);
         }
 
         setState(() {
@@ -436,9 +420,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
             width: widget.width,
             height: widget.height,
             color: Colors.grey[300],
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
+            child: const Center(child: CircularProgressIndicator()),
           );
     }
 
@@ -448,9 +430,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
             width: widget.width,
             height: widget.height,
             color: Colors.grey[300],
-            child: const Center(
-              child: Icon(Icons.error),
-            ),
+            child: const Center(child: Icon(Icons.error)),
           );
     }
 
@@ -459,10 +439,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
       child: Container(
         width: widget.width,
         height: widget.height,
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(8),
-        ),
+        decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8)),
         child: Stack(
           children: [
             // Миниатюра или видео
@@ -478,13 +455,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
                 width: widget.width,
                 height: widget.height,
                 color: Colors.grey[800],
-                child: const Center(
-                  child: Icon(
-                    Icons.videocam,
-                    color: Colors.white,
-                    size: 48,
-                  ),
-                ),
+                child: const Center(child: Icon(Icons.videocam, color: Colors.white, size: 48)),
               ),
             // Кнопка воспроизведения
             Center(
@@ -494,11 +465,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
                   color: Colors.black.withValues(alpha: 0.6),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.play_arrow,
-                  color: Colors.white,
-                  size: 32,
-                ),
+                child: const Icon(Icons.play_arrow, color: Colors.white, size: 32),
               ),
             ),
             // Индикатор видео
@@ -514,11 +481,7 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.videocam,
-                      color: Colors.white,
-                      size: 16,
-                    ),
+                    Icon(Icons.videocam, color: Colors.white, size: 16),
                     SizedBox(width: 4),
                     Text(
                       'Видео',
@@ -559,28 +522,26 @@ class VideoThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => OptimizedVideoPlayer(
-        videoUrl: videoUrl,
-        width: size,
-        height: size,
-        fit: fit,
-        placeholder: placeholder ??
-            Container(
-              width: size,
-              height: size,
-              color: Colors.grey[300],
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-        errorWidget: errorWidget ??
-            Container(
-              width: size,
-              height: size,
-              color: Colors.grey[300],
-              child: const Center(
-                child: Icon(Icons.error),
-              ),
-            ),
-        onTap: onTap,
-      );
+    videoUrl: videoUrl,
+    width: size,
+    height: size,
+    fit: fit,
+    placeholder:
+        placeholder ??
+        Container(
+          width: size,
+          height: size,
+          color: Colors.grey[300],
+          child: const Center(child: CircularProgressIndicator()),
+        ),
+    errorWidget:
+        errorWidget ??
+        Container(
+          width: size,
+          height: size,
+          color: Colors.grey[300],
+          child: const Center(child: Icon(Icons.error)),
+        ),
+    onTap: onTap,
+  );
 }

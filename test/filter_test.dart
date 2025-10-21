@@ -31,10 +31,7 @@ void main() {
             now.add(const Duration(days: 2)),
             now.add(const Duration(days: 3)),
           ],
-          busyDates: [
-            now.add(const Duration(days: 4)),
-            now.add(const Duration(days: 5)),
-          ],
+          busyDates: [now.add(const Duration(days: 4)), now.add(const Duration(days: 5))],
         ),
         Specialist(
           id: 'test_2',
@@ -57,10 +54,7 @@ void main() {
             now.add(const Duration(days: 4)),
             now.add(const Duration(days: 6)),
           ],
-          busyDates: [
-            now.add(const Duration(days: 1)),
-            now.add(const Duration(days: 3)),
-          ],
+          busyDates: [now.add(const Duration(days: 1)), now.add(const Duration(days: 3))],
         ),
         Specialist(
           id: 'test_3',
@@ -83,10 +77,7 @@ void main() {
             now.add(const Duration(days: 3)),
             now.add(const Duration(days: 5)),
           ],
-          busyDates: [
-            now.add(const Duration(days: 2)),
-            now.add(const Duration(days: 4)),
-          ],
+          busyDates: [now.add(const Duration(days: 2)), now.add(const Duration(days: 4))],
         ),
       ];
     });
@@ -96,8 +87,9 @@ void main() {
       // В реальном тесте нужно будет использовать моки
 
       // Тестируем фильтр по минимальной цене 4000
-      final filtered =
-          testSpecialists.where((specialist) => (specialist.price ?? 0) >= 4000).toList();
+      final filtered = testSpecialists
+          .where((specialist) => (specialist.price ?? 0) >= 4000)
+          .toList();
 
       expect(filtered.length, 2);
       expect(filtered.every((s) => (s.price ?? 0) >= 4000), true);
@@ -105,8 +97,9 @@ void main() {
 
     test('Фильтр по максимальной цене', () async {
       // Тестируем фильтр по максимальной цене 3500
-      final filtered =
-          testSpecialists.where((specialist) => (specialist.price ?? 0) <= 3500).toList();
+      final filtered = testSpecialists
+          .where((specialist) => (specialist.price ?? 0) <= 3500)
+          .toList();
 
       expect(filtered.length, 1);
       expect(filtered.first.price, 3000.0);
@@ -137,9 +130,7 @@ void main() {
     test('Комбинированный фильтр (цена + рейтинг)', () async {
       // Тестируем комбинированный фильтр
       final filtered = testSpecialists
-          .where(
-            (specialist) => (specialist.price ?? 0) >= 4000 && specialist.rating >= 4.5,
-          )
+          .where((specialist) => (specialist.price ?? 0) >= 4000 && specialist.rating >= 4.5)
           .toList();
 
       expect(filtered.length, 2);
@@ -150,13 +141,11 @@ void main() {
       final busyDate = DateTime.now().add(const Duration(days: 4));
 
       // Тестируем фильтр по занятым датам
-      final filtered =
-          testSpecialists.where((specialist) => !specialist.isDateBusy(busyDate)).toList();
+      final filtered = testSpecialists
+          .where((specialist) => !specialist.isDateBusy(busyDate))
+          .toList();
 
-      expect(
-        filtered.length,
-        1,
-      ); // test_2 не занят в день 4 (test_1 занят, test_3 занят)
+      expect(filtered.length, 1); // test_2 не занят в день 4 (test_1 занят, test_3 занят)
     });
   });
 }

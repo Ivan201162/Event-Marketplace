@@ -7,12 +7,7 @@ class AdvertisementWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onClose;
 
-  const AdvertisementWidget({
-    super.key,
-    required this.advertisement,
-    this.onTap,
-    this.onClose,
-  });
+  const AdvertisementWidget({super.key, required this.advertisement, this.onTap, this.onClose});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +16,7 @@ class AdvertisementWidget extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.blue.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,29 +33,17 @@ class AdvertisementWidget extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.campaign,
-                    color: Colors.blue,
-                    size: 16,
-                  ),
+                  const Icon(Icons.campaign, color: Colors.blue, size: 16),
                   const SizedBox(width: 8),
                   const Text(
                     'Реклама',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 12),
                   ),
                   const Spacer(),
                   if (onClose != null)
                     GestureDetector(
                       onTap: onClose,
-                      child: const Icon(
-                        Icons.close,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
+                      child: const Icon(Icons.close, color: Colors.grey, size: 16),
                     ),
                 ],
               ),
@@ -84,9 +65,9 @@ class AdvertisementWidget extends StatelessWidget {
                     if (advertisement.title != null) ...[
                       Text(
                         advertisement.title!,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                     ],
@@ -95,9 +76,9 @@ class AdvertisementWidget extends StatelessWidget {
                     if (advertisement.description != null) ...[
                       Text(
                         advertisement.description!,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 8),
                     ],
@@ -116,11 +97,7 @@ class AdvertisementWidget extends StatelessWidget {
                               width: double.infinity,
                               height: 200,
                               color: Colors.grey[300],
-                              child: const Icon(
-                                Icons.image,
-                                color: Colors.grey,
-                                size: 48,
-                              ),
+                              child: const Icon(Icons.image, color: Colors.grey, size: 48),
                             );
                           },
                         ),
@@ -140,29 +117,19 @@ class AdvertisementWidget extends StatelessWidget {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            const Icon(
-                              Icons.play_circle_filled,
-                              color: Colors.white,
-                              size: 64,
-                            ),
+                            const Icon(Icons.play_circle_filled, color: Colors.white, size: 64),
                             Positioned(
                               bottom: 8,
                               right: 8,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Colors.black.withValues(alpha: 0.7),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: const Text(
                                   'Видео',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
+                                  style: TextStyle(color: Colors.white, fontSize: 12),
                                 ),
                               ),
                             ),
@@ -184,10 +151,7 @@ class AdvertisementWidget extends StatelessWidget {
                         child: const Text(
                           'Подробнее',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -228,16 +192,11 @@ class AdvertisementBannerWidget extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               gradient: LinearGradient(
-                colors: [
-                  Colors.blue.withValues(alpha: 0.1),
-                  Colors.blue.withValues(alpha: 0.05),
-                ],
+                colors: [Colors.blue.withValues(alpha: 0.1), Colors.blue.withValues(alpha: 0.05)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              border: Border.all(
-                color: Colors.blue.withValues(alpha: 0.3),
-              ),
+              border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
             ),
             child: Stack(
               children: [
@@ -254,11 +213,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                           color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(
-                          Icons.campaign,
-                          color: Colors.blue,
-                          size: 24,
-                        ),
+                        child: const Icon(Icons.campaign, color: Colors.blue, size: 24),
                       ),
                       const SizedBox(width: 12),
 
@@ -270,9 +225,9 @@ class AdvertisementBannerWidget extends StatelessWidget {
                           children: [
                             Text(
                               advertisement.title ?? 'Реклама',
-                              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -280,9 +235,9 @@ class AdvertisementBannerWidget extends StatelessWidget {
                               const SizedBox(height: 2),
                               Text(
                                 advertisement.description!,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.grey[600],
-                                    ),
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -292,11 +247,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                       ),
 
                       // Стрелка
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.blue,
-                        size: 16,
-                      ),
+                      const Icon(Icons.arrow_forward_ios, color: Colors.blue, size: 16),
                     ],
                   ),
                 ),
@@ -315,11 +266,7 @@ class AdvertisementBannerWidget extends StatelessWidget {
                           color: Colors.grey.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 16,
-                        ),
+                        child: const Icon(Icons.close, color: Colors.white, size: 16),
                       ),
                     ),
                   ),

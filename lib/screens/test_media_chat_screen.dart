@@ -157,9 +157,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
               children: [
                 Text(
                   'Тестирование медиафункций чата',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -177,26 +175,16 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.chat_bubble_outline,
-                          size: 64,
-                          color: Colors.grey[400],
-                        ),
+                        Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[400]),
                         const SizedBox(height: 16),
                         Text(
                           'Нет сообщений',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[600],
-                          ),
+                          style: TextStyle(fontSize: 18, color: Colors.grey[600]),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Нажмите "Создать тестовые сообщения" или отправьте новое',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[500],
-                          ),
+                          style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -234,11 +222,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        border: Border(
-          top: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.2),
-          ),
-        ),
+        border: Border(top: BorderSide(color: theme.colorScheme.outline.withValues(alpha: 0.2))),
       ),
       child: Row(
         children: [
@@ -261,13 +245,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
               controller: _messageController,
               decoration: InputDecoration(
                 hintText: 'Введите сообщение...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
               maxLines: null,
               onSubmitted: (_) => _sendTextMessage(),
@@ -277,10 +256,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
           const SizedBox(width: 8),
 
           // Кнопка отправки
-          FloatingActionButton.small(
-            onPressed: _sendTextMessage,
-            child: const Icon(Icons.send),
-          ),
+          FloatingActionButton.small(onPressed: _sendTextMessage, child: const Icon(Icons.send)),
         ],
       ),
     );
@@ -315,10 +291,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => MediaAttachmentWidget(
-        onMediaSelected: _handleMediaSelected,
-        onError: _showErrorSnackBar,
-      ),
+      builder: (context) =>
+          MediaAttachmentWidget(onMediaSelected: _handleMediaSelected, onError: _showErrorSnackBar),
     );
   }
 
@@ -339,10 +313,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         fileType: mediaResult.fileType,
         fileSize: mediaResult.fileSize,
         thumbnailUrl: mediaResult.thumbnailUrl,
-        metadata: {
-          'storagePath': mediaResult.storagePath,
-          'mediaType': mediaResult.mediaType.name,
-        },
+        metadata: {'storagePath': mediaResult.storagePath, 'mediaType': mediaResult.mediaType.name},
         status: MessageStatus.sent,
         timestamp: DateTime.now(),
       );
@@ -424,9 +395,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
                   child: Image.network(
                     imageUrl,
                     fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => const Center(
-                      child: Icon(Icons.broken_image, size: 64),
-                    ),
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Center(child: Icon(Icons.broken_image, size: 64)),
                   ),
                 ),
               ),
@@ -453,10 +423,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -478,10 +445,7 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -501,16 +465,11 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
             const SizedBox(height: 16),
             Text('URL: ${message.fileUrl}'),
             const SizedBox(height: 16),
-            const Text(
-              'В реальном приложении здесь будет возможность скачать файл',
-            ),
+            const Text('В реальном приложении здесь будет возможность скачать файл'),
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -533,20 +492,14 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
   }
 
   void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 }

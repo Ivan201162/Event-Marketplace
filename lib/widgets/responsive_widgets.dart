@@ -79,20 +79,11 @@ class ResponsiveUtils {
 }
 
 /// Типы экранов
-enum ScreenType {
-  mobile,
-  tablet,
-  desktop,
-}
+enum ScreenType { mobile, tablet, desktop }
 
 /// Адаптивный виджет, который изменяет свой контент в зависимости от размера экрана
 class ResponsiveWidget extends StatelessWidget {
-  const ResponsiveWidget({
-    super.key,
-    required this.mobile,
-    this.tablet,
-    this.desktop,
-  });
+  const ResponsiveWidget({super.key, required this.mobile, this.tablet, this.desktop});
 
   final Widget mobile;
   final Widget? tablet;
@@ -272,13 +263,7 @@ class ResponsiveText extends StatelessWidget {
         break;
     }
 
-    return Text(
-      text,
-      style: style,
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
-    );
+    return Text(text, style: style, textAlign: textAlign, maxLines: maxLines, overflow: overflow);
   }
 }
 
@@ -330,10 +315,7 @@ class ResponsiveButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: style,
-      child: Padding(
-        padding: padding ?? EdgeInsets.zero,
-        child: child,
-      ),
+      child: Padding(padding: padding ?? EdgeInsets.zero, child: child),
     );
   }
 }
@@ -459,32 +441,23 @@ class ResponsiveCard extends StatelessWidget {
       elevation: elevation,
       margin: margin,
       shape: borderRadius != null ? RoundedRectangleBorder(borderRadius: borderRadius) : null,
-      child: Padding(
-        padding: padding ?? EdgeInsets.zero,
-        child: child,
-      ),
+      child: Padding(padding: padding ?? EdgeInsets.zero, child: child),
     );
   }
 }
 
 /// Адаптивный LayoutBuilder
 class ResponsiveLayoutBuilder extends StatelessWidget {
-  const ResponsiveLayoutBuilder({
-    super.key,
-    required this.builder,
-  });
+  const ResponsiveLayoutBuilder({super.key, required this.builder});
 
-  final Widget Function(
-    BuildContext context,
-    ScreenType screenType,
-    BoxConstraints constraints,
-  ) builder;
+  final Widget Function(BuildContext context, ScreenType screenType, BoxConstraints constraints)
+  builder;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-        builder: (context, constraints) {
-          final screenType = ResponsiveUtils.getScreenType(context);
-          return builder(context, screenType, constraints);
-        },
-      );
+    builder: (context, constraints) {
+      final screenType = ResponsiveUtils.getScreenType(context);
+      return builder(context, screenType, constraints);
+    },
+  );
 }

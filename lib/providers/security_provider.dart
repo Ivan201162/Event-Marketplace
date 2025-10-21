@@ -16,8 +16,8 @@ final securityStatsProvider = FutureProvider<SecurityStats>(
 /// Провайдер для валидации пароля
 final passwordValidationProvider =
     NotifierProvider<PasswordValidationNotifier, PasswordValidationState>(
-  (ref) => PasswordValidationNotifier(),
-);
+      (ref) => PasswordValidationNotifier(),
+    );
 
 /// Состояние безопасности
 class SecurityState {
@@ -40,14 +40,13 @@ class SecurityState {
     String? error,
     DateTime? lastUpdate,
     bool? hasEncryptionKey,
-  }) =>
-      SecurityState(
-        isEncryptionEnabled: isEncryptionEnabled ?? this.isEncryptionEnabled,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-        lastUpdate: lastUpdate ?? this.lastUpdate,
-        hasEncryptionKey: hasEncryptionKey ?? this.hasEncryptionKey,
-      );
+  }) => SecurityState(
+    isEncryptionEnabled: isEncryptionEnabled ?? this.isEncryptionEnabled,
+    isLoading: isLoading ?? this.isLoading,
+    error: error ?? this.error,
+    lastUpdate: lastUpdate ?? this.lastUpdate,
+    hasEncryptionKey: hasEncryptionKey ?? this.hasEncryptionKey,
+  );
 
   /// Получить статус безопасности
   String get securityStatus {
@@ -82,13 +81,12 @@ class PasswordValidationState {
     PasswordValidation? validation,
     bool? isVisible,
     String? error,
-  }) =>
-      PasswordValidationState(
-        password: password ?? this.password,
-        validation: validation ?? this.validation,
-        isVisible: isVisible ?? this.isVisible,
-        error: error ?? this.error,
-      );
+  }) => PasswordValidationState(
+    password: password ?? this.password,
+    validation: validation ?? this.validation,
+    isVisible: isVisible ?? this.isVisible,
+    error: error ?? this.error,
+  );
 
   /// Получить цвет силы пароля
   int get strengthColor {
@@ -145,10 +143,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
       await SecureStorageService.enableEncryption();
       await _updateSecurityStatus();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -160,10 +155,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
       await SecureStorageService.disableEncryption();
       await _updateSecurityStatus();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -175,10 +167,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
       await SecureStorageService.updateEncryptionKey();
       await _updateSecurityStatus();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -190,10 +179,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
       await SecureStorageService.clearAllSecure();
       await _updateSecurityStatus();
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -215,10 +201,7 @@ class PasswordValidationNotifier extends Notifier<PasswordValidationState> {
   /// Обновить пароль
   void updatePassword(String password) {
     final validation = EncryptionService.validatePassword(password);
-    state = state.copyWith(
-      password: password,
-      validation: validation,
-    );
+    state = state.copyWith(password: password, validation: validation);
   }
 
   /// Переключить видимость пароля
@@ -228,9 +211,7 @@ class PasswordValidationNotifier extends Notifier<PasswordValidationState> {
 
   /// Очистить пароль
   void clearPassword() {
-    state = state.copyWith(
-      password: '',
-    );
+    state = state.copyWith(password: '');
   }
 
   /// Установить ошибку
@@ -306,25 +287,15 @@ class DataSecurityChecker {
           'Периодическое обновление ключей',
         ];
       case SecurityLevel.medium:
-        return [
-          'Опциональное шифрование',
-          'Базовые меры безопасности',
-        ];
+        return ['Опциональное шифрование', 'Базовые меры безопасности'];
       case SecurityLevel.low:
-        return [
-          'Стандартные меры безопасности',
-        ];
+        return ['Стандартные меры безопасности'];
     }
   }
 }
 
 /// Уровни безопасности
-enum SecurityLevel {
-  low,
-  medium,
-  high,
-  critical,
-}
+enum SecurityLevel { low, medium, high, critical }
 
 /// Провайдер для генерации безопасных токенов
 final secureTokenProvider = Provider<SecureTokenGenerator>((ref) => SecureTokenGenerator());

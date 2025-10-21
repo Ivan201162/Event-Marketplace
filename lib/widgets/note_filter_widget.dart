@@ -3,11 +3,7 @@ import '../providers/customer_profile_extended_providers.dart';
 
 /// Виджет фильтрации заметок
 class NoteFilterWidget extends StatefulWidget {
-  const NoteFilterWidget({
-    super.key,
-    required this.currentFilters,
-    required this.onFiltersChanged,
-  });
+  const NoteFilterWidget({super.key, required this.currentFilters, required this.onFiltersChanged});
   final NoteFilters currentFilters;
   final Function(NoteFilters) onFiltersChanged;
 
@@ -46,171 +42,150 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
 
   @override
   Widget build(BuildContext context) => Dialog(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
-          child: Column(
-            children: [
-              AppBar(
-                title: const Text('Фильтры заметок'),
-                actions: [
-                  TextButton(
-                    onPressed: _clearFilters,
-                    child: const Text('Сбросить'),
-                  ),
-                  TextButton(
-                    onPressed: _applyFilters,
-                    child: const Text('Применить'),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Поиск
-                      TextField(
-                        controller: _searchController,
-                        decoration: const InputDecoration(
-                          labelText: 'Поиск',
-                          hintText: 'Поиск по заголовку, содержимому или тегам',
-                          prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Закреплённые заметки
-                      SwitchListTile(
-                        title: const Text('Только закреплённые заметки'),
-                        subtitle: const Text('Показать только важные заметки'),
-                        value: _showPinnedOnly,
-                        onChanged: (value) {
-                          setState(() {
-                            _showPinnedOnly = value;
-                          });
-                        },
-                      ),
-
-                      const Divider(),
-
-                      // Фильтр по дате
-                      SwitchListTile(
-                        title: const Text('Фильтр по дате'),
-                        subtitle: const Text(
-                          'Показать заметки за определённый период',
-                        ),
-                        value: _showByDate,
-                        onChanged: (value) {
-                          setState(() {
-                            _showByDate = value;
-                          });
-                        },
-                      ),
-
-                      if (_showByDate) ...[
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ListTile(
-                                title: const Text('От'),
-                                subtitle: Text(
-                                  _fromDate != null
-                                      ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
-                                      : 'Не выбрано',
-                                ),
-                                trailing: const Icon(Icons.calendar_today),
-                                onTap: _selectFromDate,
-                              ),
-                            ),
-                            Expanded(
-                              child: ListTile(
-                                title: const Text('До'),
-                                subtitle: Text(
-                                  _toDate != null
-                                      ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
-                                      : 'Не выбрано',
-                                ),
-                                trailing: const Icon(Icons.calendar_today),
-                                onTap: _selectToDate,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-
-                      const Divider(),
-
-                      // Связь с событиями и специалистами
-                      const Text(
-                        'Связь с объектами',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-
-                      ListTile(
-                        leading: const Icon(Icons.event),
-                        title: const Text('Связанные с событием'),
-                        subtitle: Text(
-                          _eventId != null ? 'ID: $_eventId' : 'Все заметки',
-                        ),
-                        trailing: _eventId != null
-                            ? IconButton(
-                                icon: const Icon(Icons.clear),
-                                onPressed: () {
-                                  setState(() {
-                                    _eventId = null;
-                                  });
-                                },
-                              )
-                            : const Icon(Icons.arrow_forward_ios),
-                        onTap: _selectEvent,
-                      ),
-
-                      ListTile(
-                        leading: const Icon(Icons.person),
-                        title: const Text('Связанные со специалистом'),
-                        subtitle: Text(
-                          _specialistId != null ? 'ID: $_specialistId' : 'Все заметки',
-                        ),
-                        trailing: _specialistId != null
-                            ? IconButton(
-                                icon: const Icon(Icons.clear),
-                                onPressed: () {
-                                  setState(() {
-                                    _specialistId = null;
-                                  });
-                                },
-                              )
-                            : const Icon(Icons.arrow_forward_ios),
-                        onTap: _selectSpecialist,
-                      ),
-
-                      const Divider(),
-
-                      // Теги
-                      const Text(
-                        'Теги',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildTagFilters(),
-                    ],
-                  ),
-                ),
-              ),
+    child: Container(
+      constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
+      child: Column(
+        children: [
+          AppBar(
+            title: const Text('Фильтры заметок'),
+            actions: [
+              TextButton(onPressed: _clearFilters, child: const Text('Сбросить')),
+              TextButton(onPressed: _applyFilters, child: const Text('Применить')),
             ],
           ),
-        ),
-      );
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Поиск
+                  TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Поиск',
+                      hintText: 'Поиск по заголовку, содержимому или тегам',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Закреплённые заметки
+                  SwitchListTile(
+                    title: const Text('Только закреплённые заметки'),
+                    subtitle: const Text('Показать только важные заметки'),
+                    value: _showPinnedOnly,
+                    onChanged: (value) {
+                      setState(() {
+                        _showPinnedOnly = value;
+                      });
+                    },
+                  ),
+
+                  const Divider(),
+
+                  // Фильтр по дате
+                  SwitchListTile(
+                    title: const Text('Фильтр по дате'),
+                    subtitle: const Text('Показать заметки за определённый период'),
+                    value: _showByDate,
+                    onChanged: (value) {
+                      setState(() {
+                        _showByDate = value;
+                      });
+                    },
+                  ),
+
+                  if (_showByDate) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ListTile(
+                            title: const Text('От'),
+                            subtitle: Text(
+                              _fromDate != null
+                                  ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
+                                  : 'Не выбрано',
+                            ),
+                            trailing: const Icon(Icons.calendar_today),
+                            onTap: _selectFromDate,
+                          ),
+                        ),
+                        Expanded(
+                          child: ListTile(
+                            title: const Text('До'),
+                            subtitle: Text(
+                              _toDate != null
+                                  ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
+                                  : 'Не выбрано',
+                            ),
+                            trailing: const Icon(Icons.calendar_today),
+                            onTap: _selectToDate,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+
+                  const Divider(),
+
+                  // Связь с событиями и специалистами
+                  const Text(
+                    'Связь с объектами',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+
+                  ListTile(
+                    leading: const Icon(Icons.event),
+                    title: const Text('Связанные с событием'),
+                    subtitle: Text(_eventId != null ? 'ID: $_eventId' : 'Все заметки'),
+                    trailing: _eventId != null
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              setState(() {
+                                _eventId = null;
+                              });
+                            },
+                          )
+                        : const Icon(Icons.arrow_forward_ios),
+                    onTap: _selectEvent,
+                  ),
+
+                  ListTile(
+                    leading: const Icon(Icons.person),
+                    title: const Text('Связанные со специалистом'),
+                    subtitle: Text(_specialistId != null ? 'ID: $_specialistId' : 'Все заметки'),
+                    trailing: _specialistId != null
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              setState(() {
+                                _specialistId = null;
+                              });
+                            },
+                          )
+                        : const Icon(Icons.arrow_forward_ios),
+                    onTap: _selectSpecialist,
+                  ),
+
+                  const Divider(),
+
+                  // Теги
+                  const Text('Теги', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  _buildTagFilters(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 
   Widget _buildTagFilters() {
     // Предустановленные теги для фильтрации
@@ -332,18 +307,14 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
   void _selectEvent() {
     // TODO(developer): Реализовать выбор события из списка
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Выбор события будет добавлен в следующей версии'),
-      ),
+      const SnackBar(content: Text('Выбор события будет добавлен в следующей версии')),
     );
   }
 
   void _selectSpecialist() {
     // TODO(developer): Реализовать выбор специалиста из списка
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Выбор специалиста будет добавлен в следующей версии'),
-      ),
+      const SnackBar(content: Text('Выбор специалиста будет добавлен в следующей версии')),
     );
   }
 

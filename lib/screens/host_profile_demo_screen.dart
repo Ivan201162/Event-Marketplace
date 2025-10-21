@@ -22,9 +22,7 @@ class HostProfileDemoScreen extends StatelessWidget {
           children: [
             Text(
               'Тестирование страницы профиля ведущего',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
 
@@ -45,9 +43,7 @@ class HostProfileDemoScreen extends StatelessWidget {
                 },
                 icon: const Icon(Icons.person),
                 label: const Text('Открыть профиль ведущего'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
+                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
               ),
             ),
 
@@ -59,34 +55,21 @@ class HostProfileDemoScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: theme.colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                ),
+                border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Mock-данные ведущего:',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   _buildMockInfoRow('Имя', MockHostData.sampleHost.fullName),
                   _buildMockInfoRow('Город', MockHostData.sampleHost.city),
-                  _buildMockInfoRow(
-                    'Рейтинг',
-                    '${MockHostData.sampleHost.rating}/5.0',
-                  ),
-                  _buildMockInfoRow(
-                    'Отзывы',
-                    '${MockHostData.sampleHost.totalReviews}',
-                  ),
-                  _buildMockInfoRow(
-                    'Цена',
-                    MockHostData.sampleHost.priceRangeText,
-                  ),
+                  _buildMockInfoRow('Рейтинг', '${MockHostData.sampleHost.rating}/5.0'),
+                  _buildMockInfoRow('Отзывы', '${MockHostData.sampleHost.totalReviews}'),
+                  _buildMockInfoRow('Цена', MockHostData.sampleHost.priceRangeText),
                   _buildMockInfoRow(
                     'Категории',
                     MockHostData.sampleHost.eventCategories.join(', '),
@@ -107,20 +90,14 @@ class HostProfileDemoScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.orange.withValues(alpha: 0.3),
-                ),
+                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      const Icon(
-                        Icons.info_outline,
-                        color: Colors.orange,
-                        size: 20,
-                      ),
+                      const Icon(Icons.info_outline, color: Colors.orange, size: 20),
                       const SizedBox(width: 8),
                       Text(
                         'TODO: Интеграция с реальными данными',
@@ -139,9 +116,7 @@ class HostProfileDemoScreen extends StatelessWidget {
                     '• Добавить чат с ведущим\n'
                     '• Реализовать добавление в избранное\n'
                     '• Добавить шаринг профиля',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: Colors.orange.shade700,
-                    ),
+                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.orange.shade700),
                   ),
                 ],
               ),
@@ -153,29 +128,21 @@ class HostProfileDemoScreen extends StatelessWidget {
   }
 
   Widget _buildMockInfoRow(String label, String value) => Padding(
-        padding: const EdgeInsets.only(bottom: 4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 100,
-              child: Text(
-                '$label:',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                value,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 100,
+          child: Text(
+            '$label:',
+            style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.grey),
+          ),
         ),
-      );
+        Expanded(
+          child: Text(value, style: const TextStyle(fontWeight: FontWeight.w400)),
+        ),
+      ],
+    ),
+  );
 }

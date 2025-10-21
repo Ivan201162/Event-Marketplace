@@ -235,10 +235,12 @@ class ServicePrice {
       duration: data['duration'] as String?,
       includedServices: List<String>.from(data['includedServices'] ?? []),
       isActive: data['isActive'] as bool? ?? true,
-      createdAt:
-          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-      updatedAt:
-          data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 
@@ -254,16 +256,16 @@ class ServicePrice {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'serviceName': serviceName,
-        'price': price,
-        'description': description,
-        'duration': duration,
-        'includedServices': includedServices,
-        'isActive': isActive,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'specialistId': specialistId,
+    'serviceName': serviceName,
+    'price': price,
+    'description': description,
+    'duration': duration,
+    'includedServices': includedServices,
+    'isActive': isActive,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+  };
 }
 
 /// Модель шаблона цен
@@ -287,14 +289,14 @@ class ServicePriceTemplate {
       ),
       name: data['name'] as String? ?? '',
       description: data['description'] as String? ?? '',
-      services: (data['services'] as List<dynamic>?)
-              ?.map(
-                (e) => TemplateService.fromMap(Map<String, dynamic>.from(e)),
-              )
+      services:
+          (data['services'] as List<dynamic>?)
+              ?.map((e) => TemplateService.fromMap(Map<String, dynamic>.from(e)))
               .toList() ??
           [],
-      createdAt:
-          data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
     );
   }
 
@@ -317,12 +319,12 @@ class TemplateService {
   });
 
   factory TemplateService.fromMap(Map<String, dynamic> data) => TemplateService(
-        name: data['name'] as String? ?? '',
-        price: (data['price'] as num?)?.toDouble() ?? 0.0,
-        description: data['description'] as String?,
-        duration: data['duration'] as String?,
-        includedServices: List<String>.from(data['includedServices'] ?? []),
-      );
+    name: data['name'] as String? ?? '',
+    price: (data['price'] as num?)?.toDouble() ?? 0.0,
+    description: data['description'] as String?,
+    duration: data['duration'] as String?,
+    includedServices: List<String>.from(data['includedServices'] ?? []),
+  );
 
   final String name;
   final double price;
@@ -331,10 +333,10 @@ class TemplateService {
   final List<String> includedServices;
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'price': price,
-        'description': description,
-        'duration': duration,
-        'includedServices': includedServices,
-      };
+    'name': name,
+    'price': price,
+    'description': description,
+    'duration': duration,
+    'includedServices': includedServices,
+  };
 }

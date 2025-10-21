@@ -2,13 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 /// Request status
-enum RequestStatus {
-  pending,
-  accepted,
-  rejected,
-  completed,
-  cancelled,
-}
+enum RequestStatus { pending, accepted, rejected, completed, cancelled }
 
 /// Request model for event requests
 class Request extends Equatable {
@@ -85,8 +79,9 @@ class Request extends Equatable {
       location: data['location'],
       requirements: List<String>.from(data['requirements'] ?? []),
       notes: data['notes'],
-      responseDate:
-          data['responseDate'] != null ? (data['responseDate'] as Timestamp).toDate() : null,
+      responseDate: data['responseDate'] != null
+          ? (data['responseDate'] as Timestamp).toDate()
+          : null,
     );
   }
 
@@ -287,28 +282,28 @@ class Request extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        fromUserId,
-        toUserId,
-        city,
-        date,
-        budget,
-        category,
-        status,
-        createdAt,
-        updatedAt,
-        description,
-        fromUserName,
-        fromUserAvatarUrl,
-        toUserName,
-        toUserAvatarUrl,
-        eventType,
-        guestCount,
-        location,
-        requirements,
-        notes,
-        responseDate,
-      ];
+    id,
+    fromUserId,
+    toUserId,
+    city,
+    date,
+    budget,
+    category,
+    status,
+    createdAt,
+    updatedAt,
+    description,
+    fromUserName,
+    fromUserAvatarUrl,
+    toUserName,
+    toUserAvatarUrl,
+    eventType,
+    guestCount,
+    location,
+    requirements,
+    notes,
+    responseDate,
+  ];
 
   @override
   String toString() {

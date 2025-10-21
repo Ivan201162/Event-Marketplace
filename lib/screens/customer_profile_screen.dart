@@ -11,11 +11,7 @@ import '../widgets/profile_header.dart';
 
 /// Экран профиля заказчика
 class CustomerProfileScreen extends ConsumerStatefulWidget {
-  const CustomerProfileScreen({
-    super.key,
-    required this.userId,
-    this.isOwnProfile = false,
-  });
+  const CustomerProfileScreen({super.key, required this.userId, this.isOwnProfile = false});
   final String userId;
   final bool isOwnProfile;
 
@@ -65,313 +61,249 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
   }
 
   Widget _buildProfileContent(UserProfile profile) => NestedScrollView(
-        controller: _scrollController,
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          _buildSliverAppBar(profile),
-          _buildProfileHeader(profile),
-          _buildStatsSection(profile),
-          _buildTabBar(),
-        ],
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            BookingHistory(userId: widget.userId),
-            FavoriteSpecialists(userId: widget.userId),
-            _buildAnniversariesTab(profile),
-            _buildSettingsTab(profile),
-          ],
-        ),
-      );
+    controller: _scrollController,
+    headerSliverBuilder: (context, innerBoxIsScrolled) => [
+      _buildSliverAppBar(profile),
+      _buildProfileHeader(profile),
+      _buildStatsSection(profile),
+      _buildTabBar(),
+    ],
+    body: TabBarView(
+      controller: _tabController,
+      children: [
+        BookingHistory(userId: widget.userId),
+        FavoriteSpecialists(userId: widget.userId),
+        _buildAnniversariesTab(profile),
+        _buildSettingsTab(profile),
+      ],
+    ),
+  );
 
   Widget _buildSliverAppBar(UserProfile profile) => SliverAppBar(
-        expandedHeight: 200,
-        pinned: true,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        flexibleSpace: FlexibleSpaceBar(
-          background: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Theme.of(context).primaryColor,
-                  Theme.of(context).primaryColor.withValues(alpha: 0.7),
-                  Theme.of(context).colorScheme.secondary,
-                ],
-              ),
-            ),
-            child: Stack(
-              children: [
-                // Обложка профиля
-                if (profile.coverUrl.isNotEmpty)
-                  Positioned.fill(
-                    child: CachedNetworkImage(
-                      imageUrl: profile.coverUrl,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                      ),
-                    ),
-                  ),
-                // Градиент поверх обложки
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withValues(alpha: 0.3),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    expandedHeight: 200,
+    pinned: true,
+    elevation: 0,
+    backgroundColor: Colors.transparent,
+    flexibleSpace: FlexibleSpaceBar(
+      background: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor.withValues(alpha: 0.7),
+              Theme.of(context).colorScheme.secondary,
+            ],
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        actions: [
-          if (widget.isOwnProfile) ...[
-            IconButton(
-              icon: const Icon(Icons.edit, color: Colors.white),
-              onPressed: () => _editProfile(profile),
-            ),
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.white),
-              onPressed: () => _showProfileMenu(profile),
-            ),
-          ] else ...[
-            IconButton(
-              icon: const Icon(Icons.share, color: Colors.white),
-              onPressed: () => _shareProfile(profile),
-            ),
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.white),
-              onPressed: () => _showProfileMenu(profile),
+        child: Stack(
+          children: [
+            // Обложка профиля
+            if (profile.coverUrl.isNotEmpty)
+              Positioned.fill(
+                child: CachedNetworkImage(
+                  imageUrl: profile.coverUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) =>
+                      Container(color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
+                  errorWidget: (context, url, error) =>
+                      Container(color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
+                ),
+              ),
+            // Градиент поверх обложки
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.transparent, Colors.black.withValues(alpha: 0.3)],
+                  ),
+                ),
+              ),
             ),
           ],
-        ],
-      );
+        ),
+      ),
+    ),
+    leading: IconButton(
+      icon: const Icon(Icons.arrow_back, color: Colors.white),
+      onPressed: () => Navigator.of(context).pop(),
+    ),
+    actions: [
+      if (widget.isOwnProfile) ...[
+        IconButton(
+          icon: const Icon(Icons.edit, color: Colors.white),
+          onPressed: () => _editProfile(profile),
+        ),
+        IconButton(
+          icon: const Icon(Icons.more_vert, color: Colors.white),
+          onPressed: () => _showProfileMenu(profile),
+        ),
+      ] else ...[
+        IconButton(
+          icon: const Icon(Icons.share, color: Colors.white),
+          onPressed: () => _shareProfile(profile),
+        ),
+        IconButton(
+          icon: const Icon(Icons.more_vert, color: Colors.white),
+          onPressed: () => _showProfileMenu(profile),
+        ),
+      ],
+    ],
+  );
 
   Widget _buildProfileHeader(UserProfile profile) => SliverToBoxAdapter(
-        child: ProfileHeader(
-          profile: profile,
-          isOwnProfile: widget.isOwnProfile,
-          onFollow: () => _toggleFollow(profile),
-          onMessage: () => _sendMessage(profile),
-        ),
-      );
+    child: ProfileHeader(
+      profile: profile,
+      isOwnProfile: widget.isOwnProfile,
+      onFollow: () => _toggleFollow(profile),
+      onMessage: () => _sendMessage(profile),
+    ),
+  );
 
-  Widget _buildStatsSection(UserProfile profile) => SliverToBoxAdapter(
-        child: CustomerStats(userId: widget.userId),
-      );
+  Widget _buildStatsSection(UserProfile profile) =>
+      SliverToBoxAdapter(child: CustomerStats(userId: widget.userId));
 
   Widget _buildTabBar() => SliverPersistentHeader(
-        pinned: true,
-        delegate: _TabBarDelegate(
-          TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(icon: Icon(Icons.history), text: 'Заказы'),
-              Tab(icon: Icon(Icons.favorite), text: 'Избранные'),
-              Tab(icon: Icon(Icons.event), text: 'Годовщины'),
-              Tab(icon: Icon(Icons.settings), text: 'Настройки'),
-            ],
-            labelColor: Theme.of(context).primaryColor,
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: Theme.of(context).primaryColor,
-          ),
-        ),
-      );
+    pinned: true,
+    delegate: _TabBarDelegate(
+      TabBar(
+        controller: _tabController,
+        tabs: const [
+          Tab(icon: Icon(Icons.history), text: 'Заказы'),
+          Tab(icon: Icon(Icons.favorite), text: 'Избранные'),
+          Tab(icon: Icon(Icons.event), text: 'Годовщины'),
+          Tab(icon: Icon(Icons.settings), text: 'Настройки'),
+        ],
+        labelColor: Theme.of(context).primaryColor,
+        unselectedLabelColor: Colors.grey,
+        indicatorColor: Theme.of(context).primaryColor,
+      ),
+    ),
+  );
 
   Widget _buildAnniversariesTab(UserProfile profile) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.event,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Годовщины и напоминания',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Здесь будут отображаться важные даты\nи напоминания о событиях',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-              textAlign: TextAlign.center,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.event, size: 64, color: Colors.grey[400]),
+        const SizedBox(height: 16),
+        Text('Годовщины и напоминания', style: Theme.of(context).textTheme.headlineSmall),
+        const SizedBox(height: 8),
+        Text(
+          'Здесь будут отображаться важные даты\nи напоминания о событиях',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildSettingsTab(UserProfile profile) => ListView(
+    padding: const EdgeInsets.all(16),
+    children: [
+      _buildSettingsSection('Профиль', [
+        _buildSettingsItem(Icons.person, 'Редактировать профиль', () => _editProfile(profile)),
+        _buildSettingsItem(Icons.notifications, 'Уведомления', _openNotificationsSettings),
+        _buildSettingsItem(Icons.privacy_tip, 'Приватность', _openPrivacySettings),
+      ]),
+      const SizedBox(height: 24),
+      _buildSettingsSection('Приложение', [
+        _buildSettingsItem(Icons.help, 'Помощь', _openHelp),
+        _buildSettingsItem(Icons.info, 'О приложении', _openAbout),
+        _buildSettingsItem(Icons.logout, 'Выйти', _logout, isDestructive: true),
+      ]),
+    ],
+  );
+
+  Widget _buildSettingsSection(String title, List<Widget> items) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.only(left: 16, bottom: 8),
+        child: Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
+      ),
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withValues(alpha: 0.1),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
-      );
-
-  Widget _buildSettingsTab(UserProfile profile) => ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildSettingsSection(
-            'Профиль',
-            [
-              _buildSettingsItem(
-                Icons.person,
-                'Редактировать профиль',
-                () => _editProfile(profile),
-              ),
-              _buildSettingsItem(
-                Icons.notifications,
-                'Уведомления',
-                _openNotificationsSettings,
-              ),
-              _buildSettingsItem(
-                Icons.privacy_tip,
-                'Приватность',
-                _openPrivacySettings,
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          _buildSettingsSection(
-            'Приложение',
-            [
-              _buildSettingsItem(
-                Icons.help,
-                'Помощь',
-                _openHelp,
-              ),
-              _buildSettingsItem(
-                Icons.info,
-                'О приложении',
-                _openAbout,
-              ),
-              _buildSettingsItem(
-                Icons.logout,
-                'Выйти',
-                _logout,
-                isDestructive: true,
-              ),
-            ],
-          ),
-        ],
-      );
-
-  Widget _buildSettingsSection(String title, List<Widget> items) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 8),
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
-                  ),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.1),
-                  spreadRadius: 1,
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Column(children: items),
-          ),
-        ],
-      );
+        child: Column(children: items),
+      ),
+    ],
+  );
 
   Widget _buildSettingsItem(
     IconData icon,
     String title,
     VoidCallback onTap, {
     bool isDestructive = false,
-  }) =>
-      ListTile(
-        leading: Icon(
-          icon,
-          color: isDestructive ? Colors.red : null,
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            color: isDestructive ? Colors.red : null,
-          ),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap,
-      );
+  }) => ListTile(
+    leading: Icon(icon, color: isDestructive ? Colors.red : null),
+    title: Text(title, style: TextStyle(color: isDestructive ? Colors.red : null)),
+    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+    onTap: onTap,
+  );
 
   Widget _buildLoadingWidget() => Scaffold(
-        appBar: AppBar(
-          title: const Text('Профиль заказчика'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+    appBar: AppBar(
+      title: const Text('Профиль заказчика'),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    ),
+    body: const Center(child: CircularProgressIndicator()),
+  );
 
   Widget _buildErrorWidget(String message) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Профиль заказчика'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
+    appBar: AppBar(
+      title: const Text('Профиль заказчика'),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    ),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+          const SizedBox(height: 16),
+          Text(message, style: Theme.of(context).textTheme.headlineSmall),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              ref.read(userProfileNotifierProvider.notifier).loadProfile(widget.userId);
+            },
+            child: const Text('Повторить'),
           ),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.error_outline,
-                size: 64,
-                color: Colors.grey[400],
-              ),
-              const SizedBox(height: 16),
-              Text(
-                message,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  ref.read(userProfileNotifierProvider.notifier).loadProfile(widget.userId);
-                },
-                child: const Text('Повторить'),
-              ),
-            ],
-          ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 
   void _editProfile(UserProfile profile) {
     // TODO(developer): Навигация к экрану редактирования профиля
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Редактирование профиля')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Редактирование профиля')));
   }
 
   void _showProfileMenu(UserProfile profile) {
@@ -425,51 +357,45 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
 
   void _shareProfile(UserProfile profile) {
     // TODO(developer): Реализовать функциональность шаринга
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Поделиться профилем')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Поделиться профилем')));
   }
 
   void _toggleFollow(UserProfile profile) {
     // TODO(developer): Реализовать подписку/отписку
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Подписка/отписка')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Подписка/отписка')));
   }
 
   void _sendMessage(UserProfile profile) {
     // TODO(developer): Навигация к чату
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Отправить сообщение')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Отправить сообщение')));
   }
 
   void _openNotificationsSettings() {
     // TODO(developer): Открыть настройки уведомлений
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Настройки уведомлений')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Настройки уведомлений')));
   }
 
   void _openPrivacySettings() {
     // TODO(developer): Открыть настройки приватности
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Настройки приватности')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Настройки приватности')));
   }
 
   void _openHelp() {
     // TODO(developer): Открыть справку
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Справка')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Справка')));
   }
 
   void _openAbout() {
     // TODO(developer): Открыть информацию о приложении
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('О приложении')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('О приложении')));
   }
 
   void _logout() {
@@ -479,17 +405,14 @@ class _CustomerProfileScreenState extends ConsumerState<CustomerProfileScreen>
         title: const Text('Выйти из аккаунта'),
         content: const Text('Вы уверены, что хотите выйти?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               // TODO(developer): Реализовать выход из аккаунта
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Выход из аккаунта')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Выход из аккаунта')));
             },
             child: const Text('Выйти'),
           ),
@@ -511,15 +434,8 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) =>
-      Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: _tabBar,
-      );
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) =>
+      Container(color: Theme.of(context).scaffoldBackgroundColor, child: _tabBar);
 
   @override
   bool shouldRebuild(_TabBarDelegate oldDelegate) => false;

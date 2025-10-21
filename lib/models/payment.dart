@@ -2,14 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 /// Payment method enum
-enum PaymentMethod {
-  card,
-  bankTransfer,
-  digitalWallet,
-  cryptocurrency,
-  cash,
-  sbp,
-}
+enum PaymentMethod { card, bankTransfer, digitalWallet, cryptocurrency, cash, sbp }
 
 /// PaymentMethod extensions
 extension PaymentMethodExtension on PaymentMethod {
@@ -90,15 +83,7 @@ extension PaymentMethodExtension on PaymentMethod {
 }
 
 /// Payment status enum
-enum PaymentStatus {
-  pending,
-  processing,
-  completed,
-  failed,
-  cancelled,
-  refunded,
-  disputed,
-}
+enum PaymentStatus { pending, processing, completed, failed, cancelled, refunded, disputed }
 
 /// PaymentStatus extensions
 extension PaymentStatusExtension on PaymentStatus {
@@ -575,41 +560,41 @@ class Payment extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        specialistId,
-        bookingId,
-        amount,
-        currency,
-        method,
-        status,
-        type,
-        createdAt,
-        updatedAt,
-        paidAt,
-        transactionId,
-        description,
-        metadata,
-        receiptUrl,
-        fee,
-        taxAmount,
-        taxStatus,
-        typeDisplayName,
-        methodDisplayName,
-        taxStatusDisplayName,
-        isCompleted,
-        netAmount,
-        completedAt,
-        isPending,
-        failureReason,
-        duration,
-        formattedDuration,
-        isFailed,
-        commission,
-        formattedCommission,
-        formattedNetAmount,
-        isSuccessful,
-      ];
+    id,
+    userId,
+    specialistId,
+    bookingId,
+    amount,
+    currency,
+    method,
+    status,
+    type,
+    createdAt,
+    updatedAt,
+    paidAt,
+    transactionId,
+    description,
+    metadata,
+    receiptUrl,
+    fee,
+    taxAmount,
+    taxStatus,
+    typeDisplayName,
+    methodDisplayName,
+    taxStatusDisplayName,
+    isCompleted,
+    netAmount,
+    completedAt,
+    isPending,
+    failureReason,
+    duration,
+    formattedDuration,
+    isFailed,
+    commission,
+    formattedCommission,
+    formattedNetAmount,
+    isSuccessful,
+  ];
 
   @override
   String toString() {

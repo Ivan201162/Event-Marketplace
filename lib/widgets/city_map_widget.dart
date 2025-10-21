@@ -50,10 +50,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
       );
       _currentZoom = 10.0;
     } else if (widget.currentLocation != null) {
-      _currentCenter = LatLng(
-        widget.currentLocation!.latitude,
-        widget.currentLocation!.longitude,
-      );
+      _currentCenter = LatLng(widget.currentLocation!.latitude, widget.currentLocation!.longitude);
       _currentZoom = 8.0;
     } else {
       // Центр России
@@ -80,10 +77,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
       );
       _mapController.move(newCenter, 10);
     } else if (widget.currentLocation != null) {
-      final newCenter = LatLng(
-        widget.currentLocation!.latitude,
-        widget.currentLocation!.longitude,
-      );
+      final newCenter = LatLng(widget.currentLocation!.latitude, widget.currentLocation!.longitude);
       _mapController.move(newCenter, 8);
     }
   }
@@ -115,9 +109,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
             ),
 
             // Маркеры городов
-            MarkerLayer(
-              markers: _buildCityMarkers(),
-            ),
+            MarkerLayer(markers: _buildCityMarkers()),
 
             // Маркер текущего местоположения
             if (widget.currentLocation != null)
@@ -143,11 +135,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.my_location,
-                        color: Colors.white,
-                        size: 20,
-                      ),
+                      child: const Icon(Icons.my_location, color: Colors.white, size: 20),
                     ),
                   ),
                 ],
@@ -159,10 +147,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
         _buildMapControls(theme),
 
         // Индикатор загрузки
-        if (_isLoading)
-          const Center(
-            child: CircularProgressIndicator(),
-          ),
+        if (_isLoading) const Center(child: CircularProgressIndicator()),
       ],
     );
   }
@@ -174,10 +159,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
     for (final city in widget.nearbyCities) {
       markers.add(
         Marker(
-          point: LatLng(
-            city.coordinates.latitude,
-            city.coordinates.longitude,
-          ),
+          point: LatLng(city.coordinates.latitude, city.coordinates.longitude),
           width: 50,
           height: 50,
           child: GestureDetector(
@@ -198,12 +180,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                   ),
                 ],
               ),
-              child: Center(
-                child: Text(
-                  city.citySize.icon,
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
+              child: Center(child: Text(city.citySize.icon, style: const TextStyle(fontSize: 16))),
             ),
           ),
         ),
@@ -234,13 +211,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                 ),
               ],
             ),
-            child: const Center(
-              child: Icon(
-                Icons.location_city,
-                color: Colors.white,
-                size: 24,
-              ),
-            ),
+            child: const Center(child: Icon(Icons.location_city, color: Colors.white, size: 24)),
           ),
         ),
       );
@@ -250,33 +221,27 @@ class _CityMapWidgetState extends State<CityMapWidget> {
   }
 
   Widget _buildMapControls(ThemeData theme) => Positioned(
-        right: 16,
-        top: 16,
-        child: Column(
-          children: [
-            // Кнопка "Мое местоположение"
-            FloatingActionButton.small(
-              onPressed: widget.onLocationRequested,
-              backgroundColor: theme.cardColor,
-              child: Icon(
-                Icons.my_location,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Кнопка "Центр России"
-            FloatingActionButton.small(
-              onPressed: _centerOnRussia,
-              backgroundColor: theme.cardColor,
-              child: Icon(
-                Icons.public,
-                color: theme.colorScheme.primary,
-              ),
-            ),
-          ],
+    right: 16,
+    top: 16,
+    child: Column(
+      children: [
+        // Кнопка "Мое местоположение"
+        FloatingActionButton.small(
+          onPressed: widget.onLocationRequested,
+          backgroundColor: theme.cardColor,
+          child: Icon(Icons.my_location, color: theme.colorScheme.primary),
         ),
-      );
+        const SizedBox(height: 8),
+
+        // Кнопка "Центр России"
+        FloatingActionButton.small(
+          onPressed: _centerOnRussia,
+          backgroundColor: theme.cardColor,
+          child: Icon(Icons.public, color: theme.colorScheme.primary),
+        ),
+      ],
+    ),
+  );
 
   void _centerOnRussia() {
     setState(() {

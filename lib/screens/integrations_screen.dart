@@ -21,207 +21,189 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Интеграции'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: _showSearchDialog,
-            ),
-            IconButton(
-              icon: const Icon(Icons.filter_list),
-              onPressed: _showFilterDialog,
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            // Быстрые действия
-            _buildQuickActions(),
+    appBar: AppBar(
+      title: const Text('Интеграции'),
+      actions: [
+        IconButton(icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+        IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
+      ],
+    ),
+    body: Column(
+      children: [
+        // Быстрые действия
+        _buildQuickActions(),
 
-            // Типы интеграций
-            _buildTypeSelector(),
+        // Типы интеграций
+        _buildTypeSelector(),
 
-            // Список интеграций
-            Expanded(
-              child: _buildIntegrationsList(),
-            ),
-          ],
-        ),
-      );
+        // Список интеграций
+        Expanded(child: _buildIntegrationsList()),
+      ],
+    ),
+  );
 
   Widget _buildQuickActions() => Container(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildQuickActionCard(
-                icon: Icons.location_on,
-                title: 'Геолокация',
-                color: Colors.blue,
-                onTap: _showLocationSettings,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildQuickActionCard(
-                icon: Icons.share,
-                title: 'Шаринг',
-                color: Colors.green,
-                onTap: _showSharingOptions,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildQuickActionCard(
-                icon: Icons.wifi,
-                title: 'Подключение',
-                color: Colors.orange,
-                onTap: _showConnectionStatus,
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.all(16),
+    child: Row(
+      children: [
+        Expanded(
+          child: _buildQuickActionCard(
+            icon: Icons.location_on,
+            title: 'Геолокация',
+            color: Colors.blue,
+            onTap: _showLocationSettings,
+          ),
         ),
-      );
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildQuickActionCard(
+            icon: Icons.share,
+            title: 'Шаринг',
+            color: Colors.green,
+            onTap: _showSharingOptions,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildQuickActionCard(
+            icon: Icons.wifi,
+            title: 'Подключение',
+            color: Colors.orange,
+            onTap: _showConnectionStatus,
+          ),
+        ),
+      ],
+    ),
+  );
 
   Widget _buildQuickActionCard({
     required IconData icon,
     required String title,
     required Color color,
     required VoidCallback onTap,
-  }) =>
-      Card(
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Icon(icon, color: color, size: 32),
-                const SizedBox(height: 8),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-
-  Widget _buildTypeSelector() => Container(
-        height: 50,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: IntegrationType.values.length + 1,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              final isSelected = _selectedType == null;
-              return Container(
-                margin: const EdgeInsets.only(right: 8),
-                child: FilterChip(
-                  label: const Text('Все'),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    setState(() {
-                      _selectedType = null;
-                    });
-                  },
-                ),
-              );
-            }
-
-            final type = IntegrationType.values[index - 1];
-            final isSelected = _selectedType == type;
-
-            return Container(
-              margin: const EdgeInsets.only(right: 8),
-              child: FilterChip(
-                label: Text(_getTypeText(type)),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    _selectedType = selected ? type : null;
-                  });
-                },
-              ),
-            );
-          },
-        ),
-      );
-
-  Widget _buildIntegrationsList() => StreamBuilder<List<Integration>>(
-        stream: _integrationService.getAvailableIntegrations(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка: ${snapshot.error}'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {}),
-                    child: const Text('Повторить'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final integrations = snapshot.data ?? [];
-          final filteredIntegrations = _filterIntegrations(integrations);
-
-          if (filteredIntegrations.isEmpty) {
-            return _buildEmptyState();
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            itemCount: filteredIntegrations.length,
-            itemBuilder: (context, index) {
-              final integration = filteredIntegrations[index];
-              return IntegrationWidget(
-                integration: integration,
-                onTap: () => _showIntegrationDetail(integration),
-              );
-            },
-          );
-        },
-      );
-
-  Widget _buildEmptyState() => const Center(
+  }) => Card(
+    child: InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.extension, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
             Text(
-              'Нет интеграций',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Попробуйте изменить фильтры или поисковый запрос',
-              style: TextStyle(color: Colors.grey),
+              title,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
             ),
           ],
         ),
+      ),
+    ),
+  );
+
+  Widget _buildTypeSelector() => Container(
+    height: 50,
+    padding: const EdgeInsets.symmetric(vertical: 8),
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      itemCount: IntegrationType.values.length + 1,
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          final isSelected = _selectedType == null;
+          return Container(
+            margin: const EdgeInsets.only(right: 8),
+            child: FilterChip(
+              label: const Text('Все'),
+              selected: isSelected,
+              onSelected: (selected) {
+                setState(() {
+                  _selectedType = null;
+                });
+              },
+            ),
+          );
+        }
+
+        final type = IntegrationType.values[index - 1];
+        final isSelected = _selectedType == type;
+
+        return Container(
+          margin: const EdgeInsets.only(right: 8),
+          child: FilterChip(
+            label: Text(_getTypeText(type)),
+            selected: isSelected,
+            onSelected: (selected) {
+              setState(() {
+                _selectedType = selected ? type : null;
+              });
+            },
+          ),
+        );
+      },
+    ),
+  );
+
+  Widget _buildIntegrationsList() => StreamBuilder<List<Integration>>(
+    stream: _integrationService.getAvailableIntegrations(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (snapshot.hasError) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('Ошибка: ${snapshot.error}'),
+              const SizedBox(height: 16),
+              ElevatedButton(onPressed: () => setState(() {}), child: const Text('Повторить')),
+            ],
+          ),
+        );
+      }
+
+      final integrations = snapshot.data ?? [];
+      final filteredIntegrations = _filterIntegrations(integrations);
+
+      if (filteredIntegrations.isEmpty) {
+        return _buildEmptyState();
+      }
+
+      return ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        itemCount: filteredIntegrations.length,
+        itemBuilder: (context, index) {
+          final integration = filteredIntegrations[index];
+          return IntegrationWidget(
+            integration: integration,
+            onTap: () => _showIntegrationDetail(integration),
+          );
+        },
       );
+    },
+  );
+
+  Widget _buildEmptyState() => const Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.extension, size: 64, color: Colors.grey),
+        SizedBox(height: 16),
+        Text('Нет интеграций', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        SizedBox(height: 8),
+        Text(
+          'Попробуйте изменить фильтры или поисковый запрос',
+          style: TextStyle(color: Colors.grey),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
 
   List<Integration> _filterIntegrations(List<Integration> integrations) {
     var filtered = integrations;
@@ -272,9 +254,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
   void _showIntegrationDetail(Integration integration) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => IntegrationDetailScreen(
-          integration: integration,
-        ),
+        builder: (context) => IntegrationDetailScreen(integration: integration),
       ),
     );
   }
@@ -296,14 +276,8 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
           },
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Поиск'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Поиск')),
         ],
       ),
     );
@@ -316,10 +290,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
         title: const Text('Фильтр интеграций'),
         content: const Text('Фильтры уже применены в интерфейсе'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -340,10 +311,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -372,10 +340,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -415,10 +380,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
           },
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Закрыть'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
         ],
       ),
     );
@@ -443,12 +405,9 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 }

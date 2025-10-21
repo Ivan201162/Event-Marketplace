@@ -65,8 +65,10 @@ class SpecialistProfileRepository {
   /// Получить все профили специалистов
   Future<List<SpecialistProfile>> getAllProfiles() async {
     try {
-      final query =
-          await _firestore.collection(_collection).orderBy('createdAt', descending: true).get();
+      final query = await _firestore
+          .collection(_collection)
+          .orderBy('createdAt', descending: true)
+          .get();
 
       return query.docs.map((doc) => SpecialistProfile.fromDocument(doc)).toList();
     } catch (e) {

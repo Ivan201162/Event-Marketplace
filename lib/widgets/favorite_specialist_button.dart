@@ -71,16 +71,10 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
 
     try {
       if (_isFavorite) {
-        await _portfolioService.removeFromFavorites(
-          currentUser.uid,
-          widget.specialistId,
-        );
+        await _portfolioService.removeFromFavorites(currentUser.uid, widget.specialistId);
         _showSnackBar('${widget.specialistName} удален из избранного');
       } else {
-        await _portfolioService.addToFavorites(
-          currentUser.uid,
-          widget.specialistId,
-        );
+        await _portfolioService.addToFavorites(currentUser.uid, widget.specialistId);
         _showSnackBar('${widget.specialistName} добавлен в избранное');
       }
 
@@ -102,67 +96,59 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
 
   void _showAuthError() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Необходимо войти в систему'),
-        backgroundColor: Colors.red,
-      ),
+      const SnackBar(content: Text('Необходимо войти в систему'), backgroundColor: Colors.red),
     );
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), duration: const Duration(seconds: 2)));
   }
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: _isLoading ? null : _toggleFavorite,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: _isFavorite ? Colors.red : Colors.grey[200],
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: _isFavorite ? Colors.red : Colors.grey[300]!,
+    onTap: _isLoading ? null : _toggleFavorite,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: _isFavorite ? Colors.red : Colors.grey[200],
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: _isFavorite ? Colors.red : Colors.grey[300]!),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_isLoading)
+            SizedBox(
+              width: widget.size ?? 16,
+              height: widget.size ?? 16,
+              child: const CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          else
+            Icon(
+              _isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: _isFavorite ? Colors.white : Colors.grey[600],
+              size: widget.size ?? 16,
             ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (_isLoading)
-                SizedBox(
-                  width: widget.size ?? 16,
-                  height: widget.size ?? 16,
-                  child: const CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                )
-              else
-                Icon(
-                  _isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: _isFavorite ? Colors.white : Colors.grey[600],
-                  size: widget.size ?? 16,
-                ),
-              if (widget.showText) ...[
-                const SizedBox(width: 6),
-                Text(
-                  _isFavorite ? 'В избранном' : 'В избранное',
-                  style: TextStyle(
-                    color: _isFavorite ? Colors.white : Colors.grey[600],
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-      );
+          if (widget.showText) ...[
+            const SizedBox(width: 6),
+            Text(
+              _isFavorite ? 'В избранном' : 'В избранное',
+              style: TextStyle(
+                color: _isFavorite ? Colors.white : Colors.grey[600],
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
 }
 
 /// Компактная версия кнопки избранного (только иконка)
@@ -181,12 +167,12 @@ class FavoriteSpecialistIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FavoriteSpecialistButton(
-        specialistId: specialistId,
-        specialistName: specialistName,
-        onFavoriteChanged: onFavoriteChanged,
-        showText: false,
-        size: size,
-      );
+    specialistId: specialistId,
+    specialistName: specialistName,
+    onFavoriteChanged: onFavoriteChanged,
+    showText: false,
+    size: size,
+  );
 }
 
 /// Плавающая кнопка избранного
@@ -203,13 +189,13 @@ class FloatingFavoriteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Positioned(
-        top: 16,
-        right: 16,
-        child: FavoriteSpecialistIconButton(
-          specialistId: specialistId,
-          specialistName: specialistName,
-          onFavoriteChanged: onFavoriteChanged,
-          size: 20,
-        ),
-      );
+    top: 16,
+    right: 16,
+    child: FavoriteSpecialistIconButton(
+      specialistId: specialistId,
+      specialistName: specialistName,
+      onFavoriteChanged: onFavoriteChanged,
+      size: 20,
+    ),
+  );
 }

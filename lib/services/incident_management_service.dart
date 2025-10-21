@@ -221,8 +221,8 @@ class IncidentManagementService {
         attachments: attachments,
         acknowledgedAt:
             status == IncidentStatus.acknowledged && existingIncident.acknowledgedAt == null
-                ? now
-                : existingIncident.acknowledgedAt,
+            ? now
+            : existingIncident.acknowledgedAt,
         resolvedAt: status == IncidentStatus.resolved && existingIncident.resolvedAt == null
             ? now
             : existingIncident.resolvedAt,
@@ -411,8 +411,8 @@ class IncidentManagementService {
         status: incident.status == IncidentStatus.closed
             ? SLAStatus.met
             : incident.status == IncidentStatus.cancelled
-                ? SLAStatus.cancelled
-                : SLAStatus.active,
+            ? SLAStatus.cancelled
+            : SLAStatus.active,
         updatedAt: now,
       );
 
@@ -603,9 +603,7 @@ class IncidentManagementService {
 
     // Заголовки для инцидентов
     buffer.writeln('Incidents:');
-    buffer.writeln(
-      'Title,Type,Severity,Status,Priority,Assigned To,Reported At,Resolved At',
-    );
+    buffer.writeln('Title,Type,Severity,Status,Priority,Assigned To,Reported At,Resolved At');
 
     for (final incident in data['incidents']) {
       buffer.writeln(

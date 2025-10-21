@@ -42,128 +42,106 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Фильтры идей'),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Категории
-              _buildCategorySection(),
+    title: const Text('Фильтры идей'),
+    content: SizedBox(
+      width: double.maxFinite,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Категории
+          _buildCategorySection(),
 
-              const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-              // Популярные теги
-              _buildTagsSection(),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: _clearFilters,
-            child: const Text('Очистить'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: _applyFilters,
-            child: const Text('Применить'),
-          ),
+          // Популярные теги
+          _buildTagsSection(),
         ],
-      );
+      ),
+    ),
+    actions: [
+      TextButton(onPressed: _clearFilters, child: const Text('Очистить')),
+      TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+      ElevatedButton(onPressed: _applyFilters, child: const Text('Применить')),
+    ],
+  );
 
   Widget _buildCategorySection() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Категория',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: <IdeaCategory>[].map((IdeaCategory category) {
-              final bool isSelected = _selectedCategory == category;
-              return FilterChip(
-                label: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(category.icon),
-                    const SizedBox(width: 4),
-                    Text(category.name),
-                  ],
-                ),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    _selectedCategory = selected ? category : null;
-                  });
-                },
-                backgroundColor: isSelected
-                    ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
-                    : null,
-                selectedColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                checkmarkColor: Theme.of(context).colorScheme.primary,
-              );
-            }).toList(),
-          ),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Категория', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 12),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: <IdeaCategory>[].map((IdeaCategory category) {
+          final bool isSelected = _selectedCategory == category;
+          return FilterChip(
+            label: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [Text(category.icon), const SizedBox(width: 4), Text(category.name)],
+            ),
+            selected: isSelected,
+            onSelected: (selected) {
+              setState(() {
+                _selectedCategory = selected ? category : null;
+              });
+            },
+            backgroundColor: isSelected
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
+                : null,
+            selectedColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            checkmarkColor: Theme.of(context).colorScheme.primary,
+          );
+        }).toList(),
+      ),
+    ],
+  );
 
   Widget _buildTagsSection() => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Популярные теги',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _popularTags.map((String tag) {
-              final bool isSelected = _selectedTags.contains(tag);
-              return FilterChip(
-                label: Text(tag),
-                selected: isSelected,
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _selectedTags.add(tag);
-                    } else {
-                      _selectedTags.remove(tag);
-                    }
-                  });
-                },
-                backgroundColor: isSelected
-                    ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2)
-                    : null,
-                selectedColor: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2),
-                checkmarkColor: Theme.of(context).colorScheme.secondary,
-              );
-            }).toList(),
-          ),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Популярные теги', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+      const SizedBox(height: 12),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: _popularTags.map((String tag) {
+          final bool isSelected = _selectedTags.contains(tag);
+          return FilterChip(
+            label: Text(tag),
+            selected: isSelected,
+            onSelected: (selected) {
+              setState(() {
+                if (selected) {
+                  _selectedTags.add(tag);
+                } else {
+                  _selectedTags.remove(tag);
+                }
+              });
+            },
+            backgroundColor: isSelected
+                ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2)
+                : null,
+            selectedColor: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2),
+            checkmarkColor: Theme.of(context).colorScheme.secondary,
+          );
+        }).toList(),
+      ),
 
-          const SizedBox(height: 16),
+      const SizedBox(height: 16),
 
-          // Поле для добавления собственного тега
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Добавить тег',
-              border: const OutlineInputBorder(),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: _addCustomTag,
-              ),
-            ),
-            onSubmitted: _addCustomTag,
-          ),
-        ],
-      );
+      // Поле для добавления собственного тега
+      TextField(
+        decoration: InputDecoration(
+          hintText: 'Добавить тег',
+          border: const OutlineInputBorder(),
+          suffixIcon: IconButton(icon: const Icon(Icons.add), onPressed: _addCustomTag),
+        ),
+        onSubmitted: _addCustomTag,
+      ),
+    ],
+  );
 
   void _addCustomTag([String? tag]) {
     final controller = TextEditingController(text: tag ?? '');
@@ -182,10 +160,7 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
             autofocus: true,
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена'),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
             ElevatedButton(
               onPressed: () {
                 final newTag = controller.text.trim();
@@ -275,17 +250,14 @@ class ActiveFiltersWidget extends StatelessWidget {
     BuildContext context, {
     required String label,
     required VoidCallback onRemove,
-  }) =>
-      Container(
-        margin: const EdgeInsets.only(right: 8),
-        child: Chip(
-          label: Text(label),
-          deleteIcon: const Icon(Icons.close, size: 18),
-          onDeleted: onRemove,
-          backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-          labelStyle: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-      );
+  }) => Container(
+    margin: const EdgeInsets.only(right: 8),
+    child: Chip(
+      label: Text(label),
+      deleteIcon: const Icon(Icons.close, size: 18),
+      onDeleted: onRemove,
+      backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+      labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+    ),
+  );
 }

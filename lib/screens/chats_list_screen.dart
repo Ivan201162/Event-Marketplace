@@ -60,18 +60,13 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: _loadChats,
-        child: _buildBody(),
-      ),
+      body: RefreshIndicator(onRefresh: _loadChats, child: _buildBody()),
     );
   }
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {
@@ -79,32 +74,17 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Ошибка загрузки чатов',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Ошибка загрузки чатов', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               _error!,
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadChats,
-              child: const Text('Повторить'),
-            ),
+            ElevatedButton(onPressed: _loadChats, child: const Text('Повторить')),
           ],
         ),
       );
@@ -115,25 +95,13 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.chat_bubble_outline,
-              size: 64,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text(
-              'Нет сообщений',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey[600],
-              ),
-            ),
+            Text('Нет сообщений', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Начните общение с другими пользователями',
-              style: TextStyle(
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -162,44 +130,29 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
       leading: CircleAvatar(
         radius: 24,
         backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-        backgroundImage:
-            chat.otherUser.avatarUrl != null ? NetworkImage(chat.otherUser.avatarUrl!) : null,
+        backgroundImage: chat.otherUser.avatarUrl != null
+            ? NetworkImage(chat.otherUser.avatarUrl!)
+            : null,
         child: chat.otherUser.avatarUrl == null
-            ? Icon(
-                Icons.person,
-                color: theme.primaryColor,
-              )
+            ? Icon(Icons.person, color: theme.primaryColor)
             : null,
       ),
-      title: Text(
-        chat.otherUser.name,
-        style: const TextStyle(
-          fontWeight: FontWeight.w600,
-        ),
-      ),
+      title: Text(chat.otherUser.name, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: chat.lastMessage != null
           ? Text(
               chat.lastMessage!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(color: Colors.grey[600]),
             )
           : const Text(
               'Нет сообщений',
-              style: TextStyle(
-                color: Colors.grey,
-                fontStyle: FontStyle.italic,
-              ),
+              style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
             ),
       trailing: chat.lastMessageTime != null
           ? Text(
               _formatTime(chat.lastMessageTime!),
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[500],
-              ),
+              style: TextStyle(fontSize: 12, color: Colors.grey[500]),
             )
           : null,
       onTap: () => context.push('/chat/${chat.chatId}'),

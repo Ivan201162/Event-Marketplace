@@ -19,111 +19,81 @@ class _SpecialistPricingTestScreenState extends ConsumerState<SpecialistPricingT
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Тест среднего прайса специалиста'),
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
+    appBar: AppBar(
+      title: const Text('Тест среднего прайса специалиста'),
+      backgroundColor: Colors.blue,
+      foregroundColor: Colors.white,
+    ),
+    body: Column(
+      children: [
+        _buildSpecialistSelection(),
+        const Divider(),
+        Expanded(
+          child: _selectedSpecialistId == null
+              ? const Center(
+                  child: Text(
+                    'Выберите специалиста для просмотра статистики цен',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                )
+              : SpecialistAveragePriceWidget(
+                  specialistId: _selectedSpecialistId!,
+                  showHistory: _showHistory,
+                ),
         ),
-        body: Column(
-          children: [
-            _buildSpecialistSelection(),
-            const Divider(),
-            Expanded(
-              child: _selectedSpecialistId == null
-                  ? const Center(
-                      child: Text(
-                        'Выберите специалиста для просмотра статистики цен',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    )
-                  : SpecialistAveragePriceWidget(
-                      specialistId: _selectedSpecialistId!,
-                      showHistory: _showHistory,
-                    ),
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 
   Widget _buildSpecialistSelection() => Container(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Выберите специалиста:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _buildSpecialistChips(),
-            ),
-            const SizedBox(height: 16),
-            if (_selectedSpecialistId != null) ...[
-              const Text(
-                'Настройки отображения:',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              SwitchListTile(
-                title: const Text('Показать историю цен'),
-                subtitle: const Text('Отображать график изменения цен по месяцам'),
-                value: _showHistory,
-                onChanged: (value) {
-                  setState(() {
-                    _showHistory = value;
-                  });
-                },
-                contentPadding: EdgeInsets.zero,
-              ),
-              const SizedBox(height: 8),
-              ElevatedButton.icon(
-                onPressed: _updatePricingData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить данные'),
-              ),
-            ],
-          ],
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Выберите специалиста:',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-      );
+        const SizedBox(height: 12),
+        Wrap(spacing: 8, runSpacing: 8, children: _buildSpecialistChips()),
+        const SizedBox(height: 16),
+        if (_selectedSpecialistId != null) ...[
+          const Text(
+            'Настройки отображения:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          SwitchListTile(
+            title: const Text('Показать историю цен'),
+            subtitle: const Text('Отображать график изменения цен по месяцам'),
+            value: _showHistory,
+            onChanged: (value) {
+              setState(() {
+                _showHistory = value;
+              });
+            },
+            contentPadding: EdgeInsets.zero,
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton.icon(
+            onPressed: _updatePricingData,
+            icon: const Icon(Icons.refresh),
+            label: const Text('Обновить данные'),
+          ),
+        ],
+      ],
+    ),
+  );
 
   List<Widget> _buildSpecialistChips() {
     const testSpecialists = [
-      _TestSpecialist(
-        'specialist_1',
-        'Фотограф Алексей',
-        SpecialistCategory.photographer,
-      ),
-      _TestSpecialist(
-        'specialist_2',
-        'Видеограф Елена',
-        SpecialistCategory.videographer,
-      ),
+      _TestSpecialist('specialist_1', 'Фотограф Алексей', SpecialistCategory.photographer),
+      _TestSpecialist('specialist_2', 'Видеограф Елена', SpecialistCategory.videographer),
       _TestSpecialist('specialist_3', 'Ведущий Иван', SpecialistCategory.host),
       _TestSpecialist('specialist_4', 'DJ Мария', SpecialistCategory.dj),
-      _TestSpecialist(
-        'specialist_5',
-        'Декоратор Ольга',
-        SpecialistCategory.decorator,
-      ),
-      _TestSpecialist(
-        'specialist_6',
-        'Музыкант Дмитрий',
-        SpecialistCategory.musician,
-      ),
-      _TestSpecialist(
-        'specialist_7',
-        'Аниматор Анна',
-        SpecialistCategory.animator,
-      ),
+      _TestSpecialist('specialist_5', 'Декоратор Ольга', SpecialistCategory.decorator),
+      _TestSpecialist('specialist_6', 'Музыкант Дмитрий', SpecialistCategory.musician),
+      _TestSpecialist('specialist_7', 'Аниматор Анна', SpecialistCategory.animator),
     ];
 
     return testSpecialists.map((specialist) {
@@ -150,19 +120,13 @@ class _SpecialistPricingTestScreenState extends ConsumerState<SpecialistPricingT
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Данные о ценах обновлены'),
-            backgroundColor: Colors.green,
-          ),
+          const SnackBar(content: Text('Данные о ценах обновлены'), backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка обновления: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Ошибка обновления: $e'), backgroundColor: Colors.red),
         );
       }
     }

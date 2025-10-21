@@ -48,10 +48,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                 children: [
                   Icon(Icons.feed_outlined, size: 80, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text(
-                    'Пока нет постов',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
+                  Text('Пока нет постов', style: TextStyle(fontSize: 18, color: Colors.grey)),
                   SizedBox(height: 8),
                   Text(
                     'Будьте первым, кто поделится новостью!',
@@ -89,19 +86,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
             ),
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.error_outline, size: 80, color: Colors.red),
               const SizedBox(height: 16),
-              Text(
-                'Ошибка загрузки ленты',
-                style: TextStyle(fontSize: 18, color: Colors.red[700]),
-              ),
+              Text('Ошибка загрузки ленты', style: TextStyle(fontSize: 18, color: Colors.red[700])),
               const SizedBox(height: 8),
               Text(
                 error.toString(),
@@ -125,9 +117,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   void _handleLike(Post post) {
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Войдите в аккаунт для лайков')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Войдите в аккаунт для лайков')));
       return;
     }
 

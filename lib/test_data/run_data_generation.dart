@@ -11,9 +11,7 @@ Future<void> main() async {
 
   try {
     // Инициализация Firebase
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     print('✅ Firebase инициализирован');
 
     // Создаем генератор данных

@@ -37,14 +37,13 @@ class AppUpdateState {
     String? error,
     bool? isDismissed,
     DateTime? lastCheckTime,
-  }) =>
-      AppUpdateState(
-        isChecking: isChecking ?? this.isChecking,
-        updateInfo: updateInfo ?? this.updateInfo,
-        error: error ?? this.error,
-        isDismissed: isDismissed ?? this.isDismissed,
-        lastCheckTime: lastCheckTime ?? this.lastCheckTime,
-      );
+  }) => AppUpdateState(
+    isChecking: isChecking ?? this.isChecking,
+    updateInfo: updateInfo ?? this.updateInfo,
+    error: error ?? this.error,
+    isDismissed: isDismissed ?? this.isDismissed,
+    lastCheckTime: lastCheckTime ?? this.lastCheckTime,
+  );
 
   /// Получить статус обновления
   String get updateStatus {
@@ -100,10 +99,7 @@ class AppUpdateNotifier extends Notifier<AppUpdateState> {
         );
       }
     } catch (e) {
-      state = state.copyWith(
-        isChecking: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isChecking: false, error: e.toString());
     }
   }
 
@@ -130,10 +126,7 @@ class AppUpdateNotifier extends Notifier<AppUpdateState> {
         );
       }
     } catch (e) {
-      state = state.copyWith(
-        isChecking: false,
-        error: e.toString(),
-      );
+      state = state.copyWith(isChecking: false, error: e.toString());
     }
   }
 
@@ -155,9 +148,7 @@ class AppUpdateNotifier extends Notifier<AppUpdateState> {
   /// Очистить кэш обновлений
   Future<void> clearUpdateCache() async {
     await AppUpdateService.clearUpdateCache();
-    state = state.copyWith(
-      isDismissed: false,
-    );
+    state = state.copyWith(isDismissed: false);
   }
 
   /// Очистить ошибки

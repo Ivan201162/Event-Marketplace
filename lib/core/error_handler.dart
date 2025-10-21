@@ -46,10 +46,7 @@ class ErrorHandler {
   }
 
   /// Обработка ошибок Firebase Auth
-  static String _handleFirebaseAuthError(
-    FirebaseAuthException error,
-    String? context,
-  ) {
+  static String _handleFirebaseAuthError(FirebaseAuthException error, String? context) {
     String message;
     final code = error.code;
     const type = 'FIREBASE_AUTH';
@@ -177,12 +174,7 @@ class ErrorHandler {
       message = 'Ошибка сети: ${error.message}';
     }
 
-    _logError(
-      error,
-      context,
-      type,
-      error.osError?.errorCode.toString() ?? 'UNKNOWN',
-    );
+    _logError(error, context, type, error.osError?.errorCode.toString() ?? 'UNKNOWN');
     return message;
   }
 
@@ -241,10 +233,7 @@ class ErrorHandler {
   }
 
   /// Обработка ошибок нереализованных функций
-  static String _handleUnimplementedError(
-    UnimplementedError error,
-    String? context,
-  ) {
+  static String _handleUnimplementedError(UnimplementedError error, String? context) {
     final message = 'Функция не реализована: ${error.message}';
     const type = 'UNIMPLEMENTED';
 
@@ -253,10 +242,7 @@ class ErrorHandler {
   }
 
   /// Обработка ошибок неподдерживаемых операций
-  static String _handleUnsupportedError(
-    UnsupportedError error,
-    String? context,
-  ) {
+  static String _handleUnsupportedError(UnsupportedError error, String? context) {
     final message = 'Неподдерживаемая операция: ${error.message}';
     const type = 'UNSUPPORTED';
 
@@ -283,12 +269,7 @@ class ErrorHandler {
   }
 
   /// Логирование ошибки
-  static void _logError(
-    dynamic error,
-    String? context,
-    String type,
-    String code,
-  ) {
+  static void _logError(dynamic error, String? context, String type, String code) {
     final timestamp = DateTime.now().toIso8601String();
     final errorInfo = {
       'timestamp': timestamp,
@@ -349,10 +330,7 @@ class ErrorHandler {
   }
 
   /// Создание отчета об ошибке
-  static Map<String, dynamic> createErrorReport(
-    dynamic error, {
-    String? context,
-  }) {
+  static Map<String, dynamic> createErrorReport(dynamic error, {String? context}) {
     final timestamp = DateTime.now().toIso8601String();
     final message = handleError(error, context: context);
 

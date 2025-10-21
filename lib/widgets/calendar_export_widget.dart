@@ -49,23 +49,23 @@ class CalendarExportWidget extends ConsumerWidget {
   }
 
   Widget _buildIconButton(BuildContext context) => IconButton(
-        onPressed: () => _exportCalendar(context),
-        icon: Icon(icon ?? Icons.calendar_today),
-        tooltip: title ?? 'Экспорт в календарь',
-      );
+    onPressed: () => _exportCalendar(context),
+    icon: Icon(icon ?? Icons.calendar_today),
+    tooltip: title ?? 'Экспорт в календарь',
+  );
 
   Widget _buildButton(BuildContext context) => ElevatedButton.icon(
-        onPressed: () => _exportCalendar(context),
-        icon: Icon(icon ?? Icons.calendar_today),
-        label: Text(title ?? 'Экспорт в календарь'),
-      );
+    onPressed: () => _exportCalendar(context),
+    icon: Icon(icon ?? Icons.calendar_today),
+    label: Text(title ?? 'Экспорт в календарь'),
+  );
 
   Widget _buildListTile(BuildContext context) => ListTile(
-        leading: Icon(icon ?? Icons.calendar_today),
-        title: Text(title ?? 'Экспорт в календарь'),
-        subtitle: const Text('Сохранить в календарное приложение'),
-        onTap: () => _exportCalendar(context),
-      );
+    leading: Icon(icon ?? Icons.calendar_today),
+    title: Text(title ?? 'Экспорт в календарь'),
+    subtitle: const Text('Сохранить в календарное приложение'),
+    onTap: () => _exportCalendar(context),
+  );
 
   Future<void> _exportCalendar(BuildContext context) async {
     try {
@@ -103,19 +103,12 @@ class CalendarExportWidget extends ConsumerWidget {
         onError?.call();
       }
     } catch (e, stackTrace) {
-      SafeLog.error(
-        'CalendarExportWidget: Error exporting calendar',
-        e,
-        stackTrace,
-      );
+      SafeLog.error('CalendarExportWidget: Error exporting calendar', e, stackTrace);
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
       onError?.call();
     }
@@ -140,12 +133,12 @@ class EventCalendarExportWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CalendarExportWidget(
-        event: event,
-        title: title ?? 'Экспорт события',
-        icon: icon ?? Icons.calendar_today,
-        showAsButton: showAsButton,
-        showAsIconButton: showAsIconButton,
-      );
+    event: event,
+    title: title ?? 'Экспорт события',
+    icon: icon ?? Icons.calendar_today,
+    showAsButton: showAsButton,
+    showAsIconButton: showAsIconButton,
+  );
 }
 
 /// Виджет для экспорта одного бронирования
@@ -166,12 +159,12 @@ class BookingCalendarExportWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CalendarExportWidget(
-        booking: booking,
-        title: title ?? 'Экспорт бронирования',
-        icon: icon ?? Icons.calendar_today,
-        showAsButton: showAsButton,
-        showAsIconButton: showAsIconButton,
-      );
+    booking: booking,
+    title: title ?? 'Экспорт бронирования',
+    icon: icon ?? Icons.calendar_today,
+    showAsButton: showAsButton,
+    showAsIconButton: showAsIconButton,
+  );
 }
 
 /// Виджет для экспорта нескольких событий
@@ -240,13 +233,7 @@ class BookingsCalendarExportWidget extends StatelessWidget {
 
 /// Диалог для выбора типа экспорта
 class CalendarExportDialog extends StatelessWidget {
-  const CalendarExportDialog({
-    super.key,
-    this.event,
-    this.booking,
-    this.events,
-    this.bookings,
-  });
+  const CalendarExportDialog({super.key, this.event, this.booking, this.events, this.bookings});
   final Event? event;
   final Booking? booking;
   final List<Event>? events;
@@ -259,10 +246,7 @@ class CalendarExportDialog extends StatelessWidget {
         title: const Text('Экспорт календаря'),
         content: const Text('Экспорт календаря временно отключен'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('ОК'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('ОК')),
         ],
       );
     }
@@ -284,10 +268,7 @@ class CalendarExportDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Отмена'),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
       ],
     );
   }
@@ -319,19 +300,12 @@ class CalendarExportDialog extends StatelessWidget {
         );
       }
     } catch (e, stackTrace) {
-      SafeLog.error(
-        'CalendarExportDialog: Error exporting calendar',
-        e,
-        stackTrace,
-      );
+      SafeLog.error('CalendarExportDialog: Error exporting calendar', e, stackTrace);
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -364,10 +338,7 @@ class CalendarExportUtils {
   }
 
   /// Показать диалог экспорта для бронирований
-  static void showBookingsExportDialog(
-    BuildContext context,
-    List<Booking> bookings,
-  ) {
+  static void showBookingsExportDialog(BuildContext context, List<Booking> bookings) {
     showDialog<void>(
       context: context,
       builder: (context) => CalendarExportDialog(bookings: bookings),

@@ -32,49 +32,40 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
         children: [
-          Row(
-            children: [
-              const Icon(Icons.comment, color: Colors.blue),
-              const SizedBox(width: 8),
-              const Text(
-                'Комментарии',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '${widget.comments.length} комментариев',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
-              ),
-            ],
+          const Icon(Icons.comment, color: Colors.blue),
+          const SizedBox(width: 8),
+          const Text('Комментарии', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Spacer(),
+          Text(
+            '${widget.comments.length} комментариев',
+            style: TextStyle(color: Colors.grey[600], fontSize: 14),
           ),
-          const SizedBox(height: 16),
-
-          // Список комментариев
-          if (widget.comments.isNotEmpty)
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: widget.comments.length,
-              itemBuilder: (context, index) {
-                final comment = widget.comments[index];
-                return _buildCommentItem(comment);
-              },
-            ),
-
-          const SizedBox(height: 16),
-
-          // Форма добавления комментария
-          _buildAddCommentForm(),
         ],
-      );
+      ),
+      const SizedBox(height: 16),
+
+      // Список комментариев
+      if (widget.comments.isNotEmpty)
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.comments.length,
+          itemBuilder: (context, index) {
+            final comment = widget.comments[index];
+            return _buildCommentItem(comment);
+          },
+        ),
+
+      const SizedBox(height: 16),
+
+      // Форма добавления комментария
+      _buildAddCommentForm(),
+    ],
+  );
 
   Widget _buildCommentItem(OrderComment comment) {
     final isCurrentUser = comment.authorId == widget.currentUserId;
@@ -104,9 +95,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
               decoration: BoxDecoration(
                 color: isCurrentUser ? Colors.blue[50] : Colors.grey[50],
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: isCurrentUser ? Colors.blue[200]! : Colors.grey[200]!,
-                ),
+                border: Border.all(color: isCurrentUser ? Colors.blue[200]! : Colors.grey[200]!),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,10 +114,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                       if (comment.isInternal) ...[
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.orange[100],
                             borderRadius: BorderRadius.circular(8),
@@ -146,10 +132,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                       const Spacer(),
                       Text(
                         _formatDate(comment.createdAt),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 10, color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -157,13 +140,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                   const SizedBox(height: 8),
 
                   // Текст комментария
-                  Text(
-                    comment.text,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                    ),
-                  ),
+                  Text(comment.text, style: const TextStyle(fontSize: 14, color: Colors.black87)),
 
                   // Вложения
                   if (comment.attachments.isNotEmpty) ...[
@@ -180,124 +157,116 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
   }
 
   Widget _buildAttachments(List<OrderAttachment> attachments) => Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: attachments
-            .map(
-              (attachment) => GestureDetector(
-                onTap: () {
-                  // TODO: Открыть вложение
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        attachment.type.icon,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        attachment.name,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+    spacing: 8,
+    runSpacing: 8,
+    children: attachments
+        .map(
+          (attachment) => GestureDetector(
+            onTap: () {
+              // TODO: Открыть вложение
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey[300]!),
               ),
-            )
-            .toList(),
-      );
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(attachment.type.icon, style: const TextStyle(fontSize: 12)),
+                  const SizedBox(width: 4),
+                  Text(
+                    attachment.name,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+        .toList(),
+  );
 
   Widget _buildAddCommentForm() => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey[200]!),
-        ),
-        child: Column(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: Colors.grey[200]!),
+    ),
+    child: Column(
+      children: [
+        // Переключатель внутреннего комментария
+        Row(
           children: [
-            // Переключатель внутреннего комментария
-            Row(
-              children: [
-                Checkbox(
-                  value: _isInternal,
-                  onChanged: (value) {
-                    setState(() {
-                      _isInternal = value ?? false;
-                    });
-                  },
-                ),
-                const Text('Внутренний комментарий'),
-                const Spacer(),
-                if (_isInternal)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.orange[100],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      'Только для специалистов',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.orange[700],
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-              ],
+            Checkbox(
+              value: _isInternal,
+              onChanged: (value) {
+                setState(() {
+                  _isInternal = value ?? false;
+                });
+              },
             ),
-
-            const SizedBox(height: 12),
-
-            // Поле ввода комментария
-            TextField(
-              controller: _commentController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                hintText: 'Добавить комментарий...',
-                border: OutlineInputBorder(
+            const Text('Внутренний комментарий'),
+            const Spacer(),
+            if (_isInternal)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.orange[100],
                   borderRadius: BorderRadius.circular(8),
                 ),
-                contentPadding: const EdgeInsets.all(12),
+                child: Text(
+                  'Только для специалистов',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.orange[700],
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        // Поле ввода комментария
+        TextField(
+          controller: _commentController,
+          maxLines: 3,
+          decoration: InputDecoration(
+            hintText: 'Добавить комментарий...',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            contentPadding: const EdgeInsets.all(12),
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // Кнопки действий
+        Row(
+          children: [
+            // Кнопка добавления вложения
+            IconButton(
+              onPressed: _addAttachment,
+              icon: const Icon(Icons.attach_file),
+              tooltip: 'Добавить вложение',
             ),
 
-            const SizedBox(height: 12),
+            const Spacer(),
 
-            // Кнопки действий
-            Row(
-              children: [
-                // Кнопка добавления вложения
-                IconButton(
-                  onPressed: _addAttachment,
-                  icon: const Icon(Icons.attach_file),
-                  tooltip: 'Добавить вложение',
-                ),
-
-                const Spacer(),
-
-                // Кнопка отправки
-                ElevatedButton(
-                  onPressed: _commentController.text.trim().isEmpty ? null : _sendComment,
-                  child: const Text('Отправить'),
-                ),
-              ],
+            // Кнопка отправки
+            ElevatedButton(
+              onPressed: _commentController.text.trim().isEmpty ? null : _sendComment,
+              child: const Text('Отправить'),
             ),
           ],
         ),
-      );
+      ],
+    ),
+  );
 
   void _sendComment() {
     final text = _commentController.text.trim();
@@ -318,10 +287,7 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
         title: const Text('Добавить вложение'),
         content: const Text('Функция добавления вложений будет реализована позже'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK')),
         ],
       ),
     );

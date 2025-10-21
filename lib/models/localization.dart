@@ -50,12 +50,7 @@ enum SupportedLanguage {
   arabic('ar', 'SA', 'العربية', 'العربية'),
   portuguese('pt', 'BR', 'Português', 'Português');
 
-  const SupportedLanguage(
-    this.languageCode,
-    this.countryCode,
-    this.displayName,
-    this.nativeName,
-  );
+  const SupportedLanguage(this.languageCode, this.countryCode, this.displayName, this.nativeName);
 
   final String languageCode;
   final String countryCode;
@@ -76,12 +71,12 @@ class LocalizationSettings {
   });
 
   factory LocalizationSettings.fromMap(Map<String, dynamic> map) => LocalizationSettings(
-        currentLanguage: map['currentLanguage'] ?? 'ru',
-        autoDetectLanguage: map['autoDetectLanguage'] ?? true,
-        showNativeNames: map['showNativeNames'] ?? false,
-        preferredLanguages: List<String>.from(map['preferredLanguages'] ?? []),
-        lastUpdated: DateTime.fromMillisecondsSinceEpoch(map['lastUpdated'] ?? 0),
-      );
+    currentLanguage: map['currentLanguage'] ?? 'ru',
+    autoDetectLanguage: map['autoDetectLanguage'] ?? true,
+    showNativeNames: map['showNativeNames'] ?? false,
+    preferredLanguages: List<String>.from(map['preferredLanguages'] ?? []),
+    lastUpdated: DateTime.fromMillisecondsSinceEpoch(map['lastUpdated'] ?? 0),
+  );
   final String currentLanguage;
   final bool autoDetectLanguage;
   final bool showNativeNames;
@@ -94,22 +89,21 @@ class LocalizationSettings {
     bool? showNativeNames,
     List<String>? preferredLanguages,
     DateTime? lastUpdated,
-  }) =>
-      LocalizationSettings(
-        currentLanguage: currentLanguage ?? this.currentLanguage,
-        autoDetectLanguage: autoDetectLanguage ?? this.autoDetectLanguage,
-        showNativeNames: showNativeNames ?? this.showNativeNames,
-        preferredLanguages: preferredLanguages ?? this.preferredLanguages,
-        lastUpdated: lastUpdated ?? this.lastUpdated,
-      );
+  }) => LocalizationSettings(
+    currentLanguage: currentLanguage ?? this.currentLanguage,
+    autoDetectLanguage: autoDetectLanguage ?? this.autoDetectLanguage,
+    showNativeNames: showNativeNames ?? this.showNativeNames,
+    preferredLanguages: preferredLanguages ?? this.preferredLanguages,
+    lastUpdated: lastUpdated ?? this.lastUpdated,
+  );
 
   Map<String, dynamic> toMap() => {
-        'currentLanguage': currentLanguage,
-        'autoDetectLanguage': autoDetectLanguage,
-        'showNativeNames': showNativeNames,
-        'preferredLanguages': preferredLanguages,
-        'lastUpdated': lastUpdated.millisecondsSinceEpoch,
-      };
+    'currentLanguage': currentLanguage,
+    'autoDetectLanguage': autoDetectLanguage,
+    'showNativeNames': showNativeNames,
+    'preferredLanguages': preferredLanguages,
+    'lastUpdated': lastUpdated.millisecondsSinceEpoch,
+  };
 }
 
 /// Модель перевода
@@ -127,17 +121,16 @@ class Translation {
   });
 
   factory Translation.fromMap(Map<String, dynamic> map) => Translation(
-        key: map['key'] ?? '',
-        value: map['value'] ?? '',
-        language: map['language'] ?? '',
-        context: map['context'],
-        description: map['description'],
-        isPlural: map['isPlural'] ?? false,
-        pluralForms:
-            map['pluralForms'] != null ? Map<String, String>.from(map['pluralForms']) : null,
-        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] ?? 0),
-        updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] ?? 0),
-      );
+    key: map['key'] ?? '',
+    value: map['value'] ?? '',
+    language: map['language'] ?? '',
+    context: map['context'],
+    description: map['description'],
+    isPlural: map['isPlural'] ?? false,
+    pluralForms: map['pluralForms'] != null ? Map<String, String>.from(map['pluralForms']) : null,
+    createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] ?? 0),
+    updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] ?? 0),
+  );
   final String key;
   final String value;
   final String language;
@@ -149,16 +142,16 @@ class Translation {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-        'key': key,
-        'value': value,
-        'language': language,
-        'context': context,
-        'description': description,
-        'isPlural': isPlural,
-        'pluralForms': pluralForms,
-        'createdAt': createdAt.millisecondsSinceEpoch,
-        'updatedAt': updatedAt.millisecondsSinceEpoch,
-      };
+    'key': key,
+    'value': value,
+    'language': language,
+    'context': context,
+    'description': description,
+    'isPlural': isPlural,
+    'pluralForms': pluralForms,
+    'createdAt': createdAt.millisecondsSinceEpoch,
+    'updatedAt': updatedAt.millisecondsSinceEpoch,
+  };
 
   Translation copyWith({
     String? key,
@@ -170,18 +163,17 @@ class Translation {
     Map<String, String>? pluralForms,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) =>
-      Translation(
-        key: key ?? this.key,
-        value: value ?? this.value,
-        language: language ?? this.language,
-        context: context ?? this.context,
-        description: description ?? this.description,
-        isPlural: isPlural ?? this.isPlural,
-        pluralForms: pluralForms ?? this.pluralForms,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  }) => Translation(
+    key: key ?? this.key,
+    value: value ?? this.value,
+    language: language ?? this.language,
+    context: context ?? this.context,
+    description: description ?? this.description,
+    isPlural: isPlural ?? this.isPlural,
+    pluralForms: pluralForms ?? this.pluralForms,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 }
 
 /// Модель статистики локализации
@@ -196,13 +188,13 @@ class LocalizationStats {
   });
 
   factory LocalizationStats.fromMap(Map<String, dynamic> map) => LocalizationStats(
-        language: map['language'] ?? '',
-        totalKeys: map['totalKeys'] ?? 0,
-        translatedKeys: map['translatedKeys'] ?? 0,
-        missingKeys: map['missingKeys'] ?? 0,
-        completionPercentage: map['completionPercentage']?.toDouble() ?? 0.0,
-        lastUpdated: DateTime.fromMillisecondsSinceEpoch(map['lastUpdated'] ?? 0),
-      );
+    language: map['language'] ?? '',
+    totalKeys: map['totalKeys'] ?? 0,
+    translatedKeys: map['translatedKeys'] ?? 0,
+    missingKeys: map['missingKeys'] ?? 0,
+    completionPercentage: map['completionPercentage']?.toDouble() ?? 0.0,
+    lastUpdated: DateTime.fromMillisecondsSinceEpoch(map['lastUpdated'] ?? 0),
+  );
   final String language;
   final int totalKeys;
   final int translatedKeys;
@@ -211,13 +203,13 @@ class LocalizationStats {
   final DateTime lastUpdated;
 
   Map<String, dynamic> toMap() => {
-        'language': language,
-        'totalKeys': totalKeys,
-        'translatedKeys': translatedKeys,
-        'missingKeys': missingKeys,
-        'completionPercentage': completionPercentage,
-        'lastUpdated': lastUpdated.millisecondsSinceEpoch,
-      };
+    'language': language,
+    'totalKeys': totalKeys,
+    'translatedKeys': translatedKeys,
+    'missingKeys': missingKeys,
+    'completionPercentage': completionPercentage,
+    'lastUpdated': lastUpdated.millisecondsSinceEpoch,
+  };
 }
 
 /// Модель контекста перевода
@@ -230,20 +222,20 @@ class TranslationContext {
   });
 
   factory TranslationContext.fromMap(Map<String, dynamic> map) => TranslationContext(
-        name: map['name'] ?? '',
-        description: map['description'] ?? '',
-        keys: List<String>.from(map['keys'] ?? []),
-        category: map['category'],
-      );
+    name: map['name'] ?? '',
+    description: map['description'] ?? '',
+    keys: List<String>.from(map['keys'] ?? []),
+    category: map['category'],
+  );
   final String name;
   final String description;
   final List<String> keys;
   final String? category;
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'description': description,
-        'keys': keys,
-        'category': category,
-      };
+    'name': name,
+    'description': description,
+    'keys': keys,
+    'category': category,
+  };
 }
