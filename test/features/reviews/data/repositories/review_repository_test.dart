@@ -22,7 +22,6 @@ void main() {
     late MockFirebaseFirestore mockFirestore;
     late MockCollectionReference<Map<String, dynamic>> mockReviewsCollection;
     late MockDocumentReference<Map<String, dynamic>> mockDocumentRef;
-    late MockDocumentSnapshot<Map<String, dynamic>> mockDocumentSnapshot;
     late MockQuery<Map<String, dynamic>> mockQuery;
     late MockQuerySnapshot<Map<String, dynamic>> mockQuerySnapshot;
 
@@ -316,8 +315,8 @@ void main() {
 
         // Assert
         expect(stats, isNotNull);
-        expect(stats.totalReviews, 2);
-        expect(stats.averageRating, 4.5);
+        expect(stats?.totalReviews, 2);
+        expect(stats?.averageRating, 4.5);
       });
     });
   });

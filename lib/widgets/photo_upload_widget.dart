@@ -203,9 +203,11 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
         });
       }
     } on Exception catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка выбора изображения: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка выбора изображения: $e')));
+      }
     }
   }
 
@@ -246,16 +248,20 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
       );
 
       if (photo != null) {
-        Navigator.pop(context);
-        widget.onPhotoAdded();
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Фото успешно загружено')));
+        if (mounted) {
+          Navigator.pop(context);
+          widget.onPhotoAdded();
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Фото успешно загружено')));
+        }
       } else {
         throw Exception('Не удалось загрузить фото');
       }
     } on Exception catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e')));
+      }
     } finally {
       setState(() {
         _isUploading = false;

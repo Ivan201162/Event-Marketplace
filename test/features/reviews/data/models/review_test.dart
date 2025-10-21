@@ -11,7 +11,7 @@ class MockDocumentSnapshot extends Mock implements DocumentSnapshot<Map<String, 
     when(id).thenReturn(_id);
     when(data()).thenReturn(_data);
     when(exists).thenReturn(true);
-    when(metadata).thenReturn(const SnapshotMetadata(false, false, false));
+    when(metadata).thenReturn(SnapshotMetadata(false, false, false));
   }
 
   @override
@@ -293,7 +293,7 @@ void main() {
         totalReviews: 50,
         ratingDistribution: {1: 0, 2: 1, 3: 2, 4: 10, 5: 37},
         topTags: ['professional', 'friendly', 'reliable'],
-        serviceRatings: {'photography': 4.9, 'videography': 4.7},
+        serviceRatings: {'photography': 5, 'videography': 5},
       );
 
       expect(stats.specialistId, 'specialist_1');

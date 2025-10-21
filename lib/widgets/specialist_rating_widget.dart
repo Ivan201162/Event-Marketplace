@@ -22,9 +22,9 @@ class SpecialistRatingWidget extends ConsumerWidget {
     final reviewStats = ref.watch(specialistReviewStatsProvider(specialistId));
 
     return reviewStats.when(
-      data: (stats) => stats != null ? _buildRatingContent(context, stats) : _buildNoDataState(),
-      loading: _buildLoadingState,
-      error: (error, stack) => _buildErrorState(error),
+      data: (stats) => stats != null ? _buildRatingContent(context, stats) : const Center(child: Text('Нет данных о рейтинге')),
+      loading: () => _buildLoadingState(context),
+      error: (error, stack) => _buildErrorState(context, error),
     );
   }
 
@@ -167,7 +167,7 @@ class SpecialistRatingWidget extends ConsumerWidget {
     ],
   );
 
-  Widget _buildLoadingState() => Card(
+  Widget _buildLoadingState(BuildContext context) => Card(
     child: Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -180,7 +180,7 @@ class SpecialistRatingWidget extends ConsumerWidget {
     ),
   );
 
-  Widget _buildErrorState(Object error) => Card(
+  Widget _buildErrorState(BuildContext context, Object error) => Card(
     child: Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -215,8 +215,8 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
     return reviews.when(
       data: (reviewsList) => _buildReviewsContent(context, reviewsList),
-      loading: _buildLoadingState,
-      error: (error, stack) => _buildErrorState(error),
+      loading: () => _buildLoadingState(context),
+      error: (error, stack) => _buildErrorState(context, error),
     );
   }
 
@@ -371,7 +371,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
     ),
   );
 
-  Widget _buildLoadingState() => Card(
+  Widget _buildLoadingState(BuildContext context) => Card(
     child: Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -384,7 +384,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
     ),
   );
 
-  Widget _buildErrorState(Object error) => Card(
+  Widget _buildErrorState(BuildContext context, Object error) => Card(
     child: Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -470,7 +470,4 @@ class SpecialistReviewsWidget extends ConsumerWidget {
     }
   }
 
-  Widget _buildNoDataState() {
-    return const Center(child: Text('Нет данных о рейтинге'));
-  }
 }

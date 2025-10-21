@@ -439,13 +439,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            StreamBuilder<QuerySnapshot>(
-              stream: _adminService.getAdminLogsStream(limit: 5).map((logs) {
-                // Convert logs to QuerySnapshot-like structure
-                return QuerySnapshot(
-                  docs: logs.map((log) => QueryDocumentSnapshot(log.id, log.toMap())).toList(),
-                );
-              }),
+            StreamBuilder<List<AdminLog>>(
+              stream: _adminService.getAdminLogsStream(limit: 5),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -455,26 +450,25 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   return Text('Ошибка: ${snapshot.error}');
                 }
 
-                final logs = snapshot.data?.docs ?? [];
+                final logs = snapshot.data ?? [];
                 if (logs.isEmpty) {
                   return const Text('Нет последних действий');
                 }
 
                 return Column(
-                  children: logs.map((doc) {
-                    final data = doc.data() as Map<String, dynamic>;
+                  children: logs.map((log) {
                     return ListTile(
                       leading: Icon(
-                        _getActionIcon(data['action']),
-                        color: _getActionColor(data['status']),
+                        _getActionIcon(log.action.toString()),
+                        color: _getActionColor(log.status.toString()),
                       ),
-                      title: Text(data['description'] ?? 'Действие'),
+                      title: Text(log.description ?? 'Действие'),
                       subtitle: Text(
-                        '${data['adminEmail']} • ${_formatTimestamp(data['timestamp'])}',
+                        '${log.adminEmail} • ${_formatTimestamp(log.timestamp)}',
                       ),
                       trailing: Icon(
-                        _getStatusIcon(data['status']),
-                        color: _getActionColor(data['status']),
+                        _getStatusIcon(log.status.toString()),
+                        color: _getActionColor(log.status.toString()),
                         size: 16,
                       ),
                     );

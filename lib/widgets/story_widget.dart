@@ -233,13 +233,17 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
       try {
         await _storyService.deleteStory(story.id);
         await _loadStories();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Сторис удалена'), backgroundColor: Colors.green),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Сторис удалена'), backgroundColor: Colors.green),
+          );
+        }
       } catch (e) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
+        }
       }
     }
   }

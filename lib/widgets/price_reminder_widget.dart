@@ -190,14 +190,18 @@ class PriceReminderAdminWidget extends ConsumerWidget {
       final service = ref.read(priceReminderServiceProvider);
       await service.sendBulkPriceUpdateReminders();
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Напоминания отправлены')));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Напоминания отправлены')));
 
-      // Обновляем данные
-      ref.invalidate(priceReminderStatsProvider);
+        // Обновляем данные
+        ref.invalidate(priceReminderStatsProvider);
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      }
     }
   }
 
@@ -249,14 +253,18 @@ class PriceReminderAdminWidget extends ConsumerWidget {
       final service = ref.read(priceReminderServiceProvider);
       await service.sendPriceUpdateReminder(specialistId);
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Напоминание отправлено')));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Напоминание отправлено')));
 
-      // Обновляем данные
-      ref.invalidate(specialistsWithOutdatedPricesProvider);
+        // Обновляем данные
+        ref.invalidate(specialistsWithOutdatedPricesProvider);
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      }
     }
   }
 }

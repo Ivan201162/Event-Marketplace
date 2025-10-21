@@ -296,15 +296,19 @@ class _CreateStudioRecommendationWidgetState
         expiresIn: const Duration(days: 7),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Рекомендация создана'), backgroundColor: Colors.green),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Рекомендация создана'), backgroundColor: Colors.green),
+        );
 
-      widget.onRecommendationCreated?.call();
+        widget.onRecommendationCreated?.call();
+      }
     } on Exception catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      }
     } finally {
       setState(() {
         _isLoading = false;

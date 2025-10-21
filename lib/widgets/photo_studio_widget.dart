@@ -44,7 +44,7 @@ class PhotoStudioCard extends ConsumerWidget {
 
           // Описание
           Text(
-            studio.description ?? 'Описание отсутствует',
+            studio.description,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
 
@@ -190,7 +190,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          studio.description ?? 'Описание отсутствует',
+                          studio.description,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 8),
@@ -308,7 +308,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          option.description ?? 'Описание отсутствует',
+          option.description,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         // TODO(developer): Добавить поддержку фотографий для опций студии
@@ -663,21 +663,6 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
     });
 
     try {
-      final startDateTime = DateTime(
-        _selectedDate!.year,
-        _selectedDate!.month,
-        _selectedDate!.day,
-        _startTime!.hour,
-        _startTime!.minute,
-      );
-
-      final endDateTime = DateTime(
-        _selectedDate!.year,
-        _selectedDate!.month,
-        _selectedDate!.day,
-        _endTime!.hour,
-        _endTime!.minute,
-      );
 
       // await service.createStudioBooking(
       //   studioId: widget.studio.id,

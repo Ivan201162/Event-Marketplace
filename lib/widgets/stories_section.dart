@@ -312,7 +312,7 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   );
 
   Widget _buildImageContent(Story story) => Image.network(
-    story.mediaUrl ?? '',
+    story.mediaUrl,
     fit: BoxFit.cover,
     loadingBuilder: (context, child, loadingProgress) {
       if (loadingProgress == null) return child;

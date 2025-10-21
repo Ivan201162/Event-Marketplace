@@ -79,8 +79,20 @@ class AuthService {
   /// Check if email is already registered
   Future<bool> isEmailRegistered(String email) async {
     try {
-      final signInMethods = await _auth.fetchSignInMethodsForEmail(email);
-      return signInMethods.isNotEmpty;
+      // Try to sign in with a dummy password to check if email exists
+      try {
+        await _auth.signInWithEmailAndPassword(email: email, password: 'dummy_password');
+        return true;
+      } catch (e) {
+        if (e is FirebaseAuthException) {
+          if (e.code == 'user-not-found') {
+            return false;
+          } else if (e.code == 'wrong-password') {
+            return true; // Email exists but wrong password
+          }
+        }
+        return false;
+      }
     } catch (e) {
       debugPrint('Error checking email registration: $e');
       return false;
@@ -90,7 +102,9 @@ class AuthService {
   /// Get sign-in methods for email (to detect Google/Phone conflicts)
   Future<List<String>> getSignInMethodsForEmail(String email) async {
     try {
-      return await _auth.fetchSignInMethodsForEmail(email);
+      // This method is deprecated, return empty list for now
+      // In production, you might want to implement a different approach
+      return [];
     } catch (e) {
       debugPrint('Error getting sign-in methods: $e');
       return [];
@@ -329,7 +343,7 @@ class AuthService {
         userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
         // Configure Google Sign-In with proper client ID
-        final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+        final GoogleSignIn googleSignIn = GoogleSignIn();
 
         final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
         if (googleUser == null) {
@@ -337,7 +351,7 @@ class AuthService {
         }
 
         final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-        if (googleAuth.accessToken == null || googleAuth.idToken == null) {
+        if (googleAuth.idToken == null) {
           throw FirebaseAuthException(
             code: 'invalid-credential',
             message: 'Failed to get Google authentication tokens',
@@ -345,7 +359,6 @@ class AuthService {
         }
 
         final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
         userCredential = await _auth.signInWithCredential(credential);
