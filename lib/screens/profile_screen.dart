@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+// import '../models/app_user.dart'; // Conflict with user.dart
 import '../providers/auth_providers.dart';
 import '../widgets/profile/profile_actions_widget.dart';
 import '../widgets/profile/profile_header_widget.dart';
@@ -23,7 +24,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final currentUser = ref.watch(currentUserProvider);
-    final isCurrentUser = widget.userId == null || (currentUser.value?.id == widget.userId);
+    final isCurrentUser = widget.userId == null || (currentUser.value?.uid == widget.userId);
 
     return Scaffold(
       appBar: AppBar(
@@ -50,22 +51,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Column(
                 children: [
                   // Заголовок профиля
-                  ProfileHeaderWidget(user: user, isCurrentUser: isCurrentUser),
+                  ProfileHeaderWidget(user: user as dynamic, isCurrentUser: isCurrentUser),
 
                   const SizedBox(height: 16),
 
                   // Статистика профиля
-                  ProfileStatsWidget(user: user, isCurrentUser: isCurrentUser),
+                  ProfileStatsWidget(user: user as dynamic, isCurrentUser: isCurrentUser),
 
                   const SizedBox(height: 16),
 
                   // Действия профиля
-                  ProfileActionsWidget(user: user, isCurrentUser: isCurrentUser),
+                  ProfileActionsWidget(user: user as dynamic, isCurrentUser: isCurrentUser),
 
                   const SizedBox(height: 16),
 
                   // Вкладки профиля
-                  ProfileTabsWidget(user: user, isCurrentUser: isCurrentUser),
+                  ProfileTabsWidget(user: user as dynamic, isCurrentUser: isCurrentUser),
                 ],
               ),
             ),
