@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../models/common_types.dart';
 import '../models/price_range.dart';
 import '../models/specialist.dart';
 import '../services/mock_data_service.dart';
@@ -116,7 +117,7 @@ final specialistsProvider = FutureProvider.family<List<Specialist>, String>(
 /// Провайдер для пагинированной загрузки специалистов (мигрирован с StateNotifierProvider)
 final paginatedSpecialistsProvider =
     NotifierProvider.family<PaginatedSpecialistsNotifier, AsyncValue<List<Specialist>>, String>(
-        (ref, category) => PaginatedSpecialistsNotifier(category));
+        () => PaginatedSpecialistsNotifier());
 
 /// Провайдер для получения уникальных городов специалистов по категории
 final specialistCitiesProvider = FutureProvider.family<List<String>, String>((ref, category) async {
@@ -139,11 +140,9 @@ final specialistPriceRangeProvider =
   double maxPrice = 0;
 
   for (final specialist in specialists) {
-    final priceRange = specialist.priceRange;
-    if (priceRange != null) {
-      if (priceRange.minPrice < minPrice) minPrice = priceRange.minPrice;
-      if (priceRange.maxPrice > maxPrice) maxPrice = priceRange.maxPrice;
-    }
+    final price = specialist.pricePerHour;
+    if (price < minPrice) minPrice = price;
+    if (price > maxPrice) maxPrice = price;
   }
 
   return {
@@ -186,14 +185,12 @@ Future<List<Specialist>> _loadSpecialistsByCategory(String category) async {
 }
 
 /// Notifier для пагинированной загрузки специалистов (мигрирован с StateNotifier)
-class PaginatedSpecialistsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
+class PaginatedSpecialistsNotifier extends FamilyNotifier<AsyncValue<List<Specialist>>, String> {
   @override
-  AsyncValue<List<Specialist>> build() {
+  AsyncValue<List<Specialist>> build(String category) {
     loadSpecialists();
     return const AsyncValue.loading();
   }
-
-  String get category => ref.argument;
 
   static const int _pageSize = 8;
   DocumentSnapshot? _lastDocument;
@@ -274,14 +271,12 @@ class PaginatedSpecialistsNotifier extends Notifier<AsyncValue<List<Specialist>>
   bool _matchesFilters(Specialist specialist, SpecialistFilters filters) {
     // Фильтр по цене
     if (filters.minPrice != null || filters.maxPrice != null) {
-      final priceRange = specialist.priceRange;
-      if (priceRange != null) {
-        if (filters.minPrice != null && priceRange.maxPrice < filters.minPrice!) {
-          return false;
-        }
-        if (filters.maxPrice != null && priceRange.minPrice > filters.maxPrice!) {
-          return false;
-        }
+      final price = specialist.pricePerHour;
+      if (filters.minPrice != null && price < filters.minPrice!) {
+        return false;
+      }
+      if (filters.maxPrice != null && price > filters.maxPrice!) {
+        return false;
       }
     }
 
@@ -303,7 +298,7 @@ class PaginatedSpecialistsNotifier extends Notifier<AsyncValue<List<Specialist>>
     // Фильтр по поисковому запросу
     if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
       final query = filters.searchQuery!.toLowerCase();
-      final fullName = '${specialist.firstName ?? ''} ${specialist.lastName ?? ''}'.toLowerCase();
+      final fullName = specialist.name.toLowerCase();
       final city = specialist.city.toLowerCase() ?? '';
 
       if (!fullName.contains(query) && !city.contains(query)) {
@@ -395,22 +390,15 @@ List<Specialist> _generateMockSpecialistsForCategory(String category) {
       id: '${category}_${index + 1}',
       userId: 'user_${index + 1}',
       name: '${name.$1} ${name.$2}',
-      firstName: name.$1,
-      lastName: name.$2,
-      email: '${name.$1.toLowerCase()}.${name.$2.toLowerCase()}@example.com',
-      phone: '+7 (999) ${100 + index}-${10 + index}-${20 + index}',
+      specialization: _getSpecializationForCategory(categoryEnum),
       city: city,
+      rating: rating,
+      pricePerHour: priceRange.minPrice.toInt(),
       category: _getSpecialistCategoryFromString(categoryEnum.displayName),
-      subcategories: subcategories,
       experienceLevel: ExperienceLevel.values[index % ExperienceLevel.values.length],
       yearsOfExperience: 1 + (index % 10),
-      hourlyRate: priceRange.minPrice / 2,
-      price: priceRange.minPrice,
-      priceRange: priceRange,
-      rating: rating,
-      totalReviews: 5 + (index % 100),
       description: _getDescriptionForCategory(categoryEnum, index),
-      photoUrl:
+      avatarUrl:
           'https://images.unsplash.com/photo-${1500000000000 + index * 1000000}?w=400&h=400&fit=crop&crop=face',
       isVerified: index % 4 == 0,
       createdAt: DateTime.now().subtract(Duration(days: 365 - index * 5)),
@@ -477,14 +465,14 @@ PriceRange _getPriceRangeForCategory(SpecialistCategory category, int index) {
     case SpecialistCategory.dj:
       final minPrice = 8000 + (index % 8) * 3000;
       return PriceRange(
-        minPrice: minPrice.toDouble(),
-        maxPrice: (minPrice + 15000).toDouble(),
+        min: minPrice.toDouble(),
+        max: (minPrice + 15000).toDouble(),
       );
     case SpecialistCategory.photographer:
       final minPrice = 15000 + (index % 12) * 4000;
       return PriceRange(
-        minPrice: minPrice.toDouble(),
-        maxPrice: (minPrice + 25000).toDouble(),
+        min: minPrice.toDouble(),
+        max: (minPrice + 25000).toDouble(),
       );
     case SpecialistCategory.animator:
       final minPrice = 5000 + (index % 6) * 2000;
@@ -562,5 +550,29 @@ String _getDescriptionForCategory(SpecialistCategory category, int index) {
       return 'Профессиональный музыкант с $experience-летним опытом выступлений. Играю на различных инструментах и создаю атмосферу для вашего события.';
     case SpecialistCategory.makeup:
       return 'Опытный визажист с $experience-летним стажем. Специализируюсь на свадебном и вечернем макияже. Подчеркиваю вашу естественную красоту.';
+  }
+}
+
+/// Получить специализацию для категории
+String _getSpecializationForCategory(SpecialistCategory category) {
+  switch (category) {
+    case SpecialistCategory.host:
+      return 'Ведущий мероприятий';
+    case SpecialistCategory.photographer:
+      return 'Фотограф';
+    case SpecialistCategory.dj:
+      return 'Диск-жокей';
+    case SpecialistCategory.musician:
+      return 'Музыкант';
+    case SpecialistCategory.decorator:
+      return 'Декоратор';
+    case SpecialistCategory.florist:
+      return 'Флорист';
+    case SpecialistCategory.animator:
+      return 'Аниматор';
+    case SpecialistCategory.makeup:
+      return 'Визажист';
+    default:
+      return 'Специалист';
   }
 }
