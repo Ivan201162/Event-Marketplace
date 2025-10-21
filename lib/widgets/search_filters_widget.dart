@@ -7,7 +7,7 @@ import '../providers/specialist_providers.dart';
 /// Widget for search filters
 class SearchFiltersWidget extends ConsumerStatefulWidget {
   final SearchFilters initialFilters;
-  final Function(SearchFilters) onApplyFilters;
+  final void Function(SearchFilters) onApplyFilters;
 
   const SearchFiltersWidget({
     super.key,
@@ -37,12 +37,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Фильтры поиска'),
-        actions: [
-          TextButton(
-            onPressed: _resetFilters,
-            child: const Text('Сбросить'),
-          ),
-        ],
+        actions: [TextButton(onPressed: _resetFilters, child: const Text('Сбросить'))],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -121,9 +116,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -131,18 +124,10 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   Widget _buildCityFilter(List<String> cities) {
     return DropdownButtonFormField<String>(
       initialValue: _currentFilters.city,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: 'Выберите город',
-      ),
+      decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Выберите город'),
       items: [
-        const DropdownMenuItem(
-          child: Text('Любой город'),
-        ),
-        ...cities.map((city) => DropdownMenuItem(
-              value: city,
-              child: Text(city),
-            )),
+        const DropdownMenuItem(child: Text('Любой город')),
+        ...cities.map((city) => DropdownMenuItem(value: city, child: Text(city))),
       ],
       onChanged: (value) {
         setState(() {
@@ -160,13 +145,10 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
         labelText: 'Выберите специализацию',
       ),
       items: [
-        const DropdownMenuItem(
-          child: Text('Любая специализация'),
+        const DropdownMenuItem(child: Text('Любая специализация')),
+        ...specializations.map(
+          (specialization) => DropdownMenuItem(value: specialization, child: Text(specialization)),
         ),
-        ...specializations.map((specialization) => DropdownMenuItem(
-              value: specialization,
-              child: Text(specialization),
-            )),
       ],
       onChanged: (value) {
         setState(() {
@@ -186,9 +168,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           label: (_currentFilters.minRating ?? 0.0).toStringAsFixed(1),
           onChanged: (value) {
             setState(() {
-              _currentFilters = _currentFilters.copyWith(
-                minRating: value == 0 ? null : value,
-              );
+              _currentFilters = _currentFilters.copyWith(minRating: value == 0 ? null : value);
             });
           },
         ),
@@ -216,9 +196,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                 onChanged: (value) {
                   final price = int.tryParse(value);
                   setState(() {
-                    _currentFilters = _currentFilters.copyWith(
-                      minPrice: price,
-                    );
+                    _currentFilters = _currentFilters.copyWith(minPrice: price);
                   });
                 },
               ),
@@ -235,9 +213,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                 onChanged: (value) {
                   final price = int.tryParse(value);
                   setState(() {
-                    _currentFilters = _currentFilters.copyWith(
-                      maxPrice: price,
-                    );
+                    _currentFilters = _currentFilters.copyWith(maxPrice: price);
                   });
                 },
               ),
@@ -252,24 +228,26 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
     return Column(
       children: services
           .take(10)
-          .map((service) => CheckboxListTile(
-                title: Text(service),
-                value: _currentFilters.services?.contains(service) ?? false,
-                onChanged: (value) {
-                  setState(() {
-                    final currentServices = _currentFilters.services ?? [];
-                    if (value == true) {
-                      _currentFilters = _currentFilters.copyWith(
-                        services: [...currentServices, service],
-                      );
-                    } else {
-                      _currentFilters = _currentFilters.copyWith(
-                        services: currentServices.where((s) => s != service).toList(),
-                      );
-                    }
-                  });
-                },
-              ))
+          .map(
+            (service) => CheckboxListTile(
+              title: Text(service),
+              value: _currentFilters.services?.contains(service) ?? false,
+              onChanged: (value) {
+                setState(() {
+                  final currentServices = _currentFilters.services ?? [];
+                  if (value == true) {
+                    _currentFilters = _currentFilters.copyWith(
+                      services: [...currentServices, service],
+                    );
+                  } else {
+                    _currentFilters = _currentFilters.copyWith(
+                      services: currentServices.where((s) => s != service).toList(),
+                    );
+                  }
+                });
+              },
+            ),
+          )
           .toList(),
     );
   }
@@ -277,43 +255,25 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   Widget _buildAvailabilityFilter() {
     return Column(
       children: [
-        Column(
-          children: [
-            ListTile(
-              title: const Text('Любая'),
-              leading: Radio<bool?>(
-                value: null,
-                groupValue: _currentFilters.isAvailable,
-                onChanged: (value) {
-                  setState(() {
-                    _currentFilters = _currentFilters.copyWith(isAvailable: value);
-                  });
-                },
-              ),
-              onTap: () {
-                setState(() {
-                  _currentFilters = _currentFilters.copyWith();
-                });
-              },
-            ),
-            ListTile(
-              title: const Text('Только доступные'),
-              leading: Radio<bool?>(
-                value: true,
-                groupValue: _currentFilters.isAvailable,
-                onChanged: (value) {
-                  setState(() {
-                    _currentFilters = _currentFilters.copyWith(isAvailable: value);
-                  });
-                },
-              ),
-              onTap: () {
-                setState(() {
-                  _currentFilters = _currentFilters.copyWith(isAvailable: true);
-                });
-              },
-            ),
-          ],
+        RadioListTile<bool?>(
+          value: null,
+          groupValue: _currentFilters.isAvailable,
+          title: const Text('Любая'),
+          onChanged: (value) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(isAvailable: value);
+            });
+          },
+        ),
+        RadioListTile<bool?>(
+          value: true,
+          groupValue: _currentFilters.isAvailable,
+          title: const Text('Только доступные'),
+          onChanged: (value) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(isAvailable: value);
+            });
+          },
         ),
       ],
     );
@@ -343,37 +303,23 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
         const SizedBox(height: 16),
         Column(
           children: [
-            ListTile(
+            RadioListTile<bool>(
+              value: true,
+              groupValue: _currentFilters.sortAscending,
               title: const Text('По возрастанию'),
-              leading: Radio<bool>(
-                value: true,
-                groupValue: _currentFilters.sortAscending,
-                onChanged: (value) {
-                  setState(() {
-                    _currentFilters = _currentFilters.copyWith(sortAscending: value);
-                  });
-                },
-              ),
-              onTap: () {
+              onChanged: (value) {
                 setState(() {
-                  _currentFilters = _currentFilters.copyWith(sortAscending: true);
+                  _currentFilters = _currentFilters.copyWith(sortAscending: value);
                 });
               },
             ),
-            ListTile(
+            RadioListTile<bool>(
+              value: false,
+              groupValue: _currentFilters.sortAscending,
               title: const Text('По убыванию'),
-              leading: Radio<bool>(
-                value: false,
-                groupValue: _currentFilters.sortAscending,
-                onChanged: (value) {
-                  setState(() {
-                    _currentFilters = _currentFilters.copyWith(sortAscending: value);
-                  });
-                },
-              ),
-              onTap: () {
+              onChanged: (value) {
                 setState(() {
-                  _currentFilters = _currentFilters.copyWith(sortAscending: false);
+                  _currentFilters = _currentFilters.copyWith(sortAscending: value);
                 });
               },
             ),

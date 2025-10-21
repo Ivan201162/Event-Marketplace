@@ -15,12 +15,7 @@ class PageTransitions {
         position: Tween<Offset>(
           begin: begin,
           end: end,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOutCubic,
-          ),
-        ),
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
         child: child,
       );
 
@@ -37,16 +32,8 @@ class PageTransitions {
         scale: Tween<double>(
           begin: begin,
           end: end,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOutCubic,
-          ),
-        ),
-        child: FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
+        child: FadeTransition(opacity: animation, child: child),
       );
 
   /// Переход с поворотом
@@ -62,16 +49,8 @@ class PageTransitions {
         turns: Tween<double>(
           begin: begin,
           end: end,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOutCubic,
-          ),
-        ),
-        child: FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
+        child: FadeTransition(opacity: animation, child: child),
       );
 
   /// Переход с выдвижением снизу
@@ -85,12 +64,7 @@ class PageTransitions {
         position: Tween<Offset>(
           begin: const Offset(0, 1),
           end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOutCubic,
-          ),
-        ),
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
         child: child,
       );
 
@@ -105,12 +79,7 @@ class PageTransitions {
         position: Tween<Offset>(
           begin: const Offset(0, -1),
           end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOutCubic,
-          ),
-        ),
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
         child: child,
       );
 
@@ -125,12 +94,7 @@ class PageTransitions {
         position: Tween<Offset>(
           begin: const Offset(-1, 0),
           end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOutCubic,
-          ),
-        ),
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
         child: child,
       );
 
@@ -145,12 +109,7 @@ class PageTransitions {
         position: Tween<Offset>(
           begin: const Offset(1, 0),
           end: Offset.zero,
-        ).animate(
-          CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeInOutCubic,
-          ),
-        ),
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOutCubic)),
         child: child,
       );
 
@@ -194,12 +153,9 @@ class PageTransitions {
         builder: (context, child) => Transform(
           alignment: Alignment.center,
           transform: Matrix4.identity()
-            ..scale(animation.value)
+            ..scale(animation.value, animation.value, animation.value)
             ..rotateZ(animation.value * 0.1),
-          child: FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
+          child: FadeTransition(opacity: animation, child: child),
         ),
         child: child,
       );
@@ -284,10 +240,7 @@ class CustomPageRoute<T> extends PageRouteBuilder<T> {
                 );
               case PageTransitionType.fade:
                 return FadeTransition(
-                  opacity: CurvedAnimation(
-                    parent: animation,
-                    curve: curve,
-                  ),
+                  opacity: CurvedAnimation(parent: animation, curve: curve),
                   child: child,
                 );
             }
@@ -396,14 +349,8 @@ class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
+    _animation = CurvedAnimation(parent: _controller, curve: widget.curve);
 
     // Запускаем анимацию с задержкой
     Future.delayed(widget.delay, () {
@@ -423,20 +370,14 @@ class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProv
   Widget build(BuildContext context) {
     switch (widget.animationType) {
       case AnimationType.fadeIn:
-        return FadeTransition(
-          opacity: _animation,
-          child: widget.child,
-        );
+        return FadeTransition(opacity: _animation, child: widget.child);
       case AnimationType.slideUp:
         return SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(0, 0.3),
             end: Offset.zero,
           ).animate(_animation),
-          child: FadeTransition(
-            opacity: _animation,
-            child: widget.child,
-          ),
+          child: FadeTransition(opacity: _animation, child: widget.child),
         );
       case AnimationType.slideDown:
         return SlideTransition(
@@ -444,27 +385,16 @@ class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProv
             begin: const Offset(0, -0.3),
             end: Offset.zero,
           ).animate(_animation),
-          child: FadeTransition(
-            opacity: _animation,
-            child: widget.child,
-          ),
+          child: FadeTransition(opacity: _animation, child: widget.child),
         );
       case AnimationType.scale:
         return ScaleTransition(
           scale: _animation,
-          child: FadeTransition(
-            opacity: _animation,
-            child: widget.child,
-          ),
+          child: FadeTransition(opacity: _animation, child: widget.child),
         );
     }
   }
 }
 
 /// Типы анимации для контента
-enum AnimationType {
-  fadeIn,
-  slideUp,
-  slideDown,
-  scale,
-}
+enum AnimationType { fadeIn, slideUp, slideDown, scale }

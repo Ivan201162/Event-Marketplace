@@ -6,7 +6,7 @@ import '../models/app_user.dart';
 class ProfileEditDialog extends StatefulWidget {
   final String field;
   final String currentValue;
-  final Function(String) onSave;
+  final void Function(String) onSave;
 
   const ProfileEditDialog({
     super.key,
@@ -49,14 +49,8 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
       title: Text(_getFieldTitle()),
       content: _buildContent(),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Отмена'),
-        ),
-        ElevatedButton(
-          onPressed: _save,
-          child: const Text('Сохранить'),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+        ElevatedButton(onPressed: _save, child: const Text('Сохранить')),
       ],
     );
   }
@@ -83,10 +77,7 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
 
     return TextField(
       controller: _controller,
-      decoration: InputDecoration(
-        hintText: _getFieldHint(),
-        border: const OutlineInputBorder(),
-      ),
+      decoration: InputDecoration(hintText: _getFieldHint(), border: const OutlineInputBorder()),
       maxLines: widget.field == 'status' ? 3 : 1,
     );
   }
@@ -95,21 +86,14 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: UserType.values.map((type) {
-        return ListTile(
+        return RadioListTile<UserType>(
+          value: type,
+          groupValue: _selectedUserType,
           title: Text(type.displayName),
           subtitle: Text(type.description),
-          leading: Radio<UserType>(
-            value: type,
-            groupValue: _selectedUserType,
-            onChanged: (value) {
-              setState(() {
-                _selectedUserType = value;
-              });
-            },
-          ),
-          onTap: () {
+          onChanged: (value) {
             setState(() {
-              _selectedUserType = type;
+              _selectedUserType = value;
             });
           },
         );

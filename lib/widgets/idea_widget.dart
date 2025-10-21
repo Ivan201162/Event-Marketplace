@@ -44,48 +44,35 @@ class IdeaWidget extends StatelessWidget {
                         Expanded(
                           child: Text(
                             idea.title,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: ColorUtils.getCategoryColor(idea.categoryColor)
-                                .withValues(alpha: 0.1),
+                            color: idea.categoryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: ColorUtils.getCategoryColor(
-                                idea.categoryColor,
-                              ).withValues(alpha: 0.3),
+                              color: idea.categoryColor.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                ColorUtils.getCategoryIcon(idea.category),
+                                ColorUtils.getCategoryIcon(idea.category ?? 'другое'),
                                 size: 14,
-                                color: ColorUtils.getCategoryColor(
-                                  idea.categoryColor,
-                                ),
+                                color: idea.categoryColor,
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                idea.category,
+                                idea.category ?? 'Без категории',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: ColorUtils.getCategoryColor(
-                                    idea.categoryColor,
-                                  ),
+                                  color: idea.categoryColor,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -99,11 +86,8 @@ class IdeaWidget extends StatelessWidget {
 
                     // Описание
                     Text(
-                      idea.description,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
+                      idea.description ?? idea.shortDesc,
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -119,20 +103,14 @@ class IdeaWidget extends StatelessWidget {
                             .take(3)
                             .map(
                               (tag) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
-                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
                                   '#$tag',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.grey[600],
-                                  ),
+                                  style: TextStyle(fontSize: 10, color: Colors.grey[600]),
                                 ),
                               ),
                             )
@@ -151,8 +129,8 @@ class IdeaWidget extends StatelessWidget {
                               : null,
                           child: idea.authorPhotoUrl == null
                               ? Text(
-                                  idea.authorName.isNotEmpty
-                                      ? (idea.authorName[0]).toUpperCase()
+                                  (idea.authorName?.isNotEmpty == true)
+                                      ? (idea.authorName![0]).toUpperCase()
                                       : '?',
                                   style: const TextStyle(fontSize: 10),
                                 )
@@ -161,19 +139,13 @@ class IdeaWidget extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            idea.authorName,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            idea.authorName ?? 'Неизвестный автор',
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                           ),
                         ),
                         Text(
                           _formatDate(idea.createdAt),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
+                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -205,14 +177,10 @@ class IdeaWidget extends StatelessWidget {
             fit: BoxFit.cover,
             placeholder: (context, url) => Container(
               color: Colors.grey[200],
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             ),
-            errorWidget: (context, url, error) => Container(
-              color: Colors.grey[200],
-              child: const Icon(Icons.error),
-            ),
+            errorWidget: (context, url, error) =>
+                Container(color: Colors.grey[200], child: const Icon(Icons.error)),
           );
         },
       ),
@@ -234,10 +202,7 @@ class IdeaWidget extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   idea.likesCount.toString(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -248,18 +213,11 @@ class IdeaWidget extends StatelessWidget {
           // Просмотры
           Row(
             children: [
-              Icon(
-                Icons.visibility,
-                size: 20,
-                color: Colors.grey[600],
-              ),
+              Icon(Icons.visibility, size: 20, color: Colors.grey[600]),
               const SizedBox(width: 4),
               Text(
-                (idea.viewsCount ?? 0).toString(),
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                idea.viewsCount.toString(),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
           ),
@@ -279,10 +237,7 @@ class IdeaWidget extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   (idea.savesCount).toString(),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -293,18 +248,11 @@ class IdeaWidget extends StatelessWidget {
           // Комментарии
           Row(
             children: [
-              Icon(
-                Icons.comment,
-                size: 20,
-                color: Colors.grey[600],
-              ),
+              Icon(Icons.comment, size: 20, color: Colors.grey[600]),
               const SizedBox(width: 4),
               Text(
                 (idea.commentsCount).toString(),
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
           ),
@@ -314,11 +262,7 @@ class IdeaWidget extends StatelessWidget {
           // Шаринг
           GestureDetector(
             onTap: onShare,
-            child: Icon(
-              Icons.share,
-              size: 20,
-              color: Colors.grey[600],
-            ),
+            child: Icon(Icons.share, size: 20, color: Colors.grey[600]),
           ),
         ],
       );
@@ -369,9 +313,7 @@ class IdeaListTile extends StatelessWidget {
                     width: 60,
                     height: 60,
                     color: Colors.grey[200],
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: const Center(child: CircularProgressIndicator()),
                   ),
                   errorWidget: (context, url, error) => Container(
                     width: 60,
@@ -385,12 +327,12 @@ class IdeaListTile extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
+                  color: idea.categoryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  ColorUtils.getCategoryIcon(idea.category),
-                  color: ColorUtils.getCategoryColorFromColor(idea.categoryColor),
+                  ColorUtils.getCategoryIcon(idea.category ?? 'другое'),
+                  color: idea.categoryColor,
                   size: 24,
                 ),
               ),
@@ -403,26 +345,21 @@ class IdeaListTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              idea.description,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+            Text(idea.description ?? idea.shortDesc, maxLines: 2, overflow: TextOverflow.ellipsis),
             const SizedBox(height: 4),
             Row(
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ColorUtils.getCategoryColorFromColor(idea.categoryColor)
-                        .withValues(alpha: 0.1),
+                    color: idea.categoryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    idea.category,
+                    idea.category ?? 'Без категории',
                     style: TextStyle(
                       fontSize: 10,
-                      color: ColorUtils.getCategoryColorFromColor(idea.categoryColor),
+                      color: idea.categoryColor,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -430,10 +367,7 @@ class IdeaListTile extends StatelessWidget {
                 const Spacer(),
                 Text(
                   _formatDate(idea.createdAt),
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 10, color: Colors.grey[600]),
                 ),
               ],
             ),
@@ -454,10 +388,7 @@ class IdeaListTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                Text(
-                  (idea.likesCount).toString(),
-                  style: const TextStyle(fontSize: 12),
-                ),
+                Text((idea.likesCount).toString(), style: const TextStyle(fontSize: 12)),
               ],
             ),
             const SizedBox(height: 4),
@@ -473,10 +404,7 @@ class IdeaListTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                Text(
-                  (idea.savesCount).toString(),
-                  style: const TextStyle(fontSize: 12),
-                ),
+                Text((idea.savesCount).toString(), style: const TextStyle(fontSize: 12)),
               ],
             ),
           ],
@@ -533,27 +461,18 @@ class IdeaGridTile extends StatelessWidget {
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Container(
                           color: Colors.grey[200],
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
+                          child: const Center(child: CircularProgressIndicator()),
                         ),
-                        errorWidget: (context, url, error) => Container(
-                          color: Colors.grey[200],
-                          child: const Icon(Icons.error),
-                        ),
+                        errorWidget: (context, url, error) =>
+                            Container(color: Colors.grey[200], child: const Icon(Icons.error)),
                       )
                     : Container(
-                        color:
-                            ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
+                        color: idea.categoryColor.withValues(alpha: 0.1),
                         child: Center(
                           child: Icon(
-                            idea.categoryIcon ?? Icons.category,
-                            style: TextStyle(
-                              fontSize: 32,
-                              color: ColorUtils.getCategoryColor(
-                                idea.categoryColor,
-                              ),
-                            ),
+                            ColorUtils.getCategoryIcon(idea.category ?? 'другое'),
+                            size: 32,
+                            color: idea.categoryColor,
                           ),
                         ),
                       ),
@@ -570,10 +489,7 @@ class IdeaGridTile extends StatelessWidget {
                       // Заголовок
                       Text(
                         idea.title,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -582,20 +498,16 @@ class IdeaGridTile extends StatelessWidget {
 
                       // Категория
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: ColorUtils.getCategoryColor(idea.categoryColor)
-                              .withValues(alpha: 0.1),
+                          color: idea.categoryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          idea.category,
+                          idea.category ?? 'Без категории',
                           style: TextStyle(
                             fontSize: 10,
-                            color: ColorUtils.getCategoryColor(idea.categoryColor),
+                            color: idea.categoryColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -615,10 +527,7 @@ class IdeaGridTile extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            (idea.likesCount).toString(),
-                            style: const TextStyle(fontSize: 12),
-                          ),
+                          Text((idea.likesCount).toString(), style: const TextStyle(fontSize: 12)),
                           const Spacer(),
                           GestureDetector(
                             onTap: onSave,
@@ -629,10 +538,7 @@ class IdeaGridTile extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            (idea.savesCount).toString(),
-                            style: const TextStyle(fontSize: 12),
-                          ),
+                          Text((idea.savesCount).toString(), style: const TextStyle(fontSize: 12)),
                         ],
                       ),
                     ],

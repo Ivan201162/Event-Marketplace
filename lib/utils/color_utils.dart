@@ -65,4 +65,26 @@ class ColorUtils {
         return Icons.category;
     }
   }
+
+  /// Преобразовать hex строку в Color
+  static Color parseHexColor(String hexString) {
+    // Убираем # если есть
+    String hex = hexString.replaceAll('#', '');
+
+    // Добавляем FF для альфа-канала если строка 6 символов
+    if (hex.length == 6) {
+      hex = 'FF$hex';
+    }
+
+    // Проверяем что строка валидная
+    if (hex.length != 8) {
+      return Colors.grey; // Возвращаем серый по умолчанию
+    }
+
+    try {
+      return Color(int.parse(hex, radix: 16));
+    } catch (e) {
+      return Colors.grey; // Возвращаем серый по умолчанию при ошибке
+    }
+  }
 }
