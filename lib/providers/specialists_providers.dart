@@ -459,8 +459,8 @@ PriceRange _getPriceRangeForCategory(SpecialistCategory category, int index) {
     case SpecialistCategory.host:
       final minPrice = 10000 + (index % 10) * 5000;
       return PriceRange(
-        minPrice: minPrice.toDouble(),
-        maxPrice: (minPrice + 20000).toDouble(),
+        min: minPrice.toDouble(),
+        max: (minPrice + 20000).toDouble(),
       );
     case SpecialistCategory.dj:
       final minPrice = 8000 + (index % 8) * 3000;
@@ -477,32 +477,32 @@ PriceRange _getPriceRangeForCategory(SpecialistCategory category, int index) {
     case SpecialistCategory.animator:
       final minPrice = 5000 + (index % 6) * 2000;
       return PriceRange(
-        minPrice: minPrice.toDouble(),
-        maxPrice: (minPrice + 10000).toDouble(),
+        min: minPrice.toDouble(),
+        max: (minPrice + 10000).toDouble(),
       );
     case SpecialistCategory.videographer:
       final minPrice = 20000 + (index % 8) * 5000;
       return PriceRange(
-        minPrice: minPrice.toDouble(),
-        maxPrice: (minPrice + 30000).toDouble(),
+        min: minPrice.toDouble(),
+        max: (minPrice + 30000).toDouble(),
       );
     case SpecialistCategory.decorator:
       final minPrice = 12000 + (index % 5) * 4000;
       return PriceRange(
-        minPrice: minPrice.toDouble(),
-        maxPrice: (minPrice + 18000).toDouble(),
+        min: minPrice.toDouble(),
+        max: (minPrice + 18000).toDouble(),
       );
     case SpecialistCategory.musician:
       final minPrice = 6000 + (index % 7) * 2000;
       return PriceRange(
-        minPrice: minPrice.toDouble(),
-        maxPrice: (minPrice + 12000).toDouble(),
+        min: minPrice.toDouble(),
+        max: (minPrice + 12000).toDouble(),
       );
     case SpecialistCategory.makeup:
       final minPrice = 3000 + (index % 6) * 1500;
       return PriceRange(
-        minPrice: minPrice.toDouble(),
-        maxPrice: (minPrice + 8000).toDouble(),
+        min: minPrice.toDouble(),
+        max: (minPrice + 8000).toDouble(),
       );
   }
 }
