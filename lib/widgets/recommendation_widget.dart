@@ -172,7 +172,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                       ),
                 ),
                 Text(
-                  specialist.categoryDisplayName,
+                  specialist.categoryDisplayName ?? 'Специалист',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),

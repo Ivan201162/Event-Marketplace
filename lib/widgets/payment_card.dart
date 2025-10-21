@@ -46,7 +46,7 @@ class PaymentCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          payment.description,
+                          payment.description ?? 'Платеж',
                           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
                               ),
@@ -123,7 +123,7 @@ class PaymentCard extends StatelessWidget {
                 ],
               ),
               // Commission info
-              if (payment.commission > 0) ...[
+              if ((double.tryParse(payment.commission ?? '0') ?? 0) > 0) ...[
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.all(8),
@@ -140,7 +140,7 @@ class PaymentCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Комиссия: ${payment.formattedCommission}',
+                        'Комиссия: ${(double.tryParse(payment.commission ?? '0') ?? 0).toStringAsFixed(2)} ₽',
                         style: TextStyle(
                           color: Colors.orange[700],
                           fontSize: 12,
@@ -221,16 +221,24 @@ class PaymentCard extends StatelessWidget {
     switch (type) {
       case PaymentType.booking:
         return Icons.calendar_today;
-      case PaymentType.commission:
-        return Icons.percent;
-      case PaymentType.refund:
-        return Icons.undo;
-      case PaymentType.payout:
-        return Icons.account_balance_wallet;
       case PaymentType.subscription:
         return Icons.subscriptions;
-      case PaymentType.premium:
+      case PaymentType.deposit:
+        return Icons.account_balance_wallet;
+      case PaymentType.prepayment:
+        return Icons.payment;
+      case PaymentType.finalPayment:
+        return Icons.check_circle;
+      case PaymentType.fullPayment:
+        return Icons.payment;
+      case PaymentType.penalty:
+        return Icons.warning;
+      case PaymentType.bonus:
         return Icons.star;
+      case PaymentType.hold:
+        return Icons.pause_circle;
+      default:
+        return Icons.payment;
     }
   }
 
@@ -248,6 +256,10 @@ class PaymentCard extends StatelessWidget {
         return Colors.grey;
       case PaymentStatus.refunded:
         return Colors.purple;
+      case PaymentStatus.disputed:
+        return Colors.red;
+      default:
+        return Colors.grey;
     }
   }
 

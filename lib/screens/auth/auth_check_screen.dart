@@ -39,8 +39,8 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
       }
     });
 
-    // Listen to auth state changes
-    ref.listen<AsyncValue<AppUser?>>(authStateProvider, (previous, next) {
+    // Listen to auth state changes using listenManual
+    ref.listenManual<AsyncValue<AppUser?>>(authStateProvider, (previous, next) {
       if (_hasNavigated) return;
 
       next.when(

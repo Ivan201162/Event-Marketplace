@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../models/specialist.dart';
+import '../models/common_types.dart';
 
 /// Современная карточка специалиста в едином стиле
 class ModernSpecialistCard extends ConsumerWidget {
@@ -104,7 +105,7 @@ class ModernSpecialistCard extends ConsumerWidget {
             children: [
               Expanded(
                 child: Text(
-                  specialist.displayName,
+                  specialist.name,
                   style: TextStyle(
                     fontSize: isCompact ? 16 : 18,
                     fontWeight: FontWeight.bold,
@@ -118,7 +119,7 @@ class ModernSpecialistCard extends ConsumerWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            specialist.category?.displayName ?? 'Категория',
+            specialist.category?.name ?? 'Категория',
             style: TextStyle(
               fontSize: isCompact ? 12 : 14,
               color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
@@ -165,7 +166,7 @@ class ModernSpecialistCard extends ConsumerWidget {
   Widget _buildDescription(BuildContext context) => Text(
         (specialist.description?.isNotEmpty ?? false)
             ? specialist.description!
-            : 'Опытный специалист в области ${specialist.category?.displayName.toLowerCase() ?? 'услуг'}',
+            : 'Опытный специалист в области ${specialist.category?.name.toLowerCase() ?? 'услуг'}',
         style: TextStyle(
           fontSize: 14,
           color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,

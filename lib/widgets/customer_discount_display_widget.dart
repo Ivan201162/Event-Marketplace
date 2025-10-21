@@ -4,6 +4,7 @@ import '../models/booking_discount.dart';
 import '../models/price_history.dart';
 import '../services/price_history_service.dart';
 import 'responsive_layout.dart';
+import 'responsive_text.dart';
 
 /// Виджет для отображения скидки у заказчика
 class CustomerDiscountDisplayWidget extends ConsumerWidget {
@@ -592,4 +593,5 @@ final priceHistoryProvider =
 final priceHistoryServiceProvider = Provider<PriceHistoryService>((ref) => PriceHistoryService());
 
 /// Провайдер для сервиса скидок
-final discountServiceProvider = Provider<DiscountService>((ref) => DiscountService());
+// TODO: Создать провайдер для DiscountService
+// final discountServiceProvider = Provider<DiscountService>((ref) => DiscountService());

@@ -86,7 +86,7 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: IdeaCategory.values.map((IdeaCategory category) {
+            children: <IdeaCategory>[].map((IdeaCategory category) {
               final bool isSelected = _selectedCategory == category;
               return FilterChip(
                 label: Row(
@@ -94,7 +94,7 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
                   children: [
                     Text(category.icon),
                     const SizedBox(width: 4),
-                    Text(category.displayName),
+                    Text(category.name),
                   ],
                 ),
                 selected: isSelected,

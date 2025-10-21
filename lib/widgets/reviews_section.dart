@@ -27,7 +27,7 @@ class ReviewsSection extends ConsumerStatefulWidget {
 class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
   final ReviewService _reviewService = ReviewService();
   List<Review> _reviews = [];
-  SpecialistReviewStats? _stats;
+  ReviewStats? _stats;
   bool _isLoading = true;
   String? _error;
 

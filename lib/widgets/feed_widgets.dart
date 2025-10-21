@@ -447,16 +447,12 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
 
     try {
       final service = ref.read(feedServiceProvider);
-      final comment = FeedComment(
-        id: '', // Будет сгенерирован Firestore
-        postId: widget.postId,
-        userId: 'current_user', // TODO(developer): Получить реальный ID пользователя
-        userName: 'Пользователь', // TODO(developer): Получить реальное имя пользователя
-        content: _commentController.text.trim(),
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+      await service.addComment(
+        widget.postId,
+        _commentController.text.trim(),
+        'current_user', // TODO(developer): Получить реальный ID пользователя
+        'Пользователь', // TODO(developer): Получить реальное имя пользователя
       );
-      await service.addComment(comment);
 
       _commentController.clear();
       ref.invalidate(postCommentsProvider(widget.postId));
@@ -569,7 +565,8 @@ class CommentWidget extends ConsumerWidget {
   Future<void> _likeComment(WidgetRef ref) async {
     try {
       final service = ref.read(feedServiceProvider);
-      await service.likeComment(
+      await service.toggleCommentLike(
+        widget.post.id,
         comment.id,
         'current_user', // TODO(developer): Получить реальный ID пользователя
       );

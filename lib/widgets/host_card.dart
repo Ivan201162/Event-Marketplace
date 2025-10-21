@@ -45,9 +45,9 @@ class HostCard extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
-                  child: specialist.photoUrl != null
+                  child: specialist.avatarUrl != null
                       ? CachedNetworkImage(
-                          imageUrl: specialist.photoUrl!,
+                          imageUrl: specialist.avatarUrl!,
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: theme.primaryColor.withValues(alpha: 0.1),
@@ -94,7 +94,7 @@ class HostCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            '${specialist.firstName} ${specialist.lastName}',
+                            specialist.name,
                             style: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: isMobile ? 12 : 14,
@@ -179,7 +179,7 @@ class HostCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        _formatPriceRange(specialist.priceRange),
+                        '${specialist.pricePerHour} ₽/час',
                         style: theme.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: theme.primaryColor,
@@ -195,18 +195,5 @@ class HostCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatPriceRange(PriceRange? priceRange) {
-    if (priceRange == null) return 'Цена не указана';
-
-    final minPrice = priceRange.minPrice;
-    final maxPrice = priceRange.maxPrice;
-
-    if (minPrice == maxPrice) {
-      return '${minPrice.toStringAsFixed(0)} ₽';
-    } else {
-      return '${minPrice.toStringAsFixed(0)}-${maxPrice.toStringAsFixed(0)} ₽';
-    }
   }
 }

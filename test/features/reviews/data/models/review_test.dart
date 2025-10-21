@@ -1,30 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/review.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
-class MockDocumentSnapshot extends DocumentSnapshot {
+class MockDocumentSnapshot extends Mock implements DocumentSnapshot<Map<String, dynamic>> {
   final String _id;
   final Map<String, dynamic> _data;
 
-  MockDocumentSnapshot(this._id, this._data);
-
-  @override
-  String get id => _id;
-
-  @override
-  Map<String, dynamic>? data() => _data;
+  MockDocumentSnapshot(this._id, this._data) {
+    when(id).thenReturn(_id);
+    when(data()).thenReturn(_data);
+    when(exists).thenReturn(true);
+    when(metadata).thenReturn(const SnapshotMetadata(false, false, false));
+  }
 
   @override
   dynamic get(Object field) => _data[field];
-
-  @override
-  bool get exists => true;
-
-  @override
-  SnapshotMetadata get metadata => const SnapshotMetadata(false, false, false);
-
-  @override
-  DocumentReference get reference => throw UnimplementedError();
 }
 
 void main() {

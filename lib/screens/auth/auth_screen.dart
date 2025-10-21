@@ -249,280 +249,291 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 40),
-
-              // Логотип
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: theme.primaryColor,
-                  borderRadius: BorderRadius.circular(20),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - 48, // 48 = padding * 2
                 ),
-                child: const Icon(
-                  Icons.event,
-                  size: 40,
-                  color: Colors.white,
-                ),
-              ),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 40),
 
-              const SizedBox(height: 24),
+                      // Логотип
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: theme.primaryColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Icon(
+                          Icons.event,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
 
-              // Заголовок
-              Text(
-                'Event Marketplace',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
+                      const SizedBox(height: 24),
 
-              const SizedBox(height: 8),
+                      // Заголовок
+                      Text(
+                        'Event Marketplace',
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
 
-              Text(
-                'Найдите идеального специалиста для вашего события',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.center,
-              ),
+                      const SizedBox(height: 8),
 
-              const SizedBox(height: 40),
+                      Text(
+                        'Найдите идеального специалиста для вашего события',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
 
-              // Переключатель режима
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _isLoginMode = true),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                      const SizedBox(height: 40),
+
+                      // Переключатель режима
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() => _isLoginMode = true),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: _isLoginMode ? theme.primaryColor : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    'Вход',
+                                    style: TextStyle(
+                                      color: _isLoginMode ? Colors.white : Colors.grey[600],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => setState(() => _isLoginMode = false),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  decoration: BoxDecoration(
+                                    color: !_isLoginMode ? theme.primaryColor : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    'Регистрация',
+                                    style: TextStyle(
+                                      color: !_isLoginMode ? Colors.white : Colors.grey[600],
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Форма авторизации
+                      if (_isLoginMode) ...[
+                        // Поля для входа
+                        TextField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
+                            prefixIcon: Icon(Icons.email),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        TextField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Пароль',
+                            prefixIcon: Icon(Icons.lock),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Кнопка входа
+                        ElevatedButton(
+                          onPressed: _isLoading ? null : _signInWithEmail,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Text('Войти'),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // Ссылка "Забыли пароль?"
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () => context.go('/forgot-password'),
+                            child: const Text('Забыли пароль?'),
+                          ),
+                        ),
+                      ] else ...[
+                        // Поля для регистрации
+                        TextField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Имя',
+                            prefixIcon: Icon(Icons.person),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        TextField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            labelText: 'Email',
+                            prefixIcon: Icon(Icons.email),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        TextField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Пароль',
+                            prefixIcon: Icon(Icons.lock),
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Кнопка регистрации
+                        ElevatedButton(
+                          onPressed: _isLoading ? null : _signUpWithEmail,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Text('Зарегистрироваться'),
+                        ),
+                      ],
+
+                      const SizedBox(height: 16),
+
+                      // Ошибка
+                      if (_errorMessage != null)
+                        Container(
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: _isLoginMode ? theme.primaryColor : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.red[50],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.red[200]!),
                           ),
                           child: Text(
-                            'Вход',
-                            style: TextStyle(
-                              color: _isLoginMode ? Colors.white : Colors.grey[600],
-                              fontWeight: FontWeight.w600,
-                            ),
+                            _errorMessage!,
+                            style: TextStyle(color: Colors.red[700]),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                      ),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => setState(() => _isLoginMode = false),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: !_isLoginMode ? theme.primaryColor : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            'Регистрация',
-                            style: TextStyle(
-                              color: !_isLoginMode ? Colors.white : Colors.grey[600],
-                              fontWeight: FontWeight.w600,
+
+                      const SizedBox(height: 24),
+
+                      // Разделитель
+                      Row(
+                        children: [
+                          const Expanded(child: Divider()),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'или',
+                              style: TextStyle(color: Colors.grey[600]),
                             ),
-                            textAlign: TextAlign.center,
+                          ),
+                          const Expanded(child: Divider()),
+                        ],
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Вход по телефону
+                      OutlinedButton.icon(
+                        onPressed: _isLoading ? null : _signInWithPhone,
+                        icon: const Icon(Icons.phone),
+                        label: const Text('Войти по телефону'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Google Sign-In button
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: _isLoading ? null : _signInWithGoogle,
+                          icon: Image.asset(
+                            'assets/icons/google_logo.png',
+                            height: 24.0,
+                            width: 24.0,
+                            errorBuilder: (context, error, stackTrace) => const Icon(Icons.login),
+                          ),
+                          label: const Text('Войти через Google'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
 
-              const SizedBox(height: 24),
-
-              // Форма авторизации
-              if (_isLoginMode) ...[
-                // Поля для входа
-                TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Пароль',
-                    prefixIcon: Icon(Icons.lock),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Кнопка входа
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _signInWithEmail,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Войти'),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Ссылка "Забыли пароль?"
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => context.go('/forgot-password'),
-                    child: const Text('Забыли пароль?'),
-                  ),
-                ),
-              ] else ...[
-                // Поля для регистрации
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Имя',
-                    prefixIcon: Icon(Icons.person),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Пароль',
-                    prefixIcon: Icon(Icons.lock),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Кнопка регистрации
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _signUpWithEmail,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Зарегистрироваться'),
-                ),
-              ],
-
-              const SizedBox(height: 16),
-
-              // Ошибка
-              if (_errorMessage != null)
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red[200]!),
-                  ),
-                  child: Text(
-                    _errorMessage!,
-                    style: TextStyle(color: Colors.red[700]),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-
-              const SizedBox(height: 24),
-
-              // Разделитель
-              Row(
-                children: [
-                  const Expanded(child: Divider()),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'или',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ),
-                  const Expanded(child: Divider()),
-                ],
-              ),
-
-              const SizedBox(height: 24),
-
-              // Вход по телефону
-              OutlinedButton.icon(
-                onPressed: _isLoading ? null : _signInWithPhone,
-                icon: const Icon(Icons.phone),
-                label: const Text('Войти по телефону'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // Google Sign-In button
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: _isLoading ? null : _signInWithGoogle,
-                  icon: Image.asset(
-                    'assets/icons/google_logo.png',
-                    height: 24.0,
-                    width: 24.0,
-                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.login),
-                  ),
-                  label: const Text('Войти через Google'),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                      const SizedBox(height: 40),
+                    ],
                   ),
                 ),
               ),
-
-              const SizedBox(height: 40),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

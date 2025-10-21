@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/chat.dart';
+import '../models/chat_message.dart' as chat_message;
 
 /// Виджет для отображения медиафайлов в сообщениях чата
 class MediaMessageWidget extends StatelessWidget {
@@ -133,7 +134,8 @@ class MediaMessageWidget extends StatelessWidget {
         return _buildVideoContent(context);
       case MessageType.audio:
         return _buildAudioContent(context);
-      case MessageType.file:
+      case MessageType.document:
+        return _buildFileContent(context);
       case MessageType.attachment:
         return _buildFileContent(context);
       default:
@@ -445,23 +447,23 @@ class MediaMessageWidget extends StatelessWidget {
     Color iconColor;
 
     switch (message.status) {
-      case MessageStatus.sending:
+      case chat_message.MessageStatus.sending:
         iconData = Icons.access_time;
         iconColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
         break;
-      case MessageStatus.sent:
+      case chat_message.MessageStatus.sent:
         iconData = Icons.check;
         iconColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
         break;
-      case MessageStatus.delivered:
+      case chat_message.MessageStatus.delivered:
         iconData = Icons.done_all;
         iconColor = theme.colorScheme.onSurface.withValues(alpha: 0.5);
         break;
-      case MessageStatus.read:
+      case chat_message.MessageStatus.read:
         iconData = Icons.done_all;
         iconColor = theme.colorScheme.primary;
         break;
-      case MessageStatus.failed:
+      case chat_message.MessageStatus.failed:
         iconData = Icons.error;
         iconColor = theme.colorScheme.error;
         break;

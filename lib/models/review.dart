@@ -294,6 +294,7 @@ class ReviewStats extends Equatable {
   final Map<int, int> ratingDistribution;
   final int verifiedReviews;
   final int recentReviews;
+  final List<String> topTags;
 
   const ReviewStats({
     required this.averageRating,
@@ -301,6 +302,7 @@ class ReviewStats extends Equatable {
     required this.ratingDistribution,
     required this.verifiedReviews,
     required this.recentReviews,
+    this.topTags = const [],
   });
 
   /// Get rating percentage for specific rating
@@ -319,6 +321,7 @@ class ReviewStats extends Equatable {
         ratingDistribution,
         verifiedReviews,
         recentReviews,
+        topTags,
       ];
 
   @override

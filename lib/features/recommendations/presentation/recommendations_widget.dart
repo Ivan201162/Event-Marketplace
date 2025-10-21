@@ -54,17 +54,18 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
     });
 
     try {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      if (authProvider.user == null) {
-        setState(() {
-          _isLoading = false;
-          _error = 'Пользователь не авторизован';
-        });
-        return;
-      }
+      // TODO: Добавить провайдер для аутентификации
+      // final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      // if (authProvider.user == null) {
+      setState(() {
+        _isLoading = false;
+        _error = 'Пользователь не авторизован';
+      });
+      // return;
+      // }
 
       final recommendations = await _recommendationService.getRecommendations(
-        customerId: authProvider.user!.uid,
+        customerId: 'current_user', // TODO: Получить реальный ID пользователя
         city: widget.city,
         category: widget.category,
         budget: widget.budget,

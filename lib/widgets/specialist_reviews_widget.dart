@@ -277,9 +277,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
               const SizedBox(height: 12),
 
               // Заголовок отзыва
-              if (review.title.isNotEmpty) ...[
+              if ((review.title?.isNotEmpty ?? false)) ...[
                 Text(
-                  review.title,
+                  review.title!,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

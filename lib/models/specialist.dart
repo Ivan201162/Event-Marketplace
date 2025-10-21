@@ -517,123 +517,12 @@ class Specialist extends Equatable {
   String get formattedPricePerHour => '$pricePerHour ₽/час';
 
   /// Get display name for category
-  String get categoryDisplayName {
-    switch (category) {
-      case SpecialistCategory.host:
-        return 'Ведущий';
-      case SpecialistCategory.photographer:
-        return 'Фотограф';
-      case SpecialistCategory.animator:
-        return 'Аниматор';
-      case SpecialistCategory.dj:
-        return 'Диджей';
-      case SpecialistCategory.decorator:
-        return 'Оформитель';
-      case SpecialistCategory.catering:
-        return 'Кейтеринг';
-      case SpecialistCategory.cleaning:
-        return 'Клининг';
-      case SpecialistCategory.equipment:
-        return 'Оборудование';
-      case SpecialistCategory.clothing:
-        return 'Одежда';
-      case SpecialistCategory.fireShow:
-        return 'Фаер-шоу';
-      case SpecialistCategory.fireworks:
-        return 'Салюты';
-      case SpecialistCategory.lightShow:
-        return 'Световое шоу';
-      case SpecialistCategory.florist:
-        return 'Флорист';
-      case SpecialistCategory.coverBand:
-        return 'Кавер-группа';
-      case SpecialistCategory.teamBuilding:
-        return 'Тимбилдинг';
-      case SpecialistCategory.videographer:
-        return 'Видеограф';
-      case SpecialistCategory.makeup:
-        return 'Визажист';
-      case SpecialistCategory.musician:
-        return 'Музыкант';
-      case SpecialistCategory.caterer:
-        return 'Кейтеринг';
-      case SpecialistCategory.security:
-        return 'Охрана';
-      case SpecialistCategory.technician:
-        return 'Техник';
-      case SpecialistCategory.other:
-        return 'Другое';
-      case null:
-        return 'Не указано';
-    }
-  }
 
   /// Create Specialist from Firestore document
   factory Specialist.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
-    return Specialist.fromMap(data, doc.id);
-  }
-
-  /// Create Specialist from Map
-  factory Specialist.fromMap(Map<String, dynamic> data, [String? id]) {
-    return Specialist(
-      id: id ?? data['id'] ?? '',
-      userId: data['userId'] ?? '',
-      name: data['name'] ?? '',
-      specialization: data['specialization'] ?? '',
-      city: data['city'] ?? '',
-      rating: (data['rating'] ?? 0.0).toDouble(),
-      pricePerHour: data['pricePerHour'] ?? 0,
-      avatarUrl: data['avatarUrl'],
-      imageUrl: data['imageUrl'],
-      portfolio: List<String>.from(data['portfolio'] ?? []),
-      description: data['description'],
-      bio: data['bio'],
-      services: List<String>.from(data['services'] ?? []),
-      isAvailable: data['isAvailable'] ?? true,
-      isVerified: data['isVerified'] ?? false,
-      completedEvents: data['completedEvents'] ?? 0,
-      reviewCount: data['reviewCount'] ?? 0,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      contactInfo: data['contactInfo'],
-      contacts: data['contacts'],
-      languages: List<String>.from(data['languages'] ?? []),
-      experience: data['experience'],
-      category: data['category'] != null
-          ? SpecialistCategory.values.firstWhere(
-              (e) => e.name == data['category'],
-              orElse: () => SpecialistCategory.host,
-            )
-          : null,
-      experienceLevel: data['experienceLevel'] != null
-          ? ExperienceLevel.values.firstWhere(
-              (e) => e.name == data['experienceLevel'],
-              orElse: () => ExperienceLevel.beginner,
-            )
-          : null,
-      yearsOfExperience: data['yearsOfExperience'],
-      hourlyRate: data['hourlyRate']?.toDouble(),
-      price: data['price']?.toDouble(),
-      location: data['location'],
-      subcategories: List<String>.from(data['subcategories'] ?? []),
-      minBookingHours: data['minBookingHours'],
-      maxBookingHours: data['maxBookingHours'],
-      serviceAreas: List<String>.from(data['serviceAreas'] ?? []),
-      equipment: List<String>.from(data['equipment'] ?? []),
-      servicesWithPrices: Map<String, double>.from(data['servicesWithPrices'] ?? {}),
-      availableDates:
-          (data['availableDates'] as List?)?.map((e) => (e as Timestamp).toDate()).toList(),
-      busyDates: (data['busyDates'] as List?)?.map((e) => (e as Timestamp).toDate()).toList(),
-      displayName: data['displayName'],
-      imageUrlValue: data['imageUrlValue'],
-      categoryDisplayName: data['categoryDisplayName'],
-      priceRangeString: data['priceRangeString'],
-      totalReviews: data['totalReviews'],
-      totalBookings: data['totalBookings'],
-      avgRating: data['avgRating']?.toDouble(),
-      categories: List<String>.from(data['categories'] ?? []),
-    );
+    data['id'] = doc.id; // Add the document ID to the data
+    return Specialist.fromMap(data);
   }
 
   @override

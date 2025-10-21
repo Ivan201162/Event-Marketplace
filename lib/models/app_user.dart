@@ -181,13 +181,3 @@ class AppUser extends Equatable {
     return 'AppUser(uid: $uid, name: $name, email: $email, city: $city, type: $type)';
   }
 }
-        isOnline,
-        preferences,
-        favoriteSpecialists,
-      ];
-
-  @override
-  String toString() {
-    return 'AppUser(uid: $uid, name: $name, email: $email, city: $city, type: $type)';
-  }
-}

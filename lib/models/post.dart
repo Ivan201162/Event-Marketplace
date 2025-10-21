@@ -173,9 +173,6 @@ class Post extends Equatable {
   /// Get likes count
   int get likes => likesCount;
 
-  /// Get comments count
-  int get comments => commentsCount;
-
   /// Get formatted time ago string
   String get timeAgo {
     final now = DateTime.now();

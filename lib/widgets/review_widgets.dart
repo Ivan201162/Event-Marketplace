@@ -32,7 +32,7 @@ class ReviewCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        review.title.isNotEmpty ? review.title : 'Без заголовка',
+                        (review.title?.isNotEmpty ?? false) ? review.title! : 'Без заголовка',
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -48,7 +48,7 @@ class ReviewCard extends StatelessWidget {
                 // Комментарий
                 if (review.hasComment) ...[
                   Text(
-                    review.text,
+                    review.text ?? '',
                     style: TextStyle(
                       fontSize: 14,
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
@@ -195,7 +195,8 @@ class ReviewStatsWidget extends StatelessWidget {
               const SizedBox(height: 16),
 
               // Популярные теги (только для SpecialistReviewStats)
-              if (statistics is SpecialistReviewStats && statistics.topTags.isNotEmpty) ...[
+              if (statistics is SpecialistReviewStats &&
+                  (statistics.topTags?.isNotEmpty ?? false)) ...[
                 Text(
                   'Популярные теги',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -206,7 +207,8 @@ class ReviewStatsWidget extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: statistics.topTags.map((tag) => _buildTagChip(context, tag)).toList(),
+                  children:
+                      (statistics.topTags ?? []).map((tag) => _buildTagChip(context, tag)).toList(),
                 ),
                 const SizedBox(height: 16),
               ],

@@ -20,7 +20,7 @@ class AnalyticsWrapper extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Инициализируем аналитику при первом использовании
-    ref.listen(analyticsInitializationProvider, (previous, next) {
+    ref.listenManual(analyticsInitializationProvider, (previous, next) {
       next.whenOrNull(
         data: (_) {
           // Аналитика инициализирована

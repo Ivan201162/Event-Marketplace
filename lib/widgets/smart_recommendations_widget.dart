@@ -352,7 +352,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
 
                 // Категория
                 Text(
-                  specialist.categoryDisplayName,
+                  specialist.categoryDisplayName ?? 'Специалист',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.primary,
                   ),

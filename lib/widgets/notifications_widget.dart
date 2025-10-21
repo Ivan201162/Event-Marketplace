@@ -35,7 +35,7 @@ class NotificationsWidget extends ConsumerWidget {
                     onPressed: () async {
                       try {
                         await ref.read(
-                          markAllNotificationsAsReadProvider(currentUser.id).future,
+                          markAllNotificationsAsReadProvider(currentUser.id ?? '').future,
                         );
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -342,7 +342,7 @@ class NotificationItem extends StatelessWidget {
     required this.onDelete,
   });
 
-  final dynamic notification;
+  final AppNotification notification;
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
@@ -352,7 +352,7 @@ class NotificationItem extends StatelessWidget {
         child: ListTile(
           leading: _buildNotificationIcon(context),
           title: Text(
-            notification.title.toString(),
+            notification.title ?? 'Уведомление',
             style: TextStyle(
               fontWeight: notification.isRead == true ? FontWeight.normal : FontWeight.bold,
             ),
@@ -360,11 +360,11 @@ class NotificationItem extends StatelessWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(notification['message'].toString()),
+              Text(notification.message ?? ''),
               const SizedBox(height: 4),
               Text(
                 _formatDate(
-                  notification['createdAt'] as DateTime? ?? DateTime.now(),
+                  notification.createdAt,
                 ),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Colors.grey[600],

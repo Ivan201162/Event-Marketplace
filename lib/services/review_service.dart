@@ -151,7 +151,7 @@ class ReviewService {
   }
 
   /// Get specialist review statistics
-  Future<SpecialistReviewStats?> getSpecialistReviewStats(String specialistId) async {
+  Future<ReviewStats?> getSpecialistReviewStats(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection(_reviewsCollection)
@@ -200,13 +200,15 @@ class ReviewService {
         }
       }
 
-      return SpecialistReviewStats(
-        specialistId: specialistId,
+      return ReviewStats(
         averageRating: averageRating,
         totalReviews: totalReviews,
         ratingDistribution: ratingDistribution,
+        verifiedReviews: reviews.where((r) => r.isVerified).length,
+        recentReviews: reviews
+            .where((r) => r.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30))))
+            .length,
         topTags: topTagsList,
-        serviceRatings: serviceRatings,
       );
     } catch (e) {
       throw Exception('Error getting specialist review stats: $e');

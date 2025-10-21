@@ -41,6 +41,13 @@ final userBalanceProvider = FutureProvider.family<int, String>((ref, userId) asy
   return paymentService.getUserBalance(userId);
 });
 
+/// Booking payments provider
+final bookingPaymentsProvider =
+    FutureProvider.family<List<Payment>, String>((ref, bookingId) async {
+  final paymentService = ref.read(paymentServiceProvider);
+  return paymentService.getBookingPayments(bookingId);
+});
+
 /// Payment statistics provider
 final paymentStatsProvider =
     FutureProvider.family<Map<String, dynamic>, String>((ref, userId) async {

@@ -50,14 +50,14 @@ class PaymentHistoryItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          payment.typeDisplayName,
+                          payment.typeDisplayName ?? 'Платеж',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          payment.methodDisplayName,
+                          payment.methodDisplayName ?? 'Не указан',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                           ),
@@ -77,9 +77,9 @@ class PaymentHistoryItem extends StatelessWidget {
                           color: _getAmountColor(payment.status, theme),
                         ),
                       ),
-                      if (payment.taxAmount > 0)
+                      if ((payment.taxAmount ?? 0.0) > 0)
                         Text(
-                          'налог: ${payment.taxAmount.toStringAsFixed(0)} ₽',
+                          'налог: ${(payment.taxAmount ?? 0.0).toStringAsFixed(0)} ₽',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                           ),

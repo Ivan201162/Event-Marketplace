@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/booking_discount.dart';
 import '../services/discount_service.dart';
+import 'responsive_text.dart';
 import 'responsive_layout.dart';
 
 /// Виджет для отображения скидки в карточке заявки

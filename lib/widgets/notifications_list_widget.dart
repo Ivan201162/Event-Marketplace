@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/app_notification.dart';
 import '../services/notification_service.dart';
 
 /// Виджет для отображения списка уведомлений
@@ -20,7 +21,7 @@ class NotificationsListWidget extends StatefulWidget {
 class _NotificationsListWidgetState extends State<NotificationsListWidget> {
   @override
   Widget build(BuildContext context) => StreamBuilder<List<AppNotification>>(
-        stream: NotificationService.getUserNotifications(widget.userId),
+        stream: NotificationService.getUserNotificationsStream(widget.userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const _LoadingWidget();
@@ -50,7 +51,7 @@ class _NotificationsListWidgetState extends State<NotificationsListWidget> {
 
   Future<void> _markAsRead(String notificationId) async {
     try {
-      await NotificationService.markAsRead(widget.userId, notificationId);
+      await NotificationService.markAsRead(notificationId);
     } on Exception catch (e) {
       _showErrorSnackBar('Ошибка отметки уведомления: $e');
     }

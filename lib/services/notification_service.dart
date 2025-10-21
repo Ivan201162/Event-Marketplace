@@ -5,13 +5,12 @@ import '../models/notification.dart';
 
 /// Service for managing notifications
 class NotificationService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static const String _collection = 'notifications';
 
   /// Get user's notifications
-  Future<List<AppNotification>> getUserNotifications(String userId, {int limit = 50}) async {
+  static Future<List<AppNotification>> getUserNotifications(String userId, {int limit = 50}) async {
     try {
-      final snapshot = await _firestore
+      final snapshot = await FirebaseFirestore.instance
           .collection(_collection)
           .where('userId', isEqualTo: userId)
           .orderBy('createdAt', descending: true)
@@ -25,10 +24,22 @@ class NotificationService {
     }
   }
 
+  /// Get user's notifications stream
+  static Stream<List<AppNotification>> getUserNotificationsStream(String userId, {int limit = 50}) {
+    return FirebaseFirestore.instance
+        .collection(_collection)
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList());
+  }
+
   /// Get unread notifications
-  Future<List<AppNotification>> getUnreadNotifications(String userId, {int limit = 20}) async {
+  static Future<List<AppNotification>> getUnreadNotifications(String userId,
+      {int limit = 20}) async {
     try {
-      final snapshot = await _firestore
+      final snapshot = await FirebaseFirestore.instance
           .collection(_collection)
           .where('userId', isEqualTo: userId)
           .where('read', isEqualTo: false)
@@ -100,9 +111,9 @@ class NotificationService {
   }
 
   /// Mark notification as read
-  Future<bool> markAsRead(String notificationId) async {
+  static Future<bool> markAsRead(String notificationId) async {
     try {
-      await _firestore.collection(_collection).doc(notificationId).update({
+      await FirebaseFirestore.instance.collection(_collection).doc(notificationId).update({
         'read': true,
       });
       return true;
@@ -113,10 +124,10 @@ class NotificationService {
   }
 
   /// Mark all notifications as read
-  Future<bool> markAllAsRead(String userId) async {
+  static Future<bool> markAllAsRead(String userId) async {
     try {
-      final batch = _firestore.batch();
-      final snapshot = await _firestore
+      final batch = FirebaseFirestore.instance.batch();
+      final snapshot = await FirebaseFirestore.instance
           .collection(_collection)
           .where('userId', isEqualTo: userId)
           .where('read', isEqualTo: false)

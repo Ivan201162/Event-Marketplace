@@ -308,7 +308,7 @@ class PaymentStatusWidget extends ConsumerWidget {
               // Дополнительная информация
               ...[
                 Text(
-                  payment.description,
+                  payment.description ?? 'Платеж',
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 12,

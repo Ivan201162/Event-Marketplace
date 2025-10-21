@@ -331,7 +331,7 @@ class MockTaxCalculationService extends _i1.Mock implements _i5.TaxCalculationSe
             #taxStatus: taxStatus,
           },
         ),
-        returnValue: _i4.Future<_i3.TaxCalculation>.value(_FakeTaxCalculation_7(
+        returnValue: _i4.Future<_i6.TaxCalculation>.value(_FakeTaxCalculation_7(
           this,
           Invocation.method(
             #calculateTax,

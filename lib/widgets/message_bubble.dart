@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/chat.dart';
+import '../models/chat_message.dart' as chat_message;
 
 /// Виджет для отображения сообщения в чате
 class MessageBubble extends StatelessWidget {
@@ -111,12 +112,11 @@ class MessageBubble extends StatelessWidget {
       case MessageType.audio:
         return _buildAudioMessage(context);
       case MessageType.document:
-      case MessageType.file:
         return _buildFileMessage(context);
       case MessageType.location:
         return _buildLocationMessage(context);
-      case MessageType.system:
-        return _buildSystemMessage(context);
+      case MessageType.attachment:
+        return _buildAttachmentMessage(context);
       default:
         return _buildAttachmentMessage(context);
     }
@@ -406,31 +406,35 @@ class MessageBubble extends StatelessWidget {
 
   IconData _getStatusIcon() {
     switch (message.status) {
-      case MessageStatus.sending:
+      case chat_message.MessageStatus.sending:
         return Icons.access_time;
-      case MessageStatus.sent:
+      case chat_message.MessageStatus.sent:
         return Icons.done;
-      case MessageStatus.delivered:
+      case chat_message.MessageStatus.delivered:
         return Icons.done_all;
-      case MessageStatus.read:
+      case chat_message.MessageStatus.read:
         return Icons.done_all;
-      case MessageStatus.failed:
+      case chat_message.MessageStatus.failed:
         return Icons.error;
+      default:
+        return Icons.done;
     }
   }
 
   Color _getStatusColor() {
     switch (message.status) {
-      case MessageStatus.sending:
+      case chat_message.MessageStatus.sending:
         return Colors.grey;
-      case MessageStatus.sent:
+      case chat_message.MessageStatus.sent:
         return Colors.grey;
-      case MessageStatus.delivered:
+      case chat_message.MessageStatus.delivered:
         return Colors.grey;
-      case MessageStatus.read:
+      case chat_message.MessageStatus.read:
         return Colors.blue;
-      case MessageStatus.failed:
+      case chat_message.MessageStatus.failed:
         return Colors.red;
+      default:
+        return Colors.grey;
     }
   }
 

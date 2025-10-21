@@ -48,21 +48,21 @@ class PaymentSummaryWidget extends StatelessWidget {
             _buildDetailRow(
               context,
               'Тип платежа',
-              payment.typeDisplayName,
+              payment.typeDisplayName ?? 'Не указан',
             ),
             const SizedBox(height: 12),
 
             _buildDetailRow(
               context,
               'Способ оплаты',
-              payment.methodDisplayName,
+              payment.methodDisplayName ?? 'Не указан',
             ),
             const SizedBox(height: 12),
 
             _buildDetailRow(
               context,
               'Налоговый статус',
-              payment.taxStatusDisplayName,
+              payment.taxStatusDisplayName ?? 'Не указан',
             ),
             const SizedBox(height: 20),
 
@@ -81,12 +81,12 @@ class PaymentSummaryWidget extends StatelessWidget {
                     payment.amount,
                     isTotal: true,
                   ),
-                  if (payment.taxAmount > 0) ...[
+                  if ((payment.taxAmount ?? 0.0) > 0) ...[
                     const SizedBox(height: 8),
                     _buildAmountRow(
                       context,
-                      'Налог (${(payment.taxAmount! / payment.amount * 100).toStringAsFixed(1)}%)',
-                      payment.taxAmount!,
+                      'Налог (${((payment.taxAmount ?? 0.0) / payment.amount * 100).toStringAsFixed(1)}%)',
+                      payment.taxAmount ?? 0.0,
                       isTax: true,
                     ),
                     const SizedBox(height: 8),
@@ -104,7 +104,7 @@ class PaymentSummaryWidget extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Tax information
-            if (payment.taxAmount > 0)
+            if ((payment.taxAmount ?? 0.0) > 0)
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(

@@ -399,4 +399,20 @@ class PaymentService {
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => Transaction.fromFirestore(doc)).toList());
   }
+
+  /// Get payments for a specific booking
+  Future<List<Payment>> getBookingPayments(String bookingId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('payments')
+          .where('bookingId', isEqualTo: bookingId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snapshot.docs.map((doc) => Payment.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint('Error getting booking payments: $e');
+      return [];
+    }
+  }
 }

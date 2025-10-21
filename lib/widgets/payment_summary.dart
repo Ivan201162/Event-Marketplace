@@ -151,6 +151,10 @@ class PaymentSummary extends StatelessWidget {
 
   IconData _getTypeIcon() {
     switch (type) {
+      case PaymentType.booking:
+        return Icons.calendar_today;
+      case PaymentType.subscription:
+        return Icons.subscriptions;
       case PaymentType.deposit:
         return Icons.payment;
       case PaymentType.prepayment:
@@ -159,19 +163,23 @@ class PaymentSummary extends StatelessWidget {
         return Icons.account_balance_wallet;
       case PaymentType.fullPayment:
         return Icons.check_circle;
-      case PaymentType.refund:
-        return Icons.undo;
       case PaymentType.penalty:
         return Icons.warning;
       case PaymentType.bonus:
         return Icons.star;
       case PaymentType.hold:
         return Icons.pause_circle;
+      default:
+        return Icons.payment;
     }
   }
 
   String _getTypeDisplayName() {
     switch (type) {
+      case PaymentType.booking:
+        return 'Бронирование';
+      case PaymentType.subscription:
+        return 'Подписка';
       case PaymentType.deposit:
         return 'Депозит';
       case PaymentType.prepayment:
@@ -180,19 +188,23 @@ class PaymentSummary extends StatelessWidget {
         return 'Окончательный расчет';
       case PaymentType.fullPayment:
         return 'Полная оплата';
-      case PaymentType.refund:
-        return 'Возврат';
       case PaymentType.penalty:
         return 'Штраф';
       case PaymentType.bonus:
         return 'Бонус';
       case PaymentType.hold:
         return 'Заморозка средств';
+      default:
+        return 'Платеж';
     }
   }
 
   String _getPaymentInfo() {
     switch (type) {
+      case PaymentType.booking:
+        return 'Оплата за бронирование услуги';
+      case PaymentType.subscription:
+        return 'Оплата подписки';
       case PaymentType.deposit:
         return 'Депозит для бронирования услуги';
       case PaymentType.prepayment:
@@ -201,14 +213,14 @@ class PaymentSummary extends StatelessWidget {
         return 'Окончательный расчет после завершения мероприятия';
       case PaymentType.fullPayment:
         return 'Полная оплата за услугу';
-      case PaymentType.refund:
-        return 'Возврат средств';
       case PaymentType.penalty:
         return 'Штраф за нарушение условий';
       case PaymentType.bonus:
         return 'Бонусная выплата';
       case PaymentType.hold:
         return 'Временная заморозка средств';
+      default:
+        return 'Платеж за услугу';
     }
   }
 }

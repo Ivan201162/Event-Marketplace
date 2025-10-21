@@ -118,6 +118,10 @@ class PaymentMethodSelector extends StatelessWidget {
         return Icons.money;
       case PaymentMethod.bankTransfer:
         return Icons.account_balance_wallet;
+      case PaymentMethod.sbp:
+        return Icons.phone_android;
+      default:
+        return Icons.payment;
     }
   }
 
@@ -133,6 +137,10 @@ class PaymentMethodSelector extends StatelessWidget {
         return 'Наличные';
       case PaymentMethod.bankTransfer:
         return 'Банковский перевод';
+      case PaymentMethod.sbp:
+        return 'СБП';
+      default:
+        return 'Способ оплаты';
     }
   }
 
@@ -148,6 +156,10 @@ class PaymentMethodSelector extends StatelessWidget {
         return 'Оплата наличными при встрече';
       case PaymentMethod.bankTransfer:
         return 'Перевод на банковский счет';
+      case PaymentMethod.sbp:
+        return 'Оплата через СБП';
+      default:
+        return 'Способ оплаты';
     }
   }
 }
