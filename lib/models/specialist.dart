@@ -568,6 +568,74 @@ class Specialist extends Equatable {
     }
   }
 
+  /// Create Specialist from Firestore document
+  factory Specialist.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return Specialist.fromMap(data, doc.id);
+  }
+
+  /// Create Specialist from Map
+  factory Specialist.fromMap(Map<String, dynamic> data, [String? id]) {
+    return Specialist(
+      id: id ?? data['id'] ?? '',
+      userId: data['userId'] ?? '',
+      name: data['name'] ?? '',
+      specialization: data['specialization'] ?? '',
+      city: data['city'] ?? '',
+      rating: (data['rating'] ?? 0.0).toDouble(),
+      pricePerHour: data['pricePerHour'] ?? 0,
+      avatarUrl: data['avatarUrl'],
+      imageUrl: data['imageUrl'],
+      portfolio: List<String>.from(data['portfolio'] ?? []),
+      description: data['description'],
+      bio: data['bio'],
+      services: List<String>.from(data['services'] ?? []),
+      isAvailable: data['isAvailable'] ?? true,
+      isVerified: data['isVerified'] ?? false,
+      completedEvents: data['completedEvents'] ?? 0,
+      reviewCount: data['reviewCount'] ?? 0,
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      contactInfo: data['contactInfo'],
+      contacts: data['contacts'],
+      languages: List<String>.from(data['languages'] ?? []),
+      experience: data['experience'],
+      category: data['category'] != null
+          ? SpecialistCategory.values.firstWhere(
+              (e) => e.name == data['category'],
+              orElse: () => SpecialistCategory.host,
+            )
+          : null,
+      experienceLevel: data['experienceLevel'] != null
+          ? ExperienceLevel.values.firstWhere(
+              (e) => e.name == data['experienceLevel'],
+              orElse: () => ExperienceLevel.beginner,
+            )
+          : null,
+      yearsOfExperience: data['yearsOfExperience'],
+      hourlyRate: data['hourlyRate']?.toDouble(),
+      price: data['price']?.toDouble(),
+      location: data['location'],
+      subcategories: List<String>.from(data['subcategories'] ?? []),
+      minBookingHours: data['minBookingHours'],
+      maxBookingHours: data['maxBookingHours'],
+      serviceAreas: List<String>.from(data['serviceAreas'] ?? []),
+      equipment: List<String>.from(data['equipment'] ?? []),
+      servicesWithPrices: Map<String, double>.from(data['servicesWithPrices'] ?? {}),
+      availableDates:
+          (data['availableDates'] as List?)?.map((e) => (e as Timestamp).toDate()).toList(),
+      busyDates: (data['busyDates'] as List?)?.map((e) => (e as Timestamp).toDate()).toList(),
+      displayName: data['displayName'],
+      imageUrlValue: data['imageUrlValue'],
+      categoryDisplayName: data['categoryDisplayName'],
+      priceRangeString: data['priceRangeString'],
+      totalReviews: data['totalReviews'],
+      totalBookings: data['totalBookings'],
+      avgRating: data['avgRating']?.toDouble(),
+      categories: List<String>.from(data['categories'] ?? []),
+    );
+  }
+
   @override
   String toString() {
     return 'Specialist(id: $id, name: $name, specialization: $specialization, city: $city, rating: $rating)';

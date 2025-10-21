@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/specialist.dart';
 import '../models/specialist_comparison.dart';
+import '../models/common_types.dart';
 
 class SpecialistComparisonCard extends StatelessWidget {
   const SpecialistComparisonCard({
@@ -346,7 +347,7 @@ class DetailedComparisonWidget extends StatelessWidget {
                   ),
                   _buildComparisonRow(
                     'Цена',
-                    (s) => '${s.hourlyRate.toStringAsFixed(0)} ₽/час',
+                    (s) => '${s.hourlyRate?.toStringAsFixed(0) ?? '0'} ₽/час',
                   ),
                   _buildComparisonRow(
                     'Опыт',

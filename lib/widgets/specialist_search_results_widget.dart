@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/advanced_search_filters.dart';
 import '../models/specialist.dart';
+import '../models/common_types.dart';
 import '../providers/advanced_search_providers.dart';
 
 /// Виджет результатов поиска специалистов
@@ -200,9 +201,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          specialist.categoryDisplayName ??
-                              specialist.category?.displayName ??
-                              'Категория',
+                          specialist.category?.displayName ?? 'Категория',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.primary,
                           ),

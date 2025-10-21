@@ -1,132 +1,140 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-/// Модель комментария к идее
-class IdeaComment {
+/// Idea comment model
+class IdeaComment extends Equatable {
+  final String id;
+  final String ideaId;
+  final String authorId;
+  final String authorName;
+  final String? authorAvatar;
+  final String content;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int likesCount;
+  final List<String> likedBy;
+  final String? parentCommentId;
+  final List<String> replies;
+
   const IdeaComment({
     required this.id,
     required this.ideaId,
-    required this.userId,
-    required this.userName,
-    required this.text,
-    this.parentId,
-    this.replies = const [],
-    this.likes = 0,
-    this.isLiked = false,
+    required this.authorId,
+    required this.authorName,
+    this.authorAvatar,
+    required this.content,
     required this.createdAt,
-    this.updatedAt,
-    this.deletedAt,
+    required this.updatedAt,
+    this.likesCount = 0,
+    this.likedBy = const [],
+    this.parentCommentId,
+    this.replies = const [],
   });
 
-  final String id;
-  final String ideaId;
-  final String userId;
-  final String userName;
-  final String text;
-  final String? parentId;
-  final List<IdeaComment> replies;
-  final int likes;
-  final bool isLiked;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  final DateTime? deletedAt;
-
-  /// Создать из Map
-  factory IdeaComment.fromMap(Map<String, dynamic> data) {
+  /// Create IdeaComment from Firestore document
+  factory IdeaComment.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return IdeaComment(
-      id: data['id'] as String? ?? '',
-      ideaId: data['ideaId'] as String? ?? '',
-      userId: data['userId'] as String? ?? '',
-      userName: data['userName'] as String? ?? '',
-      text: data['text'] as String? ?? '',
-      parentId: data['parentId'] as String?,
-      replies: (data['replies'] as List<dynamic>?)
-              ?.map((e) => IdeaComment.fromMap(Map<String, dynamic>.from(e)))
-              .toList() ??
-          [],
-      likes: data['likes'] as int? ?? 0,
-      isLiked: data['isLiked'] as bool? ?? false,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['updatedAt'].toString()))
-          : null,
-      deletedAt: data['deletedAt'] != null
-          ? (data['deletedAt'] is Timestamp
-              ? (data['deletedAt'] as Timestamp).toDate()
-              : DateTime.tryParse(data['deletedAt'].toString()))
-          : null,
+      id: doc.id,
+      ideaId: data['ideaId'] ?? '',
+      authorId: data['authorId'] ?? '',
+      authorName: data['authorName'] ?? '',
+      authorAvatar: data['authorAvatar'],
+      content: data['content'] ?? '',
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      likesCount: data['likesCount'] ?? 0,
+      likedBy: List<String>.from(data['likedBy'] ?? []),
+      parentCommentId: data['parentCommentId'],
+      replies: List<String>.from(data['replies'] ?? []),
     );
   }
 
-  /// Создать из документа Firestore
-  factory IdeaComment.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>?;
-    if (data == null) {
-      throw Exception('Document data is null');
-    }
-
-    return IdeaComment.fromMap({
-      'id': doc.id,
-      ...data,
-    });
+  /// Convert IdeaComment to Firestore document
+  Map<String, dynamic> toFirestore() {
+    return {
+      'ideaId': ideaId,
+      'authorId': authorId,
+      'authorName': authorName,
+      'authorAvatar': authorAvatar,
+      'content': content,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'likesCount': likesCount,
+      'likedBy': likedBy,
+      'parentCommentId': parentCommentId,
+      'replies': replies,
+    };
   }
 
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'ideaId': ideaId,
-        'userId': userId,
-        'userName': userName,
-        'text': text,
-        'parentId': parentId,
-        'replies': replies.map((e) => e.toMap()).toList(),
-        'likes': likes,
-        'isLiked': isLiked,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-        'deletedAt': deletedAt != null ? Timestamp.fromDate(deletedAt!) : null,
-      };
-
-  /// Копировать с изменениями
+  /// Create a copy with updated fields
   IdeaComment copyWith({
     String? id,
     String? ideaId,
-    String? userId,
-    String? userName,
-    String? text,
-    String? parentId,
-    List<IdeaComment>? replies,
-    int? likes,
-    bool? isLiked,
+    String? authorId,
+    String? authorName,
+    String? authorAvatar,
+    String? content,
     DateTime? createdAt,
     DateTime? updatedAt,
-    DateTime? deletedAt,
-  }) =>
-      IdeaComment(
-        id: id ?? this.id,
-        ideaId: ideaId ?? this.ideaId,
-        userId: userId ?? this.userId,
-        userName: userName ?? this.userName,
-        text: text ?? this.text,
-        parentId: parentId ?? this.parentId,
-        replies: replies ?? this.replies,
-        likes: likes ?? this.likes,
-        isLiked: isLiked ?? this.isLiked,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        deletedAt: deletedAt ?? this.deletedAt,
-      );
+    int? likesCount,
+    List<String>? likedBy,
+    String? parentCommentId,
+    List<String>? replies,
+  }) {
+    return IdeaComment(
+      id: id ?? this.id,
+      ideaId: ideaId ?? this.ideaId,
+      authorId: authorId ?? this.authorId,
+      authorName: authorName ?? this.authorName,
+      authorAvatar: authorAvatar ?? this.authorAvatar,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      likesCount: likesCount ?? this.likesCount,
+      likedBy: likedBy ?? this.likedBy,
+      parentCommentId: parentCommentId ?? this.parentCommentId,
+      replies: replies ?? this.replies,
+    );
+  }
 
-  /// Проверить, является ли комментарий удаленным
-  bool get isDeleted => deletedAt != null;
+  /// Check if comment is liked by user
+  bool isLikedBy(String userId) => likedBy.contains(userId);
 
-  /// Проверить, является ли комментарий ответом
-  bool get isReply => parentId != null;
+  /// Get formatted time ago string
+  String get timeAgo {
+    final now = DateTime.now();
+    final difference = now.difference(createdAt);
 
-  /// Получить количество ответов
-  int get repliesCount => replies.length;
+    if (difference.inDays > 0) {
+      return '${difference.inDays}д назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}ч назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}м назад';
+    } else {
+      return 'только что';
+    }
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        ideaId,
+        authorId,
+        authorName,
+        authorAvatar,
+        content,
+        createdAt,
+        updatedAt,
+        likesCount,
+        likedBy,
+        parentCommentId,
+        replies,
+      ];
+
+  @override
+  String toString() {
+    return 'IdeaComment(id: $id, ideaId: $ideaId, authorId: $authorId, content: ${content.substring(0, content.length > 50 ? 50 : content.length)}...)';
+  }
 }

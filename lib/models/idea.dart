@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 /// Idea model for creative event ideas
 class Idea extends Equatable {
@@ -20,6 +21,11 @@ class Idea extends Equatable {
   final int? estimatedDuration; // in minutes
   final List<String> requiredMaterials;
   final String? detailedDescription;
+  final List<String> images;
+  final String? description;
+  final String? authorPhotoUrl;
+  final int savesCount;
+  final int commentsCount;
 
   const Idea({
     required this.id,
@@ -39,6 +45,11 @@ class Idea extends Equatable {
     this.estimatedDuration,
     this.requiredMaterials = const [],
     this.detailedDescription,
+    this.images = const [],
+    this.description,
+    this.authorPhotoUrl,
+    this.savesCount = 0,
+    this.commentsCount = 0,
   });
 
   /// Create Idea from Firestore document
@@ -62,6 +73,11 @@ class Idea extends Equatable {
       estimatedDuration: data['estimatedDuration'],
       requiredMaterials: List<String>.from(data['requiredMaterials'] ?? []),
       detailedDescription: data['detailedDescription'],
+      images: List<String>.from(data['images'] ?? []),
+      description: data['description'],
+      authorPhotoUrl: data['authorPhotoUrl'],
+      savesCount: data['savesCount'] ?? 0,
+      commentsCount: data['commentsCount'] ?? 0,
     );
   }
 
@@ -84,6 +100,11 @@ class Idea extends Equatable {
       'estimatedDuration': estimatedDuration,
       'requiredMaterials': requiredMaterials,
       'detailedDescription': detailedDescription,
+      'images': images,
+      'description': description,
+      'authorPhotoUrl': authorPhotoUrl,
+      'savesCount': savesCount,
+      'commentsCount': commentsCount,
     };
   }
 
@@ -106,6 +127,11 @@ class Idea extends Equatable {
     int? estimatedDuration,
     List<String>? requiredMaterials,
     String? detailedDescription,
+    List<String>? images,
+    String? description,
+    String? authorPhotoUrl,
+    int? savesCount,
+    int? commentsCount,
   }) {
     return Idea(
       id: id ?? this.id,
@@ -125,6 +151,11 @@ class Idea extends Equatable {
       estimatedDuration: estimatedDuration ?? this.estimatedDuration,
       requiredMaterials: requiredMaterials ?? this.requiredMaterials,
       detailedDescription: detailedDescription ?? this.detailedDescription,
+      images: images ?? this.images,
+      description: description ?? this.description,
+      authorPhotoUrl: authorPhotoUrl ?? this.authorPhotoUrl,
+      savesCount: savesCount ?? this.savesCount,
+      commentsCount: commentsCount ?? this.commentsCount,
     );
   }
 
@@ -133,6 +164,22 @@ class Idea extends Equatable {
 
   /// Check if idea is liked by user
   bool isLikedBy(String userId) => likedBy.contains(userId);
+
+  /// Get category color
+  Color get categoryColor {
+    switch (category) {
+      case 'Свадьба':
+        return Colors.pink;
+      case 'День рождения':
+        return Colors.blue;
+      case 'Корпоратив':
+        return Colors.green;
+      case 'Детский праздник':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
 
   /// Get formatted time ago string
   String get timeAgo {
@@ -239,6 +286,11 @@ class Idea extends Equatable {
         estimatedDuration,
         requiredMaterials,
         detailedDescription,
+        images,
+        description,
+        authorPhotoUrl,
+        savesCount,
+        commentsCount,
       ];
 
   @override

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/specialist.dart';
+import '../models/common_types.dart';
 
 /// Виджет портфолио специалиста
 class SpecialistPortfolioWidget extends StatelessWidget {
@@ -165,9 +166,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        specialist.categoryDisplayName ??
-                            specialist.category?.displayName ??
-                            'Категория',
+                        specialist.category?.displayName ?? 'Категория',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 10,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/specialist.dart';
 import '../models/specialist_category.dart';
+import '../models/common_types.dart';
 
 // Временное определение для совместимости
 enum SpecialistSortOption {
@@ -182,7 +182,7 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
                 },
               ),
               ...SpecialistCategory.values.map(
-                (category) => _buildFilterChip(
+                (SpecialistCategory category) => _buildFilterChip(
                   label: category.displayName,
                   selected: widget.selectedCategory == category,
                   onSelected: (selected) {

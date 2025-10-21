@@ -33,7 +33,7 @@ class NotificationCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: _getTypeColor(notification.type).withOpacity(0.1),
+                  color: _getTypeColor(notification.type).withValues(alpha:(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -85,7 +85,7 @@ class NotificationCard extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: _getTypeColor(notification.type).withOpacity(0.1),
+                            color: _getTypeColor(notification.type).withValues(alpha:(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -101,7 +101,7 @@ class NotificationCard extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: _getPriorityColor(notification.priority).withOpacity(0.1),
+                            color: _getPriorityColor(notification.priority).withValues(alpha:(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(

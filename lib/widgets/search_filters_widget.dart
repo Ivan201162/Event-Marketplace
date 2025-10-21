@@ -341,13 +341,7 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           },
         ),
         const SizedBox(height: 16),
-        RadioGroup<bool>(
-          value: _currentFilters.sortAscending,
-          onChanged: (value) {
-            setState(() {
-              _currentFilters = _currentFilters.copyWith(sortAscending: value);
-            });
-          },
+        Column(
           children: [
             ListTile(
               title: const Text('По возрастанию'),

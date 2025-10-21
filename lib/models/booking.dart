@@ -267,4 +267,42 @@ class Booking extends Equatable {
         eventDate,
         endDate,
       ];
+
+  /// Create Booking from Firestore document
+  factory Booking.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return Booking.fromMap(data, doc.id);
+  }
+
+  /// Create Booking from Map
+  factory Booking.fromMap(Map<String, dynamic> data, [String? id]) {
+    return Booking(
+      id: id ?? data['id'] ?? '',
+      specialistId: data['specialistId'] ?? '',
+      specialistName: data['specialistName'] ?? '',
+      clientId: data['clientId'] ?? '',
+      clientName: data['clientName'] ?? '',
+      service: data['service'] ?? '',
+      date: (data['date'] as Timestamp).toDate(),
+      time: data['time'] ?? '',
+      duration: data['duration'] ?? 0,
+      totalPrice: data['totalPrice'] ?? 0,
+      notes: data['notes'] ?? '',
+      status: BookingStatus.values.firstWhere(
+        (e) => e.name == data['status'],
+        orElse: () => BookingStatus.pending,
+      ),
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      location: data['location'],
+      clientPhone: data['clientPhone'],
+      clientEmail: data['clientEmail'],
+      metadata: data['metadata'],
+      eventTitle: data['eventTitle'],
+      participantsCount: data['participantsCount'],
+      organizerName: data['organizerName'],
+      eventDate: data['eventDate'] != null ? (data['eventDate'] as Timestamp).toDate() : null,
+      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
+    );
+  }
 }

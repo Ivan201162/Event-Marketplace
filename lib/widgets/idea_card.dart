@@ -118,10 +118,10 @@ class IdeaCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: _getDifficultyColor(idea.difficulty!).withOpacity(0.1),
+              color: _getDifficultyColor(idea.difficulty!).withValues(alpha:(0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: _getDifficultyColor(idea.difficulty!).withOpacity(0.3),
+                color: _getDifficultyColor(idea.difficulty!).withValues(alpha:(0.3),
               ),
             ),
             child: Text(

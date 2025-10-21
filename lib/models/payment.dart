@@ -11,6 +11,84 @@ enum PaymentMethod {
   sbp,
 }
 
+/// PaymentMethod extensions
+extension PaymentMethodExtension on PaymentMethod {
+  /// Get display name for payment method
+  String get displayName {
+    switch (this) {
+      case PaymentMethod.card:
+        return 'Банковская карта';
+      case PaymentMethod.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethod.digitalWallet:
+        return 'Электронный кошелек';
+      case PaymentMethod.cryptocurrency:
+        return 'Криптовалюта';
+      case PaymentMethod.cash:
+        return 'Наличные';
+      case PaymentMethod.sbp:
+        return 'СБП';
+    }
+  }
+
+  /// Get icon for payment method
+  String get icon {
+    switch (this) {
+      case PaymentMethod.card:
+        return '💳';
+      case PaymentMethod.bankTransfer:
+        return '🏦';
+      case PaymentMethod.digitalWallet:
+        return '📱';
+      case PaymentMethod.cryptocurrency:
+        return '₿';
+      case PaymentMethod.cash:
+        return '💵';
+      case PaymentMethod.sbp:
+        return '📲';
+    }
+  }
+
+  /// Check if payment method is available
+  bool get isAvailable => true;
+
+  /// Get description for payment method
+  String get description {
+    switch (this) {
+      case PaymentMethod.card:
+        return 'Оплата банковской картой';
+      case PaymentMethod.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethod.digitalWallet:
+        return 'Электронный кошелек';
+      case PaymentMethod.cryptocurrency:
+        return 'Криптовалюта';
+      case PaymentMethod.cash:
+        return 'Наличные';
+      case PaymentMethod.sbp:
+        return 'Система быстрых платежей';
+    }
+  }
+
+  /// Get fee for payment method
+  double get fee {
+    switch (this) {
+      case PaymentMethod.card:
+        return 0.03; // 3%
+      case PaymentMethod.bankTransfer:
+        return 0.01; // 1%
+      case PaymentMethod.digitalWallet:
+        return 0.02; // 2%
+      case PaymentMethod.cryptocurrency:
+        return 0.05; // 5%
+      case PaymentMethod.cash:
+        return 0.0; // 0%
+      case PaymentMethod.sbp:
+        return 0.0; // 0%
+    }
+  }
+}
+
 /// Payment status enum
 enum PaymentStatus {
   pending,
@@ -20,6 +98,49 @@ enum PaymentStatus {
   cancelled,
   refunded,
   disputed,
+}
+
+/// PaymentStatus extensions
+extension PaymentStatusExtension on PaymentStatus {
+  /// Get display name for payment status
+  String get displayName {
+    switch (this) {
+      case PaymentStatus.pending:
+        return 'Ожидает';
+      case PaymentStatus.processing:
+        return 'Обрабатывается';
+      case PaymentStatus.completed:
+        return 'Завершен';
+      case PaymentStatus.failed:
+        return 'Неудачный';
+      case PaymentStatus.cancelled:
+        return 'Отменен';
+      case PaymentStatus.refunded:
+        return 'Возвращен';
+      case PaymentStatus.disputed:
+        return 'Спорный';
+    }
+  }
+
+  /// Get color for payment status
+  String get color {
+    switch (this) {
+      case PaymentStatus.pending:
+        return 'orange';
+      case PaymentStatus.processing:
+        return 'blue';
+      case PaymentStatus.completed:
+        return 'green';
+      case PaymentStatus.failed:
+        return 'red';
+      case PaymentStatus.cancelled:
+        return 'grey';
+      case PaymentStatus.refunded:
+        return 'purple';
+      case PaymentStatus.disputed:
+        return 'red';
+    }
+  }
 }
 
 /// Payment type enum
@@ -33,6 +154,57 @@ enum PaymentType {
   penalty,
   bonus,
   hold,
+}
+
+/// PaymentType extensions
+extension PaymentTypeExtension on PaymentType {
+  /// Get display name for payment type
+  String get displayName {
+    switch (this) {
+      case PaymentType.booking:
+        return 'Бронирование';
+      case PaymentType.subscription:
+        return 'Подписка';
+      case PaymentType.deposit:
+        return 'Депозит';
+      case PaymentType.prepayment:
+        return 'Предоплата';
+      case PaymentType.finalPayment:
+        return 'Финальный платеж';
+      case PaymentType.fullPayment:
+        return 'Полная оплата';
+      case PaymentType.penalty:
+        return 'Штраф';
+      case PaymentType.bonus:
+        return 'Бонус';
+      case PaymentType.hold:
+        return 'Блокировка';
+    }
+  }
+
+  /// Get icon for payment type
+  String get icon {
+    switch (this) {
+      case PaymentType.booking:
+        return '📅';
+      case PaymentType.subscription:
+        return '🔄';
+      case PaymentType.deposit:
+        return '💰';
+      case PaymentType.prepayment:
+        return '💳';
+      case PaymentType.finalPayment:
+        return '✅';
+      case PaymentType.fullPayment:
+        return '💯';
+      case PaymentType.penalty:
+        return '⚠️';
+      case PaymentType.bonus:
+        return '🎁';
+      case PaymentType.hold:
+        return '🔒';
+    }
+  }
 }
 
 /// Tax status enum
