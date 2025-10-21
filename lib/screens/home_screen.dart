@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../models/app_user.dart';
+import '../models/search_filters.dart';
 import '../providers/auth_providers.dart';
 import '../providers/local_data_providers.dart';
 import '../widgets/category_grid_widget.dart';
@@ -17,7 +19,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _searchController = TextEditingController();
-  Map<String, dynamic> _currentFilters = {};
+  SearchFilters _currentFilters = const SearchFilters();
 
   @override
   void dispose() {
@@ -47,7 +49,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildHomeContent(user) => SingleChildScrollView(
+  Widget _buildHomeContent(AppUser? user) => SingleChildScrollView(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -72,7 +74,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ),
   );
 
-  Widget _buildUserProfileCard(user) => Container(
+  Widget _buildUserProfileCard(AppUser? user) => Container(
     margin: const EdgeInsets.all(16),
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
@@ -98,10 +100,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         CircleAvatar(
           radius: 30,
           backgroundColor: Colors.white,
-          child: user?.photoUrl?.isNotEmpty == true
+          child: user?.avatarUrl?.isNotEmpty == true
               ? ClipOval(
                   child: Image.network(
-                    user.photoUrl!,
+                    user?.avatarUrl ?? '',
                     width: 60,
                     height: 60,
                     fit: BoxFit.cover,
@@ -178,7 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(width: 8),
             ElevatedButton.icon(
               onPressed: () {
-                showModalBottomSheet(
+                showModalBottomSheet<void>(
                   context: context,
                   isScrollControlled: true,
                   builder: (context) => FractionallySizedBox(
@@ -202,7 +204,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ),
   );
 
-  void _applyFilters(Map<String, dynamic> filters) {
+  void _applyFilters(SearchFilters filters) {
     setState(() {
       _currentFilters = filters;
     });
