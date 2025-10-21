@@ -80,7 +80,7 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
     });
 
     // Обновляем состояние
-    ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.verifying;
+    ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.verifying);
 
     try {
       final authService = ref.read(authServiceProvider);
@@ -99,7 +99,7 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
       );
 
       // Обновляем состояние
-      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.verified;
+      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.verified);
 
       if (mounted) {
         // Переходим на главный экран
@@ -126,14 +126,14 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
       }
 
       // Обновляем состояние ошибки
-      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.error);
 
       setState(() {
         _errorMessage = errorMessage;
       });
     } catch (e) {
       // Обновляем состояние ошибки
-      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.error);
 
       setState(() {
         _errorMessage = 'Произошла ошибка: ${e.toString()}';
@@ -157,20 +157,20 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
     });
 
     // Обновляем состояние
-    ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.sending;
+    ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.sending);
 
     try {
       final authService = ref.read(authServiceProvider);
       await authService.sendPhoneVerificationCode(widget.phoneNumber);
 
       // Обновляем verification ID
-      ref.read(phoneVerificationIdProvider.notifier).state = authService.currentVerificationId;
+      ref.read(phoneVerificationIdProvider.notifier).setVerificationId(authService.currentVerificationId);
 
       // Запускаем новый таймер
       _startCountdown();
 
       // Обновляем состояние
-      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.codeSent;
+      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.codeSent);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -195,14 +195,14 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
       }
 
       // Обновляем состояние ошибки
-      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.error);
 
       setState(() {
         _errorMessage = errorMessage;
       });
     } catch (e) {
       // Обновляем состояние ошибки
-      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.error);
 
       setState(() {
         _errorMessage = 'Произошла ошибка: ${e.toString()}';

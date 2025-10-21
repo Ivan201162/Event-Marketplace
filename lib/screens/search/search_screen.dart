@@ -31,13 +31,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       query: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
     );
 
-    ref.read(searchFiltersProvider.notifier).state = newFilters;
+    ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
     setState(() => _isSearching = true);
   }
 
   void _clearSearch() {
     _searchController.clear();
-    ref.read(searchFiltersProvider.notifier).state = SearchFilters.empty();
+    ref.read(searchFiltersProvider.notifier).clearFilters();
     setState(() => _isSearching = false);
   }
 
@@ -50,7 +50,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         child: SearchFiltersWidget(
           initialFilters: ref.read(searchFiltersProvider),
           onApplyFilters: (filters) {
-            ref.read(searchFiltersProvider.notifier).state = filters;
+            ref.read(searchFiltersProvider.notifier).updateFilters(filters);
             setState(() => _isSearching = true);
           },
         ),
@@ -117,29 +117,29 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       if (searchFilters.query != null && searchFilters.query!.isNotEmpty)
                         _buildFilterChip('Поиск: ${searchFilters.query}', () {
                           final newFilters = searchFilters.copyWith();
-                          ref.read(searchFiltersProvider.notifier).state = newFilters;
+                          ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
                         }),
                       if (searchFilters.city != null)
                         _buildFilterChip('Город: ${searchFilters.city}', () {
                           final newFilters = searchFilters.copyWith();
-                          ref.read(searchFiltersProvider.notifier).state = newFilters;
+                          ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
                         }),
                       if (searchFilters.specialization != null)
                         _buildFilterChip('Специализация: ${searchFilters.specialization}', () {
                           final newFilters = searchFilters.copyWith();
-                          ref.read(searchFiltersProvider.notifier).state = newFilters;
+                          ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
                         }),
                       if (searchFilters.minRating != null)
                         _buildFilterChip('Рейтинг: ${searchFilters.minRating}+', () {
                           final newFilters = searchFilters.copyWith();
-                          ref.read(searchFiltersProvider.notifier).state = newFilters;
+                          ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
                         }),
                       if (searchFilters.minPrice != null || searchFilters.maxPrice != null)
                         _buildFilterChip(
                           'Цена: ${searchFilters.minPrice ?? 0}-${searchFilters.maxPrice ?? '∞'} ₽',
                           () {
                             final newFilters = searchFilters.copyWith();
-                            ref.read(searchFiltersProvider.notifier).state = newFilters;
+                            ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
                           },
                         ),
                     ],

@@ -36,7 +36,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     setState(() => _isLoading = true);
-    ref.read(authLoadingProvider.notifier).state = true;
+    ref.read(authLoadingProvider.notifier).setLoading(true);
 
     try {
       final authService = ref.read(authServiceProvider);
@@ -54,7 +54,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _showError('Произошла ошибка: ${e.toString()}');
     } finally {
       setState(() => _isLoading = false);
-      ref.read(authLoadingProvider.notifier).state = false;
+      ref.read(authLoadingProvider.notifier).setLoading(false);
     }
   }
 
@@ -67,7 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     setState(() => _isLoading = true);
-    ref.read(authLoadingProvider.notifier).state = true;
+    ref.read(authLoadingProvider.notifier).setLoading(true);
 
     try {
       final authService = ref.read(authServiceProvider);
@@ -86,7 +86,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _showError('Произошла ошибка: ${e.toString()}');
     } finally {
       setState(() => _isLoading = false);
-      ref.read(authLoadingProvider.notifier).state = false;
+      ref.read(authLoadingProvider.notifier).setLoading(false);
     }
   }
 
@@ -97,7 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _signInWithGoogle() async {
     setState(() => _isLoading = true);
-    ref.read(authLoadingProvider.notifier).state = true;
+    ref.read(authLoadingProvider.notifier).setLoading(true);
 
     try {
       final authService = ref.read(authServiceProvider);
@@ -138,7 +138,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _showError(errorMessage);
     } finally {
       setState(() => _isLoading = false);
-      ref.read(authLoadingProvider.notifier).state = false;
+      ref.read(authLoadingProvider.notifier).setLoading(false);
     }
   }
 

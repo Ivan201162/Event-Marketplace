@@ -56,7 +56,7 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     });
 
     // Обновляем состояние
-    ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.sending;
+    ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.sending);
 
     try {
       String phoneNumber = _phoneController.text.trim();
@@ -73,14 +73,14 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
       debugPrint('📱 Отправка SMS на номер: $phoneNumber');
 
       // Сохраняем номер телефона
-      ref.read(phoneNumberProvider.notifier).state = phoneNumber;
+      ref.read(phoneNumberProvider.notifier).setPhoneNumber(phoneNumber);
 
       final authService = ref.read(authServiceProvider);
       await authService.sendPhoneVerificationCode(phoneNumber);
 
       // Обновляем состояние
-      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.codeSent;
-      ref.read(phoneVerificationIdProvider.notifier).state = authService.currentVerificationId;
+      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.codeSent);
+      ref.read(phoneVerificationIdProvider.notifier).setVerificationId(authService.currentVerificationId);
 
       if (mounted) {
         // Переходим на экран ввода кода
@@ -110,14 +110,14 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
       }
 
       // Обновляем состояние ошибки
-      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.error);
 
       setState(() {
         _errorMessage = errorMessage;
       });
     } catch (e) {
       // Обновляем состояние ошибки
-      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.error);
 
       setState(() {
         _errorMessage = 'Произошла ошибка: ${e.toString()}';
