@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../../models/common_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/specialist.dart';
@@ -222,6 +223,9 @@ class _CreateTestSpecialistButtonState extends ConsumerState<CreateTestSpecialis
         id: specialistId,
         userId: userId,
         name: 'Максим Видеограф',
+        city: 'Санкт-Петербург',
+        specialization: 'Видеограф',
+        pricePerHour: 4000,
         description:
             'Креативный видеограф и монтажер. Создаю запоминающиеся видео для любых событий.',
         bio:

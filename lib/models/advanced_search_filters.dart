@@ -1,4 +1,5 @@
 import 'city_region.dart';
+import 'common_types.dart';
 import 'specialist.dart';
 
 /// Расширенные фильтры для поиска специалистов по всей России

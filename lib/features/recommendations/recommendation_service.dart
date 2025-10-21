@@ -59,7 +59,7 @@ class RecommendationService {
         return [];
       }
 
-      final specialist = Specialist.fromFirestore(specialistDoc);
+      final specialist = Specialist.fromDocument(specialistDoc);
 
       // Ищем специалистов с похожими характеристиками
       final similarSpecialists = await _db
@@ -71,7 +71,7 @@ class RecommendationService {
           .get();
 
       final specialists = similarSpecialists.docs
-          .map(Specialist.fromFirestore)
+          .map(Specialist.fromDocument)
           .where((s) => s.id != specialistId) // Исключаем самого специалиста
           .toList();
 
@@ -109,7 +109,7 @@ class RecommendationService {
 
       final snapshot = await query.limit(limit).get();
 
-      return snapshot.docs.map(Specialist.fromFirestore).toList();
+      return snapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения топ специалистов: $e');
     }
@@ -141,7 +141,7 @@ class RecommendationService {
 
       final snapshot = await query.limit(limit).get();
 
-      return snapshot.docs.map(Specialist.fromFirestore).toList();
+      return snapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения рекомендаций по бюджету: $e');
     }
@@ -181,7 +181,7 @@ class RecommendationService {
         // Получаем данные специалиста
         final specialistDoc = await _db.collection('specialists').doc(booking.specialistId).get();
         if (specialistDoc.exists) {
-          final specialist = Specialist.fromFirestore(specialistDoc);
+          final specialist = Specialist.fromDocument(specialistDoc);
 
           // Город
           if (specialist.city != null) {
