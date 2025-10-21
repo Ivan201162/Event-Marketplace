@@ -125,7 +125,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
   Future<void> _signInWithPhone() async {
     // Переходим на экран ввода номера телефона
-    context.push('/phone-auth');
+    await context.push('/phone-auth');
   }
 
   Future<void> _signInWithGoogle() async {
@@ -224,7 +224,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   void _showGoogleSignInDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Email уже используется'),

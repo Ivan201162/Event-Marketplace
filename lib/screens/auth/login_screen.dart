@@ -92,7 +92,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _signInWithPhone() async {
     // Переходим на экран ввода номера телефона
-    context.push('/phone-auth');
+    await context.push('/phone-auth');
   }
 
   Future<void> _signInWithGoogle() async {
