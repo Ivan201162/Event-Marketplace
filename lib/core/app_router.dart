@@ -9,6 +9,9 @@ import '../screens/auth/onboarding_screen.dart';
 import '../screens/auth/phone_auth_screen.dart';
 import '../screens/auth/phone_verification_screen.dart';
 import '../screens/main_navigation_screen.dart';
+import '../screens/notifications/notifications_screen.dart';
+import '../screens/profile/edit_profile_screen.dart';
+import '../screens/ideas/add_idea_screen.dart';
 import '../screens/search/search_screen.dart';
 
 /// App router provider
@@ -60,6 +63,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       // Search route
       GoRoute(path: '/search', name: 'search', builder: (context, state) => const SearchScreen()),
+
+      // Profile routes
+      GoRoute(
+        path: '/profile/edit',
+        name: 'edit-profile',
+        builder: (context, state) => const EditProfileScreen(),
+      ),
+
+      // Ideas routes
+      GoRoute(
+        path: '/ideas/add',
+        name: 'add-idea',
+        builder: (context, state) => const AddIdeaScreen(),
+      ),
+
+      // Notifications route
+      GoRoute(
+        path: '/notifications',
+        name: 'notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
 
       // Main app routes
       GoRoute(

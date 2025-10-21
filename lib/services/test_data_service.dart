@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +11,105 @@ class TestDataService {
 
   // Константы для батчевых операций
   static const int _batchSize = 500;
+
+  // Тестовые категории
+  final List<Map<String, dynamic>> _testCategories = [
+    {
+      'id': 'category_1',
+      'name': 'Ведущие',
+      'displayName': 'Ведущие',
+      'description': 'Профессиональные ведущие для свадеб, корпоративов и праздников',
+      'icon': '🎤',
+      'color': '#FF6B6B',
+      'subcategories': ['Свадебный ведущий', 'Корпоративный ведущий', 'Детский ведущий'],
+      'isActive': true,
+      'sortOrder': 1,
+    },
+    {
+      'id': 'category_2',
+      'name': 'Фотографы',
+      'displayName': 'Фотографы',
+      'description': 'Профессиональная фотосъемка для любых мероприятий',
+      'icon': '📸',
+      'color': '#4ECDC4',
+      'subcategories': ['Свадебная фотосъемка', 'Портретная фотосъемка', 'Студийная фотосъемка'],
+      'isActive': true,
+      'sortOrder': 2,
+    },
+    {
+      'id': 'category_3',
+      'name': 'Флористы',
+      'displayName': 'Флористы',
+      'description': 'Цветочные композиции и декорации для мероприятий',
+      'icon': '🌸',
+      'color': '#45B7D1',
+      'subcategories': ['Свадебная флористика', 'Корпоративная флористика', 'Праздничная флористика'],
+      'isActive': true,
+      'sortOrder': 3,
+    },
+    {
+      'id': 'category_4',
+      'name': 'Музыканты',
+      'displayName': 'Музыканты',
+      'description': 'Живая музыка для ваших мероприятий',
+      'icon': '🎵',
+      'color': '#96CEB4',
+      'subcategories': ['Свадебная музыка', 'Корпоративная музыка', 'Детская музыка'],
+      'isActive': true,
+      'sortOrder': 4,
+    },
+    {
+      'id': 'category_5',
+      'name': 'Декораторы',
+      'displayName': 'Декораторы',
+      'description': 'Оформление и декорирование мероприятий',
+      'icon': '🎨',
+      'color': '#FFEAA7',
+      'subcategories': ['Свадебное оформление', 'Корпоративное оформление', 'Детское оформление'],
+      'isActive': true,
+      'sortOrder': 5,
+    },
+  ];
+
+  // Тестовые тарифы
+  final List<Map<String, dynamic>> _testTariffs = [
+    {
+      'id': 'tariff_1',
+      'name': 'Базовый',
+      'description': 'Основные возможности для начинающих специалистов',
+      'price': 0.0,
+      'currency': 'RUB',
+      'duration': 30,
+      'features': ['Создание профиля', '5 заявок в месяц', 'Базовая поддержка'],
+      'isActive': true,
+      'isPopular': false,
+      'sortOrder': 1,
+    },
+    {
+      'id': 'tariff_2',
+      'name': 'Профессиональный',
+      'description': 'Расширенные возможности для опытных специалистов',
+      'price': 2990.0,
+      'currency': 'RUB',
+      'duration': 30,
+      'features': ['Неограниченные заявки', 'Приоритет в поиске', 'Расширенная аналитика', 'Премиум поддержка'],
+      'isActive': true,
+      'isPopular': true,
+      'sortOrder': 2,
+    },
+    {
+      'id': 'tariff_3',
+      'name': 'Премиум',
+      'description': 'Максимальные возможности для топ-специалистов',
+      'price': 5990.0,
+      'currency': 'RUB',
+      'duration': 30,
+      'features': ['Все возможности Профессионального', 'Персональный менеджер', 'VIP поддержка', 'Эксклюзивные возможности'],
+      'isActive': true,
+      'isPopular': false,
+      'sortOrder': 3,
+    },
+  ];
 
   // Тестовые промоакции
   final List<Map<String, dynamic>> _testPromotions = [
@@ -2551,6 +2650,117 @@ class TestDataService {
             .set(message);
       }
       debugPrint('    ✅ 5 сообщений добавлено в чат $chatId');
+    }
+  }
+
+  /// Создать тестовые категории
+  Future<void> createTestCategories() async {
+    try {
+      final batch = _firestore.batch();
+      int count = 0;
+
+      for (final category in _testCategories) {
+        final docRef = _firestore.collection('categories').doc(category['id']);
+        batch.set(docRef, {
+          ...category,
+          'createdAt': FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+
+        count++;
+        if (count >= _batchSize) {
+          await batch.commit();
+          count = 0;
+        }
+      }
+
+      if (count > 0) {
+        await batch.commit();
+      }
+
+      debugPrint('✅ Тестовые категории созданы успешно');
+    } catch (e) {
+      debugPrint('❌ Ошибка создания тестовых категорий: $e');
+    }
+  }
+
+  /// Создать тестовые тарифы
+  Future<void> createTestTariffs() async {
+    try {
+      final batch = _firestore.batch();
+      int count = 0;
+
+      for (final tariff in _testTariffs) {
+        final docRef = _firestore.collection('tariffs').doc(tariff['id']);
+        batch.set(docRef, {
+          ...tariff,
+          'createdAt': FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+
+        count++;
+        if (count >= _batchSize) {
+          await batch.commit();
+          count = 0;
+        }
+      }
+
+      if (count > 0) {
+        await batch.commit();
+      }
+
+      debugPrint('✅ Тестовые тарифы созданы успешно');
+    } catch (e) {
+      debugPrint('❌ Ошибка создания тестовых тарифов: $e');
+    }
+  }
+
+  /// Создать тестовые посты
+  Future<void> createTestPosts() async {
+    try {
+      final batch = _firestore.batch();
+      int count = 0;
+
+      for (final post in _testPosts) {
+        final docRef = _firestore.collection('posts').doc(post['id']);
+        batch.set(docRef, {
+          ...post,
+          'createdAt': FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+
+        count++;
+        if (count >= _batchSize) {
+          await batch.commit();
+          count = 0;
+        }
+      }
+
+      if (count > 0) {
+        await batch.commit();
+      }
+
+      debugPrint('✅ Тестовые посты созданы успешно');
+    } catch (e) {
+      debugPrint('❌ Ошибка создания тестовых постов: $e');
+    }
+  }
+
+  /// Создать все тестовые данные
+  Future<void> createAllTestData() async {
+    try {
+      debugPrint('🚀 Начинаем создание всех тестовых данных...');
+      
+      await createTestCategories();
+      await createTestTariffs();
+      await createTestSpecialists();
+      await createTestPosts();
+      await createTestIdeas();
+      await createTestPromotions();
+      
+      debugPrint('✅ Все тестовые данные созданы успешно!');
+    } catch (e) {
+      debugPrint('❌ Ошибка создания тестовых данных: $e');
     }
   }
 

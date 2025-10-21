@@ -126,45 +126,82 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
         });
         widget.onCategorySelected(category['name'] as String);
       },
-      child: Container(
-        width: 80,
-        margin: const EdgeInsets.only(right: 12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        width: 90,
+        height: 100,
+        margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
-          color: isSelected
-              ? (category['color'] as Color).withValues(alpha: 0.2)
-              : (category['color'] as Color).withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(16),
+          gradient: isSelected
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    (category['color'] as Color),
+                    (category['color'] as Color).withOpacity(0.8),
+                  ],
+                )
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white,
+                    Colors.grey[50]!,
+                  ],
+                ),
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: (category['color'] as Color).withValues(alpha: isSelected ? 0.5 : 0.3),
+            color: isSelected 
+                ? (category['color'] as Color)
+                : Colors.grey.withOpacity(0.3),
             width: isSelected ? 2 : 1,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: (category['color'] as Color).withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
+          boxShadow: [
+            BoxShadow(
+              color: isSelected 
+                  ? (category['color'] as Color).withOpacity(0.4)
+                  : Colors.grey.withOpacity(0.2),
+              blurRadius: isSelected ? 12 : 6,
+              offset: Offset(0, isSelected ? 6 : 3),
+            ),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedScale(
-              scale: isSelected ? 1.2 : 1.0,
+            AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              child: Text(category['icon'] as String, style: const TextStyle(fontSize: 24)),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isSelected 
+                    ? Colors.white.withOpacity(0.2)
+                    : (category['color'] as Color).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: AnimatedScale(
+                scale: isSelected ? 1.1 : 1.0,
+                duration: const Duration(milliseconds: 200),
+                child: Text(
+                  category['icon'] as String, 
+                  style: TextStyle(
+                    fontSize: 28,
+                    color: isSelected ? Colors.white : (category['color'] as Color),
+                  ),
+                ),
+              ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
             Text(
               category['name'] as String,
               style: TextStyle(
                 fontSize: 12,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected ? (category['color'] as Color) : Colors.grey[700],
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                color: isSelected ? Colors.white : Colors.grey[700],
               ),
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

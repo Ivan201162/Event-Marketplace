@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../models/push_notification.dart';
+import '../../models/notification.dart';
 import '../../providers/auth_providers.dart';
-import '../../providers/push_notification_providers.dart';
-import '../../widgets/notification_card.dart';
+import '../../services/notification_service.dart';
+import '../../widgets/loading/loading_state_widget.dart';
 
-/// Screen for managing notifications
+/// Экран уведомлений
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
@@ -15,18 +16,52 @@ class NotificationsScreen extends ConsumerStatefulWidget {
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+    with TickerProviderStateMixin {
+  late AnimationController _fadeController;
+  late AnimationController _slideController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _initializeAnimations();
+  }
+
+  void _initializeAnimations() {
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _slideController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeInOut,
+    ));
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _slideController,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _fadeController.forward();
+    _slideController.forward();
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _fadeController.dispose();
+    _slideController.dispose();
     super.dispose();
   }
 
@@ -37,55 +72,50 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Уведомления'),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          tabs: const [
-            Tab(text: 'Все', icon: Icon(Icons.notifications)),
-            Tab(text: 'Непрочитанные', icon: Icon(Icons.mark_email_unread)),
-            Tab(text: 'Важные', icon: Icon(Icons.priority_high)),
-            Tab(text: 'Статистика', icon: Icon(Icons.analytics)),
-          ],
-        ),
+        centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              ref.invalidate(userNotificationsProvider);
-            },
+            icon: const Icon(Icons.mark_email_read),
+            onPressed: _markAllAsRead,
+            tooltip: 'Отметить все как прочитанные',
           ),
-          IconButton(icon: const Icon(Icons.mark_email_read), onPressed: () => _markAllAsRead()),
         ],
       ),
       body: currentUser.when(
         data: (user) {
           if (user == null) {
-            return const Center(child: Text('Пользователь не найден'));
+            return const Center(
+              child: Text('Войдите в аккаунт для просмотра уведомлений'),
+            );
           }
 
-          return TabBarView(
-            controller: _tabController,
-            children: [
-              _buildAllNotificationsTab(user.id),
-              _buildUnreadNotificationsTab(user.id),
-              _buildHighPriorityNotificationsTab(user.id),
-              _buildStatisticsTab(user.id),
-            ],
+          return FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: _buildNotificationsList(user.uid),
+            ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const LoadingStateWidget(
+          message: 'Загрузка уведомлений...',
+        ),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error, size: 64, color: Colors.red),
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
               const SizedBox(height: 16),
-              Text('Ошибка загрузки: $error'),
+              Text('Ошибка загрузки уведомлений'),
+              const SizedBox(height: 8),
+              Text(
+                error.toString(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.grey),
+              ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  ref.invalidate(currentUserProvider);
-                },
+                onPressed: () => setState(() {}),
                 child: const Text('Повторить'),
               ),
             ],
@@ -95,568 +125,237 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     );
   }
 
-  Widget _buildAllNotificationsTab(String userId) {
-    final notificationsAsync = ref.watch(userNotificationsStreamProvider(userId));
-
-    return notificationsAsync.when(
-      data: (notifications) {
-        if (notifications.isEmpty) {
-          return _buildEmptyState(
-            icon: Icons.notifications_none,
-            title: 'Нет уведомлений',
-            subtitle: 'Здесь будут отображаться ваши уведомления',
+  Widget _buildNotificationsList(String userId) {
+    return StreamBuilder<List<AppNotification>>(
+      stream: NotificationService.getUserNotificationsStream(userId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LoadingStateWidget(
+            message: 'Загрузка уведомлений...',
           );
+        }
+
+        if (snapshot.hasError) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
+                const Text('Ошибка загрузки уведомлений'),
+                const SizedBox(height: 8),
+                Text(
+                  snapshot.error.toString(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => setState(() {}),
+                  child: const Text('Повторить'),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final notifications = snapshot.data ?? [];
+
+        if (notifications.isEmpty) {
+          return _buildEmptyState();
         }
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(userNotificationsProvider);
+            setState(() {});
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: notifications.length,
             itemBuilder: (context, index) {
               final notification = notifications[index];
-              return NotificationCard(
-                notification: notification,
-                onTap: () => _showNotificationDetails(notification),
-                onMarkAsRead: () => _markAsRead(notification.id),
-                onDelete: () => _deleteNotification(notification.id),
-              );
+              return _buildNotificationCard(notification);
             },
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => _buildErrorState(error),
     );
   }
 
-  Widget _buildUnreadNotificationsTab(String userId) {
-    final unreadNotificationsAsync = ref.watch(unreadNotificationsProvider(userId));
-
-    return unreadNotificationsAsync.when(
-      data: (notifications) {
-        if (notifications.isEmpty) {
-          return _buildEmptyState(
-            icon: Icons.mark_email_read,
-            title: 'Все уведомления прочитаны',
-            subtitle: 'У вас нет непрочитанных уведомлений',
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(unreadNotificationsProvider);
-          },
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: notifications.length,
-            itemBuilder: (context, index) {
-              final notification = notifications[index];
-              return NotificationCard(
-                notification: notification,
-                onTap: () => _showNotificationDetails(notification),
-                onMarkAsRead: () => _markAsRead(notification.id),
-                onDelete: () => _deleteNotification(notification.id),
-              );
-            },
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.notifications_none,
+            size: 80,
+            color: Colors.grey[400],
           ),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => _buildErrorState(error),
-    );
-  }
-
-  Widget _buildHighPriorityNotificationsTab(String userId) {
-    final highPriorityNotificationsAsync = ref.watch(highPriorityNotificationsProvider(userId));
-
-    return highPriorityNotificationsAsync.when(
-      data: (notifications) {
-        if (notifications.isEmpty) {
-          return _buildEmptyState(
-            icon: Icons.priority_high,
-            title: 'Нет важных уведомлений',
-            subtitle: 'Здесь будут отображаться важные уведомления',
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(highPriorityNotificationsProvider);
-          },
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: notifications.length,
-            itemBuilder: (context, index) {
-              final notification = notifications[index];
-              return NotificationCard(
-                notification: notification,
-                onTap: () => _showNotificationDetails(notification),
-                onMarkAsRead: () => _markAsRead(notification.id),
-                onDelete: () => _deleteNotification(notification.id),
-              );
-            },
+          const SizedBox(height: 16),
+          Text(
+            'Нет уведомлений',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: Colors.grey[600],
+            ),
           ),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => _buildErrorState(error),
-    );
-  }
-
-  Widget _buildStatisticsTab(String userId) {
-    final statsAsync = ref.watch(notificationStatsProvider(userId));
-
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.invalidate(notificationStatsProvider);
-      },
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: statsAsync.when(
-          data: (stats) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Overview Cards
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      'Всего',
-                      stats['totalNotifications'] ?? 0,
-                      Colors.blue,
-                      Icons.notifications,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildStatCard(
-                      'Непрочитанных',
-                      stats['unreadNotifications'] ?? 0,
-                      Colors.orange,
-                      Icons.mark_email_unread,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      'Прочитанных',
-                      stats['readNotifications'] ?? 0,
-                      Colors.green,
-                      Icons.mark_email_read,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildStatCard(
-                      'Сегодня',
-                      stats['todaysNotifications'] ?? 0,
-                      Colors.purple,
-                      Icons.today,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              // By Type
-              Text(
-                'По типам',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              ..._buildTypeStats(stats['notificationsByType'] ?? {}),
-              const SizedBox(height: 24),
-              // By Priority
-              Text(
-                'По приоритету',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 12),
-              ..._buildPriorityStats(stats['notificationsByPriority'] ?? {}),
-            ],
+          const SizedBox(height: 8),
+          Text(
+            'Здесь будут появляться уведомления о новых заявках, сообщениях и обновлениях',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 14,
+            ),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => _buildErrorState(error),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildStatCard(String title, int count, Color color, IconData icon) {
+  Widget _buildNotificationCard(AppNotification notification) {
+    final theme = Theme.of(context);
+    final isUnread = !notification.read;
+
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: isUnread ? 2 : 1,
+      color: isUnread ? theme.primaryColor.withValues(alpha: 0.05) : null,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: _getNotificationColor(notification.type).withValues(alpha: 0.1),
+          child: Icon(
+            _getNotificationIcon(notification.type),
+            color: _getNotificationColor(notification.type),
+            size: 20,
+          ),
+        ),
+        title: Text(
+          notification.title,
+          style: TextStyle(
+            fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ),
+            Text(notification.body),
             const SizedBox(height: 4),
             Text(
-              count.toString(),
-              style: Theme.of(
-                context,
-              ).textTheme.headlineMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
+              _formatDate(notification.createdAt),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[500],
+              ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  List<Widget> _buildTypeStats(Map<PushNotificationType, int> typeStats) {
-    return PushNotificationType.values.map((type) {
-      final count = typeStats[type] ?? 0;
-      return Card(
-        margin: const EdgeInsets.only(bottom: 8),
-        child: ListTile(
-          leading: Text(_getTypeIcon(type), style: const TextStyle(fontSize: 24)),
-          title: Text(type.displayName),
-          trailing: Text(
-            count.toString(),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ),
-      );
-    }).toList();
-  }
-
-  List<Widget> _buildPriorityStats(Map<PushNotificationPriority, int> priorityStats) {
-    return PushNotificationPriority.values.map((priority) {
-      final count = priorityStats[priority] ?? 0;
-      return Card(
-        margin: const EdgeInsets.only(bottom: 8),
-        child: ListTile(
-          leading: Icon(_getPriorityIcon(priority), color: _getPriorityColor(priority)),
-          title: Text(priority.displayName),
-          trailing: Text(
-            count.toString(),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ),
-      );
-    }).toList();
-  }
-
-  Widget _buildEmptyState({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          Text(title, style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildErrorState(Object error) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error, size: 64, color: Colors.red),
-          const SizedBox(height: 16),
-          const Text('Ошибка загрузки уведомлений'),
-          const SizedBox(height: 8),
-          Text(
-            error.toString(),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              ref.invalidate(userNotificationsProvider);
-            },
-            child: const Text('Повторить'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showNotificationDetails(PushNotification notification) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => NotificationDetailsSheet(notification: notification),
-    );
-  }
-
-  Future<void> _markAsRead(String notificationId) async {
-    final service = ref.read(pushNotificationServiceProvider);
-    final success = await service.markAsRead(notificationId);
-
-    if (success && mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Уведомление отмечено как прочитанное')));
-    }
-  }
-
-  Future<void> _markAllAsRead() async {
-    final currentUser = ref.read(currentUserProvider).value;
-    if (currentUser == null) return;
-
-    final service = ref.read(pushNotificationServiceProvider);
-    final success = await service.markAllAsRead(currentUser.id);
-
-    if (success && mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Все уведомления отмечены как прочитанные')));
-    }
-  }
-
-  Future<void> _deleteNotification(String notificationId) async {
-    final service = ref.read(pushNotificationServiceProvider);
-    final success = await service.deleteNotification(notificationId);
-
-    if (success && mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Уведомление удалено')));
-    }
-  }
-
-  String _getTypeIcon(PushNotificationType type) {
-    switch (type) {
-      case PushNotificationType.booking:
-        return '📅';
-      case PushNotificationType.payment:
-        return '💳';
-      case PushNotificationType.message:
-        return '💬';
-      case PushNotificationType.review:
-        return '⭐';
-      case PushNotificationType.request:
-        return '📋';
-      case PushNotificationType.system:
-        return '⚙️';
-      case PushNotificationType.promotion:
-        return '🎉';
-      case PushNotificationType.reminder:
-        return '⏰';
-    }
-  }
-
-  IconData _getPriorityIcon(PushNotificationPriority priority) {
-    switch (priority) {
-      case PushNotificationPriority.low:
-        return Icons.keyboard_arrow_down;
-      case PushNotificationPriority.normal:
-        return Icons.remove;
-      case PushNotificationPriority.high:
-        return Icons.keyboard_arrow_up;
-      case PushNotificationPriority.urgent:
-        return Icons.priority_high;
-    }
-  }
-
-  Color _getPriorityColor(PushNotificationPriority priority) {
-    switch (priority) {
-      case PushNotificationPriority.low:
-        return Colors.grey;
-      case PushNotificationPriority.normal:
-        return Colors.blue;
-      case PushNotificationPriority.high:
-        return Colors.orange;
-      case PushNotificationPriority.urgent:
-        return Colors.red;
-    }
-  }
-}
-
-/// Bottom sheet for displaying notification details
-class NotificationDetailsSheet extends StatelessWidget {
-  final PushNotification notification;
-
-  const NotificationDetailsSheet({super.key, required this.notification});
-
-  @override
-  Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.6,
-      minChildSize: 0.4,
-      maxChildSize: 0.8,
-      builder: (context, scrollController) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              // Handle
-              Container(
-                margin: const EdgeInsets.only(top: 12),
-                width: 40,
-                height: 4,
+        trailing: isUnread
+            ? Container(
+                width: 8,
+                height: 8,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
+                  color: theme.primaryColor,
+                  shape: BoxShape.circle,
                 ),
-              ),
-              // Header
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: _getTypeColor(notification.type).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(notification.typeIcon, style: const TextStyle(fontSize: 24)),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(notification.title, style: Theme.of(context).textTheme.titleLarge),
-                          Text(
-                            notification.type.displayName,
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: _getPriorityColor(notification.priority).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        notification.priority.displayName,
-                        style: TextStyle(
-                          color: _getPriorityColor(notification.priority),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // Content
-              Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  children: [
-                    Text(notification.body, style: Theme.of(context).textTheme.bodyLarge),
-                    const SizedBox(height: 16),
-                    _buildDetailRow('ID уведомления', notification.id),
-                    _buildDetailRow('Тип', notification.type.displayName),
-                    _buildDetailRow('Приоритет', notification.priority.displayName),
-                    _buildDetailRow('Статус', notification.read ? 'Прочитано' : 'Непрочитано'),
-                    _buildDetailRow('Доставлено', notification.delivered ? 'Да' : 'Нет'),
-                    _buildDetailRow('Создано', notification.formattedDateTime),
-                    if (notification.readAt != null)
-                      _buildDetailRow('Прочитано', _formatDateTime(notification.readAt!)),
-                    if (notification.deliveredAt != null)
-                      _buildDetailRow('Доставлено', _formatDateTime(notification.deliveredAt!)),
-                    if (notification.senderName != null)
-                      _buildDetailRow('Отправитель', notification.senderName!),
-                    if (notification.actionUrl != null)
-                      _buildDetailRow('Действие', notification.actionUrl!),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
-            ),
-          ),
-          Expanded(
-            child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-          ),
-        ],
+              )
+            : null,
+        onTap: () => _handleNotificationTap(notification),
       ),
     );
   }
 
-  Color _getTypeColor(PushNotificationType type) {
+  Color _getNotificationColor(String type) {
     switch (type) {
-      case PushNotificationType.booking:
+      case 'new_application':
         return Colors.blue;
-      case PushNotificationType.payment:
+      case 'new_message':
         return Colors.green;
-      case PushNotificationType.message:
+      case 'new_idea':
+        return Colors.orange;
+      case 'booking_update':
         return Colors.purple;
-      case PushNotificationType.review:
-        return Colors.orange;
-      case PushNotificationType.request:
-        return Colors.teal;
-      case PushNotificationType.system:
+      case 'system':
         return Colors.grey;
-      case PushNotificationType.promotion:
-        return Colors.pink;
-      case PushNotificationType.reminder:
-        return Colors.amber;
-    }
-  }
-
-  Color _getPriorityColor(PushNotificationPriority priority) {
-    switch (priority) {
-      case PushNotificationPriority.low:
-        return Colors.grey;
-      case PushNotificationPriority.normal:
+      default:
         return Colors.blue;
-      case PushNotificationPriority.high:
-        return Colors.orange;
-      case PushNotificationPriority.urgent:
-        return Colors.red;
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} в ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  IconData _getNotificationIcon(String type) {
+    switch (type) {
+      case 'new_application':
+        return Icons.assignment;
+      case 'new_message':
+        return Icons.message;
+      case 'new_idea':
+        return Icons.lightbulb;
+      case 'booking_update':
+        return Icons.event;
+      case 'system':
+        return Icons.info;
+      default:
+        return Icons.notifications;
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays} дн. назад';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} ч. назад';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} мин. назад';
+    } else {
+      return 'Только что';
+    }
+  }
+
+  void _handleNotificationTap(AppNotification notification) {
+    // Отмечаем как прочитанное
+    _markAsRead(notification.id);
+
+    // Навигация на основе типа уведомления
+    switch (notification.type) {
+      case 'new_application':
+        if (notification.targetId != null) {
+          context.push('/applications/${notification.targetId}');
+        }
+        break;
+      case 'new_message':
+        if (notification.targetId != null) {
+          context.push('/chat/${notification.targetId}');
+        }
+        break;
+      case 'new_idea':
+        if (notification.targetId != null) {
+          context.push('/ideas/${notification.targetId}');
+        }
+        break;
+      case 'booking_update':
+        if (notification.targetId != null) {
+          context.push('/bookings/${notification.targetId}');
+        }
+        break;
+    }
+  }
+
+  void _markAsRead(String notificationId) {
+    // TODO: Реализовать отметку уведомления как прочитанного
+    debugPrint('Marking notification as read: $notificationId');
+  }
+
+  void _markAllAsRead() {
+    // TODO: Реализовать отметку всех уведомлений как прочитанных
+    debugPrint('Marking all notifications as read');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Все уведомления отмечены как прочитанные'),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 }

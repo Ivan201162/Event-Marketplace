@@ -10,6 +10,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../firebase_options.dart';
 import '../services/fcm_service.dart';
+import '../services/push_notification_service.dart';
 
 /// Bootstrap class for safe app initialization
 class Bootstrap {
@@ -30,6 +31,9 @@ class Bootstrap {
 
       // Initialize FCM
       await _initializeFCM();
+
+      // Initialize Push Notifications
+      await _initializePushNotifications();
 
       debugPrint('✅ Bootstrap: App initialized successfully');
     } catch (e, stackTrace) {
@@ -186,6 +190,17 @@ class Bootstrap {
     } catch (e) {
       debugPrint('❌ FCM initialization failed: $e');
       // Не прерываем инициализацию приложения из-за ошибки FCM
+    }
+  }
+
+  /// Initialize Push Notifications
+  static Future<void> _initializePushNotifications() async {
+    try {
+      await PushNotificationService.initialize();
+      debugPrint('✅ Push Notifications initialized successfully');
+    } catch (e) {
+      debugPrint('❌ Push Notifications initialization failed: $e');
+      // Не прерываем инициализацию приложения из-за ошибки Push Notifications
     }
   }
 

@@ -144,21 +144,48 @@ class MonetizationScreen extends StatelessWidget {
   }
 
   Widget _buildPlanCard(BuildContext context, Map<String, dynamic> plan) {
+    final isPopular = plan['popular'] as bool;
+    final planColor = plan['color'] as Color;
+    
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Card(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: (plan['popular'] as bool)
-                ? Border.all(color: plan['color'] as Color, width: 2)
-                : null,
+      margin: const EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isPopular
+              ? [
+                  planColor.withOpacity(0.1),
+                  planColor.withOpacity(0.05),
+                ]
+              : [
+                  Colors.white,
+                  Colors.grey[50]!,
+                ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isPopular ? planColor : Colors.grey.withOpacity(0.3),
+          width: isPopular ? 2 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isPopular 
+                ? planColor.withOpacity(0.3)
+                : Colors.black.withOpacity(0.05),
+            blurRadius: isPopular ? 15 : 8,
+            offset: Offset(0, isPopular ? 8 : 4),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Заголовок и популярный бейдж
                 Row(
                   children: [
                     Expanded(
@@ -169,21 +196,34 @@ class MonetizationScreen extends StatelessWidget {
                             children: [
                               Text(
                                 plan['name'] as String,
-                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: isPopular ? planColor : Colors.grey[800],
+                                ),
                               ),
-                              if (plan['popular'] as bool) ...[
-                                const SizedBox(width: 8),
+                              if (isPopular) ...[
+                                const SizedBox(width: 12),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                   decoration: BoxDecoration(
-                                    color: plan['color'] as Color,
-                                    borderRadius: BorderRadius.circular(12),
+                                    gradient: LinearGradient(
+                                      colors: [planColor, planColor.withOpacity(0.8)],
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: planColor.withOpacity(0.3),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                                   ),
                                   child: const Text(
                                     'ПОПУЛЯРНЫЙ',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 10,
+                                      fontSize: 11,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -191,50 +231,108 @@ class MonetizationScreen extends StatelessWidget {
                               ],
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 12),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
                                 '${plan['price']} ₽',
-                                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: isPopular ? planColor : Colors.grey[800],
+                                ),
                               ),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: 6),
                               Text(
                                 '/ ${plan['period']}',
-                                style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
                           ),
                         ],
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _showPurchaseDialog(context, plan);
-                      },
-                      style: ElevatedButton.styleFrom(backgroundColor: plan['color'] as Color),
-                      child: const Text('Выбрать'),
-                    ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
+                // Список функций
                 ...(plan['features'] as List<String>).map(
-                  (feature) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                  (feature) => Container(
+                    margin: const EdgeInsets.only(bottom: 12),
                     child: Row(
                       children: [
-                        Icon(Icons.check_circle, color: plan['color'] as Color, size: 20),
-                        const SizedBox(width: 8),
-                        Expanded(child: Text(feature, style: const TextStyle(fontSize: 14))),
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: planColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.check_circle,
+                            color: planColor,
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            feature,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ),
                       ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // Кнопка выбора
+                Container(
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [planColor, planColor.withOpacity(0.8)],
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: planColor.withOpacity(0.4),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => _showPurchaseDialog(context, plan),
+                      borderRadius: BorderRadius.circular(16),
+                      child: const Center(
+                        child: Text(
+                          'Выбрать план',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

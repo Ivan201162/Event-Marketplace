@@ -1,14 +1,66 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 import '../../models/user.dart';
+import '../../services/image_upload_service.dart';
 
 /// Виджет заголовка профиля
-class ProfileHeaderWidget extends StatelessWidget {
+class ProfileHeaderWidget extends StatefulWidget {
   const ProfileHeaderWidget({super.key, required this.user, required this.isCurrentUser});
 
   final AppUser user;
   final bool isCurrentUser;
+
+  @override
+  State<ProfileHeaderWidget> createState() => _ProfileHeaderWidgetState();
+}
+
+class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
+  final ImagePicker _picker = ImagePicker();
+  bool _isUploading = false;
+
+  Future<void> _pickAndUploadAvatar() async {
+    if (!widget.isCurrentUser) return;
+
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 512,
+        maxHeight: 512,
+        imageQuality: 85,
+      );
+
+      if (image != null) {
+        setState(() => _isUploading = true);
+
+        final imageUploadService = ImageUploadService();
+        final downloadUrl = await imageUploadService.uploadUserAvatar(
+          File(image.path),
+          widget.user.uid,
+        );
+
+        // Обновляем профиль пользователя
+        // TODO: Добавить обновление профиля через AuthService
+        debugPrint('Avatar uploaded: $downloadUrl');
+      }
+    } catch (e) {
+      debugPrint('Error uploading avatar: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка загрузки аватарки: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isUploading = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,36 +82,48 @@ class ProfileHeaderWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Аватар
+          // Аватар с возможностью загрузки
           Stack(
             children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-                child: user.avatarUrl != null
-                    ? ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl: user.avatarUrl!,
+              GestureDetector(
+                onTap: widget.isCurrentUser ? _pickAndUploadAvatar : null,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
+                  child: _isUploading
+                      ? SizedBox(
                           width: 100,
                           height: 100,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
-                            width: 100,
-                            height: 100,
-                            color: theme.primaryColor.withValues(alpha: 0.1),
-                            child: Icon(Icons.person, size: 50, color: theme.primaryColor),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3,
+                            valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
                           ),
-                          errorWidget: (context, url, error) => Container(
-                            width: 100,
-                            height: 100,
-                            color: theme.primaryColor.withValues(alpha: 0.1),
-                            child: Icon(Icons.person, size: 50, color: theme.primaryColor),
-                          ),
-                        ),
-                      )
-                    : Icon(Icons.person, size: 50, color: theme.primaryColor),
+                        )
+                      : widget.user.avatarUrl != null
+                          ? ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: widget.user.avatarUrl!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: theme.primaryColor.withValues(alpha: 0.1),
+                                  child: Icon(Icons.person, size: 50, color: theme.primaryColor),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: theme.primaryColor.withValues(alpha: 0.1),
+                                  child: Icon(Icons.person, size: 50, color: theme.primaryColor),
+                                ),
+                              ),
+                            )
+                          : Icon(Icons.person, size: 50, color: theme.primaryColor),
+                ),
               ),
-              if (user.isVerified)
+              if (widget.user.isVerified)
                 Positioned(
                   bottom: 0,
                   right: 0,
@@ -74,6 +138,36 @@ class ProfileHeaderWidget extends StatelessWidget {
                     child: const Icon(Icons.verified, color: Colors.white, size: 14),
                   ),
                 ),
+              // Кнопка редактирования аватарки
+              if (widget.isCurrentUser && !_isUploading)
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  child: GestureDetector(
+                    onTap: _pickAndUploadAvatar,
+                    child: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: theme.primaryColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: theme.cardColor, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.camera_alt,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
 
@@ -81,7 +175,7 @@ class ProfileHeaderWidget extends StatelessWidget {
 
           // Имя пользователя
           Text(
-            user.displayName ?? user.email.split('@').first,
+            widget.user.displayName ?? widget.user.email.split('@').first,
             style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -90,7 +184,7 @@ class ProfileHeaderWidget extends StatelessWidget {
 
           // Email
           Text(
-            user.email,
+            widget.user.email,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
             ),
@@ -107,7 +201,7 @@ class ProfileHeaderWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              user.roleDisplayName,
+              widget.user.roleDisplayName,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.primaryColor,
                 fontWeight: FontWeight.w600,
@@ -115,7 +209,7 @@ class ProfileHeaderWidget extends StatelessWidget {
             ),
           ),
 
-          if (user.city != null) ...[
+          if (widget.user.city != null) ...[
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -127,7 +221,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  user.city!,
+                  widget.user.city!,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                   ),
@@ -136,18 +230,18 @@ class ProfileHeaderWidget extends StatelessWidget {
             ),
           ],
 
-          if (user.bio != null && user.bio!.isNotEmpty) ...[
+          if (widget.user.bio != null && widget.user.bio!.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Text(user.bio!, style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
+            Text(widget.user.bio!, style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
           ],
 
           // Специализации (для специалистов)
-          if (user.isSpecialist && user.specialties.isNotEmpty) ...[
+          if (widget.user.isSpecialist && widget.user.specialties.isNotEmpty) ...[
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 4,
-              children: user.specialties
+              children: widget.user.specialties
                   .take(3)
                   .map(
                     (specialty) => Container(

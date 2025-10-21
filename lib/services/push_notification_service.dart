@@ -1,427 +1,257 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/push_notification.dart';
-
-/// Service for managing push notifications
+/// Сервис для управления пуш-уведомлениями
 class PushNotificationService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Initialize push notifications
-  Future<void> initialize() async {
+  /// Инициализация пуш-уведомлений
+  static Future<void> initialize() async {
     try {
-      // Request permission
+      // Запрашиваем разрешения
+      await _requestPermissions();
+
+      // Настраиваем обработчики
+      _setupMessageHandlers();
+
+      // Получаем и сохраняем токен
+      await _updateToken();
+
+      debugPrint('✅ PushNotificationService initialized successfully');
+    } catch (e) {
+      debugPrint('❌ Error initializing PushNotificationService: $e');
+    }
+  }
+
+  /// Запрос разрешений на уведомления
+  static Future<void> _requestPermissions() async {
+    if (Platform.isIOS) {
+      final settings = await _messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+
+      debugPrint('📱 Notification permission status: ${settings.authorizationStatus}');
+    } else if (Platform.isAndroid) {
       final settings = await _messaging.requestPermission();
+      debugPrint('📱 Notification permission status: ${settings.authorizationStatus}');
+    }
+  }
 
-      debugPrint('Push notification permission: ${settings.authorizationStatus}');
+  /// Настройка обработчиков сообщений
+  static void _setupMessageHandlers() {
+    // Обработка уведомлений когда приложение в фоне
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-      // Get FCM token
-      final token = await _messaging.getToken();
-      debugPrint('FCM Token: $token');
+    // Обработка уведомлений когда приложение в переднем плане
+    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
-      // Listen to token refresh
-      _messaging.onTokenRefresh.listen((newToken) {
-        debugPrint('FCM Token refreshed: $newToken');
-        // TODO: Update token in user profile
+    // Обработка нажатий на уведомления
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
+
+    // Обработка уведомлений при запуске приложения
+    _handleInitialMessage();
+  }
+
+  /// Обработка уведомлений в фоне
+  @pragma('vm:entry-point')
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    debugPrint('📱 Background message received: ${message.messageId}');
+    debugPrint('📱 Title: ${message.notification?.title}');
+    debugPrint('📱 Body: ${message.notification?.body}');
+    debugPrint('📱 Data: ${message.data}');
+  }
+
+  /// Обработка уведомлений в переднем плане
+  static void _handleForegroundMessage(RemoteMessage message) {
+    debugPrint('📱 Foreground message received: ${message.messageId}');
+    debugPrint('📱 Title: ${message.notification?.title}');
+    debugPrint('📱 Body: ${message.notification?.body}');
+    debugPrint('📱 Data: ${message.data}');
+
+    // Здесь можно показать локальное уведомление или обновить UI
+    _showLocalNotification(message);
+  }
+
+  /// Обработка нажатий на уведомления
+  static void _handleMessageOpenedApp(RemoteMessage message) {
+    debugPrint('📱 Message opened app: ${message.messageId}');
+    debugPrint('📱 Data: ${message.data}');
+
+    // Навигация на основе данных уведомления
+    _handleNotificationNavigation(message.data);
+  }
+
+  /// Обработка уведомлений при запуске приложения
+  static Future<void> _handleInitialMessage() async {
+    final RemoteMessage? initialMessage = await _messaging.getInitialMessage();
+    if (initialMessage != null) {
+      debugPrint('📱 Initial message: ${initialMessage.messageId}');
+      _handleNotificationNavigation(initialMessage.data);
+    }
+  }
+
+  /// Показать локальное уведомление
+  static void _showLocalNotification(RemoteMessage message) {
+    // TODO: Реализовать показ локального уведомления
+    // Можно использовать flutter_local_notifications
+  }
+
+  /// Обработка навигации по уведомлениям
+  static void _handleNotificationNavigation(Map<String, dynamic> data) {
+    final String? type = data['type'];
+    final String? targetId = data['targetId'];
+
+    debugPrint('📱 Navigation: type=$type, targetId=$targetId');
+
+    // TODO: Реализовать навигацию на основе типа уведомления
+    switch (type) {
+      case 'new_application':
+        // Навигация к заявке
+        break;
+      case 'new_message':
+        // Навигация к чату
+        break;
+      case 'new_idea':
+        // Навигация к идее
+        break;
+      case 'booking_update':
+        // Навигация к бронированию
+        break;
+    }
+  }
+
+  /// Обновление FCM токена
+  static Future<void> _updateToken() async {
+    try {
+      final String? token = await _messaging.getToken();
+      if (token != null) {
+        debugPrint('📱 FCM Token: $token');
+        await _saveTokenToFirestore(token);
+      }
+    } catch (e) {
+      debugPrint('❌ Error getting FCM token: $e');
+    }
+  }
+
+  /// Сохранение токена в Firestore
+  static Future<void> _saveTokenToFirestore(String token) async {
+    try {
+      // TODO: Получить ID текущего пользователя
+      // final user = FirebaseAuth.instance.currentUser;
+      // if (user != null) {
+      //   await _firestore.collection('users').doc(user.uid).update({
+      //     'fcmToken': token,
+      //     'fcmTokenUpdatedAt': Timestamp.now(),
+      //   });
+      // }
+    } catch (e) {
+      debugPrint('❌ Error saving FCM token: $e');
+    }
+  }
+
+  /// Отправка уведомления пользователю
+  static Future<void> sendNotificationToUser({
+    required String userId,
+    required String title,
+    required String body,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      // Получаем FCM токен пользователя
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (!userDoc.exists) return;
+
+      final String? fcmToken = userDoc.data()?['fcmToken'];
+      if (fcmToken == null) return;
+
+      // TODO: Отправить уведомление через Firebase Admin SDK
+      // Это должно быть реализовано на сервере
+      debugPrint('📱 Would send notification to user $userId: $title');
+    } catch (e) {
+      debugPrint('❌ Error sending notification: $e');
+    }
+  }
+
+  /// Создание уведомления в Firestore
+  static Future<void> createNotification({
+    required String userId,
+    required String title,
+    required String body,
+    required String type,
+    String? targetId,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      await _firestore.collection('notifications').add({
+        'userId': userId,
+        'title': title,
+        'body': body,
+        'type': type,
+        'targetId': targetId,
+        'data': data ?? {},
+        'read': false,
+        'createdAt': Timestamp.now(),
       });
 
-      // Handle background messages
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-      // Handle foreground messages
-      FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-      // Handle notification tap when app is in background
-      FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
-
-      // Handle notification tap when app is terminated
-      final initialMessage = await _messaging.getInitialMessage();
-      if (initialMessage != null) {
-        _handleNotificationTap(initialMessage);
-      }
-
-      debugPrint('✅ Push notifications initialized successfully');
+      debugPrint('📱 Notification created for user $userId');
     } catch (e) {
-      debugPrint('❌ Error initializing push notifications: $e');
+      debugPrint('❌ Error creating notification: $e');
     }
   }
 
-  /// Send push notification to user
-  Future<bool> sendNotification({
-    required String userId,
-    required String title,
-    required String body,
-    required PushNotificationType type,
-    PushNotificationPriority priority = PushNotificationPriority.normal,
-    Map<String, dynamic>? data,
-    String? imageUrl,
-    String? actionUrl,
-    String? senderId,
-    String? senderName,
-    String? senderAvatarUrl,
-    DateTime? scheduledAt,
-    DateTime? expiresAt,
-  }) async {
+  /// Подписка на топик
+  static Future<void> subscribeToTopic(String topic) async {
     try {
-      // Create notification record
-      final notification = PushNotification(
-        id: '', // Will be set by Firestore
-        userId: userId,
-        title: title,
-        body: body,
-        type: type,
-        priority: priority,
-        data: data,
-        imageUrl: imageUrl,
-        actionUrl: actionUrl,
-        senderId: senderId,
-        senderName: senderName,
-        senderAvatarUrl: senderAvatarUrl,
-        read: false,
-        delivered: false,
-        createdAt: DateTime.now(),
-        scheduledAt: scheduledAt,
-        expiresAt: expiresAt,
-      );
-
-      // Save to Firestore
-      final docRef = await _firestore
-          .collection('push_notifications')
-          .add(notification.toFirestore());
-
-      final notificationId = docRef.id;
-      debugPrint('Push notification created with ID: $notificationId');
-
-      // Send via FCM (in real app, this would be done via backend)
-      final success = await _sendFCMNotification(
-        userId: userId,
-        title: title,
-        body: body,
-        data: {
-          'notificationId': notificationId,
-          'type': type.name,
-          'priority': priority.name,
-          ...?data,
-        },
-        imageUrl: imageUrl,
-      );
-
-      // Update delivery status
-      if (success) {
-        await _firestore.collection('push_notifications').doc(notificationId).update({
-          'delivered': true,
-          'deliveredAt': Timestamp.now(),
-        });
-      }
-
-      return success;
+      await _messaging.subscribeToTopic(topic);
+      debugPrint('📱 Subscribed to topic: $topic');
     } catch (e) {
-      debugPrint('Error sending push notification: $e');
-      return false;
+      debugPrint('❌ Error subscribing to topic: $e');
     }
   }
 
-  /// Send notification to multiple users
-  Future<Map<String, bool>> sendNotificationToUsers({
-    required List<String> userIds,
-    required String title,
-    required String body,
-    required PushNotificationType type,
-    PushNotificationPriority priority = PushNotificationPriority.normal,
-    Map<String, dynamic>? data,
-    String? imageUrl,
-    String? actionUrl,
-    String? senderId,
-    String? senderName,
-    String? senderAvatarUrl,
-    DateTime? scheduledAt,
-    DateTime? expiresAt,
-  }) async {
-    final results = <String, bool>{};
-
-    for (final userId in userIds) {
-      final success = await sendNotification(
-        userId: userId,
-        title: title,
-        body: body,
-        type: type,
-        priority: priority,
-        data: data,
-        imageUrl: imageUrl,
-        actionUrl: actionUrl,
-        senderId: senderId,
-        senderName: senderName,
-        senderAvatarUrl: senderAvatarUrl,
-        scheduledAt: scheduledAt,
-        expiresAt: expiresAt,
-      );
-      results[userId] = success;
-    }
-
-    return results;
-  }
-
-  /// Get user notifications
-  Future<List<PushNotification>> getUserNotifications(String userId) async {
+  /// Отписка от топика
+  static Future<void> unsubscribeFromTopic(String topic) async {
     try {
-      final querySnapshot = await _firestore
-          .collection('push_notifications')
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return querySnapshot.docs.map((doc) => PushNotification.fromFirestore(doc)).toList();
+      await _messaging.unsubscribeFromTopic(topic);
+      debugPrint('📱 Unsubscribed from topic: $topic');
     } catch (e) {
-      debugPrint('Error getting user notifications: $e');
-      return [];
+      debugPrint('❌ Error unsubscribing from topic: $e');
     }
   }
 
-  /// Get unread notifications count
-  Future<int> getUnreadCount(String userId) async {
+  /// Получение текущего токена
+  static Future<String?> getToken() async {
     try {
-      final querySnapshot = await _firestore
-          .collection('push_notifications')
-          .where('userId', isEqualTo: userId)
-          .where('read', isEqualTo: false)
-          .get();
-
-      return querySnapshot.docs.length;
+      return await _messaging.getToken();
     } catch (e) {
-      debugPrint('Error getting unread count: $e');
-      return 0;
+      debugPrint('❌ Error getting token: $e');
+      return null;
     }
   }
 
-  /// Mark notification as read
-  Future<bool> markAsRead(String notificationId) async {
+  /// Удаление токена
+  static Future<void> deleteToken() async {
     try {
-      await _firestore.collection('push_notifications').doc(notificationId).update({
-        'read': true,
-        'readAt': Timestamp.now(),
-      });
-
-      return true;
+      await _messaging.deleteToken();
+      debugPrint('📱 FCM token deleted');
     } catch (e) {
-      debugPrint('Error marking notification as read: $e');
-      return false;
+      debugPrint('❌ Error deleting token: $e');
     }
-  }
-
-  /// Mark all notifications as read
-  Future<bool> markAllAsRead(String userId) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('push_notifications')
-          .where('userId', isEqualTo: userId)
-          .where('read', isEqualTo: false)
-          .get();
-
-      final batch = _firestore.batch();
-      for (final doc in querySnapshot.docs) {
-        batch.update(doc.reference, {'read': true, 'readAt': Timestamp.now()});
-      }
-
-      await batch.commit();
-      return true;
-    } catch (e) {
-      debugPrint('Error marking all notifications as read: $e');
-      return false;
-    }
-  }
-
-  /// Delete notification
-  Future<bool> deleteNotification(String notificationId) async {
-    try {
-      await _firestore.collection('push_notifications').doc(notificationId).delete();
-
-      return true;
-    } catch (e) {
-      debugPrint('Error deleting notification: $e');
-      return false;
-    }
-  }
-
-  /// Delete all notifications
-  Future<bool> deleteAllNotifications(String userId) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection('push_notifications')
-          .where('userId', isEqualTo: userId)
-          .get();
-
-      final batch = _firestore.batch();
-      for (final doc in querySnapshot.docs) {
-        batch.delete(doc.reference);
-      }
-
-      await batch.commit();
-      return true;
-    } catch (e) {
-      debugPrint('Error deleting all notifications: $e');
-      return false;
-    }
-  }
-
-  /// Get notifications stream
-  Stream<List<PushNotification>> getUserNotificationsStream(String userId) {
-    return _firestore
-        .collection('push_notifications')
-        .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs.map((doc) => PushNotification.fromFirestore(doc)).toList(),
-        );
-  }
-
-  /// Get unread count stream
-  Stream<int> getUnreadCountStream(String userId) {
-    return _firestore
-        .collection('push_notifications')
-        .where('userId', isEqualTo: userId)
-        .where('read', isEqualTo: false)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.length);
-  }
-
-  /// Send FCM notification (mock implementation)
-  Future<bool> _sendFCMNotification({
-    required String userId,
-    required String title,
-    required String body,
-    Map<String, dynamic>? data,
-    String? imageUrl,
-  }) async {
-    try {
-      // In real app, this would call your backend API
-      // which would then send the notification via FCM
-      debugPrint('Sending FCM notification to user: $userId');
-      debugPrint('Title: $title');
-      debugPrint('Body: $body');
-      debugPrint('Data: $data');
-      debugPrint('Image: $imageUrl');
-
-      // Simulate network delay
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      // Simulate success
-      return true;
-    } catch (e) {
-      debugPrint('Error sending FCM notification: $e');
-      return false;
-    }
-  }
-
-  /// Handle foreground message
-  void _handleForegroundMessage(RemoteMessage message) {
-    debugPrint('Received foreground message: ${message.messageId}');
-    debugPrint('Title: ${message.notification?.title}');
-    debugPrint('Body: ${message.notification?.body}');
-    debugPrint('Data: ${message.data}');
-
-    // TODO: Show in-app notification
-  }
-
-  /// Handle notification tap
-  void _handleNotificationTap(RemoteMessage message) {
-    debugPrint('Notification tapped: ${message.messageId}');
-    debugPrint('Data: ${message.data}');
-
-    // TODO: Navigate to appropriate screen
-    final notificationId = message.data['notificationId'];
-    if (notificationId != null) {
-      // Mark as read
-      markAsRead(notificationId);
-    }
-  }
-
-  /// Create specialized notifications
-  Future<bool> sendBookingNotification({
-    required String userId,
-    required String specialistName,
-    required String serviceName,
-    required DateTime bookingTime,
-    required String bookingId,
-  }) async {
-    return sendNotification(
-      userId: userId,
-      title: 'Новое бронирование',
-      body:
-          '$specialistName подтвердил бронирование "$serviceName" на ${_formatDateTime(bookingTime)}',
-      type: PushNotificationType.booking,
-      priority: PushNotificationPriority.high,
-      data: {
-        'bookingId': bookingId,
-        'specialistName': specialistName,
-        'serviceName': serviceName,
-        'bookingTime': bookingTime.toIso8601String(),
-      },
-      actionUrl: '/bookings/$bookingId',
-    );
-  }
-
-  Future<bool> sendPaymentNotification({
-    required String userId,
-    required String amount,
-    required String serviceName,
-    required String paymentId,
-  }) async {
-    return sendNotification(
-      userId: userId,
-      title: 'Платеж обработан',
-      body: 'Платеж $amount за "$serviceName" успешно обработан',
-      type: PushNotificationType.payment,
-      priority: PushNotificationPriority.high,
-      data: {'paymentId': paymentId, 'amount': amount, 'serviceName': serviceName},
-      actionUrl: '/payments/$paymentId',
-    );
-  }
-
-  Future<bool> sendMessageNotification({
-    required String userId,
-    required String senderName,
-    required String messageText,
-    required String chatId,
-  }) async {
-    return sendNotification(
-      userId: userId,
-      title: 'Новое сообщение от $senderName',
-      body: messageText,
-      type: PushNotificationType.message,
-      data: {'chatId': chatId, 'senderName': senderName, 'messageText': messageText},
-      actionUrl: '/chats/$chatId',
-    );
-  }
-
-  Future<bool> sendReviewNotification({
-    required String userId,
-    required String reviewerName,
-    required int rating,
-    required String reviewId,
-  }) async {
-    return sendNotification(
-      userId: userId,
-      title: 'Новый отзыв',
-      body: '$reviewerName оставил отзыв с оценкой $rating ⭐',
-      type: PushNotificationType.review,
-      data: {'reviewId': reviewId, 'reviewerName': reviewerName, 'rating': rating},
-      actionUrl: '/reviews/$reviewId',
-    );
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} в ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }
 
-/// Background message handler
+/// Обработчик уведомлений в фоне (должен быть глобальной функцией)
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint('Handling background message: ${message.messageId}');
-  debugPrint('Title: ${message.notification?.title}');
-  debugPrint('Body: ${message.notification?.body}');
-  debugPrint('Data: ${message.data}');
+  await PushNotificationService._firebaseMessagingBackgroundHandler(message);
 }

@@ -2,8 +2,8 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Публичное чтение идей (лента). Запись только аутентифицированным.
-    match /ideas/{ideaId} {
+    // Публичное чтение постов (лента). Запись только аутентифицированным.
+    match /posts/{postId} {
       allow read: if true;
       allow create: if request.auth != null && 
         request.auth.uid == resource.data.authorId;
@@ -67,6 +67,27 @@ service cloud.firestore {
     // Уведомления — только для владельца
     match /notifications/{notificationId} {
       allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+
+    // Категории — публичное чтение, запись только админам
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.admin == true;
+    }
+
+    // Тарифы/планы — публичное чтение, запись только админам
+    match /tariffs/{tariffId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.admin == true;
+    }
+
+    // Планы — публичное чтение, запись только админам
+    match /plans/{planId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        request.auth.token.admin == true;
     }
 
     // Остальное — запрещено

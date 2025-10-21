@@ -56,6 +56,10 @@ class EventIdeaCard extends StatelessWidget {
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 8),
+
+                    // Автор идеи
+                    if (idea.authorName != null) _buildAuthorInfo(),
                     const SizedBox(height: 12),
 
                     // Метаданные
@@ -257,5 +261,34 @@ class EventIdeaCard extends StatelessWidget {
             ],
           ],
         ),
+      );
+
+  Widget _buildAuthorInfo() => Row(
+        children: [
+          // Аватар автора
+          CircleAvatar(
+            radius: 12,
+            backgroundColor: Colors.grey[300],
+            backgroundImage: idea.authorPhotoUrl != null
+                ? NetworkImage(idea.authorPhotoUrl!)
+                : null,
+            child: idea.authorPhotoUrl == null
+                ? const Icon(Icons.person, size: 16, color: Colors.grey)
+                : null,
+          ),
+          const SizedBox(width: 8),
+          // Имя автора
+          Expanded(
+            child: Text(
+              'Автор: ${idea.authorName}',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       );
 }

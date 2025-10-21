@@ -178,17 +178,33 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
         builder: (context, child) {
           return Transform.scale(
             scale: _scaleAnimation.value,
-            child: Container(
-              width: 170,
-              margin: const EdgeInsets.only(right: 12),
+            child:             Container(
+              width: 180,
+              margin: const EdgeInsets.only(right: 16),
               decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white,
+                    Colors.grey[50]!,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.grey.withOpacity(0.2),
+                  width: 1,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
@@ -210,24 +226,87 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Аватар специалиста
+                    // Улучшенный аватар специалиста
                     Container(
-                      height: 110,
+                      height: 120,
                       decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                         image: widget.specialist.avatar != null
                             ? DecorationImage(
                                 image: CachedNetworkImageProvider(widget.specialist.avatar!),
                                 fit: BoxFit.cover,
                               )
                             : null,
-                        color: widget.specialist.avatar == null
-                            ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                        gradient: widget.specialist.avatar == null
+                            ? LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Theme.of(context).primaryColor.withOpacity(0.1),
+                                  Theme.of(context).primaryColor.withOpacity(0.05),
+                                ],
+                              )
                             : null,
                       ),
                       child: widget.specialist.avatar == null
-                          ? const Center(child: Icon(Icons.person, size: 50, color: Colors.grey))
-                          : null,
+                          ? Center(
+                              child: Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.person,
+                                  size: 40,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            )
+                          : Stack(
+                              children: [
+                                // Градиентный оверлей
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.transparent,
+                                        Colors.black.withOpacity(0.3),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // Рейтинг в углу
+                                Positioned(
+                                  top: 8,
+                                  right: 8,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.9),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.star, color: Colors.amber[600], size: 12),
+                                        const SizedBox(width: 2),
+                                        Text(
+                                          widget.specialist.rating.toString(),
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
                     // Информация о специалисте
                     Expanded(
@@ -238,67 +317,132 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                           children: [
                             Text(
                               widget.specialist.name,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold, 
+                                fontSize: 15,
+                                color: Colors.black87,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              widget.specialist.category?.displayName ?? 'Категория',
-                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            const SizedBox(height: 4),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                widget.specialist.category?.displayName ?? 'Категория',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                             const Spacer(),
-                            Row(
-                              children: [
-                                Icon(Icons.star, color: Colors.amber[600], size: 14),
-                                const SizedBox(width: 2),
-                                Text(
-                                  widget.specialist.rating.toString(),
-                                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                            // Цена с улучшенным дизайном
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Theme.of(context).primaryColor.withOpacity(0.1),
+                                    Theme.of(context).primaryColor.withOpacity(0.05),
+                                  ],
                                 ),
-                                const Spacer(),
-                                Text(
-                                  '${widget.specialist.price}₸',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'от ${widget.specialist.price}₸',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
                                 ),
-                              ],
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                             const SizedBox(height: 8),
-                            // Интерактивные кнопки
+                            // Улучшенные кнопки действий
                             Row(
                               children: [
                                 Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => _openChat(context),
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 6),
-                                      minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                      backgroundColor: Theme.of(context).primaryColor,
-                                      foregroundColor: Colors.white,
+                                  child: Container(
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Theme.of(context).primaryColor,
+                                          Theme.of(context).primaryColor.withOpacity(0.8),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                                     ),
-                                    child: const Text('Связаться', style: TextStyle(fontSize: 10)),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () => _openChat(context),
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: const Center(
+                                          child: Text(
+                                            'Связаться',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: 6),
                                 Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => _openBooking(context),
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 6),
-                                      minimumSize: Size.zero,
-                                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                      backgroundColor: Colors.green,
-                                      foregroundColor: Colors.white,
+                                  child: Container(
+                                    height: 32,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        colors: [Colors.green, Color(0xFF4CAF50)],
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.green.withOpacity(0.3),
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                                     ),
-                                    child:
-                                        const Text('Забронировать', style: TextStyle(fontSize: 10)),
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () => _openBooking(context),
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: const Center(
+                                          child: Text(
+                                            'Забронировать',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],

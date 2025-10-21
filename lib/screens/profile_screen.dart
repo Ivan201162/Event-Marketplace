@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 // import '../models/app_user.dart'; // Conflict with user.dart
 import '../providers/auth_providers.dart';
+import '../widgets/loading/loading_state_widget.dart';
 import '../widgets/profile/profile_actions_widget.dart';
 import '../widgets/profile/profile_header_widget.dart';
 import '../widgets/profile/profile_stats_widget.dart';
@@ -31,8 +32,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         title: Text(isCurrentUser ? 'Мой профиль' : 'Профиль'),
         centerTitle: true,
         actions: [
-          if (isCurrentUser) IconButton(icon: const Icon(Icons.edit), onPressed: _editProfile),
-          IconButton(icon: const Icon(Icons.share), onPressed: _shareProfile),
+          if (isCurrentUser) 
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: _editProfile,
+              tooltip: 'Редактировать профиль',
+            ),
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: _shareProfile,
+            tooltip: 'Поделиться профилем',
+          ),
         ],
       ),
       body: currentUser.when(
@@ -72,7 +82,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const LoadingStateWidget(
+          message: 'Загрузка профиля...',
+        ),
         error: (error, stack) => Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
