@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/advanced_search_filters.dart';
 import '../models/city_region.dart';
 import '../models/specialist.dart';
+import '../models/specialist_category.dart';
 import '../providers/advanced_search_providers.dart';
 import '../providers/city_region_providers.dart';
 

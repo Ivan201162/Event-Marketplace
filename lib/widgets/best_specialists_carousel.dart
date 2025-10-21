@@ -121,7 +121,7 @@ class _SpecialistCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        specialist.category.displayName,
+                        specialist.category?.displayName ?? 'Категория',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 12,

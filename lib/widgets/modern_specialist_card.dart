@@ -118,7 +118,7 @@ class ModernSpecialistCard extends ConsumerWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            specialist.category.displayName ?? 'Категория',
+            specialist.category?.displayName ?? 'Категория',
             style: TextStyle(
               fontSize: isCompact ? 12 : 14,
               color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,
@@ -165,7 +165,7 @@ class ModernSpecialistCard extends ConsumerWidget {
   Widget _buildDescription(BuildContext context) => Text(
         (specialist.description?.isNotEmpty ?? false)
             ? specialist.description!
-            : 'Опытный специалист в области ${specialist.category.displayName.toLowerCase() ?? 'услуг'}',
+            : 'Опытный специалист в области ${specialist.category?.displayName.toLowerCase() ?? 'услуг'}',
         style: TextStyle(
           fontSize: 14,
           color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.grey,

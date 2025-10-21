@@ -38,7 +38,7 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
     super.dispose();
   }
 
-  List<DateTime> _getSelectedDates() => widget.specialist.busyDates;
+  List<DateTime> _getSelectedDates() => widget.specialist.busyDates ?? [];
 
   @override
   Widget build(BuildContext context) => Card(
@@ -468,7 +468,7 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
     final now = DateTime.now();
     final endOfMonth = DateTime(now.year, now.month + 1, 0);
     final totalDays = endOfMonth.day;
-    final busyDays = specialist.busyDates
+    final busyDays = (specialist.busyDates ?? [])
         .where((date) => date.year == now.year && date.month == now.month)
         .length;
     final availableDays = totalDays - busyDays;

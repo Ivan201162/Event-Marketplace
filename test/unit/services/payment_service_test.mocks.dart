@@ -6,6 +6,7 @@
 import 'dart:async' as _i4;
 
 import 'package:event_marketplace_app/models/payment_models.dart' as _i3;
+import 'package:event_marketplace_app/models/tax_models.dart' as _i6;
 import 'package:event_marketplace_app/services/russian_bank_service.dart' as _i2;
 import 'package:event_marketplace_app/services/tax_calculation_service.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
@@ -95,7 +96,7 @@ class _FakeRefundResponse_6 extends _i1.SmartFake implements _i2.RefundResponse 
         );
 }
 
-class _FakeTaxCalculation_7 extends _i1.SmartFake implements _i3.TaxCalculation {
+class _FakeTaxCalculation_7 extends _i1.SmartFake implements _i6.TaxCalculation {
   _FakeTaxCalculation_7(
     Object parent,
     Invocation parentInvocation,
@@ -315,10 +316,10 @@ class MockTaxCalculationService extends _i1.Mock implements _i5.TaxCalculationSe
   }
 
   @override
-  _i4.Future<_i3.TaxCalculation> calculateTax({
+  _i4.Future<_i6.TaxCalculation> calculateTax({
     required String? paymentId,
     required double? grossAmount,
-    required _i3.TaxStatus? taxStatus,
+    required _i6.TaxStatus? taxStatus,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -342,10 +343,10 @@ class MockTaxCalculationService extends _i1.Mock implements _i5.TaxCalculationSe
             },
           ),
         )),
-      ) as _i4.Future<_i3.TaxCalculation>);
+      ) as _i4.Future<_i6.TaxCalculation>);
 
   @override
-  _i3.TaxStatus getRecommendedTaxStatus({
+  _i6.TaxStatus getRecommendedTaxStatus({
     required bool? isIndividual,
     required bool? isSelfEmployed,
     required bool? isEntrepreneur,
@@ -362,11 +363,11 @@ class MockTaxCalculationService extends _i1.Mock implements _i5.TaxCalculationSe
             #amount: amount,
           },
         ),
-        returnValue: _i3.TaxStatus.none,
-      ) as _i3.TaxStatus);
+        returnValue: _i6.TaxStatus.none,
+      ) as _i6.TaxStatus);
 
   @override
-  _i4.Future<List<_i3.TaxCalculation>> calculateTaxesForPayments(
+  _i4.Future<List<_i6.TaxCalculation>> calculateTaxesForPayments(
           {required List<Map<String, dynamic>>? payments}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -374,12 +375,12 @@ class MockTaxCalculationService extends _i1.Mock implements _i5.TaxCalculationSe
           [],
           {#payments: payments},
         ),
-        returnValue: _i4.Future<List<_i3.TaxCalculation>>.value(<_i3.TaxCalculation>[]),
-      ) as _i4.Future<List<_i3.TaxCalculation>>);
+        returnValue: _i4.Future<List<_i6.TaxCalculation>>.value(<_i6.TaxCalculation>[]),
+      ) as _i4.Future<List<_i6.TaxCalculation>>);
 
   @override
   _i4.Future<Map<String, dynamic>> getTaxStatistics(
-          {required List<_i3.TaxCalculation>? calculations}) =>
+          {required List<_i6.TaxCalculation>? calculations}) =>
       (super.noSuchMethod(
         Invocation.method(
           #getTaxStatistics,

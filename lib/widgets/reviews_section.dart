@@ -27,7 +27,7 @@ class ReviewsSection extends ConsumerStatefulWidget {
 class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
   final ReviewService _reviewService = ReviewService();
   List<Review> _reviews = [];
-  ReviewStats? _stats;
+  SpecialistReviewStats? _stats;
   bool _isLoading = true;
   String? _error;
 
@@ -46,7 +46,6 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
 
       final reviews = await _reviewService.getSpecialistReviews(
         widget.specialistId,
-        limit: widget.showAllReviews ? 50 : 5,
       );
 
       final stats = await _reviewService.getSpecialistReviewStats(widget.specialistId);
@@ -265,7 +264,6 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
 
       final reviews = await _reviewService.getSpecialistReviews(
         widget.specialistId,
-        limit: 100,
       );
 
       final stats = await _reviewService.getSpecialistReviewStats(widget.specialistId);

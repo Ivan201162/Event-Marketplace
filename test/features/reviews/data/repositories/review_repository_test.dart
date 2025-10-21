@@ -21,7 +21,6 @@ void main() {
     late ReviewRepository repository;
     late MockFirebaseFirestore mockFirestore;
     late MockCollectionReference<Map<String, dynamic>> mockReviewsCollection;
-    late MockCollectionReference<Map<String, dynamic>> mockBookingsCollection;
     late MockDocumentReference<Map<String, dynamic>> mockDocumentRef;
     late MockDocumentSnapshot<Map<String, dynamic>> mockDocumentSnapshot;
     late MockQuery<Map<String, dynamic>> mockQuery;
@@ -30,19 +29,15 @@ void main() {
     setUp(() {
       mockFirestore = MockFirebaseFirestore();
       mockReviewsCollection = MockCollectionReference<Map<String, dynamic>>();
-      mockBookingsCollection = MockCollectionReference<Map<String, dynamic>>();
       mockDocumentRef = MockDocumentReference<Map<String, dynamic>>();
       mockDocumentSnapshot = MockDocumentSnapshot<Map<String, dynamic>>();
       mockQuery = MockQuery<Map<String, dynamic>>();
       mockQuerySnapshot = MockQuerySnapshot<Map<String, dynamic>>();
 
       when(mockFirestore.collection('reviews')).thenReturn(mockReviewsCollection);
-      when(mockFirestore.collection('bookings')).thenReturn(mockBookingsCollection);
       when(mockReviewsCollection.doc(any)).thenReturn(mockDocumentRef);
-      when(mockBookingsCollection.doc(any)).thenReturn(mockDocumentRef);
 
       repository = ReviewRepository();
-      // Заменяем приватное поле _db через рефлексию или создаем тестовую версию
     });
 
     group('addReview', () {
@@ -50,406 +45,276 @@ void main() {
         // Arrange
         final review = Review(
           id: 'review_1',
-          bookingId: 'booking_1',
           specialistId: 'specialist_1',
-          customerId: 'customer_1',
-          customerName: 'Customer',
+          clientId: 'client_1',
+          clientName: 'Client Name',
+          specialistName: 'Specialist Name',
           rating: 4,
-          text: 'Отличная работа!',
-          date: DateTime.now(),
+          comment: 'Отличная работа!',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
 
-        when(mockDocumentSnapshot.exists).thenReturn(true);
-        when(mockDocumentSnapshot.data()).thenReturn({
-          'status': 'completed',
-          'customerId': 'customer_1',
-        });
-        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
-
-        when(mockQuerySnapshot.docs).thenReturn([]);
-        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
-        when(mockReviewsCollection.where(any, isEqualTo: anyNamed('isEqualTo')))
-            .thenReturn(mockQuery);
-
-        when(mockDocumentRef.set(any)).thenAnswer((_) async {});
+        when(mockDocumentRef.set(any)).thenAnswer((_) async => {});
 
         // Act
-        await repository.addReview(review);
+        final result = await repository.addReview(review);
 
         // Assert
+        expect(result, true);
         verify(mockDocumentRef.set(any)).called(1);
       });
 
-      test('should throw exception for invalid rating', () async {
+      test('should handle error when adding review', () async {
         // Arrange
         final review = Review(
           id: 'review_1',
-          bookingId: 'booking_1',
           specialistId: 'specialist_1',
-          customerId: 'customer_1',
-          customerName: 'Customer',
-          rating: 6, // Неверный рейтинг
-          text: 'Отличная работа!',
-          date: DateTime.now(),
-        );
-
-        // Act & Assert
-        expect(
-          () => repository.addReview(review),
-          throwsA(
-            isA<Exception>().having(
-              (e) => e.toString(),
-              'message',
-              contains('Некорректный рейтинг'),
-            ),
-          ),
-        );
-      });
-
-      test('should throw exception for invalid comment', () async {
-        // Arrange
-        final review = Review(
-          id: 'review_1',
-          bookingId: 'booking_1',
-          specialistId: 'specialist_1',
-          customerId: 'customer_1',
-          customerName: 'Customer',
+          clientId: 'client_1',
+          clientName: 'Client Name',
+          specialistName: 'Specialist Name',
           rating: 4,
-          text: 'Короткий', // Неверный комментарий
-          date: DateTime.now(),
+          comment: 'Отличная работа!',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
 
-        // Act & Assert
-        expect(
-          () => repository.addReview(review),
-          throwsA(
-            isA<Exception>().having(
-              (e) => e.toString(),
-              'message',
-              contains('Комментарий должен содержать минимум 10 символов'),
-            ),
-          ),
-        );
-      });
+        when(mockDocumentRef.set(any)).thenThrow(Exception('Database error'));
 
-      test('should throw exception for non-completed booking', () async {
-        // Arrange
-        final review = Review(
-          id: 'review_1',
-          bookingId: 'booking_1',
-          specialistId: 'specialist_1',
-          customerId: 'customer_1',
-          customerName: 'Customer',
-          rating: 4,
-          text: 'Отличная работа!',
-          date: DateTime.now(),
-        );
+        // Act
+        final result = await repository.addReview(review);
 
-        when(mockDocumentSnapshot.exists).thenReturn(true);
-        when(mockDocumentSnapshot.data()).thenReturn({
-          'status': 'pending', // Не завершенный заказ
-          'customerId': 'customer_1',
-        });
-        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
-
-        // Act & Assert
-        expect(
-          () => repository.addReview(review),
-          throwsA(
-            isA<Exception>().having(
-              (e) => e.toString(),
-              'message',
-              contains('Отзыв можно оставить только для завершенных заказов'),
-            ),
-          ),
-        );
-      });
-
-      test('should throw exception for existing review', () async {
-        // Arrange
-        final review = Review(
-          id: 'review_1',
-          bookingId: 'booking_1',
-          specialistId: 'specialist_1',
-          customerId: 'customer_1',
-          customerName: 'Customer',
-          rating: 4,
-          text: 'Отличная работа!',
-          date: DateTime.now(),
-        );
-
-        when(mockDocumentSnapshot.exists).thenReturn(true);
-        when(mockDocumentSnapshot.data()).thenReturn({
-          'status': 'completed',
-          'customerId': 'customer_1',
-        });
-        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
-
-        // Существующий отзыв
-        final existingReviewDoc = MockQueryDocumentSnapshot<Map<String, dynamic>>();
-        when(existingReviewDoc.id).thenReturn('existing_review');
-        when(mockQuerySnapshot.docs).thenReturn([existingReviewDoc]);
-        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
-        when(mockReviewsCollection.where(any, isEqualTo: anyNamed('isEqualTo')))
-            .thenReturn(mockQuery);
-
-        // Act & Assert
-        expect(
-          () => repository.addReview(review),
-          throwsA(
-            isA<Exception>().having(
-              (e) => e.toString(),
-              'message',
-              contains('Отзыв для этого заказа уже существует'),
-            ),
-          ),
-        );
+        // Assert
+        expect(result, false);
       });
     });
 
-    group('editReview', () {
-      test('should edit review successfully', () async {
+    group('getReviews', () {
+      test('should get reviews successfully', () async {
         // Arrange
-        const reviewId = 'review_1';
-        const newRating = 5.0;
-        const newComment = 'Превосходная работа!';
+        final reviewData = {
+          'specialistId': 'specialist_1',
+          'clientId': 'client_1',
+          'clientName': 'Client Name',
+          'specialistName': 'Specialist Name',
+          'rating': 4,
+          'comment': 'Отличная работа!',
+          'createdAt': Timestamp.fromDate(DateTime.now()),
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+          'images': [],
+          'likedBy': [],
+          'likesCount': 0,
+          'hasComment': true,
+          'tags': [],
+          'isVerified': false,
+          'isPublic': true,
+          'serviceTags': [],
+          'photos': [],
+          'responses': [],
+        };
 
-        when(mockDocumentSnapshot.exists).thenReturn(true);
-        when(mockDocumentSnapshot.data()).thenReturn({
-          'customerId': 'customer_1',
-          'edited': false,
-        });
-        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
-        when(mockDocumentRef.update(any)).thenAnswer((_) async {});
+        final mockQueryDocSnapshot = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        when(mockQueryDocSnapshot.id).thenReturn('review_1');
+        when(mockQueryDocSnapshot.data()).thenReturn(reviewData);
+
+        when(mockReviewsCollection.orderBy('createdAt', descending: true)).thenReturn(mockQuery);
+        when(mockQuery.limit(any)).thenReturn(mockQuery);
+        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
+        when(mockQuerySnapshot.docs).thenReturn([mockQueryDocSnapshot]);
 
         // Act
-        await repository.editReview(
-          reviewId,
-          rating: newRating,
-          comment: newComment,
-        );
+        final reviews = await repository.getReviews(limit: 10);
 
         // Assert
-        verify(mockDocumentRef.update(any)).called(1);
+        expect(reviews.length, 1);
+        expect(reviews.first.id, 'review_1');
+        expect(reviews.first.rating, 4);
       });
 
-      test('should throw exception for non-existent review', () async {
+      test('should handle error when getting reviews', () async {
         // Arrange
-        const reviewId = 'non_existent_review';
+        when(mockReviewsCollection.orderBy(any, descending: any))
+            .thenThrow(Exception('Database error'));
 
-        when(mockDocumentSnapshot.exists).thenReturn(false);
-        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
+        // Act
+        final reviews = await repository.getReviews();
 
-        // Act & Assert
-        expect(
-          () => repository.editReview(reviewId, rating: 5),
-          throwsA(
-            isA<Exception>().having(
-              (e) => e.toString(),
-              'message',
-              contains('Отзыв не найден'),
-            ),
-          ),
-        );
-      });
-
-      test('should throw exception for already edited review', () async {
-        // Arrange
-        const reviewId = 'review_1';
-
-        when(mockDocumentSnapshot.exists).thenReturn(true);
-        when(mockDocumentSnapshot.data()).thenReturn({
-          'customerId': 'customer_1',
-          'edited': true, // Уже отредактирован
-        });
-        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
-
-        // Act & Assert
-        expect(
-          () => repository.editReview(reviewId, rating: 5),
-          throwsA(
-            isA<Exception>().having(
-              (e) => e.toString(),
-              'message',
-              contains('Отзыв уже был отредактирован'),
-            ),
-          ),
-        );
+        // Assert
+        expect(reviews, isEmpty);
       });
     });
 
     group('getReviewsBySpecialist', () {
-      test('should return reviews for specialist', () async {
+      test('should get reviews by specialist successfully', () async {
         // Arrange
-        const specialistId = 'specialist_1';
+        final specialistId = 'specialist_1';
         final reviewData = {
-          'bookingId': 'booking_1',
           'specialistId': specialistId,
-          'customerId': 'customer_1',
-          'rating': 4.5,
+          'clientId': 'client_1',
+          'clientName': 'Client Name',
+          'specialistName': 'Specialist Name',
+          'rating': 4,
           'comment': 'Отличная работа!',
           'createdAt': Timestamp.fromDate(DateTime.now()),
-          'reported': false,
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+          'images': [],
+          'likedBy': [],
+          'likesCount': 0,
+          'hasComment': true,
+          'tags': [],
+          'isVerified': false,
+          'isPublic': true,
+          'serviceTags': [],
+          'photos': [],
+          'responses': [],
         };
 
-        final reviewDoc = MockQueryDocumentSnapshot<Map<String, dynamic>>();
-        when(reviewDoc.id).thenReturn('review_1');
-        when(reviewDoc.data()).thenReturn(reviewData);
-        when(mockQuerySnapshot.docs).thenReturn([reviewDoc]);
-        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
-        when(mockReviewsCollection.where(any, isEqualTo: anyNamed('isEqualTo')))
+        final mockQueryDocSnapshot = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        when(mockQueryDocSnapshot.id).thenReturn('review_1');
+        when(mockQueryDocSnapshot.data()).thenReturn(reviewData);
+
+        when(mockReviewsCollection.where('specialistId', isEqualTo: specialistId))
             .thenReturn(mockQuery);
+        when(mockQuery.orderBy('createdAt', descending: true)).thenReturn(mockQuery);
+        when(mockQuery.limit(any)).thenReturn(mockQuery);
+        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
+        when(mockQuerySnapshot.docs).thenReturn([mockQueryDocSnapshot]);
 
         // Act
-        final reviews = await repository.getReviewsBySpecialist(specialistId);
+        final reviews = await repository.getReviewsBySpecialist(specialistId, limit: 10);
 
         // Assert
-        expect(reviews, isA<List<Review>>());
         expect(reviews.length, 1);
         expect(reviews.first.specialistId, specialistId);
       });
     });
 
-    group('canLeaveReview', () {
-      test('should return true for completed booking without review', () async {
+    group('updateReview', () {
+      test('should update review successfully', () async {
         // Arrange
-        const bookingId = 'booking_1';
-        const customerId = 'customer_1';
+        final reviewId = 'review_1';
+        final updates = {'comment': 'Updated comment', 'rating': 5};
 
-        when(mockDocumentSnapshot.exists).thenReturn(true);
-        when(mockDocumentSnapshot.data()).thenReturn({
-          'status': 'completed',
-          'customerId': customerId,
-        });
-        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
-
-        when(mockQuerySnapshot.docs).thenReturn([]);
-        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
-        when(mockReviewsCollection.where(any, isEqualTo: anyNamed('isEqualTo')))
-            .thenReturn(mockQuery);
+        when(mockDocumentRef.update(any)).thenAnswer((_) async => {});
 
         // Act
-        final canLeave = await repository.canLeaveReview(
-          bookingId: bookingId,
-          customerId: customerId,
-        );
+        final result = await repository.updateReview(reviewId, updates);
 
         // Assert
-        expect(canLeave, true);
+        expect(result, true);
+        verify(mockDocumentRef.update(any)).called(1);
       });
 
-      test('should return false for non-completed booking', () async {
+      test('should handle error when updating review', () async {
         // Arrange
-        const bookingId = 'booking_1';
-        const customerId = 'customer_1';
+        final reviewId = 'review_1';
+        final updates = {'comment': 'Updated comment'};
 
-        when(mockDocumentSnapshot.exists).thenReturn(true);
-        when(mockDocumentSnapshot.data()).thenReturn({
-          'status': 'pending',
-          'customerId': customerId,
-        });
-        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
+        when(mockDocumentRef.update(any)).thenThrow(Exception('Database error'));
 
         // Act
-        final canLeave = await repository.canLeaveReview(
-          bookingId: bookingId,
-          customerId: customerId,
-        );
+        final result = await repository.updateReview(reviewId, updates);
 
         // Assert
-        expect(canLeave, false);
-      });
-
-      test('should return false for existing review', () async {
-        // Arrange
-        const bookingId = 'booking_1';
-        const customerId = 'customer_1';
-
-        when(mockDocumentSnapshot.exists).thenReturn(true);
-        when(mockDocumentSnapshot.data()).thenReturn({
-          'status': 'completed',
-          'customerId': customerId,
-        });
-        when(mockDocumentRef.get()).thenAnswer((_) async => mockDocumentSnapshot);
-
-        // Существующий отзыв
-        final existingReviewDoc = MockQueryDocumentSnapshot<Map<String, dynamic>>();
-        when(mockQuerySnapshot.docs).thenReturn([existingReviewDoc]);
-        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
-        when(mockReviewsCollection.where(any, isEqualTo: anyNamed('isEqualTo')))
-            .thenReturn(mockQuery);
-
-        // Act
-        final canLeave = await repository.canLeaveReview(
-          bookingId: bookingId,
-          customerId: customerId,
-        );
-
-        // Assert
-        expect(canLeave, false);
+        expect(result, false);
       });
     });
 
-    group('getSpecialistReviewStats', () {
-      test('should return correct statistics', () async {
+    group('deleteReview', () {
+      test('should delete review successfully', () async {
         // Arrange
-        const specialistId = 'specialist_1';
+        final reviewId = 'review_1';
+
+        when(mockDocumentRef.delete()).thenAnswer((_) async => {});
+
+        // Act
+        final result = await repository.deleteReview(reviewId);
+
+        // Assert
+        expect(result, true);
+        verify(mockDocumentRef.delete()).called(1);
+      });
+
+      test('should handle error when deleting review', () async {
+        // Arrange
+        final reviewId = 'review_1';
+
+        when(mockDocumentRef.delete()).thenThrow(Exception('Database error'));
+
+        // Act
+        final result = await repository.deleteReview(reviewId);
+
+        // Assert
+        expect(result, false);
+      });
+    });
+
+    group('getReviewStats', () {
+      test('should get review stats successfully', () async {
+        // Arrange
+        final specialistId = 'specialist_1';
         final reviewData1 = {
-          'bookingId': 'booking_1',
           'specialistId': specialistId,
-          'customerId': 'customer_1',
-          'rating': 4.0,
-          'comment': 'Хорошая работа!',
+          'clientId': 'client_1',
+          'clientName': 'Client Name',
+          'specialistName': 'Specialist Name',
+          'rating': 5,
+          'comment': 'Excellent!',
           'createdAt': Timestamp.fromDate(DateTime.now()),
-          'reported': false,
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+          'images': [],
+          'likedBy': [],
+          'likesCount': 0,
+          'hasComment': true,
+          'tags': [],
+          'isVerified': true,
+          'isPublic': true,
+          'serviceTags': [],
+          'photos': [],
+          'responses': [],
         };
 
         final reviewData2 = {
-          'bookingId': 'booking_2',
           'specialistId': specialistId,
-          'customerId': 'customer_2',
-          'rating': 5.0,
-          'comment': 'Отличная работа!',
+          'clientId': 'client_2',
+          'clientName': 'Client Name 2',
+          'specialistName': 'Specialist Name',
+          'rating': 4,
+          'comment': 'Good work',
           'createdAt': Timestamp.fromDate(DateTime.now()),
-          'reported': false,
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+          'images': [],
+          'likedBy': [],
+          'likesCount': 0,
+          'hasComment': true,
+          'tags': [],
+          'isVerified': false,
+          'isPublic': true,
+          'serviceTags': [],
+          'photos': [],
+          'responses': [],
         };
 
-        final reviewDoc1 = MockQueryDocumentSnapshot<Map<String, dynamic>>();
-        when(reviewDoc1.data()).thenReturn(reviewData1);
+        final mockQueryDocSnapshot1 = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        when(mockQueryDocSnapshot1.id).thenReturn('review_1');
+        when(mockQueryDocSnapshot1.data()).thenReturn(reviewData1);
 
-        final reviewDoc2 = MockQueryDocumentSnapshot<Map<String, dynamic>>();
-        when(reviewDoc2.data()).thenReturn(reviewData2);
+        final mockQueryDocSnapshot2 = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        when(mockQueryDocSnapshot2.id).thenReturn('review_2');
+        when(mockQueryDocSnapshot2.data()).thenReturn(reviewData2);
 
-        when(mockQuerySnapshot.docs).thenReturn([reviewDoc1, reviewDoc2]);
-        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
-        when(mockReviewsCollection.where(any, isEqualTo: anyNamed('isEqualTo')))
+        when(mockReviewsCollection.where('specialistId', isEqualTo: specialistId))
             .thenReturn(mockQuery);
+        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
+        when(mockQuerySnapshot.docs).thenReturn([mockQueryDocSnapshot1, mockQueryDocSnapshot2]);
 
         // Act
-        final stats = await repository.getSpecialistReviewStats(specialistId);
+        final stats = await repository.getReviewStats(specialistId);
 
         // Assert
-        expect(stats['avgRating'], 4.5);
-        expect(stats['reviewsCount'], 2);
-        expect(stats['ratingDistribution'], isA<Map<int, int>>());
-      });
-
-      test('should return zero stats for specialist without reviews', () async {
-        // Arrange
-        const specialistId = 'specialist_1';
-
-        when(mockQuerySnapshot.docs).thenReturn([]);
-        when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
-        when(mockReviewsCollection.where(any, isEqualTo: anyNamed('isEqualTo')))
-            .thenReturn(mockQuery);
-
-        // Act
-        final stats = await repository.getSpecialistReviewStats(specialistId);
-
-        // Assert
-        expect(stats['avgRating'], 0.0);
-        expect(stats['reviewsCount'], 0);
-        expect(stats['ratingDistribution'], {1: 0, 2: 0, 3: 0, 4: 0, 5: 0});
+        expect(stats, isNotNull);
+        expect(stats.totalReviews, 2);
+        expect(stats.averageRating, 4.5);
       });
     });
   });

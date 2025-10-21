@@ -315,7 +315,7 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                           ),
                         ),
                         Text(
-                          specialist.category.displayName,
+                          specialist.category?.displayName ?? 'Категория',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 12,

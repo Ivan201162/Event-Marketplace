@@ -216,7 +216,7 @@ class RecommendationCard extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                specialist.category.displayName,
+                specialist.category?.displayName ?? 'Категория',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),

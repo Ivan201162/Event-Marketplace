@@ -159,7 +159,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                             width: 80,
                             height: 80,
                             decoration: BoxDecoration(
-                              color: Colors.orange.withOpacity(0.1),
+                              color: Colors.orange.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Center(
@@ -223,7 +223,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                           children: idea.requiredMaterials
                               .map((material) => Chip(
                                     label: Text(material),
-                                    backgroundColor: Colors.blue.withOpacity(0.1),
+                                    backgroundColor: Colors.blue.withValues(alpha: 0.1),
                                   ))
                               .toList(),
                         ),
@@ -244,7 +244,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                           children: idea.tags
                               .map((tag) => Chip(
                                     label: Text('#$tag'),
-                                    backgroundColor: Colors.orange.withOpacity(0.1),
+                                    backgroundColor: Colors.orange.withValues(alpha: 0.1),
                                   ))
                               .toList(),
                         ),

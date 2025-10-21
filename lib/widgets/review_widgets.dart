@@ -194,8 +194,8 @@ class ReviewStatsWidget extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // Популярные теги
-              if (statistics.tags.isNotEmpty) ...[
+              // Популярные теги (только для SpecialistReviewStats)
+              if (statistics is SpecialistReviewStats && statistics.topTags.isNotEmpty) ...[
                 Text(
                   'Популярные теги',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -206,7 +206,7 @@ class ReviewStatsWidget extends StatelessWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: statistics.tags.map((tag) => _buildTagChip(context, tag)).toList(),
+                  children: statistics.topTags.map((tag) => _buildTagChip(context, tag)).toList(),
                 ),
                 const SizedBox(height: 16),
               ],
@@ -566,9 +566,27 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
         ],
       );
 
+  /// Получить теги по рейтингу
+  List<String> _getTagsByRating(int rating) {
+    switch (rating) {
+      case 1:
+        return ['Плохое качество', 'Не рекомендую', 'Проблемы'];
+      case 2:
+        return ['Не понравилось', 'Медленно', 'Дорого'];
+      case 3:
+        return ['Нормально', 'Средне', 'Обычно'];
+      case 4:
+        return ['Хорошо', 'Быстро', 'Качественно'];
+      case 5:
+        return ['Отлично', 'Рекомендую', 'Быстро', 'Качественно', 'Профессионально'];
+      default:
+        return [];
+    }
+  }
+
   /// Построить секцию тегов
   Widget _buildTagsSection(BuildContext context, ReviewFormState formState) {
-    final availableTags = ReviewTags.getTagsByRating(formState.rating);
+    final availableTags = _getTagsByRating(formState.rating);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -626,11 +644,13 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
       final review = Review(
         id: '',
         specialistId: widget.specialistId,
-        customerId: 'current_user_id',
-        customerName: 'Current User',
-        rating: (ref.read(reviewFormProvider)).rating.toDouble(),
-        text: (ref.read(reviewFormProvider)).comment,
-        date: DateTime.now(),
+        clientId: 'current_user_id',
+        clientName: 'Current User',
+        specialistName: 'Specialist Name',
+        rating: (ref.read(reviewFormProvider)).rating.toInt(),
+        comment: (ref.read(reviewFormProvider)).comment,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
       await ref.read<ReviewStateNotifier>(reviewStateProvider.notifier).createReview(review);

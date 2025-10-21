@@ -2,285 +2,269 @@ import 'package:event_marketplace_app/models/review.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('ReviewService Tests', () {
-    // late ReviewService reviewService;
-
-    setUp(() {
-      // reviewService = ReviewService();
-    });
-
-    test('should calculate average rating correctly', () {
-      // Arrange
-      final reviews = [
-        Review(
-          id: '1',
-          specialistId: 'specialist_1',
-          specialistName: 'Specialist 1',
-          clientId: 'customer_1',
-          clientName: 'Customer 1',
-          customerId: 'customer_1',
-          customerName: 'Customer 1',
-          rating: 5,
-          text: 'Great!',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          date: DateTime.now(),
-        ),
-        Review(
-          id: '2',
-          specialistId: 'specialist_1',
-          specialistName: 'Specialist 1',
-          clientId: 'customer_2',
-          clientName: 'Customer 2',
-          customerId: 'customer_2',
-          customerName: 'Customer 2',
-          rating: 4,
-          text: 'Good!',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          date: DateTime.now(),
-        ),
-        Review(
-          id: '3',
-          specialistId: 'specialist_1',
-          specialistName: 'Specialist 1',
-          clientId: 'customer_3',
-          clientName: 'Customer 3',
-          customerId: 'customer_3',
-          customerName: 'Customer 3',
-          rating: 3,
-          text: 'Average',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          date: DateTime.now(),
-        ),
-      ];
-
-      // Act
-      final totalRating = reviews.fold<double>(
-        0,
-        (sum, review) => sum + review.rating.toDouble(),
-      );
-      final averageRating = totalRating / reviews.length;
-
-      // Assert
-      expect(averageRating, equals(4.0));
-    });
-
-    test('should validate rating range', () {
-      // Test valid ratings
-      expect(
-        () => Review(
-          id: '1',
-          specialistId: 'specialist_1',
-          specialistName: 'Specialist 1',
-          clientId: 'customer_1',
-          clientName: 'Customer 1',
-          customerId: 'customer_1',
-          customerName: 'Customer 1',
-          rating: 1,
-          text: 'Test',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          date: DateTime.now(),
-        ),
-        returnsNormally,
+  group('Review Model Tests', () {
+    test('should create review with all required fields', () {
+      final review = Review(
+        id: 'review_1',
+        specialistId: 'specialist_1',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 4,
+        comment: 'Отличная работа!',
+        createdAt: DateTime(2024, 1, 15),
+        updatedAt: DateTime(2024, 1, 16),
       );
 
-      expect(
-        () => Review(
-          id: '2',
-          specialistId: 'specialist_1',
-          specialistName: 'Specialist 1',
-          clientId: 'customer_1',
-          clientName: 'Customer 1',
-          customerId: 'customer_1',
-          customerName: 'Customer 1',
-          rating: 5,
-          text: 'Test',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          date: DateTime.now(),
-        ),
-        returnsNormally,
-      );
+      expect(review.id, 'review_1');
+      expect(review.specialistId, 'specialist_1');
+      expect(review.clientId, 'client_1');
+      expect(review.clientName, 'Client Name');
+      expect(review.specialistName, 'Specialist Name');
+      expect(review.rating, 4);
+      expect(review.comment, 'Отличная работа!');
     });
 
-    test('should format review date correctly', () {
-      // Arrange
+    test('should create review with optional fields', () {
+      final review = Review(
+        id: 'review_1',
+        specialistId: 'specialist_1',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 5,
+        comment: 'Excellent work!',
+        createdAt: DateTime(2024, 1, 15),
+        updatedAt: DateTime(2024, 1, 16),
+        images: ['image1.jpg', 'image2.jpg'],
+        likedBy: ['user1', 'user2'],
+        likesCount: 2,
+        title: 'Great service',
+        hasComment: true,
+        tags: ['professional', 'friendly'],
+        isVerified: true,
+        isPublic: true,
+        serviceTags: ['photography'],
+        photos: ['photo1.jpg'],
+        responses: [
+          {'text': 'Thank you!'}
+        ],
+      );
+
+      expect(review.images, ['image1.jpg', 'image2.jpg']);
+      expect(review.likedBy, ['user1', 'user2']);
+      expect(review.likesCount, 2);
+      expect(review.title, 'Great service');
+      expect(review.hasComment, true);
+      expect(review.tags, ['professional', 'friendly']);
+      expect(review.isVerified, true);
+      expect(review.isPublic, true);
+      expect(review.serviceTags, ['photography']);
+      expect(review.photos, ['photo1.jpg']);
+      expect(review.responses, [
+        {'text': 'Thank you!'}
+      ]);
+    });
+
+    test('should get rating stars string', () {
+      final review = Review(
+        id: 'review_1',
+        specialistId: 'specialist_1',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 3,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      expect(review.ratingStars, '⭐⭐⭐');
+    });
+
+    test('should get time ago string', () {
       final now = DateTime.now();
       final review = Review(
-        id: '1',
+        id: 'review_1',
         specialistId: 'specialist_1',
-        specialistName: 'Specialist 1',
-        clientId: 'customer_1',
-        clientName: 'Customer 1',
-        customerId: 'customer_1',
-        customerName: 'Customer 1',
-        rating: 5,
-        text: 'Test',
-        createdAt: now,
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 4,
+        createdAt: now.subtract(const Duration(hours: 2)),
         updatedAt: now,
-        date: now,
       );
 
-      // Act
-      final formattedDate = review.formattedCreatedAt;
-
-      // Assert
-      expect(formattedDate, isA<String>());
-      expect(formattedDate, isNotEmpty);
+      expect(review.timeAgo, '2ч назад');
     });
 
-    test('should check if review can be edited', () {
-      // Arrange
-      final recentReview = Review(
-        id: '1',
+    test('should check if review has images', () {
+      final reviewWithImages = Review(
+        id: 'review_1',
         specialistId: 'specialist_1',
-        specialistName: 'Specialist 1',
-        clientId: 'customer_1',
-        clientName: 'Customer 1',
-        customerId: 'customer_1',
-        customerName: 'Customer 1',
-        rating: 5,
-        text: 'Test',
-        createdAt: DateTime.now().subtract(const Duration(hours: 12)),
-        updatedAt: DateTime.now().subtract(const Duration(hours: 12)),
-        date: DateTime.now().subtract(const Duration(hours: 12)),
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 4,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        images: ['image1.jpg'],
       );
 
-      final oldReview = Review(
-        id: '2',
-        specialistId: 'specialist_1',
-        specialistName: 'Specialist 1',
-        clientId: 'customer_1',
-        clientName: 'Customer 1',
-        customerId: 'customer_1',
-        customerName: 'Customer 1',
-        rating: 5,
-        text: 'Test',
-        createdAt: DateTime.now().subtract(const Duration(days: 2)),
-        updatedAt: DateTime.now().subtract(const Duration(days: 2)),
-        date: DateTime.now().subtract(const Duration(days: 2)),
+      final reviewWithoutImages = Review(
+        id: 'review_2',
+        specialistId: 'specialist_2',
+        clientId: 'client_2',
+        clientName: 'Client Name 2',
+        specialistName: 'Specialist Name 2',
+        rating: 4,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
-      // Act & Assert
-      expect(recentReview.canEdit, isTrue);
-      expect(oldReview.canEdit, isFalse);
+      expect(reviewWithImages.hasImages, true);
+      expect(reviewWithoutImages.hasImages, false);
     });
 
-    test('should check if review can be deleted', () {
-      // Arrange
-      final recentReview = Review(
-        id: '1',
-        specialistId: 'specialist_1',
-        specialistName: 'Specialist 1',
-        clientId: 'customer_1',
-        clientName: 'Customer 1',
-        customerId: 'customer_1',
-        customerName: 'Customer 1',
-        rating: 5,
-        text: 'Test',
-        createdAt: DateTime.now().subtract(const Duration(hours: 12)),
-        updatedAt: DateTime.now().subtract(const Duration(hours: 12)),
-        date: DateTime.now().subtract(const Duration(hours: 12)),
-      );
-
-      final oldReview = Review(
-        id: '2',
-        specialistId: 'specialist_1',
-        specialistName: 'Specialist 1',
-        clientId: 'customer_1',
-        clientName: 'Customer 1',
-        customerId: 'customer_1',
-        customerName: 'Customer 1',
-        rating: 5,
-        text: 'Test',
-        createdAt: DateTime.now().subtract(const Duration(days: 2)),
-        updatedAt: DateTime.now().subtract(const Duration(days: 2)),
-        date: DateTime.now().subtract(const Duration(days: 2)),
-      );
-
-      // Act & Assert
-      expect(recentReview.canDelete, isTrue);
-      expect(oldReview.canDelete, isFalse);
-    });
-
-    test('should generate rating stars correctly', () {
-      // Arrange
+    test('should get first image', () {
       final review = Review(
-        id: '1',
+        id: 'review_1',
         specialistId: 'specialist_1',
-        specialistName: 'Specialist 1',
-        clientId: 'customer_1',
-        clientName: 'Customer 1',
-        customerId: 'customer_1',
-        customerName: 'Customer 1',
-        rating: 3,
-        text: 'Test',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 4,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        date: DateTime.now(),
+        images: ['image1.jpg', 'image2.jpg'],
       );
 
-      // Act
-      final stars = review.ratingStars;
-
-      // Assert
-      expect(stars, equals('★★★☆☆'));
+      expect(review.firstImage, 'image1.jpg');
     });
 
-    test('should get correct rating color', () {
-      // Arrange
-      final highRatingReview = Review(
-        id: '1',
+    test('should return null for first image when no images', () {
+      final review = Review(
+        id: 'review_1',
         specialistId: 'specialist_1',
-        specialistName: 'Specialist 1',
-        clientId: 'customer_1',
-        clientName: 'Customer 1',
-        customerId: 'customer_1',
-        customerName: 'Customer 1',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 4,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      expect(review.firstImage, null);
+    });
+
+    test('should create copy with updated fields', () {
+      final originalReview = Review(
+        id: 'review_1',
+        specialistId: 'specialist_1',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 4,
+        comment: 'Good work',
+        createdAt: DateTime(2024, 1, 15),
+        updatedAt: DateTime(2024, 1, 16),
+      );
+
+      final updatedReview = originalReview.copyWith(
         rating: 5,
-        text: 'Test',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        date: DateTime.now(),
+        comment: 'Excellent work!',
+        isVerified: true,
       );
 
-      final mediumRatingReview = Review(
-        id: '2',
+      expect(updatedReview.id, 'review_1');
+      expect(updatedReview.rating, 5);
+      expect(updatedReview.comment, 'Excellent work!');
+      expect(updatedReview.isVerified, true);
+      expect(updatedReview.specialistId, 'specialist_1'); // unchanged
+    });
+
+    test('should convert to firestore document', () {
+      final review = Review(
+        id: 'review_1',
         specialistId: 'specialist_1',
-        specialistName: 'Specialist 1',
-        clientId: 'customer_1',
-        clientName: 'Customer 1',
-        customerId: 'customer_1',
-        customerName: 'Customer 1',
-        rating: 3,
-        text: 'Test',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        date: DateTime.now(),
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 4,
+        comment: 'Отличная работа!',
+        createdAt: DateTime(2024, 1, 15),
+        updatedAt: DateTime(2024, 1, 16),
       );
 
-      final lowRatingReview = Review(
-        id: '3',
+      final firestoreData = review.toFirestore();
+
+      expect(firestoreData['specialistId'], 'specialist_1');
+      expect(firestoreData['clientId'], 'client_1');
+      expect(firestoreData['clientName'], 'Client Name');
+      expect(firestoreData['specialistName'], 'Specialist Name');
+      expect(firestoreData['rating'], 4);
+      expect(firestoreData['comment'], 'Отличная работа!');
+    });
+  });
+
+  group('ReviewStats Model Tests', () {
+    test('should create review stats', () {
+      final stats = ReviewStats(
+        averageRating: 4.5,
+        totalReviews: 100,
+        ratingDistribution: {1: 5, 2: 10, 3: 20, 4: 35, 5: 30},
+        verifiedReviews: 80,
+        recentReviews: 25,
+      );
+
+      expect(stats.averageRating, 4.5);
+      expect(stats.totalReviews, 100);
+      expect(stats.verifiedReviews, 80);
+      expect(stats.recentReviews, 25);
+    });
+
+    test('should calculate rating percentage', () {
+      final stats = ReviewStats(
+        averageRating: 4.5,
+        totalReviews: 100,
+        ratingDistribution: {1: 5, 2: 10, 3: 20, 4: 35, 5: 30},
+        verifiedReviews: 80,
+        recentReviews: 25,
+      );
+
+      expect(stats.getRatingPercentage(5), 30.0);
+      expect(stats.getRatingPercentage(4), 35.0);
+      expect(stats.getRatingPercentage(1), 5.0);
+    });
+
+    test('should format average rating', () {
+      final stats = ReviewStats(
+        averageRating: 4.567,
+        totalReviews: 100,
+        ratingDistribution: {},
+        verifiedReviews: 80,
+        recentReviews: 25,
+      );
+
+      expect(stats.formattedAverageRating, '4.6');
+    });
+  });
+
+  group('SpecialistReviewStats Model Tests', () {
+    test('should create specialist review stats', () {
+      final stats = SpecialistReviewStats(
         specialistId: 'specialist_1',
-        specialistName: 'Specialist 1',
-        clientId: 'customer_1',
-        clientName: 'Customer 1',
-        customerId: 'customer_1',
-        customerName: 'Customer 1',
-        rating: 1,
-        text: 'Test',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        date: DateTime.now(),
+        averageRating: 4.8,
+        totalReviews: 50,
+        ratingDistribution: {1: 0, 2: 1, 3: 2, 4: 10, 5: 37},
+        topTags: ['professional', 'friendly', 'reliable'],
+        serviceRatings: {'photography': 4.9, 'videography': 4.7},
       );
 
-      // Act & Assert
-      expect(highRatingReview.ratingColor, equals('green'));
-      expect(mediumRatingReview.ratingColor, equals('orange'));
-      expect(lowRatingReview.ratingColor, equals('red'));
+      expect(stats.specialistId, 'specialist_1');
+      expect(stats.averageRating, 4.8);
+      expect(stats.totalReviews, 50);
+      expect(stats.topTags, ['professional', 'friendly', 'reliable']);
+      expect(stats.serviceRatings, {'photography': 4.9, 'videography': 4.7});
     });
   });
 }

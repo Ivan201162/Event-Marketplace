@@ -198,7 +198,7 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                     radius: 16,
                     backgroundColor: Colors.blue.shade100,
                     child: Text(
-                      review.customerName.isNotEmpty ? review.customerName[0].toUpperCase() : 'П',
+                      review.clientName.isNotEmpty ? review.clientName[0].toUpperCase() : 'П',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -211,14 +211,14 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          review.customerName,
+                          review.clientName,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
-                          _formatDate(review.date),
+                          _formatDate(review.createdAt),
                           style: TextStyle(
                             color: Colors.grey.shade600,
                             fontSize: 10,
@@ -255,7 +255,7 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
 
               // Текст отзыва
               Text(
-                review.text,
+                review.comment ?? '',
                 style: const TextStyle(fontSize: 12),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -316,7 +316,7 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    response.authorName,
+                                    response['authorName'] ?? 'Специалист',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue.shade600,
@@ -327,7 +327,7 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                response.text,
+                                response['text'] ?? '',
                                 style: const TextStyle(fontSize: 10),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,

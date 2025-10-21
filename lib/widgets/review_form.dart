@@ -35,7 +35,7 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
     super.initState();
     if (widget.initialReview != null) {
       _rating = widget.initialReview!.rating.toDouble();
-      _commentController.text = widget.initialReview!.text;
+      _commentController.text = widget.initialReview!.comment ?? '';
     }
   }
 
@@ -215,29 +215,33 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
         // Редактирование существующего отзыва
         await reviewService.updateReview(
           widget.initialReview!.id,
-          rating: _rating.round(),
-          comment: _commentController.text.trim(),
+          _rating.round(),
+          _commentController.text.trim(),
         );
       } else {
         // Создание нового отзыва
         final reviewId = await reviewService.createReview(
           specialistId: widget.specialistId,
-          customerId: 'current_user_id', // TODO(developer): Get from auth
-          customerName: 'Current User', // TODO(developer): Get from auth
+          clientId: 'current_user_id', // TODO(developer): Get from auth
+          clientName: 'Current User', // TODO(developer): Get from auth
+          specialistName: widget.specialistName,
           rating: _rating.round(),
           comment: _commentController.text.trim(),
-          specialistName: widget.specialistName,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
 
         // Create a Review object for callback
         final review = Review(
           id: reviewId,
           specialistId: widget.specialistId,
-          customerId: 'current_user_id',
-          customerName: 'Current User',
-          rating: _rating,
-          text: _commentController.text.trim(),
-          date: DateTime.now(),
+          clientId: 'current_user_id',
+          clientName: 'Current User',
+          specialistName: widget.specialistName,
+          rating: _rating.round(),
+          comment: _commentController.text.trim(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
         widget.onReviewSubmitted?.call(review);
       }

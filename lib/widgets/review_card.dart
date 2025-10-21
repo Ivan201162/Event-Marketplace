@@ -35,12 +35,8 @@ class ReviewCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage: review.clientAvatarUrl != null
-                        ? CachedNetworkImageProvider(review.clientAvatarUrl!)
-                        : null,
-                    child: review.clientAvatarUrl == null
-                        ? Text(review.clientName.substring(0, 1))
-                        : null,
+                    backgroundImage: null,
+                    child: Text(review.clientName.substring(0, 1)),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -55,7 +51,7 @@ class ReviewCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          review.formattedDate,
+                          review.timeAgo,
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 12,
@@ -72,7 +68,7 @@ class ReviewCard extends StatelessWidget {
 
               // Review text
               Text(
-                review.text,
+                review.comment ?? '',
                 style: const TextStyle(fontSize: 14),
               ),
 

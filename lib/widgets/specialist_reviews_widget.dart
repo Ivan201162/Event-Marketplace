@@ -37,7 +37,8 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
           // Статистика отзывов
           statisticsAsync.when(
-            data: _buildReviewStatistics,
+            data: (stats) =>
+                stats != null ? _buildReviewStatistics(stats) : const SizedBox.shrink(),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => _buildErrorWidget(error),
           ),
@@ -228,7 +229,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Клиент ${review.customerId.substring(0, 8)}...', // Заглушка
+                          'Клиент ${review.clientId.substring(0, 8)}...', // Заглушка
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -290,7 +291,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
               // Комментарий
               ...[
                 Text(
-                  review.text,
+                  review.comment ?? '',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[700],

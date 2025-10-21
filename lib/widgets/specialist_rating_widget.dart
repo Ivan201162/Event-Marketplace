@@ -22,7 +22,7 @@ class SpecialistRatingWidget extends ConsumerWidget {
     final reviewStats = ref.watch(specialistReviewStatsProvider(specialistId));
 
     return reviewStats.when(
-      data: (stats) => _buildRatingContent(context, stats),
+      data: (stats) => stats != null ? _buildRatingContent(context, stats) : _buildNoDataState(),
       loading: _buildLoadingState,
       error: (error, stack) => _buildErrorState(error),
     );
@@ -328,7 +328,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                   radius: 16,
                   backgroundColor: Colors.grey[300],
                   child: Text(
-                    review.customerName.isNotEmpty ? review.customerName[0].toUpperCase() : '?',
+                    review.clientName.isNotEmpty ? review.clientName[0].toUpperCase() : '?',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -343,7 +343,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        review.customerName,
+                        review.clientName,
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
@@ -377,9 +377,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
             const SizedBox(height: 8),
 
             // Текст отзыва
-            if (review.text.isNotEmpty) ...[
+            if (review.comment != null && review.comment!.isNotEmpty) ...[
               Text(
-                review.text,
+                review.comment!,
                 style: const TextStyle(fontSize: 14),
               ),
               const SizedBox(height: 8),
@@ -559,5 +559,11 @@ class SpecialistReviewsWidget extends ConsumerWidget {
     } else {
       return 'Только что';
     }
+  }
+
+  Widget _buildNoDataState() {
+    return const Center(
+      child: Text('Нет данных о рейтинге'),
+    );
   }
 }

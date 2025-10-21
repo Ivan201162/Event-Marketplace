@@ -64,7 +64,7 @@ class SpecialistCardWidget extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            specialist.category.displayName,
+                            specialist.category?.displayName ?? 'Категория',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade600,
@@ -80,8 +80,8 @@ class SpecialistCardWidget extends StatelessWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                specialist.avgRating > 0
-                                    ? specialist.avgRating.toStringAsFixed(1)
+                                (specialist.avgRating ?? 0) > 0
+                                    ? (specialist.avgRating ?? 0).toStringAsFixed(1)
                                     : specialist.rating.toStringAsFixed(1),
                                 style: const TextStyle(
                                   fontSize: 14,

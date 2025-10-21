@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/specialist.dart';
+import '../models/specialist_category.dart';
 
 // Временное определение для совместимости
 enum SpecialistSortOption {

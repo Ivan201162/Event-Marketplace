@@ -267,7 +267,7 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              widget.specialist.category.displayName,
+                              widget.specialist.category?.displayName ?? 'Категория',
                               style: TextStyle(
                                 color: Colors.grey[600],
                                 fontSize: 12,

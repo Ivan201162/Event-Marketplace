@@ -200,7 +200,9 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          specialist.categoryDisplayName,
+                          specialist.categoryDisplayName ??
+                              specialist.category?.displayName ??
+                              'Категория',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.primary,
                           ),
@@ -286,16 +288,16 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
               ],
 
               // Категории и услуги
-              if (specialist.categories.isNotEmpty) ...[
+              if (specialist.categories != null && specialist.categories!.isNotEmpty) ...[
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: specialist.categories
+                  children: (specialist.categories ?? [])
                       .take(3)
                       .map(
                         (category) => Chip(
                           label: Text(
-                            '${category.icon} ${category.displayName}',
+                            category,
                             style: theme.textTheme.bodySmall,
                           ),
                           backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
@@ -322,7 +324,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                           ),
                         ),
                         Text(
-                          '${specialist.price.toInt()} ₽',
+                          '${(specialist.price ?? 0).toInt()} ₽',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: theme.colorScheme.primary,

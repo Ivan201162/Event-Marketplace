@@ -1,249 +1,112 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/review.dart';
 
-/// Репозиторий для работы с отзывами
+import '../../../../models/review.dart';
+
+/// Repository for managing reviews
 class ReviewRepository {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static const String _reviewsCollection = 'reviews';
 
-  /// Добавить отзыв
-  Future<void> addReview(Review review) async {
+  /// Add a new review
+  Future<bool> addReview(Review review) async {
     try {
-      // Проверяем, что отзыв валиден
-      if (!Review.isValidRating(review.rating)) {
-        throw Exception(
-          'Некорректный рейтинг. Допустимы значения от 1.0 до 5.0 с шагом 0.5',
-        );
-      }
-
-      if (!Review.isValidComment(review.comment)) {
-        throw Exception('Комментарий должен содержать минимум 10 символов');
-      }
-
-      // Проверяем, что заказ завершен
-      final bookingDoc = await _db.collection('bookings').doc(review.bookingId).get();
-      if (!bookingDoc.exists) {
-        throw Exception('Заказ не найден');
-      }
-
-      final bookingData = bookingDoc.data()!;
-      if (bookingData['status'] != 'completed') {
-        throw Exception('Отзыв можно оставить только для завершенных заказов');
-      }
-
-      // Проверяем, что отзыв еще не существует для этого заказа
-      final existingReview = await _db
-          .collection('reviews')
-          .where('bookingId', isEqualTo: review.bookingId)
-          .limit(1)
-          .get();
-
-      if (existingReview.docs.isNotEmpty) {
-        throw Exception('Отзыв для этого заказа уже существует');
-      }
-
-      // Добавляем отзыв
-      await _db.collection('reviews').doc(review.id).set(review.toMap());
-    } catch (e) {
-      throw Exception('Ошибка при добавлении отзыва: $e');
-    }
-  }
-
-  /// Редактировать отзыв
-  Future<void> editReview(
-    String reviewId, {
-    double? rating,
-    String? comment,
-  }) async {
-    try {
-      final reviewDoc = await _db.collection('reviews').doc(reviewId).get();
-      if (!reviewDoc.exists) {
-        throw Exception('Отзыв не найден');
-      }
-
-      final review = Review.fromDocument(reviewDoc);
-
-      // Проверяем, что отзыв можно редактировать
-      if (!review.canEdit()) {
-        throw Exception('Отзыв уже был отредактирован');
-      }
-
-      // Валидация новых данных
-      if (rating != null && !Review.isValidRating(rating)) {
-        throw Exception(
-          'Некорректный рейтинг. Допустимы значения от 1.0 до 5.0 с шагом 0.5',
-        );
-      }
-
-      if (comment != null && !Review.isValidComment(comment)) {
-        throw Exception('Комментарий должен содержать минимум 10 символов');
-      }
-
-      // Обновляем отзыв
-      final updateData = <String, dynamic>{
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-        'edited': true,
-      };
-
-      if (rating != null) {
-        updateData['rating'] = rating;
-      }
-
-      if (comment != null) {
-        updateData['comment'] = comment;
-      }
-
-      await _db.collection('reviews').doc(reviewId).update(updateData);
-    } catch (e) {
-      throw Exception('Ошибка при редактировании отзыва: $e');
-    }
-  }
-
-  /// Получить отзывы по специалисту
-  Future<List<Review>> getReviewsBySpecialist(String specialistId) async {
-    try {
-      final querySnapshot = await _db
-          .collection('reviews')
-          .where('specialistId', isEqualTo: specialistId)
-          .where('reported', isEqualTo: false) // Исключаем жалобы
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return querySnapshot.docs.map(Review.fromDocument).toList();
-    } catch (e) {
-      throw Exception('Ошибка при получении отзывов: $e');
-    }
-  }
-
-  /// Получить отзывы по специалисту (стрим)
-  Stream<List<Review>> getReviewsBySpecialistStream(String specialistId) => _db
-      .collection('reviews')
-      .where('specialistId', isEqualTo: specialistId)
-      .where('reported', isEqualTo: false) // Исключаем жалобы
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) => snapshot.docs.map(Review.fromDocument).toList(),
-      );
-
-  /// Получить отзывы по заказчику
-  Future<List<Review>> getReviewsByCustomer(String customerId) async {
-    try {
-      final querySnapshot = await _db
-          .collection('reviews')
-          .where('customerId', isEqualTo: customerId)
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return querySnapshot.docs.map(Review.fromDocument).toList();
-    } catch (e) {
-      throw Exception('Ошибка при получении отзывов заказчика: $e');
-    }
-  }
-
-  /// Проверить, может ли пользователь оставить отзыв
-  Future<bool> canLeaveReview({
-    required String bookingId,
-    required String customerId,
-  }) async {
-    try {
-      // Проверяем статус заказа
-      final bookingDoc = await _db.collection('bookings').doc(bookingId).get();
-      if (!bookingDoc.exists) {
-        return false;
-      }
-
-      final bookingData = bookingDoc.data()!;
-      if (bookingData['status'] != 'completed' || bookingData['customerId'] != customerId) {
-        return false;
-      }
-
-      // Проверяем, что отзыв еще не существует
-      final existingReview =
-          await _db.collection('reviews').where('bookingId', isEqualTo: bookingId).limit(1).get();
-
-      return existingReview.docs.isEmpty;
+      await _firestore.collection(_reviewsCollection).add(review.toFirestore());
+      return true;
     } catch (e) {
       return false;
     }
   }
 
-  /// Получить отзыв по ID заказа
-  Future<Review?> getReviewByBookingId(String bookingId) async {
+  /// Get reviews by specialist
+  Future<List<Review>> getReviewsBySpecialist(String specialistId, {int limit = 20}) async {
     try {
-      final querySnapshot =
-          await _db.collection('reviews').where('bookingId', isEqualTo: bookingId).limit(1).get();
-
-      if (querySnapshot.docs.isEmpty) {
-        return null;
-      }
-
-      return Review.fromDocument(querySnapshot.docs.first);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  /// Пожаловаться на отзыв
-  Future<void> reportReview(String reviewId, String reason) async {
-    try {
-      await _db.collection('reviews').doc(reviewId).update({
-        'reported': true,
-        'reportReason': reason,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-    } catch (e) {
-      throw Exception('Ошибка при подаче жалобы: $e');
-    }
-  }
-
-  /// Получить статистику отзывов специалиста
-  Future<Map<String, dynamic>> getSpecialistReviewStats(
-    String specialistId,
-  ) async {
-    try {
-      final querySnapshot = await _db
-          .collection('reviews')
+      final snapshot = await _firestore
+          .collection(_reviewsCollection)
           .where('specialistId', isEqualTo: specialistId)
-          .where('reported', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
           .get();
 
-      if (querySnapshot.docs.isEmpty) {
-        return {
-          'avgRating': 0.0,
-          'reviewsCount': 0,
-          'ratingDistribution': {1: 0, 2: 0, 3: 0, 4: 0, 5: 0},
-        };
-      }
-
-      final reviews = querySnapshot.docs.map(Review.fromDocument).toList();
-
-      final totalRating = reviews.fold<double>(0, (sum, review) => sum + review.rating);
-      final avgRating = totalRating / reviews.length;
-
-      final ratingDistribution = <int, int>{1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
-      for (final review in reviews) {
-        final rating = review.rating.round();
-        ratingDistribution[rating] = (ratingDistribution[rating] ?? 0) + 1;
-      }
-
-      return {
-        'avgRating': avgRating,
-        'reviewsCount': reviews.length,
-        'ratingDistribution': ratingDistribution,
-      };
+      return snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
     } catch (e) {
-      throw Exception('Ошибка при получении статистики отзывов: $e');
+      return [];
     }
   }
 
-  /// Получить отзыв по ID
-  Future<Review?> getReviewById(String reviewId) async {
+  /// Get all reviews
+  Future<List<Review>> getReviews({int limit = 20}) async {
     try {
-      final doc = await _db.collection('reviews').doc(reviewId).get();
-      if (!doc.exists) {
+      final snapshot = await _firestore
+          .collection(_reviewsCollection)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .get();
+
+      return snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /// Update a review
+  Future<bool> updateReview(String reviewId, Map<String, dynamic> updates) async {
+    try {
+      await _firestore.collection(_reviewsCollection).doc(reviewId).update(updates);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Delete a review
+  Future<bool> deleteReview(String reviewId) async {
+    try {
+      await _firestore.collection(_reviewsCollection).doc(reviewId).delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Get review statistics for a specialist
+  Future<ReviewStats?> getReviewStats(String specialistId) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_reviewsCollection)
+          .where('specialistId', isEqualTo: specialistId)
+          .get();
+
+      if (snapshot.docs.isEmpty) {
         return null;
       }
-      return Review.fromDocument(doc);
+
+      final reviews = snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+
+      if (reviews.isEmpty) {
+        return null;
+      }
+
+      // Calculate statistics
+      final totalReviews = reviews.length;
+      final averageRating = reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
+
+      final ratingDistribution = <int, int>{};
+      for (final review in reviews) {
+        ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
+      }
+
+      final verifiedReviews = reviews.where((r) => r.isVerified).length;
+      final recentReviews = reviews
+          .where((r) => r.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30))))
+          .length;
+
+      return ReviewStats(
+        averageRating: averageRating,
+        totalReviews: totalReviews,
+        ratingDistribution: ratingDistribution,
+        verifiedReviews: verifiedReviews,
+        recentReviews: recentReviews,
+      );
     } catch (e) {
       return null;
     }

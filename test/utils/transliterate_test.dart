@@ -74,7 +74,7 @@ void main() {
       for (var i = 0; i < 10; i++) {
         results.add(TransliterateUtils.transliterateNameToUsername('Тест'));
         // Небольшая задержка для обеспечения уникальности timestamp
-        await Future.delayed(const Duration(milliseconds: 1));
+        await Future<void>.delayed(const Duration(milliseconds: 1));
       }
 
       // Проверяем, что все результаты разные

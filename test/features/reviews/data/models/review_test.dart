@@ -2,241 +2,315 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/review.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+class MockDocumentSnapshot extends DocumentSnapshot {
+  final String _id;
+  final Map<String, dynamic> _data;
+
+  MockDocumentSnapshot(this._id, this._data);
+
+  @override
+  String get id => _id;
+
+  @override
+  Map<String, dynamic>? data() => _data;
+
+  @override
+  dynamic get(Object field) => _data[field];
+
+  @override
+  bool get exists => true;
+
+  @override
+  SnapshotMetadata get metadata => const SnapshotMetadata(false, false, false);
+
+  @override
+  DocumentReference get reference => throw UnimplementedError();
+}
+
 void main() {
   group('Review Model Tests', () {
-    test('should create review from map', () {
-      final map = {
-        'id': 'review_1',
-        'bookingId': 'booking_1',
+    test('should create review from firestore document', () {
+      final data = {
         'specialistId': 'specialist_1',
-        'customerId': 'customer_1',
-        'rating': 4.5,
+        'clientId': 'client_1',
+        'clientName': 'Client Name',
+        'specialistName': 'Specialist Name',
+        'rating': 4,
         'comment': 'Отличная работа!',
         'createdAt': Timestamp.fromDate(DateTime(2024, 1, 15)),
         'updatedAt': Timestamp.fromDate(DateTime(2024, 1, 16)),
-        'edited': true,
-        'reported': false,
-        'reportReason': null,
+        'images': [],
+        'likedBy': [],
+        'likesCount': 0,
+        'hasComment': true,
+        'tags': [],
+        'isVerified': false,
+        'isPublic': true,
+        'serviceTags': [],
+        'photos': [],
+        'responses': [],
       };
 
-      final review = Review.fromMap(map);
+      final doc = MockDocumentSnapshot('review_1', data);
+      final review = Review.fromFirestore(doc);
 
       expect(review.id, 'review_1');
-      expect(review.bookingId, 'booking_1');
       expect(review.specialistId, 'specialist_1');
-      expect(review.customerId, 'customer_1');
+      expect(review.clientId, 'client_1');
+      expect(review.clientName, 'Client Name');
+      expect(review.specialistName, 'Specialist Name');
       expect(review.rating, 4);
-      expect(review.text, 'Отличная работа!');
-      expect(review.isEdited, true);
-      expect(review.metadata['reported'], false);
-      expect(review.metadata['reportReason'], null);
+      expect(review.comment, 'Отличная работа!');
+      expect(review.hasComment, true);
     });
 
-    test('should convert review to map', () {
+    test('should convert review to firestore document', () {
       final review = Review(
         id: 'review_1',
         specialistId: 'specialist_1',
-        customerId: 'customer_1',
-        customerName: 'Customer Name',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
         rating: 4,
-        text: 'Отличная работа!',
-        date: DateTime(2024, 1, 15),
-        bookingId: 'booking_1',
-        editedAt: DateTime(2024, 1, 16),
-        isEdited: true,
+        comment: 'Отличная работа!',
+        createdAt: DateTime(2024, 1, 15),
+        updatedAt: DateTime(2024, 1, 16),
       );
 
-      final map = review.toMap();
+      final firestoreData = review.toFirestore();
 
-      expect(map['bookingId'], 'booking_1');
-      expect(map['specialistId'], 'specialist_1');
-      expect(map['customerId'], 'customer_1');
-      expect(map['rating'], 4);
-      expect(map['comment'], 'Отличная работа!');
-      expect(map['isEdited'], true);
-      expect(map['reported'], false);
-      expect(map['reportReason'], null);
+      expect(firestoreData['specialistId'], 'specialist_1');
+      expect(firestoreData['clientId'], 'client_1');
+      expect(firestoreData['clientName'], 'Client Name');
+      expect(firestoreData['specialistName'], 'Specialist Name');
+      expect(firestoreData['rating'], 4);
+      expect(firestoreData['comment'], 'Отличная работа!');
     });
 
-    test('should validate rating correctly', () {
+    test('should create review with all parameters', () {
       final review = Review(
-        id: 'test',
-        specialistId: 'test',
-        customerId: 'test',
-        customerName: 'test',
-        rating: 1,
-        text: 'test',
-        date: DateTime.now(),
-      );
-      expect(review.isValidRating(1), true);
-      expect(review.isValidRating(2), true);
-      expect(review.isValidRating(5), true);
-      expect(review.isValidRating(0), false); // Меньше 1
-      expect(review.isValidRating(6), false); // Больше 5
-    });
-
-    test('should validate comment correctly', () {
-      final review = Review(
-        id: 'test',
-        specialistId: 'test',
-        customerId: 'test',
-        customerName: 'test',
-        rating: 1,
-        text: 'test',
-        date: DateTime.now(),
-      );
-      expect(review.isValidComment('Это хороший комментарий'), true);
-      expect(review.isValidComment('   Это тоже хороший комментарий   '), true);
-      expect(review.isValidComment('Короткий'), false); // Меньше 10 символов
-      expect(review.isValidComment(''), false); // Пустой
-      expect(review.isValidComment('   '), false); // Только пробелы
-    });
-
-    test('should check if review can be edited', () {
-      final editableReview = Review(
         id: 'review_1',
         specialistId: 'specialist_1',
-        customerId: 'customer_1',
-        customerName: 'Customer',
-        rating: 4,
-        text: 'Отличная работа!',
-        date: DateTime.now(),
-        bookingId: 'booking_1',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 5,
+        comment: 'Отличная работа!',
+        createdAt: DateTime(2024, 1, 15),
+        updatedAt: DateTime(2024, 1, 16),
+        images: ['image1.jpg', 'image2.jpg'],
+        likedBy: ['user1', 'user2'],
+        likesCount: 2,
+        title: 'Great service',
+        hasComment: true,
+        tags: ['professional', 'friendly'],
+        isVerified: true,
+        isPublic: true,
+        serviceTags: ['photography'],
+        photos: ['photo1.jpg'],
+        responses: [
+          {'text': 'Thank you!'}
+        ],
       );
 
-      final nonEditableReview = Review(
-        id: 'review_2',
-        specialistId: 'specialist_2',
-        customerId: 'customer_2',
-        customerName: 'Customer',
-        rating: 4,
-        text: 'Хорошая работа!',
-        date: DateTime.now(),
-        bookingId: 'booking_2',
-        isEdited: true,
-      );
-
-      expect(editableReview.canEdit, true);
-      expect(nonEditableReview.canEdit, false);
+      expect(review.id, 'review_1');
+      expect(review.specialistId, 'specialist_1');
+      expect(review.clientId, 'client_1');
+      expect(review.clientName, 'Client Name');
+      expect(review.specialistName, 'Specialist Name');
+      expect(review.rating, 5);
+      expect(review.comment, 'Отличная работа!');
+      expect(review.images, ['image1.jpg', 'image2.jpg']);
+      expect(review.likedBy, ['user1', 'user2']);
+      expect(review.likesCount, 2);
+      expect(review.title, 'Great service');
+      expect(review.hasComment, true);
+      expect(review.tags, ['professional', 'friendly']);
+      expect(review.isVerified, true);
+      expect(review.isPublic, true);
+      expect(review.serviceTags, ['photography']);
+      expect(review.photos, ['photo1.jpg']);
+      expect(review.responses, [
+        {'text': 'Thank you!'}
+      ]);
     });
 
-    test('should check if review can be reported', () {
-      final reportableReview = Review(
-        id: 'review_1',
-        specialistId: 'specialist_1',
-        customerId: 'customer_1',
-        customerName: 'Customer',
-        rating: 4,
-        text: 'Отличная работа!',
-        date: DateTime.now(),
-        bookingId: 'booking_1',
-      );
-
-      final reportedReview = Review(
-        id: 'review_2',
-        specialistId: 'specialist_2',
-        customerId: 'customer_2',
-        customerName: 'Customer',
-        rating: 4,
-        text: 'Хорошая работа!',
-        date: DateTime.now(),
-        bookingId: 'booking_2',
-        metadata: const {'reported': true},
-      );
-
-      expect(reportableReview.canReport(), true);
-      expect(reportedReview.canReport(), false);
-    });
-
-    test('should copy review with changes', () {
+    test('should create copy with updated fields', () {
       final originalReview = Review(
         id: 'review_1',
         specialistId: 'specialist_1',
-        customerId: 'customer_1',
-        customerName: 'Customer',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
         rating: 4,
-        text: 'Отличная работа!',
-        date: DateTime(2024, 1, 15),
-        bookingId: 'booking_1',
+        comment: 'Good work',
+        createdAt: DateTime(2024, 1, 15),
+        updatedAt: DateTime(2024, 1, 16),
       );
 
       final updatedReview = originalReview.copyWith(
         rating: 5,
-        text: 'Превосходная работа!',
-        isEdited: true,
-        editedAt: DateTime(2024, 1, 16),
+        comment: 'Excellent work!',
+        isVerified: true,
       );
 
-      expect(updatedReview.id, originalReview.id);
+      expect(updatedReview.id, 'review_1');
       expect(updatedReview.rating, 5);
-      expect(updatedReview.text, 'Превосходная работа!');
-      expect(updatedReview.isEdited, true);
-      expect(updatedReview.editedAt, DateTime(2024, 1, 16));
-      expect(updatedReview.createdAt, originalReview.createdAt);
+      expect(updatedReview.comment, 'Excellent work!');
+      expect(updatedReview.isVerified, true);
+      expect(updatedReview.specialistId, 'specialist_1'); // unchanged
     });
 
-    test('should implement equality correctly', () {
-      final review1 = Review(
+    test('should get rating stars string', () {
+      final review = Review(
         id: 'review_1',
         specialistId: 'specialist_1',
-        customerId: 'customer_1',
-        customerName: 'Customer',
-        rating: 4,
-        text: 'Отличная работа!',
-        date: DateTime(2024, 1, 15),
-        bookingId: 'booking_1',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 3,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
-      final review2 = Review(
+      expect(review.ratingStars, '⭐⭐⭐');
+    });
+
+    test('should get time ago string', () {
+      final now = DateTime.now();
+      final review = Review(
         id: 'review_1',
         specialistId: 'specialist_1',
-        customerId: 'customer_1',
-        customerName: 'Customer',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
         rating: 4,
-        text: 'Отличная работа!',
-        date: DateTime(2024, 1, 15),
-        bookingId: 'booking_1',
+        createdAt: now.subtract(const Duration(hours: 2)),
+        updatedAt: now,
       );
 
-      final review3 = Review(
+      expect(review.timeAgo, '2ч назад');
+    });
+
+    test('should check if review has images', () {
+      final reviewWithImages = Review(
+        id: 'review_1',
+        specialistId: 'specialist_1',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
+        rating: 4,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        images: ['image1.jpg'],
+      );
+
+      final reviewWithoutImages = Review(
         id: 'review_2',
-        specialistId: 'specialist_1',
-        customerId: 'customer_1',
-        customerName: 'Customer',
+        specialistId: 'specialist_2',
+        clientId: 'client_2',
+        clientName: 'Client Name 2',
+        specialistName: 'Specialist Name 2',
         rating: 4,
-        text: 'Отличная работа!',
-        date: DateTime(2024, 1, 15),
-        bookingId: 'booking_1',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
-      expect(review1, equals(review2));
-      expect(review1, isNot(equals(review3)));
+      expect(reviewWithImages.hasImages, true);
+      expect(reviewWithoutImages.hasImages, false);
     });
 
-    test('should implement hashCode correctly', () {
-      final review1 = Review(
+    test('should get first image', () {
+      final review = Review(
         id: 'review_1',
         specialistId: 'specialist_1',
-        customerId: 'customer_1',
-        customerName: 'Customer',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
         rating: 4,
-        text: 'Отличная работа!',
-        date: DateTime(2024, 1, 15),
-        bookingId: 'booking_1',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        images: ['image1.jpg', 'image2.jpg'],
       );
 
-      final review2 = Review(
+      expect(review.firstImage, 'image1.jpg');
+    });
+
+    test('should return null for first image when no images', () {
+      final review = Review(
         id: 'review_1',
         specialistId: 'specialist_1',
-        customerId: 'customer_1',
-        customerName: 'Customer',
+        clientId: 'client_1',
+        clientName: 'Client Name',
+        specialistName: 'Specialist Name',
         rating: 4,
-        text: 'Отличная работа!',
-        date: DateTime(2024, 1, 15),
-        bookingId: 'booking_1',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
-      expect(review1.hashCode, equals(review2.hashCode));
+      expect(review.firstImage, null);
+    });
+  });
+
+  group('ReviewStats Model Tests', () {
+    test('should create review stats', () {
+      final stats = ReviewStats(
+        averageRating: 4.5,
+        totalReviews: 100,
+        ratingDistribution: {1: 5, 2: 10, 3: 20, 4: 35, 5: 30},
+        verifiedReviews: 80,
+        recentReviews: 25,
+      );
+
+      expect(stats.averageRating, 4.5);
+      expect(stats.totalReviews, 100);
+      expect(stats.verifiedReviews, 80);
+      expect(stats.recentReviews, 25);
+    });
+
+    test('should calculate rating percentage', () {
+      final stats = ReviewStats(
+        averageRating: 4.5,
+        totalReviews: 100,
+        ratingDistribution: {1: 5, 2: 10, 3: 20, 4: 35, 5: 30},
+        verifiedReviews: 80,
+        recentReviews: 25,
+      );
+
+      expect(stats.getRatingPercentage(5), 30.0);
+      expect(stats.getRatingPercentage(4), 35.0);
+      expect(stats.getRatingPercentage(1), 5.0);
+    });
+
+    test('should format average rating', () {
+      final stats = ReviewStats(
+        averageRating: 4.567,
+        totalReviews: 100,
+        ratingDistribution: {},
+        verifiedReviews: 80,
+        recentReviews: 25,
+      );
+
+      expect(stats.formattedAverageRating, '4.6');
+    });
+  });
+
+  group('SpecialistReviewStats Model Tests', () {
+    test('should create specialist review stats', () {
+      final stats = SpecialistReviewStats(
+        specialistId: 'specialist_1',
+        averageRating: 4.8,
+        totalReviews: 50,
+        ratingDistribution: {1: 0, 2: 1, 3: 2, 4: 10, 5: 37},
+        topTags: ['professional', 'friendly', 'reliable'],
+        serviceRatings: {'photography': 4.9, 'videography': 4.7},
+      );
+
+      expect(stats.specialistId, 'specialist_1');
+      expect(stats.averageRating, 4.8);
+      expect(stats.totalReviews, 50);
+      expect(stats.topTags, ['professional', 'friendly', 'reliable']);
+      expect(stats.serviceRatings, {'photography': 4.9, 'videography': 4.7});
     });
   });
 }

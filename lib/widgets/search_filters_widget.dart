@@ -277,25 +277,35 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   Widget _buildAvailabilityFilter() {
     return Column(
       children: [
-        RadioListTile<bool?>(
-          title: const Text('Любая'),
-          value: null,
-          groupValue: _currentFilters.isAvailable,
+        RadioGroup<bool?>(
+          value: _currentFilters.isAvailable,
           onChanged: (value) {
             setState(() {
               _currentFilters = _currentFilters.copyWith(isAvailable: value);
             });
           },
-        ),
-        RadioListTile<bool?>(
-          title: const Text('Только доступные'),
-          value: true,
-          groupValue: _currentFilters.isAvailable,
-          onChanged: (value) {
-            setState(() {
-              _currentFilters = _currentFilters.copyWith(isAvailable: value);
-            });
-          },
+          children: [
+            RadioListTile<bool?>(
+              title: const Text('Любая'),
+              value: null,
+              groupValue: _currentFilters.isAvailable,
+              onChanged: (value) {
+                setState(() {
+                  _currentFilters = _currentFilters.copyWith(isAvailable: value);
+                });
+              },
+            ),
+            RadioListTile<bool?>(
+              title: const Text('Только доступные'),
+              value: true,
+              groupValue: _currentFilters.isAvailable,
+              onChanged: (value) {
+                setState(() {
+                  _currentFilters = _currentFilters.copyWith(isAvailable: value);
+                });
+              },
+            ),
+          ],
         ),
       ],
     );
@@ -323,31 +333,33 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           },
         ),
         const SizedBox(height: 16),
-        Row(
+        RadioGroup<bool>(
+          value: _currentFilters.sortAscending,
+          onChanged: (value) {
+            setState(() {
+              _currentFilters = _currentFilters.copyWith(sortAscending: value);
+            });
+          },
           children: [
-            Expanded(
-              child: RadioListTile<bool>(
-                title: const Text('По возрастанию'),
-                value: true,
-                groupValue: _currentFilters.sortAscending,
-                onChanged: (value) {
-                  setState(() {
-                    _currentFilters = _currentFilters.copyWith(sortAscending: value);
-                  });
-                },
-              ),
+            RadioListTile<bool>(
+              title: const Text('По возрастанию'),
+              value: true,
+              groupValue: _currentFilters.sortAscending,
+              onChanged: (value) {
+                setState(() {
+                  _currentFilters = _currentFilters.copyWith(sortAscending: value);
+                });
+              },
             ),
-            Expanded(
-              child: RadioListTile<bool>(
-                title: const Text('По убыванию'),
-                value: false,
-                groupValue: _currentFilters.sortAscending,
-                onChanged: (value) {
-                  setState(() {
-                    _currentFilters = _currentFilters.copyWith(sortAscending: value);
-                  });
-                },
-              ),
+            RadioListTile<bool>(
+              title: const Text('По убыванию'),
+              value: false,
+              groupValue: _currentFilters.sortAscending,
+              onChanged: (value) {
+                setState(() {
+                  _currentFilters = _currentFilters.copyWith(sortAscending: value);
+                });
+              },
             ),
           ],
         ),

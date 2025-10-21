@@ -8,182 +8,218 @@ final reviewServiceProvider = Provider<ReviewService>((ref) {
   return ReviewService();
 });
 
+/// Review form state
+class ReviewFormState {
+  const ReviewFormState({
+    this.rating = 0,
+    this.comment = '',
+    this.title = '',
+    this.selectedTags = const [],
+    this.isPublic = true,
+    this.isSubmitting = false,
+    this.errorMessage,
+  });
+
+  final int rating;
+  final String comment;
+  final String title;
+  final List<String> selectedTags;
+  final bool isPublic;
+  final bool isSubmitting;
+  final String? errorMessage;
+
+  ReviewFormState copyWith({
+    int? rating,
+    String? comment,
+    String? title,
+    List<String>? selectedTags,
+    bool? isPublic,
+    bool? isSubmitting,
+    String? errorMessage,
+  }) {
+    return ReviewFormState(
+      rating: rating ?? this.rating,
+      comment: comment ?? this.comment,
+      title: title ?? this.title,
+      selectedTags: selectedTags ?? this.selectedTags,
+      isPublic: isPublic ?? this.isPublic,
+      isSubmitting: isSubmitting ?? this.isSubmitting,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+
+  bool get isValid => rating > 0 && comment.isNotEmpty;
+}
+
+/// Review form notifier
+class ReviewFormNotifier extends Notifier<ReviewFormState> {
+  @override
+  ReviewFormState build() => const ReviewFormState();
+
+  void updateRating(int rating) {
+    state = state.copyWith(rating: rating);
+  }
+
+  void setRating(int rating) {
+    state = state.copyWith(rating: rating);
+  }
+
+  void updateComment(String comment) {
+    state = state.copyWith(comment: comment);
+  }
+
+  void updateTitle(String title) {
+    state = state.copyWith(title: title);
+  }
+
+  void addTag(String tag) {
+    if (!state.selectedTags.contains(tag)) {
+      state = state.copyWith(selectedTags: [...state.selectedTags, tag]);
+    }
+  }
+
+  void removeTag(String tag) {
+    state = state.copyWith(selectedTags: state.selectedTags.where((t) => t != tag).toList());
+  }
+
+  void togglePublic() {
+    state = state.copyWith(isPublic: !state.isPublic);
+  }
+
+  void startSubmitting() {
+    state = state.copyWith(isSubmitting: true, errorMessage: null);
+  }
+
+  void finishSubmitting() {
+    state = state.copyWith(isSubmitting: false);
+  }
+
+  void setError(String error) {
+    state = state.copyWith(isSubmitting: false, errorMessage: error);
+  }
+
+  void reset() {
+    state = const ReviewFormState();
+  }
+}
+
+/// Review form provider
+final reviewFormProvider = NotifierProvider<ReviewFormNotifier, ReviewFormState>(
+  ReviewFormNotifier.new,
+);
+
+/// Review state
+class ReviewState {
+  const ReviewState({
+    this.reviews = const [],
+    this.isLoading = false,
+    this.error,
+  });
+
+  final List<Review> reviews;
+  final bool isLoading;
+  final String? error;
+
+  ReviewState copyWith({
+    List<Review>? reviews,
+    bool? isLoading,
+    String? error,
+  }) {
+    return ReviewState(
+      reviews: reviews ?? this.reviews,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
+}
+
+/// Review state notifier
+class ReviewStateNotifier extends Notifier<ReviewState> {
+  @override
+  ReviewState build() => const ReviewState();
+
+  Future<void> loadReviews(String specialistId) async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final service = ref.read(reviewServiceProvider);
+      final reviews = await service.getReviewsBySpecialist(specialistId);
+      state = state.copyWith(reviews: reviews, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(error: e.toString(), isLoading: false);
+    }
+  }
+
+  Future<void> createReview(Review review) async {
+    try {
+      final service = ref.read(reviewServiceProvider);
+      await service.addReview(review);
+      // Reload reviews
+      await loadReviews(review.specialistId);
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
+  }
+
+  Future<void> updateReview(String reviewId, Map<String, dynamic> updates) async {
+    try {
+      final service = ref.read(reviewServiceProvider);
+      await service.updateReview(reviewId, updates);
+      // Reload reviews
+      final currentReviews = state.reviews;
+      final specialistId = currentReviews.isNotEmpty ? currentReviews.first.specialistId : '';
+      if (specialistId.isNotEmpty) {
+        await loadReviews(specialistId);
+      }
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
+  }
+
+  Future<void> deleteReview(String reviewId) async {
+    try {
+      final service = ref.read(reviewServiceProvider);
+      await service.deleteReview(reviewId);
+      // Reload reviews
+      final currentReviews = state.reviews;
+      final specialistId = currentReviews.isNotEmpty ? currentReviews.first.specialistId : '';
+      if (specialistId.isNotEmpty) {
+        await loadReviews(specialistId);
+      }
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
+  }
+}
+
+/// Review state provider
+final reviewStateProvider = NotifierProvider<ReviewStateNotifier, ReviewState>(
+  ReviewStateNotifier.new,
+);
+
+/// Reviews by specialist provider
+final reviewsBySpecialistProvider =
+    FutureProvider.family<List<Review>, String>((ref, specialistId) async {
+  final service = ref.read(reviewServiceProvider);
+  return service.getReviewsBySpecialist(specialistId);
+});
+
+/// Review stats provider
+final reviewStatsProvider = FutureProvider.family<ReviewStats?, String>((ref, specialistId) async {
+  final service = ref.read(reviewServiceProvider);
+  return service.getReviewStats(specialistId);
+});
+
+/// Specialist review stats provider
+final specialistReviewStatsProvider =
+    FutureProvider.family<SpecialistReviewStats?, String>((ref, specialistId) async {
+  final service = ref.read(reviewServiceProvider);
+  return service.getSpecialistReviewStats(specialistId);
+});
+
 /// Specialist reviews provider
 final specialistReviewsProvider =
     FutureProvider.family<List<Review>, String>((ref, specialistId) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getSpecialistReviews(specialistId);
-});
-
-/// Client reviews provider
-final clientReviewsProvider = FutureProvider.family<List<Review>, String>((ref, clientId) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getClientReviews(clientId);
-});
-
-/// Reviews by rating provider
-final reviewsByRatingProvider = FutureProvider.family<List<Review>, int>((ref, rating) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getReviewsByRating(rating);
-});
-
-/// Review by ID provider
-final reviewByIdProvider = FutureProvider.family<Review?, String>((ref, reviewId) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getReviewById(reviewId);
-});
-
-/// Specialist reviews stream provider
-final specialistReviewsStreamProvider =
-    StreamProvider.family<List<Review>, String>((ref, specialistId) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getSpecialistReviewsStream(specialistId);
-});
-
-/// Client reviews stream provider
-final clientReviewsStreamProvider = StreamProvider.family<List<Review>, String>((ref, clientId) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getClientReviewsStream(clientId);
-});
-
-/// Reviews by rating stream provider
-final reviewsByRatingStreamProvider = StreamProvider.family<List<Review>, int>((ref, rating) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getReviewsByRatingStream(rating);
-});
-
-/// Specialist review statistics provider
-final specialistReviewStatsProvider =
-    FutureProvider.family<Map<String, dynamic>, String>((ref, specialistId) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getSpecialistReviewStats(specialistId);
-});
-
-/// Recent reviews provider
-final recentReviewsProvider = FutureProvider.family<List<Review>, int>((ref, limit) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getRecentReviews(limit: limit);
-});
-
-/// Top rated specialists provider
-final topRatedSpecialistsProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, int>((ref, limit) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getTopRatedSpecialists(limit: limit);
-});
-
-/// Can client review specialist provider
-final canClientReviewProvider =
-    FutureProvider.family<bool, Map<String, String>>((ref, params) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  final clientId = params['clientId']!;
-  final specialistId = params['specialistId']!;
-  return reviewService.canClientReviewSpecialist(clientId, specialistId);
-});
-
-/// Review statistics provider
-final reviewStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
-  final reviewService = ref.read(reviewServiceProvider);
-
-  // Get overall statistics
-  final recentReviews = await reviewService.getRecentReviews(limit: 100);
-  final topSpecialists = await reviewService.getTopRatedSpecialists();
-
-  final totalReviews = recentReviews.length;
-  final averageRating = recentReviews.isNotEmpty
-      ? recentReviews.fold(0.0, (sum, review) => sum + review.rating) / recentReviews.length
-      : 0.0;
-
-  final ratingDistribution = <int, int>{1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
-  for (final review in recentReviews) {
-    ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
-  }
-
-  return {
-    'totalReviews': totalReviews,
-    'averageRating': averageRating,
-    'ratingDistribution': ratingDistribution,
-    'topSpecialists': topSpecialists,
-  };
-});
-
-/// Reviews with images provider
-final reviewsWithImagesProvider =
-    FutureProvider.family<List<Review>, String>((ref, specialistId) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  final reviews = await reviewService.getSpecialistReviews(specialistId);
-  return reviews.where((review) => review.hasImages).toList();
-});
-
-/// Reviews with images stream provider
-final reviewsWithImagesStreamProvider =
-    StreamProvider.family<List<Review>, String>((ref, specialistId) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService
-      .getSpecialistReviewsStream(specialistId)
-      .map((reviews) => reviews.where((review) => review.hasImages).toList());
-});
-
-/// High rating reviews provider (4+ stars)
-final highRatingReviewsProvider =
-    FutureProvider.family<List<Review>, String>((ref, specialistId) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  final reviews = await reviewService.getSpecialistReviews(specialistId);
-  return reviews.where((review) => review.rating >= 4).toList();
-});
-
-/// High rating reviews stream provider
-final highRatingReviewsStreamProvider =
-    StreamProvider.family<List<Review>, String>((ref, specialistId) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService
-      .getSpecialistReviewsStream(specialistId)
-      .map((reviews) => reviews.where((review) => review.rating >= 4).toList());
-});
-
-/// Low rating reviews provider (1-2 stars)
-final lowRatingReviewsProvider =
-    FutureProvider.family<List<Review>, String>((ref, specialistId) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  final reviews = await reviewService.getSpecialistReviews(specialistId);
-  return reviews.where((review) => review.rating <= 2).toList();
-});
-
-/// Low rating reviews stream provider
-final lowRatingReviewsStreamProvider =
-    StreamProvider.family<List<Review>, String>((ref, specialistId) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService
-      .getSpecialistReviewsStream(specialistId)
-      .map((reviews) => reviews.where((review) => review.rating <= 2).toList());
-});
-
-/// Reviews count provider
-final reviewsCountProvider = FutureProvider.family<int, String>((ref, specialistId) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  final reviews = await reviewService.getSpecialistReviews(specialistId);
-  return reviews.length;
-});
-
-/// Reviews count stream provider
-final reviewsCountStreamProvider = StreamProvider.family<int, String>((ref, specialistId) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getSpecialistReviewsStream(specialistId).map((reviews) => reviews.length);
-});
-
-/// Average rating provider
-final averageRatingProvider = FutureProvider.family<double, String>((ref, specialistId) async {
-  final reviewService = ref.read(reviewServiceProvider);
-  final stats = await reviewService.getSpecialistReviewStats(specialistId);
-  return stats['averageRating'] as double;
-});
-
-/// Average rating stream provider
-final averageRatingStreamProvider = StreamProvider.family<double, String>((ref, specialistId) {
-  final reviewService = ref.read(reviewServiceProvider);
-  return reviewService.getSpecialistReviewsStream(specialistId).map((reviews) {
-    if (reviews.isEmpty) return 0.0;
-    final totalRating = reviews.fold(0, (sum, review) => sum + review.rating);
-    return totalRating / reviews.length;
-  });
+  final service = ref.read(reviewServiceProvider);
+  return service.getSpecialistReviews(specialistId);
 });

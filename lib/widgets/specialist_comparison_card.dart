@@ -64,7 +64,7 @@ class SpecialistComparisonCard extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  specialist.category.displayName,
+                                  specialist.category?.displayName ?? 'Категория',
                                   style: TextStyle(
                                     color: Theme.of(context).colorScheme.primary,
                                     fontSize: 14,
@@ -234,7 +234,7 @@ class SpecialistComparisonCard extends StatelessWidget {
           Expanded(
             child: _buildCharacteristicItem(
               'Цена',
-              '${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
+              '${(specialist.hourlyRate ?? 0).toStringAsFixed(0)} ₽/час',
               Icons.attach_money,
               Colors.green,
             ),

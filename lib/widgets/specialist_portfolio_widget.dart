@@ -165,7 +165,9 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        specialist.categoryDisplayName,
+                        specialist.categoryDisplayName ??
+                            specialist.category?.displayName ??
+                            'Категория',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 10,

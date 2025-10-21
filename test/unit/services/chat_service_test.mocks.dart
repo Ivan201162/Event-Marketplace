@@ -6,8 +6,8 @@
 import 'dart:async' as _i3;
 import 'dart:typed_data' as _i6;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_marketplace_app/models/chat.dart' as _i4;
-import 'package:event_marketplace_app/models/chat_message.dart' as _i5;
 import 'package:event_marketplace_app/services/chat_service.dart' as _i2;
 import 'package:event_marketplace_app/services/media_upload_service.dart' as _i8;
 import 'package:mockito/mockito.dart' as _i1;
@@ -37,48 +37,35 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
   }
 
   @override
-  _i3.Future<List<_i4.Chat>> getUserChats(String? userId) => (super.noSuchMethod(
+  _i3.Future<List<_i4.Chat>> getUserChats(String userId, {int limit = 20}) => (super.noSuchMethod(
         Invocation.method(
           #getUserChats,
           [userId],
+          {#limit: limit},
         ),
         returnValue: _i3.Future<List<_i4.Chat>>.value(<_i4.Chat>[]),
       ) as _i3.Future<List<_i4.Chat>>);
 
   @override
-  _i3.Stream<_i4.Chat?> getChat(String? chatId) => (super.noSuchMethod(
+  _i3.Future<_i4.Chat?> getChatById(String chatId) => (super.noSuchMethod(
         Invocation.method(
-          #getChat,
+          #getChatById,
           [chatId],
         ),
-        returnValue: _i3.Stream<_i4.Chat?>.empty(),
-      ) as _i3.Stream<_i4.Chat?>);
+        returnValue: _i3.Future<_i4.Chat?>.value(null),
+      ) as _i3.Future<_i4.Chat?>);
 
   @override
-  _i3.Stream<List<_i5.ChatMessage>> getChatMessages(String? chatId) => (super.noSuchMethod(
+  _i3.Future<List<_i4.Message>> getChatMessages(String chatId,
+          {int limit = 50, DocumentSnapshot? lastDocument}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #getChatMessages,
           [chatId],
+          {#limit: limit, #lastDocument: lastDocument},
         ),
-        returnValue: _i3.Stream<List<_i5.ChatMessage>>.empty(),
-      ) as _i3.Stream<List<_i5.ChatMessage>>);
-
-  @override
-  _i3.Future<void> sendMessage(
-    String? chatId,
-    _i5.ChatMessage? message,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #sendMessage,
-          [
-            chatId,
-            message,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i3.Future<List<_i4.Message>>.value(<_i4.Message>[]),
+      ) as _i3.Future<List<_i4.Message>>);
 
   @override
   _i3.Future<String> uploadFile({
@@ -224,21 +211,13 @@ class MockChatService extends _i1.Mock implements _i2.ChatService {
       ) as _i3.Future<void>);
 
   @override
-  _i3.Future<void> deleteMessage(
-    String? chatId,
-    String? messageId,
-  ) =>
-      (super.noSuchMethod(
+  _i3.Future<bool> deleteMessage(String messageId) => (super.noSuchMethod(
         Invocation.method(
           #deleteMessage,
-          [
-            chatId,
-            messageId,
-          ],
+          [messageId],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i3.Future<bool>.value(true),
+      ) as _i3.Future<bool>);
 
   @override
   _i3.Future<int> getUnreadMessagesCount(String? userId) => (super.noSuchMethod(
