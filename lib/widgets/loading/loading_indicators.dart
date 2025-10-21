@@ -205,7 +205,7 @@ class _PulseLoadingIndicatorState extends State<_PulseLoadingIndicator>
           height: widget.size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: widget.color.withOpacity(_animation.value),
+            color: widget.color.withValues(alpha: _animation.value),
           ),
         );
       },
@@ -348,7 +348,7 @@ class _DotsLoadingIndicatorState extends State<_DotsLoadingIndicator>
               margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: widget.color.withOpacity(_animations[index].value),
+                color: widget.color.withValues(alpha: _animations[index].value),
               ),
             );
           },

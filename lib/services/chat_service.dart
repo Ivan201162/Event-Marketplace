@@ -1,401 +1,303 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/chat.dart';
+import '../models/message.dart';
+import '../models/app_user.dart';
 
-/// Service for managing chats and messages
+/// Сервис для работы с чатами и сообщениями
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage? _storage = kIsWeb ? null : FirebaseStorage.instance;
-  static const String _chatsCollection = 'chats';
-  static const String _messagesCollection = 'messages';
 
-  /// Get user's chats
-  Future<List<Chat>> getUserChats(String userId, {int limit = 20}) async {
+  /// Создание или получение чата между двумя пользователями
+  Future<String> getOrCreateChat(String userId1, String userId2) async {
     try {
-      final snapshot = await _firestore
-          .collection(_chatsCollection)
-          .where('members', arrayContains: userId)
-          .orderBy('updatedAt', descending: true)
-          .limit(limit)
-          .get();
+      // Создаем ID чата (сортируем ID пользователей для консистентности)
+      final participants = [userId1, userId2]..sort();
+      final chatId = '${participants[0]}_${participants[1]}';
 
-      return snapshot.docs.map((doc) => Chat.fromFirestore(doc)).toList();
+      // Проверяем, существует ли чат
+      final chatDoc = await _firestore.collection('chats').doc(chatId).get();
+
+      if (!chatDoc.exists) {
+        // Создаем новый чат
+        final now = DateTime.now();
+        final chat = Chat(
+          id: chatId,
+          participants: participants,
+          createdAt: now,
+          updatedAt: now,
+        );
+
+        await _firestore.collection('chats').doc(chatId).set(chat.toFirestore());
+        debugPrint('✅ Chat created: $chatId');
+      }
+
+      return chatId;
     } catch (e) {
-      debugPrint('Error getting user chats: $e');
-      return [];
+      debugPrint('❌ Error creating/getting chat: $e');
+      rethrow;
     }
   }
 
-  /// Get or create direct chat between two users
-  Future<String?> getOrCreateDirectChat(String userId1, String userId2) async {
+  /// Отправка сообщения
+  Future<void> sendMessage({
+    required String chatId,
+    required String text,
+    required String senderId,
+    String? senderName,
+    String? senderAvatar,
+    MessageType type = MessageType.text,
+    Map<String, dynamic>? metadata,
+  }) async {
     try {
-      // Check if chat already exists
-      final existingChats = await _firestore
-          .collection(_chatsCollection)
-          .where('members', arrayContains: userId1)
+      final now = DateTime.now();
+      final messageId = _firestore.collection('chats').doc(chatId).collection('messages').doc().id;
+
+      final message = Message(
+        id: messageId,
+        chatId: chatId,
+        text: text,
+        senderId: senderId,
+        senderName: senderName,
+        senderAvatar: senderAvatar,
+        timestamp: now,
+        type: type,
+        metadata: metadata,
+      );
+
+      // Сохраняем сообщение
+      await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId)
+          .set(message.toFirestore());
+
+      // Обновляем информацию о чате
+      await _firestore.collection('chats').doc(chatId).update({
+        'lastMessage': text,
+        'lastMessageTime': Timestamp.fromDate(now),
+        'lastMessageSenderId': senderId,
+        'updatedAt': Timestamp.fromDate(now),
+      });
+
+      // Увеличиваем счетчик непрочитанных сообщений для других участников
+      final chatDoc = await _firestore.collection('chats').doc(chatId).get();
+      if (chatDoc.exists) {
+        final chat = Chat.fromFirestore(chatDoc);
+        final unreadCounts = Map<String, int>.from(chat.unreadCounts);
+        
+        for (final participantId in chat.participants) {
+          if (participantId != senderId) {
+            unreadCounts[participantId] = (unreadCounts[participantId] ?? 0) + 1;
+          }
+        }
+
+        await _firestore.collection('chats').doc(chatId).update({
+          'unreadCounts': unreadCounts,
+        });
+      }
+
+      debugPrint('✅ Message sent: $messageId');
+    } catch (e) {
+      debugPrint('❌ Error sending message: $e');
+      rethrow;
+    }
+  }
+
+  /// Получение сообщений чата в реальном времени
+  Stream<List<Message>> getMessagesStream(String chatId) {
+    return _firestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('timestamp', descending: false)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Message.fromFirestore(doc)).toList();
+    });
+  }
+
+  /// Получение чатов пользователя в реальном времени
+  Stream<List<Chat>> getUserChatsStream(String userId) {
+    return _firestore
+        .collection('chats')
+        .where('participants', arrayContains: userId)
+        .orderBy('updatedAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Chat.fromFirestore(doc)).toList();
+    });
+  }
+
+  /// Получение чатов пользователя с информацией о собеседниках
+  Future<List<ChatWithUser>> getUserChatsWithUsers(String userId) async {
+    try {
+      final chatsSnapshot = await _firestore
+          .collection('chats')
+          .where('participants', arrayContains: userId)
+          .orderBy('updatedAt', descending: true)
           .get();
 
-      for (final doc in existingChats.docs) {
-        final chat = Chat.fromFirestore(doc);
-        if (chat.members.contains(userId2) && !chat.isGroup) {
-          return doc.id;
+      final List<ChatWithUser> chatsWithUsers = [];
+
+      for (final chatDoc in chatsSnapshot.docs) {
+        final chat = Chat.fromFirestore(chatDoc);
+        final otherUserId = chat.getOtherParticipantId(userId);
+
+        // Получаем информацию о собеседнике
+        final userDoc = await _firestore.collection('users').doc(otherUserId).get();
+        if (userDoc.exists) {
+          final userData = userDoc.data() as Map<String, dynamic>;
+          final chatWithUser = ChatWithUser(
+            chat: chat,
+            otherUserId: otherUserId,
+            otherUserName: userData['name'],
+            otherUserAvatar: userData['avatarUrl'],
+            isOnline: userData['isOnline'] ?? false,
+          );
+          chatsWithUsers.add(chatWithUser);
         }
       }
 
-      // Create new chat
-      final chat = Chat(
-        id: '', // Will be set by Firestore
-        members: [userId1, userId2],
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        createdBy: userId1,
-      );
-
-      final docRef = await _firestore.collection(_chatsCollection).add(chat.toFirestore());
-      return docRef.id;
+      return chatsWithUsers;
     } catch (e) {
-      debugPrint('Error getting or creating direct chat: $e');
-      return null;
-    }
-  }
-
-  /// Create group chat
-  Future<String?> createGroupChat({
-    required String createdBy,
-    required List<String> members,
-    required String name,
-    String? imageUrl,
-  }) async {
-    try {
-      final chat = Chat(
-        id: '', // Will be set by Firestore
-        members: members,
-        name: name,
-        imageUrl: imageUrl,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        isGroup: true,
-        createdBy: createdBy,
-      );
-
-      final docRef = await _firestore.collection(_chatsCollection).add(chat.toFirestore());
-      return docRef.id;
-    } catch (e) {
-      debugPrint('Error creating group chat: $e');
-      return null;
-    }
-  }
-
-  /// Get chat by ID
-  Future<Chat?> getChatById(String chatId) async {
-    try {
-      final doc = await _firestore.collection(_chatsCollection).doc(chatId).get();
-      if (doc.exists) {
-        return Chat.fromFirestore(doc);
-      }
-      return null;
-    } catch (e) {
-      debugPrint('Error getting chat by ID: $e');
-      return null;
-    }
-  }
-
-  /// Get messages for a chat
-  Future<List<Message>> getChatMessages(
-    String chatId, {
-    int limit = 50,
-    DocumentSnapshot? lastDocument,
-  }) async {
-    try {
-      Query query = _firestore
-          .collection(_messagesCollection)
-          .where('chatId', isEqualTo: chatId)
-          .orderBy('createdAt', descending: true)
-          .limit(limit);
-
-      if (lastDocument != null) {
-        query = query.startAfterDocument(lastDocument);
-      }
-
-      final snapshot = await query.get();
-      return snapshot.docs.map((doc) => Message.fromFirestore(doc)).toList();
-    } catch (e) {
-      debugPrint('Error getting chat messages: $e');
+      debugPrint('❌ Error getting user chats with users: $e');
       return [];
     }
   }
 
-  /// Send text message
-  Future<String?> sendTextMessage({
-    required String chatId,
-    required String senderId,
-    required String text,
-    String? senderName,
-    String? senderAvatarUrl,
-    String? replyToMessageId,
-    String? replyToMessageText,
-  }) async {
+  /// Отметка сообщений как прочитанных
+  Future<void> markMessagesAsRead(String chatId, String userId) async {
     try {
-      final message = Message(
-        id: '', // Will be set by Firestore
-        chatId: chatId,
-        senderId: senderId,
-        text: text,
-        type: MessageType.text,
-        senderName: senderName,
-        senderAvatarUrl: senderAvatarUrl,
-        replyToMessageId: replyToMessageId,
-        replyToMessageText: replyToMessageText,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+      // Получаем все непрочитанные сообщения от других пользователей
+      final messagesSnapshot = await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .where('senderId', isNotEqualTo: userId)
+          .where('read', isEqualTo: false)
+          .get();
 
-      final docRef = await _firestore.collection(_messagesCollection).add(message.toFirestore());
+      // Обновляем каждое сообщение
+      final batch = _firestore.batch();
+      final now = DateTime.now();
 
-      // Update chat with last message info
-      await _firestore.collection(_chatsCollection).doc(chatId).update({
-        'lastMessage': text,
-        'lastMessageTime': DateTime.now(),
-        'lastMessageSenderId': senderId,
-        'updatedAt': DateTime.now(),
-      });
+      for (final messageDoc in messagesSnapshot.docs) {
+        batch.update(messageDoc.reference, {
+          'read': true,
+          'readAt': Timestamp.fromDate(now),
+        });
+      }
 
-      return docRef.id;
+      await batch.commit();
+
+      // Обновляем счетчик непрочитанных сообщений в чате
+      final chatDoc = await _firestore.collection('chats').doc(chatId).get();
+      if (chatDoc.exists) {
+        final chat = Chat.fromFirestore(chatDoc);
+        final unreadCounts = Map<String, int>.from(chat.unreadCounts);
+        unreadCounts[userId] = 0;
+
+        await _firestore.collection('chats').doc(chatId).update({
+          'unreadCounts': unreadCounts,
+        });
+      }
+
+      debugPrint('✅ Messages marked as read for user: $userId');
     } catch (e) {
-      debugPrint('Error sending text message: $e');
+      debugPrint('❌ Error marking messages as read: $e');
+      rethrow;
+    }
+  }
+
+  /// Получение информации о чате
+  Future<Chat?> getChat(String chatId) async {
+    try {
+      final chatDoc = await _firestore.collection('chats').doc(chatId).get();
+      if (chatDoc.exists) {
+        return Chat.fromFirestore(chatDoc);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('❌ Error getting chat: $e');
       return null;
     }
   }
 
-  /// Send media message
-  Future<String?> sendMediaMessage({
-    required String chatId,
-    required String senderId,
-    required String mediaUrl,
-    required MessageType type,
-    String? text,
-    String? senderName,
-    String? senderAvatarUrl,
-    String? fileName,
-    int? fileSize,
-  }) async {
+  /// Получение информации о пользователе
+  Future<AppUser?> getUser(String userId) async {
     try {
-      final message = Message(
-        id: '', // Will be set by Firestore
-        chatId: chatId,
-        senderId: senderId,
-        text: text,
-        mediaUrl: mediaUrl,
-        type: type,
-        senderName: senderName,
-        senderAvatarUrl: senderAvatarUrl,
-        fileName: fileName,
-        fileSize: fileSize,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      final docRef = await _firestore.collection(_messagesCollection).add(message.toFirestore());
-
-      // Update chat with last message info
-      final lastMessageText = text ?? _getMediaMessageText(type);
-      await _firestore.collection(_chatsCollection).doc(chatId).update({
-        'lastMessage': lastMessageText,
-        'lastMessageTime': DateTime.now(),
-        'lastMessageSenderId': senderId,
-        'updatedAt': DateTime.now(),
-      });
-
-      return docRef.id;
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        return AppUser.fromFirestore(userDoc);
+      }
+      return null;
     } catch (e) {
-      debugPrint('Error sending media message: $e');
+      debugPrint('❌ Error getting user: $e');
       return null;
     }
   }
 
-  /// Mark message as read
-  Future<bool> markMessageAsRead(String messageId, String userId) async {
+  /// Удаление чата (только для администраторов)
+  Future<void> deleteChat(String chatId) async {
     try {
-      await _firestore.collection(_messagesCollection).doc(messageId).update({
-        'readBy': FieldValue.arrayUnion([userId]),
-        'updatedAt': DateTime.now(),
-      });
-      return true;
+      // Удаляем все сообщения
+      final messagesSnapshot = await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .get();
+
+      final batch = _firestore.batch();
+      for (final messageDoc in messagesSnapshot.docs) {
+        batch.delete(messageDoc.reference);
+      }
+
+      // Удаляем чат
+      batch.delete(_firestore.collection('chats').doc(chatId));
+      await batch.commit();
+
+      debugPrint('✅ Chat deleted: $chatId');
     } catch (e) {
-      debugPrint('Error marking message as read: $e');
-      return false;
+      debugPrint('❌ Error deleting chat: $e');
+      rethrow;
     }
   }
 
-  /// Mark all messages in chat as read
-  Future<bool> markChatAsRead(String chatId, String userId) async {
+  /// Получение общего количества непрочитанных сообщений пользователя
+  Future<int> getTotalUnreadCount(String userId) async {
     try {
-      // Reset unread count for user
-      await _firestore.collection(_chatsCollection).doc(chatId).update({
-        'unreadCounts.$userId': 0,
-        'updatedAt': DateTime.now(),
-      });
-      return true;
-    } catch (e) {
-      debugPrint('Error marking chat as read: $e');
-      return false;
-    }
-  }
-
-  /// Delete message
-  Future<bool> deleteMessage(String messageId) async {
-    try {
-      await _firestore.collection(_messagesCollection).doc(messageId).delete();
-      return true;
-    } catch (e) {
-      debugPrint('Error deleting message: $e');
-      return false;
-    }
-  }
-
-  /// Update chat info
-  Future<bool> updateChat(String chatId, Map<String, dynamic> updates) async {
-    try {
-      await _firestore.collection(_chatsCollection).doc(chatId).update({
-        ...updates,
-        'updatedAt': DateTime.now(),
-      });
-      return true;
-    } catch (e) {
-      debugPrint('Error updating chat: $e');
-      return false;
-    }
-  }
-
-  /// Add member to group chat
-  Future<bool> addMemberToChat(
-    String chatId,
-    String userId,
-    String userName,
-    String? userAvatarUrl,
-  ) async {
-    try {
-      await _firestore.collection(_chatsCollection).doc(chatId).update({
-        'members': FieldValue.arrayUnion([userId]),
-        'memberNames.$userId': userName,
-        'memberAvatars.$userId': userAvatarUrl,
-        'unreadCounts.$userId': 0,
-        'updatedAt': DateTime.now(),
-      });
-      return true;
-    } catch (e) {
-      debugPrint('Error adding member to chat: $e');
-      return false;
-    }
-  }
-
-  /// Remove member from group chat
-  Future<bool> removeMemberFromChat(String chatId, String userId) async {
-    try {
-      await _firestore.collection(_chatsCollection).doc(chatId).update({
-        'members': FieldValue.arrayRemove([userId]),
-        'memberNames.$userId': FieldValue.delete(),
-        'memberAvatars.$userId': FieldValue.delete(),
-        'unreadCounts.$userId': FieldValue.delete(),
-        'updatedAt': DateTime.now(),
-      });
-      return true;
-    } catch (e) {
-      debugPrint('Error removing member from chat: $e');
-      return false;
-    }
-  }
-
-  /// Upload media file
-  Future<String?> uploadMedia(String filePath, String fileName) async {
-    if (_storage == null) {
-      debugPrint('Firebase Storage not available on web');
-      return null;
-    }
-    try {
-      final ref = _storage.ref().child('chat_media/$fileName');
-      final uploadTask = await ref.putFile(filePath as dynamic); // In real app, use File
-      final downloadUrl = await uploadTask.ref.getDownloadURL();
-      return downloadUrl;
-    } catch (e) {
-      debugPrint('Error uploading media: $e');
-      return null;
-    }
-  }
-
-  /// Get unread messages count for user
-  Future<int> getUnreadMessagesCount(String userId) async {
-    try {
-      final snapshot = await _firestore
-          .collection(_chatsCollection)
-          .where('members', arrayContains: userId)
+      final chatsSnapshot = await _firestore
+          .collection('chats')
+          .where('participants', arrayContains: userId)
           .get();
 
       int totalUnread = 0;
-      for (final doc in snapshot.docs) {
-        final chat = Chat.fromFirestore(doc);
+      for (final chatDoc in chatsSnapshot.docs) {
+        final chat = Chat.fromFirestore(chatDoc);
         totalUnread += chat.getUnreadCount(userId);
       }
 
       return totalUnread;
     } catch (e) {
-      debugPrint('Error getting unread messages count: $e');
+      debugPrint('❌ Error getting total unread count: $e');
       return 0;
     }
   }
 
-  /// Stream of user's chats
-  Stream<List<Chat>> getUserChatsStream(String userId, {int limit = 20}) {
-    return _firestore
-        .collection(_chatsCollection)
-        .where('members', arrayContains: userId)
-        .orderBy('updatedAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Chat.fromFirestore(doc)).toList());
-  }
-
-  /// Stream of chat messages
-  Stream<List<Message>> getChatMessagesStream(String chatId, {int limit = 50}) {
-    return _firestore
-        .collection(_messagesCollection)
-        .where('chatId', isEqualTo: chatId)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Message.fromFirestore(doc)).toList());
-  }
-
-  /// Stream of unread messages count
-  Stream<int> getUnreadMessagesCountStream(String userId) {
-    return _firestore
-        .collection(_chatsCollection)
-        .where('members', arrayContains: userId)
-        .snapshots()
-        .map((snapshot) {
-          int totalUnread = 0;
-          for (final doc in snapshot.docs) {
-            final chat = Chat.fromFirestore(doc);
-            totalUnread += chat.getUnreadCount(userId);
-          }
-          return totalUnread;
-        });
-  }
-
-  /// Helper method to get media message text
-  String _getMediaMessageText(MessageType type) {
-    switch (type) {
-      case MessageType.image:
-        return '🖼️ Фото';
-      case MessageType.video:
-        return '🎥 Видео';
-      case MessageType.file:
-        return '📎 Файл';
-      case MessageType.text:
-      case MessageType.system:
-        return '';
+  /// Поиск чатов по имени собеседника
+  Future<List<ChatWithUser>> searchChats(String userId, String query) async {
+    try {
+      final allChats = await getUserChatsWithUsers(userId);
+      return allChats.where((chat) {
+        final displayName = chat.displayName.toLowerCase();
+        return displayName.contains(query.toLowerCase());
+      }).toList();
+    } catch (e) {
+      debugPrint('❌ Error searching chats: $e');
+      return [];
     }
   }
 }

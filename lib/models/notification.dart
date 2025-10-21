@@ -19,6 +19,9 @@ class AppNotification extends Equatable {
   final String? senderId;
   final String? senderName;
   final String? senderAvatarUrl;
+  final String? targetId;
+  final String? message;
+  final bool isRead;
 
   const AppNotification({
     required this.id,
@@ -34,6 +37,9 @@ class AppNotification extends Equatable {
     this.senderId,
     this.senderName,
     this.senderAvatarUrl,
+    this.targetId,
+    this.message,
+    this.isRead = false,
   });
 
   /// Create AppNotification from Firestore document
@@ -56,6 +62,9 @@ class AppNotification extends Equatable {
       senderId: data['senderId'],
       senderName: data['senderName'],
       senderAvatarUrl: data['senderAvatarUrl'],
+      targetId: data['targetId'],
+      message: data['message'],
+      isRead: data['isRead'] ?? false,
     );
   }
 
@@ -74,6 +83,9 @@ class AppNotification extends Equatable {
       'senderId': senderId,
       'senderName': senderName,
       'senderAvatarUrl': senderAvatarUrl,
+      'targetId': targetId,
+      'message': message,
+      'isRead': isRead,
     };
   }
 
@@ -92,6 +104,9 @@ class AppNotification extends Equatable {
     String? senderId,
     String? senderName,
     String? senderAvatarUrl,
+    String? targetId,
+    String? message,
+    bool? isRead,
   }) {
     return AppNotification(
       id: id ?? this.id,
@@ -107,6 +122,9 @@ class AppNotification extends Equatable {
       senderId: senderId ?? this.senderId,
       senderName: senderName ?? this.senderName,
       senderAvatarUrl: senderAvatarUrl ?? this.senderAvatarUrl,
+      targetId: targetId ?? this.targetId,
+      message: message ?? this.message,
+      isRead: isRead ?? this.isRead,
     );
   }
 
@@ -222,6 +240,9 @@ class AppNotification extends Equatable {
     senderId,
     senderName,
     senderAvatarUrl,
+    targetId,
+    message,
+    isRead,
   ];
 
   @override

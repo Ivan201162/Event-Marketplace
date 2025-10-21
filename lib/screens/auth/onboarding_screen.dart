@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../models/app_user.dart';
 import '../../providers/auth_providers.dart';
+import '../../widgets/animations/animated_content.dart';
 
 /// Onboarding screen for new users
 class OnboardingScreen extends ConsumerStatefulWidget {
@@ -225,11 +226,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                 const Spacer(),
 
                 // Animated onboarding form
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Container(
+                AnimatedContent(
+                  animationType: AnimationType.fadeSlideIn,
+                  delay: const Duration(milliseconds: 300),
+                  child: Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         color: Colors.white,

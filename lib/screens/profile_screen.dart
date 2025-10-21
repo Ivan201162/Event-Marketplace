@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 
 // import '../models/app_user.dart'; // Conflict with user.dart
 import '../providers/auth_providers.dart';
+import '../widgets/error/error_state_widget.dart';
 import '../widgets/loading/loading_state_widget.dart';
 import '../widgets/profile/profile_actions_widget.dart';
 import '../widgets/profile/profile_header_widget.dart';
 import '../widgets/profile/profile_stats_widget.dart';
 import '../widgets/profile/profile_tabs_widget.dart';
+import '../widgets/chat/start_chat_button.dart';
 
 /// Экран профиля пользователя
 class ProfileScreen extends ConsumerStatefulWidget {
@@ -73,6 +75,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   // Действия профиля
                   ProfileActionsWidget(user: user as dynamic, isCurrentUser: isCurrentUser),
 
+                  // Кнопка "Написать сообщение" для других пользователей
+                  if (!isCurrentUser) ...[
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: StartChatButton(
+                        userId: widget.userId!,
+                        userName: user.name,
+                        userAvatar: user.avatarUrl,
+                      ),
+                    ),
+                  ],
+
                   const SizedBox(height: 16),
 
                   // Вкладки профиля
@@ -85,28 +100,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         loading: () => const LoadingStateWidget(
           message: 'Загрузка профиля...',
         ),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
-              const SizedBox(height: 16),
-              Text('Ошибка загрузки профиля', style: theme.textTheme.headlineSmall),
-              const SizedBox(height: 8),
-              Text(
-                error.toString(),
-                style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  ref.invalidate(currentUserProvider);
-                },
-                child: const Text('Повторить'),
-              ),
-            ],
-          ),
+        error: (error, stack) => ErrorStateWidget(
+          error: error.toString(),
+          onRetry: () {
+            ref.invalidate(currentUserProvider);
+          },
+          title: 'Ошибка загрузки профиля',
         ),
       ),
     );

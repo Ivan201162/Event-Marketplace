@@ -48,6 +48,9 @@ class AppUser extends Equatable {
   final double? hourlyRate;
   final String? specialistType;
 
+  /// Get user ID (alias for uid)
+  String get id => uid;
+
   const AppUser({
     required this.uid,
     required this.name,

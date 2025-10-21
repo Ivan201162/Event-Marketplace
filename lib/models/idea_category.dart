@@ -36,6 +36,9 @@ class IdeaCategory {
   final DateTime createdAt;
   final DateTime? updatedAt;
 
+  /// Get display name (alias for name)
+  String get displayName => name;
+
   /// Создать из Map
   factory IdeaCategory.fromMap(Map<String, dynamic> data) {
     return IdeaCategory(

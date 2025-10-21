@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/chat.dart';
+import '../models/message.dart';
 
 /// Виджет для отображения сообщения в чате
 class MessageBubble extends StatelessWidget {

@@ -47,7 +47,7 @@ class PaymentMethodWidget extends StatelessWidget {
         ),
         child: ListTile(
           leading: Icon(
-            method.icon,
+            _getMethodIcon(method),
             color: isSelected ? Theme.of(context).primaryColor : Colors.grey.shade600,
           ),
           title: Text(
@@ -64,4 +64,21 @@ class PaymentMethodWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       );
+    }
+  }
+
+  IconData _getMethodIcon(PaymentMethod method) {
+    switch (method.type) {
+      case PaymentMethodType.card:
+        return Icons.credit_card;
+      case PaymentMethodType.bankTransfer:
+        return Icons.account_balance;
+      case PaymentMethodType.digitalWallet:
+        return Icons.account_balance_wallet;
+      case PaymentMethodType.cash:
+        return Icons.money;
+      case PaymentMethodType.other:
+        return Icons.payment;
+    }
+  }
 }

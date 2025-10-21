@@ -1,185 +1,251 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 
-import '../models/chat.dart' as chat_message;
 import '../models/chat.dart';
-import '../models/chat_attachment.dart';
+import '../models/message.dart';
 import '../services/chat_service.dart';
 
-/// Провайдер сервиса чата
+/// Провайдер сервиса чатов
 final chatServiceProvider = Provider<ChatService>((ref) => ChatService());
 
-/// Провайдер для списка чатов пользователя
-final userChatsProvider = FutureProvider.family<List<Chat>, UserChatsParams>((ref, params) async {
+/// Провайдер для получения чатов пользователя
+final userChatsProvider = StreamProvider.family<List<Chat>, String>((ref, userId) {
   final chatService = ref.read(chatServiceProvider);
-  return chatService.getUserChats(params.userId);
+  return chatService.getUserChatsStream(userId);
 });
 
-/// Параметры для получения чатов пользователя
-class UserChatsParams {
-  const UserChatsParams({required this.userId});
-  final String userId;
-}
-
-/// Провайдер для сообщений чата
-final chatMessagesProvider = StreamProvider.family<List<chat_message.ChatMessage>, String>((
-  ref,
-  chatId,
-) {
+/// Провайдер для получения чатов с информацией о пользователях
+final userChatsWithUsersProvider = FutureProvider.family<List<ChatWithUser>, String>((ref, userId) {
   final chatService = ref.read(chatServiceProvider);
-  return chatService.getChatMessages(chatId);
+  return chatService.getUserChatsWithUsers(userId);
 });
 
-/// Провайдер для чата
-final chatProvider = StreamProvider.family<Chat?, String>((ref, chatId) {
+/// Провайдер для получения сообщений чата
+final chatMessagesProvider = StreamProvider.family<List<Message>, String>((ref, chatId) {
+  final chatService = ref.read(chatServiceProvider);
+  return chatService.getMessagesStream(chatId);
+});
+
+/// Провайдер для получения информации о чате
+final chatProvider = FutureProvider.family<Chat?, String>((ref, chatId) {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getChat(chatId);
 });
 
-/// Провайдер для состояния формы сообщения
-final messageFormProvider = NotifierProvider<MessageFormNotifier, MessageFormState>(
-  MessageFormNotifier.new,
-);
+/// Провайдер для получения общего количества непрочитанных сообщений
+final totalUnreadCountProvider = FutureProvider.family<int, String>((ref, userId) {
+  final chatService = ref.read(chatServiceProvider);
+  return chatService.getTotalUnreadCount(userId);
+});
 
-/// Состояние формы сообщения
-class MessageFormState {
-  const MessageFormState({
-    this.text = '',
-    this.attachments = const [],
-    this.isSending = false,
-    this.error,
-  });
-  final String text;
-  final List<String> attachments;
-  final bool isSending;
-  final String? error;
+/// Провайдер для поиска чатов
+final searchChatsProvider = FutureProvider.family<List<ChatWithUser>, ({String userId, String query})>((ref, params) {
+  final chatService = ref.read(chatServiceProvider);
+  return chatService.searchChats(params.userId, params.query);
+});
 
-  MessageFormState copyWith({
-    String? text,
-    List<String>? attachments,
-    bool? isSending,
-    String? error,
-  }) => MessageFormState(
-    text: text ?? this.text,
-    attachments: attachments ?? this.attachments,
-    isSending: isSending ?? this.isSending,
-    error: error ?? this.error,
-  );
-}
-
-/// Нотификатор для формы сообщения
-class MessageFormNotifier extends Notifier<MessageFormState> {
-  @override
-  MessageFormState build() => const MessageFormState();
-
-  void updateText(String text) {
-    state = state.copyWith(text: text);
-  }
-
-  void addAttachment(String attachment) {
-    final updatedAttachments = [...state.attachments, attachment];
-    state = state.copyWith(attachments: updatedAttachments);
-  }
-
-  void removeAttachment(String attachment) {
-    final updatedAttachments = state.attachments.where((a) => a != attachment).toList();
-    state = state.copyWith(attachments: updatedAttachments);
-  }
-
-  void setSending(bool isSending) {
-    state = state.copyWith(isSending: isSending);
-  }
-
-  void setError(String? error) {
-    state = state.copyWith(error: error);
-  }
-
-  void clear() {
-    state = const MessageFormState();
-  }
-}
-
-/// Провайдер для состояния чата
-final chatStateProvider = NotifierProvider<ChatStateNotifier, ChatState>(ChatStateNotifier.new);
+/// Провайдер для управления состоянием чата
+final chatStateProvider = StateNotifierProvider.family<ChatStateNotifier, ChatState, String>((ref, chatId) {
+  final chatService = ref.read(chatServiceProvider);
+  return ChatStateNotifier(chatService, chatId);
+});
 
 /// Состояние чата
 class ChatState {
-  const ChatState({
-    this.chats = const [],
-    this.messages = const {},
-    this.isLoading = false,
-    this.error,
-  });
-  final List<Chat> chats;
-  final Map<String, List<chat_message.ChatMessage>> messages;
   final bool isLoading;
+  final bool isSending;
   final String? error;
+  final List<Message> messages;
+  final Chat? chat;
+
+  const ChatState({
+    this.isLoading = false,
+    this.isSending = false,
+    this.error,
+    this.messages = const [],
+    this.chat,
+  });
 
   ChatState copyWith({
-    List<Chat>? chats,
-    Map<String, List<chat_message.ChatMessage>>? messages,
     bool? isLoading,
+    bool? isSending,
     String? error,
-  }) => ChatState(
-    chats: chats ?? this.chats,
-    messages: messages ?? this.messages,
-    isLoading: isLoading ?? this.isLoading,
-    error: error ?? this.error,
-  );
+    List<Message>? messages,
+    Chat? chat,
+  }) {
+    return ChatState(
+      isLoading: isLoading ?? this.isLoading,
+      isSending: isSending ?? this.isSending,
+      error: error ?? this.error,
+      messages: messages ?? this.messages,
+      chat: chat ?? this.chat,
+    );
+  }
 }
 
-/// Нотификатор для состояния чата
-class ChatStateNotifier extends Notifier<ChatState> {
-  @override
-  ChatState build() => const ChatState();
+/// Нотификатор состояния чата
+class ChatStateNotifier extends StateNotifier<ChatState> {
+  final ChatService _chatService;
+  final String _chatId;
 
-  void setChats(List<Chat> chats) {
-    state = state.copyWith(chats: chats);
+  ChatStateNotifier(this._chatService, this._chatId) : super(const ChatState()) {
+    _loadChat();
   }
 
-  void setMessages(String chatId, List<chat_message.ChatMessage> messages) {
-    final updatedMessages = Map<String, List<chat_message.ChatMessage>>.from(state.messages);
-    updatedMessages[chatId] = messages;
-    state = state.copyWith(messages: updatedMessages);
-  }
-
-  void addMessage(String chatId, chat_message.ChatMessage message) {
-    final currentMessages = state.messages[chatId] ?? [];
-    final updatedMessages = [...currentMessages, message];
-    setMessages(chatId, updatedMessages);
-  }
-
-  void setLoading(bool isLoading) {
-    state = state.copyWith(isLoading: isLoading);
-  }
-
-  void setError(String? error) {
-    state = state.copyWith(error: error);
-  }
-
-  Future<void> sendMessage(String chatId, String text, {ChatAttachment? attachment}) async {
+  /// Загрузка чата
+  Future<void> _loadChat() async {
+    state = state.copyWith(isLoading: true, error: null);
+    
     try {
-      setLoading(true);
-      final chatService = ref.read(chatServiceProvider);
-      await chatService.sendMessage(
-        chatId,
-        chat_message.ChatMessage(
-          id: '',
-          chatId: chatId,
-          senderId: 'current_user_id',
-          type: attachment != null
-              ? chat_message.MessageType.attachment
-              : chat_message.MessageType.text,
-          content: text,
-          status: chat_message.MessageStatus.sent,
-          timestamp: DateTime.now(),
-          senderName: 'Current User',
-          attachmentId: attachment?.id,
-        ),
+      final chat = await _chatService.getChat(_chatId);
+      state = state.copyWith(
+        isLoading: false,
+        chat: chat,
       );
-      setLoading(false);
-    } on Exception catch (e) {
-      setError(e.toString());
-      setLoading(false);
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
     }
+  }
+
+  /// Отправка сообщения
+  Future<void> sendMessage({
+    required String text,
+    required String senderId,
+    String? senderName,
+    String? senderAvatar,
+  }) async {
+    if (text.trim().isEmpty) return;
+
+    state = state.copyWith(isSending: true, error: null);
+
+    try {
+      await _chatService.sendMessage(
+        chatId: _chatId,
+        text: text.trim(),
+        senderId: senderId,
+        senderName: senderName,
+        senderAvatar: senderAvatar,
+      );
+
+      state = state.copyWith(isSending: false);
+    } catch (e) {
+      state = state.copyWith(
+        isSending: false,
+        error: e.toString(),
+      );
+    }
+  }
+
+  /// Отметка сообщений как прочитанных
+  Future<void> markAsRead(String userId) async {
+    try {
+      await _chatService.markMessagesAsRead(_chatId, userId);
+    } catch (e) {
+      debugPrint('Error marking messages as read: $e');
+    }
+  }
+
+  /// Очистка ошибки
+  void clearError() {
+    state = state.copyWith(error: null);
+  }
+}
+
+/// Провайдер для управления состоянием списка чатов
+final chatListStateProvider = StateNotifierProvider.family<ChatListStateNotifier, ChatListState, String>((ref, userId) {
+  final chatService = ref.read(chatServiceProvider);
+  return ChatListStateNotifier(chatService, userId);
+});
+
+/// Состояние списка чатов
+class ChatListState {
+  final bool isLoading;
+  final String? error;
+  final List<ChatWithUser> chats;
+  final String searchQuery;
+
+  const ChatListState({
+    this.isLoading = false,
+    this.error,
+    this.chats = const [],
+    this.searchQuery = '',
+  });
+
+  ChatListState copyWith({
+    bool? isLoading,
+    String? error,
+    List<ChatWithUser>? chats,
+    String? searchQuery,
+  }) {
+    return ChatListState(
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+      chats: chats ?? this.chats,
+      searchQuery: searchQuery ?? this.searchQuery,
+    );
+  }
+}
+
+/// Нотификатор состояния списка чатов
+class ChatListStateNotifier extends StateNotifier<ChatListState> {
+  final ChatService _chatService;
+  final String _userId;
+
+  ChatListStateNotifier(this._chatService, this._userId) : super(const ChatListState()) {
+    _loadChats();
+  }
+
+  /// Загрузка чатов
+  Future<void> _loadChats() async {
+    state = state.copyWith(isLoading: true, error: null);
+    
+    try {
+      final chats = await _chatService.getUserChatsWithUsers(_userId);
+      state = state.copyWith(
+        isLoading: false,
+        chats: chats,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+    }
+  }
+
+  /// Поиск чатов
+  Future<void> searchChats(String query) async {
+    state = state.copyWith(searchQuery: query);
+    
+    if (query.trim().isEmpty) {
+      await _loadChats();
+      return;
+    }
+
+    try {
+      final chats = await _chatService.searchChats(_userId, query);
+      state = state.copyWith(chats: chats);
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
+  }
+
+  /// Очистка поиска
+  void clearSearch() {
+    state = state.copyWith(searchQuery: '');
+    _loadChats();
+  }
+
+  /// Очистка ошибки
+  void clearError() {
+    state = state.copyWith(error: null);
+  }
+
+  /// Обновление чатов
+  Future<void> refresh() async {
+    await _loadChats();
   }
 }

@@ -6,6 +6,23 @@ enum PaymentStatus { pending, processing, completed, failed, cancelled, refunded
 /// Тип платежного метода
 enum PaymentMethodType { card, bankTransfer, digitalWallet, cash, other }
 
+extension PaymentMethodTypeExtension on PaymentMethodType {
+  String get icon {
+    switch (this) {
+      case PaymentMethodType.card:
+        return 'credit_card';
+      case PaymentMethodType.bankTransfer:
+        return 'account_balance';
+      case PaymentMethodType.digitalWallet:
+        return 'account_balance_wallet';
+      case PaymentMethodType.cash:
+        return 'money';
+      case PaymentMethodType.other:
+        return 'payment';
+    }
+  }
+}
+
 /// Информация о платежном методе
 class PaymentMethodInfo {
   const PaymentMethodInfo({
@@ -20,6 +37,25 @@ class PaymentMethodInfo {
     required this.createdAt,
     this.updatedAt,
   });
+
+  /// Get icon for payment method
+  String get icon => type.icon;
+
+  /// Get display name for payment method
+  String get displayName {
+    switch (type) {
+      case PaymentMethodType.card:
+        return 'Банковская карта';
+      case PaymentMethodType.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethodType.digitalWallet:
+        return 'Цифровой кошелек';
+      case PaymentMethodType.cash:
+        return 'Наличные';
+      case PaymentMethodType.other:
+        return 'Другое';
+    }
+  }
 
   final String id;
   final String userId;
@@ -149,6 +185,25 @@ class PaymentMethod {
     required this.createdAt,
     this.updatedAt,
   });
+
+  /// Get icon for payment method
+  String get icon => type.icon;
+
+  /// Get display name for payment method
+  String get displayName {
+    switch (type) {
+      case PaymentMethodType.card:
+        return 'Банковская карта';
+      case PaymentMethodType.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethodType.digitalWallet:
+        return 'Цифровой кошелек';
+      case PaymentMethodType.cash:
+        return 'Наличные';
+      case PaymentMethodType.other:
+        return 'Другое';
+    }
+  }
 
   final String id;
   final String userId;

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../models/idea.dart';
 import '../../providers/auth_providers.dart';
 import '../../providers/ideas_providers.dart';
-import '../../widgets/idea_card.dart';
+import '../../widgets/animated_idea_card.dart';
 
 /// Ideas screen with creative event ideas
 class IdeasScreen extends ConsumerStatefulWidget {
@@ -69,13 +69,15 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
               itemCount: ideas.length,
               itemBuilder: (context, index) {
                 final idea = ideas[index];
-                return IdeaCard(
+                return AnimatedIdeaCard(
                   idea: idea,
+                  index: index,
                   onTap: () => _showIdeaDetails(context, idea),
                   onLike: () => _handleLike(idea),
                   onShare: () {
                     _shareIdea(idea);
                   },
+                  onSave: () => _saveIdea(idea),
                 );
               },
             ),

@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../models/notification.dart';
 import '../../providers/auth_providers.dart';
 import '../../services/notification_service.dart';
+import '../../widgets/animations/animated_content.dart';
+import '../../widgets/error/error_state_widget.dart';
 import '../../widgets/loading/loading_state_widget.dart';
 
 /// Экран уведомлений
@@ -89,37 +91,18 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
             );
           }
 
-          return FadeTransition(
-            opacity: _fadeAnimation,
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: _buildNotificationsList(user.uid),
-            ),
+          return AnimatedContent(
+            animationType: AnimationType.fadeSlideIn,
+            child: _buildNotificationsList(user.uid),
           );
         },
         loading: () => const LoadingStateWidget(
           message: 'Загрузка уведомлений...',
         ),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('Ошибка загрузки уведомлений'),
-              const SizedBox(height: 8),
-              Text(
-                error.toString(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () => setState(() {}),
-                child: const Text('Повторить'),
-              ),
-            ],
-          ),
+        error: (error, stack) => ErrorStateWidget(
+          error: error.toString(),
+          onRetry: () => setState(() {}),
+          title: 'Ошибка загрузки уведомлений',
         ),
       ),
     );
@@ -136,26 +119,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
         }
 
         if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                const Text('Ошибка загрузки уведомлений'),
-                const SizedBox(height: 8),
-                Text(
-                  snapshot.error.toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => setState(() {}),
-                  child: const Text('Повторить'),
-                ),
-              ],
-            ),
+          return ErrorStateWidget(
+            error: snapshot.error.toString(),
+            onRetry: () => setState(() {}),
+            title: 'Ошибка загрузки уведомлений',
           );
         }
 
@@ -183,33 +150,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.notifications_none,
-            size: 80,
-            color: Colors.grey[400],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Нет уведомлений',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Здесь будут появляться уведомления о новых заявках, сообщениях и обновлениях',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.grey[500],
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
+    return const EmptyStateWidget(
+      title: 'Нет уведомлений',
+      message: 'Здесь будут появляться уведомления о новых заявках, сообщениях и обновлениях',
+      icon: Icons.notifications_none,
+      iconSize: 80,
     );
   }
 
@@ -237,19 +182,19 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
           ),
         ),
         subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
             Text(notification.body),
             const SizedBox(height: 4),
-            Text(
+                          Text(
               _formatDate(notification.createdAt),
-              style: TextStyle(
-                fontSize: 12,
+                        style: TextStyle(
+                          fontSize: 12,
                 color: Colors.grey[500],
-              ),
-            ),
-          ],
-        ),
+                      ),
+                    ),
+                  ],
+                ),
         trailing: isUnread
             ? Container(
                 width: 8,

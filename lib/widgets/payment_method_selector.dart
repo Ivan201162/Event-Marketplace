@@ -158,4 +158,19 @@ class PaymentMethodSelector extends StatelessWidget {
         return 'Способ оплаты';
     }
   }
+
+  IconData _getMethodIcon(PaymentMethod method) {
+    switch (method.type) {
+      case PaymentMethodType.card:
+        return Icons.credit_card;
+      case PaymentMethodType.bankTransfer:
+        return Icons.account_balance;
+      case PaymentMethodType.digitalWallet:
+        return Icons.account_balance_wallet;
+      case PaymentMethodType.cash:
+        return Icons.money;
+      case PaymentMethodType.other:
+        return Icons.payment;
+    }
+  }
 }

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../models/post.dart';
 import '../../providers/auth_providers.dart';
 import '../../providers/feed_providers.dart';
-import '../../widgets/post_card.dart';
+import '../../widgets/animated_post_card.dart';
 
 /// Feed screen with posts
 class FeedScreen extends ConsumerStatefulWidget {
@@ -69,8 +69,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
-                return PostCard(
+                return AnimatedPostCard(
                   post: post,
+                  index: index,
                   onTap: () {
                     context.push('/posts/${post.id}');
                   },

@@ -65,8 +65,26 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "sentAt",
-          "order": "DESCENDING"
+          "fieldPath": "timestamp",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "messages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "chatId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "senderId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "read",
+          "order": "ASCENDING"
         }
       ]
     },
@@ -75,7 +93,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "members",
+          "fieldPath": "participants",
           "order": "ASCENDING"
         },
         {

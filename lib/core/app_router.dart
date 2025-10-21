@@ -12,6 +12,10 @@ import '../screens/main_navigation_screen.dart';
 import '../screens/notifications/notifications_screen.dart';
 import '../screens/profile/edit_profile_screen.dart';
 import '../screens/ideas/add_idea_screen.dart';
+import '../screens/ideas/create_idea_screen.dart';
+// import '../screens/chat/chat_screen.dart';
+// import '../screens/chat/chat_list_screen.dart';
+import '../screens/posts/create_post_screen.dart';
 import '../screens/search/search_screen.dart';
 
 /// App router provider
@@ -78,12 +82,46 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const AddIdeaScreen(),
       ),
 
+      GoRoute(
+        path: '/ideas/create',
+        name: 'create-idea',
+        builder: (context, state) => const CreateIdeaScreen(),
+      ),
+
+      // Posts routes
+      GoRoute(
+        path: '/posts/create',
+        name: 'create-post',
+        builder: (context, state) => const CreatePostScreen(),
+      ),
+
       // Notifications route
       GoRoute(
         path: '/notifications',
         name: 'notifications',
         builder: (context, state) => const NotificationsScreen(),
       ),
+
+      // Chat routes - temporarily disabled
+      // GoRoute(
+      //   path: '/chats',
+      //   name: 'chats',
+      //   builder: (context, state) => const ChatListScreen(),
+      // ),
+      // GoRoute(
+      //   path: '/chat/:chatId',
+      //   name: 'chat',
+      //   builder: (context, state) {
+      //     final chatId = state.pathParameters['chatId']!;
+      //     final extra = state.extra as Map<String, dynamic>?;
+      //     return ChatScreen(
+      //       chatId: chatId,
+      //       otherUserId: extra?['otherUserId'],
+      //       otherUserName: extra?['otherUserName'],
+      //       otherUserAvatar: extra?['otherUserAvatar'],
+      //     );
+      //   },
+      // ),
 
       // Main app routes
       GoRoute(

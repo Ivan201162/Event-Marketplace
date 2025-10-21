@@ -48,6 +48,9 @@ class Specialist extends Equatable {
   final int? totalReviews;
   final int? totalBookings;
   final double? avgRating;
+
+  /// Get price range (alias for priceRangeString)
+  String? get priceRange => priceRangeString;
   final List<String>? categories;
 
   const Specialist({

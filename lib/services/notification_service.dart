@@ -6,6 +6,7 @@ import '../models/notification.dart';
 /// Service for managing notifications
 class NotificationService {
   static const String _collection = 'notifications';
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Get user's notifications
   static Future<List<AppNotification>> getUserNotifications(String userId, {int limit = 50}) async {
@@ -33,6 +34,21 @@ class NotificationService {
         .limit(limit)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList());
+  }
+
+  /// Get unread count
+  static Future<int> getUnreadCount(String userId) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection(_collection)
+          .where('userId', isEqualTo: userId)
+          .where('read', isEqualTo: false)
+          .get();
+      return snapshot.docs.length;
+    } catch (e) {
+      debugPrint('Error getting unread count: $e');
+      return 0;
+    }
   }
 
   /// Get unread notifications
@@ -340,16 +356,6 @@ class NotificationService {
     );
   }
 
-  /// Stream of user's notifications
-  Stream<List<AppNotification>> getUserNotificationsStream(String userId, {int limit = 50}) {
-    return _firestore
-        .collection(_collection)
-        .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList());
-  }
 
   /// Stream of unread notifications
   Stream<List<AppNotification>> getUnreadNotificationsStream(String userId, {int limit = 20}) {

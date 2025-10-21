@@ -1,3 +1,4 @@
+// import 'package:cloud_firestore/cloud_firestore.dart'; // Unused import
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,10 +20,10 @@ class SpecialistReviewsScreen extends StatefulWidget {
 class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
   final ReviewService _reviewService = ReviewService();
   List<Review> _reviews = [];
-  Map<String, dynamic> _stats = {};
+  ReviewStats? _stats;
   bool _isLoading = true;
   bool _hasMore = true;
-  DocumentSnapshot? _lastDocument;
+  // DocumentSnapshot? _lastDocument; // Unused field
 
   @override
   void initState() {
@@ -65,7 +66,6 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
 
       final moreReviews = await _reviewService.getSpecialistReviews(
         widget.specialist.id,
-        lastDocument: _lastDocument,
       );
 
       setState(() {
@@ -98,11 +98,11 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
         : Column(
             children: [
               // Сводка по рейтингу
-              if (_stats.isNotEmpty)
+              if (_stats != null)
                 RatingSummaryWidget(
-                  averageRating: _stats['averageRating']?.toDouble() ?? 0.0,
-                  totalReviews: _stats['totalReviews'] ?? 0,
-                  ratingDistribution: Map<int, int>.from(_stats['ratingDistribution'] ?? {}),
+                  averageRating: _stats!.averageRating,
+                  totalReviews: _stats!.totalReviews,
+                  ratingDistribution: _stats!.ratingDistribution,
                 ),
 
               // Список отзывов
@@ -121,11 +121,9 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
                             }
 
                             final review = _reviews[index];
-                            return ReviewCard(
+                            return                             ReviewCard(
                               review: review,
-                              showSpecialistInfo: false,
-                              onEdit: review.canEdit ? () => _editReview(review) : null,
-                              onDelete: review.canDelete ? () => _deleteReview(review) : null,
+                              onTap: () => _editReview(review),
                             );
                           },
                         ),
@@ -169,32 +167,32 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
     context.push('/edit-review', extra: review);
   }
 
-  void _deleteReview(Review review) {
-    showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Удалить отзыв'),
-        content: const Text('Вы уверены, что хотите удалить этот отзыв?'),
-        actions: [
-          TextButton(onPressed: () => context.pop(), child: const Text('Отмена')),
-          TextButton(
-            onPressed: () async {
-              context.pop();
-              try {
-                await _reviewService.deleteReview(review.id);
-                _loadReviews();
-                _loadStats();
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text('Отзыв удален')));
-              } on Exception catch (e) {
-                _showErrorSnackBar('Ошибка удаления отзыва: $e');
-              }
-            },
-            child: const Text('Удалить', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
-    );
-  }
+  // void _deleteReview(Review review) { // Unused method
+  //   showDialog<void>(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: const Text('Удалить отзыв'),
+  //       content: const Text('Вы уверены, что хотите удалить этот отзыв?'),
+  //       actions: [
+  //         TextButton(onPressed: () => context.pop(), child: const Text('Отмена')),
+  //         TextButton(
+  //           onPressed: () async {
+  //             context.pop();
+  //             try {
+  //               await _reviewService.deleteReview(review.id);
+  //               await _loadReviews();
+  //               await _loadStats();
+  //               ScaffoldMessenger.of(
+  //                 context,
+  //               ).showSnackBar(const SnackBar(content: Text('Отзыв удален')));
+  //             } on Exception catch (e) {
+  //               _showErrorSnackBar('Ошибка удаления отзыва: $e');
+  //             }
+  //           },
+  //           child: const Text('Удалить', style: TextStyle(color: Colors.red)),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/event_idea.dart';
 import '../models/event_idea_category.dart';
@@ -379,7 +380,7 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Изображение
-            if (idea.imageUrl.isNotEmpty)
+            if (idea.imageUrl != null && idea.imageUrl!.isNotEmpty)
               AspectRatio(
                 aspectRatio: 16 / 9,
                 child: CachedNetworkImage(

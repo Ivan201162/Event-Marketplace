@@ -8,6 +8,7 @@ import '../../models/app_user.dart';
 import '../../providers/auth_providers.dart';
 import '../../services/image_upload_service.dart';
 import '../../services/auth_service.dart';
+import '../../widgets/animations/animated_content.dart';
 
 /// Экран редактирования профиля
 class EditProfileScreen extends ConsumerStatefulWidget {
@@ -270,11 +271,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen>
           ),
         ],
       ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: SingleChildScrollView(
+      body: AnimatedContent(
+        animationType: AnimationType.fadeSlideIn,
+        child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [

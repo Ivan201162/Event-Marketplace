@@ -7,6 +7,7 @@ import 'dart:io';
 import '../../models/app_user.dart';
 import '../../providers/auth_providers.dart';
 import '../../services/image_upload_service.dart';
+import '../../widgets/animations/animated_content.dart';
 
 /// Экран добавления новой идеи
 class AddIdeaScreen extends ConsumerStatefulWidget {
@@ -278,11 +279,9 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen>
           ),
         ],
       ),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: SingleChildScrollView(
+      body: AnimatedContent(
+        animationType: AnimationType.fadeSlideIn,
+        child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [

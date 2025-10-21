@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'chats/chats_screen.dart';
+import 'chat/chat_list_screen.dart';
 import 'feed/feed_screen.dart';
 import 'home/home_screen.dart';
 import 'ideas/ideas_screen.dart';
@@ -45,7 +45,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       icon: Icons.chat_bubble_outline,
       activeIcon: Icons.chat_bubble,
       label: 'Чаты',
-      screen: ChatsScreen(),
+      screen: ChatListScreen(),
     ),
     const NavigationItem(
       icon: Icons.lightbulb_outline,
