@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' hide debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/utils/debug_utils.dart';

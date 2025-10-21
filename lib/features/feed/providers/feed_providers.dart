@@ -111,7 +111,7 @@ final createPostProvider = FutureProvider.family<void, Map<String, dynamic>>((re
       userId: user.id,
       userName: user.displayName ?? 'Пользователь',
       userCity: 'Москва',
-      userAvatar: user.photoUrl ?? '',
+      userAvatar: user.photoURL ?? '',
       description: params['description'] as String,
       taggedCategories: params['taggedCategories'] as List<String>,
       type: params['type'] as PostType,

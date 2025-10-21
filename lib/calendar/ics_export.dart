@@ -173,12 +173,10 @@ class IcsExportService {
         return false;
       }
 
-      await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(filePath)],
-          subject: subject ?? 'Календарное событие',
-          text: 'Экспорт календарного события',
-        ),
+      await Share.shareXFiles(
+        [XFile(filePath)],
+        subject: subject ?? 'Календарное событие',
+        text: 'Экспорт календарного события',
       );
 
       SafeLog.info('IcsExportService: ICS file shared successfully');
