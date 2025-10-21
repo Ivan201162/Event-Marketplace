@@ -59,7 +59,7 @@ class RecommendationService {
         return [];
       }
 
-      final specialist = Specialist.fromDocument(specialistDoc);
+      final specialist = Specialist.fromFirestore(specialistDoc);
 
       // Ищем специалистов с похожими характеристиками
       final similarSpecialists = await _db
@@ -71,7 +71,7 @@ class RecommendationService {
           .get();
 
       final specialists = similarSpecialists.docs
-          .map(Specialist.fromDocument)
+          .map(Specialist.fromFirestore)
           .where((s) => s.id != specialistId) // Исключаем самого специалиста
           .toList();
 
@@ -109,7 +109,7 @@ class RecommendationService {
 
       final snapshot = await query.limit(limit).get();
 
-      return snapshot.docs.map(Specialist.fromDocument).toList();
+      return snapshot.docs.map(Specialist.fromFirestore).toList();
     } catch (e) {
       throw Exception('Ошибка получения топ специалистов: $e');
     }
@@ -141,7 +141,7 @@ class RecommendationService {
 
       final snapshot = await query.limit(limit).get();
 
-      return snapshot.docs.map(Specialist.fromDocument).toList();
+      return snapshot.docs.map(Specialist.fromFirestore).toList();
     } catch (e) {
       throw Exception('Ошибка получения рекомендаций по бюджету: $e');
     }
@@ -169,7 +169,7 @@ class RecommendationService {
         };
       }
 
-      final bookings = bookingsSnapshot.docs.map(Booking.fromDocument).toList();
+      final bookings = bookingsSnapshot.docs.map(Booking.fromFirestore).toList();
 
       // Анализируем предпочтения
       final cities = <String, int>{};
@@ -181,7 +181,7 @@ class RecommendationService {
         // Получаем данные специалиста
         final specialistDoc = await _db.collection('specialists').doc(booking.specialistId).get();
         if (specialistDoc.exists) {
-          final specialist = Specialist.fromDocument(specialistDoc);
+          final specialist = Specialist.fromFirestore(specialistDoc);
 
           // Город
           if (specialist.city != null) {
@@ -267,7 +267,7 @@ class RecommendationService {
 
     final snapshot = await query.limit(limit).get();
 
-    return snapshot.docs.map(Specialist.fromDocument).toList();
+    return snapshot.docs.map(Specialist.fromFirestore).toList();
   }
 
   /// Применить алгоритмы рекомендаций
@@ -333,7 +333,7 @@ class RecommendationService {
             .get();
 
         for (final doc in userBookings.docs) {
-          final booking = Booking.fromDocument(doc);
+          final booking = Booking.fromFirestore(doc);
           recommendedSpecialistIds[booking.specialistId] =
               (recommendedSpecialistIds[booking.specialistId] ?? 0) + 1;
         }
@@ -344,7 +344,7 @@ class RecommendationService {
         final boost = recommendedSpecialistIds[specialist.id] ?? 0;
         if (boost > 0) {
           // Добавляем метаданные для сортировки
-          specialist.metadata?['collaborativeBoost'] = boost;
+          specialist.contactInfo?['collaborativeBoost'] = boost;
         }
       }
 
@@ -377,7 +377,7 @@ class RecommendationService {
       final userSimilarities = <String, int>{};
 
       for (final doc in otherUsers.docs) {
-        final booking = Booking.fromDocument(doc);
+        final booking = Booking.fromFirestore(doc);
         if (booking.customerId == customerId) continue;
 
         final otherPreferences = await _getUserPreferences(booking.customerId);
@@ -412,11 +412,11 @@ class RecommendationService {
         // Усиливаем специалистов с высоким рейтингом и большим количеством отзывов
         var popularityBoost = 0;
 
-        if (specialist.avgRating >= 4.5) {
+        if (specialist.rating >= 4.5) {
           popularityBoost += 0.2;
         }
 
-        if (specialist.reviewsCount >= 10) {
+        if (specialist.reviewCount >= 10) {
           popularityBoost += 0.1;
         }
 
@@ -425,7 +425,7 @@ class RecommendationService {
         }
 
         // Добавляем метаданные для сортировки
-        specialist.metadata?['popularityBoost'] = popularityBoost;
+        specialist.contactInfo?['popularityBoost'] = popularityBoost;
 
         return specialist;
       }).toList();
@@ -438,10 +438,10 @@ class RecommendationService {
     var score = 0;
 
     // Базовый рейтинг
-    score += specialist.avgRating * 0.3;
+    score += specialist.rating * 0.3;
 
     // Количество отзывов (нормализованное)
-    score += (specialist.reviewsCount / 100.0).clamp(0.0, 1.0) * 0.2;
+    score += (specialist.reviewCount / 100.0).clamp(0.0, 1.0) * 0.2;
 
     // Соответствие предпочтениям
     if (preferences['city'] == specialist.city) {
@@ -463,10 +463,10 @@ class RecommendationService {
     }
 
     // Популярность
-    score += (specialist.metadata?['popularityBoost'] ?? 0.0) * 0.1;
+    score += (specialist.contactInfo?['popularityBoost'] ?? 0.0) * 0.1;
 
     // Collaborative boost
-    score += (specialist.metadata?['collaborativeBoost'] ?? 0) * 0.05;
+    score += (specialist.contactInfo?['collaborativeBoost'] ?? 0) * 0.05;
 
     return score;
   }
@@ -478,12 +478,12 @@ class RecommendationService {
   ) {
     final reasons = <String>[];
 
-    if (specialist.avgRating >= 4.5) {
-      reasons.add('высокий рейтинг (${specialist.avgRating})');
+    if (specialist.rating >= 4.5) {
+      reasons.add('высокий рейтинг (${specialist.rating})');
     }
 
-    if (specialist.reviewsCount >= 10) {
-      reasons.add('много отзывов (${specialist.reviewsCount})');
+    if (specialist.reviewCount >= 10) {
+      reasons.add('много отзывов (${specialist.reviewCount})');
     }
 
     if (preferences['city'] == specialist.city) {

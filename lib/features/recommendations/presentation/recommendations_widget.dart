@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../specialists/data/models/specialist.dart';
 import '../../specialists/presentation/specialist_card.dart';
@@ -222,7 +221,6 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
                   margin: const EdgeInsets.only(right: 16),
                   child: SpecialistCard(
                     specialist: specialist,
-                    showRecommendationBadge: true,
                     onTap: () => _navigateToSpecialist(specialist),
                   ),
                 );
@@ -287,7 +285,6 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
                       margin: const EdgeInsets.only(bottom: 16),
                       child: SpecialistCard(
                         specialist: specialist,
-                        showRecommendationBadge: true,
                         onTap: () {
                           Navigator.pop(context);
                           _navigateToSpecialist(specialist);
@@ -415,7 +412,6 @@ class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
                 margin: const EdgeInsets.only(right: 16),
                 child: SpecialistCard(
                   specialist: specialist,
-                  compact: true,
                   onTap: () => _navigateToSpecialist(specialist),
                 ),
               );
