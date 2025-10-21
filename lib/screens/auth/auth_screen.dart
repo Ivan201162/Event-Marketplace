@@ -124,44 +124,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   }
 
   Future<void> _signInWithPhone() async {
-    if (_phoneController.text.isEmpty) {
-      setState(() {
-        _errorMessage = 'Введите номер телефона';
-      });
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final authService = ref.read(authServiceProvider);
-      await authService.signInWithPhoneNumber(phoneNumber: _phoneController.text.trim());
-
-      if (mounted) {
-        // Переходим на экран подтверждения SMS
-        context.push(
-          '/phone-verification',
-          extra: _phoneController.text.trim(),
-        );
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        _errorMessage = _getErrorMessage(e.code);
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Произошла ошибка: $e';
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    // Переходим на экран ввода номера телефона
+    context.push('/phone-auth');
   }
 
   Future<void> _signInWithGoogle() async {

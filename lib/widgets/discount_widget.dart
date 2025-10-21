@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/booking_discount.dart';
 import '../services/discount_service.dart';
-import 'responsive_text.dart';
 import 'responsive_layout.dart';
+import 'responsive_text.dart';
 
 /// Виджет для отображения скидки в карточке заявки
 class DiscountWidget extends ConsumerWidget {
@@ -36,7 +37,7 @@ class DiscountWidget extends ConsumerWidget {
                 color: _getDiscountColor(),
               ),
               const SizedBox(width: 8),
-              Expanded(
+              const Expanded(
                 child: ResponsiveText(
                   'Предложение скидки',
                   isTitle: true,
@@ -62,7 +63,7 @@ class DiscountWidget extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ResponsiveText(
+                    const ResponsiveText(
                       'Старая цена:',
                       isSubtitle: true,
                     ),
@@ -79,7 +80,7 @@ class DiscountWidget extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ResponsiveText(
+                    const ResponsiveText(
                       'Новая цена:',
                       isSubtitle: true,
                     ),
@@ -97,7 +98,7 @@ class DiscountWidget extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ResponsiveText(
+                    const ResponsiveText(
                       'Экономия:',
                       isSubtitle: true,
                     ),
@@ -405,10 +406,10 @@ class OfferDiscountWidget extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
-                const Icon(Icons.local_offer, color: Colors.blue),
-                const SizedBox(width: 8),
+                Icon(Icons.local_offer, color: Colors.blue),
+                SizedBox(width: 8),
                 ResponsiveText(
                   'Предложить скидку',
                   isTitle: true,

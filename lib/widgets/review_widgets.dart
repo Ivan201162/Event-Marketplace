@@ -196,7 +196,7 @@ class ReviewStatsWidget extends StatelessWidget {
 
               // Популярные теги (только для SpecialistReviewStats)
               if (statistics is SpecialistReviewStats &&
-                  (statistics.topTags?.isNotEmpty ?? false)) ...[
+                  (statistics.topTags.isNotEmpty ?? false)) ...[
                 Text(
                   'Популярные теги',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(

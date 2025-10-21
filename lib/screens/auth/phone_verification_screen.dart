@@ -1,16 +1,20 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../providers/auth_providers.dart';
 
-/// Экран подтверждения SMS кода для входа по телефону
+/// Экран ввода SMS кода подтверждения
 class PhoneVerificationScreen extends ConsumerStatefulWidget {
+  final String phoneNumber;
+  
   const PhoneVerificationScreen({
     super.key,
     required this.phoneNumber,
   });
-  final String phoneNumber;
 
   @override
   ConsumerState<PhoneVerificationScreen> createState() => _PhoneVerificationScreenState();
@@ -18,215 +22,356 @@ class PhoneVerificationScreen extends ConsumerStatefulWidget {
 
 class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScreen> {
   final _codeController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String? _errorMessage;
-  String? _verificationId;
-  int _resendTimer = 0;
-  bool _canResend = true;
+  Timer? _timer;
+  int _countdown = 60;
+  bool _canResend = false;
 
   @override
   void initState() {
     super.initState();
-    _sendSMS();
+    _startCountdown();
   }
 
   @override
   void dispose() {
     _codeController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
-  Future<void> _sendSMS() async {
+  /// Запуск таймера обратного отсчета
+  void _startCountdown() {
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      _countdown = 60;
+      _canResend = false;
     });
-
-    try {
-      final authService = ref.read(authServiceProvider);
-      await authService.signInWithPhoneNumber(phoneNumber: widget.phoneNumber);
-
-      setState(() {
-        _isLoading = false;
-        _canResend = false;
-        _resendTimer = 60;
-      });
-
-      _startResendTimer();
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'Ошибка отправки SMS: $e';
-      });
-    }
-  }
-
-  void _startResendTimer() {
-    Future.delayed(const Duration(seconds: 1), () {
+    
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() {
-          _resendTimer--;
-          if (_resendTimer <= 0) {
+          _countdown--;
+          if (_countdown <= 0) {
             _canResend = true;
+            timer.cancel();
           }
         });
-
-        if (_resendTimer > 0) {
-          _startResendTimer();
-        }
       }
     });
   }
 
-  Future<void> _verifyCode() async {
-    if (_codeController.text.isEmpty) {
-      setState(() {
-        _errorMessage = 'Введите код из SMS';
-      });
-      return;
+  /// Валидация SMS кода
+  String? _validateCode(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Введите код подтверждения';
     }
+    if (value.length < 6) {
+      return 'Код должен содержать 6 цифр';
+    }
+    return null;
+  }
+
+  /// Проверка SMS кода
+  Future<void> _verifyCode() async {
+    if (!_formKey.currentState!.validate()) return;
 
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
+    // Обновляем состояние
+    ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.verifying;
+
     try {
       final authService = ref.read(authServiceProvider);
-      await authService.verifyPhoneCode(_codeController.text.trim());
+      final verificationId = ref.read(phoneVerificationIdProvider);
+      
+      if (verificationId == null) {
+        throw FirebaseAuthException(
+          code: 'invalid-verification-id',
+          message: 'Verification ID not found',
+        );
+      }
+
+      await authService.verifyPhoneCode(
+        verificationId: verificationId,
+        smsCode: _codeController.text.trim(),
+      );
+
+      // Обновляем состояние
+      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.verified;
 
       if (mounted) {
-        // Успешная верификация - переходим в приложение
+        // Переходим на главный экран
         context.go('/main');
       }
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = 'Ошибка проверки кода';
+      
+      switch (e.code) {
+        case 'invalid-verification-code':
+          errorMessage = 'Неверный код подтверждения';
+          break;
+        case 'code-expired':
+          errorMessage = 'Код истёк. Запросите новый код';
+          break;
+        case 'session-expired':
+          errorMessage = 'Сессия истекла. Начните заново';
+          break;
+        case 'network-request-failed':
+          errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
+          break;
+        default:
+          errorMessage = 'Ошибка проверки кода: ${e.message ?? e.code}';
+      }
+      
+      // Обновляем состояние ошибки
+      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      
       setState(() {
-        _isLoading = false;
-        _errorMessage = 'Неверный код. Попробуйте еще раз';
+        _errorMessage = errorMessage;
       });
+    } catch (e) {
+      // Обновляем состояние ошибки
+      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      
+      setState(() {
+        _errorMessage = 'Произошла ошибка: ${e.toString()}';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  /// Повторная отправка кода
+  Future<void> _resendCode() async {
+    if (!_canResend) return;
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    // Обновляем состояние
+    ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.sending;
+
+    try {
+      final authService = ref.read(authServiceProvider);
+      await authService.sendPhoneVerificationCode(widget.phoneNumber);
+      
+      // Обновляем verification ID
+      ref.read(phoneVerificationIdProvider.notifier).state = authService.currentVerificationId;
+      
+      // Запускаем новый таймер
+      _startCountdown();
+      
+      // Обновляем состояние
+      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.codeSent;
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Код отправлен повторно'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = 'Ошибка отправки кода';
+      
+      switch (e.code) {
+        case 'too-many-requests':
+          errorMessage = 'Слишком много запросов. Попробуйте позже';
+          break;
+        case 'quota-exceeded':
+          errorMessage = 'Превышена квота SMS. Попробуйте позже';
+          break;
+        case 'network-request-failed':
+          errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
+          break;
+        default:
+          errorMessage = 'Ошибка отправки кода: ${e.message ?? e.code}';
+      }
+      
+      // Обновляем состояние ошибки
+      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      
+      setState(() {
+        _errorMessage = errorMessage;
+      });
+    } catch (e) {
+      // Обновляем состояние ошибки
+      ref.read(phoneAuthStateProvider.notifier).state = PhoneAuthState.error;
+      
+      setState(() {
+        _errorMessage = 'Произошла ошибка: ${e.toString()}';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Подтверждение номера'),
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.white,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Подтверждение номера'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 40),
-              Icon(
-                Icons.sms,
-                size: 80,
-                color: Theme.of(context).primaryColor,
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Подтверждение номера',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 40),
+                
+                // Иконка SMS
+                const Icon(
+                  Icons.sms,
+                  size: 80,
+                  color: Colors.blue,
+                ),
+                const SizedBox(height: 24),
+                
+                // Заголовок
+                const Text(
+                  'Введите код из SMS',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                
+                Text(
+                  'Код отправлен на номер\n${widget.phoneNumber}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                
+                // Поле ввода кода
+                TextFormField(
+                  controller: _codeController,
+                  keyboardType: TextInputType.number,
+                  maxLength: 6,
+                  decoration: const InputDecoration(
+                    labelText: 'Код подтверждения',
+                    hintText: '123456',
+                    prefixIcon: Icon(Icons.security),
+                    border: OutlineInputBorder(),
+                    counterText: '',
+                  ),
+                  validator: _validateCode,
+                  onChanged: (value) {
+                    // Автоматически переходим к проверке при вводе 6 цифр
+                    if (value.length == 6) {
+                      _verifyCode();
+                    }
+                  },
+                ),
+                const SizedBox(height: 24),
+                
+                // Кнопка проверки
+                SizedBox(
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _verifyCode,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
                     ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Мы отправили SMS код на номер\n${widget.phoneNumber}',
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 40),
-              TextField(
-                controller: _codeController,
-                keyboardType: TextInputType.number,
-                maxLength: 6,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 8,
-                ),
-                decoration: InputDecoration(
-                  hintText: '000000',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  counterText: '',
-                ),
-              ),
-              const SizedBox(height: 20),
-              if (_errorMessage != null) ...[
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    _errorMessage!,
-                    style: TextStyle(color: Colors.red.shade800),
-                    textAlign: TextAlign.center,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                            'Подтвердить',
+                            style: TextStyle(fontSize: 16),
+                          ),
                   ),
                 ),
-                const SizedBox(height: 20),
-              ],
-              ElevatedButton(
-                onPressed: _isLoading ? null : _verifyCode,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : const Text(
-                        'Подтвердить',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                const SizedBox(height: 16),
+                
+                // Таймер и кнопка повторной отправки
+                if (!_canResend)
                   Text(
-                    'Не получили код? ',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                    'Повторная отправка через $_countdownс',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
+                  )
+                else
                   TextButton(
-                    onPressed: _canResend ? _sendSMS : null,
-                    child: Text(
-                      _canResend ? 'Отправить повторно' : 'Повторно через $_resendTimer сек',
-                      style: TextStyle(
-                        color: _canResend ? Theme.of(context).primaryColor : Colors.grey,
-                      ),
+                    onPressed: _isLoading ? null : _resendCode,
+                    child: const Text(
+                      'Отправить код повторно',
+                      style: TextStyle(fontSize: 16),
                     ),
                   ),
-                ],
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () => context.pop(),
-                child: const Text('Изменить номер телефона'),
-              ),
-            ],
+                
+                const SizedBox(height: 16),
+                
+                // Сообщение об ошибке
+                if (_errorMessage != null)
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.red.shade200),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.error_outline, color: Colors.red.shade700),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _errorMessage!,
+                            style: TextStyle(color: Colors.red.shade700),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                
+                const SizedBox(height: 24),
+                
+                // Информация
+                const Text(
+                  'Не получили SMS? Проверьте правильность номера или попробуйте позже',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }

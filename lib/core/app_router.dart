@@ -6,6 +6,8 @@ import '../screens/auth/auth_check_screen.dart';
 import '../screens/auth/forgot_password_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/onboarding_screen.dart';
+import '../screens/auth/phone_auth_screen.dart';
+import '../screens/auth/phone_verification_screen.dart';
 import '../screens/main_navigation_screen.dart';
 import '../screens/search/search_screen.dart';
 
@@ -37,6 +39,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/forgot-password',
         name: 'forgot-password',
         builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+
+      // Phone auth routes
+      GoRoute(
+        path: '/phone-auth',
+        name: 'phone-auth',
+        builder: (context, state) => const PhoneAuthScreen(),
+      ),
+
+      GoRoute(
+        path: '/phone-verification',
+        name: 'phone-verification',
+        builder: (context, state) {
+          final phoneNumber = state.extra as String?;
+          if (phoneNumber == null) {
+            return const Scaffold(
+              body: Center(
+                child: Text('Ошибка: номер телефона не найден'),
+              ),
+            );
+          }
+          return PhoneVerificationScreen(phoneNumber: phoneNumber);
+        },
       ),
 
       GoRoute(

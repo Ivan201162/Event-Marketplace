@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../firebase_options.dart';
+import '../services/fcm_service.dart';
 
 /// Bootstrap class for safe app initialization
 class Bootstrap {
@@ -26,6 +27,9 @@ class Bootstrap {
 
       // Initialize other services
       await _initializeServices();
+      
+      // Initialize FCM
+      await _initializeFCM();
 
       debugPrint('✅ Bootstrap: App initialized successfully');
     } catch (e, stackTrace) {
@@ -178,6 +182,17 @@ class Bootstrap {
     } catch (e) {
       debugPrint('❌ Services initialization failed: $e');
       rethrow;
+    }
+  }
+
+  /// Initialize FCM
+  static Future<void> _initializeFCM() async {
+    try {
+      await FCMService.initialize();
+      debugPrint('✅ FCM initialized successfully');
+    } catch (e) {
+      debugPrint('❌ FCM initialization failed: $e');
+      // Не прерываем инициализацию приложения из-за ошибки FCM
     }
   }
 

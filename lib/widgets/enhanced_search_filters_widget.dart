@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../models/specialist.dart';
 import '../models/common_types.dart';
 
 /// Улучшенный виджет фильтров поиска

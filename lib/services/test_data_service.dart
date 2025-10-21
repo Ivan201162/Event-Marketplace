@@ -1662,7 +1662,7 @@ class TestDataService {
         }
       }
 
-      final total = stats.values.fold(0, (sum, count) => sum + count);
+      final total = stats.values.fold(0, (totalSum, count) => totalSum + count);
       stats['total'] = total;
 
       debugPrint('📊 Статистика тестовых данных: $stats');
@@ -1716,7 +1716,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 10)),
         'photos': ['https://picsum.photos/400?random=203'],
         'likes': 5,
-        'responses': [],
+        'responses': <String>[],
         'bookingId': 'booking_2',
         'eventTitle': 'Корпоратив IT-компании',
         'customerAvatar': 'https://picsum.photos/200?random=302',
@@ -1733,7 +1733,7 @@ class TestDataService {
         'text':
             'Отличный ведущий! Профессиональный подход, интересная программа, все было на высоте. Рекомендую всем!',
         'date': DateTime.now().subtract(const Duration(days: 15)),
-        'photos': [],
+        'photos': <String>[],
         'likes': 8,
         'responses': [
           {
@@ -1764,7 +1764,7 @@ class TestDataService {
           'https://picsum.photos/400?random=205',
         ],
         'likes': 3,
-        'responses': [],
+        'responses': <String>[],
         'bookingId': 'booking_4',
         'eventTitle': 'Юбилей',
         'customerAvatar': 'https://picsum.photos/200?random=304',
@@ -1840,7 +1840,7 @@ class TestDataService {
         'date': DateTime.now().subtract(const Duration(days: 8)),
         'photos': ['https://picsum.photos/400?random=209'],
         'likes': 7,
-        'responses': [],
+        'responses': <String>[],
         'bookingId': 'booking_7',
         'eventTitle': 'Корпоративная фотосессия',
         'customerAvatar': 'https://picsum.photos/200?random=307',
@@ -1888,7 +1888,7 @@ class TestDataService {
         'text':
             'Хороший DJ, но музыкальный вкус не совсем совпал с нашими предпочтениями. В целом справился с задачей.',
         'date': DateTime.now().subtract(const Duration(days: 6)),
-        'photos': [],
+        'photos': <String>[],
         'likes': 4,
         'responses': [
           {

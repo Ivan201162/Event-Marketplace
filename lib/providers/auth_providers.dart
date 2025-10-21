@@ -50,3 +50,28 @@ final onboardingStateProvider = StateProvider<bool>((ref) => false);
 
 /// Auth loading state provider
 final authLoadingProvider = StateProvider<bool>((ref) => false);
+
+/// Phone verification ID provider
+final phoneVerificationIdProvider = StateProvider<String?>((ref) => null);
+
+/// Phone auth state provider
+final phoneAuthStateProvider = StateProvider<PhoneAuthState>((ref) => PhoneAuthState.idle);
+
+/// Phone number provider
+final phoneNumberProvider = StateProvider<String?>((ref) => null);
+
+/// Phone auth timer provider
+final phoneAuthTimerProvider = StateProvider<int>((ref) => 0);
+
+/// Can resend code provider
+final canResendCodeProvider = StateProvider<bool>((ref) => false);
+
+/// Phone auth states
+enum PhoneAuthState {
+  idle,           // Начальное состояние
+  sending,        // Отправка SMS
+  codeSent,       // SMS отправлен
+  verifying,      // Проверка кода
+  verified,        // Код подтвержден
+  error,          // Ошибка
+}

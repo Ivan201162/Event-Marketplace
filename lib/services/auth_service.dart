@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -64,6 +65,8 @@ class AuthService {
       );
 
       if (credential.user != null) {
+        // Обновляем FCM токен после успешного входа
+        await updateFCMToken();
         return await currentUser;
       }
       return null;
@@ -166,59 +169,161 @@ class AuthService {
     }
   }
 
-  /// Sign in with phone number
-  Future<void> signInWithPhoneNumber({
-    required String phoneNumber,
-    required Function(String verificationId) onCodeSent,
-    required Function(String error) onError,
-  }) async {
+  /// Send phone verification code
+  Future<void> sendPhoneVerificationCode(String phoneNumber) async {
     try {
+      debugPrint('📱 Отправка SMS кода на номер: $phoneNumber');
+      
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
+          debugPrint('✅ Автоматическая верификация завершена');
+          // Auto-verification completed
           await _auth.signInWithCredential(credential);
         },
         verificationFailed: (FirebaseAuthException e) {
-          onError(e.message ?? 'Verification failed');
+          debugPrint('❌ Ошибка верификации: ${e.code} - ${e.message}');
+          
+          // Обработка специфических ошибок Phone Auth
+          if (e.code == 'unknown' && e.message?.contains('BILLING_NOT_ENABLED') == true) {
+            throw FirebaseAuthException(
+              code: 'billing-not-enabled',
+              message: 'Phone Authentication не настроена в Firebase Console. Обратитесь к администратору.',
+            );
+          }
+          
+          throw e;
         },
         codeSent: (String verificationId, int? resendToken) {
-          onCodeSent(verificationId);
+          debugPrint('📨 SMS код отправлен, verificationId: $verificationId');
+          // Сохраняем verificationId для последующей проверки
+          _currentVerificationId = verificationId;
+          _resendToken = resendToken;
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          // Auto-retrieval timeout
+          debugPrint('⏰ Таймаут автоматического получения кода');
+          _currentVerificationId = verificationId;
         },
+        timeout: const Duration(seconds: 60),
       );
     } catch (e) {
-      debugPrint('Phone sign in error: $e');
-      onError(e.toString());
+      debugPrint('❌ Ошибка отправки SMS: $e');
+      rethrow;
     }
   }
 
   /// Verify phone code
   Future<AppUser?> verifyPhoneCode({
     required String verificationId,
-    required String code,
+    required String smsCode,
   }) async {
     try {
+      debugPrint('🔐 Проверка SMS кода: $smsCode');
+      
       final credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
-        smsCode: code,
+        smsCode: smsCode,
       );
-
+      
       final userCredential = await _auth.signInWithCredential(credential);
-
-      if (userCredential.user != null) {
-        return await currentUser;
+      final user = userCredential.user;
+      
+      if (user == null) {
+        throw FirebaseAuthException(
+          code: 'user-not-found',
+          message: 'User not found after phone verification',
+        );
       }
-      return null;
-    } on FirebaseAuthException catch (e) {
-      debugPrint('Phone verification error: ${e.code} - ${e.message}');
-      rethrow;
+
+      debugPrint('✅ SMS код подтвержден для пользователя: ${user.uid}');
+
+      // Ensure profile exists
+      final docRef = _firestore.collection('users').doc(user.uid);
+      final snapshot = await docRef.get();
+      
+      if (!snapshot.exists) {
+        // Create new user profile
+        await docRef.set({
+          'uid': user.uid,
+          'email': user.email ?? '',
+          'phone': user.phoneNumber ?? '',
+          'name': user.displayName ?? 'Пользователь',
+          'avatarUrl': user.photoURL,
+          'provider': 'phone',
+          'createdAt': Timestamp.now(),
+          'updatedAt': Timestamp.now(),
+        });
+        debugPrint('👤 Создан новый профиль пользователя');
+      } else {
+        // Update existing profile with phone number
+        await docRef.update({
+          'phone': user.phoneNumber ?? '',
+          'updatedAt': Timestamp.now(),
+        });
+        debugPrint('👤 Обновлен профиль пользователя с номером телефона');
+      }
+
+      // Обновляем FCM токен после успешной авторизации
+      await updateFCMToken();
+
+      return await currentUser;
     } catch (e) {
-      debugPrint('Unexpected phone verification error: $e');
+      debugPrint('❌ Ошибка проверки SMS кода: $e');
       rethrow;
     }
   }
+
+  // Private fields for phone auth
+  String? _currentVerificationId;
+  int? _resendToken;
+
+  /// Get current verification ID
+  String? get currentVerificationId => _currentVerificationId;
+
+  /// Get resend token
+  int? get resendToken => _resendToken;
+
+  /// Update FCM token for current user
+  Future<void> updateFCMToken() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
+
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken == null) return;
+
+      debugPrint('📱 Обновление FCM токена для пользователя: ${user.uid}');
+
+      await _firestore.collection('users').doc(user.uid).update({
+        'fcmToken': fcmToken,
+        'fcmTokenUpdatedAt': Timestamp.now(),
+      });
+
+      debugPrint('✅ FCM токен обновлен');
+    } catch (e) {
+      debugPrint('❌ Ошибка обновления FCM токена: $e');
+    }
+  }
+
+  /// Clear FCM token on logout
+  Future<void> clearFCMToken() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
+
+      debugPrint('📱 Очистка FCM токена для пользователя: ${user.uid}');
+
+      await _firestore.collection('users').doc(user.uid).update({
+        'fcmToken': FieldValue.delete(),
+        'fcmTokenClearedAt': Timestamp.now(),
+      });
+
+      debugPrint('✅ FCM токен очищен');
+    } catch (e) {
+      debugPrint('❌ Ошибка очистки FCM токена: $e');
+    }
+  }
+
 
   /// Sign in with Google
   Future<AppUser?> signInWithGoogle() async {
@@ -277,6 +382,9 @@ class AuthService {
       } else {
         await docRef.update({'updatedAt': Timestamp.now()});
       }
+
+      // Обновляем FCM токен после успешной авторизации
+      await updateFCMToken();
 
       return await currentUser;
     } on FirebaseAuthException catch (e) {
@@ -391,6 +499,10 @@ class AuthService {
   Future<void> signOut() async {
     try {
       await setUserOnlineStatus(false);
+      
+      // Очищаем FCM токен перед выходом
+      await clearFCMToken();
+      
       if (!kIsWeb) {
         try {
           await GoogleSignIn().signOut();
@@ -422,6 +534,9 @@ class AuthService {
 
     try {
       await _firestore.collection('users').doc(firebaseUser.uid).set(user.toFirestore());
+
+      // Обновляем FCM токен после создания профиля
+      await updateFCMToken();
 
       return user;
     } catch (e) {

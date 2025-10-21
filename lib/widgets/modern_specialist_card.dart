@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../models/specialist.dart';
-import '../models/common_types.dart';
 
 /// Современная карточка специалиста в едином стиле
 class ModernSpecialistCard extends ConsumerWidget {

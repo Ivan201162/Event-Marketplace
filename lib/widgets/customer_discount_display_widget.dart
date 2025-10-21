@@ -37,7 +37,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                 size: 24,
               ),
               const SizedBox(width: 8),
-              Expanded(
+              const Expanded(
                 child: ResponsiveText(
                   'Предложение скидки',
                   isTitle: true,
@@ -76,7 +76,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ResponsiveText(
+                        const ResponsiveText(
                           'Было:',
                           isSubtitle: true,
                         ),
@@ -94,7 +94,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        ResponsiveText(
+                        const ResponsiveText(
                           'Стало:',
                           isSubtitle: true,
                         ),
@@ -283,10 +283,10 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       children: [
-                        const Icon(Icons.history, size: 20),
-                        const SizedBox(width: 8),
+                        Icon(Icons.history, size: 20),
+                        SizedBox(width: 8),
                         ResponsiveText(
                           'История изменений цены',
                           isTitle: true,

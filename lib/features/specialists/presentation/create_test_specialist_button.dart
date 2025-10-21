@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../../models/common_types.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../models/common_types.dart';
 import '../../../models/specialist.dart';
 import '../../../services/specialist_service.dart';
 
