@@ -87,17 +87,17 @@ class _EditProfileAdvancedState extends ConsumerState<EditProfileAdvanced> {
       if (doc.exists) {
         final data = doc.data()!;
         setState(() {
-          _nameController.text = data['name'] ?? '';
-          _cityController.text = data['city'] ?? '';
-          _bioController.text = data['bio'] ?? '';
-          _phoneController.text = data['phone'] ?? '';
-          _websiteController.text = data['website'] ?? '';
-          _instagramController.text = data['socialLinks']?['instagram'] ?? '';
-          _vkController.text = data['socialLinks']?['vk'] ?? '';
-          _telegramController.text = data['socialLinks']?['telegram'] ?? '';
-          _tiktokController.text = data['socialLinks']?['tiktok'] ?? '';
-          _youtubeController.text = data['socialLinks']?['youtube'] ?? '';
-          _selectedRole = data['proCategory'] ?? '';
+          _nameController.text = (data['name'] ?? '').toString();
+          _cityController.text = (data['city'] ?? '').toString();
+          _bioController.text = (data['bio'] ?? '').toString();
+          _phoneController.text = (data['phone'] ?? '').toString();
+          _websiteController.text = (data['website'] ?? '').toString();
+          _instagramController.text = (data['socialLinks']?['instagram'] ?? '').toString();
+          _vkController.text = (data['socialLinks']?['vk'] ?? '').toString();
+          _telegramController.text = (data['socialLinks']?['telegram'] ?? '').toString();
+          _tiktokController.text = (data['socialLinks']?['tiktok'] ?? '').toString();
+          _youtubeController.text = (data['socialLinks']?['youtube'] ?? '').toString();
+          _selectedRole = (data['proCategory'] ?? '').toString();
           _showCity = data['showCity'] ?? true;
           _allowMentions = data['allowMentions'] ?? true;
           _allowMessages = data['allowMessages'] ?? true;
@@ -178,21 +178,21 @@ class _EditProfileAdvancedState extends ConsumerState<EditProfileAdvanced> {
 
       // Подготавливаем данные для сохранения
       final updateData = <String, dynamic>{
-        'name': _nameController.text.trim(),
-        'city': _cityController.text.trim(),
-        'bio': _bioController.text.trim(),
-        'phone': _phoneController.text.trim(),
-        'website': _websiteController.text.trim(),
-        'proCategory': _selectedRole,
+        'name': _nameController.text.trim().isNotEmpty ? _nameController.text.trim() : null,
+        'city': _cityController.text.trim().isNotEmpty ? _cityController.text.trim() : null,
+        'bio': _bioController.text.trim().isNotEmpty ? _bioController.text.trim() : null,
+        'phone': _phoneController.text.trim().isNotEmpty ? _phoneController.text.trim() : null,
+        'website': _websiteController.text.trim().isNotEmpty ? _websiteController.text.trim() : null,
+        'proCategory': _selectedRole?.isNotEmpty == true ? _selectedRole : null,
         'showCity': _showCity,
         'allowMentions': _allowMentions,
         'allowMessages': _allowMessages,
         'socialLinks': {
-          'instagram': _instagramController.text.trim(),
-          'vk': _vkController.text.trim(),
-          'telegram': _telegramController.text.trim(),
-          'tiktok': _tiktokController.text.trim(),
-          'youtube': _youtubeController.text.trim(),
+          'instagram': _instagramController.text.trim().isNotEmpty ? _instagramController.text.trim() : null,
+          'vk': _vkController.text.trim().isNotEmpty ? _vkController.text.trim() : null,
+          'telegram': _telegramController.text.trim().isNotEmpty ? _telegramController.text.trim() : null,
+          'tiktok': _tiktokController.text.trim().isNotEmpty ? _tiktokController.text.trim() : null,
+          'youtube': _youtubeController.text.trim().isNotEmpty ? _youtubeController.text.trim() : null,
         },
         'updatedAt': Timestamp.now(),
       };
@@ -256,14 +256,8 @@ class _EditProfileAdvancedState extends ConsumerState<EditProfileAdvanced> {
         foregroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () {
-            if (Navigator.of(context).canPop()) {
-              Navigator.of(context).pop();
-            } else {
-              context.go('/main');
-            }
-          },
           icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).maybePop(),
         ),
         actions: [
           TextButton(
@@ -558,8 +552,17 @@ class _EditProfileAdvancedState extends ConsumerState<EditProfileAdvanced> {
   }
 
   Widget _buildRoleDropdown() {
+    // Обеспечиваем безопасную обработку значений
+    final uniqueItems = _roles
+        .where((e) => e.trim().isNotEmpty)
+        .toSet()
+        .toList();
+    
+    // Безопасное значение value
+    final safeValue = uniqueItems.contains(_selectedRole) ? _selectedRole : null;
+    
     return DropdownButtonFormField<String>(
-      value: _selectedRole,
+      value: safeValue,
       decoration: InputDecoration(
         labelText: 'Роль',
         border: OutlineInputBorder(
@@ -570,13 +573,16 @@ class _EditProfileAdvancedState extends ConsumerState<EditProfileAdvanced> {
           borderSide: const BorderSide(color: Color(0xFF1E3A8A), width: 2),
         ),
       ),
-      items: _roles.map((role) {
-        return DropdownMenuItem(
+      items: uniqueItems.map((role) {
+        return DropdownMenuItem<String>(
           value: role,
           child: Text(role),
         );
       }).toList(),
       onChanged: (value) => setState(() => _selectedRole = value),
+      validator: (value) => (value == null || value.isEmpty)
+          ? 'Пожалуйста, выберите роль'
+          : null,
     );
   }
 

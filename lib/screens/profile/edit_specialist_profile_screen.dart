@@ -144,6 +144,10 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
     return Scaffold(
       appBar: AppBar(
         title: const Text('Редактирование профиля'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _saveProfile,
@@ -223,30 +227,7 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
               const SizedBox(height: 16),
               
               // Тип специалиста
-              DropdownButtonFormField<String>(
-                initialValue: _selectedSpecialistType,
-                decoration: const InputDecoration(
-                  labelText: 'Тип специалиста',
-                  border: OutlineInputBorder(),
-                ),
-                items: _specialistTypes.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(type),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedSpecialistType = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Выберите тип специалиста';
-                  }
-                  return null;
-                },
-              ),
+              _buildSpecialistTypeDropdown(),
               const SizedBox(height: 16),
               
               // Описание
@@ -289,6 +270,42 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSpecialistTypeDropdown() {
+    // Обеспечиваем безопасную обработку значений
+    final uniqueItems = _specialistTypes
+        .where((e) => e.trim().isNotEmpty)
+        .toSet()
+        .toList();
+    
+    // Безопасное значение value
+    final safeValue = uniqueItems.contains(_selectedSpecialistType) ? _selectedSpecialistType : null;
+    
+    return DropdownButtonFormField<String>(
+      value: safeValue,
+      decoration: const InputDecoration(
+        labelText: 'Тип специалиста',
+        border: OutlineInputBorder(),
+      ),
+      items: uniqueItems.map((type) {
+        return DropdownMenuItem<String>(
+          value: type,
+          child: Text(type),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _selectedSpecialistType = value;
+        });
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Выберите тип специалиста';
+        }
+        return null;
+      },
     );
   }
 }
