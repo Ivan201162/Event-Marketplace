@@ -6,6 +6,7 @@ import '../../providers/auth_providers.dart';
 import '../../providers/real_specialists_providers.dart';
 import '../../providers/real_categories_providers.dart';
 import '../../core/feature_flags.dart';
+import '../../widgets/ui_kit/ui_kit.dart';
 
 /// Улучшенный главный экран с shimmer-анимацией
 class HomeScreenImproved extends ConsumerStatefulWidget {

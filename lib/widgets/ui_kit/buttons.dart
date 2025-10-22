@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class UIButtons {
   /// Основная кнопка
   static Widget primary({
+    required BuildContext context,
     required String text,
     required VoidCallback onPressed,
     bool isLoading = false,
@@ -49,6 +50,7 @@ class UIButtons {
 
   /// Вторичная кнопка
   static Widget secondary({
+    required BuildContext context,
     required String text,
     required VoidCallback onPressed,
     bool isLoading = false,
@@ -97,6 +99,7 @@ class UIButtons {
 
   /// Текстовая кнопка
   static Widget text({
+    required BuildContext context,
     required String text,
     required VoidCallback onPressed,
     bool isLoading = false,
@@ -134,6 +137,7 @@ class UIButtons {
 
   /// Кнопка с иконкой
   static Widget icon({
+    required BuildContext context,
     required IconData icon,
     required VoidCallback onPressed,
     String? tooltip,
@@ -154,6 +158,7 @@ class UIButtons {
 
   /// Плавающая кнопка действий
   static Widget floatingAction({
+    required BuildContext context,
     required IconData icon,
     required VoidCallback onPressed,
     String? tooltip,
@@ -195,6 +200,7 @@ extension UIButtonsExtension on BuildContext {
     EdgeInsetsGeometry? padding,
   }) {
     return UIButtons.primary(
+      context: this,
       text: text,
       onPressed: onPressed,
       isLoading: isLoading,
@@ -215,6 +221,7 @@ extension UIButtonsExtension on BuildContext {
     EdgeInsetsGeometry? padding,
   }) {
     return UIButtons.secondary(
+      context: this,
       text: text,
       onPressed: onPressed,
       isLoading: isLoading,
@@ -235,6 +242,7 @@ extension UIButtonsExtension on BuildContext {
     FontWeight? fontWeight,
   }) {
     return UIButtons.text(
+      context: this,
       text: text,
       onPressed: onPressed,
       isLoading: isLoading,

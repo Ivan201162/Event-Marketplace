@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class UICards {
   /// Основная карточка
   static Widget primary({
+    required BuildContext context,
     required Widget child,
     EdgeInsetsGeometry? padding,
     EdgeInsetsGeometry? margin,
@@ -42,6 +43,7 @@ class UICards {
 
   /// Карточка с изображением
   static Widget image({
+    required BuildContext context,
     required String imageUrl,
     required Widget child,
     double? imageHeight,
@@ -90,6 +92,7 @@ class UICards {
 
   /// Карточка статистики
   static Widget stats({
+    required BuildContext context,
     required String title,
     required String value,
     IconData? icon,
@@ -147,6 +150,7 @@ class UICards {
 
   /// Карточка списка
   static Widget list({
+    required BuildContext context,
     required Widget leading,
     required Widget title,
     Widget? subtitle,
@@ -344,6 +348,7 @@ extension UICardsExtension on BuildContext {
     bool isSelected = false,
   }) {
     return UICards.primary(
+      context: this,
       child: child,
       padding: padding,
       margin: margin,
@@ -368,6 +373,7 @@ extension UICardsExtension on BuildContext {
     BoxFit imageFit = BoxFit.cover,
   }) {
     return UICards.image(
+      context: this,
       imageUrl: imageUrl,
       child: child,
       imageHeight: imageHeight,
@@ -391,6 +397,7 @@ extension UICardsExtension on BuildContext {
     EdgeInsetsGeometry? margin,
   }) {
     return UICards.stats(
+      context: this,
       title: title,
       value: value,
       icon: icon,
@@ -414,6 +421,7 @@ extension UICardsExtension on BuildContext {
     BorderRadius? borderRadius,
   }) {
     return UICards.list(
+      context: this,
       leading: leading,
       title: title,
       subtitle: subtitle,

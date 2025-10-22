@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../models/specialist.dart';
 import '../providers/real_specialists_providers.dart';
 import '../core/feature_flags.dart';
+import 'ui_kit/ui_kit.dart';
 
 class BestSpecialistsCarousel extends ConsumerWidget {
   const BestSpecialistsCarousel({super.key});
@@ -65,12 +66,9 @@ class BestSpecialistsCarousel extends ConsumerWidget {
           return Container(
             width: 160,
             margin: const EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
+            child: context.cardSkeleton(
+              height: 200,
               borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Center(
-              child: CircularProgressIndicator(),
             ),
           );
         },
@@ -82,22 +80,10 @@ class BestSpecialistsCarousel extends ConsumerWidget {
     return Container(
       height: 200,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.person_search, size: 48, color: Colors.grey),
-            SizedBox(height: 8),
-            Text(
-              'Специалисты не найдены',
-              style: TextStyle(color: Colors.grey, fontSize: 16),
-            ),
-          ],
-        ),
+      child: UICards.empty(
+        title: 'Специалисты не найдены',
+        icon: Icons.person_search,
+        margin: EdgeInsets.zero,
       ),
     );
   }
@@ -106,28 +92,9 @@ class BestSpecialistsCarousel extends ConsumerWidget {
     return Container(
       height: 200,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.red[50],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
-            const SizedBox(height: 8),
-            const Text(
-              'Ошибка загрузки',
-              style: TextStyle(color: Colors.red, fontSize: 16),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              error,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+      child: UICards.error(
+        message: error,
+        margin: EdgeInsets.zero,
       ),
     );
   }
