@@ -391,22 +391,72 @@ class AuthService {
       final user = userCredential.user;
       if (user == null) return null;
 
-      // Ensure profile exists
+      // Ensure profile exists and update with Google data
       final docRef = _firestore.collection('users').doc(user.uid);
       final snapshot = await docRef.get();
+      
+      // Parse display name into first and last name
+      String firstName = '';
+      String lastName = '';
+      if (user.displayName != null && user.displayName!.isNotEmpty) {
+        final nameParts = user.displayName!.split(' ');
+        firstName = nameParts.first;
+        if (nameParts.length > 1) {
+          lastName = nameParts.sublist(1).join(' ');
+        }
+      }
+      
       if (!snapshot.exists) {
+        // Create new user profile with Google data
         await docRef.set({
           'uid': user.uid,
+          'name': user.displayName ?? 'Пользователь',
+          'firstName': firstName,
+          'lastName': lastName,
           'email': user.email,
           'phone': user.phoneNumber ?? '',
-          'name': user.displayName ?? 'Пользователь',
           'avatarUrl': user.photoURL,
+          'displayName': user.displayName,
+          'photoURL': user.photoURL,
           'provider': 'google',
+          'isProAccount': false,
+          'isVerified': false,
+          'followersCount': 0,
+          'followingCount': 0,
+          'postsCount': 0,
+          'socialLinks': [],
+          'ctaButtons': {},
           'createdAt': Timestamp.now(),
           'updatedAt': Timestamp.now(),
         });
       } else {
-        await docRef.update({'updatedAt': Timestamp.now()});
+        // Update existing profile with Google data (only if fields are empty)
+        final existingData = snapshot.data() as Map<String, dynamic>;
+        final updateData = <String, dynamic>{
+          'updatedAt': Timestamp.now(),
+        };
+        
+        // Update name if empty or if Google has better data
+        if (existingData['name'] == null || existingData['name'] == 'Пользователь') {
+          updateData['name'] = user.displayName ?? 'Пользователь';
+        }
+        if (existingData['firstName'] == null || existingData['firstName'] == '') {
+          updateData['firstName'] = firstName;
+        }
+        if (existingData['lastName'] == null || existingData['lastName'] == '') {
+          updateData['lastName'] = lastName;
+        }
+        if (existingData['avatarUrl'] == null || existingData['avatarUrl'] == '') {
+          updateData['avatarUrl'] = user.photoURL;
+        }
+        if (existingData['displayName'] == null || existingData['displayName'] == '') {
+          updateData['displayName'] = user.displayName;
+        }
+        if (existingData['photoURL'] == null || existingData['photoURL'] == '') {
+          updateData['photoURL'] = user.photoURL;
+        }
+        
+        await docRef.update(updateData);
       }
 
       // Обновляем FCM токен после успешной авторизации

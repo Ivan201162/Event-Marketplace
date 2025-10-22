@@ -36,6 +36,62 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
     super.dispose();
   }
 
+  void _handleMenuAction(BuildContext context, String action) {
+    switch (action) {
+      case 'edit_profile':
+        context.go('/profile/edit');
+        break;
+      case 'account_security':
+        context.go('/account/security');
+        break;
+      case 'appearance':
+        context.go('/appearance');
+        break;
+      case 'notifications':
+        context.go('/notifications');
+        break;
+      case 'privacy':
+        context.go('/privacy');
+        break;
+      case 'professional':
+        context.go('/professional');
+        break;
+      case 'blocked':
+        context.go('/blocked');
+        break;
+      case 'report':
+        context.go('/report');
+        break;
+      case 'logout':
+        _handleLogout(context);
+        break;
+    }
+  }
+
+  void _handleLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Выйти из аккаунта'),
+        content: const Text('Вы уверены, что хотите выйти?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              // TODO: Implement logout with AuthService
+              context.go('/login');
+            },
+            child: const Text('Выйти', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(authStateProvider);
@@ -59,13 +115,93 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () => Navigator.of(context).maybePop(),
+                      onPressed: () {
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        } else {
+                          context.go('/main');
+                        }
+                      },
                       icon: const Icon(Icons.arrow_back, color: Colors.white),
                     ),
                     const Spacer(),
-                    IconButton(
-                      onPressed: () {},
+                    PopupMenuButton<String>(
+                      onSelected: (value) => _handleMenuAction(context, value),
                       icon: const Icon(Icons.more_vert, color: Colors.white),
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: 'edit_profile',
+                          child: ListTile(
+                            leading: Icon(Icons.edit, color: Color(0xFF1E3A8A)),
+                            title: Text('Редактировать профиль'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'account_security',
+                          child: ListTile(
+                            leading: Icon(Icons.security, color: Color(0xFF1E3A8A)),
+                            title: Text('Аккаунт и безопасность'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'appearance',
+                          child: ListTile(
+                            leading: Icon(Icons.palette, color: Color(0xFF1E3A8A)),
+                            title: Text('Внешний вид'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'notifications',
+                          child: ListTile(
+                            leading: Icon(Icons.notifications, color: Color(0xFF1E3A8A)),
+                            title: Text('Уведомления'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'privacy',
+                          child: ListTile(
+                            leading: Icon(Icons.privacy_tip, color: Color(0xFF1E3A8A)),
+                            title: Text('Конфиденциальность'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'professional',
+                          child: ListTile(
+                            leading: Icon(Icons.business, color: Color(0xFF1E3A8A)),
+                            title: Text('Профессиональный аккаунт'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'blocked',
+                          child: ListTile(
+                            leading: Icon(Icons.block, color: Color(0xFF1E3A8A)),
+                            title: Text('Заблокированные пользователи'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'report',
+                          child: ListTile(
+                            leading: Icon(Icons.bug_report, color: Color(0xFF1E3A8A)),
+                            title: Text('Сообщить о проблеме'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'logout',
+                          child: ListTile(
+                            leading: Icon(Icons.logout, color: Colors.red),
+                            title: Text('Выйти', style: TextStyle(color: Colors.red)),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -144,13 +280,18 @@ class _ProfileHeader extends ConsumerWidget {
         }
 
         final userData = snapshot.data!.data() as Map<String, dynamic>?;
-        final name = userData?['name'] ?? 'Пользователь';
+        final name = userData?['name'] ?? userData?['displayName'] ?? 'Пользователь';
+        final firstName = userData?['firstName'] ?? '';
+        final lastName = userData?['lastName'] ?? '';
+        final fullName = firstName.isNotEmpty && lastName.isNotEmpty 
+            ? '$firstName $lastName' 
+            : name;
         final city = userData?['city'] ?? 'Город не указан';
         final bio = userData?['bio'] ?? '';
         final isProAccount = userData?['isProAccount'] ?? false;
         final proCategory = userData?['proCategory'] ?? '';
         final isVerified = userData?['isVerified'] ?? false;
-        final avatarUrl = userData?['avatarUrl'];
+        final avatarUrl = userData?['avatarUrl'] ?? userData?['photoURL'];
         final followersCount = userData?['followersCount'] ?? 0;
         final followingCount = userData?['followingCount'] ?? 0;
         final postsCount = userData?['postsCount'] ?? 0;
@@ -183,7 +324,7 @@ class _ProfileHeader extends ConsumerWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                name,
+                                fullName,
                                 style: const TextStyle(
                                   color: Colors.white, 
                                   fontSize: 18, 

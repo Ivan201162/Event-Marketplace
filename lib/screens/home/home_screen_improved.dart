@@ -130,11 +130,29 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Добро пожаловать!',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
+                          user.when(
+                            data: (userData) => Text(
+                              userData != null 
+                                  ? 'Добро пожаловать, ${userData.displayName ?? userData.name}!'
+                                  : 'Добро пожаловать!',
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                            loading: () => const Text(
+                              'Добро пожаловать!',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
+                            ),
+                            error: (_, __) => const Text(
+                              'Добро пожаловать!',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 4),
