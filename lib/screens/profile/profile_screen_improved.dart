@@ -56,6 +56,9 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
       case 'professional':
         context.go('/professional');
         break;
+      case 'monetization':
+        context.go('/monetization');
+        break;
       case 'blocked':
         context.go('/blocked');
         break;
@@ -174,6 +177,14 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                           child: ListTile(
                             leading: Icon(Icons.business, color: Color(0xFF1E3A8A)),
                             title: Text('Профессиональный аккаунт'),
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                        const PopupMenuItem(
+                          value: 'monetization',
+                          child: ListTile(
+                            leading: Icon(Icons.attach_money, color: Color(0xFF1E3A8A)),
+                            title: Text('Монетизация'),
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),

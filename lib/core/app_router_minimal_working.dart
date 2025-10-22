@@ -8,9 +8,12 @@ import '../screens/auth/login_screen_improved.dart';
 import '../screens/auth/phone_auth_improved.dart';
 import '../screens/main_navigation_screen.dart';
 import '../screens/profile/edit_profile_improved.dart';
+import '../screens/profile/edit_profile_advanced.dart';
 import '../screens/profile/profile_screen_improved.dart';
+import '../screens/profile/profile_screen_advanced.dart';
 import '../screens/chat/chat_list_screen_improved.dart';
 import '../screens/chat/chat_screen_improved.dart';
+import '../screens/monetization/monetization_screen.dart';
 
 /// Минимальный рабочий роутер без проблемных компонентов
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -57,7 +60,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/profile/edit',
         name: 'edit-profile',
-        builder: (context, state) => const EditProfileImproved(),
+        builder: (context, state) => const EditProfileAdvanced(),
       ),
       
       // Чаты
@@ -81,8 +84,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'profile',
         builder: (context, state) {
           final userId = state.pathParameters['userId']!;
-          return ProfileScreenImproved(userId: userId);
+          return ProfileScreenAdvanced(userId: userId);
         },
+      ),
+
+      // Монетизация
+      GoRoute(
+        path: '/monetization',
+        name: 'monetization',
+        builder: (context, state) => const MonetizationScreen(),
       ),
     ],
     errorBuilder: (context, state) {

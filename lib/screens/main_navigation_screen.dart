@@ -53,12 +53,6 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       label: 'Идеи',
       screen: IdeasScreen(),
     ),
-    const NavigationItem(
-      icon: Icons.attach_money_outlined,
-      activeIcon: Icons.attach_money,
-      label: 'Монетизация',
-      screen: MonetizationScreen(),
-    ),
   ];
 
   @override

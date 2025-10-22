@@ -59,6 +59,32 @@ class StorageService {
     }
   }
 
+  /// Загружает обложку профиля пользователя
+  Future<String> uploadUserCover(String userId, File imageFile) async {
+    try {
+      final ref = _storage.ref().child('users/$userId/cover.jpg');
+
+      final uploadTask = ref.putFile(
+        imageFile,
+        SettableMetadata(
+          contentType: 'image/jpeg',
+          customMetadata: {
+            'userId': userId,
+            'type': 'cover',
+          },
+        ),
+      );
+
+      final downloadUrl = await ref.getDownloadURL();
+
+      debugPrint('✅ User cover uploaded: $downloadUrl');
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('❌ Error uploading user cover: $e');
+      rethrow;
+    }
+  }
+
   /// Загружает изображение поста
   Future<String> uploadPostImage(String postId, File imageFile) async {
     try {
