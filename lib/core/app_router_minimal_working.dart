@@ -8,6 +8,8 @@ import '../screens/auth/login_screen_improved.dart';
 import '../screens/auth/phone_auth_improved.dart';
 import '../screens/main_navigation_screen.dart';
 import '../screens/profile/edit_profile_improved.dart';
+import '../screens/chat/chat_list_screen_improved.dart';
+import '../screens/chat/chat_screen_improved.dart';
 
 /// Минимальный рабочий роутер без проблемных компонентов
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -55,6 +57,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/profile/edit',
         name: 'edit-profile',
         builder: (context, state) => const EditProfileImproved(),
+      ),
+      
+      // Чаты
+      GoRoute(
+        path: '/chats',
+        name: 'chats',
+        builder: (context, state) => const ChatListScreenImproved(),
+      ),
+      GoRoute(
+        path: '/chat/:chatId',
+        name: 'chat',
+        builder: (context, state) {
+          final chatId = state.pathParameters['chatId']!;
+          return ChatScreenImproved(chatId: chatId);
+        },
       ),
     ],
     errorBuilder: (context, state) {

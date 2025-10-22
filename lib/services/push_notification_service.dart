@@ -1,35 +1,22 @@
-import 'dart:io';
+import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-/// Сервис для управления пуш-уведомлениями
+/// Сервис для работы с push-уведомлениями
 class PushNotificationService {
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FlutterLocalNotificationsPlugin _localNotifications = 
+      FlutterLocalNotificationsPlugin();
 
-  /// Инициализация пуш-уведомлений
+  static bool _isInitialized = false;
+
+  /// Инициализация сервиса уведомлений
   static Future<void> initialize() async {
+    if (_isInitialized) return;
+
     try {
       // Запрашиваем разрешения
-      await _requestPermissions();
-
-      // Настраиваем обработчики
-      _setupMessageHandlers();
-
-      // Получаем и сохраняем токен
-      await _updateToken();
-
-      debugPrint('✅ PushNotificationService initialized successfully');
-    } catch (e) {
-      debugPrint('❌ Error initializing PushNotificationService: $e');
-    }
-  }
-
-  /// Запрос разрешений на уведомления
-  static Future<void> _requestPermissions() async {
-    if (Platform.isIOS) {
       final settings = await _messaging.requestPermission(
         alert: true,
         announcement: false,
@@ -40,218 +27,215 @@ class PushNotificationService {
         sound: true,
       );
 
-      debugPrint('📱 Notification permission status: ${settings.authorizationStatus}');
-    } else if (Platform.isAndroid) {
-      final settings = await _messaging.requestPermission();
-      debugPrint('📱 Notification permission status: ${settings.authorizationStatus}');
+      debugPrint('✅ Push notification permission status: ${settings.authorizationStatus}');
+
+      // Инициализируем локальные уведомления
+      await _initializeLocalNotifications();
+
+      // Настраиваем обработчики сообщений
+      _setupMessageHandlers();
+
+      _isInitialized = true;
+      debugPrint('✅ Push notification service initialized successfully');
+    } catch (e) {
+      debugPrint('❌ Error initializing push notification service: $e');
+      rethrow;
     }
+  }
+
+  /// Инициализация локальных уведомлений
+  static Future<void> _initializeLocalNotifications() async {
+    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    const initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
+
+    await _localNotifications.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: _onNotificationTapped,
+    );
+
+    // Создаем канал для Android
+    const androidChannel = AndroidNotificationChannel(
+      'chat_messages',
+      'Chat Messages',
+      description: 'Notifications for new chat messages',
+      importance: Importance.high,
+      playSound: true,
+    );
+
+    await _localNotifications
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidChannel);
   }
 
   /// Настройка обработчиков сообщений
   static void _setupMessageHandlers() {
-    // Обработка уведомлений когда приложение в фоне
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    // Обработка уведомлений когда приложение в переднем плане
+    // Обработчик сообщений в foreground
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
-    // Обработка нажатий на уведомления
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
+    // Обработчик нажатий на уведомления
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
 
-    // Обработка уведомлений при запуске приложения
-    _handleInitialMessage();
+    // Обработчик сообщений в background
+    FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
   }
 
-  /// Обработка уведомлений в фоне
-  @pragma('vm:entry-point')
-  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    debugPrint('📱 Background message received: ${message.messageId}');
-    debugPrint('📱 Title: ${message.notification?.title}');
-    debugPrint('📱 Body: ${message.notification?.body}');
-    debugPrint('📱 Data: ${message.data}');
-  }
-
-  /// Обработка уведомлений в переднем плане
-  static void _handleForegroundMessage(RemoteMessage message) {
-    debugPrint('📱 Foreground message received: ${message.messageId}');
-    debugPrint('📱 Title: ${message.notification?.title}');
-    debugPrint('📱 Body: ${message.notification?.body}');
-    debugPrint('📱 Data: ${message.data}');
-
-    // Здесь можно показать локальное уведомление или обновить UI
-    _showLocalNotification(message);
+  /// Обработка сообщений в foreground
+  static Future<void> _handleForegroundMessage(RemoteMessage message) async {
+    debugPrint('📱 Received foreground message: ${message.messageId}');
+    
+    // Показываем локальное уведомление
+    await _showLocalNotification(message);
   }
 
   /// Обработка нажатий на уведомления
-  static void _handleMessageOpenedApp(RemoteMessage message) {
-    debugPrint('📱 Message opened app: ${message.messageId}');
-    debugPrint('📱 Data: ${message.data}');
-
-    // Навигация на основе данных уведомления
-    _handleNotificationNavigation(message.data);
+  static void _handleNotificationTap(RemoteMessage message) {
+    debugPrint('📱 Notification tapped: ${message.messageId}');
+    
+    // TODO: Navigate to specific chat
+    final chatId = message.data['chatId'];
+    if (chatId != null) {
+      // Navigate to chat screen
+      debugPrint('📱 Navigating to chat: $chatId');
+    }
   }
 
-  /// Обработка уведомлений при запуске приложения
-  static Future<void> _handleInitialMessage() async {
-    final RemoteMessage? initialMessage = await _messaging.getInitialMessage();
-    if (initialMessage != null) {
-      debugPrint('📱 Initial message: ${initialMessage.messageId}');
-      _handleNotificationNavigation(initialMessage.data);
-    }
+  /// Обработка сообщений в background
+  static Future<void> _handleBackgroundMessage(RemoteMessage message) async {
+    debugPrint('📱 Received background message: ${message.messageId}');
+    
+    // В background мы не можем показать UI, только обработать данные
+    // Здесь можно сохранить данные в локальную базу или отправить аналитику
   }
 
   /// Показать локальное уведомление
-  static void _showLocalNotification(RemoteMessage message) {
-    // TODO: Реализовать показ локального уведомления
-    // Можно использовать flutter_local_notifications
+  static Future<void> _showLocalNotification(RemoteMessage message) async {
+    final notification = message.notification;
+    if (notification == null) return;
+
+    final androidDetails = AndroidNotificationDetails(
+      'chat_messages',
+      'Chat Messages',
+      channelDescription: 'Notifications for new chat messages',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+      icon: '@mipmap/ic_launcher',
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    final details = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    await _localNotifications.show(
+      message.hashCode,
+      notification.title,
+      notification.body,
+      details,
+      payload: message.data.toString(),
+    );
   }
 
-  /// Обработка навигации по уведомлениям
-  static void _handleNotificationNavigation(Map<String, dynamic> data) {
-    final String? type = data['type'];
-    final String? targetId = data['targetId'];
-
-    debugPrint('📱 Navigation: type=$type, targetId=$targetId');
-
-    // TODO: Реализовать навигацию на основе типа уведомления
-    switch (type) {
-      case 'new_application':
-        // Навигация к заявке
-        break;
-      case 'new_message':
-        // Навигация к чату
-        break;
-      case 'new_idea':
-        // Навигация к идее
-        break;
-      case 'booking_update':
-        // Навигация к бронированию
-        break;
+  /// Обработчик нажатий на локальные уведомления
+  static void _onNotificationTapped(NotificationResponse response) {
+    debugPrint('📱 Local notification tapped: ${response.payload}');
+    
+    // TODO: Parse payload and navigate to specific chat
+    if (response.payload != null) {
+      // Parse payload and navigate
     }
   }
 
-  /// Обновление FCM токена
-  static Future<void> _updateToken() async {
-    try {
-      final String? token = await _messaging.getToken();
-      if (token != null) {
-        debugPrint('📱 FCM Token: $token');
-        await _saveTokenToFirestore(token);
-      }
-    } catch (e) {
-      debugPrint('❌ Error getting FCM token: $e');
-    }
-  }
-
-  /// Сохранение токена в Firestore
-  static Future<void> _saveTokenToFirestore(String token) async {
-    try {
-      // TODO: Получить ID текущего пользователя
-      // final user = FirebaseAuth.instance.currentUser;
-      // if (user != null) {
-      //   await _firestore.collection('users').doc(user.uid).update({
-      //     'fcmToken': token,
-      //     'fcmTokenUpdatedAt': Timestamp.now(),
-      //   });
-      // }
-    } catch (e) {
-      debugPrint('❌ Error saving FCM token: $e');
-    }
-  }
-
-  /// Отправка уведомления пользователю
-  static Future<void> sendNotificationToUser({
-    required String userId,
-    required String title,
-    required String body,
-    Map<String, dynamic>? data,
-  }) async {
-    try {
-      // Получаем FCM токен пользователя
-      final userDoc = await _firestore.collection('users').doc(userId).get();
-      if (!userDoc.exists) return;
-
-      final String? fcmToken = userDoc.data()?['fcmToken'];
-      if (fcmToken == null) return;
-
-      // TODO: Отправить уведомление через Firebase Admin SDK
-      // Это должно быть реализовано на сервере
-      debugPrint('📱 Would send notification to user $userId: $title');
-    } catch (e) {
-      debugPrint('❌ Error sending notification: $e');
-    }
-  }
-
-  /// Создание уведомления в Firestore
-  static Future<void> createNotification({
-    required String userId,
-    required String title,
-    required String body,
-    required String type,
-    String? targetId,
-    Map<String, dynamic>? data,
-  }) async {
-    try {
-      await _firestore.collection('notifications').add({
-        'userId': userId,
-        'title': title,
-        'body': body,
-        'type': type,
-        'targetId': targetId,
-        'data': data ?? {},
-        'read': false,
-        'createdAt': Timestamp.now(),
-      });
-
-      debugPrint('📱 Notification created for user $userId');
-    } catch (e) {
-      debugPrint('❌ Error creating notification: $e');
-    }
-  }
-
-  /// Подписка на топик
-  static Future<void> subscribeToTopic(String topic) async {
-    try {
-      await _messaging.subscribeToTopic(topic);
-      debugPrint('📱 Subscribed to topic: $topic');
-    } catch (e) {
-      debugPrint('❌ Error subscribing to topic: $e');
-    }
-  }
-
-  /// Отписка от топика
-  static Future<void> unsubscribeFromTopic(String topic) async {
-    try {
-      await _messaging.unsubscribeFromTopic(topic);
-      debugPrint('📱 Unsubscribed from topic: $topic');
-    } catch (e) {
-      debugPrint('❌ Error unsubscribing from topic: $e');
-    }
-  }
-
-  /// Получение текущего токена
+  /// Получить FCM токен
   static Future<String?> getToken() async {
     try {
-      return await _messaging.getToken();
+      final token = await _messaging.getToken();
+      debugPrint('📱 FCM Token: $token');
+      return token;
     } catch (e) {
-      debugPrint('❌ Error getting token: $e');
+      debugPrint('❌ Error getting FCM token: $e');
       return null;
     }
   }
 
-  /// Удаление токена
-  static Future<void> deleteToken() async {
+  /// Подписаться на топик
+  static Future<void> subscribeToTopic(String topic) async {
     try {
-      await _messaging.deleteToken();
-      debugPrint('📱 FCM token deleted');
+      await _messaging.subscribeToTopic(topic);
+      debugPrint('✅ Subscribed to topic: $topic');
     } catch (e) {
-      debugPrint('❌ Error deleting token: $e');
+      debugPrint('❌ Error subscribing to topic $topic: $e');
+    }
+  }
+
+  /// Отписаться от топика
+  static Future<void> unsubscribeFromTopic(String topic) async {
+    try {
+      await _messaging.unsubscribeFromTopic(topic);
+      debugPrint('✅ Unsubscribed from topic: $topic');
+    } catch (e) {
+      debugPrint('❌ Error unsubscribing from topic $topic: $e');
+    }
+  }
+
+  /// Отправить уведомление о новом сообщении
+  static Future<void> sendChatNotification({
+    required String chatId,
+    required String senderName,
+    required String messageContent,
+    required String receiverToken,
+  }) async {
+    try {
+      // В реальном приложении это должно отправляться через Cloud Functions
+      // или серверный API, а не из клиентского приложения
+      debugPrint('📱 Would send notification to $receiverToken: $messageContent');
+    } catch (e) {
+      debugPrint('❌ Error sending chat notification: $e');
+    }
+  }
+
+  /// Очистить все уведомления
+  static Future<void> clearAllNotifications() async {
+    try {
+      await _localNotifications.cancelAll();
+      debugPrint('✅ All notifications cleared');
+    } catch (e) {
+      debugPrint('❌ Error clearing notifications: $e');
+    }
+  }
+
+  /// Очистить уведомления для конкретного чата
+  static Future<void> clearChatNotifications(String chatId) async {
+    try {
+      // В реальном приложении нужно отслеживать ID уведомлений для каждого чата
+      await _localNotifications.cancel(chatId.hashCode);
+      debugPrint('✅ Notifications cleared for chat: $chatId');
+    } catch (e) {
+      debugPrint('❌ Error clearing chat notifications: $e');
     }
   }
 }
 
-/// Обработчик уведомлений в фоне (должен быть глобальной функцией)
+/// Обработчик сообщений в background (должен быть top-level функцией)
 @pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await PushNotificationService._firebaseMessagingBackgroundHandler(message);
+Future<void> _handleBackgroundMessage(RemoteMessage message) async {
+  debugPrint('📱 Background message received: ${message.messageId}');
+  
+  // Здесь можно обработать сообщение в background
+  // Например, сохранить в локальную базу данных
 }
