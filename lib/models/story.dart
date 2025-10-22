@@ -40,6 +40,10 @@ class Story extends Equatable {
   final String id;
   final String userId;
   final String? content; // URL изображения/видео или текст
+  final String? mediaUrl; // URL медиа файла
+  final String? thumbnailUrl; // URL превью
+  final String? caption; // Подпись к сторис
+  final String? title; // Заголовок сторис
   final StoryType type;
   final StoryPrivacy privacy;
   final List<String> mentions; // @username упоминания
@@ -50,11 +54,20 @@ class Story extends Equatable {
   final bool isHighlighted; // закрепленная сторис
   final String? highlightTitle; // название для закрепленной сторис
   final Map<String, dynamic>? metadata; // дополнительная информация
+  final int likes; // Количество лайков
+  final bool isVideo; // Является ли видео
+  final String? specialistName; // Имя специалиста
+  final String? specialistPhotoUrl; // Фото специалиста
+  final String? timeAgo; // Время назад
 
   const Story({
     required this.id,
     required this.userId,
     this.content,
+    this.mediaUrl,
+    this.thumbnailUrl,
+    this.caption,
+    this.title,
     this.type = StoryType.image,
     this.privacy = StoryPrivacy.public,
     this.mentions = const [],
@@ -65,6 +78,11 @@ class Story extends Equatable {
     this.isHighlighted = false,
     this.highlightTitle,
     this.metadata,
+    this.likes = 0,
+    this.isVideo = false,
+    this.specialistName,
+    this.specialistPhotoUrl,
+    this.timeAgo,
   });
 
   /// Создать Story из Firestore документа
@@ -74,6 +92,10 @@ class Story extends Equatable {
       id: doc.id,
       userId: data['userId'] ?? '',
       content: data['content'],
+      mediaUrl: data['mediaUrl'],
+      thumbnailUrl: data['thumbnailUrl'],
+      caption: data['caption'],
+      title: data['title'],
       type: StoryType.fromString(data['type'] ?? 'image'),
       privacy: StoryPrivacy.fromString(data['privacy'] ?? 'public'),
       mentions: List<String>.from(data['mentions'] ?? []),
@@ -84,6 +106,11 @@ class Story extends Equatable {
       isHighlighted: data['isHighlighted'] ?? false,
       highlightTitle: data['highlightTitle'],
       metadata: data['metadata'] as Map<String, dynamic>?,
+      likes: data['likes'] ?? 0,
+      isVideo: data['isVideo'] ?? false,
+      specialistName: data['specialistName'],
+      specialistPhotoUrl: data['specialistPhotoUrl'],
+      timeAgo: data['timeAgo'],
     );
   }
 
@@ -92,6 +119,10 @@ class Story extends Equatable {
     return {
       'userId': userId,
       'content': content,
+      'mediaUrl': mediaUrl,
+      'thumbnailUrl': thumbnailUrl,
+      'caption': caption,
+      'title': title,
       'type': type.value,
       'privacy': privacy.value,
       'mentions': mentions,
@@ -102,6 +133,11 @@ class Story extends Equatable {
       'isHighlighted': isHighlighted,
       'highlightTitle': highlightTitle,
       'metadata': metadata,
+      'likes': likes,
+      'isVideo': isVideo,
+      'specialistName': specialistName,
+      'specialistPhotoUrl': specialistPhotoUrl,
+      'timeAgo': timeAgo,
     };
   }
 
@@ -167,11 +203,20 @@ class Story extends Equatable {
     }
   }
 
+  /// Проверить, просмотрена ли сторис пользователем
+  bool isViewedBy(String userId) {
+    return viewers.contains(userId);
+  }
+
   @override
   List<Object?> get props => [
         id,
         userId,
         content,
+        mediaUrl,
+        thumbnailUrl,
+        caption,
+        title,
         type,
         privacy,
         mentions,
@@ -182,6 +227,11 @@ class Story extends Equatable {
         isHighlighted,
         highlightTitle,
         metadata,
+        likes,
+        isVideo,
+        specialistName,
+        specialistPhotoUrl,
+        timeAgo,
       ];
 
   @override

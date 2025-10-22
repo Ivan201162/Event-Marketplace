@@ -37,6 +37,38 @@ class StoryService {
     });
   }
 
+  /// Получить все активные сторис (для ленты)
+  Stream<List<Story>> getAllActiveStories() {
+    return _firestore
+        .collection('stories')
+        .where('expiresAt', isGreaterThan: Timestamp.now())
+        .orderBy('expiresAt')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Story.fromFirestore(doc)).toList();
+    });
+  }
+
+  /// Лайкнуть сторис
+  Future<void> likeStory(String storyId, String userId) async {
+    try {
+      await _firestore.collection('stories').doc(storyId).update({
+        'likes': FieldValue.increment(1),
+        'reactions': FieldValue.arrayUnion([
+          {
+            'userId': userId,
+            'type': 'like',
+            'timestamp': Timestamp.now(),
+          }
+        ]),
+      });
+    } catch (e) {
+      debugPrint('Error liking story: $e');
+      rethrow;
+    }
+  }
+
   /// Создать новую сторис
   Future<String> createStory({
     required File? imageFile,
