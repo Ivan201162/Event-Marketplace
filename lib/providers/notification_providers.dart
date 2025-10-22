@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/app_notification.dart';
 import '../services/notification_service.dart';
 
 /// Провайдеры для уведомлений
@@ -9,9 +10,9 @@ class NotificationProviders {
   });
 
   /// Уведомления пользователя
-  static final userNotificationsProvider = StreamProvider.family<List<Notification>, String>((ref, userId) {
+  static final userNotificationsProvider = StreamProvider.family<List<AppNotification>, String>((ref, userId) {
     final service = ref.watch(notificationServiceProvider);
-    return service.getUserNotifications(userId);
+    return service.getNotificationsForUser(userId);
   });
 
   /// Количество непрочитанных уведомлений
@@ -21,8 +22,8 @@ class NotificationProviders {
   });
 
   /// Последние уведомления (для бейджа)
-  static final recentNotificationsProvider = StreamProvider.family<List<Notification>, String>((ref, userId) {
+  static final recentNotificationsProvider = StreamProvider.family<List<AppNotification>, String>((ref, userId) {
     final service = ref.watch(notificationServiceProvider);
-    return service.getUserNotifications(userId);
+    return service.getNotificationsForUser(userId);
   });
 }

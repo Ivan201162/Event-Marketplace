@@ -137,8 +137,8 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                           user.when(
                             data: (userData) => Text(
                               userData != null 
-                                  ? 'Добро пожаловать, ${userData.displayName ?? userData.name}!'
-                                  : 'Добро пожаловать!',
+                                  ? '${_getGreetingByTime()}, ${_getUserDisplayName(userData)}!'
+                                  : '${_getGreetingByTime()}!',
                               style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
@@ -245,7 +245,7 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                                 subtitle: 'Найти специалиста',
                                 color: const Color(0xFF1E3A8A),
                                 onTap: () {
-                                  // TODO: Navigate to create request
+                                  context.go('/create-request');
                                 },
                               ),
                             ),
@@ -257,7 +257,7 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                                 subtitle: 'Вдохновить других',
                                 color: const Color(0xFF10B981),
                                 onTap: () {
-                                  // TODO: Navigate to create idea
+                                  context.go('/create-idea');
                                 },
                               ),
                             ),
@@ -372,6 +372,39 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
         ),
       ),
     );
+  }
+
+  /// Получить приветствие в зависимости от времени суток
+  String _getGreetingByTime() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return 'Доброе утро';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Добрый день';
+    } else if (hour >= 17 && hour < 22) {
+      return 'Добрый вечер';
+    } else {
+      return 'Доброй ночи';
+    }
+  }
+
+  /// Получить отображаемое имя пользователя с fallback
+  String _getUserDisplayName(dynamic userData) {
+    // Приоритет: displayName -> name -> email (до @) -> "Пользователь"
+    if (userData.displayName != null && userData.displayName!.isNotEmpty) {
+      return userData.displayName!;
+    }
+    if (userData.name != null && userData.name!.isNotEmpty) {
+      return userData.name!;
+    }
+    if (userData.email != null && userData.email!.isNotEmpty) {
+      final email = userData.email!;
+      final atIndex = email.indexOf('@');
+      if (atIndex > 0) {
+        return email.substring(0, atIndex);
+      }
+    }
+    return 'Пользователь';
   }
 }
 
@@ -513,5 +546,38 @@ class _StatCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Получить приветствие в зависимости от времени суток
+  String _getGreetingByTime() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return 'Доброе утро';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Добрый день';
+    } else if (hour >= 17 && hour < 22) {
+      return 'Добрый вечер';
+    } else {
+      return 'Доброй ночи';
+    }
+  }
+
+  /// Получить отображаемое имя пользователя с fallback
+  String _getUserDisplayName(dynamic userData) {
+    // Приоритет: displayName -> name -> email (до @) -> "Пользователь"
+    if (userData.displayName != null && userData.displayName!.isNotEmpty) {
+      return userData.displayName!;
+    }
+    if (userData.name != null && userData.name!.isNotEmpty) {
+      return userData.name!;
+    }
+    if (userData.email != null && userData.email!.isNotEmpty) {
+      final email = userData.email!;
+      final atIndex = email.indexOf('@');
+      if (atIndex > 0) {
+        return email.substring(0, atIndex);
+      }
+    }
+    return 'Пользователь';
   }
 }

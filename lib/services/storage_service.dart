@@ -112,17 +112,57 @@ class StorageService {
     }
   }
 
-  /// Загружает изображение идеи
-  Future<String> uploadIdeaImage(String ideaId, File imageFile) async {
+
+  /// Удаляет файл по URL
+  Future<void> deleteFile(String url) async {
     try {
-      final ref = _storage.ref().child('ideas/$ideaId.jpg');
+      final ref = _storage.refFromURL(url);
+      await ref.delete();
+      debugPrint('✅ File deleted successfully: $url');
+    } catch (e) {
+      debugPrint('❌ Error deleting file: $e');
+      rethrow;
+    }
+  }
+
+  /// Загружает изображение заявки
+  Future<String> uploadRequestImage(String userId, File imageFile, String fileName) async {
+    try {
+      final ref = _storage.ref().child('requests/$userId/$fileName.jpg');
       
       final uploadTask = ref.putFile(
         imageFile,
         SettableMetadata(
           contentType: 'image/jpeg',
           customMetadata: {
-            'ideaId': ideaId,
+            'userId': userId,
+            'type': 'request',
+          },
+        ),
+      );
+
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      
+      debugPrint('✅ Request image uploaded successfully: $downloadUrl');
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('❌ Error uploading request image: $e');
+      rethrow;
+    }
+  }
+
+  /// Загружает изображение идеи
+  Future<String> uploadIdeaImage(String userId, File imageFile, String fileName) async {
+    try {
+      final ref = _storage.ref().child('ideas/$userId/$fileName.jpg');
+      
+      final uploadTask = ref.putFile(
+        imageFile,
+        SettableMetadata(
+          contentType: 'image/jpeg',
+          customMetadata: {
+            'userId': userId,
             'type': 'idea',
           },
         ),
@@ -139,14 +179,29 @@ class StorageService {
     }
   }
 
-  /// Удаляет файл по URL
-  Future<void> deleteFile(String url) async {
+  /// Загружает видео идеи
+  Future<String> uploadIdeaVideo(String userId, File videoFile, String fileName) async {
     try {
-      final ref = _storage.refFromURL(url);
-      await ref.delete();
-      debugPrint('✅ File deleted successfully: $url');
+      final ref = _storage.ref().child('ideas/$userId/$fileName.mp4');
+      
+      final uploadTask = ref.putFile(
+        videoFile,
+        SettableMetadata(
+          contentType: 'video/mp4',
+          customMetadata: {
+            'userId': userId,
+            'type': 'idea_video',
+          },
+        ),
+      );
+
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      
+      debugPrint('✅ Idea video uploaded successfully: $downloadUrl');
+      return downloadUrl;
     } catch (e) {
-      debugPrint('❌ Error deleting file: $e');
+      debugPrint('❌ Error uploading idea video: $e');
       rethrow;
     }
   }

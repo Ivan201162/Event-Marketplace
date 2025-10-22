@@ -1,402 +1,174 @@
-import 'dart:async';
-import 'dart:developer' as developer;
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 
-/// Сервис для логирования ошибок с батчевыми операциями и кэшированием
+/// Сервис для логирования ошибок и аналитики
 class ErrorLoggingService {
-  factory ErrorLoggingService() => _instance;
-  ErrorLoggingService._internal();
-  static final ErrorLoggingService _instance = ErrorLoggingService._internal();
+  static final FirebaseCrashlytics _crashlytics = FirebaseCrashlytics.instance;
+  static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  // Кэш для батчевых операций
-  final List<Map<String, dynamic>> _errorLogCache = [];
-  final List<Map<String, dynamic>> _warningLogCache = [];
-  final List<Map<String, dynamic>> _performanceLogCache = [];
-
-  // Таймеры для периодической отправки
-  Timer? _errorLogTimer;
-  Timer? _warningLogTimer;
-  Timer? _performanceLogTimer;
-
-  // Константы
-  static const int _batchSize = 50;
-  static const Duration _flushInterval = Duration(seconds: 30);
-
-  /// Логировать ошибку
-  Future<void> logError({
-    required String error,
-    required String stackTrace,
-    String? userId,
-    String? screen,
-    String? action,
-    Map<String, dynamic>? additionalData,
+  /// Логирует ошибку в Crashlytics
+  static Future<void> logError(
+    dynamic error,
+    StackTrace? stackTrace, {
+    String? reason,
+    bool fatal = false,
   }) async {
     try {
-      // Логирование в консоль для разработки
-      if (kDebugMode) {
-        developer.log(
-          'ERROR: $error',
-          name: 'ErrorLogging',
-          error: error,
-          stackTrace: StackTrace.current,
-        );
+      if (reason != null) {
+        await _crashlytics.setCustomKey('error_reason', reason);
       }
-
-      // Добавляем в кэш для батчевой отправки
-      _errorLogCache.add({
-        'error': error,
-        'stackTrace': stackTrace,
-        'userId': userId,
-        'screen': screen,
-        'action': action,
-        'additionalData': additionalData ?? {},
-        'timestamp': FieldValue.serverTimestamp(),
-        'platform': defaultTargetPlatform.name,
-        'isDebug': kDebugMode,
-        'errorType': _getErrorType(error),
-      });
-
-      // Если кэш заполнен, отправляем немедленно
-      if (_errorLogCache.length >= _batchSize) {
-        await _flushErrorLogs();
-      } else {
-        // Запускаем таймер для периодической отправки
-        _errorLogTimer?.cancel();
-        _errorLogTimer = Timer(_flushInterval, _flushErrorLogs);
-      }
+      
+      await _crashlytics.recordError(
+        error,
+        stackTrace,
+        fatal: fatal,
+        information: [
+          'Error logged at: ${DateTime.now().toIso8601String()}',
+          'Platform: ${defaultTargetPlatform.name}',
+        ],
+      );
+      
+      debugPrint('📊 Error logged to Crashlytics: $error');
     } catch (e) {
-      // Если не удалось записать в Firestore, хотя бы выводим в консоль
-      developer.log('Failed to log error to Firestore: $e');
+      debugPrint('❌ Failed to log error to Crashlytics: $e');
     }
   }
 
-  /// Отправить накопленные логи ошибок
-  Future<void> _flushErrorLogs() async {
-    if (_errorLogCache.isEmpty) return;
-
-    final logsToSend = List<Map<String, dynamic>>.from(_errorLogCache);
-    _errorLogCache.clear();
-
+  /// Логирует пользовательское событие
+  static Future<void> logUserAction(String action, {Map<String, dynamic>? parameters}) async {
     try {
-      final batch = _firestore.batch();
-
-      for (final logData in logsToSend) {
-        final docRef = _firestore.collection('error_logs').doc();
-        batch.set(docRef, logData);
-      }
-
-      await batch.commit();
-      developer.log('Flushed ${logsToSend.length} error logs to Firestore');
+      await _analytics.logEvent(
+        name: action,
+        parameters: parameters,
+      );
+      
+      debugPrint('📈 User action logged: $action');
     } catch (e) {
-      // Возвращаем логи в кэш при ошибке
-      _errorLogCache.insertAll(0, logsToSend);
-      developer.log('Failed to flush error logs: $e');
+      debugPrint('❌ Failed to log user action: $e');
     }
   }
 
-  /// Логировать предупреждение
-  Future<void> logWarning({
-    required String warning,
-    String? userId,
-    String? screen,
-    String? action,
-    Map<String, dynamic>? additionalData,
+  /// Логирует ошибку аутентификации
+  static Future<void> logAuthError(String error, String method) async {
+    await logError(
+      'Auth Error: $error',
+      StackTrace.current,
+      reason: 'Authentication failed in $method',
+    );
+    
+    await logUserAction('auth_error', parameters: {
+      'error_message': error,
+      'method': method,
+    });
+  }
+
+  /// Логирует ошибку Firestore
+  static Future<void> logFirestoreError(String error, String operation) async {
+    await logError(
+      'Firestore Error: $error',
+      StackTrace.current,
+      reason: 'Firestore operation failed: $operation',
+    );
+    
+    await logUserAction('firestore_error', parameters: {
+      'error_message': error,
+      'operation': operation,
+    });
+  }
+
+  /// Логирует ошибку Storage
+  static Future<void> logStorageError(String error, String operation) async {
+    await logError(
+      'Storage Error: $error',
+      StackTrace.current,
+      reason: 'Storage operation failed: $operation',
+    );
+    
+    await logUserAction('storage_error', parameters: {
+      'error_message': error,
+      'operation': operation,
+    });
+  }
+
+  /// Логирует ошибку UI
+  static Future<void> logUIError(String error, String screen) async {
+    await logError(
+      'UI Error: $error',
+      StackTrace.current,
+      reason: 'UI error in screen: $screen',
+    );
+    
+    await logUserAction('ui_error', parameters: {
+      'error_message': error,
+      'screen': screen,
+    });
+  }
+
+  /// Логирует ошибку роутинга
+  static Future<void> logRoutingError(String error, String route) async {
+    await logError(
+      'Routing Error: $error',
+      StackTrace.current,
+      reason: 'Navigation failed to route: $route',
+    );
+    
+    await logUserAction('routing_error', parameters: {
+      'error_message': error,
+      'route': route,
+    });
+  }
+
+  /// Логирует успешное действие пользователя
+  static Future<void> logSuccess(String action, {Map<String, dynamic>? parameters}) async {
+    await logUserAction('success_$action', parameters: parameters);
+  }
+
+  /// Логирует начало сессии
+  static Future<void> logSessionStart() async {
+    await logUserAction('session_start', parameters: {
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  /// Логирует конец сессии
+  static Future<void> logSessionEnd() async {
+    await logUserAction('session_end', parameters: {
+      'timestamp': DateTime.now().toIso8601String(),
+    });
+  }
+
+  /// Устанавливает пользовательские данные для Crashlytics
+  static Future<void> setUserData({
+    required String userId,
+    String? email,
+    String? name,
   }) async {
     try {
-      if (kDebugMode) {
-        developer.log('WARNING: $warning', name: 'ErrorLogging');
+      await _crashlytics.setUserIdentifier(userId);
+      if (email != null) {
+        await _crashlytics.setCustomKey('user_email', email);
       }
-
-      // Добавляем в кэш для батчевой отправки
-      _warningLogCache.add({
-        'warning': warning,
-        'userId': userId,
-        'screen': screen,
-        'action': action,
-        'additionalData': additionalData ?? {},
-        'timestamp': FieldValue.serverTimestamp(),
-        'platform': defaultTargetPlatform.name,
-        'isDebug': kDebugMode,
-      });
-
-      // Если кэш заполнен, отправляем немедленно
-      if (_warningLogCache.length >= _batchSize) {
-        await _flushWarningLogs();
-      } else {
-        // Запускаем таймер для периодической отправки
-        _warningLogTimer?.cancel();
-        _warningLogTimer = Timer(_flushInterval, _flushWarningLogs);
+      if (name != null) {
+        await _crashlytics.setCustomKey('user_name', name);
       }
+      
+      debugPrint('👤 User data set for Crashlytics: $userId');
     } catch (e) {
-      developer.log('Failed to log warning to Firestore: $e');
+      debugPrint('❌ Failed to set user data: $e');
     }
   }
 
-  /// Отправить накопленные логи предупреждений
-  Future<void> _flushWarningLogs() async {
-    if (_warningLogCache.isEmpty) return;
-
-    final logsToSend = List<Map<String, dynamic>>.from(_warningLogCache);
-    _warningLogCache.clear();
-
+  /// Очищает пользовательские данные
+  static Future<void> clearUserData() async {
     try {
-      final batch = _firestore.batch();
-
-      for (final logData in logsToSend) {
-        final docRef = _firestore.collection('warning_logs').doc();
-        batch.set(docRef, logData);
-      }
-
-      await batch.commit();
-      developer.log('Flushed ${logsToSend.length} warning logs to Firestore');
+      await _crashlytics.setUserIdentifier('');
+      await _crashlytics.setCustomKey('user_email', '');
+      await _crashlytics.setCustomKey('user_name', '');
+      
+      debugPrint('🧹 User data cleared from Crashlytics');
     } catch (e) {
-      // Возвращаем логи в кэш при ошибке
-      _warningLogCache.insertAll(0, logsToSend);
-      developer.log('Failed to flush warning logs: $e');
+      debugPrint('❌ Failed to clear user data: $e');
     }
-  }
-
-  /// Логировать информацию
-  Future<void> logInfo({
-    required String message,
-    String? userId,
-    String? screen,
-    String? action,
-    Map<String, dynamic>? additionalData,
-  }) async {
-    try {
-      if (kDebugMode) {
-        developer.log('INFO: $message', name: 'ErrorLogging');
-      }
-
-      await _firestore.collection('info_logs').add({
-        'message': message,
-        'userId': userId,
-        'screen': screen,
-        'action': action,
-        'additionalData': additionalData ?? {},
-        'timestamp': FieldValue.serverTimestamp(),
-        'platform': defaultTargetPlatform.name,
-        'isDebug': kDebugMode,
-      });
-    } catch (e) {
-      developer.log('Failed to log info to Firestore: $e');
-    }
-  }
-
-  /// Логировать производительность
-  Future<void> logPerformance({
-    required String operation,
-    required Duration duration,
-    String? userId,
-    String? screen,
-    Map<String, dynamic>? additionalData,
-  }) async {
-    try {
-      if (kDebugMode) {
-        developer.log(
-          'PERFORMANCE: $operation took ${duration.inMilliseconds}ms',
-          name: 'ErrorLogging',
-        );
-      }
-
-      // Добавляем в кэш для батчевой отправки
-      _performanceLogCache.add({
-        'operation': operation,
-        'duration': duration.inMilliseconds,
-        'userId': userId,
-        'screen': screen,
-        'additionalData': additionalData ?? {},
-        'timestamp': FieldValue.serverTimestamp(),
-        'platform': defaultTargetPlatform.name,
-        'isDebug': kDebugMode,
-      });
-
-      // Если кэш заполнен, отправляем немедленно
-      if (_performanceLogCache.length >= _batchSize) {
-        await _flushPerformanceLogs();
-      } else {
-        // Запускаем таймер для периодической отправки
-        _performanceLogTimer?.cancel();
-        _performanceLogTimer = Timer(_flushInterval, _flushPerformanceLogs);
-      }
-    } catch (e) {
-      developer.log('Failed to log performance to Firestore: $e');
-    }
-  }
-
-  /// Отправить накопленные логи производительности
-  Future<void> _flushPerformanceLogs() async {
-    if (_performanceLogCache.isEmpty) return;
-
-    final logsToSend = List<Map<String, dynamic>>.from(_performanceLogCache);
-    _performanceLogCache.clear();
-
-    try {
-      final batch = _firestore.batch();
-
-      for (final logData in logsToSend) {
-        final docRef = _firestore.collection('performance_logs').doc();
-        batch.set(docRef, logData);
-      }
-
-      await batch.commit();
-      developer.log('Flushed ${logsToSend.length} performance logs to Firestore');
-    } catch (e) {
-      // Возвращаем логи в кэш при ошибке
-      _performanceLogCache.insertAll(0, logsToSend);
-      developer.log('Failed to flush performance logs: $e');
-    }
-  }
-
-  /// Получить статистику ошибок
-  Future<Map<String, dynamic>> getErrorStats({DateTime? startDate, DateTime? endDate}) async {
-    try {
-      Query query = _firestore.collection('error_logs');
-
-      if (startDate != null) {
-        query = query.where('timestamp', isGreaterThanOrEqualTo: startDate);
-      }
-      if (endDate != null) {
-        query = query.where('timestamp', isLessThanOrEqualTo: endDate);
-      }
-
-      final snapshot = await query.get();
-
-      var totalErrors = 0;
-      final errorsByScreen = <String, int>{};
-      final errorsByAction = <String, int>{};
-      final errorsByType = <String, int>{};
-
-      for (final doc in snapshot.docs) {
-        final data = doc.data()! as Map<String, dynamic>;
-        totalErrors++;
-
-        final screen = data['screen'] as String?;
-        if (screen != null) {
-          errorsByScreen[screen] = (errorsByScreen[screen] ?? 0) + 1;
-        }
-
-        final action = data['action'] as String?;
-        if (action != null) {
-          errorsByAction[action] = (errorsByAction[action] ?? 0) + 1;
-        }
-
-        final error = data['error'] as String?;
-        if (error != null) {
-          final errorType = _getErrorType(error);
-          errorsByType[errorType] = (errorsByType[errorType] ?? 0) + 1;
-        }
-      }
-
-      return {
-        'totalErrors': totalErrors,
-        'errorsByScreen': errorsByScreen,
-        'errorsByAction': errorsByAction,
-        'errorsByType': errorsByType,
-      };
-    } catch (e) {
-      developer.log('Failed to get error stats: $e');
-      return {};
-    }
-  }
-
-  /// Определить тип ошибки
-  String _getErrorType(String error) {
-    if (error.contains('NoSuchMethodError')) return 'NoSuchMethodError';
-    if (error.contains('Null check operator')) return 'NullCheckError';
-    if (error.contains('RangeError')) return 'RangeError';
-    if (error.contains('FormatException')) return 'FormatException';
-    if (error.contains('TimeoutException')) return 'TimeoutException';
-    if (error.contains('FirebaseException')) return 'FirebaseException';
-    if (error.contains('NetworkException')) return 'NetworkException';
-    return 'Unknown';
-  }
-
-  /// Принудительно отправить все накопленные логи
-  Future<void> flushAllLogs() async {
-    await Future.wait([_flushErrorLogs(), _flushWarningLogs(), _flushPerformanceLogs()]);
-  }
-
-  /// Очистить старые логи с батчевыми операциями
-  Future<void> cleanupOldLogs({int daysToKeep = 30}) async {
-    try {
-      final cutoffDate = DateTime.now().subtract(Duration(days: daysToKeep));
-
-      final collections = ['error_logs', 'warning_logs', 'info_logs', 'performance_logs'];
-
-      for (final collection in collections) {
-        final QuerySnapshot snapshot = await _firestore
-            .collection(collection)
-            .where('timestamp', isLessThan: cutoffDate)
-            .limit(500) // Ограничиваем количество для батчевых операций
-            .get();
-
-        if (snapshot.docs.isNotEmpty) {
-          // Используем батчевые операции для удаления
-          final batches = <WriteBatch>[];
-          WriteBatch? currentBatch = _firestore.batch();
-          var batchCount = 0;
-
-          for (final doc in snapshot.docs) {
-            currentBatch!.delete(doc.reference);
-            batchCount++;
-
-            if (batchCount >= _batchSize) {
-              batches.add(currentBatch);
-              currentBatch = _firestore.batch();
-              batchCount = 0;
-            }
-          }
-
-          if (batchCount > 0) {
-            batches.add(currentBatch!);
-          }
-
-          for (final batch in batches) {
-            await batch.commit();
-          }
-
-          developer.log('Cleaned up ${snapshot.docs.length} old logs from $collection');
-        }
-      }
-    } catch (e) {
-      developer.log('Failed to cleanup old logs: $e');
-    }
-  }
-
-  /// Получить статистику логов
-  Future<Map<String, int>> getLogStats() async {
-    try {
-      final collections = ['error_logs', 'warning_logs', 'info_logs', 'performance_logs'];
-
-      final stats = <String, int>{};
-
-      for (final collection in collections) {
-        final snapshot = await _firestore.collection(collection).get();
-        stats[collection] = snapshot.docs.length;
-      }
-
-      // Добавляем статистику кэша
-      stats['error_logs_cached'] = _errorLogCache.length;
-      stats['warning_logs_cached'] = _warningLogCache.length;
-      stats['performance_logs_cached'] = _performanceLogCache.length;
-
-      return stats;
-    } catch (e) {
-      developer.log('Failed to get log stats: $e');
-      return {};
-    }
-  }
-
-  /// Освободить ресурсы
-  void dispose() {
-    _errorLogTimer?.cancel();
-    _warningLogTimer?.cancel();
-    _performanceLogTimer?.cancel();
   }
 }

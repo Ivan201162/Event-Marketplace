@@ -6,6 +6,7 @@ import 'feed/feed_screen_improved.dart';
 import 'home/home_screen_improved.dart';
 import 'ideas/ideas_screen.dart';
 import 'monetization/monetization_screen.dart';
+import 'notifications/notifications_screen.dart';
 import 'requests/requests_screen_improved.dart';
 
 /// Main navigation screen with bottom navigation
@@ -52,6 +53,12 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       activeIcon: Icons.lightbulb,
       label: 'Идеи',
       screen: IdeasScreen(),
+    ),
+    const NavigationItem(
+      icon: Icons.notifications_outlined,
+      activeIcon: Icons.notifications,
+      label: 'Уведомления',
+      screen: NotificationsScreen(),
     ),
   ];
 

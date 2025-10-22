@@ -1,82 +1,95 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-enum NotificationPriority { low, normal, high }
-
-class AppNotification {
+/// Модель уведомления
+class AppNotification extends Equatable {
   final String id;
-  final String userId;
   final String title;
-  final String body;
-  final String? payloadType; // например: "chat","request","system"
-  final String? payloadId;
-  final NotificationPriority priority;
+  final String message;
+  final String type;
+  final String userId;
+  final String? senderId;
+  final bool isRead;
   final DateTime createdAt;
-  final bool read;
+  final Map<String, dynamic>? data;
 
-  AppNotification({
+  const AppNotification({
     required this.id,
-    required this.userId,
     required this.title,
-    required this.body,
-    this.payloadType,
-    this.payloadId,
-    required this.priority,
+    required this.message,
+    required this.type,
+    required this.userId,
+    this.senderId,
+    this.isRead = false,
     required this.createdAt,
-    this.read = false,
+    this.data,
   });
 
-  factory AppNotification.fromJson(Map<String, dynamic> json) {
+  /// Создает уведомление из Firestore документа
+  factory AppNotification.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return AppNotification(
-      id: json['id'] as String,
-      userId: json['userId'] as String,
-      title: json['title'] as String,
-      body: json['body'] as String,
-      payloadType: json['payloadType'] as String?,
-      payloadId: json['payloadId'] as String?,
-      priority: NotificationPriority.values.firstWhere(
-        (e) => e.name == json['priority'],
-        orElse: () => NotificationPriority.normal,
-      ),
-      createdAt: (json['createdAt'] as Timestamp).toDate(),
-      read: json['read'] as bool? ?? false,
+      id: doc.id,
+      title: data['title'] ?? '',
+      message: data['message'] ?? '',
+      type: data['type'] ?? 'system',
+      userId: data['userId'] ?? '',
+      senderId: data['senderId'],
+      isRead: data['isRead'] ?? false,
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      data: data['data'] as Map<String, dynamic>?,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  /// Преобразует уведомление в Map для Firestore
+  Map<String, dynamic> toFirestore() {
     return {
-      'id': id,
-      'userId': userId,
       'title': title,
-      'body': body,
-      'payloadType': payloadType,
-      'payloadId': payloadId,
-      'priority': priority.name,
+      'message': message,
+      'type': type,
+      'userId': userId,
+      'senderId': senderId,
+      'isRead': isRead,
       'createdAt': Timestamp.fromDate(createdAt),
-      'read': read,
+      'data': data,
     };
   }
 
+  /// Создает копию уведомления с обновленными полями
   AppNotification copyWith({
     String? id,
-    String? userId,
     String? title,
-    String? body,
-    String? payloadType,
-    String? payloadId,
-    NotificationPriority? priority,
+    String? message,
+    String? type,
+    String? userId,
+    String? senderId,
+    bool? isRead,
     DateTime? createdAt,
-    bool? read,
+    Map<String, dynamic>? data,
   }) {
     return AppNotification(
       id: id ?? this.id,
-      userId: userId ?? this.userId,
       title: title ?? this.title,
-      body: body ?? this.body,
-      payloadType: payloadType ?? this.payloadType,
-      payloadId: payloadId ?? this.payloadId,
-      priority: priority ?? this.priority,
+      message: message ?? this.message,
+      type: type ?? this.type,
+      userId: userId ?? this.userId,
+      senderId: senderId ?? this.senderId,
+      isRead: isRead ?? this.isRead,
       createdAt: createdAt ?? this.createdAt,
-      read: read ?? this.read,
+      data: data ?? this.data,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        title,
+        message,
+        type,
+        userId,
+        senderId,
+        isRead,
+        createdAt,
+        data,
+      ];
 }

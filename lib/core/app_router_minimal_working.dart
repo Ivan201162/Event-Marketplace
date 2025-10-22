@@ -14,6 +14,9 @@ import '../screens/profile/profile_screen_advanced.dart';
 import '../screens/chat/chat_list_screen_improved.dart';
 import '../screens/chat/chat_screen_improved.dart';
 import '../screens/monetization/monetization_screen.dart';
+import '../screens/requests/create_request_screen.dart';
+import '../screens/ideas/create_idea_screen.dart';
+import '../screens/notifications/notifications_screen.dart';
 
 /// Минимальный рабочий роутер без проблемных компонентов
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -93,6 +96,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/monetization',
         name: 'monetization',
         builder: (context, state) => const MonetizationScreen(),
+      ),
+
+      // Создание заявки
+      GoRoute(
+        path: '/create-request',
+        name: 'create-request',
+        builder: (context, state) => const CreateRequestScreen(),
+      ),
+
+      // Создание идеи
+      GoRoute(
+        path: '/create-idea',
+        name: 'create-idea',
+        builder: (context, state) => const CreateIdeaScreen(),
+      ),
+
+      // Уведомления
+      GoRoute(
+        path: '/notifications',
+        name: 'notifications',
+        builder: (context, state) => const NotificationsScreen(),
       ),
     ],
     errorBuilder: (context, state) {

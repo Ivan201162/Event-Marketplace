@@ -1,11 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'core/bootstrap.dart';
 import 'core/app_router_minimal_working.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Настройка Crashlytics
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
   
   try {
     debugPrint('🚀 Запуск приложения...');
@@ -20,10 +26,17 @@ void main() async {
     
     debugPrint('✅ Bootstrap инициализация завершена');
     
-    runApp(const ProviderScope(child: EventMarketplaceApp()));
+    runZonedGuarded(() {
+      runApp(const ProviderScope(child: EventMarketplaceApp()));
+    }, (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack);
+    });
   } catch (e, stackTrace) {
     debugPrint('❌ Критическая ошибка инициализации: $e');
     debugPrint('Stack trace: $stackTrace');
+    
+    // Отправляем ошибку в Crashlytics
+    FirebaseCrashlytics.instance.recordError(e, stackTrace);
     
     // Запускаем приложение даже при ошибке инициализации
     runApp(const ProviderScope(child: EventMarketplaceApp()));
