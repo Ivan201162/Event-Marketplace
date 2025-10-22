@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../models/specialist.dart';
-import '../test_data/mock_data.dart';
+import '../providers/real_specialists_providers.dart';
+import '../core/feature_flags.dart';
 
 class BestSpecialistsCarousel extends ConsumerWidget {
   const BestSpecialistsCarousel({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final specialists = MockData.specialists.take(5).toList();
+    final specialistsAsync = ref.watch(RealSpecialistsProviders.topSpecialistsProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,19 +29,106 @@ class BestSpecialistsCarousel extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 8),
-        SizedBox(
-          height: 200,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: specialists.length,
-            itemBuilder: (context, index) {
-              final specialist = specialists[index];
-              return _SpecialistCard(specialist: specialist);
-            },
-          ),
+        specialistsAsync.when(
+          data: (specialists) {
+            if (specialists.isEmpty) {
+              return _buildEmptyState();
+            }
+            return SizedBox(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: specialists.length,
+                itemBuilder: (context, index) {
+                  final specialist = specialists[index];
+                  return _SpecialistCard(specialist: specialist);
+                },
+              ),
+            );
+          },
+          loading: () => _buildLoadingState(),
+          error: (error, stack) => _buildErrorState(error.toString()),
         ),
       ],
+    );
+  }
+
+  Widget _buildLoadingState() {
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: 3,
+        itemBuilder: (context, index) {
+          return Container(
+            width: 160,
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      height: 200,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.person_search, size: 48, color: Colors.grey),
+            SizedBox(height: 8),
+            Text(
+              'Специалисты не найдены',
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(String error) {
+    return Container(
+      height: 200,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.red[50],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            const SizedBox(height: 8),
+            const Text(
+              'Ошибка загрузки',
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              error,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

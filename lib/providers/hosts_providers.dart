@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/host_profile.dart';
 import '../models/specialist.dart';
+import 'real_hosts_providers.dart';
+import '../core/feature_flags.dart';
 
 /// Фильтры для поиска ведущих
 class HostFilters {
@@ -73,7 +75,12 @@ final hostFiltersProvider = StateProvider<HostFilters>((ref) => const HostFilter
 
 /// Провайдер для загрузки всех ведущих с фильтрами
 final hostsProvider = FutureProvider.family<List<Specialist>, HostFilters>(
-  (ref, filters) async => _loadHostsWithFilters(filters),
+  (ref, filters) async {
+    if (FeatureFlags.useRealHosts) {
+      return ref.read(RealHostsProviders.hostsWithFiltersProvider(filters).future);
+    }
+    return _loadHostsWithFilters(filters);
+  },
 );
 
 /// Провайдер для пагинированной загрузки ведущих (мигрирован с StateNotifierProvider)

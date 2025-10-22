@@ -5,6 +5,8 @@ import '../models/common_types.dart';
 import '../models/price_range.dart';
 import '../models/specialist.dart';
 import '../services/mock_data_service.dart';
+import 'real_specialists_providers.dart';
+import '../core/feature_flags.dart';
 
 /// Категории специалистов
 enum SpecialistCategory {
@@ -104,7 +106,12 @@ final specialistFiltersProvider = StateProvider<SpecialistFilters>(
 
 /// Провайдер для загрузки специалистов по категории с фильтрами
 final specialistsProvider = FutureProvider.family<List<Specialist>, String>(
-  (ref, category) async => MockDataService.getSpecialistsByCategory(category),
+  (ref, category) async {
+    if (FeatureFlags.useRealSpecialists) {
+      return ref.read(RealSpecialistsProviders.specialistsByCategoryProvider(category).future);
+    }
+    return MockDataService.getSpecialistsByCategory(category);
+  },
 );
 
 /// Провайдер для пагинированной загрузки специалистов (мигрирован с StateNotifierProvider)
@@ -146,7 +153,12 @@ final specialistPriceRangeProvider = FutureProvider.family<Map<String, double>, 
 
 /// Провайдер для поиска специалистов
 final searchSpecialistsProvider = FutureProvider.family<List<Specialist>, String>(
-  (ref, query) async => MockDataService.searchSpecialists(query),
+  (ref, query) async {
+    if (FeatureFlags.useRealSpecialists) {
+      return ref.read(RealSpecialistsProviders.searchSpecialistsProvider(query).future);
+    }
+    return MockDataService.searchSpecialists(query);
+  },
 );
 
 /// Загрузка специалистов по категории с применением фильтров

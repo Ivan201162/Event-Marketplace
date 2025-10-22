@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/enhanced_feed_post.dart';
 import '../test_data/mock_data.dart';
+import '../core/feature_flags.dart';
+import 'real_feed_providers.dart';
 
 /// Состояние ленты
 class EnhancedFeedState {
@@ -36,8 +38,20 @@ class EnhancedFeedNotifier extends ChangeNotifier {
       // Имитируем задержку сети
       await Future.delayed(const Duration(seconds: 1));
 
-      // Загружаем тестовые данные
-      final posts = MockData.feedPosts;
+      // Загружаем данные в зависимости от флага
+      List<EnhancedFeedPost> posts;
+      if (FeatureFlags.useRealFeedData) {
+        // Получаем реальные данные из Firestore
+        final feedAsync = ref.read(RealFeedProviders.feedPostsProvider);
+        posts = feedAsync.when(
+          data: (data) => data,
+          loading: () => [],
+          error: (error, stack) => [],
+        );
+      } else {
+        posts = MockData.feedPosts;
+      }
+      
       _state = _state.copyWith(posts: posts, isLoading: false);
       notifyListeners();
     } catch (e) {

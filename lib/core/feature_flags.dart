@@ -6,6 +6,8 @@ class FeatureFlags {
   static const bool useRealCategories = true;
   static const bool useRealReviews = true;
   static const bool useRealRequests = true;
+  static const bool useRealFeedData = true;
+  static const bool useRealIdeasData = true;
   
   // UI компоненты
   static const bool useRealCarousel = true;
