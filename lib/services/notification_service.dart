@@ -1,381 +1,365 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
-import '../models/notification.dart';
-
-/// Service for managing notifications
+/// Сервис для работы с уведомлениями
 class NotificationService {
-  static const String _collection = 'notifications';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Get user's notifications
-  static Future<List<AppNotification>> getUserNotifications(String userId, {int limit = 50}) async {
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection(_collection)
-          .where('userId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
-          .limit(limit)
-          .get();
-
-      return snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList();
-    } catch (e) {
-      debugPrint('Error getting user notifications: $e');
-      return [];
-    }
-  }
-
-  /// Get user's notifications stream
-  static Stream<List<AppNotification>> getUserNotificationsStream(String userId, {int limit = 50}) {
-    return FirebaseFirestore.instance
-        .collection(_collection)
-        .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList());
-  }
-
-  /// Get unread count
-  static Future<int> getUnreadCount(String userId) async {
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection(_collection)
-          .where('userId', isEqualTo: userId)
-          .where('read', isEqualTo: false)
-          .get();
-      return snapshot.docs.length;
-    } catch (e) {
-      debugPrint('Error getting unread count: $e');
-      return 0;
-    }
-  }
-
-  /// Get unread notifications
-  static Future<List<AppNotification>> getUnreadNotifications(
-    String userId, {
-    int limit = 20,
-  }) async {
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection(_collection)
-          .where('userId', isEqualTo: userId)
-          .where('read', isEqualTo: false)
-          .orderBy('createdAt', descending: true)
-          .limit(limit)
-          .get();
-
-      return snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList();
-    } catch (e) {
-      debugPrint('Error getting unread notifications: $e');
-      return [];
-    }
-  }
-
-  /// Get notifications by type
-  Future<List<AppNotification>> getNotificationsByType(
-    String userId,
-    NotificationType type, {
-    int limit = 20,
-  }) async {
-    try {
-      final snapshot = await _firestore
-          .collection(_collection)
-          .where('userId', isEqualTo: userId)
-          .where('type', isEqualTo: type.toString().split('.').last)
-          .orderBy('createdAt', descending: true)
-          .limit(limit)
-          .get();
-
-      return snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList();
-    } catch (e) {
-      debugPrint('Error getting notifications by type: $e');
-      return [];
-    }
-  }
-
-  /// Create notification
-  Future<String?> createNotification({
+  /// Создать уведомление
+  Future<void> createNotification({
     required String userId,
-    required NotificationType type,
     required String title,
     required String body,
-    String? data,
+    required NotificationType type,
     String? imageUrl,
-    String? actionUrl,
-    String? senderId,
-    String? senderName,
-    String? senderAvatarUrl,
+    Map<String, dynamic>? data,
   }) async {
     try {
-      final notification = AppNotification(
-        id: '', // Will be set by Firestore
-        userId: userId,
-        type: type,
-        title: title,
-        body: body,
-        data: data,
-        imageUrl: imageUrl,
-        actionUrl: actionUrl,
-        senderId: senderId,
-        senderName: senderName,
-        senderAvatarUrl: senderAvatarUrl,
-        createdAt: DateTime.now(),
-      );
-
-      final docRef = await _firestore.collection(_collection).add(notification.toFirestore());
-      return docRef.id;
+      await _firestore.collection('notifications').add({
+        'userId': userId,
+        'title': title,
+        'body': body,
+        'type': type.name,
+        'imageUrl': imageUrl,
+        'data': data ?? {},
+        'isRead': false,
+        'createdAt': Timestamp.now(),
+        'updatedAt': Timestamp.now(),
+      });
     } catch (e) {
       debugPrint('Error creating notification: $e');
-      return null;
+      rethrow;
     }
   }
 
-  /// Mark notification as read
-  static Future<bool> markAsRead(String notificationId) async {
+  /// Получить уведомления пользователя
+  Stream<List<Notification>> getUserNotifications(String userId) {
+    return _firestore
+        .collection('notifications')
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .limit(50)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Notification(
+          id: doc.id,
+          userId: data['userId'] ?? '',
+          title: data['title'] ?? '',
+          body: data['body'] ?? '',
+          type: NotificationType.values.firstWhere(
+            (type) => type.name == data['type'],
+            orElse: () => NotificationType.general,
+          ),
+          imageUrl: data['imageUrl'],
+          data: Map<String, dynamic>.from(data['data'] ?? {}),
+          isRead: data['isRead'] ?? false,
+          createdAt: (data['createdAt'] as Timestamp).toDate(),
+          updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        );
+      }).toList();
+    });
+  }
+
+  /// Отметить уведомление как прочитанное
+  Future<void> markAsRead(String notificationId) async {
     try {
-      await FirebaseFirestore.instance.collection(_collection).doc(notificationId).update({
-        'read': true,
+      await _firestore.collection('notifications').doc(notificationId).update({
+        'isRead': true,
+        'updatedAt': Timestamp.now(),
       });
-      return true;
     } catch (e) {
       debugPrint('Error marking notification as read: $e');
-      return false;
+      rethrow;
     }
   }
 
-  /// Mark all notifications as read
-  static Future<bool> markAllAsRead(String userId) async {
+  /// Отметить все уведомления как прочитанные
+  Future<void> markAllAsRead(String userId) async {
     try {
-      final batch = FirebaseFirestore.instance.batch();
-      final snapshot = await FirebaseFirestore.instance
-          .collection(_collection)
+      final batch = _firestore.batch();
+      final notifications = await _firestore
+          .collection('notifications')
           .where('userId', isEqualTo: userId)
-          .where('read', isEqualTo: false)
+          .where('isRead', isEqualTo: false)
           .get();
 
-      for (final doc in snapshot.docs) {
-        batch.update(doc.reference, {'read': true});
+      for (final doc in notifications.docs) {
+        batch.update(doc.reference, {
+          'isRead': true,
+          'updatedAt': Timestamp.now(),
+        });
       }
 
       await batch.commit();
-      return true;
     } catch (e) {
       debugPrint('Error marking all notifications as read: $e');
-      return false;
+      rethrow;
     }
   }
 
-  /// Delete notification
-  Future<bool> deleteNotification(String notificationId) async {
+  /// Получить количество непрочитанных уведомлений
+  Stream<int> getUnreadCount(String userId) {
+    return _firestore
+        .collection('notifications')
+        .where('userId', isEqualTo: userId)
+        .where('isRead', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
+  /// Удалить уведомление
+  Future<void> deleteNotification(String notificationId) async {
     try {
-      await _firestore.collection(_collection).doc(notificationId).delete();
-      return true;
+      await _firestore.collection('notifications').doc(notificationId).delete();
     } catch (e) {
       debugPrint('Error deleting notification: $e');
-      return false;
+      rethrow;
     }
   }
 
-  /// Delete all notifications
-  Future<bool> deleteAllNotifications(String userId) async {
+  /// Удалить все уведомления пользователя
+  Future<void> deleteAllNotifications(String userId) async {
     try {
       final batch = _firestore.batch();
-      final snapshot = await _firestore
-          .collection(_collection)
+      final notifications = await _firestore
+          .collection('notifications')
           .where('userId', isEqualTo: userId)
           .get();
 
-      for (final doc in snapshot.docs) {
+      for (final doc in notifications.docs) {
         batch.delete(doc.reference);
       }
 
       await batch.commit();
-      return true;
     } catch (e) {
       debugPrint('Error deleting all notifications: $e');
-      return false;
+      rethrow;
     }
   }
 
-  /// Get notification by ID
-  Future<AppNotification?> getNotificationById(String notificationId) async {
-    try {
-      final doc = await _firestore.collection(_collection).doc(notificationId).get();
-      if (doc.exists) {
-        return AppNotification.fromFirestore(doc);
-      }
-      return null;
-    } catch (e) {
-      debugPrint('Error getting notification by ID: $e');
-      return null;
-    }
-  }
-
-  /// Get unread count
-  Future<int> getUnreadCount(String userId) async {
-    try {
-      final snapshot = await _firestore
-          .collection(_collection)
-          .where('userId', isEqualTo: userId)
-          .where('read', isEqualTo: false)
-          .get();
-
-      return snapshot.docs.length;
-    } catch (e) {
-      debugPrint('Error getting unread count: $e');
-      return 0;
-    }
-  }
-
-  /// Create request notification
-  Future<String?> createRequestNotification({
-    required String userId,
-    required String fromUserName,
-    required String category,
-    required String city,
-    required int budget,
-    String? fromUserAvatarUrl,
+  /// Создать уведомление о лайке
+  Future<void> createLikeNotification({
+    required String postId,
+    required String postAuthorId,
+    required String likerId,
+    required String likerName,
   }) async {
-    return createNotification(
-      userId: userId,
-      type: NotificationType.request,
-      title: 'Новая заявка',
-      body: '$fromUserName отправил заявку на $category в $city ($budget₽)',
-      senderName: fromUserName,
-      senderAvatarUrl: fromUserAvatarUrl,
-      actionUrl: '/requests',
-    );
-  }
+    if (postAuthorId == likerId) return; // Не уведомляем о собственном лайке
 
-  /// Create message notification
-  Future<String?> createMessageNotification({
-    required String userId,
-    required String fromUserName,
-    required String messageText,
-    String? fromUserAvatarUrl,
-    String? chatId,
-  }) async {
-    return createNotification(
-      userId: userId,
-      type: NotificationType.message,
-      title: 'Новое сообщение от $fromUserName',
-      body: messageText.length > 50 ? '${messageText.substring(0, 50)}...' : messageText,
-      senderName: fromUserName,
-      senderAvatarUrl: fromUserAvatarUrl,
-      actionUrl: chatId != null ? '/chat/$chatId' : '/chats',
-    );
-  }
-
-  /// Create like notification
-  Future<String?> createLikeNotification({
-    required String userId,
-    required String fromUserName,
-    required String postType, // 'post' or 'idea'
-    String? fromUserAvatarUrl,
-    String? postId,
-  }) async {
-    return createNotification(
-      userId: userId,
-      type: NotificationType.like,
+    await createNotification(
+      userId: postAuthorId,
       title: 'Новый лайк',
-      body: '$fromUserName поставил лайк вашему $postType',
-      senderName: fromUserName,
-      senderAvatarUrl: fromUserAvatarUrl,
-      actionUrl: postId != null ? '/$postType/$postId' : '/feed',
+      body: '$likerName поставил лайк вашему посту',
+      type: NotificationType.like,
+      data: {
+        'postId': postId,
+        'likerId': likerId,
+        'likerName': likerName,
+      },
     );
   }
 
-  /// Create comment notification
-  Future<String?> createCommentNotification({
-    required String userId,
-    required String fromUserName,
+  /// Создать уведомление о комментарии
+  Future<void> createCommentNotification({
+    required String postId,
+    required String postAuthorId,
+    required String commenterId,
+    required String commenterName,
     required String commentText,
-    required String postType, // 'post' or 'idea'
-    String? fromUserAvatarUrl,
-    String? postId,
   }) async {
-    return createNotification(
-      userId: userId,
-      type: NotificationType.comment,
+    if (postAuthorId == commenterId) return; // Не уведомляем о собственном комментарии
+
+    await createNotification(
+      userId: postAuthorId,
       title: 'Новый комментарий',
-      body: '$fromUserName прокомментировал ваш $postType',
-      senderName: fromUserName,
-      senderAvatarUrl: fromUserAvatarUrl,
-      actionUrl: postId != null ? '/$postType/$postId' : '/feed',
+      body: '$commenterName прокомментировал ваш пост: ${commentText.length > 50 ? '${commentText.substring(0, 50)}...' : commentText}',
+      type: NotificationType.comment,
+      data: {
+        'postId': postId,
+        'commenterId': commenterId,
+        'commenterName': commenterName,
+        'commentText': commentText,
+      },
     );
   }
 
-  /// Create system notification
-  Future<String?> createSystemNotification({
+  /// Создать уведомление о подписке
+  Future<void> createFollowNotification({
     required String userId,
-    required String title,
-    required String body,
-    String? actionUrl,
+    required String followerId,
+    required String followerName,
   }) async {
-    return createNotification(
+    if (userId == followerId) return; // Не уведомляем о собственной подписке
+
+    await createNotification(
       userId: userId,
-      type: NotificationType.system,
-      title: title,
-      body: body,
-      actionUrl: actionUrl,
+      title: 'Новая подписка',
+      body: '$followerName подписался на вас',
+      type: NotificationType.follow,
+      data: {
+        'followerId': followerId,
+        'followerName': followerName,
+      },
     );
   }
 
-  /// Create reminder notification
-  Future<String?> createReminderNotification({
+  /// Создать уведомление о сообщении
+  Future<void> createMessageNotification({
     required String userId,
-    required String title,
-    required String body,
-    String? actionUrl,
+    required String senderId,
+    required String senderName,
+    required String messageText,
+    required String chatId,
   }) async {
-    return createNotification(
+    if (userId == senderId) return; // Не уведомляем о собственном сообщении
+
+    await createNotification(
       userId: userId,
-      type: NotificationType.reminder,
-      title: title,
-      body: body,
-      actionUrl: actionUrl,
+      title: 'Новое сообщение',
+      body: '$senderName: ${messageText.length > 50 ? '${messageText.substring(0, 50)}...' : messageText}',
+      type: NotificationType.message,
+      data: {
+        'senderId': senderId,
+        'senderName': senderName,
+        'messageText': messageText,
+        'chatId': chatId,
+      },
     );
   }
 
-  /// Create promotion notification
-  Future<String?> createPromotionNotification({
+  /// Создать уведомление об упоминании
+  Future<void> createMentionNotification({
     required String userId,
-    required String title,
-    required String body,
+    required String postId,
+    required String mentionerId,
+    required String mentionerName,
+    required String postText,
+  }) async {
+    if (userId == mentionerId) return; // Не уведомляем о собственном упоминании
+
+    await createNotification(
+      userId: userId,
+      title: 'Вас упомянули',
+      body: '$mentionerName упомянул вас в посте',
+      type: NotificationType.mention,
+      data: {
+        'postId': postId,
+        'mentionerId': mentionerId,
+        'mentionerName': mentionerName,
+        'postText': postText,
+      },
+    );
+  }
+}
+
+/// Типы уведомлений
+enum NotificationType {
+  general('general'),
+  like('like'),
+  comment('comment'),
+  follow('follow'),
+  message('message'),
+  mention('mention'),
+  system('system');
+
+  const NotificationType(this.value);
+  final String value;
+}
+
+/// Модель уведомления
+class Notification {
+  final String id;
+  final String userId;
+  final String title;
+  final String body;
+  final NotificationType type;
+  final String? imageUrl;
+  final Map<String, dynamic> data;
+  final bool isRead;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  const Notification({
+    required this.id,
+    required this.userId,
+    required this.title,
+    required this.body,
+    required this.type,
+    this.imageUrl,
+    required this.data,
+    required this.isRead,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  /// Создать уведомление из Firestore документа
+  factory Notification.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Notification(
+      id: doc.id,
+      userId: data['userId'] ?? '',
+      title: data['title'] ?? '',
+      body: data['body'] ?? '',
+      type: NotificationType.values.firstWhere(
+        (type) => type.name == data['type'],
+        orElse: () => NotificationType.general,
+      ),
+      imageUrl: data['imageUrl'],
+      data: Map<String, dynamic>.from(data['data'] ?? {}),
+      isRead: data['isRead'] ?? false,
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+    );
+  }
+
+  /// Конвертировать уведомление в Firestore документ
+  Map<String, dynamic> toFirestore() {
+    return {
+      'userId': userId,
+      'title': title,
+      'body': body,
+      'type': type.name,
+      'imageUrl': imageUrl,
+      'data': data,
+      'isRead': isRead,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+    };
+  }
+
+  /// Создать копию с обновленными полями
+  Notification copyWith({
+    String? id,
+    String? userId,
+    String? title,
+    String? body,
+    NotificationType? type,
     String? imageUrl,
-    String? actionUrl,
-  }) async {
-    return createNotification(
-      userId: userId,
-      type: NotificationType.promotion,
-      title: title,
-      body: body,
-      imageUrl: imageUrl,
-      actionUrl: actionUrl,
+    Map<String, dynamic>? data,
+    bool? isRead,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return Notification(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      type: type ?? this.type,
+      imageUrl: imageUrl ?? this.imageUrl,
+      data: data ?? this.data,
+      isRead: isRead ?? this.isRead,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
-
-  /// Stream of unread notifications
-  Stream<List<AppNotification>> getUnreadNotificationsStream(String userId, {int limit = 20}) {
-    return _firestore
-        .collection(_collection)
-        .where('userId', isEqualTo: userId)
-        .where('read', isEqualTo: false)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => AppNotification.fromFirestore(doc)).toList());
-  }
-
-  /// Stream of unread count
-  Stream<int> getUnreadCountStream(String userId) {
-    return _firestore
-        .collection(_collection)
-        .where('userId', isEqualTo: userId)
-        .where('read', isEqualTo: false)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.length);
+  @override
+  String toString() {
+    return 'Notification(id: $id, title: $title, type: $type, isRead: $isRead)';
   }
 }
