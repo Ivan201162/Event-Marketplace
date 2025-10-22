@@ -1,1 +1,50 @@
-import 'main_simple.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/bootstrap.dart';
+import 'core/app_router_minimal_working.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  try {
+    debugPrint('🚀 Запуск приложения...');
+    
+    // Инициализация Bootstrap с таймаутом
+    await Bootstrap.initialize().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        debugPrint('⚠️ Bootstrap инициализация превысила таймаут, продолжаем...');
+      },
+    );
+    
+    debugPrint('✅ Bootstrap инициализация завершена');
+    
+    runApp(const ProviderScope(child: EventMarketplaceApp()));
+  } catch (e, stackTrace) {
+    debugPrint('❌ Критическая ошибка инициализации: $e');
+    debugPrint('Stack trace: $stackTrace');
+    
+    // Запускаем приложение даже при ошибке инициализации
+    runApp(const ProviderScope(child: EventMarketplaceApp()));
+  }
+}
+
+class EventMarketplaceApp extends ConsumerWidget {
+  const EventMarketplaceApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+    
+    return MaterialApp.router(
+      title: 'Event Marketplace',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+      ),
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}

@@ -167,6 +167,9 @@ class EventIdea {
   final int? savesCount;
   final int? sharesCount;
 
+  /// Get author photo URL (alias for authorAvatar)
+  String? get authorPhotoUrl => authorAvatar;
+
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
     'authorId': authorId,

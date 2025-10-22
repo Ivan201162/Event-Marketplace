@@ -39,6 +39,9 @@ class SpecialistCategory extends Equatable {
     );
   }
 
+  /// Get icon with fallback
+  String get iconName => this.icon ?? 'category';
+
   /// Convert SpecialistCategory to Map
   Map<String, dynamic> toMap() {
     return {

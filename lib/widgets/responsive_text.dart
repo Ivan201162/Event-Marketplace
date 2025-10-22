@@ -1,96 +1,74 @@
 import 'package:flutter/material.dart';
 
-/// Адаптивный текст для различных размеров экрана с поддержкой Material Design 3
+/// Responsive text widget that adapts to screen size
 class ResponsiveText extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final Color? color;
+  final bool? isTitle;
+  final bool? isSubtitle;
+
   const ResponsiveText(
     this.text, {
     super.key,
     this.style,
     this.textAlign,
-    this.overflow,
     this.maxLines,
-    this.textScaleFactor,
-    this.textScaler,
-    this.textDirection,
-    this.locale,
-    this.softWrap,
-    this.textWidthBasis,
-    this.textHeightBehavior,
-    this.selectionColor,
-    this.responsive = true,
-    this.minFontSize = 10.0,
-    this.maxFontSize = 24.0,
-    this.isTitle = false,
-    this.isSubtitle = false,
+    this.overflow,
+    this.fontSize,
+    this.fontWeight,
+    this.color,
+    this.isTitle,
+    this.isSubtitle,
   });
-
-  final String text;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final TextOverflow? overflow;
-  final int? maxLines;
-  final double? textScaleFactor;
-  final TextScaler? textScaler;
-  final TextDirection? textDirection;
-  final Locale? locale;
-  final bool? softWrap;
-  final TextWidthBasis? textWidthBasis;
-  final TextHeightBehavior? textHeightBehavior;
-  final Color? selectionColor;
-  final bool responsive;
-  final double minFontSize;
-  final double maxFontSize;
-  final bool isTitle;
-  final bool isSubtitle;
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    // final screenHeight = MediaQuery.of(context).size.height; // Unused variable
-    final isTablet = screenWidth >= 768;
-    final isDesktop = screenWidth >= 1024;
-
-    // Адаптивный размер шрифта
-    var responsiveFontSize = style?.fontSize ?? 14.0;
-
-    // Применяем стили для заголовков и подзаголовков
-    if (isTitle) {
-      responsiveFontSize = 24.0;
-    } else if (isSubtitle) {
-      responsiveFontSize = 16.0;
+    
+    // Calculate responsive font size based on type
+    double baseFontSize = fontSize ?? 14.0;
+    if (isTitle == true) {
+      baseFontSize = fontSize ?? 18.0;
+    } else if (isSubtitle == true) {
+      baseFontSize = fontSize ?? 16.0;
+    }
+    
+    double responsiveFontSize = baseFontSize;
+    if (screenWidth < 600) {
+      responsiveFontSize = baseFontSize * 0.9;
+    } else if (screenWidth > 1200) {
+      responsiveFontSize = baseFontSize * 1.1;
     }
 
-    if (responsive) {
-      if (isDesktop) {
-        responsiveFontSize = responsiveFontSize * 1.2;
-      } else if (isTablet) {
-        responsiveFontSize = responsiveFontSize * 1.1;
-      }
-
-      // Ограничиваем размер шрифта
-      responsiveFontSize = responsiveFontSize.clamp(minFontSize, maxFontSize);
+    // Set appropriate font weight based on type
+    FontWeight finalFontWeight = fontWeight ?? FontWeight.normal;
+    if (isTitle == true) {
+      finalFontWeight = fontWeight ?? FontWeight.bold;
+    } else if (isSubtitle == true) {
+      finalFontWeight = fontWeight ?? FontWeight.w500;
     }
-
-    // Адаптивные отступы
-    final responsiveStyle = style?.copyWith(
-          fontSize: responsiveFontSize,
-          fontWeight: isTitle ? FontWeight.bold : style?.fontWeight,
-        ) ??
-        TextStyle(fontSize: responsiveFontSize, fontWeight: isTitle ? FontWeight.bold : null);
 
     return Text(
       text,
-      style: responsiveStyle,
+      style: style?.copyWith(
+            fontSize: responsiveFontSize,
+            fontWeight: finalFontWeight,
+            color: color,
+          ) ??
+          TextStyle(
+            fontSize: responsiveFontSize,
+            fontWeight: finalFontWeight,
+            color: color,
+          ),
       textAlign: textAlign,
-      overflow: overflow,
       maxLines: maxLines,
-      textScaler: textScaler,
-      textDirection: textDirection,
-      locale: locale,
-      softWrap: softWrap,
-      textWidthBasis: textWidthBasis,
-      textHeightBehavior: textHeightBehavior,
-      selectionColor: selectionColor,
+      overflow: overflow,
     );
   }
 }

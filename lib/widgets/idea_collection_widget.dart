@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/idea.dart';
+import '../models/idea_collection.dart';
 
 /// Виджет коллекции идей
 class IdeaCollectionWidget extends StatelessWidget {

@@ -30,6 +30,8 @@ enum UserType {
 class AppUser extends Equatable {
   final String uid;
   final String name;
+  final String? firstName;
+  final String? lastName;
   final String? email;
   final String? phone;
   final String? city;
@@ -54,6 +56,8 @@ class AppUser extends Equatable {
   const AppUser({
     required this.uid,
     required this.name,
+    this.firstName,
+    this.lastName,
     this.email,
     this.phone,
     this.city,
@@ -79,6 +83,8 @@ class AppUser extends Equatable {
     return AppUser(
       uid: doc.id,
       name: data['name'] ?? '',
+      firstName: data['firstName'],
+      lastName: data['lastName'],
       email: data['email'],
       phone: data['phone'],
       city: data['city'],
@@ -106,6 +112,8 @@ class AppUser extends Equatable {
   Map<String, dynamic> toFirestore() {
     return {
       'name': name,
+      'firstName': firstName,
+      'lastName': lastName,
       'email': email,
       'phone': phone,
       'city': city,
@@ -130,6 +138,8 @@ class AppUser extends Equatable {
   AppUser copyWith({
     String? uid,
     String? name,
+    String? firstName,
+    String? lastName,
     String? email,
     String? phone,
     String? city,
@@ -151,6 +161,8 @@ class AppUser extends Equatable {
     return AppUser(
       uid: uid ?? this.uid,
       name: name ?? this.name,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
       email: email ?? this.email,
       phone: phone ?? this.phone,
       city: city ?? this.city,
@@ -183,6 +195,8 @@ class AppUser extends Equatable {
   List<Object?> get props => [
     uid,
     name,
+    firstName,
+    lastName,
     email,
     phone,
     city,

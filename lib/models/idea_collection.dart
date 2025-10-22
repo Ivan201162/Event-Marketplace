@@ -1,154 +1,112 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-/// Idea collection model
+/// Model for idea collections
 class IdeaCollection extends Equatable {
   final String id;
   final String name;
-  final String description;
+  final String? description;
+  final String? imageUrl;
+  final List<String> ideaIds;
   final String authorId;
   final String authorName;
-  final String? authorAvatarUrl;
-  final List<String> ideaIds;
+  final bool isPublic;
+  final int likesCount;
+  final int viewsCount;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int likesCount;
-  final List<String> likedBy;
-  final bool isPublic;
-  final List<String> tags;
-  final String? coverImageUrl;
 
   const IdeaCollection({
     required this.id,
     required this.name,
-    required this.description,
+    this.description,
+    this.imageUrl,
+    required this.ideaIds,
     required this.authorId,
     required this.authorName,
-    this.authorAvatarUrl,
-    this.ideaIds = const [],
+    this.isPublic = true,
+    this.likesCount = 0,
+    this.viewsCount = 0,
     required this.createdAt,
     required this.updatedAt,
-    this.likesCount = 0,
-    this.likedBy = const [],
-    this.isPublic = true,
-    this.tags = const [],
-    this.coverImageUrl,
   });
 
-  /// Create IdeaCollection from Firestore document
-  factory IdeaCollection.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory IdeaCollection.fromMap(Map<String, dynamic> map) {
     return IdeaCollection(
-      id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      authorId: data['authorId'] ?? '',
-      authorName: data['authorName'] ?? '',
-      authorAvatarUrl: data['authorAvatarUrl'],
-      ideaIds: List<String>.from(data['ideaIds'] ?? []),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      likesCount: data['likesCount'] ?? 0,
-      likedBy: List<String>.from(data['likedBy'] ?? []),
-      isPublic: data['isPublic'] ?? true,
-      tags: List<String>.from(data['tags'] ?? []),
-      coverImageUrl: data['coverImageUrl'],
+      id: map['id'] ?? '',
+      name: map['name'] ?? '',
+      description: map['description'],
+      imageUrl: map['imageUrl'],
+      ideaIds: List<String>.from(map['ideaIds'] ?? []),
+      authorId: map['authorId'] ?? '',
+      authorName: map['authorName'] ?? '',
+      isPublic: map['isPublic'] ?? true,
+      likesCount: map['likesCount'] ?? 0,
+      viewsCount: map['viewsCount'] ?? 0,
+      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt: DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 
-  /// Convert IdeaCollection to Firestore document
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'description': description,
+      'imageUrl': imageUrl,
+      'ideaIds': ideaIds,
       'authorId': authorId,
       'authorName': authorName,
-      'authorAvatarUrl': authorAvatarUrl,
-      'ideaIds': ideaIds,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'likesCount': likesCount,
-      'likedBy': likedBy,
       'isPublic': isPublic,
-      'tags': tags,
-      'coverImageUrl': coverImageUrl,
+      'likesCount': likesCount,
+      'viewsCount': viewsCount,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
-  /// Create a copy with updated fields
   IdeaCollection copyWith({
     String? id,
     String? name,
     String? description,
+    String? imageUrl,
+    List<String>? ideaIds,
     String? authorId,
     String? authorName,
-    String? authorAvatarUrl,
-    List<String>? ideaIds,
+    bool? isPublic,
+    int? likesCount,
+    int? viewsCount,
     DateTime? createdAt,
     DateTime? updatedAt,
-    int? likesCount,
-    List<String>? likedBy,
-    bool? isPublic,
-    List<String>? tags,
-    String? coverImageUrl,
   }) {
     return IdeaCollection(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      ideaIds: ideaIds ?? this.ideaIds,
       authorId: authorId ?? this.authorId,
       authorName: authorName ?? this.authorName,
-      authorAvatarUrl: authorAvatarUrl ?? this.authorAvatarUrl,
-      ideaIds: ideaIds ?? this.ideaIds,
+      isPublic: isPublic ?? this.isPublic,
+      likesCount: likesCount ?? this.likesCount,
+      viewsCount: viewsCount ?? this.viewsCount,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      likesCount: likesCount ?? this.likesCount,
-      likedBy: likedBy ?? this.likedBy,
-      isPublic: isPublic ?? this.isPublic,
-      tags: tags ?? this.tags,
-      coverImageUrl: coverImageUrl ?? this.coverImageUrl,
     );
-  }
-
-  /// Check if collection is liked by user
-  bool isLikedBy(String userId) => likedBy.contains(userId);
-
-  /// Get formatted time ago string
-  String get timeAgo {
-    final now = DateTime.now();
-    final difference = now.difference(createdAt);
-
-    if (difference.inDays > 0) {
-      return '${difference.inDays}д назад';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}ч назад';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}м назад';
-    } else {
-      return 'только что';
-    }
   }
 
   @override
   List<Object?> get props => [
-    id,
-    name,
-    description,
-    authorId,
-    authorName,
-    authorAvatarUrl,
-    ideaIds,
-    createdAt,
-    updatedAt,
-    likesCount,
-    likedBy,
-    isPublic,
-    tags,
-    coverImageUrl,
-  ];
-
-  @override
-  String toString() {
-    return 'IdeaCollection(id: $id, name: $name, authorId: $authorId)';
-  }
+        id,
+        name,
+        description,
+        imageUrl,
+        ideaIds,
+        authorId,
+        authorName,
+        isPublic,
+        likesCount,
+        viewsCount,
+        createdAt,
+        updatedAt,
+      ];
 }

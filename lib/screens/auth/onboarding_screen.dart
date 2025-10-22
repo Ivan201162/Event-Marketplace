@@ -188,7 +188,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                               child: Container(
                                 padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
@@ -236,7 +236,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
+                            color: Colors.black.withValues(alpha: 0.15),
                             blurRadius: 20,
                             offset: const Offset(0, 10),
                           ),
@@ -350,7 +350,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                       ),
                     ),
                   ),
-                ),
 
                 const Spacer(),
               ],

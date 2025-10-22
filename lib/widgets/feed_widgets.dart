@@ -454,7 +454,7 @@ class CommentWidget extends ConsumerWidget {
                     ),
                     const SizedBox(width: 16),
                     InkWell(
-                      onTap: () => _likeComment(ref),
+                      onTap: () => _likeComment(ref, post.id),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -484,11 +484,11 @@ class CommentWidget extends ConsumerWidget {
         ],
       );
 
-  Future<void> _likeComment(WidgetRef ref) async {
+  Future<void> _likeComment(WidgetRef ref, String postId) async {
     try {
       final service = ref.read(feedServiceProvider);
       await service.toggleCommentLike(
-        widget.post.id,
+        postId,
         comment.id,
         'current_user', // TODO(developer): Получить реальный ID пользователя
       );

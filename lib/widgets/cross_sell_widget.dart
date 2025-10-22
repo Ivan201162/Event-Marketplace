@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'responsive_text.dart';
 import '../models/cross_sell_suggestion.dart';
 import '../services/cross_sell_service.dart';
 import 'responsive_layout.dart';

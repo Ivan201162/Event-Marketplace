@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'chat/chat_list_screen.dart';
+import 'chat_placeholder_screen.dart';
 import 'feed/feed_screen.dart';
 import 'home/home_screen.dart';
 import 'ideas/ideas_screen.dart';
@@ -45,7 +45,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       icon: Icons.chat_bubble_outline,
       activeIcon: Icons.chat_bubble,
       label: 'Чаты',
-      screen: ChatListScreen(),
+      screen: ChatPlaceholderScreen(),
     ),
     const NavigationItem(
       icon: Icons.lightbulb_outline,
@@ -102,7 +102,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -139,15 +139,15 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                         gradient: isActive
                             ? LinearGradient(
                                 colors: [
-                                  Theme.of(context).primaryColor.withOpacity(0.1),
-                                  Theme.of(context).primaryColor.withOpacity(0.05),
+                                  Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                                  Theme.of(context).primaryColor.withValues(alpha: 0.05),
                                 ],
                               )
                             : null,
                         borderRadius: BorderRadius.circular(16),
                         border: isActive
                             ? Border.all(
-                                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                                 width: 1,
                               )
                             : null,

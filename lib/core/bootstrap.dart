@@ -20,19 +20,26 @@ class Bootstrap {
   /// Initialize the app with timeout and error handling
   static Future<void> initialize() async {
     try {
+      debugPrint('🔄 Bootstrap: Начинаем инициализацию...');
+      
       // Set up error handling first
+      debugPrint('🔄 Bootstrap: Настройка обработки ошибок...');
       _setupErrorHandling();
 
       // Initialize Firebase with timeout
+      debugPrint('🔄 Bootstrap: Инициализация Firebase...');
       await _initializeFirebase();
 
       // Initialize other services
+      debugPrint('🔄 Bootstrap: Инициализация сервисов...');
       await _initializeServices();
 
       // Initialize FCM
+      debugPrint('🔄 Bootstrap: Инициализация FCM...');
       await _initializeFCM();
 
       // Initialize Push Notifications
+      debugPrint('🔄 Bootstrap: Инициализация Push Notifications...');
       await _initializePushNotifications();
 
       debugPrint('✅ Bootstrap: App initialized successfully');
@@ -41,8 +48,12 @@ class Bootstrap {
       debugPrint('Stack trace: $stackTrace');
 
       // Report to Crashlytics if available
-      if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
-        FirebaseCrashlytics.instance.recordError(e, stackTrace);
+      try {
+        if (FirebaseCrashlytics.instance.isCrashlyticsCollectionEnabled) {
+          FirebaseCrashlytics.instance.recordError(e, stackTrace);
+        }
+      } catch (_) {
+        debugPrint('⚠️ Bootstrap: Не удалось отправить ошибку в Crashlytics');
       }
 
       // Re-throw to be handled by main

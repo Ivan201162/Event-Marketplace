@@ -267,31 +267,33 @@ class Idea extends Equatable {
     }
   }
 
+  /// Get author photo URL (already available as field)
+
   @override
   List<Object?> get props => [
-    id,
-    title,
-    shortDesc,
-    mediaUrl,
-    tags,
-    createdAt,
-    updatedAt,
-    authorId,
-    authorName,
-    likesCount,
-    viewsCount,
-    likedBy,
-    category,
-    difficulty,
-    estimatedDuration,
-    requiredMaterials,
-    detailedDescription,
-    images,
-    description,
-    authorPhotoUrl,
-    savesCount,
-    commentsCount,
-  ];
+        id,
+        title,
+        shortDesc,
+        mediaUrl,
+        tags,
+        createdAt,
+        updatedAt,
+        authorId,
+        authorName,
+        likesCount,
+        viewsCount,
+        likedBy,
+        category,
+        difficulty,
+        estimatedDuration,
+        requiredMaterials,
+        detailedDescription,
+        images,
+        description,
+        authorPhotoUrl,
+        savesCount,
+        commentsCount,
+      ];
 
   @override
   String toString() {

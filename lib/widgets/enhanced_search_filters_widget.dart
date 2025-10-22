@@ -106,7 +106,7 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
                   value: category,
                   child: Row(
                     children: [
-                      Text(category.icon),
+                      Text(category.iconName),
                       const SizedBox(width: 8),
                       Text(category.displayName),
                     ],

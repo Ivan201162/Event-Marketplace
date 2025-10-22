@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/discount_providers.dart';
 import '../models/booking_discount.dart';
 import '../models/price_history.dart';
 import '../services/price_history_service.dart';
@@ -371,6 +372,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
     try {
       final service = ref.read(discountServiceProvider);
       await service.acceptDiscount(
+        'discount_id', // TODO(developer): Получить реальный ID скидки
         bookingId: bookingId,
         customerId: 'current_user_id', // TODO(developer): Получить из контекста
       );

@@ -1,51 +1,65 @@
-/// Тип контента истории
-enum StoryContentType { image, video, text, poll, quiz, link }
+/// Типы контента для историй
+enum StoryContentType {
+  text,
+  image,
+  video,
+  poll,
+  question,
+  music,
+  location,
+  mention,
+  hashtag,
+  link,
+}
 
-/// Расширение для StoryContentType
 extension StoryContentTypeExtension on StoryContentType {
-  /// Получить название типа
   String get displayName {
     switch (this) {
+      case StoryContentType.text:
+        return 'Текст';
       case StoryContentType.image:
         return 'Изображение';
       case StoryContentType.video:
         return 'Видео';
-      case StoryContentType.text:
-        return 'Текст';
       case StoryContentType.poll:
         return 'Опрос';
-      case StoryContentType.quiz:
-        return 'Викторина';
+      case StoryContentType.question:
+        return 'Вопрос';
+      case StoryContentType.music:
+        return 'Музыка';
+      case StoryContentType.location:
+        return 'Местоположение';
+      case StoryContentType.mention:
+        return 'Упоминание';
+      case StoryContentType.hashtag:
+        return 'Хештег';
       case StoryContentType.link:
         return 'Ссылка';
     }
   }
 
-  /// Получить иконку типа
   String get icon {
     switch (this) {
-      case StoryContentType.image:
-        return '🖼️';
-      case StoryContentType.video:
-        return '🎥';
       case StoryContentType.text:
-        return '📝';
+        return 'text_fields';
+      case StoryContentType.image:
+        return 'image';
+      case StoryContentType.video:
+        return 'videocam';
       case StoryContentType.poll:
-        return '📊';
-      case StoryContentType.quiz:
-        return '🧩';
+        return 'poll';
+      case StoryContentType.question:
+        return 'help_outline';
+      case StoryContentType.music:
+        return 'music_note';
+      case StoryContentType.location:
+        return 'location_on';
+      case StoryContentType.mention:
+        return 'alternate_email';
+      case StoryContentType.hashtag:
+        return 'tag';
       case StoryContentType.link:
-        return '🔗';
+        return 'link';
     }
-  }
-
-  /// Проверить, является ли тип медиа
-  bool get isMedia {
-    return this == StoryContentType.image || this == StoryContentType.video;
-  }
-
-  /// Проверить, является ли тип интерактивным
-  bool get isInteractive {
-    return this == StoryContentType.poll || this == StoryContentType.quiz;
   }
 }

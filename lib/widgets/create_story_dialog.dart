@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/story_content_type.dart';
+import '../services/story_service.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../models/story.dart';
@@ -121,18 +123,42 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                 child: RadioListTile<StoryContentType>(
                   title: const Text('Изображение'),
                   value: StoryContentType.image,
+                  groupValue: _selectedType,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedType = value;
+                      });
+                    }
+                  },
                 ),
               ),
               Expanded(
                 child: RadioListTile<StoryContentType>(
                   title: const Text('Видео'),
                   value: StoryContentType.video,
+                  groupValue: _selectedType,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedType = value;
+                      });
+                    }
+                  },
                 ),
               ),
               Expanded(
                 child: RadioListTile<StoryContentType>(
                   title: const Text('Текст'),
                   value: StoryContentType.text,
+                  groupValue: _selectedType,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedType = value;
+                      });
+                    }
+                  },
                 ),
               ),
             ],
@@ -359,10 +385,10 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
       final file = _selectedType == StoryContentType.image
           ? await _storyService.pickImage()
           : await _storyService.pickVideo();
-
+      
       if (file != null) {
         setState(() {
-          _selectedFile = file;
+          _selectedFile = XFile(file.path);
           _error = null;
         });
       }
@@ -381,7 +407,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
 
       if (file != null) {
         setState(() {
-          _selectedFile = file;
+          _selectedFile = XFile(file.path);
           _error = null;
         });
       }
@@ -423,43 +449,42 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
         // Загружаем файл
         if (_selectedType == StoryContentType.image) {
           content = await _storyService.uploadStoryImage(
-            authorId: currentUser.uid,
-            imageFile: _selectedFile!,
-          );
+            File(_selectedFile!.path),
+            currentUser.uid,
+          ) ?? '';
         } else {
           content = await _storyService.uploadStoryVideo(
-            authorId: currentUser.uid,
-            videoFile: _selectedFile!,
-          );
+            File(_selectedFile!.path),
+            currentUser.uid,
+          ) ?? '';
         }
       }
 
       // Создаем сторис
-      final createStory = CreateStory(
-        authorId: currentUser.uid,
-        contentType: _selectedType,
-        content: content,
-        text: _selectedType == StoryContentType.text ? _textController.text.trim() : null,
-        backgroundColor: _selectedType == StoryContentType.text
-            ? '#${_backgroundColor.toARGB32().toRadixString(16).substring(2)}'
-            : null,
-        textColor: _selectedType == StoryContentType.text
-            ? '#${_textColor.toARGB32().toRadixString(16).substring(2)}'
-            : null,
-        fontSize: _selectedType == StoryContentType.text ? _fontSize : null,
+      final success = await _storyService.createStory(
+        specialistId: currentUser.uid,
+        mediaUrl: content,
+        text: _selectedType == StoryContentType.text ? _textController.text.trim() : '',
+        metadata: {
+          'contentType': _selectedType.toString(),
+          'backgroundColor': _selectedType == StoryContentType.text
+              ? '#${_backgroundColor.toARGB32().toRadixString(16).substring(2)}'
+              : null,
+          'textColor': _selectedType == StoryContentType.text
+              ? '#${_textColor.toARGB32().toRadixString(16).substring(2)}'
+              : null,
+          'fontSize': _selectedType == StoryContentType.text ? _fontSize : null,
+        },
       );
 
-      await _storyService.createStory(
-        specialistId: createStory.specialistId,
-        mediaUrl: createStory.mediaUrl,
-        text: createStory.text,
-        metadata: createStory.metadata,
-      );
-
-      if (mounted) {
-        Navigator.of(context).pop(true);
+      if (success) {
+        Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Сторис создана'), backgroundColor: Colors.green),
+          const SnackBar(content: Text('История создана успешно')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ошибка создания истории')),
         );
       }
     } catch (e) {

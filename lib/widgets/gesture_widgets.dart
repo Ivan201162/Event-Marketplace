@@ -260,8 +260,8 @@ class _PinchZoomWidgetState extends State<PinchZoomWidget> {
         onScaleEnd: _onScaleEnd,
         child: Transform(
           transform: Matrix4.identity()
-            ..translate(_offset.dx, _offset.dy)
-            ..scale(_scale),
+            ..translateByDouble(_offset.dx, _offset.dy)
+            ..scaleByDouble(_scale),
           child: widget.child,
         ),
       );

@@ -1,184 +1,164 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import '../models/story_content_type.dart';
 
-import '../models/story.dart';
-
-/// Сервис для работы со сторис
+/// Сервис для работы с историями
 class StoryService {
-  factory StoryService() => _instance;
-  StoryService._internal();
-  static final StoryService _instance = StoryService._internal();
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String _collection = 'stories';
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final ImagePicker _imagePicker = ImagePicker();
 
-  /// Получить сторис специалиста
-  Future<List<Story>> getStoriesBySpecialist(String specialistId) async {
+  /// Выбор изображения из галереи
+  Future<File?> pickImage() async {
     try {
-      final snapshot = await _firestore
-          .collection(_collection)
-          .where('specialistId', isEqualTo: specialistId)
-          .where('expiresAt', isGreaterThan: Timestamp.fromDate(DateTime.now()))
-          .orderBy('expiresAt')
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs.map(Story.fromDocument).toList();
-    } on Exception {
-      // Возвращаем тестовые данные в случае ошибки
-      return _getTestStories(specialistId);
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1080,
+        maxHeight: 1920,
+        imageQuality: 85,
+      );
+      return image != null ? File(image.path) : null;
+    } catch (e) {
+      print('Ошибка выбора изображения: $e');
+      return null;
     }
   }
 
-  /// Получить все активные сторис
-  Future<List<Story>> getAllActiveStories() async {
+  /// Выбор видео из галереи
+  Future<File?> pickVideo() async {
     try {
-      final snapshot = await _firestore
-          .collection(_collection)
-          .where('expiresAt', isGreaterThan: Timestamp.fromDate(DateTime.now()))
-          .orderBy('expiresAt')
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs.map(Story.fromDocument).toList();
-    } on Exception {
-      // Возвращаем тестовые данные в случае ошибки
-      return _getTestStories('test_specialist');
+      final XFile? video = await _imagePicker.pickVideo(
+        source: ImageSource.gallery,
+        maxDuration: const Duration(minutes: 2),
+      );
+      return video != null ? File(video.path) : null;
+    } catch (e) {
+      print('Ошибка выбора видео: $e');
+      return null;
     }
   }
 
-  /// Создать сторис
-  Future<String> createStory(Story story) async {
+  /// Съемка фото
+  Future<File?> takePhoto() async {
     try {
-      final docRef = await _firestore.collection(_collection).add(story.toMap());
-      return docRef.id;
-    } on Exception catch (e) {
-      throw Exception('Ошибка создания сторис: $e');
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 1080,
+        maxHeight: 1920,
+        imageQuality: 85,
+      );
+      return image != null ? File(image.path) : null;
+    } catch (e) {
+      print('Ошибка съемки фото: $e');
+      return null;
     }
   }
 
-  /// Обновить сторис
-  Future<void> updateStory(String storyId, Map<String, dynamic> updates) async {
+  /// Запись видео
+  Future<File?> recordVideo() async {
     try {
-      await _firestore.collection(_collection).doc(storyId).update(updates);
-    } on Exception catch (e) {
-      throw Exception('Ошибка обновления сторис: $e');
+      final XFile? video = await _imagePicker.pickVideo(
+        source: ImageSource.camera,
+        maxDuration: const Duration(minutes: 2),
+      );
+      return video != null ? File(video.path) : null;
+    } catch (e) {
+      print('Ошибка записи видео: $e');
+      return null;
     }
   }
 
-  /// Удалить сторис
-  Future<void> deleteStory(String storyId) async {
+  /// Загрузка изображения истории
+  Future<String?> uploadStoryImage(File imageFile, String userId) async {
     try {
-      await _firestore.collection(_collection).doc(storyId).delete();
-    } on Exception catch (e) {
-      throw Exception('Ошибка удаления сторис: $e');
+      final String fileName = 'stories/${userId}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final Reference ref = _storage.ref().child(fileName);
+      
+      final UploadTask uploadTask = ref.putFile(imageFile);
+      final TaskSnapshot snapshot = await uploadTask;
+      final String downloadUrl = await snapshot.ref.getDownloadURL();
+      
+      return downloadUrl;
+    } catch (e) {
+      print('Ошибка загрузки изображения: $e');
+      return null;
     }
   }
 
-  /// Отметить сторис как просмотренную
-  Future<void> markStoryAsViewed(String storyId, String userId) async {
+  /// Загрузка видео истории
+  Future<String?> uploadStoryVideo(File videoFile, String userId) async {
     try {
-      final storyRef = _firestore.collection(_collection).doc(storyId);
-      await _firestore.runTransaction((transaction) async {
-        final snapshot = await transaction.get(storyRef);
-        if (!snapshot.exists) return;
+      final String fileName = 'stories/${userId}/${DateTime.now().millisecondsSinceEpoch}.mp4';
+      final Reference ref = _storage.ref().child(fileName);
+      
+      final UploadTask uploadTask = ref.putFile(videoFile);
+      final TaskSnapshot snapshot = await uploadTask;
+      final String downloadUrl = await snapshot.ref.getDownloadURL();
+      
+      return downloadUrl;
+    } catch (e) {
+      print('Ошибка загрузки видео: $e');
+      return null;
+    }
+  }
 
-        final story = Story.fromDocument(snapshot);
-        transaction.update(storyRef, {'viewsCount': story.viewsCount + 1});
+  /// Создание истории
+  Future<bool> createStory({
+    required String specialistId,
+    required String mediaUrl,
+    required String text,
+    required Map<String, dynamic> metadata,
+  }) async {
+    try {
+      await _firestore.collection('stories').add({
+        'specialistId': specialistId,
+        'mediaUrl': mediaUrl,
+        'text': text,
+        'metadata': metadata,
+        'createdAt': FieldValue.serverTimestamp(),
+        'expiresAt': DateTime.now().add(const Duration(hours: 24)).toIso8601String(),
+        'views': 0,
+        'likes': 0,
+        'type': StoryContentType.text.toString(),
       });
-    } on Exception catch (e) {
-      throw Exception('Ошибка отметки просмотра: $e');
+      return true;
+    } catch (e) {
+      print('Ошибка создания истории: $e');
+      return false;
     }
   }
 
-  /// Очистить истекшие сторис
-  Future<void> cleanupExpiredStories() async {
+  /// Получение историй специалиста
+  Stream<List<Map<String, dynamic>>> getSpecialistStories(String specialistId) {
+    return _firestore
+        .collection('stories')
+        .where('specialistId', isEqualTo: specialistId)
+        .where('expiresAt', isGreaterThan: DateTime.now().toIso8601String())
+        .orderBy('expiresAt')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) {
+              final data = doc.data();
+              data['id'] = doc.id;
+              return data;
+            }).toList());
+  }
+
+  /// Удаление истории
+  Future<bool> deleteStory(String storyId) async {
     try {
-      final expiredStories = await _firestore
-          .collection(_collection)
-          .where('expiresAt', isLessThan: Timestamp.fromDate(DateTime.now()))
-          .get();
-
-      final batch = _firestore.batch();
-      for (final doc in expiredStories.docs) {
-        batch.delete(doc.reference);
-      }
-      await batch.commit();
-    } on Exception catch (e) {
-      throw Exception('Ошибка очистки истекших сторис: $e');
+      await _firestore.collection('stories').doc(storyId).delete();
+      return true;
+    } catch (e) {
+      print('Ошибка удаления истории: $e');
+      return false;
     }
   }
 
-  /// Получить истории пользователя
-  Future<List<Story>> getUserStories(String userId) async {
-    try {
-      final snapshot = await _firestore
-          .collection(_collection)
-          .where('specialistId', isEqualTo: userId)
-          .where('expiresAt', isGreaterThan: DateTime.now())
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs.map(Story.fromDocument).toList();
-    } on Exception {
-      return _getTestStories(userId);
-    }
-  }
-
-  /// Лайкнуть историю
-  Future<void> likeStory(String storyId, String userId) async {
-    try {
-      await _firestore.collection(_collection).doc(storyId).update({
-        'likes': FieldValue.arrayUnion([userId]),
-      });
-    } on Exception catch (e) {
-      throw Exception('Ошибка лайка истории: $e');
-    }
-  }
-
-  /// Тестовые данные
-  List<Story> _getTestStories(String specialistId) {
-    final now = DateTime.now();
-    return [
-      Story(
-        id: '1',
-        specialistId: specialistId,
-        title: 'За кулисами',
-        mediaUrl: 'https://placehold.co/400x600/FF6B6B/white?text=Behind+Scenes',
-        thumbnailUrl: 'https://placehold.co/100x100/FF6B6B/white?text=S1',
-        createdAt: now.subtract(const Duration(hours: 2)),
-        expiresAt: now.add(const Duration(hours: 22)),
-        viewsCount: 150,
-      ),
-      Story(
-        id: '2',
-        specialistId: specialistId,
-        title: 'Новая работа',
-        mediaUrl: 'https://placehold.co/400x600/4ECDC4/white?text=New+Work',
-        thumbnailUrl: 'https://placehold.co/100x100/4ECDC4/white?text=S2',
-        createdAt: now.subtract(const Duration(hours: 5)),
-        expiresAt: now.add(const Duration(hours: 19)),
-        viewsCount: 80,
-      ),
-      Story(
-        id: '3',
-        specialistId: specialistId,
-        title: 'Совет дня',
-        mediaUrl: 'https://placehold.co/400x600/45B7D1/white?text=Tip+of+Day',
-        thumbnailUrl: 'https://placehold.co/100x100/45B7D1/white?text=S3',
-        createdAt: now.subtract(const Duration(hours: 8)),
-        expiresAt: now.add(const Duration(hours: 16)),
-        viewsCount: 200,
-      ),
-      Story(
-        id: '4',
-        specialistId: specialistId,
-        title: 'Оборудование',
-        mediaUrl: 'https://placehold.co/400x600/96CEB4/white?text=Equipment',
-        thumbnailUrl: 'https://placehold.co/100x100/96CEB4/white?text=S4',
-        createdAt: now.subtract(const Duration(hours: 12)),
-        expiresAt: now.add(const Duration(hours: 12)),
-        viewsCount: 120,
-      ),
-    ];
+  /// Получение историй специалиста (alias для getSpecialistStories)
+  Stream<List<Map<String, dynamic>>> getStoriesBySpecialist(String specialistId) {
+    return getSpecialistStories(specialistId);
   }
 }
