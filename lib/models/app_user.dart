@@ -39,7 +39,6 @@ class AppUser extends Equatable {
   final String? avatarUrl;
   final String? displayName;
   final String? photoURL;
-  final int followersCount;
   final UserType type;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -50,6 +49,17 @@ class AppUser extends Equatable {
   final String? description;
   final double? hourlyRate;
   final String? specialistType;
+  
+  // Pro account fields
+  final bool isProAccount;
+  final String? proCategory; // Ведущий, Диджей, Фотограф и т.д.
+  final bool isVerified;
+  final List<String> socialLinks; // Ссылки на соцсети
+  final String? website;
+  final Map<String, String> ctaButtons; // CTA кнопки для Pro аккаунтов
+  final int followersCount;
+  final int followingCount;
+  final int postsCount;
 
   /// Get user ID (alias for uid)
   String get id => uid;
@@ -64,7 +74,6 @@ class AppUser extends Equatable {
     this.city,
     this.status,
     this.avatarUrl,
-    this.followersCount = 0,
     this.type = UserType.physical,
     required this.createdAt,
     required this.updatedAt,
@@ -77,6 +86,15 @@ class AppUser extends Equatable {
     this.description,
     this.hourlyRate,
     this.specialistType,
+    this.isProAccount = false,
+    this.proCategory,
+    this.isVerified = false,
+    this.socialLinks = const [],
+    this.website,
+    this.ctaButtons = const {},
+    this.followersCount = 0,
+    this.followingCount = 0,
+    this.postsCount = 0,
   });
 
   /// Create AppUser from Firestore document
@@ -94,7 +112,6 @@ class AppUser extends Equatable {
       avatarUrl: data['avatarUrl'],
       displayName: data['displayName'],
       photoURL: data['photoURL'],
-      followersCount: data['followersCount'] ?? 0,
       type: UserType.values.firstWhere(
         (type) => type.name == data['type'],
         orElse: () => UserType.physical,
@@ -108,6 +125,15 @@ class AppUser extends Equatable {
       description: data['description'],
       hourlyRate: data['hourlyRate']?.toDouble(),
       specialistType: data['specialistType'],
+      isProAccount: data['isProAccount'] ?? false,
+      proCategory: data['proCategory'],
+      isVerified: data['isVerified'] ?? false,
+      socialLinks: List<String>.from(data['socialLinks'] ?? []),
+      website: data['website'],
+      ctaButtons: Map<String, String>.from(data['ctaButtons'] ?? {}),
+      followersCount: data['followersCount'] ?? 0,
+      followingCount: data['followingCount'] ?? 0,
+      postsCount: data['postsCount'] ?? 0,
     );
   }
 
@@ -135,6 +161,15 @@ class AppUser extends Equatable {
       'description': description,
       'hourlyRate': hourlyRate,
       'specialistType': specialistType,
+      'isProAccount': isProAccount,
+      'proCategory': proCategory,
+      'isVerified': isVerified,
+      'socialLinks': socialLinks,
+      'website': website,
+      'ctaButtons': ctaButtons,
+      'followersCount': followersCount,
+      'followingCount': followingCount,
+      'postsCount': postsCount,
     };
   }
 
@@ -162,6 +197,14 @@ class AppUser extends Equatable {
     String? description,
     double? hourlyRate,
     String? specialistType,
+    bool isProAccount = false,
+    String? proCategory,
+    bool isVerified = false,
+    List<String> socialLinks = const [],
+    String? website,
+    Map<String, String> ctaButtons = const {},
+    int followingCount = 0,
+    int postsCount = 0,
   }) {
     return AppUser(
       uid: uid ?? this.uid,
@@ -186,6 +229,14 @@ class AppUser extends Equatable {
       description: description ?? this.description,
       hourlyRate: hourlyRate ?? this.hourlyRate,
       specialistType: specialistType ?? this.specialistType,
+      isProAccount: isProAccount,
+      proCategory: proCategory ?? this.proCategory,
+      isVerified: isVerified,
+      socialLinks: socialLinks,
+      website: website ?? this.website,
+      ctaButtons: ctaButtons,
+      followingCount: followingCount,
+      postsCount: postsCount,
     );
   }
 
@@ -219,6 +270,15 @@ class AppUser extends Equatable {
     description,
     hourlyRate,
     specialistType,
+    isProAccount,
+    proCategory,
+    isVerified,
+    socialLinks,
+    website,
+    ctaButtons,
+    followersCount,
+    followingCount,
+    postsCount,
   ];
 
   @override

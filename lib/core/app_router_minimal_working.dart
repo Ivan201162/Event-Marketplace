@@ -8,6 +8,7 @@ import '../screens/auth/login_screen_improved.dart';
 import '../screens/auth/phone_auth_improved.dart';
 import '../screens/main_navigation_screen.dart';
 import '../screens/profile/edit_profile_improved.dart';
+import '../screens/profile/profile_screen_improved.dart';
 import '../screens/chat/chat_list_screen_improved.dart';
 import '../screens/chat/chat_screen_improved.dart';
 
@@ -71,6 +72,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final chatId = state.pathParameters['chatId']!;
           return ChatScreenImproved(chatId: chatId);
+        },
+      ),
+
+      // Профиль пользователя
+      GoRoute(
+        path: '/profile/:userId',
+        name: 'profile',
+        builder: (context, state) {
+          final userId = state.pathParameters['userId']!;
+          return ProfileScreenImproved(userId: userId);
         },
       ),
     ],

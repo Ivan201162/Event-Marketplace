@@ -1,107 +1,164 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-import 'story_type.dart';
+/// Типы контента сторис
+enum StoryType {
+  image('image'),
+  video('video'),
+  text('text');
+
+  const StoryType(this.value);
+  final String value;
+
+  static StoryType fromString(String value) {
+    return StoryType.values.firstWhere(
+      (type) => type.value == value,
+      orElse: () => StoryType.image,
+    );
+  }
+}
+
+/// Приватность сторис
+enum StoryPrivacy {
+  public('public'),
+  followers('followers'),
+  closeFriends('close_friends');
+
+  const StoryPrivacy(this.value);
+  final String value;
+
+  static StoryPrivacy fromString(String value) {
+    return StoryPrivacy.values.firstWhere(
+      (privacy) => privacy.value == value,
+      orElse: () => StoryPrivacy.public,
+    );
+  }
+}
 
 /// Модель сторис
-class Story {
+class Story extends Equatable {
+  final String id;
+  final String userId;
+  final String? content; // URL изображения/видео или текст
+  final StoryType type;
+  final StoryPrivacy privacy;
+  final List<String> mentions; // @username упоминания
+  final List<String> viewers; // ID пользователей, которые просмотрели
+  final List<Map<String, dynamic>> reactions; // реакции с эмодзи
+  final DateTime createdAt;
+  final DateTime expiresAt;
+  final bool isHighlighted; // закрепленная сторис
+  final String? highlightTitle; // название для закрепленной сторис
+  final Map<String, dynamic>? metadata; // дополнительная информация
+
   const Story({
     required this.id,
-    required this.specialistId,
-    required this.title,
-    required this.mediaUrl,
-    required this.thumbnailUrl,
+    required this.userId,
+    this.content,
+    this.type = StoryType.image,
+    this.privacy = StoryPrivacy.public,
+    this.mentions = const [],
+    this.viewers = const [],
+    this.reactions = const [],
     required this.createdAt,
     required this.expiresAt,
-    this.viewsCount = 0,
+    this.isHighlighted = false,
+    this.highlightTitle,
     this.metadata,
   });
 
-  /// Создать сторис из документа Firestore
-  factory Story.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-    return Story.fromMap(data, doc.id);
+  /// Создать Story из Firestore документа
+  factory Story.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Story(
+      id: doc.id,
+      userId: data['userId'] ?? '',
+      content: data['content'],
+      type: StoryType.fromString(data['type'] ?? 'image'),
+      privacy: StoryPrivacy.fromString(data['privacy'] ?? 'public'),
+      mentions: List<String>.from(data['mentions'] ?? []),
+      viewers: List<String>.from(data['viewers'] ?? []),
+      reactions: List<Map<String, dynamic>>.from(data['reactions'] ?? []),
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      expiresAt: (data['expiresAt'] as Timestamp).toDate(),
+      isHighlighted: data['isHighlighted'] ?? false,
+      highlightTitle: data['highlightTitle'],
+      metadata: data['metadata'] as Map<String, dynamic>?,
+    );
   }
 
-  /// Создать сторис из Map
-  factory Story.fromMap(Map<String, dynamic> data, [String? id]) => Story(
-    id: id ?? data['id'] ?? '',
-    specialistId: data['specialistId'] ?? '',
-    title: data['title'] ?? '',
-    mediaUrl: data['mediaUrl'] ?? '',
-    thumbnailUrl: data['thumbnailUrl'] ?? '',
-    createdAt: data['createdAt'] != null
-        ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
-        : DateTime.now(),
-    expiresAt: data['expiresAt'] != null
-        ? (data['expiresAt'] is Timestamp
-              ? (data['expiresAt'] as Timestamp).toDate()
-              : DateTime.parse(data['expiresAt'].toString()))
-        : DateTime.now().add(const Duration(hours: 24)),
-    viewsCount: data['viewsCount'] as int? ?? 0,
-    metadata: data['metadata'],
-  );
+  /// Конвертировать Story в Firestore документ
+  Map<String, dynamic> toFirestore() {
+    return {
+      'userId': userId,
+      'content': content,
+      'type': type.value,
+      'privacy': privacy.value,
+      'mentions': mentions,
+      'viewers': viewers,
+      'reactions': reactions,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'expiresAt': Timestamp.fromDate(expiresAt),
+      'isHighlighted': isHighlighted,
+      'highlightTitle': highlightTitle,
+      'metadata': metadata,
+    };
+  }
 
-  final String id;
-  final String specialistId;
-  final String title;
-  final String mediaUrl; // URL видео или изображения
-  final String thumbnailUrl; // URL превью
-  final DateTime createdAt;
-  final DateTime expiresAt; // Время истечения (24 часа)
-  final int viewsCount;
-  final Map<String, dynamic>? metadata;
-
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'title': title,
-    'mediaUrl': mediaUrl,
-    'thumbnailUrl': thumbnailUrl,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'expiresAt': Timestamp.fromDate(expiresAt),
-    'viewsCount': viewsCount,
-    'metadata': metadata,
-  };
-
-  /// Копировать с изменениями
+  /// Создать копию с обновленными полями
   Story copyWith({
     String? id,
-    String? specialistId,
-    String? title,
-    String? mediaUrl,
-    String? thumbnailUrl,
+    String? userId,
+    String? content,
+    StoryType? type,
+    StoryPrivacy? privacy,
+    List<String>? mentions,
+    List<String>? viewers,
+    List<Map<String, dynamic>>? reactions,
     DateTime? createdAt,
     DateTime? expiresAt,
-    int? viewsCount,
+    bool? isHighlighted,
+    String? highlightTitle,
     Map<String, dynamic>? metadata,
-  }) => Story(
-    id: id ?? this.id,
-    specialistId: specialistId ?? this.specialistId,
-    title: title ?? this.title,
-    mediaUrl: mediaUrl ?? this.mediaUrl,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-    createdAt: createdAt ?? this.createdAt,
-    expiresAt: expiresAt ?? this.expiresAt,
-    viewsCount: viewsCount ?? this.viewsCount,
-    metadata: metadata ?? this.metadata,
-  );
+  }) {
+    return Story(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      content: content ?? this.content,
+      type: type ?? this.type,
+      privacy: privacy ?? this.privacy,
+      mentions: mentions ?? this.mentions,
+      viewers: viewers ?? this.viewers,
+      reactions: reactions ?? this.reactions,
+      createdAt: createdAt ?? this.createdAt,
+      expiresAt: expiresAt ?? this.expiresAt,
+      isHighlighted: isHighlighted ?? this.isHighlighted,
+      highlightTitle: highlightTitle ?? this.highlightTitle,
+      metadata: metadata ?? this.metadata,
+    );
+  }
 
-  /// Проверить, активна ли история
-  bool get isActive => expiresAt.isAfter(DateTime.now());
+  /// Проверить, истекла ли сторис
+  bool get isExpired => DateTime.now().isAfter(expiresAt);
+
+  /// Получить количество просмотров
+  int get viewCount => viewers.length;
+
+  /// Получить количество реакций
+  int get reactionCount => reactions.length;
+
+  /// Проверить, просмотрел ли пользователь сторис
+  bool hasViewed(String userId) => viewers.contains(userId);
 
   /// Получить время до истечения
   Duration get timeUntilExpiry => expiresAt.difference(DateTime.now());
 
-  /// Получить время назад
-  String get timeAgo {
+  /// Получить отформатированное время создания
+  String get formattedTime {
     final now = DateTime.now();
     final difference = now.difference(createdAt);
 
-    if (difference.inDays > 0) {
-      return '${difference.inDays}д назад';
-    } else if (difference.inHours > 0) {
+    if (difference.inHours > 0) {
       return '${difference.inHours}ч назад';
     } else if (difference.inMinutes > 0) {
       return '${difference.inMinutes}м назад';
@@ -110,54 +167,25 @@ class Story {
     }
   }
 
-  /// Получить тип контента
-  StoryType get type => mediaUrl.contains('video') ? StoryType.video : StoryType.image;
-
-  /// Получить текст (для текстовых историй)
-  String get text => title;
-
-  /// Получить цвет фона
-  String get backgroundColor => '#FF6B6B';
-
-  /// Получить цвет текста
-  String get textColor => '#FFFFFF';
-
-  /// Получить размер шрифта
-  double get fontSize => 16;
-
-  /// Получить подпись
-  String get caption => title;
-
-  /// Получить количество просмотров
-  int get viewCount => viewsCount;
-
-  /// Получить количество лайков
-  int get likes => 0;
-
-  /// Проверить, просмотрена ли история пользователем
-  bool isViewedBy(String userId) => false;
-
-  /// Получить URL фото специалиста
-  String get specialistPhotoUrl => '';
-
-  /// Получить имя специалиста
-  String get specialistName => '';
-
-  /// Проверить, является ли сторис видео
-  bool get isVideo => mediaUrl.contains('video');
-
-  /// Проверить, является ли сторис изображением
-  bool get isImage => !mediaUrl.contains('video');
+  @override
+  List<Object?> get props => [
+        id,
+        userId,
+        content,
+        type,
+        privacy,
+        mentions,
+        viewers,
+        reactions,
+        createdAt,
+        expiresAt,
+        isHighlighted,
+        highlightTitle,
+        metadata,
+      ];
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Story && other.id == id;
+  String toString() {
+    return 'Story(id: $id, userId: $userId, type: $type, privacy: $privacy, viewCount: $viewCount)';
   }
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() => 'Story(id: $id, title: $title, specialistId: $specialistId)';
 }

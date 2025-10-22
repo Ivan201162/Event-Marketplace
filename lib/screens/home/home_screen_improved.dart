@@ -67,7 +67,11 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                   children: [
                     // Аватар пользователя
                     GestureDetector(
-                      onTap: () => context.go('/profile/edit'),
+                      onTap: () {
+                        final userData = user.value;
+                        final uid = userData?.uid ?? 'me';
+                        context.go('/profile/$uid');
+                      },
                       child: Container(
                         width: 50,
                         height: 50,
@@ -85,16 +89,19 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                         child: ClipOval(
                           child: user.when(
                             data: (userData) => userData?.avatarUrl != null
-                                ? Image.network(
-                                    userData!.avatarUrl!,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(
-                                        Icons.person,
-                                        color: Colors.white,
-                                        size: 30,
-                                      );
-                                    },
+                                ? Hero(
+                                    tag: 'avatar-${userData!.uid}',
+                                    child: Image.network(
+                                      userData.avatarUrl!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return const Icon(
+                                          Icons.person,
+                                          color: Colors.white,
+                                          size: 30,
+                                        );
+                                      },
+                                    ),
                                   )
                                 : const Icon(
                                     Icons.person,

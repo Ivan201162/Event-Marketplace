@@ -33,6 +33,32 @@ class StorageService {
     }
   }
 
+  /// Загружает изображение сторис
+  Future<String> uploadStoryImage(String storyId, File imageFile) async {
+    try {
+      final ref = _storage.ref().child('stories/$storyId.jpg');
+      
+      final uploadTask = ref.putFile(
+        imageFile,
+        SettableMetadata(
+          contentType: 'image/jpeg',
+          customMetadata: {
+            'storyId': storyId,
+            'type': 'story',
+          },
+        ),
+      );
+      
+      final downloadUrl = await ref.getDownloadURL();
+      
+      debugPrint('✅ Story image uploaded: $downloadUrl');
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('❌ Error uploading story image: $e');
+      rethrow;
+    }
+  }
+
   /// Загружает изображение поста
   Future<String> uploadPostImage(String postId, File imageFile) async {
     try {
