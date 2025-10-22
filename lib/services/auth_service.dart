@@ -76,6 +76,33 @@ class AuthService {
     }
   }
 
+  /// Create user with email and password
+  Future<void> createUserWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
+    try {
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
+
+      if (credential.user != null) {
+        // Update display name
+        await credential.user!.updateDisplayName(name);
+        
+        // Create user document
+        await _createUserDocument(credential.user!);
+      }
+      
+      debugPrint('✅ User created with email successfully');
+    } catch (e) {
+      debugPrint('❌ Error creating user with email: $e');
+      rethrow;
+    }
+  }
+
   /// Check if email is already registered
   Future<bool> isEmailRegistered(String email) async {
     try {
@@ -178,10 +205,12 @@ class AuthService {
   }
 
   /// Send phone verification code
-  Future<void> sendPhoneVerificationCode(String phoneNumber) async {
+  Future<String> sendPhoneVerificationCode(String phoneNumber) async {
     try {
       debugPrint('📱 Отправка SMS кода на номер: $phoneNumber');
 
+      final completer = Completer<String>();
+      
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
@@ -201,20 +230,32 @@ class AuthService {
             );
           }
 
-          throw e;
+          if (!completer.isCompleted) {
+            completer.completeError(e);
+          }
         },
         codeSent: (String verificationId, int? resendToken) {
           debugPrint('📨 SMS код отправлен, verificationId: $verificationId');
           // Сохраняем verificationId для последующей проверки
           _currentVerificationId = verificationId;
           _resendToken = resendToken;
+          
+          if (!completer.isCompleted) {
+            completer.complete(verificationId);
+          }
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           debugPrint('⏰ Таймаут автоматического получения кода');
           _currentVerificationId = verificationId;
+          
+          if (!completer.isCompleted) {
+            completer.complete(verificationId);
+          }
         },
         timeout: const Duration(seconds: 60),
       );
+      
+      return await completer.future;
     } catch (e) {
       debugPrint('❌ Ошибка отправки SMS: $e');
       rethrow;
@@ -415,6 +456,40 @@ class AuthService {
       }
     } catch (e) {
       debugPrint('Error updating user profile: $e');
+      rethrow;
+    }
+  }
+
+  /// Update user profile (simplified version)
+  Future<void> updateUserProfileSimple({
+    required String name,
+    String? city,
+    String? description,
+    String? avatarUrl,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception('User not authenticated');
+
+    try {
+      final updateData = <String, dynamic>{
+        'name': name,
+        'updatedAt': Timestamp.now(),
+      };
+
+      if (city != null) updateData['city'] = city;
+      if (description != null) updateData['description'] = description;
+      if (avatarUrl != null) updateData['avatarUrl'] = avatarUrl;
+
+      await _firestore.collection('users').doc(user.uid).update(updateData);
+
+      // Update Firebase Auth display name if name changed
+      if (user.displayName != name) {
+        await user.updateDisplayName(name);
+      }
+
+      debugPrint('✅ User profile updated successfully');
+    } catch (e) {
+      debugPrint('❌ Error updating user profile: $e');
       rethrow;
     }
   }

@@ -47,6 +47,7 @@ class AppUser extends Equatable {
   final Map<String, dynamic>? preferences;
   final List<String> favoriteSpecialists;
   final String? bio;
+  final String? description;
   final double? hourlyRate;
   final String? specialistType;
 
@@ -73,6 +74,7 @@ class AppUser extends Equatable {
     this.displayName,
     this.photoURL,
     this.bio,
+    this.description,
     this.hourlyRate,
     this.specialistType,
   });
@@ -103,6 +105,7 @@ class AppUser extends Equatable {
       preferences: data['preferences'] as Map<String, dynamic>?,
       favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
       bio: data['bio'],
+      description: data['description'],
       hourlyRate: data['hourlyRate']?.toDouble(),
       specialistType: data['specialistType'],
     );
@@ -129,6 +132,7 @@ class AppUser extends Equatable {
       'preferences': preferences,
       'favoriteSpecialists': favoriteSpecialists,
       'bio': bio,
+      'description': description,
       'hourlyRate': hourlyRate,
       'specialistType': specialistType,
     };
@@ -155,6 +159,7 @@ class AppUser extends Equatable {
     Map<String, dynamic>? preferences,
     List<String>? favoriteSpecialists,
     String? bio,
+    String? description,
     double? hourlyRate,
     String? specialistType,
   }) {
@@ -178,6 +183,7 @@ class AppUser extends Equatable {
       preferences: preferences ?? this.preferences,
       favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
       bio: bio ?? this.bio,
+      description: description ?? this.description,
       hourlyRate: hourlyRate ?? this.hourlyRate,
       specialistType: specialistType ?? this.specialistType,
     );
@@ -210,6 +216,7 @@ class AppUser extends Equatable {
     preferences,
     favoriteSpecialists,
     bio,
+    description,
     hourlyRate,
     specialistType,
   ];

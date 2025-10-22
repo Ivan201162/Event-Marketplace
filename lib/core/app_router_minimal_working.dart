@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../screens/animated_splash_screen.dart';
 import '../screens/auth/auth_check_screen.dart';
-import '../screens/auth/login_screen.dart';
+import '../screens/auth/login_screen_improved.dart';
+import '../screens/auth/phone_auth_improved.dart';
 import '../screens/main_navigation_screen.dart';
+import '../screens/profile/edit_profile_improved.dart';
 
 /// Минимальный рабочий роутер без проблемных компонентов
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -31,7 +33,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login',
         name: 'login',
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) => const LoginScreenImproved(),
+      ),
+      
+      // Аутентификация по телефону
+      GoRoute(
+        path: '/phone-auth',
+        name: 'phone-auth',
+        builder: (context, state) => const PhoneAuthImproved(),
       ),
 
       // Главное приложение
@@ -39,6 +48,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/main',
         name: 'main',
         builder: (context, state) => const MainNavigationScreen(),
+      ),
+      
+      // Редактирование профиля
+      GoRoute(
+        path: '/profile/edit',
+        name: 'edit-profile',
+        builder: (context, state) => const EditProfileImproved(),
       ),
     ],
     errorBuilder: (context, state) {

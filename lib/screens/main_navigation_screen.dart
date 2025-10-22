@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'chat_placeholder_screen.dart';
-import 'feed/feed_screen.dart';
-import 'home/home_screen.dart';
+import 'feed/feed_screen_improved.dart';
+import 'home/home_screen_improved.dart';
 import 'ideas/ideas_screen.dart';
 import 'monetization/monetization_screen.dart';
-import 'requests/requests_screen.dart';
+import 'requests/requests_screen_improved.dart';
 
 /// Main navigation screen with bottom navigation
 class MainNavigationScreen extends ConsumerStatefulWidget {
@@ -27,19 +27,19 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       icon: Icons.home_outlined,
       activeIcon: Icons.home,
       label: 'Главная',
-      screen: HomeScreen(),
+      screen: HomeScreenImproved(),
     ),
     const NavigationItem(
       icon: Icons.dynamic_feed_outlined,
       activeIcon: Icons.dynamic_feed,
       label: 'Лента',
-      screen: FeedScreen(),
+      screen: FeedScreenImproved(),
     ),
     const NavigationItem(
       icon: Icons.assignment_outlined,
       activeIcon: Icons.assignment,
       label: 'Заявки',
-      screen: RequestsScreen(),
+      screen: RequestsScreenImproved(),
     ),
     const NavigationItem(
       icon: Icons.chat_bubble_outline,

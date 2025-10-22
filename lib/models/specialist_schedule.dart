@@ -78,7 +78,7 @@ class SpecialistSchedule {
       .map(
         (booking) => ScheduleEvent(
           id: booking.id,
-          title: booking.eventTitle,
+          title: booking.eventTitle ?? '',
           startTime: booking.eventDate,
           endTime: booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)),
           type: ScheduleEventType.booking,

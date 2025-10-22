@@ -24,6 +24,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
 
   bool _isInitialized = false;
   String _statusText = 'Инициализация...';
+  double _progress = 0.0;
 
   @override
   void initState() {
@@ -113,18 +114,21 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
       // Этап 1: Инициализация
       setState(() {
         _statusText = 'Загрузка приложения...';
+        _progress = 0.2;
       });
       await Future.delayed(const Duration(milliseconds: 500));
 
       // Этап 2: Проверка авторизации
       setState(() {
         _statusText = 'Проверка авторизации...';
+        _progress = 0.6;
       });
       await Future.delayed(const Duration(milliseconds: 800));
 
       // Этап 3: Завершение
       setState(() {
         _statusText = 'Готово!';
+        _progress = 1.0;
       });
       await Future.delayed(const Duration(milliseconds: 500));
 
@@ -141,6 +145,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
       debugPrint('❌ Ошибка инициализации: $e');
       setState(() {
         _statusText = 'Ошибка инициализации';
+        _progress = 1.0;
       });
       
       // В случае ошибки переходим к экрану авторизации
@@ -252,6 +257,38 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                     ),
 
                     const SizedBox(height: 30),
+
+                    // Прогресс-бар
+                    Opacity(
+                      opacity: _textFadeAnimation.value,
+                      child: Container(
+                        width: 200,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                        child: FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: _progress,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(2),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white.withOpacity(0.5),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 0),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
 
                     // Анимированный индикатор загрузки
                     Opacity(

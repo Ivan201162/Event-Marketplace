@@ -314,7 +314,7 @@ class IcsExportService {
     }
     buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
     buffer.writeln('CREATED:${_formatDateTime(booking.createdAt)}');
-    buffer.writeln('LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}');
+    buffer.writeln('LAST-MODIFIED:${_formatDateTime(booking.updatedAt)}');
     buffer.writeln('END:VEVENT');
     buffer.writeln('END:VCALENDAR');
 

@@ -444,7 +444,7 @@ class SmartSpecialist {
     'name': name,
     'description': description,
     'bio': bio,
-    'category': category.name,
+    'category': category?.name ?? '',
     'categories': categories.map((e) => e.name).toList(),
     'subcategories': subcategories,
     'experienceLevel': experienceLevel.name,
@@ -635,7 +635,7 @@ class SmartSpecialist {
     }
 
     // Добавляем стили на основе опыта
-    if (specialist.yearsOfExperience > 5) {
+    if ((specialist.yearsOfExperience ?? 0) > 5) {
       styles.add('опытный');
     }
     if (specialist.rating > 4.5) {
@@ -650,7 +650,7 @@ class SmartSpecialist {
     final keywords = <String>[];
 
     // Добавляем название категории
-    keywords.add(specialist.category.displayName.toLowerCase());
+    keywords.add(specialist.category?.displayName?.toLowerCase() ?? '');
 
     // Добавляем подкатегории
     keywords.addAll(specialist.subcategories.map((s) => s.toLowerCase()));

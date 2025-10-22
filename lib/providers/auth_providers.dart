@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/app_user.dart';
 import '../services/auth_service.dart';
+import '../services/storage_service.dart';
 
 /// Onboarding state notifier
 class OnboardingNotifier extends Notifier<bool> {
@@ -77,6 +78,11 @@ class CanResendCodeNotifier extends Notifier<bool> {
 /// Auth service provider
 final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService();
+});
+
+/// Storage service provider
+final storageServiceProvider = Provider<StorageService>((ref) {
+  return StorageService();
 });
 
 /// Current Firebase user provider

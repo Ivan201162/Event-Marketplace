@@ -174,7 +174,7 @@ class _SpecialistReviewsScreenState extends State<SpecialistReviewsScreen> {
             }
 
             return FutureBuilder<bool>(
-              future: _canLeaveReview(authProvider.user!.uid),
+              future: _canLeaveReview(authProvider.user?.uid ?? ''),
               builder: (context, snapshot) {
                 if (snapshot.data ?? false) {
                   return ElevatedButton.icon(

@@ -330,8 +330,8 @@ class _AdminAdvertisementManagementScreenState extends State<AdminAdvertisementM
   }
 
   void _showEditAdDialog(Advertisement ad) {
-    _titleController.text = ad.title;
-    _descriptionController.text = ad.description;
+    _titleController.text = ad.title ?? '';
+    _descriptionController.text = ad.description ?? '';
     _contentUrlController.text = ad.contentUrl;
     _budgetController.text = ad.budget.toString();
     _selectedType = ad.type;
