@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../providers/auth_providers.dart';
 import '../../providers/notification_providers.dart';
 import '../../providers/specialist_providers.dart';
+import '../../models/specialist_enhanced.dart';
 import '../../services/navigation_service.dart';
 import '../../widgets/animated_skeleton.dart';
 
@@ -467,41 +468,64 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
         const SizedBox(height: 16),
 
         // Заглушка для специалистов
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(40),
-          decoration: BoxDecoration(
-            color: Colors.grey[50],
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey[200]!),
-          ),
-          child: Column(
-            children: [
-              Icon(
-                Icons.people_outline,
-                size: 48,
-                color: Colors.grey[400],
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Специалисты появятся здесь',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Найдите лучших специалистов для ваших мероприятий',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[500],
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+        // ТОП специалисты по городу
+        Consumer(
+          builder: (context, ref, child) {
+            final topSpecialistsAsync = ref.watch(topSpecialistsByCityProvider);
+            
+            return topSpecialistsAsync.when(
+              data: (specialists) {
+                if (specialists.isEmpty) {
+                  return _buildEmptySpecialistsState();
+                }
+                
+                return SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: specialists.length,
+                    itemBuilder: (context, index) {
+                      final specialist = specialists[index];
+                      return _buildSpecialistCard(specialist);
+                    },
+                  ),
+                );
+              },
+              loading: () => _buildSpecialistsLoadingState(),
+              error: (error, stack) => _buildSpecialistsErrorState(error.toString()),
+            );
+          },
+        ),
+        
+        const SizedBox(height: 24),
+        
+        // ТОП специалисты по России
+        Consumer(
+          builder: (context, ref, child) {
+            final topSpecialistsAsync = ref.watch(topSpecialistsByRussiaProvider);
+            
+            return topSpecialistsAsync.when(
+              data: (specialists) {
+                if (specialists.isEmpty) {
+                  return _buildEmptySpecialistsState();
+                }
+                
+                return SizedBox(
+                  height: 200,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: specialists.length,
+                    itemBuilder: (context, index) {
+                      final specialist = specialists[index];
+                      return _buildSpecialistCard(specialist);
+                    },
+                  ),
+                );
+              },
+              loading: () => _buildSpecialistsLoadingState(),
+              error: (error, stack) => _buildSpecialistsErrorState(error.toString()),
+            );
+          },
         ),
       ],
     );
@@ -853,6 +877,206 @@ class _StatCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 10,
               color: color.withOpacity(0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Карточка специалиста
+  Widget _buildSpecialistCard(SpecialistEnhanced specialist) {
+    return Container(
+      width: 160,
+      margin: const EdgeInsets.only(right: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Аватар
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            child: CachedNetworkImage(
+              imageUrl: specialist.avatarUrl ?? '',
+              width: double.infinity,
+              height: 80,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => const ShimmerBox(
+                width: double.infinity,
+                height: 80,
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[200],
+                child: const Icon(Icons.person, size: 40),
+              ),
+            ),
+          ),
+          
+          // Информация
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  specialist.name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  specialist.specialization,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star,
+                      size: 14,
+                      color: Colors.orange[400],
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      specialist.rating.toStringAsFixed(1),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    if (specialist.isVerified)
+                      Icon(
+                        Icons.verified,
+                        size: 14,
+                        color: Colors.blue[400],
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Состояние загрузки специалистов
+  Widget _buildSpecialistsLoadingState() {
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 3,
+        itemBuilder: (context, index) {
+          return Container(
+            width: 160,
+            margin: const EdgeInsets.only(right: 16),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const ShimmerBox(
+              width: 160,
+              height: 200,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  /// Состояние ошибки специалистов
+  Widget _buildSpecialistsErrorState(String error) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.red[50],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.red[200]!),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 32,
+            color: Colors.red[400],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Ошибка загрузки специалистов',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.red[600],
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            error,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.red[500],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Пустое состояние специалистов
+  Widget _buildEmptySpecialistsState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            Icons.people_outline,
+            size: 32,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Пока нет лидеров в вашем городе',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Специалисты появятся здесь',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[500],
             ),
           ),
         ],
