@@ -275,7 +275,7 @@ class MockDataService {
           category: 'Ведущие',
           description:
               'Профессиональный ведущий с 8-летним опытом. Специализируюсь на свадебных церемониях и корпоративных мероприятиях. Создаю незабываемую атмосферу для вашего праздника.',
-          priceRange: const PriceRange(minPrice: 15000, maxPrice: 35000),
+          priceRange: const PriceRange(min: 15000, max: 35000),
           rating: 4.8,
           totalReviews: 127,
           imageUrl:
@@ -327,7 +327,7 @@ class MockDataService {
           category: 'Ведущие',
           description:
               'Молодой и энергичный ведущий. Специализируюсь на современных мероприятиях: тимбилдингах, промо-акциях, молодежных вечеринках.',
-          priceRange: const PriceRange(minPrice: 10000, maxPrice: 25000),
+          priceRange: const PriceRange(min: 10000, max: 25000),
           rating: 4.5,
           totalReviews: 67,
           imageUrl:
@@ -357,7 +357,7 @@ class MockDataService {
           category: 'Фотографы',
           description:
               'Портретный и семейный фотограф. Специализируюсь на детской и семейной фотографии. Создаю теплые и душевные кадры.',
-          priceRange: const PriceRange(minPrice: 15000, maxPrice: 35000),
+          priceRange: const PriceRange(min: 15000, max: 35000),
           rating: 4.8,
           totalReviews: 145,
           imageUrl:
@@ -559,7 +559,7 @@ class MockDataService {
           category: 'Музыканты',
           description:
               'Скрипачка с консерваторским образованием. Играю классику, джаз, современную музыку. Идеально для торжественных мероприятий.',
-          priceRange: const PriceRange(minPrice: 15000, maxPrice: 35000),
+          priceRange: const PriceRange(min: 15000, max: 35000),
           rating: 4.9,
           totalReviews: 123,
           imageUrl:
@@ -606,7 +606,7 @@ class MockDataService {
           category: 'Контент-мейкеры',
           description:
               'SMM-менеджер и контент-мейкер. Создаю контент для соцсетей, веду блоги, делаю репортажи с мероприятий.',
-          priceRange: const PriceRange(minPrice: 10000, maxPrice: 25000),
+          priceRange: const PriceRange(min: 10000, max: 25000),
           rating: 4.5,
           totalReviews: 45,
           imageUrl:
@@ -623,7 +623,7 @@ class MockDataService {
           category: 'Оформители/Декораторы',
           description:
               'Декоратор с художественным образованием. Создаю уникальные декорации для свадеб, корпоративов, детских праздников.',
-          priceRange: const PriceRange(minPrice: 20000, maxPrice: 50000),
+          priceRange: const PriceRange(min: 20000, max: 50000),
           rating: 4.8,
           totalReviews: 112,
           imageUrl:
