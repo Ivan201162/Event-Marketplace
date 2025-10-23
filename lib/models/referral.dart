@@ -27,7 +27,9 @@ class Referral {
       isCompleted: data['isCompleted'] ?? false,
       invitedUserName: data['invitedUserName'],
       invitedUserEmail: data['invitedUserEmail'],
-      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+      completedAt: data['completedAt'] != null
+          ? (data['completedAt'] as Timestamp).toDate()
+          : null,
     );
   }
   final String id;
@@ -42,15 +44,16 @@ class Referral {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-    'inviterId': inviterId,
-    'invitedUserId': invitedUserId,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'bonus': bonus,
-    'isCompleted': isCompleted,
-    'invitedUserName': invitedUserName,
-    'invitedUserEmail': invitedUserEmail,
-    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-  };
+        'inviterId': inviterId,
+        'invitedUserId': invitedUserId,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'bonus': bonus,
+        'isCompleted': isCompleted,
+        'invitedUserName': invitedUserName,
+        'invitedUserEmail': invitedUserEmail,
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      };
 
   /// Копирование с изменениями
   Referral copyWith({
@@ -63,17 +66,18 @@ class Referral {
     String? invitedUserName,
     String? invitedUserEmail,
     DateTime? completedAt,
-  }) => Referral(
-    id: id ?? this.id,
-    inviterId: inviterId ?? this.inviterId,
-    invitedUserId: invitedUserId ?? this.invitedUserId,
-    timestamp: timestamp ?? this.timestamp,
-    bonus: bonus ?? this.bonus,
-    isCompleted: isCompleted ?? this.isCompleted,
-    invitedUserName: invitedUserName ?? this.invitedUserName,
-    invitedUserEmail: invitedUserEmail ?? this.invitedUserEmail,
-    completedAt: completedAt ?? this.completedAt,
-  );
+  }) =>
+      Referral(
+        id: id ?? this.id,
+        inviterId: inviterId ?? this.inviterId,
+        invitedUserId: invitedUserId ?? this.invitedUserId,
+        timestamp: timestamp ?? this.timestamp,
+        bonus: bonus ?? this.bonus,
+        isCompleted: isCompleted ?? this.isCompleted,
+        invitedUserName: invitedUserName ?? this.invitedUserName,
+        invitedUserEmail: invitedUserEmail ?? this.invitedUserEmail,
+        completedAt: completedAt ?? this.completedAt,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -130,17 +134,18 @@ class PartnerProgram {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-    'referralCode': referralCode,
-    'totalReferrals': totalReferrals,
-    'completedReferrals': completedReferrals,
-    'totalBonus': totalBonus,
-    'status': status.value,
-    'joinedAt': Timestamp.fromDate(joinedAt),
-    'lastActivityAt': Timestamp.fromDate(lastActivityAt),
-  };
+        'referralCode': referralCode,
+        'totalReferrals': totalReferrals,
+        'completedReferrals': completedReferrals,
+        'totalBonus': totalBonus,
+        'status': status.value,
+        'joinedAt': Timestamp.fromDate(joinedAt),
+        'lastActivityAt': Timestamp.fromDate(lastActivityAt),
+      };
 
   /// Получить реферальную ссылку
-  String get referralLink => 'https://eventmarketplace.app/invite/$referralCode';
+  String get referralLink =>
+      'https://eventmarketplace.app/invite/$referralCode';
 
   /// Проверить, можно ли получить следующий статус
   bool get canUpgrade {
@@ -207,7 +212,8 @@ enum PartnerStatus {
   gold('gold', 'Золотой партнёр', 10, 20),
   platinum('platinum', 'Платиновый партнёр', 20, 999);
 
-  const PartnerStatus(this.value, this.displayName, this.minReferrals, this.maxReferrals);
+  const PartnerStatus(
+      this.value, this.displayName, this.minReferrals, this.maxReferrals);
 
   final String value;
   final String displayName;
@@ -268,7 +274,9 @@ class Bonus {
       description: data['description'] ?? '',
       earnedAt: (data['earnedAt'] as Timestamp).toDate(),
       isUsed: data['isUsed'] ?? false,
-      usedAt: data['usedAt'] != null ? (data['usedAt'] as Timestamp).toDate() : null,
+      usedAt: data['usedAt'] != null
+          ? (data['usedAt'] as Timestamp).toDate()
+          : null,
       usedFor: data['usedFor'],
     );
   }
@@ -284,15 +292,15 @@ class Bonus {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-    'userId': userId,
-    'amount': amount,
-    'type': type,
-    'description': description,
-    'earnedAt': Timestamp.fromDate(earnedAt),
-    'isUsed': isUsed,
-    'usedAt': usedAt != null ? Timestamp.fromDate(usedAt!) : null,
-    'usedFor': usedFor,
-  };
+        'userId': userId,
+        'amount': amount,
+        'type': type,
+        'description': description,
+        'earnedAt': Timestamp.fromDate(earnedAt),
+        'isUsed': isUsed,
+        'usedAt': usedAt != null ? Timestamp.fromDate(usedAt!) : null,
+        'usedFor': usedFor,
+      };
 
   @override
   bool operator ==(Object other) {

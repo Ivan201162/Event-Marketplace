@@ -19,7 +19,8 @@ class GuestGreetingsScreen extends ConsumerStatefulWidget {
   final String guestName;
 
   @override
-  ConsumerState<GuestGreetingsScreen> createState() => _GuestGreetingsScreenState();
+  ConsumerState<GuestGreetingsScreen> createState() =>
+      _GuestGreetingsScreenState();
 }
 
 class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
@@ -73,119 +74,131 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
   }
 
   Widget _buildGreetingsList() => StreamBuilder<List<GuestGreeting>>(
-    stream: _guestService.getGuestGreetings(widget.event.id),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
+        stream: _guestService.getGuestGreetings(widget.event.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-      if (snapshot.hasError) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('Ошибка загрузки приветствий: ${snapshot.error}'),
-              const SizedBox(height: 16),
-              ElevatedButton(onPressed: () => setState(() {}), child: const Text('Повторить')),
-            ],
-          ),
-        );
-      }
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Ошибка загрузки приветствий: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                      onPressed: () => setState(() {}),
+                      child: const Text('Повторить')),
+                ],
+              ),
+            );
+          }
 
-      final greetings = snapshot.data ?? [];
-      if (greetings.isEmpty) {
-        return const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.message_outlined, size: 64, color: Colors.grey),
-              SizedBox(height: 16),
-              Text('Пока нет приветствий', style: TextStyle(fontSize: 18, color: Colors.grey)),
-              SizedBox(height: 8),
-              Text('Будьте первым, кто оставит приветствие!', style: TextStyle(color: Colors.grey)),
-            ],
-          ),
-        );
-      }
+          final greetings = snapshot.data ?? [];
+          if (greetings.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.message_outlined, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text('Пока нет приветствий',
+                      style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  SizedBox(height: 8),
+                  Text('Будьте первым, кто оставит приветствие!',
+                      style: TextStyle(color: Colors.grey)),
+                ],
+              ),
+            );
+          }
 
-      return ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: greetings.length,
-        itemBuilder: (context, index) {
-          final greeting = greetings[index];
-          return _buildGreetingCard(greeting);
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: greetings.length,
+            itemBuilder: (context, index) {
+              final greeting = greetings[index];
+              return _buildGreetingCard(greeting);
+            },
+          );
         },
       );
-    },
-  );
 
   Widget _buildGreetingCard(GuestGreeting greeting) => Card(
-    margin: const EdgeInsets.only(bottom: 16),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: greeting.guestAvatar != null
-                    ? NetworkImage(greeting.guestAvatar!)
-                    : null,
-                child: greeting.guestAvatar == null ? const Icon(Icons.person) : null,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      greeting.guestName,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: greeting.guestAvatar != null
+                        ? NetworkImage(greeting.guestAvatar!)
+                        : null,
+                    child: greeting.guestAvatar == null
+                        ? const Icon(Icons.person)
+                        : null,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          greeting.guestName,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        Text(
+                          _formatDateTime(greeting.createdAt),
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 12),
+                        ),
+                      ],
                     ),
-                    Text(
-                      _formatDateTime(greeting.createdAt),
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                    ),
-                  ],
-                ),
+                  ),
+                  Chip(
+                    label: Text(greeting.type.displayName),
+                    backgroundColor:
+                        _getTypeColor(greeting.type).withValues(alpha: 0.1),
+                    labelStyle: TextStyle(
+                        color: _getTypeColor(greeting.type), fontSize: 12),
+                  ),
+                ],
               ),
-              Chip(
-                label: Text(greeting.type.displayName),
-                backgroundColor: _getTypeColor(greeting.type).withValues(alpha: 0.1),
-                labelStyle: TextStyle(color: _getTypeColor(greeting.type), fontSize: 12),
+              const SizedBox(height: 12),
+              _buildGreetingContent(greeting),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      greeting.likedBy.contains(widget.guestId)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: greeting.likedBy.contains(widget.guestId)
+                          ? Colors.red
+                          : Colors.grey,
+                    ),
+                    onPressed: () => _toggleLike(greeting),
+                  ),
+                  Text('${greeting.likesCount}'),
+                  const Spacer(),
+                  Text(
+                    _formatDateTime(greeting.createdAt),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  ),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          _buildGreetingContent(greeting),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  greeting.likedBy.contains(widget.guestId)
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                  color: greeting.likedBy.contains(widget.guestId) ? Colors.red : Colors.grey,
-                ),
-                onPressed: () => _toggleLike(greeting),
-              ),
-              Text('${greeting.likesCount}'),
-              const Spacer(),
-              Text(
-                _formatDateTime(greeting.createdAt),
-                style: TextStyle(color: Colors.grey[600], fontSize: 12),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildGreetingContent(GuestGreeting greeting) {
     switch (greeting.type) {
@@ -198,7 +211,8 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
             if (greeting.text != null && greeting.text!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: Text(greeting.text!, style: const TextStyle(fontSize: 16)),
+                child:
+                    Text(greeting.text!, style: const TextStyle(fontSize: 16)),
               ),
             if (greeting.imageUrl != null)
               ClipRRect(
@@ -211,7 +225,8 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                   errorBuilder: (context, error, stackTrace) => Container(
                     height: 200,
                     color: Colors.grey[300],
-                    child: const Icon(Icons.image, size: 48, color: Colors.grey),
+                    child:
+                        const Icon(Icons.image, size: 48, color: Colors.grey),
                   ),
                 ),
               ),
@@ -224,7 +239,8 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
             if (greeting.text != null && greeting.text!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: Text(greeting.text!, style: const TextStyle(fontSize: 16)),
+                child:
+                    Text(greeting.text!, style: const TextStyle(fontSize: 16)),
               ),
             if (greeting.videoUrl != null)
               Container(
@@ -238,7 +254,8 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.play_circle_outline, size: 48, color: Colors.grey),
+                      Icon(Icons.play_circle_outline,
+                          size: 48, color: Colors.grey),
                       SizedBox(height: 8),
                       Text('Видео приветствие'),
                     ],
@@ -254,7 +271,8 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
             if (greeting.text != null && greeting.text!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: Text(greeting.text!, style: const TextStyle(fontSize: 16)),
+                child:
+                    Text(greeting.text!, style: const TextStyle(fontSize: 16)),
               ),
             if (greeting.audioUrl != null)
               Container(
@@ -283,97 +301,99 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
   }
 
   Widget _buildAddGreetingForm() => SingleChildScrollView(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildEventInfo(),
-        const SizedBox(height: 24),
-        _buildTypeSelector(),
-        const SizedBox(height: 24),
-        _buildContentInput(),
-        const SizedBox(height: 24),
-        _buildMediaUpload(),
-        const SizedBox(height: 24),
-        _buildSubmitButton(),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildEventInfo(),
+            const SizedBox(height: 24),
+            _buildTypeSelector(),
+            const SizedBox(height: 24),
+            _buildContentInput(),
+            const SizedBox(height: 24),
+            _buildMediaUpload(),
+            const SizedBox(height: 24),
+            _buildSubmitButton(),
+          ],
+        ),
+      );
 
   Widget _buildEventInfo() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Событие', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Text(widget.event.title, style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 4),
-          Text(
-            '${widget.event.date.day}.${widget.event.date.month}.${widget.event.date.year}',
-            style: TextStyle(color: Colors.grey[600], fontSize: 14),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Событие',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text(widget.event.title, style: const TextStyle(fontSize: 16)),
+              const SizedBox(height: 4),
+              Text(
+                '${widget.event.date.day}.${widget.event.date.month}.${widget.event.date.year}',
+                style: TextStyle(color: Colors.grey[600], fontSize: 14),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildTypeSelector() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Тип приветствия',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Тип приветствия',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                children: GreetingType.values.map((type) {
+                  final isSelected = _selectedType == type;
+                  return FilterChip(
+                    label: Text(type.displayName),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() {
+                          _selectedType = type;
+                        });
+                      }
+                    },
+                    selectedColor: Colors.blue.withValues(alpha: 0.2),
+                    checkmarkColor: Colors.blue,
+                  );
+                }).toList(),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            children: GreetingType.values.map((type) {
-              final isSelected = _selectedType == type;
-              return FilterChip(
-                label: Text(type.displayName),
-                selected: isSelected,
-                onSelected: (selected) {
-                  if (selected) {
-                    setState(() {
-                      _selectedType = type;
-                    });
-                  }
-                },
-                selectedColor: Colors.blue.withValues(alpha: 0.2),
-                checkmarkColor: Colors.blue,
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildContentInput() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Содержание', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _textController,
-            maxLines: 5,
-            decoration: const InputDecoration(
-              hintText: 'Введите ваше приветствие...',
-              border: OutlineInputBorder(),
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Содержание',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _textController,
+                maxLines: 5,
+                decoration: const InputDecoration(
+                  hintText: 'Введите ваше приветствие...',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildMediaUpload() {
     if (_selectedType == GreetingType.text) {
@@ -386,7 +406,8 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Медиафайл', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Медиафайл',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             _buildMediaUploadButton(),
           ],
@@ -435,21 +456,23 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
         const SizedBox(height: 12),
         SizedBox(
           width: double.infinity,
-          child: OutlinedButton.icon(onPressed: _uploadMedia, icon: Icon(icon), label: Text(label)),
+          child: OutlinedButton.icon(
+              onPressed: _uploadMedia, icon: Icon(icon), label: Text(label)),
         ),
       ],
     );
   }
 
   Widget _buildSubmitButton() => SizedBox(
-    width: double.infinity,
-    child: ElevatedButton.icon(
-      onPressed: _submitGreeting,
-      icon: const Icon(Icons.send),
-      label: const Text('Отправить приветствие'),
-      style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 12)),
-    ),
-  );
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _submitGreeting,
+          icon: const Icon(Icons.send),
+          label: const Text('Отправить приветствие'),
+          style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12)),
+        ),
+      );
 
   Color _getTypeColor(GreetingType type) {
     switch (type) {
@@ -485,7 +508,8 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -493,7 +517,8 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
     // TODO(developer): Реализовать загрузку медиафайлов
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Функция загрузки медиафайлов будет добавлена в следующих версиях'),
+        content: Text(
+            'Функция загрузки медиафайлов будет добавлена в следующих версиях'),
       ),
     );
   }
@@ -518,7 +543,9 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
         guestId: widget.guestId,
         guestName: widget.guestName,
         type: _selectedType,
-        text: _textController.text.trim().isNotEmpty ? _textController.text.trim() : null,
+        text: _textController.text.trim().isNotEmpty
+            ? _textController.text.trim()
+            : null,
         imageUrl: _imageUrl,
         videoUrl: _videoUrl,
         audioUrl: _audioUrl,
@@ -534,12 +561,15 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
       _tabController.animateTo(0);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Приветствие отправлено!'), backgroundColor: Colors.green),
+        const SnackBar(
+            content: Text('Приветствие отправлено!'),
+            backgroundColor: Colors.green),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка отправки: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(SnackBar(
+          content: Text('Ошибка отправки: $e'), backgroundColor: Colors.red));
     }
   }
 }

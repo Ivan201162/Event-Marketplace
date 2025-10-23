@@ -18,7 +18,8 @@ class SubscriptionService {
 
         if (userDoc.exists) {
           final userData = userDoc.data()!;
-          final following = List<String>.from((userData['following'] as List<dynamic>?) ?? []);
+          final following = List<String>.from(
+              (userData['following'] as List<dynamic>?) ?? []);
 
           if (!following.contains(targetUserId)) {
             following.add(targetUserId);
@@ -32,7 +33,8 @@ class SubscriptionService {
 
         if (targetDoc.exists) {
           final targetData = targetDoc.data()!;
-          final followers = List<String>.from((targetData['followers'] as List<dynamic>?) ?? []);
+          final followers = List<String>.from(
+              (targetData['followers'] as List<dynamic>?) ?? []);
 
           if (!followers.contains(userId)) {
             followers.add(userId);
@@ -55,7 +57,8 @@ class SubscriptionService {
 
         if (userDoc.exists) {
           final userData = userDoc.data()!;
-          final following = List<String>.from((userData['following'] as List<dynamic>?) ?? []);
+          final following = List<String>.from(
+              (userData['following'] as List<dynamic>?) ?? []);
           following.remove(targetUserId);
           transaction.update(userRef, {'following': following});
         }
@@ -66,7 +69,8 @@ class SubscriptionService {
 
         if (targetDoc.exists) {
           final targetData = targetDoc.data()!;
-          final followers = List<String>.from((targetData['followers'] as List<dynamic>?) ?? []);
+          final followers = List<String>.from(
+              (targetData['followers'] as List<dynamic>?) ?? []);
           followers.remove(userId);
           transaction.update(targetRef, {'followers': followers});
         }
@@ -83,7 +87,8 @@ class SubscriptionService {
 
       if (userDoc.exists) {
         final userData = userDoc.data()!;
-        return List<String>.from((userData['following'] as List<dynamic>?) ?? []);
+        return List<String>.from(
+            (userData['following'] as List<dynamic>?) ?? []);
       }
 
       return [];
@@ -99,7 +104,8 @@ class SubscriptionService {
 
       if (userDoc.exists) {
         final userData = userDoc.data()!;
-        return List<String>.from((userData['followers'] as List<dynamic>?) ?? []);
+        return List<String>.from(
+            (userData['followers'] as List<dynamic>?) ?? []);
       }
 
       return [];
@@ -144,7 +150,8 @@ class SubscriptionService {
       final following = await getUserFollowing(userId);
       final followers = await getUserFollowers(userId);
 
-      return SubscriptionStats(followingCount: following.length, followersCount: followers.length);
+      return SubscriptionStats(
+          followingCount: following.length, followersCount: followers.length);
     } catch (e) {
       throw Exception('Ошибка при получении статистики: $e');
     }
@@ -153,7 +160,8 @@ class SubscriptionService {
 
 /// Статистика подписок
 class SubscriptionStats {
-  const SubscriptionStats({required this.followingCount, required this.followersCount});
+  const SubscriptionStats(
+      {required this.followingCount, required this.followersCount});
 
   final int followingCount;
   final int followersCount;

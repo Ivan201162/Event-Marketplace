@@ -199,7 +199,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
         if (state.error != null) {
           return ErrorStateWidget(
             error: state.error!,
-            onRetry: () => ref.read(chatListStateProvider(userId).notifier).refresh(),
+            onRetry: () =>
+                ref.read(chatListStateProvider(userId).notifier).refresh(),
             title: 'Ошибка загрузки чатов',
           );
         }
@@ -209,7 +210,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
         }
 
         return RefreshIndicator(
-          onRefresh: () => ref.read(chatListStateProvider(userId).notifier).refresh(),
+          onRefresh: () =>
+              ref.read(chatListStateProvider(userId).notifier).refresh(),
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 8),
             itemCount: state.chats.length,
@@ -244,9 +246,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: hasUnread 
-                  ? theme.primaryColor.withValues(alpha: 0.05)
-                  : null,
+              color:
+                  hasUnread ? theme.primaryColor.withValues(alpha: 0.05) : null,
               borderRadius: BorderRadius.circular(12),
               border: hasUnread
                   ? Border.all(
@@ -261,12 +262,14 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
                   children: [
                     CircleAvatar(
                       radius: 24,
-                      backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
+                      backgroundColor:
+                          theme.primaryColor.withValues(alpha: 0.1),
                       backgroundImage: chat.displayAvatar != null
                           ? NetworkImage(chat.displayAvatar!)
                           : null,
                       child: chat.displayAvatar == null
-                          ? Icon(Icons.person, size: 24, color: theme.primaryColor)
+                          ? Icon(Icons.person,
+                              size: 24, color: theme.primaryColor)
                           : null,
                     ),
                     if (chat.isOnline)
@@ -297,7 +300,9 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
                               chat.displayName,
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal,
+                                fontWeight: hasUnread
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                                 color: hasUnread ? theme.primaryColor : null,
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -308,7 +313,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
                               _formatTime(chat.chat.lastMessageTime!),
                               style: TextStyle(
                                 fontSize: 12,
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.6),
                               ),
                             ),
                         ],
@@ -321,8 +327,11 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
                               chat.chat.lastMessage ?? 'Нет сообщений',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                                fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
+                                color: theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.7),
+                                fontWeight: hasUnread
+                                    ? FontWeight.w500
+                                    : FontWeight.normal,
                               ),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -339,7 +348,9 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                unreadCount > 99 ? '99+' : unreadCount.toString(),
+                                unreadCount > 99
+                                    ? '99+'
+                                    : unreadCount.toString(),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.white,
@@ -374,8 +385,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
           Text(
             'Нет чатов',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -425,7 +436,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Новый чат'),
-        content: const Text('Функция поиска пользователей будет добавлена в следующем обновлении'),
+        content: const Text(
+            'Функция поиска пользователей будет добавлена в следующем обновлении'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

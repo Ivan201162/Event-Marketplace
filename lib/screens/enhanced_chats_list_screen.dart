@@ -10,10 +10,12 @@ class EnhancedChatsListScreen extends ConsumerStatefulWidget {
   const EnhancedChatsListScreen({super.key});
 
   @override
-  ConsumerState<EnhancedChatsListScreen> createState() => _EnhancedChatsListScreenState();
+  ConsumerState<EnhancedChatsListScreen> createState() =>
+      _EnhancedChatsListScreenState();
 }
 
-class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScreen>
+class _EnhancedChatsListScreenState
+    extends ConsumerState<EnhancedChatsListScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ChatService _chatService = ChatService();
@@ -72,44 +74,49 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
   }
 
   Widget _buildChatsList(String? category) => StreamBuilder<List<Chat>>(
-    stream: category != null ? _getChatsByCategoryStream(category) : _getAllChatsStream(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
+        stream: category != null
+            ? _getChatsByCategoryStream(category)
+            : _getAllChatsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-      if (snapshot.hasError) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('Ошибка: ${snapshot.error}'),
-              const SizedBox(height: 16),
-              ElevatedButton(onPressed: () => setState(() {}), child: const Text('Повторить')),
-            ],
-          ),
-        );
-      }
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Ошибка: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                      onPressed: () => setState(() {}),
+                      child: const Text('Повторить')),
+                ],
+              ),
+            );
+          }
 
-      final chats = snapshot.data ?? [];
+          final chats = snapshot.data ?? [];
 
-      if (chats.isEmpty) {
-        return _buildEmptyState(category);
-      }
+          if (chats.isEmpty) {
+            return _buildEmptyState(category);
+          }
 
-      return ListView.builder(
-        itemCount: chats.length,
-        itemBuilder: (context, index) {
-          final chat = chats[index];
-          return _buildChatItem(chat);
+          return ListView.builder(
+            itemCount: chats.length,
+            itemBuilder: (context, index) {
+              final chat = chats[index];
+              return _buildChatItem(chat);
+            },
+          );
         },
       );
-    },
-  );
 
-  Stream<List<Chat>> _getAllChatsStream() => _chatService.getUserChats(_currentUserId!).asStream();
+  Stream<List<Chat>> _getAllChatsStream() =>
+      _chatService.getUserChats(_currentUserId!).asStream();
 
   Stream<List<Chat>> _getChatsByCategoryStream(String category) =>
       _chatService.getChatsByCategory(_currentUserId!, category).asStream();
@@ -122,12 +129,14 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
     switch (category) {
       case 'orders':
         title = 'Нет чатов с заказами';
-        subtitle = 'Здесь будут отображаться чаты с организаторами ваших мероприятий';
+        subtitle =
+            'Здесь будут отображаться чаты с организаторами ваших мероприятий';
         icon = Icons.event;
         break;
       case 'specialists':
         title = 'Нет чатов с исполнителями';
-        subtitle = 'Здесь будут отображаться чаты с исполнителями ваших заказов';
+        subtitle =
+            'Здесь будут отображаться чаты с исполнителями ваших заказов';
         icon = Icons.people;
         break;
       default:
@@ -144,12 +153,18 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
           const SizedBox(height: 16),
           Text(
             title,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall
+                ?.copyWith(color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.grey[500]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -171,15 +186,18 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
     return ListTile(
       leading: CircleAvatar(
         radius: 24,
-        backgroundImage: displayAvatar != null ? NetworkImage(displayAvatar) : null,
-        child: displayAvatar == null ? Text(displayName[0].toUpperCase()) : null,
+        backgroundImage:
+            displayAvatar != null ? NetworkImage(displayAvatar) : null,
+        child:
+            displayAvatar == null ? Text(displayName[0].toUpperCase()) : null,
       ),
       title: Row(
         children: [
           Expanded(
             child: Text(
               displayName,
-              style: TextStyle(fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal),
+              style: TextStyle(
+                  fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal),
             ),
           ),
           if (hasUnread)
@@ -218,7 +236,8 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
             children: [
               if (chat.category != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: _getCategoryColor(chat.category!),
                     borderRadius: BorderRadius.circular(8),
@@ -311,8 +330,8 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
   void _openChat(Chat chat) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) =>
-            EnhancedChatScreen(chatId: chat.id, chatTitle: chat.getDisplayName(_currentUserId!)),
+        builder: (context) => EnhancedChatScreen(
+            chatId: chat.id, chatTitle: chat.getDisplayName(_currentUserId!)),
       ),
     );
   }
@@ -343,7 +362,8 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
             ),
             ListTile(
               leading: const Icon(Icons.clear_all, color: Colors.red),
-              title: const Text('Очистить чат', style: TextStyle(color: Colors.red)),
+              title: const Text('Очистить чат',
+                  style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.of(context).pop();
                 _clearChat(chat);
@@ -351,7 +371,8 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
             ),
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('Удалить чат', style: TextStyle(color: Colors.red)),
+              title: const Text('Удалить чат',
+                  style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.of(context).pop();
                 _deleteChat(chat);
@@ -367,14 +388,16 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
     // TODO(developer): Реализовать поиск по чатам
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Поиск по чатам пока не реализован')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Поиск по чатам пока не реализован')));
   }
 
   void _createNewChat() {
     // TODO(developer): Реализовать создание нового чата
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Создание чата пока не реализовано')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Создание чата пока не реализовано')));
   }
 
   void _showChatInfo(Chat chat) {
@@ -389,11 +412,14 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
             if (chat.description != null) Text('Описание: ${chat.description}'),
             Text('Участников: ${chat.participants.length}'),
             Text('Создан: ${_formatDate(chat.createdAt)}'),
-            if (chat.category != null) Text('Категория: ${_getCategoryLabel(chat.category!)}'),
+            if (chat.category != null)
+              Text('Категория: ${_getCategoryLabel(chat.category!)}'),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -403,7 +429,8 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
     // TODO(developer): Реализовать переключение уведомлений
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Настройки уведомлений пока не реализованы')));
+    ).showSnackBar(const SnackBar(
+        content: Text('Настройки уведомлений пока не реализованы')));
   }
 
   void _clearChat(Chat chat) {
@@ -411,9 +438,12 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистить чат?'),
-        content: const Text('Все сообщения будут удалены. Это действие нельзя отменить.'),
+        content: const Text(
+            'Все сообщения будут удалены. Это действие нельзя отменить.'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -431,16 +461,20 @@ class _EnhancedChatsListScreenState extends ConsumerState<EnhancedChatsListScree
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить чат?'),
-        content: const Text('Чат будет удален навсегда. Это действие нельзя отменить.'),
+        content: const Text(
+            'Чат будет удален навсегда. Это действие нельзя отменить.'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               // TODO(developer): Реализовать удаление чата
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(const SnackBar(content: Text('Удаление чата пока не реализовано')));
+              ).showSnackBar(const SnackBar(
+                  content: Text('Удаление чата пока не реализовано')));
             },
             child: const Text('Удалить'),
           ),

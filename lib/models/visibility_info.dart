@@ -72,7 +72,8 @@ class VisibilityInfo extends Equatable {
   }
 
   @override
-  List<Object?> get props => [isVisible, visibilityPercentage, lastSeen, viewCount, viewDuration];
+  List<Object?> get props =>
+      [isVisible, visibilityPercentage, lastSeen, viewCount, viewDuration];
 
   @override
   String toString() {

@@ -46,7 +46,10 @@ class SpecialistTipsService {
 
       // Сохраняем рекомендации
       for (final tip in tips) {
-        await _firestore.collection(_tipsCollection).doc(tip.id).set(tip.toFirestore());
+        await _firestore
+            .collection(_tipsCollection)
+            .doc(tip.id)
+            .set(tip.toFirestore());
       }
 
       // Обновляем статистику профиля
@@ -90,7 +93,8 @@ class SpecialistTipsService {
           userId: specialist.id,
           field: SpecialistField.description.value,
           title: 'Расширьте описание',
-          message: 'Добавьте подробное описание ваших услуг и опыта работы (минимум 50 символов)',
+          message:
+              'Добавьте подробное описание ваших услуг и опыта работы (минимум 50 символов)',
           action: 'Дополнить',
           actionRoute: '/profile/edit',
           priority: TipPriority.high,
@@ -107,7 +111,8 @@ class SpecialistTipsService {
           userId: specialist.id,
           field: SpecialistField.price.value,
           title: 'Укажите цены',
-          message: 'Добавьте диапазон цен, чтобы клиенты могли сравнить предложения',
+          message:
+              'Добавьте диапазон цен, чтобы клиенты могли сравнить предложения',
           action: 'Указать цены',
           actionRoute: '/profile/pricing',
           priority: TipPriority.critical,
@@ -124,7 +129,8 @@ class SpecialistTipsService {
           userId: specialist.id,
           field: SpecialistField.portfolio.value,
           title: 'Добавьте портфолио',
-          message: 'Загрузите 3-5 лучших работ для демонстрации вашего мастерства',
+          message:
+              'Загрузите 3-5 лучших работ для демонстрации вашего мастерства',
           action: 'Загрузить фото',
           actionRoute: '/profile/portfolio',
           priority: TipPriority.critical,
@@ -156,7 +162,8 @@ class SpecialistTipsService {
           userId: specialist.id,
           field: SpecialistField.availability.value,
           title: 'Укажите доступность',
-          message: 'Добавьте свободные даты в календарь для привлечения клиентов',
+          message:
+              'Добавьте свободные даты в календарь для привлечения клиентов',
           action: 'Настроить календарь',
           actionRoute: '/profile/calendar',
           priority: TipPriority.high,
@@ -207,7 +214,8 @@ class SpecialistTipsService {
           userId: specialist.id,
           field: SpecialistField.reviews.value,
           title: 'Попросите отзывы',
-          message: 'Попросите первых клиентов оставить отзывы для повышения рейтинга',
+          message:
+              'Попросите первых клиентов оставить отзывы для повышения рейтинга',
           action: 'Как получить отзывы',
           actionRoute: '/help/reviews',
           priority: TipPriority.medium,
@@ -267,7 +275,8 @@ class SpecialistTipsService {
         missingFields.add('name');
       }
 
-      if (specialist.description.isNotEmpty && specialist.description.length >= 50) {
+      if (specialist.description.isNotEmpty &&
+          specialist.description.length >= 50) {
         completedFields++;
       } else {
         missingFields.add('description');
@@ -327,7 +336,8 @@ class SpecialistTipsService {
         missingFields.add('category');
       }
 
-      final completionPercentage = ((completedFields / totalFields) * 100).round();
+      final completionPercentage =
+          ((completedFields / totalFields) * 100).round();
 
       final stats = ProfileStats(
         userId: userId,
@@ -339,7 +349,10 @@ class SpecialistTipsService {
         lastUpdated: DateTime.now(),
       );
 
-      await _firestore.collection(_statsCollection).doc(userId).set(stats.toFirestore());
+      await _firestore
+          .collection(_statsCollection)
+          .doc(userId)
+          .set(stats.toFirestore());
     } on Exception catch (e) {
       debugPrint('Ошибка обновления статистики профиля: $e');
     }
@@ -348,7 +361,8 @@ class SpecialistTipsService {
   /// Получить статистику профиля
   Future<ProfileStats?> getProfileStats(String userId) async {
     try {
-      final doc = await _firestore.collection(_statsCollection).doc(userId).get();
+      final doc =
+          await _firestore.collection(_statsCollection).doc(userId).get();
 
       if (doc.exists) {
         return ProfileStats.fromFirestore(doc);
@@ -395,7 +409,8 @@ class SpecialistTipsService {
       final fieldCounts = <String, int>{};
 
       for (final tip in tips) {
-        priorityCounts[tip.priority.value] = (priorityCounts[tip.priority.value] ?? 0) + 1;
+        priorityCounts[tip.priority.value] =
+            (priorityCounts[tip.priority.value] ?? 0) + 1;
         fieldCounts[tip.field] = (fieldCounts[tip.field] ?? 0) + 1;
       }
 
@@ -404,8 +419,10 @@ class SpecialistTipsService {
         'priorityCounts': priorityCounts,
         'fieldCounts': fieldCounts,
         'profileStats': stats,
-        'criticalTips': tips.where((t) => t.priority == TipPriority.critical).length,
-        'highPriorityTips': tips.where((t) => t.priority == TipPriority.high).length,
+        'criticalTips':
+            tips.where((t) => t.priority == TipPriority.critical).length,
+        'highPriorityTips':
+            tips.where((t) => t.priority == TipPriority.high).length,
       };
     } on Exception catch (e) {
       debugPrint('Ошибка получения статистики рекомендаций: $e');
@@ -430,7 +447,8 @@ class SpecialistTipsService {
 
       if (querySnapshot.docs.isNotEmpty) {
         await batch.commit();
-        debugPrint('Удалено ${querySnapshot.docs.length} старых выполненных советов');
+        debugPrint(
+            'Удалено ${querySnapshot.docs.length} старых выполненных советов');
       }
 
       return querySnapshot.docs.length;

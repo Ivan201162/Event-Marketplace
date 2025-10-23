@@ -62,7 +62,8 @@ class LocaleNotifier extends Notifier<Locale> {
   }
 
   /// Получить список доступных языков
-  List<Locale> get availableLocales => const [Locale('ru'), Locale('en'), Locale('kk')];
+  List<Locale> get availableLocales =>
+      const [Locale('ru'), Locale('en'), Locale('kk')];
 
   /// Получить название языка по коду
   String getLanguageName(String languageCode) {
@@ -116,7 +117,8 @@ class LocaleNotifier extends Notifier<Locale> {
   }
 
   /// Получить список поддерживаемых локалей
-  List<Locale> get supportedLocales => const [Locale('ru'), Locale('en'), Locale('kk')];
+  List<Locale> get supportedLocales =>
+      const [Locale('ru'), Locale('en'), Locale('kk')];
 
   /// Переключить локаль
   Locale get toggleLocale {
@@ -134,7 +136,8 @@ class LocaleNotifier extends Notifier<Locale> {
 }
 
 /// Провайдер для управления локализацией (мигрирован с StateNotifierProvider)
-final localeProvider = NotifierProvider<LocaleNotifier, Locale>(LocaleNotifier.new);
+final localeProvider =
+    NotifierProvider<LocaleNotifier, Locale>(LocaleNotifier.new);
 
 /// Провайдер для получения текущего языка
 final currentLanguageProvider = Provider<String>((ref) {

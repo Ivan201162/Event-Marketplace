@@ -6,7 +6,8 @@ class AnimatedInterestingSection extends StatefulWidget {
   const AnimatedInterestingSection({super.key});
 
   @override
-  State<AnimatedInterestingSection> createState() => _AnimatedInterestingSectionState();
+  State<AnimatedInterestingSection> createState() =>
+      _AnimatedInterestingSectionState();
 }
 
 class _AnimatedInterestingSectionState extends State<AnimatedInterestingSection>
@@ -79,7 +80,10 @@ class _AnimatedInterestingSectionState extends State<AnimatedInterestingSection>
         children: [
           Text(
             'Интересное',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           Row(
@@ -167,7 +171,8 @@ class _InterestingCard extends StatefulWidget {
   State<_InterestingCard> createState() => _InterestingCardState();
 }
 
-class _InterestingCardState extends State<_InterestingCard> with SingleTickerProviderStateMixin {
+class _InterestingCardState extends State<_InterestingCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _hoverController;
   late Animation<double> _scaleAnimation;
   bool _isHovered = false;
@@ -183,7 +188,8 @@ class _InterestingCardState extends State<_InterestingCard> with SingleTickerPro
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.05,
-    ).animate(CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut));
   }
 
   @override
@@ -216,10 +222,12 @@ class _InterestingCardState extends State<_InterestingCard> with SingleTickerPro
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: widget.color.withValues(alpha: _isHovered ? 0.15 : 0.1),
+                  color:
+                      widget.color.withValues(alpha: _isHovered ? 0.15 : 0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: widget.color.withValues(alpha: _isHovered ? 0.4 : 0.3),
+                    color:
+                        widget.color.withValues(alpha: _isHovered ? 0.4 : 0.3),
                     width: _isHovered ? 2 : 1,
                   ),
                   boxShadow: _isHovered
@@ -244,7 +252,8 @@ class _InterestingCardState extends State<_InterestingCard> with SingleTickerPro
                       widget.title,
                       style: TextStyle(
                         color: widget.color,
-                        fontWeight: _isHovered ? FontWeight.bold : FontWeight.w500,
+                        fontWeight:
+                            _isHovered ? FontWeight.bold : FontWeight.w500,
                         fontSize: 12,
                       ),
                       textAlign: TextAlign.center,

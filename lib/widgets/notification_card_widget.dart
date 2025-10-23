@@ -22,7 +22,8 @@ class NotificationCardWidget extends ConsumerStatefulWidget {
   final VoidCallback? onDelete;
 
   @override
-  ConsumerState<NotificationCardWidget> createState() => _NotificationCardWidgetState();
+  ConsumerState<NotificationCardWidget> createState() =>
+      _NotificationCardWidgetState();
 }
 
 class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
@@ -41,7 +42,8 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 0.95,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -60,7 +62,10 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
             elevation: widget.notification.isRead ? 1 : 3,
             color: widget.notification.isRead
                 ? Theme.of(context).colorScheme.surface
-                : Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.1),
+                : Theme.of(context)
+                    .colorScheme
+                    .primaryContainer
+                    .withValues(alpha: 0.1),
             child: InkWell(
               onTap: () {
                 _animationController.forward().then((_) {
@@ -99,7 +104,9 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
                   widget.notification.title,
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
+                    fontWeight: widget.notification.isRead
+                        ? FontWeight.normal
+                        : FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -135,7 +142,8 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(
-            child: Text(widget.notification.type.icon, style: const TextStyle(fontSize: 20))),
+            child: Text(widget.notification.type.icon,
+                style: const TextStyle(fontSize: 20))),
       );
 
   Widget _buildNotificationContent() => Column(
@@ -154,7 +162,8 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
                 if (widget.notification.senderAvatar != null)
                   CircleAvatar(
                     radius: 12,
-                    backgroundImage: CachedNetworkImageProvider(widget.notification.senderAvatar!),
+                    backgroundImage: CachedNetworkImageProvider(
+                        widget.notification.senderAvatar!),
                   )
                 else
                   CircleAvatar(
@@ -182,17 +191,19 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
           const Divider(),
           const SizedBox(height: 8),
           if (widget.notification.actionUrl != null)
-            _buildDetailRow('Действие', 'Нажмите для перехода', Icons.open_in_new),
+            _buildDetailRow(
+                'Действие', 'Нажмите для перехода', Icons.open_in_new),
           if (widget.notification.category != null)
-            _buildDetailRow('Категория', widget.notification.category!, Icons.category),
-          _buildDetailRow(
-              'Приоритет', widget.notification.priority.displayName, Icons.priority_high),
+            _buildDetailRow(
+                'Категория', widget.notification.category!, Icons.category),
+          _buildDetailRow('Приоритет', widget.notification.priority.displayName,
+              Icons.priority_high),
           if (widget.notification.expiresAt != null)
-            _buildDetailRow(
-                'Истекает', _formatDate(widget.notification.expiresAt!), Icons.schedule),
+            _buildDetailRow('Истекает',
+                _formatDate(widget.notification.expiresAt!), Icons.schedule),
           if (widget.notification.readAt != null)
-            _buildDetailRow(
-                'Прочитано', _formatDate(widget.notification.readAt!), Icons.check_circle),
+            _buildDetailRow('Прочитано',
+                _formatDate(widget.notification.readAt!), Icons.check_circle),
         ],
       );
 
@@ -204,10 +215,14 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
             const SizedBox(width: 8),
             Text(
               '$label: ',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey[700]),
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[700]),
             ),
             Expanded(
-              child: Text(value, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+              child: Text(value,
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600])),
             ),
           ],
         ),
@@ -238,8 +253,11 @@ class _NotificationCardWidgetState extends ConsumerState<NotificationCardWidget>
               ),
               const PopupMenuItem(
                 value: 'archive',
-                child:
-                    Row(children: [Icon(Icons.archive), SizedBox(width: 8), Text('Архивировать')]),
+                child: Row(children: [
+                  Icon(Icons.archive),
+                  SizedBox(width: 8),
+                  Text('Архивировать')
+                ]),
               ),
               const PopupMenuItem(
                 value: 'delete',

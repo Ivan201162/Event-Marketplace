@@ -76,7 +76,8 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
   void _preloadImage() {
     if (widget.enableMemoryOptimization) {
       // Предзагрузка изображения в кэш
-      precacheImage(CachedNetworkImageProvider(_effectiveImageUrl), context).then((_) {
+      precacheImage(CachedNetworkImageProvider(_effectiveImageUrl), context)
+          .then((_) {
         if (mounted) {
           setState(() {});
         }
@@ -106,16 +107,20 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
       useOldImageOnUrlChange: widget.useOldImageOnUrlChange,
       memCacheWidth: widget.memCacheWidth,
       memCacheHeight: widget.memCacheHeight,
-      maxWidthDiskCache: widget.enableDiskCache ? widget.maxWidthDiskCache : null,
-      maxHeightDiskCache: widget.enableDiskCache ? widget.maxHeightDiskCache : null,
+      maxWidthDiskCache:
+          widget.enableDiskCache ? widget.maxWidthDiskCache : null,
+      maxHeightDiskCache:
+          widget.enableDiskCache ? widget.maxHeightDiskCache : null,
       cacheKey: widget.cacheKey,
       placeholder: (context, url) => _buildPlaceholder(theme),
       errorWidget: (context, url, error) => _buildErrorWidget(theme),
-      imageBuilder: (context, imageProvider) => _buildImageBuilder(imageProvider),
+      imageBuilder: (context, imageProvider) =>
+          _buildImageBuilder(imageProvider),
     );
 
     if (widget.borderRadius != null) {
-      imageWidget = ClipRRect(borderRadius: widget.borderRadius!, child: imageWidget);
+      imageWidget =
+          ClipRRect(borderRadius: widget.borderRadius!, child: imageWidget);
     }
 
     return imageWidget;
@@ -130,7 +135,8 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
       width: widget.width,
       height: widget.height,
       decoration: BoxDecoration(
-        color: widget.placeholderColor ?? theme.colorScheme.surfaceContainerHighest,
+        color: widget.placeholderColor ??
+            theme.colorScheme.surfaceContainerHighest,
         borderRadius: widget.borderRadius,
       ),
       child: Center(
@@ -139,7 +145,8 @@ class _OptimizedCachedImageState extends State<OptimizedCachedImage>
           height: (widget.height ?? 100) * 0.2,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+            valueColor:
+                AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
           ),
         ),
       ),
@@ -264,7 +271,8 @@ class OptimizedCardImage extends StatelessWidget {
     );
 
     if (elevation > 0) {
-      image = Material(elevation: elevation, borderRadius: borderRadius, child: image);
+      image = Material(
+          elevation: elevation, borderRadius: borderRadius, child: image);
     }
 
     if (onTap != null) {

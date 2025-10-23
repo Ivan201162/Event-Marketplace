@@ -48,7 +48,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                 children: [
                   Icon(Icons.lightbulb_outline, size: 80, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text('Пока нет идей', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  Text('Пока нет идей',
+                      style: TextStyle(fontSize: 18, color: Colors.grey)),
                   SizedBox(height: 8),
                   Text(
                     'Будьте первым, кто поделится креативной идеей!',
@@ -90,7 +91,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
             children: [
               const Icon(Icons.error_outline, size: 80, color: Colors.red),
               const SizedBox(height: 16),
-              Text('Ошибка загрузки идей', style: TextStyle(fontSize: 18, color: Colors.red[700])),
+              Text('Ошибка загрузки идей',
+                  style: TextStyle(fontSize: 18, color: Colors.red[700])),
               const SizedBox(height: 8),
               Text(
                 error.toString(),
@@ -155,7 +157,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Center(
-                              child: Text(idea.categoryIcon, style: const TextStyle(fontSize: 40)),
+                              child: Text(idea.categoryIcon,
+                                  style: const TextStyle(fontSize: 40)),
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -165,12 +168,15 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                               children: [
                                 Text(
                                   idea.title,
-                                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   idea.shortDesc,
-                                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.grey[600], fontSize: 16),
                                 ),
                               ],
                             ),
@@ -180,18 +186,21 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                       const SizedBox(height: 24),
                       const Text(
                         'Детали идеи',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        idea.detailedDescription ?? 'Подробное описание пока не добавлено.',
+                        idea.detailedDescription ??
+                            'Подробное описание пока не добавлено.',
                         style: const TextStyle(fontSize: 16),
                       ),
                       if (idea.requiredMaterials.isNotEmpty) ...[
                         const SizedBox(height: 24),
                         const Text(
                           'Необходимые материалы',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 12),
                         Wrap(
@@ -201,7 +210,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                               .map(
                                 (material) => Chip(
                                   label: Text(material),
-                                  backgroundColor: Colors.blue.withValues(alpha: 0.1),
+                                  backgroundColor:
+                                      Colors.blue.withValues(alpha: 0.1),
                                 ),
                               )
                               .toList(),
@@ -211,7 +221,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                         const SizedBox(height: 24),
                         const Text(
                           'Теги',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 12),
                         Wrap(
@@ -221,7 +232,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                               .map(
                                 (tag) => Chip(
                                   label: Text('#$tag'),
-                                  backgroundColor: Colors.orange.withValues(alpha: 0.1),
+                                  backgroundColor:
+                                      Colors.orange.withValues(alpha: 0.1),
                                 ),
                               )
                               .toList(),
@@ -237,12 +249,15 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                                 children: [
                                   const Text(
                                     'Сложность',
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     idea.difficultyText,
-                                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.grey[600]),
                                   ),
                                 ],
                               ),
@@ -255,12 +270,15 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
                                 children: [
                                   const Text(
                                     'Время',
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     idea.formattedDuration,
-                                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.grey[600]),
                                   ),
                                 ],
                               ),
@@ -316,7 +334,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
     if (currentUser == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Войдите в аккаунт для лайков')));
+      ).showSnackBar(
+          const SnackBar(content: Text('Войдите в аккаунт для лайков')));
       return;
     }
 
@@ -329,7 +348,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
   }
 
   void _shareIdea(Idea idea) {
-    final shareText = 'Посмотрите эту идею в Event Marketplace: ${idea.title} - ${idea.shortDesc}';
+    final shareText =
+        'Посмотрите эту идею в Event Marketplace: ${idea.title} - ${idea.shortDesc}';
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -344,7 +364,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
     if (currentUser == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Войдите в аккаунт для сохранения идей')));
+      ).showSnackBar(const SnackBar(
+          content: Text('Войдите в аккаунт для сохранения идей')));
       return;
     }
 
@@ -361,7 +382,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
     if (currentUser == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Войдите в аккаунт для использования идей')));
+      ).showSnackBar(const SnackBar(
+          content: Text('Войдите в аккаунт для использования идей')));
       return;
     }
 

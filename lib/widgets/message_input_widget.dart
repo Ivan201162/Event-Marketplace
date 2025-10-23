@@ -16,7 +16,8 @@ class MessageInputWidget extends StatefulWidget {
   });
 
   final Function(String text) onSendMessage;
-  final Function(List<MessageAttachment> attachments, {String? caption})? onSendMedia;
+  final Function(List<MessageAttachment> attachments, {String? caption})?
+      onSendMedia;
   final Function(MessageAttachment voiceAttachment)? onSendVoice;
   final Function(List<MessageAttachment> documents)? onSendDocument;
   final MessageReply? replyTo;
@@ -78,7 +79,8 @@ class _MessageInputWidgetState extends State<MessageInputWidget> {
                       decoration: const InputDecoration(
                         hintText: 'Введите сообщение...',
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       ),
                       onChanged: _onTextChanged,
                       onSubmitted: _onSendText,
@@ -104,7 +106,8 @@ class _MessageInputWidgetState extends State<MessageInputWidget> {
                         color: _isRecording ? Colors.red : Colors.blue,
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(_isRecording ? Icons.stop : Icons.mic, color: Colors.white),
+                      child: Icon(_isRecording ? Icons.stop : Icons.mic,
+                          color: Colors.white),
                     ),
                   ),
               ],
@@ -162,17 +165,27 @@ class _MessageInputWidgetState extends State<MessageInputWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildOptionButton(icon: Icons.photo_camera, label: 'Камера', onTap: _openCamera),
-            _buildOptionButton(icon: Icons.photo_library, label: 'Галерея', onTap: _openGallery),
-            _buildOptionButton(icon: Icons.videocam, label: 'Видео', onTap: _openVideoCamera),
+            _buildOptionButton(
+                icon: Icons.photo_camera, label: 'Камера', onTap: _openCamera),
+            _buildOptionButton(
+                icon: Icons.photo_library,
+                label: 'Галерея',
+                onTap: _openGallery),
+            _buildOptionButton(
+                icon: Icons.videocam, label: 'Видео', onTap: _openVideoCamera),
             _buildOptionButton(
               icon: Icons.insert_drive_file,
               label: 'Документ',
               onTap: _openDocumentPicker,
             ),
             _buildOptionButton(
-                icon: Icons.location_on, label: 'Местоположение', onTap: _sendLocation),
-            _buildOptionButton(icon: Icons.contact_phone, label: 'Контакт', onTap: _sendContact),
+                icon: Icons.location_on,
+                label: 'Местоположение',
+                onTap: _sendLocation),
+            _buildOptionButton(
+                icon: Icons.contact_phone,
+                label: 'Контакт',
+                onTap: _sendContact),
           ],
         ),
       );
@@ -282,9 +295,12 @@ class _MessageInputWidgetState extends State<MessageInputWidget> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Функция в разработке'),
-        content: Text('Функция "$feature" будет реализована в следующих версиях'),
+        content:
+            Text('Функция "$feature" будет реализована в следующих версиях'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK')),
         ],
       ),
     );

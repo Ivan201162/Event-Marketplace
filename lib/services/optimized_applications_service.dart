@@ -13,9 +13,10 @@ class OptimizedApplicationsService {
   static const Duration _cacheExpiry = Duration(minutes: 15);
 
   /// Получить заявки пользователя с реальным временем
-  Stream<List<Booking>> getUserBookingsStream(String userId, {bool isSpecialist = false}) {
+  Stream<List<Booking>> getUserBookingsStream(String userId,
+      {bool isSpecialist = false}) {
     final field = isSpecialist ? 'specialistId' : 'clientId';
-    
+
     return _firestore
         .collection('bookings')
         .where(field, isEqualTo: userId)
@@ -38,12 +39,13 @@ class OptimizedApplicationsService {
   }) async {
     try {
       final cacheKey = '${userId}_${isSpecialist}_${status?.name ?? 'all'}';
-      
+
       // Проверяем кэш
-      if (!forceRefresh && 
+      if (!forceRefresh &&
           _cachedBookings.containsKey(cacheKey) &&
           _bookingsCacheTime.containsKey(cacheKey) &&
-          DateTime.now().difference(_bookingsCacheTime[cacheKey]!) < _cacheExpiry) {
+          DateTime.now().difference(_bookingsCacheTime[cacheKey]!) <
+              _cacheExpiry) {
         return _cachedBookings[cacheKey]!;
       }
 
@@ -60,7 +62,7 @@ class OptimizedApplicationsService {
       }
 
       final snapshot = await query.get();
-      
+
       final bookings = snapshot.docs.map((doc) {
         final data = doc.data();
         return _parseBookingFromFirestore(doc.id, data);
@@ -111,11 +113,11 @@ class OptimizedApplicationsService {
       };
 
       final docRef = await _firestore.collection('bookings').add(bookingData);
-      
+
       // Очищаем кэш для обновления списков
       _clearUserCache(clientId);
       _clearUserCache(specialistId);
-      
+
       debugPrint('✅ Заявка создана с ID: ${docRef.id}');
       return docRef.id;
     } catch (e) {
@@ -125,7 +127,8 @@ class OptimizedApplicationsService {
   }
 
   /// Обновить статус заявки
-  Future<bool> updateBookingStatus(String bookingId, BookingStatus status) async {
+  Future<bool> updateBookingStatus(
+      String bookingId, BookingStatus status) async {
     try {
       await _firestore.collection('bookings').doc(bookingId).update({
         'status': status.name,
@@ -134,7 +137,7 @@ class OptimizedApplicationsService {
 
       // Очищаем кэш
       _clearAllCache();
-      
+
       debugPrint('✅ Статус заявки обновлён: $status');
       return true;
     } catch (e) {
@@ -147,9 +150,9 @@ class OptimizedApplicationsService {
   Future<Booking?> getBookingById(String bookingId) async {
     try {
       final doc = await _firestore.collection('bookings').doc(bookingId).get();
-      
+
       if (!doc.exists) return null;
-      
+
       return _parseBookingFromFirestore(doc.id, doc.data()!);
     } catch (e) {
       debugPrint('❌ Ошибка получения заявки: $e');
@@ -158,10 +161,11 @@ class OptimizedApplicationsService {
   }
 
   /// Получить статистику заявок
-  Future<Map<String, int>> getBookingStats(String userId, {bool isSpecialist = false}) async {
+  Future<Map<String, int>> getBookingStats(String userId,
+      {bool isSpecialist = false}) async {
     try {
       final field = isSpecialist ? 'specialistId' : 'clientId';
-      
+
       final snapshot = await _firestore
           .collection('bookings')
           .where(field, isEqualTo: userId)
@@ -178,7 +182,7 @@ class OptimizedApplicationsService {
       for (final doc in snapshot.docs) {
         final data = doc.data();
         final status = data['status'] ?? 'pending';
-        
+
         stats['total'] = (stats['total'] ?? 0) + 1;
         stats[status] = (stats[status] ?? 0) + 1;
       }
@@ -198,7 +202,7 @@ class OptimizedApplicationsService {
   }) async {
     try {
       final field = isSpecialist ? 'specialistId' : 'clientId';
-      
+
       final snapshot = await _firestore
           .collection('bookings')
           .where(field, isEqualTo: userId)
@@ -227,7 +231,7 @@ class OptimizedApplicationsService {
       });
 
       _clearAllCache();
-      
+
       debugPrint('✅ Заявка отменена');
       return true;
     } catch (e) {
@@ -239,10 +243,11 @@ class OptimizedApplicationsService {
   /// Получить информацию о специалисте для заявки
   Future<Map<String, dynamic>?> getSpecialistInfo(String specialistId) async {
     try {
-      final doc = await _firestore.collection('specialists').doc(specialistId).get();
-      
+      final doc =
+          await _firestore.collection('specialists').doc(specialistId).get();
+
       if (!doc.exists) return null;
-      
+
       final data = doc.data()!;
       return {
         'id': specialistId,
@@ -285,7 +290,8 @@ class OptimizedApplicationsService {
 
   /// Очистить кэш пользователя
   void _clearUserCache(String userId) {
-    final keysToRemove = _cachedBookings.keys.where((key) => key.startsWith(userId)).toList();
+    final keysToRemove =
+        _cachedBookings.keys.where((key) => key.startsWith(userId)).toList();
     for (final key in keysToRemove) {
       _cachedBookings.remove(key);
       _bookingsCacheTime.remove(key);

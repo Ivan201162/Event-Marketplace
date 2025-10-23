@@ -124,13 +124,13 @@ class SmartSearchTester {
       // Проверяем совместимость
       // if (recommendations.isNotEmpty) {
       //   final specialist = recommendations.first;
-        final compatibility = specialist.calculateCompatibility(
-          preferences.getCompatibilityPreferences(),
-        );
-        debugPrint(
-          '✅ Совместимость с первым специалистом: ${(compatibility * 100).toStringAsFixed(1)}%',
-        );
-      }
+      //   final compatibility = specialist.calculateCompatibility(
+      //     preferences.getCompatibilityPreferences(),
+      //   );
+      //   debugPrint(
+      //     '✅ Совместимость с первым специалистом: ${(compatibility * 100).toStringAsFixed(1)}%',
+      //   );
+      // }
     } catch (e) {
       debugPrint('❌ Ошибка персональных рекомендаций: $e');
     }

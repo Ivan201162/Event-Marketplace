@@ -11,7 +11,8 @@ class SupabaseService {
   // Получение профиля пользователя по ID
   static Future<Profile?> getProfile(String userId) async {
     try {
-      final response = await _client.from('profiles').select().eq('id', userId).single();
+      final response =
+          await _client.from('profiles').select().eq('id', userId).single();
 
       return Profile.fromJson(response);
     } catch (e) {
@@ -23,7 +24,11 @@ class SupabaseService {
   // Получение профиля пользователя по username
   static Future<Profile?> getProfileByUsername(String username) async {
     try {
-      final response = await _client.from('profiles').select().eq('username', username).single();
+      final response = await _client
+          .from('profiles')
+          .select()
+          .eq('username', username)
+          .single();
 
       return Profile.fromJson(response);
     } catch (e) {
@@ -33,14 +38,17 @@ class SupabaseService {
   }
 
   // Получение топ специалистов недели
-  static Future<List<WeeklyLeader>> getWeeklyLeaders({String? city, int limit = 10}) async {
+  static Future<List<WeeklyLeader>> getWeeklyLeaders(
+      {String? city, int limit = 10}) async {
     try {
       final response = await _client.rpc(
         'get_weekly_leaders',
         params: {'city_filter': city, 'limit_count': limit},
       );
 
-      return (response as List).map((json) => WeeklyLeader.fromJson(json)).toList();
+      return (response as List)
+          .map((json) => WeeklyLeader.fromJson(json))
+          .toList();
     } catch (e) {
       debugPrint('Error getting weekly leaders: $e');
       return [];
@@ -104,7 +112,8 @@ class SupabaseService {
   // Получение количества подписчиков
   static Future<int> getFollowersCount(String userId) async {
     try {
-      final response = await _client.from('follows').select('id').eq('following_id', userId);
+      final response =
+          await _client.from('follows').select('id').eq('following_id', userId);
 
       return response.length;
     } catch (e) {
@@ -116,7 +125,8 @@ class SupabaseService {
   // Получение количества подписок
   static Future<int> getFollowingCount(String userId) async {
     try {
-      final response = await _client.from('follows').select('id').eq('follower_id', userId);
+      final response =
+          await _client.from('follows').select('id').eq('follower_id', userId);
 
       return response.length;
     } catch (e) {
@@ -149,14 +159,11 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return [];
 
-      final response = await _client
-          .from('chat_participants')
-          .select('''
+      final response = await _client.from('chat_participants').select('''
             chat_id,
             chats!inner(id, created_at, updated_at),
             profiles!inner(id, username, name, avatar_url)
-          ''')
-          .eq('user_id', currentUserId);
+          ''').eq('user_id', currentUserId);
 
       final List<ChatListItem> chats = [];
 
@@ -171,7 +178,8 @@ class SupabaseService {
             .neq('user_id', currentUserId);
 
         if (participants.isNotEmpty) {
-          final otherUser = participants.first['profiles'] as Map<String, dynamic>;
+          final otherUser =
+              participants.first['profiles'] as Map<String, dynamic>;
 
           // Получаем последнее сообщение
           final lastMessage = await _client
@@ -207,17 +215,13 @@ class SupabaseService {
   // Получение сообщений чата
   static Future<List<Message>> getChatMessages(String chatId) async {
     try {
-      final response = await _client
-          .from('messages')
-          .select('''
+      final response = await _client.from('messages').select('''
             id,
             text,
             created_at,
             sender_id,
             profiles!inner(username, name, avatar_url)
-          ''')
-          .eq('chat_id', chatId)
-          .order('created_at', ascending: true);
+          ''').eq('chat_id', chatId).order('created_at', ascending: true);
 
       return (response as List).map((json) => Message.fromJson(json)).toList();
     } catch (e) {
@@ -239,10 +243,8 @@ class SupabaseService {
       });
 
       // Обновляем время последнего обновления чата
-      await _client
-          .from('chats')
-          .update({'updated_at': DateTime.now().toIso8601String()})
-          .eq('id', chatId);
+      await _client.from('chats').update(
+          {'updated_at': DateTime.now().toIso8601String()}).eq('id', chatId);
 
       return true;
     } catch (e) {
@@ -259,7 +261,9 @@ class SupabaseService {
           .select('profiles!inner(*)')
           .eq('following_id', userId);
 
-      return (response as List).map((json) => Profile.fromJson(json['profiles'])).toList();
+      return (response as List)
+          .map((json) => Profile.fromJson(json['profiles']))
+          .toList();
     } catch (e) {
       debugPrint('Error getting followers: $e');
       return [];
@@ -274,7 +278,9 @@ class SupabaseService {
           .select('profiles!inner(*)')
           .eq('follower_id', userId);
 
-      return (response as List).map((json) => Profile.fromJson(json['profiles'])).toList();
+      return (response as List)
+          .map((json) => Profile.fromJson(json['profiles']))
+          .toList();
     } catch (e) {
       debugPrint('Error getting following: $e');
       return [];
@@ -328,7 +334,8 @@ class SupabaseService {
   // =============================================
 
   // Получение идей с пагинацией
-  static Future<List<Idea>> getIdeas({int limit = 20, int offset = 0, String? category}) async {
+  static Future<List<Idea>> getIdeas(
+      {int limit = 20, int offset = 0, String? category}) async {
     try {
       final query = _client
           .from('ideas')
@@ -364,21 +371,17 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return null;
 
-      final response = await _client
-          .from('ideas')
-          .insert({
-            'user_id': currentUserId,
-            'type': type,
-            'content': content,
-            'media_urls': mediaUrls,
-            'category': category,
-            'is_public': true,
-          })
-          .select('''
+      final response = await _client.from('ideas').insert({
+        'user_id': currentUserId,
+        'type': type,
+        'content': content,
+        'media_urls': mediaUrls,
+        'category': category,
+        'is_public': true,
+      }).select('''
         *,
         profiles!inner(id, username, name, avatar_url)
-      ''')
-          .single();
+      ''').single();
 
       return Idea.fromJson(response);
     } catch (e) {
@@ -393,7 +396,9 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return false;
 
-      await _client.from('idea_likes').insert({'idea_id': ideaId, 'user_id': currentUserId});
+      await _client
+          .from('idea_likes')
+          .insert({'idea_id': ideaId, 'user_id': currentUserId});
 
       return true;
     } catch (e) {
@@ -408,7 +413,11 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return false;
 
-      await _client.from('idea_likes').delete().eq('idea_id', ideaId).eq('user_id', currentUserId);
+      await _client
+          .from('idea_likes')
+          .delete()
+          .eq('idea_id', ideaId)
+          .eq('user_id', currentUserId);
 
       return true;
     } catch (e) {
@@ -482,23 +491,19 @@ class SupabaseService {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return null;
 
-      final response = await _client
-          .from('requests')
-          .insert({
-            'created_by': currentUserId,
-            'title': title,
-            'description': description,
-            'category': category,
-            'budget': budget,
-            'deadline': deadline?.toIso8601String(),
-            'location': location,
-            'status': 'open',
-          })
-          .select('''
+      final response = await _client.from('requests').insert({
+        'created_by': currentUserId,
+        'title': title,
+        'description': description,
+        'category': category,
+        'budget': budget,
+        'deadline': deadline?.toIso8601String(),
+        'location': location,
+        'status': 'open',
+      }).select('''
         *,
         creator:profiles!created_by(id, username, name, avatar_url)
-      ''')
-          .single();
+      ''').single();
 
       return Request.fromJson(response);
     } catch (e) {
@@ -508,9 +513,12 @@ class SupabaseService {
   }
 
   // Обновление статуса заявки
-  static Future<bool> updateRequestStatus(String requestId, String status) async {
+  static Future<bool> updateRequestStatus(
+      String requestId, String status) async {
     try {
-      await _client.from('requests').update({'status': status}).eq('id', requestId);
+      await _client
+          .from('requests')
+          .update({'status': status}).eq('id', requestId);
 
       return true;
     } catch (e) {
@@ -524,8 +532,8 @@ class SupabaseService {
     try {
       await _client
           .from('requests')
-          .update({'assigned_to': assigneeId, 'status': 'in_progress'})
-          .eq('id', requestId);
+          .update({'assigned_to': assigneeId, 'status': 'in_progress'}).eq(
+              'id', requestId);
 
       return true;
     } catch (e) {
@@ -567,15 +575,19 @@ class SupabaseService {
   }
 
   // Загрузка аватара
-  static Future<String?> uploadAvatar(String filePath, List<int> fileBytes) async {
+  static Future<String?> uploadAvatar(
+      String filePath, List<int> fileBytes) async {
     try {
       final currentUserId = currentUser?.id;
       if (currentUserId == null) return null;
 
-      final fileName = '${currentUserId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName =
+          '${currentUserId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final filePath = 'avatars/$fileName';
 
-      await _client.storage.from('avatars').uploadBinary(filePath, Uint8List.fromList(fileBytes));
+      await _client.storage
+          .from('avatars')
+          .uploadBinary(filePath, Uint8List.fromList(fileBytes));
 
       final publicUrl = _client.storage.from('avatars').getPublicUrl(filePath);
 

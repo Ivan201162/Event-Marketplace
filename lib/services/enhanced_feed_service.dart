@@ -33,7 +33,8 @@ class EnhancedFeedService {
       final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post = EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
+        final post =
+            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
         posts.add(post);
       }
 
@@ -64,7 +65,8 @@ class EnhancedFeedService {
       final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post = EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
+        final post =
+            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
         posts.add(post);
       }
 
@@ -77,7 +79,8 @@ class EnhancedFeedService {
   /// Получить пост по ID
   Future<EnhancedFeedPost?> getPostById(String postId) async {
     try {
-      final DocumentSnapshot doc = await _firestore.collection('feed').doc(postId).get();
+      final DocumentSnapshot doc =
+          await _firestore.collection('feed').doc(postId).get();
 
       if (doc.exists) {
         return EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
@@ -143,7 +146,9 @@ class EnhancedFeedService {
     bool? isArchived,
   }) async {
     try {
-      final updates = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
+      final updates = <String, dynamic>{
+        'updatedAt': FieldValue.serverTimestamp()
+      };
 
       if (content != null) updates['content'] = content;
       if (tags != null) updates['tags'] = tags;
@@ -220,7 +225,10 @@ class EnhancedFeedService {
       );
 
       // Добавляем комментарий в коллекцию комментариев
-      await _firestore.collection('comments').doc(commentId).set(comment.toMap());
+      await _firestore
+          .collection('comments')
+          .doc(commentId)
+          .set(comment.toMap());
 
       // Обновляем счётчик комментариев в посте
       await _firestore.collection('feed').doc(postId).update({
@@ -255,7 +263,8 @@ class EnhancedFeedService {
       final comments = <FeedPostComment>[];
 
       for (final doc in snapshot.docs) {
-        final comment = FeedPostComment.fromMap(doc.data()! as Map<String, dynamic>);
+        final comment =
+            FeedPostComment.fromMap(doc.data()! as Map<String, dynamic>);
         comments.add(comment);
       }
 
@@ -346,7 +355,8 @@ class EnhancedFeedService {
       final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post = EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
+        final post =
+            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
         posts.add(post);
       }
 
@@ -382,18 +392,21 @@ class EnhancedFeedService {
         queryBuilder = queryBuilder.where('location', isEqualTo: location);
       }
 
-      queryBuilder = queryBuilder.orderBy('createdAt', descending: true).limit(limit);
+      queryBuilder =
+          queryBuilder.orderBy('createdAt', descending: true).limit(limit);
 
       final snapshot = await queryBuilder.get();
       final posts = <EnhancedFeedPost>[];
 
       for (final doc in snapshot.docs) {
-        final post = EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
+        final post =
+            EnhancedFeedPost.fromMap(doc.data()! as Map<String, dynamic>);
 
         // Фильтр по тексту (на клиенте, так как Firestore не поддерживает полнотекстовый поиск)
         if (query.isEmpty ||
             post.content.toLowerCase().contains(query.toLowerCase()) ||
-            post.tags.any((tag) => tag.toLowerCase().contains(query.toLowerCase()))) {
+            post.tags.any(
+                (tag) => tag.toLowerCase().contains(query.toLowerCase()))) {
           posts.add(post);
         }
       }

@@ -57,7 +57,8 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
         });
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(SnackBar(
+            content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -72,7 +73,9 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
             .where(
               (studio) =>
                   studio.name.toLowerCase().contains(query.toLowerCase()) ||
-                  studio.description.toLowerCase().contains(query.toLowerCase()) ||
+                  studio.description
+                      .toLowerCase()
+                      .contains(query.toLowerCase()) ||
                   studio.address.toLowerCase().contains(query.toLowerCase()),
             )
             .toList();
@@ -95,7 +98,9 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
             onPressed: () {
               // TODO(developer): Переход к созданию фотостудии
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Создание фотостудии будет реализовано позже')),
+                const SnackBar(
+                    content:
+                        Text('Создание фотостудии будет реализовано позже')),
               );
             },
             tooltip: 'Добавить фотостудию',
@@ -121,7 +126,8 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
                         icon: const Icon(Icons.clear),
                       )
                     : null,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.surface,
               ),
@@ -134,20 +140,20 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _filteredPhotoStudios.isEmpty
-                ? _buildEmptyState()
-                : RefreshIndicator(
-                    onRefresh: _loadPhotoStudios,
-                    child: ListView.builder(
-                      itemCount: _filteredPhotoStudios.length,
-                      itemBuilder: (context, index) {
-                        final photoStudio = _filteredPhotoStudios[index];
-                        return PhotoStudioCard(
-                          photoStudio: photoStudio,
-                          onTap: () => _showPhotoStudioDetails(photoStudio),
-                        );
-                      },
-                    ),
-                  ),
+                    ? _buildEmptyState()
+                    : RefreshIndicator(
+                        onRefresh: _loadPhotoStudios,
+                        child: ListView.builder(
+                          itemCount: _filteredPhotoStudios.length,
+                          itemBuilder: (context, index) {
+                            final photoStudio = _filteredPhotoStudios[index];
+                            return PhotoStudioCard(
+                              photoStudio: photoStudio,
+                              onTap: () => _showPhotoStudioDetails(photoStudio),
+                            );
+                          },
+                        ),
+                      ),
           ),
         ],
       ),
@@ -155,40 +161,42 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
   }
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          _searchQuery.isNotEmpty ? Icons.search_off : Icons.photo_camera,
-          size: 64,
-          color: Colors.grey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              _searchQuery.isNotEmpty ? Icons.search_off : Icons.photo_camera,
+              size: 64,
+              color: Colors.grey,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              _searchQuery.isNotEmpty
+                  ? 'Фотостудии не найдены'
+                  : 'Нет доступных фотостудий',
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _searchQuery.isNotEmpty
+                  ? 'Попробуйте изменить поисковый запрос'
+                  : 'Фотостудии появятся здесь, когда владельцы их добавят',
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            if (_searchQuery.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  _searchController.clear();
+                  _filterPhotoStudios('');
+                },
+                child: const Text('Очистить поиск'),
+              ),
+            ],
+          ],
         ),
-        const SizedBox(height: 16),
-        Text(
-          _searchQuery.isNotEmpty ? 'Фотостудии не найдены' : 'Нет доступных фотостудий',
-          style: const TextStyle(fontSize: 18, color: Colors.grey),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          _searchQuery.isNotEmpty
-              ? 'Попробуйте изменить поисковый запрос'
-              : 'Фотостудии появятся здесь, когда владельцы их добавят',
-          style: const TextStyle(color: Colors.grey),
-          textAlign: TextAlign.center,
-        ),
-        if (_searchQuery.isNotEmpty) ...[
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              _searchController.clear();
-              _filterPhotoStudios('');
-            },
-            child: const Text('Очистить поиск'),
-          ),
-        ],
-      ],
-    ),
-  );
+      );
 
   void _showPhotoStudioDetails(PhotoStudio photoStudio) {
     showModalBottomSheet<void>(
@@ -215,7 +223,10 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
                       photoStudio.name,
                       style: Theme.of(
                         context,
-                      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      )
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
                   IconButton(
@@ -252,7 +263,8 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
                                 child: Image.network(
                                   photoStudio.images[index],
                                   fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) => Container(
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Container(
                                     color: Colors.grey[300],
                                     child: const Icon(Icons.image, size: 48),
                                   ),
@@ -291,7 +303,8 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
                             _showBookingDialog(photoStudio);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),
@@ -317,7 +330,8 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
       children: [
         Text(
           'Информация',
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleMedium
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         _buildInfoRow(Icons.location_on, 'Адрес', photoStudio.address),
@@ -334,27 +348,30 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
   }
 
   Widget _buildInfoRow(IconData icon, String label, String value) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 16, color: Colors.grey),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 16, color: Colors.grey),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                  Text(value, style: Theme.of(context).textTheme.bodyMedium),
+                ],
               ),
-              Text(value, style: Theme.of(context).textTheme.bodyMedium),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildAmenitiesSection(PhotoStudio photoStudio) {
     final theme = Theme.of(context);
@@ -362,7 +379,9 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Удобства', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+        Text('Удобства',
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -370,11 +389,14 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
           children: photoStudio.amenities
               .map(
                 (amenity) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+                    border: Border.all(
+                        color:
+                            theme.colorScheme.outline.withValues(alpha: 0.2)),
                   ),
                   child: Text(amenity, style: theme.textTheme.bodySmall),
                 ),
@@ -391,7 +413,9 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Цены', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+        Text('Цены',
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         if (photoStudio.hourlyRate != null)
           _buildPricingRow('За час', photoStudio.getFormattedHourlyRate()),
@@ -402,18 +426,21 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
   }
 
   Widget _buildPricingRow(String label, String price) => Padding(
-    padding: const EdgeInsets.only(bottom: 4),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label),
-        Text(
-          price,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label),
+            Text(
+              price,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w500),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildWorkingHoursSection(PhotoStudio photoStudio) {
     final theme = Theme.of(context);
@@ -423,7 +450,8 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
       children: [
         Text(
           'Рабочие часы',
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.titleMedium
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         ...photoStudio.workingHours.keys.map((day) {
@@ -435,7 +463,10 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
               padding: const EdgeInsets.only(bottom: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text(day), Text(open == 'Закрыто' ? 'Закрыто' : '$open - $close')],
+                children: [
+                  Text(day),
+                  Text(open == 'Закрыто' ? 'Закрыто' : '$open - $close')
+                ],
               ),
             );
           }
@@ -452,7 +483,9 @@ class _PhotoStudiosScreenState extends ConsumerState<PhotoStudiosScreen> {
         title: Text('Бронирование ${photoStudio.name}'),
         content: const Text('Функция бронирования будет реализована позже'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK')),
         ],
       ),
     );

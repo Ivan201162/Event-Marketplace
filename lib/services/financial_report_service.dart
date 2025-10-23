@@ -26,13 +26,17 @@ class FinancialReportService {
           .where((p) => p.status == PaymentStatus.refunded)
           .fold<double>(0, (sum, payment) => sum + payment.amount);
 
-      final completedPayments = payments.where((p) => p.status == PaymentStatus.completed).length;
+      final completedPayments =
+          payments.where((p) => p.status == PaymentStatus.completed).length;
 
-      final pendingPayments = payments.where((p) => p.status == PaymentStatus.pending).length;
+      final pendingPayments =
+          payments.where((p) => p.status == PaymentStatus.pending).length;
 
-      final failedPayments = payments.where((p) => p.status == PaymentStatus.failed).length;
+      final failedPayments =
+          payments.where((p) => p.status == PaymentStatus.failed).length;
 
-      final refundedPayments = payments.where((p) => p.status == PaymentStatus.refunded).length;
+      final refundedPayments =
+          payments.where((p) => p.status == PaymentStatus.refunded).length;
 
       // Группировка по месяцам
       final monthlyBreakdown = _groupPaymentsByMonth(payments);
@@ -80,11 +84,13 @@ class FinancialReportService {
           .where(
             (p) =>
                 p.status == PaymentStatus.completed &&
-                (p.type == PaymentType.deposit || p.type == PaymentType.finalPayment),
+                (p.type == PaymentType.deposit ||
+                    p.type == PaymentType.finalPayment),
           )
           .toList();
 
-      final totalIncome = incomePayments.fold<double>(0, (sum, payment) => sum + payment.amount);
+      final totalIncome = incomePayments.fold<double>(
+          0, (sum, payment) => sum + payment.amount);
 
       final totalFees = incomePayments.fold<double>(
         0,
@@ -99,7 +105,8 @@ class FinancialReportService {
       final netIncome = totalIncome - totalFees - totalTaxes;
 
       final totalBookings = incomePayments.length;
-      final averageBookingValue = totalBookings > 0 ? totalIncome / totalBookings : 0.0;
+      final averageBookingValue =
+          totalBookings > 0 ? totalIncome / totalBookings : 0.0;
 
       // Группировка по месяцам
       final monthlyBreakdown = _groupPaymentsByMonth(incomePayments);
@@ -149,7 +156,8 @@ class FinancialReportService {
     }
 
     query = query
-        .where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .where('createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
         .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
         .orderBy('createdAt', descending: true);
 
@@ -164,7 +172,8 @@ class FinancialReportService {
     for (final payment in payments) {
       final monthKey =
           '${payment.createdAt.year}-${payment.createdAt.month.toString().padLeft(2, '0')}';
-      monthlyBreakdown[monthKey] = (monthlyBreakdown[monthKey] ?? 0.0) + payment.amount;
+      monthlyBreakdown[monthKey] =
+          (monthlyBreakdown[monthKey] ?? 0.0) + payment.amount;
     }
 
     return monthlyBreakdown;
@@ -328,5 +337,6 @@ class SpecialistIncomeReport {
   String get formattedNetIncome => '${netIncome.toStringAsFixed(2)} ₽';
 
   /// Форматировать среднюю стоимость заказа
-  String get formattedAverageBookingValue => '${averageBookingValue.toStringAsFixed(2)} ₽';
+  String get formattedAverageBookingValue =>
+      '${averageBookingValue.toStringAsFixed(2)} ₽';
 }

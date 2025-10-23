@@ -85,10 +85,15 @@ class _ChatTestDataButtonState extends State<ChatTestDataButton> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Подтверждение'),
-        content: const Text('Вы уверены, что хотите удалить все тестовые данные чатов?'),
+        content: const Text(
+            'Вы уверены, что хотите удалить все тестовые данные чатов?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Удалить')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Удалить')),
         ],
       ),
     );

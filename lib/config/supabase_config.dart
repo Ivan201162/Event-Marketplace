@@ -23,7 +23,8 @@ class SupabaseConfig {
   static const bool isDevelopment = true;
 
   // URL для редиректов (для веб-версии)
-  static const String redirectUrl = 'io.supabase.eventmarketplace://login-callback/';
+  static const String redirectUrl =
+      'io.supabase.eventmarketplace://login-callback/';
 
   // Настройки Storage
   static const String avatarsBucket = 'avatars';

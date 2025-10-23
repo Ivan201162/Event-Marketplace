@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final phoneVerificationIdProvider = StateProvider<String?>((ref) => null);
 
 /// Провайдер для состояния phone auth
-final phoneAuthStateProvider = StateProvider<PhoneAuthState>((ref) => PhoneAuthState.idle);
+final phoneAuthStateProvider =
+    StateProvider<PhoneAuthState>((ref) => PhoneAuthState.idle);
 
 /// Провайдер для номера телефона
 final phoneNumberProvider = StateProvider<String?>((ref) => null);

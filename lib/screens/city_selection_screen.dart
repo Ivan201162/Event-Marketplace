@@ -15,7 +15,8 @@ class CitySelectionScreen extends ConsumerStatefulWidget {
   final CityRegion? initialCity;
 
   @override
-  ConsumerState<CitySelectionScreen> createState() => _CitySelectionScreenState();
+  ConsumerState<CitySelectionScreen> createState() =>
+      _CitySelectionScreenState();
 }
 
 class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
@@ -67,7 +68,8 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
               tooltip: 'Мое местоположение',
             ),
           if (_selectedCity != null)
-            TextButton(onPressed: _confirmSelection, child: const Text('Выбрать')),
+            TextButton(
+                onPressed: _confirmSelection, child: const Text('Выбрать')),
         ],
       ),
       body: Column(
@@ -91,11 +93,13 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
               decoration: BoxDecoration(
                 color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: theme.primaryColor.withValues(alpha: 0.3)),
+                border: Border.all(
+                    color: theme.primaryColor.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.location_city, color: theme.primaryColor, size: 20),
+                  Icon(Icons.location_city,
+                      color: theme.primaryColor, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -130,135 +134,148 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
   }
 
   Widget _buildSearchTab() => Consumer(
-    builder: (context, ref, child) {
-      final searchState = ref.watch(citySearchProvider);
-      final popularCitiesState = ref.watch(popularCitiesProvider);
+        builder: (context, ref, child) {
+          final searchState = ref.watch(citySearchProvider);
+          final popularCitiesState = ref.watch(popularCitiesProvider);
 
-      return Column(
-        children: [
-          // Результаты поиска
-          if (_isSearching)
-            Expanded(
-              child: searchState.when(
-                data: (cities) => CityListWidget(cities: cities, onCitySelected: _onCitySelected),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Center(child: Text('Ошибка поиска: $error')),
-              ),
-            )
-          else
-            // Популярные города
-            Expanded(
-              child: popularCitiesState.when(
-                data: (cities) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Text(
-                        'Популярные города',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
+          return Column(
+            children: [
+              // Результаты поиска
+              if (_isSearching)
+                Expanded(
+                  child: searchState.when(
+                    data: (cities) => CityListWidget(
+                        cities: cities, onCitySelected: _onCitySelected),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) =>
+                        Center(child: Text('Ошибка поиска: $error')),
+                  ),
+                )
+              else
+                // Популярные города
+                Expanded(
+                  child: popularCitiesState.when(
+                    data: (cities) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            'Популярные города',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+                        Expanded(
+                          child: CityListWidget(
+                              cities: cities, onCitySelected: _onCitySelected),
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: CityListWidget(cities: cities, onCitySelected: _onCitySelected),
-                    ),
-                  ],
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) =>
+                        Center(child: Text('Ошибка загрузки: $error')),
+                  ),
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Center(child: Text('Ошибка загрузки: $error')),
-              ),
-            ),
-        ],
+            ],
+          );
+        },
       );
-    },
-  );
 
   Widget _buildMapTab() => Consumer(
-    builder: (context, ref, child) {
-      final currentLocationState = ref.watch(currentLocationProvider);
-      final nearbyCitiesState = ref.watch(nearbyCitiesProvider);
+        builder: (context, ref, child) {
+          final currentLocationState = ref.watch(currentLocationProvider);
+          final nearbyCitiesState = ref.watch(nearbyCitiesProvider);
 
-      return CityMapWidget(
-        selectedCity: _selectedCity,
-        onCitySelected: _onCitySelected,
-        currentLocation: currentLocationState.valueOrNull,
-        nearbyCities: nearbyCitiesState.valueOrNull ?? [],
-        onLocationRequested: _getCurrentLocation,
+          return CityMapWidget(
+            selectedCity: _selectedCity,
+            onCitySelected: _onCitySelected,
+            currentLocation: currentLocationState.valueOrNull,
+            nearbyCities: nearbyCitiesState.valueOrNull ?? [],
+            onLocationRequested: _getCurrentLocation,
+          );
+        },
       );
-    },
-  );
 
   Widget _buildListTab() => Consumer(
-    builder: (context, ref, child) {
-      final filteredCitiesState = ref.watch(filteredCitiesProvider);
+        builder: (context, ref, child) {
+          final filteredCitiesState = ref.watch(filteredCitiesProvider);
 
-      return Column(
-        children: [
-          // Фильтры
-          _buildFilters(),
+          return Column(
+            children: [
+              // Фильтры
+              _buildFilters(),
 
-          // Список городов
-          Expanded(
-            child: filteredCitiesState.when(
-              data: (cities) => CityListWidget(cities: cities, onCitySelected: _onCitySelected),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(child: Text('Ошибка загрузки: $error')),
-            ),
-          ),
-        ],
+              // Список городов
+              Expanded(
+                child: filteredCitiesState.when(
+                  data: (cities) => CityListWidget(
+                      cities: cities, onCitySelected: _onCitySelected),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, stack) =>
+                      Center(child: Text('Ошибка загрузки: $error')),
+                ),
+              ),
+            ],
+          );
+        },
       );
-    },
-  );
 
   Widget _buildFilters() => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      children: [
-        // Фильтр по региону
-        Consumer(
-          builder: (context, ref, child) {
-            final regionsState = ref.watch(regionsProvider);
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Фильтр по региону
+            Consumer(
+              builder: (context, ref, child) {
+                final regionsState = ref.watch(regionsProvider);
 
-            return DropdownButtonFormField<String>(
-              decoration: const InputDecoration(labelText: 'Регион', border: OutlineInputBorder()),
-              items: [
-                const DropdownMenuItem<String>(child: Text('Все регионы')),
-                ...regionsState.valueOrNull?.map(
-                      (region) => DropdownMenuItem<String>(value: region, child: Text(region)),
-                    ) ??
-                    [],
-              ],
-              onChanged: (region) {
-                ref.read(filteredCitiesProvider.notifier).updateRegion(region);
+                return DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                      labelText: 'Регион', border: OutlineInputBorder()),
+                  items: [
+                    const DropdownMenuItem<String>(child: Text('Все регионы')),
+                    ...regionsState.valueOrNull?.map(
+                          (region) => DropdownMenuItem<String>(
+                              value: region, child: Text(region)),
+                        ) ??
+                        [],
+                  ],
+                  onChanged: (region) {
+                    ref
+                        .read(filteredCitiesProvider.notifier)
+                        .updateRegion(region);
+                  },
+                );
               },
-            );
-          },
-        ),
+            ),
 
-        const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-        // Фильтр по размеру города
-        DropdownButtonFormField<CitySize>(
-          decoration: const InputDecoration(
-            labelText: 'Размер города',
-            border: OutlineInputBorder(),
-          ),
-          items: [
-            const DropdownMenuItem<CitySize>(child: Text('Все размеры')),
-            ...CitySize.values.map(
-              (size) => DropdownMenuItem<CitySize>(
-                value: size,
-                child: Text('${size.icon} ${size.displayName}'),
+            // Фильтр по размеру города
+            DropdownButtonFormField<CitySize>(
+              decoration: const InputDecoration(
+                labelText: 'Размер города',
+                border: OutlineInputBorder(),
               ),
+              items: [
+                const DropdownMenuItem<CitySize>(child: Text('Все размеры')),
+                ...CitySize.values.map(
+                  (size) => DropdownMenuItem<CitySize>(
+                    value: size,
+                    child: Text('${size.icon} ${size.displayName}'),
+                  ),
+                ),
+              ],
+              onChanged: (size) {
+                ref.read(filteredCitiesProvider.notifier).updateCitySize(size);
+              },
             ),
           ],
-          onChanged: (size) {
-            ref.read(filteredCitiesProvider.notifier).updateCitySize(size);
-          },
         ),
-      ],
-    ),
-  );
+      );
 
   void _onSearchChanged(String query) {
     setState(() => _isSearching = query.isNotEmpty);
@@ -282,9 +299,8 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
       final location = await ref.read(currentLocationProvider.future);
       if (location != null) {
         // Получаем ближайшие города
-        await ref
-            .read(nearbyCitiesProvider.notifier)
-            .getNearbyCities(latitude: location.latitude, longitude: location.longitude);
+        await ref.read(nearbyCitiesProvider.notifier).getNearbyCities(
+            latitude: location.latitude, longitude: location.longitude);
 
         // Переключаемся на карту
         _tabController.animateTo(1);

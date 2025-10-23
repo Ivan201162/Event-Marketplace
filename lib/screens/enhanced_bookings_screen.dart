@@ -12,7 +12,8 @@ class EnhancedBookingsScreen extends ConsumerStatefulWidget {
   const EnhancedBookingsScreen({super.key});
 
   @override
-  ConsumerState<EnhancedBookingsScreen> createState() => _EnhancedBookingsScreenState();
+  ConsumerState<EnhancedBookingsScreen> createState() =>
+      _EnhancedBookingsScreenState();
 }
 
 class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
@@ -38,155 +39,158 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Заявки'),
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      bottom: TabBar(
-        controller: _tabController,
-        tabs: const [
-          Tab(text: 'Мои заявки'),
-          Tab(text: 'Заявки мне'),
-        ],
-      ),
-    ),
-    body: Column(
-      children: [
-        // Поиск и фильтры
-        _buildSearchAndFilters(),
-
-        // Контент
-        Expanded(
-          child: TabBarView(
+        appBar: AppBar(
+          title: const Text('Заявки'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          bottom: TabBar(
             controller: _tabController,
-            children: [_buildMyBookingsTab(), _buildIncomingBookingsTab()],
+            tabs: const [
+              Tab(text: 'Мои заявки'),
+              Tab(text: 'Заявки мне'),
+            ],
           ),
         ),
-      ],
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: _createBooking,
-      child: const Icon(Icons.add),
-    ),
-  );
-
-  /// Построить поиск и фильтры
-  Widget _buildSearchAndFilters() => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.grey[50],
-      border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
-    ),
-    child: Column(
-      children: [
-        // Поисковая строка
-        TextField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            hintText: 'Поиск по заявкам...',
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: _searchController.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _searchController.clear();
-                      setState(() {
-                        _searchQuery = '';
-                      });
-                    },
-                  )
-                : null,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            filled: true,
-            fillColor: Colors.white,
-          ),
-          onChanged: (value) {
-            setState(() {
-              _searchQuery = value;
-            });
-          },
-        ),
-
-        const SizedBox(height: 12),
-
-        // Фильтры
-        Row(
+        body: Column(
           children: [
-            // Фильтр по статусу
-            Expanded(
-              child: DropdownButtonFormField<BookingStatus?>(
-                initialValue: _selectedStatus,
-                decoration: const InputDecoration(
-                  labelText: 'Статус',
-                  border: OutlineInputBorder(),
-                  isDense: true,
-                ),
-                hint: const Text('Все статусы'),
-                items: [
-                  const DropdownMenuItem<BookingStatus?>(child: Text('Все статусы')),
-                  ...BookingStatus.values.map(
-                    (status) => DropdownMenuItem<BookingStatus?>(
-                      value: status,
-                      child: Row(
-                        children: [
-                          Icon(_getStatusIcon(status), size: 16, color: _getStatusColor(status)),
-                          const SizedBox(width: 8),
-                          Text(_getStatusText(status)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedStatus = value;
-                  });
-                },
-              ),
-            ),
+            // Поиск и фильтры
+            _buildSearchAndFilters(),
 
-            const SizedBox(width: 12),
-
-            // Фильтр по дате
+            // Контент
             Expanded(
-              child: InkWell(
-                onTap: _selectDate,
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.calendar_today, size: 16),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          _selectedDate != null
-                              ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
-                              : 'Выберите дату',
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
-                      if (_selectedDate != null)
-                        IconButton(
-                          icon: const Icon(Icons.clear, size: 16),
-                          onPressed: () {
-                            setState(() {
-                              _selectedDate = null;
-                            });
-                          },
-                        ),
-                    ],
-                  ),
-                ),
+              child: TabBarView(
+                controller: _tabController,
+                children: [_buildMyBookingsTab(), _buildIncomingBookingsTab()],
               ),
             ),
           ],
         ),
-      ],
-    ),
-  );
+        floatingActionButton: FloatingActionButton(
+          onPressed: _createBooking,
+          child: const Icon(Icons.add),
+        ),
+      );
+
+  /// Построить поиск и фильтры
+  Widget _buildSearchAndFilters() => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
+        ),
+        child: Column(
+          children: [
+            // Поисковая строка
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Поиск по заявкам...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          setState(() {
+                            _searchQuery = '';
+                          });
+                        },
+                      )
+                    : null,
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
+
+            const SizedBox(height: 12),
+
+            // Фильтры
+            Row(
+              children: [
+                // Фильтр по статусу
+                Expanded(
+                  child: DropdownButtonFormField<BookingStatus?>(
+                    initialValue: _selectedStatus,
+                    decoration: const InputDecoration(
+                      labelText: 'Статус',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                    hint: const Text('Все статусы'),
+                    items: [
+                      const DropdownMenuItem<BookingStatus?>(
+                          child: Text('Все статусы')),
+                      ...BookingStatus.values.map(
+                        (status) => DropdownMenuItem<BookingStatus?>(
+                          value: status,
+                          child: Row(
+                            children: [
+                              Icon(_getStatusIcon(status),
+                                  size: 16, color: _getStatusColor(status)),
+                              const SizedBox(width: 8),
+                              Text(_getStatusText(status)),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedStatus = value;
+                      });
+                    },
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                // Фильтр по дате
+                Expanded(
+                  child: InkWell(
+                    onTap: _selectDate,
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.calendar_today, size: 16),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              _selectedDate != null
+                                  ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                                  : 'Выберите дату',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ),
+                          if (_selectedDate != null)
+                            IconButton(
+                              icon: const Icon(Icons.clear, size: 16),
+                              onPressed: () {
+                                setState(() {
+                                  _selectedDate = null;
+                                });
+                              },
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 
   /// Построить вкладку моих заявок
   Widget _buildMyBookingsTab() {
@@ -195,7 +199,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
       return const Center(child: Text('Необходимо войти в систему'));
     }
 
-    final bookingsStream = ref.watch(bookingsByCustomerStreamProvider(currentUser.uid));
+    final bookingsStream =
+        ref.watch(bookingsByCustomerStreamProvider(currentUser.uid));
 
     return bookingsStream.when(
       data: (bookings) {
@@ -230,7 +235,11 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
       loading: () => const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Загрузка заявок...')],
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Загрузка заявок...')
+          ],
         ),
       ),
       error: (error, stack) => Center(
@@ -243,7 +252,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(bookingsByCustomerStreamProvider(currentUser.uid));
+                ref.invalidate(
+                    bookingsByCustomerStreamProvider(currentUser.uid));
               },
               child: const Text('Повторить'),
             ),
@@ -260,7 +270,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
       return const Center(child: Text('Необходимо войти в систему'));
     }
 
-    final bookingsStream = ref.watch(bookingsBySpecialistStreamProvider(currentUser.uid));
+    final bookingsStream =
+        ref.watch(bookingsBySpecialistStreamProvider(currentUser.uid));
 
     return bookingsStream.when(
       data: (bookings) {
@@ -296,7 +307,11 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
       loading: () => const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Загрузка заявок...')],
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Загрузка заявок...')
+          ],
         ),
       ),
       error: (error, stack) => Center(
@@ -309,7 +324,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(bookingsBySpecialistStreamProvider(currentUser.uid));
+                ref.invalidate(
+                    bookingsBySpecialistStreamProvider(currentUser.uid));
               },
               child: const Text('Повторить'),
             ),
@@ -321,31 +337,36 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
 
   /// Построить пустое состояние заявок
   Widget _buildEmptyBookingsState(String title) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          'Нет заявок',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.event_busy, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Нет заявок',
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title == 'Мои заявки'
+                  ? 'Создайте первую заявку'
+                  : 'Заявки появятся здесь',
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+            if (title == 'Мои заявки') ...[
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: _createBooking,
+                icon: const Icon(Icons.add),
+                label: const Text('Создать заявку'),
+              ),
+            ],
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          title == 'Мои заявки' ? 'Создайте первую заявку' : 'Заявки появятся здесь',
-          style: TextStyle(color: Colors.grey[500]),
-        ),
-        if (title == 'Мои заявки') ...[
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: _createBooking,
-            icon: const Icon(Icons.add),
-            label: const Text('Создать заявку'),
-          ),
-        ],
-      ],
-    ),
-  );
+      );
 
   /// Фильтровать заявки
   List<Booking> _filterBookings(List<Booking> bookings) {
@@ -358,8 +379,10 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
           .where(
             (booking) =>
                 (booking.title?.toLowerCase().contains(searchLower) ?? false) ||
-                (booking.customerName?.toLowerCase().contains(searchLower) ?? false) ||
-                (booking.specialistName.toLowerCase().contains(searchLower) ?? false) ||
+                (booking.customerName?.toLowerCase().contains(searchLower) ??
+                    false) ||
+                (booking.specialistName.toLowerCase().contains(searchLower) ??
+                    false) ||
                 (booking.message.toLowerCase().contains(searchLower)),
           )
           .toList();
@@ -367,7 +390,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
 
     // Фильтр по статусу
     if (_selectedStatus != null) {
-      filtered = filtered.where((booking) => booking.status == _selectedStatus).toList();
+      filtered = filtered
+          .where((booking) => booking.status == _selectedStatus)
+          .toList();
     }
 
     // Фильтр по дате
@@ -452,7 +477,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
   void _createBooking() {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (context) => const CreateBookingScreen()));
+    ).push(MaterialPageRoute<void>(
+        builder: (context) => const CreateBookingScreen()));
   }
 
   /// Редактировать заявку
@@ -460,7 +486,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
     // TODO: Реализовать редактирование заявки
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Редактирование заявки будет реализовано')));
+    ).showSnackBar(const SnackBar(
+        content: Text('Редактирование заявки будет реализовано')));
   }
 
   /// Отменить заявку
@@ -471,7 +498,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         title: const Text('Отменить заявку'),
         content: const Text('Вы уверены, что хотите отменить эту заявку?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -482,11 +511,13 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                 if (mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Заявка отменена')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Заявка отменена')));
                 }
               } catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -505,7 +536,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         title: const Text('Подтвердить заявку'),
         content: const Text('Вы подтверждаете эту заявку?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -516,11 +549,13 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                 if (mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Заявка подтверждена')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Заявка подтверждена')));
                 }
               } catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -539,7 +574,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         title: const Text('Отклонить заявку'),
         content: const Text('Вы отклоняете эту заявку?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -550,11 +587,13 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                 if (mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Заявка отклонена')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Заявка отклонена')));
                 }
               } catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -573,7 +612,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         title: const Text('Завершить заявку'),
         content: const Text('Вы завершаете эту заявку?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -584,11 +625,13 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                 if (mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Заявка завершена')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Заявка завершена')));
                 }
               } catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -601,7 +644,8 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
 }
 
 /// Провайдер для потока заявок по заказчику
-final bookingsByCustomerStreamProvider = StreamProvider.family<List<Booking>, String>((
+final bookingsByCustomerStreamProvider =
+    StreamProvider.family<List<Booking>, String>((
   ref,
   customerId,
 ) {
@@ -610,7 +654,8 @@ final bookingsByCustomerStreamProvider = StreamProvider.family<List<Booking>, St
 });
 
 /// Провайдер для потока заявок по специалисту
-final bookingsBySpecialistStreamProvider = StreamProvider.family<List<Booking>, String>((
+final bookingsBySpecialistStreamProvider =
+    StreamProvider.family<List<Booking>, String>((
   ref,
   specialistId,
 ) {
@@ -619,4 +664,5 @@ final bookingsBySpecialistStreamProvider = StreamProvider.family<List<Booking>, 
 });
 
 /// Провайдер для сервиса Firestore
-final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());
+final firestoreServiceProvider =
+    Provider<FirestoreService>((ref) => FirestoreService());

@@ -6,7 +6,8 @@ import '../services/message_reaction_service.dart';
 import '../services/voice_message_service.dart';
 
 /// Провайдер для сервиса голосовых сообщений
-final voiceMessageServiceProvider = Provider<VoiceMessageService>((ref) => VoiceMessageService());
+final voiceMessageServiceProvider =
+    Provider<VoiceMessageService>((ref) => VoiceMessageService());
 
 /// Провайдер для сервиса реакций
 final messageReactionServiceProvider = Provider<MessageReactionService>(
@@ -14,17 +15,20 @@ final messageReactionServiceProvider = Provider<MessageReactionService>(
 );
 
 /// Провайдер для сообщений чата
-final chatMessagesProvider = StreamProvider.family<List<ChatMessageExtended>, String>(
+final chatMessagesProvider =
+    StreamProvider.family<List<ChatMessageExtended>, String>(
   (ref, chatId) => FirebaseFirestore.instance
       .collection('chat_messages')
       .where('chatId', isEqualTo: chatId)
       .orderBy('timestamp', descending: false)
       .snapshots()
-      .map((snapshot) => snapshot.docs.map(ChatMessageExtended.fromDocument).toList()),
+      .map((snapshot) =>
+          snapshot.docs.map(ChatMessageExtended.fromDocument).toList()),
 );
 
 /// Провайдер для последнего сообщения чата
-final lastChatMessageProvider = StreamProvider.family<ChatMessageExtended?, String>(
+final lastChatMessageProvider =
+    StreamProvider.family<ChatMessageExtended?, String>(
   (ref, chatId) => FirebaseFirestore.instance
       .collection('chat_messages')
       .where('chatId', isEqualTo: chatId)
@@ -32,9 +36,9 @@ final lastChatMessageProvider = StreamProvider.family<ChatMessageExtended?, Stri
       .limit(1)
       .snapshots()
       .map((snapshot) {
-        if (snapshot.docs.isEmpty) return null;
-        return ChatMessageExtended.fromDocument(snapshot.docs.first);
-      }),
+    if (snapshot.docs.isEmpty) return null;
+    return ChatMessageExtended.fromDocument(snapshot.docs.first);
+  }),
 );
 
 /// Провайдер для непрочитанных сообщений
@@ -48,18 +52,21 @@ final unreadMessagesCountProvider = StreamProvider.family<int, String>(
 );
 
 /// Провайдер для голосовых сообщений чата
-final voiceMessagesProvider = StreamProvider.family<List<ChatMessageExtended>, String>(
+final voiceMessagesProvider =
+    StreamProvider.family<List<ChatMessageExtended>, String>(
   (ref, chatId) => FirebaseFirestore.instance
       .collection('chat_messages')
       .where('chatId', isEqualTo: chatId)
       .where('type', isEqualTo: 'voice')
       .orderBy('timestamp', descending: false)
       .snapshots()
-      .map((snapshot) => snapshot.docs.map(ChatMessageExtended.fromDocument).toList()),
+      .map((snapshot) =>
+          snapshot.docs.map(ChatMessageExtended.fromDocument).toList()),
 );
 
 /// Провайдер для сообщений с реакциями
-final messagesWithReactionsProvider = StreamProvider.family<List<ChatMessageExtended>, String>(
+final messagesWithReactionsProvider =
+    StreamProvider.family<List<ChatMessageExtended>, String>(
   (ref, chatId) => FirebaseFirestore.instance
       .collection('chat_messages')
       .where('chatId', isEqualTo: chatId)
@@ -74,10 +81,9 @@ final messagesWithReactionsProvider = StreamProvider.family<List<ChatMessageExte
 );
 
 /// Провайдер для статистики реакций чата
-final chatReactionStatsProvider = StreamProvider.family<Map<String, int>, String>(
-  (ref, chatId) => ref
-      .watch(chatMessagesProvider(chatId))
-      .when(
+final chatReactionStatsProvider =
+    StreamProvider.family<Map<String, int>, String>(
+  (ref, chatId) => ref.watch(chatMessagesProvider(chatId)).when(
         data: (messages) async* {
           final reactionService = ref.read(messageReactionServiceProvider);
           yield await reactionService.getChatReactionStats(chatId);
@@ -88,7 +94,8 @@ final chatReactionStatsProvider = StreamProvider.family<Map<String, int>, String
 );
 
 /// Провайдер для поиска сообщений
-final messageSearchProvider = StreamProvider.family<List<ChatMessageExtended>, (String, String)>((
+final messageSearchProvider =
+    StreamProvider.family<List<ChatMessageExtended>, (String, String)>((
   ref,
   params,
 ) {
@@ -106,20 +113,23 @@ final messageSearchProvider = StreamProvider.family<List<ChatMessageExtended>, (
       .map(
         (snapshot) => snapshot.docs
             .map(ChatMessageExtended.fromDocument)
-            .where((message) => message.content.toLowerCase().contains(query.toLowerCase()))
+            .where((message) =>
+                message.content.toLowerCase().contains(query.toLowerCase()))
             .toList(),
       );
 });
 
 /// Провайдер для медиафайлов чата
-final chatMediaProvider = StreamProvider.family<List<ChatMessageExtended>, String>(
+final chatMediaProvider =
+    StreamProvider.family<List<ChatMessageExtended>, String>(
   (ref, chatId) => FirebaseFirestore.instance
       .collection('chat_messages')
       .where('chatId', isEqualTo: chatId)
       .where('type', whereIn: ['image', 'file'])
       .orderBy('timestamp', descending: true)
       .snapshots()
-      .map((snapshot) => snapshot.docs.map(ChatMessageExtended.fromDocument).toList()),
+      .map((snapshot) =>
+          snapshot.docs.map(ChatMessageExtended.fromDocument).toList()),
 );
 
 /// Нотификатор для статуса записи
@@ -165,8 +175,8 @@ class CurrentPlayingMessageNotifier extends Notifier<ChatMessageExtended?> {
 /// Провайдер для текущего воспроизводимого сообщения
 final currentPlayingMessageProvider =
     NotifierProvider<CurrentPlayingMessageNotifier, ChatMessageExtended?>(
-      CurrentPlayingMessageNotifier.new,
-    );
+  CurrentPlayingMessageNotifier.new,
+);
 
 /// Нотификатор для статуса "печатает"
 class TypingStatusNotifier extends Notifier<bool> {
@@ -188,11 +198,13 @@ final activeUsersProvider = StreamProvider.family<List<String>, String>(
       .where('chatId', isEqualTo: chatId)
       .where('isActive', isEqualTo: true)
       .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => doc.data()['userId'] as String).toList()),
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => doc.data()['userId'] as String).toList()),
 );
 
 /// Провайдер для настроек чата
-final chatSettingsProvider = NotifierProvider<ChatSettingsNotifier, ChatSettings>(
+final chatSettingsProvider =
+    NotifierProvider<ChatSettingsNotifier, ChatSettings>(
   ChatSettingsNotifier.new,
 );
 
@@ -217,13 +229,14 @@ class ChatSettings {
     bool? showReadReceipts,
     bool? showTypingIndicator,
     String? theme,
-  }) => ChatSettings(
-    soundEnabled: soundEnabled ?? this.soundEnabled,
-    vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
-    showReadReceipts: showReadReceipts ?? this.showReadReceipts,
-    showTypingIndicator: showTypingIndicator ?? this.showTypingIndicator,
-    theme: theme ?? this.theme,
-  );
+  }) =>
+      ChatSettings(
+        soundEnabled: soundEnabled ?? this.soundEnabled,
+        vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
+        showReadReceipts: showReadReceipts ?? this.showReadReceipts,
+        showTypingIndicator: showTypingIndicator ?? this.showTypingIndicator,
+        theme: theme ?? this.theme,
+      );
 }
 
 /// Notifier для настроек чата
@@ -254,18 +267,22 @@ class ChatSettingsNotifier extends Notifier<ChatSettings> {
 
 /// Провайдер для статистики чата
 final chatStatsProvider = StreamProvider.family<ChatStats, String>(
-  (ref, chatId) => ref
-      .watch(chatMessagesProvider(chatId))
-      .when(
+  (ref, chatId) => ref.watch(chatMessagesProvider(chatId)).when(
         data: (messages) async* {
           final stats = ChatStats(
             totalMessages: messages.length,
-            textMessages: messages.where((m) => m.type == MessageType.text).length,
-            voiceMessages: messages.where((m) => m.type == MessageType.voice).length,
-            imageMessages: messages.where((m) => m.type == MessageType.image).length,
-            fileMessages: messages.where((m) => m.type == MessageType.file).length,
-            totalReactions: messages.fold(0, (sum, m) => sum + m.reactions.length),
-            lastActivity: messages.isNotEmpty ? messages.last.timestamp : DateTime.now(),
+            textMessages:
+                messages.where((m) => m.type == MessageType.text).length,
+            voiceMessages:
+                messages.where((m) => m.type == MessageType.voice).length,
+            imageMessages:
+                messages.where((m) => m.type == MessageType.image).length,
+            fileMessages:
+                messages.where((m) => m.type == MessageType.file).length,
+            totalReactions:
+                messages.fold(0, (sum, m) => sum + m.reactions.length),
+            lastActivity:
+                messages.isNotEmpty ? messages.last.timestamp : DateTime.now(),
           );
           yield stats;
         },
@@ -287,14 +304,14 @@ class ChatStats {
   });
 
   factory ChatStats.empty() => ChatStats(
-    totalMessages: 0,
-    textMessages: 0,
-    voiceMessages: 0,
-    imageMessages: 0,
-    fileMessages: 0,
-    totalReactions: 0,
-    lastActivity: DateTime.now(),
-  );
+        totalMessages: 0,
+        textMessages: 0,
+        voiceMessages: 0,
+        imageMessages: 0,
+        fileMessages: 0,
+        totalReactions: 0,
+        lastActivity: DateTime.now(),
+      );
   final int totalMessages;
   final int textMessages;
   final int voiceMessages;

@@ -7,25 +7,26 @@ import 'core/app_router_minimal_working.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Настройка Crashlytics
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
-  
+
   try {
     debugPrint('🚀 Запуск приложения...');
-    
+
     // Инициализация Bootstrap с таймаутом
     await Bootstrap.initialize().timeout(
       const Duration(seconds: 10),
       onTimeout: () {
-        debugPrint('⚠️ Bootstrap инициализация превысила таймаут, продолжаем...');
+        debugPrint(
+            '⚠️ Bootstrap инициализация превысила таймаут, продолжаем...');
       },
     );
-    
+
     debugPrint('✅ Bootstrap инициализация завершена');
-    
+
     runZonedGuarded(() {
       runApp(const ProviderScope(child: EventMarketplaceApp()));
     }, (error, stack) {
@@ -34,10 +35,10 @@ void main() async {
   } catch (e, stackTrace) {
     debugPrint('❌ Критическая ошибка инициализации: $e');
     debugPrint('Stack trace: $stackTrace');
-    
+
     // Отправляем ошибку в Crashlytics
     FirebaseCrashlytics.instance.recordError(e, stackTrace);
-    
+
     // Запускаем приложение даже при ошибке инициализации
     runApp(const ProviderScope(child: EventMarketplaceApp()));
   }
@@ -49,7 +50,7 @@ class EventMarketplaceApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
-    
+
     return MaterialApp.router(
       title: 'Event Marketplace',
       theme: ThemeData(

@@ -21,7 +21,7 @@ class OptimizedFeedService {
     try {
       // Проверяем кэш для первой загрузки
       if (lastDocument == null && !forceRefresh && _cachedPosts.isNotEmpty) {
-        if (_postsCacheTime != null && 
+        if (_postsCacheTime != null &&
             DateTime.now().difference(_postsCacheTime!) < _cacheExpiry) {
           return FeedState(
             posts: _cachedPosts,
@@ -45,7 +45,7 @@ class OptimizedFeedService {
       }
 
       final snapshot = await query.get();
-      
+
       final posts = snapshot.docs.map((doc) {
         final data = doc.data();
         return EnhancedFeedPost(
@@ -61,8 +61,10 @@ class OptimizedFeedService {
           shares: data['shares']?.toInt() ?? 0,
           isLiked: data['isLiked'] ?? false,
           isSaved: data['isSaved'] ?? false,
-          createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-          updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          createdAt:
+              (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          updatedAt:
+              (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         );
       }).toList();
 
@@ -73,7 +75,7 @@ class OptimizedFeedService {
       }
 
       debugPrint('✅ Загружено ${posts.length} постов');
-      
+
       return FeedState(
         posts: posts,
         isLoading: false,
@@ -96,20 +98,20 @@ class OptimizedFeedService {
   Future<bool> toggleLike(String postId, String userId) async {
     try {
       final postRef = _firestore.collection('posts').doc(postId);
-      
+
       await _firestore.runTransaction((transaction) async {
         final postDoc = await transaction.get(postRef);
-        
+
         if (!postDoc.exists) {
           throw Exception('Пост не найден');
         }
-        
+
         final data = postDoc.data()!;
         final likes = data['likes']?.toInt() ?? 0;
         final likedBy = List<String>.from(data['likedBy'] ?? []);
-        
+
         bool isLiked = likedBy.contains(userId);
-        
+
         if (isLiked) {
           likedBy.remove(userId);
           transaction.update(postRef, {
@@ -126,7 +128,7 @@ class OptimizedFeedService {
           });
         }
       });
-      
+
       return true;
     } catch (e) {
       debugPrint('❌ Ошибка при лайке поста: $e');
@@ -138,31 +140,31 @@ class OptimizedFeedService {
   Future<bool> toggleSave(String postId, String userId) async {
     try {
       final userRef = _firestore.collection('users').doc(userId);
-      
+
       await _firestore.runTransaction((transaction) async {
         final userDoc = await transaction.get(userRef);
-        
+
         if (!userDoc.exists) {
           throw Exception('Пользователь не найден');
         }
-        
+
         final data = userDoc.data()!;
         final savedPosts = List<String>.from(data['savedPosts'] ?? []);
-        
+
         bool isSaved = savedPosts.contains(postId);
-        
+
         if (isSaved) {
           savedPosts.remove(postId);
         } else {
           savedPosts.add(postId);
         }
-        
+
         transaction.update(userRef, {
           'savedPosts': savedPosts,
           'updatedAt': FieldValue.serverTimestamp(),
         });
       });
-      
+
       return true;
     } catch (e) {
       debugPrint('❌ Ошибка при сохранении поста: $e');
@@ -197,7 +199,7 @@ class OptimizedFeedService {
       };
 
       final docRef = await _firestore.collection('posts').add(postData);
-      
+
       debugPrint('✅ Пост создан с ID: ${docRef.id}');
       return docRef.id;
     } catch (e) {
@@ -207,7 +209,8 @@ class OptimizedFeedService {
   }
 
   /// Получить посты пользователя
-  Future<List<EnhancedFeedPost>> getUserPosts(String userId, {int limit = 20}) async {
+  Future<List<EnhancedFeedPost>> getUserPosts(String userId,
+      {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection('posts')
@@ -232,8 +235,10 @@ class OptimizedFeedService {
           shares: data['shares']?.toInt() ?? 0,
           isLiked: data['isLiked'] ?? false,
           isSaved: data['isSaved'] ?? false,
-          createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-          updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          createdAt:
+              (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          updatedAt:
+              (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         );
       }).toList();
     } catch (e) {
@@ -252,24 +257,28 @@ class OptimizedFeedService {
   /// Парсинг медиа из Firestore
   List<FeedPostMedia> _parseMedia(dynamic mediaData) {
     if (mediaData == null) return [];
-    
+
     try {
       if (mediaData is List) {
-        return mediaData.map((item) {
-          if (item is Map<String, dynamic>) {
-            return FeedPostMedia(
-              type: item['type'] ?? 'image',
-              url: item['url'] ?? '',
-              thumbnail: item['thumbnail'],
-            );
-          }
-          return null;
-        }).where((item) => item != null).cast<FeedPostMedia>().toList();
+        return mediaData
+            .map((item) {
+              if (item is Map<String, dynamic>) {
+                return FeedPostMedia(
+                  type: item['type'] ?? 'image',
+                  url: item['url'] ?? '',
+                  thumbnail: item['thumbnail'],
+                );
+              }
+              return null;
+            })
+            .where((item) => item != null)
+            .cast<FeedPostMedia>()
+            .toList();
       }
     } catch (e) {
       debugPrint('❌ Ошибка парсинга медиа: $e');
     }
-    
+
     return [];
   }
 }

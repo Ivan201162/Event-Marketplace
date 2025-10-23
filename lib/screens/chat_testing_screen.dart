@@ -33,130 +33,140 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Тестирование чатов'),
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-    ),
-    body: SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildTestResults(),
-          const SizedBox(height: 20),
-          _buildTestButtons(),
-          const SizedBox(height: 20),
-          _buildNavigationButtons(),
-        ],
-      ),
-    ),
-  );
+        appBar: AppBar(
+          title: const Text('Тестирование чатов'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildTestResults(),
+              const SizedBox(height: 20),
+              _buildTestButtons(),
+              const SizedBox(height: 20),
+              _buildNavigationButtons(),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildTestResults() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Результаты тестирования:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          if (_testResults.isEmpty)
-            const Text('Тесты еще не запущены')
-          else
-            ..._testResults.map(
-              (result) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
-                child: Text('• $result'),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Результаты тестирования:',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-        ],
-      ),
-    ),
-  );
+              const SizedBox(height: 8),
+              if (_testResults.isEmpty)
+                const Text('Тесты еще не запущены')
+              else
+                ..._testResults.map(
+                  (result) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Text('• $result'),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildTestButtons() => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      const Text('Тесты функций:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      const SizedBox(height: 8),
-      ElevatedButton(onPressed: _testCreateChat, child: const Text('1. Создать тестовый чат')),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: _testSendTextMessage,
-        child: const Text('2. Отправить текстовое сообщение'),
-      ),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: _testSendFileMessage,
-        child: const Text('3. Отправить сообщение с файлом'),
-      ),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: _testTypingIndicator,
-        child: const Text('4. Тест индикатора печатания'),
-      ),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: _testUnreadMessages,
-        child: const Text('5. Тест непрочитанных сообщений'),
-      ),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: _testMessageDeletion,
-        child: const Text('6. Тест удаления сообщений'),
-      ),
-      const SizedBox(height: 8),
-      ElevatedButton(onPressed: _testChatCategories, child: const Text('7. Тест категорий чатов')),
-      const SizedBox(height: 8),
-      ElevatedButton(onPressed: _testAutoUpdate, child: const Text('8. Тест автообновления')),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: _testPushNotifications,
-        child: const Text('9. Тест push-уведомлений'),
-      ),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: _testFirebaseStorage,
-        child: const Text('10. Тест Firebase Storage'),
-      ),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text('Тесты функций:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          ElevatedButton(
+              onPressed: _testCreateChat,
+              child: const Text('1. Создать тестовый чат')),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: _testSendTextMessage,
+            child: const Text('2. Отправить текстовое сообщение'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: _testSendFileMessage,
+            child: const Text('3. Отправить сообщение с файлом'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: _testTypingIndicator,
+            child: const Text('4. Тест индикатора печатания'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: _testUnreadMessages,
+            child: const Text('5. Тест непрочитанных сообщений'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: _testMessageDeletion,
+            child: const Text('6. Тест удаления сообщений'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+              onPressed: _testChatCategories,
+              child: const Text('7. Тест категорий чатов')),
+          const SizedBox(height: 8),
+          ElevatedButton(
+              onPressed: _testAutoUpdate,
+              child: const Text('8. Тест автообновления')),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: _testPushNotifications,
+            child: const Text('9. Тест push-уведомлений'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: _testFirebaseStorage,
+            child: const Text('10. Тест Firebase Storage'),
+          ),
+        ],
+      );
 
   Widget _buildNavigationButtons() => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      const Text('Навигация:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-      const SizedBox(height: 8),
-      ElevatedButton(
-        onPressed: () {
-          Navigator.of(
-            context,
-          ).push(MaterialPageRoute<void>(builder: (context) => const EnhancedChatsListScreen()));
-        },
-        child: const Text('Открыть список чатов'),
-      ),
-      const SizedBox(height: 8),
-      if (_testChatId != null)
-        ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (context) =>
-                    EnhancedChatScreen(chatId: _testChatId!, chatTitle: 'Тестовый чат'),
-              ),
-            );
-          },
-          child: const Text('Открыть тестовый чат'),
-        ),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text('Навигация:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute<void>(
+                  builder: (context) => const EnhancedChatsListScreen()));
+            },
+            child: const Text('Открыть список чатов'),
+          ),
+          const SizedBox(height: 8),
+          if (_testChatId != null)
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (context) => EnhancedChatScreen(
+                        chatId: _testChatId!, chatTitle: 'Тестовый чат'),
+                  ),
+                );
+              },
+              child: const Text('Открыть тестовый чат'),
+            ),
+        ],
+      );
 
   void _addTestResult(String result) {
     setState(() {
-      _testResults.add('${DateTime.now().toString().substring(11, 19)}: $result');
+      _testResults
+          .add('${DateTime.now().toString().substring(11, 19)}: $result');
     });
   }
 
@@ -269,7 +279,8 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
 
       // Останавливаем через 3 секунды
       await Future.delayed(const Duration(seconds: 3));
-      await _typingService.stopTyping(chatId: _testChatId!, userId: _currentUserId!);
+      await _typingService.stopTyping(
+          chatId: _testChatId!, userId: _currentUserId!);
 
       _addTestResult('✅ Индикатор печатания остановлен');
     } catch (e) {
@@ -292,7 +303,8 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
       // Тестируем поток непрочитанных сообщений
       final stream = _chatService.getUnreadMessagesCountStream(_currentUserId!);
       stream.take(1).listen((count) {
-        _addTestResult('✅ Поток непрочитанных сообщений работает. Количество: $count');
+        _addTestResult(
+            '✅ Поток непрочитанных сообщений работает. Количество: $count');
       });
     } catch (e) {
       _addTestResult('❌ Ошибка теста непрочитанных сообщений: $e');
@@ -338,7 +350,10 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
       final ordersChatId = await _chatService.createChatWithCategory(
         name: 'Чат с заказом',
         participants: [_currentUserId!, 'organizer_id'],
-        participantNames: {_currentUserId!: _currentUserName!, 'organizer_id': 'Организатор'},
+        participantNames: {
+          _currentUserId!: _currentUserName!,
+          'organizer_id': 'Организатор'
+        },
         participantAvatars: {},
         category: 'orders',
         createdBy: _currentUserId!,
@@ -347,14 +362,18 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
       final specialistsChatId = await _chatService.createChatWithCategory(
         name: 'Чат с исполнителем',
         participants: [_currentUserId!, 'specialist_id'],
-        participantNames: {_currentUserId!: _currentUserName!, 'specialist_id': 'Исполнитель'},
+        participantNames: {
+          _currentUserId!: _currentUserName!,
+          'specialist_id': 'Исполнитель'
+        },
         participantAvatars: {},
         category: 'specialists',
         createdBy: _currentUserId!,
       );
 
       // Получаем чаты по категориям
-      final ordersChats = await _chatService.getChatsByCategory(_currentUserId!, 'orders');
+      final ordersChats =
+          await _chatService.getChatsByCategory(_currentUserId!, 'orders');
       final specialistsChats = await _chatService.getChatsByCategory(
         _currentUserId!,
         'specialists',
@@ -382,7 +401,8 @@ class _ChatTestingScreenState extends ConsumerState<ChatTestingScreen> {
       // Тестируем поток сообщений
       final messagesStream = _chatService.getChatMessages(_testChatId!);
       messagesStream.take(1).listen((messages) {
-        _addTestResult('✅ Поток сообщений работает. Сообщений: ${messages.length}');
+        _addTestResult(
+            '✅ Поток сообщений работает. Сообщений: ${messages.length}');
       });
 
       // Тестируем поток чата

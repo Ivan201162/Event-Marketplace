@@ -6,14 +6,14 @@ class LazyLoadingService {
   static final Map<String, Widget> _cachedScreens = {};
   static final Map<String, DateTime> _cacheTimestamps = {};
   static const Duration _cacheExpiry = Duration(minutes: 30);
-  
+
   /// Загрузить экран с кешированием
   static Widget loadScreen(String screenName, Widget Function() screenBuilder) {
     try {
       // Проверяем кеш
       if (_cachedScreens.containsKey(screenName)) {
         final timestamp = _cacheTimestamps[screenName];
-        if (timestamp != null && 
+        if (timestamp != null &&
             DateTime.now().difference(timestamp) < _cacheExpiry) {
           debugPrint('📱 Loading screen from cache: $screenName');
           return _cachedScreens[screenName]!;
@@ -23,24 +23,25 @@ class LazyLoadingService {
           _cacheTimestamps.remove(screenName);
         }
       }
-      
+
       // Создаем новый экран
       debugPrint('📱 Creating new screen: $screenName');
       final screen = screenBuilder();
-      
+
       // Кешируем экран
       _cachedScreens[screenName] = screen;
       _cacheTimestamps[screenName] = DateTime.now();
-      
+
       return screen;
     } catch (e) {
       debugPrint('❌ Error loading screen $screenName: $e');
       return screenBuilder();
     }
   }
-  
+
   /// Предзагрузить экран
-  static Future<void> preloadScreen(String screenName, Widget Function() screenBuilder) async {
+  static Future<void> preloadScreen(
+      String screenName, Widget Function() screenBuilder) async {
     try {
       if (!_cachedScreens.containsKey(screenName)) {
         debugPrint('📱 Preloading screen: $screenName');
@@ -52,51 +53,52 @@ class LazyLoadingService {
       debugPrint('❌ Error preloading screen $screenName: $e');
     }
   }
-  
+
   /// Очистить кеш экрана
   static void clearScreenCache(String screenName) {
     _cachedScreens.remove(screenName);
     _cacheTimestamps.remove(screenName);
     debugPrint('🧹 Cleared cache for screen: $screenName');
   }
-  
+
   /// Очистить весь кеш
   static void clearAllCache() {
     _cachedScreens.clear();
     _cacheTimestamps.clear();
     debugPrint('🧹 Cleared all screen cache');
   }
-  
+
   /// Оптимизировать кеш (удалить устаревшие экраны)
   static void optimizeCache() {
     final now = DateTime.now();
     final expiredScreens = <String>[];
-    
+
     for (final entry in _cacheTimestamps.entries) {
       if (now.difference(entry.value) > _cacheExpiry) {
         expiredScreens.add(entry.key);
       }
     }
-    
+
     for (final screenName in expiredScreens) {
       _cachedScreens.remove(screenName);
       _cacheTimestamps.remove(screenName);
     }
-    
+
     if (expiredScreens.isNotEmpty) {
-      debugPrint('🧹 Optimized cache, removed ${expiredScreens.length} expired screens');
+      debugPrint(
+          '🧹 Optimized cache, removed ${expiredScreens.length} expired screens');
     }
   }
-  
+
   /// Получить статистику кеша
   static Map<String, dynamic> getCacheStats() {
     return {
       'cachedScreens': _cachedScreens.length,
       'cacheSize': _cachedScreens.length,
-      'oldestCache': _cacheTimestamps.values.isNotEmpty 
+      'oldestCache': _cacheTimestamps.values.isNotEmpty
           ? _cacheTimestamps.values.reduce((a, b) => a.isBefore(b) ? a : b)
           : null,
-      'newestCache': _cacheTimestamps.values.isNotEmpty 
+      'newestCache': _cacheTimestamps.values.isNotEmpty
           ? _cacheTimestamps.values.reduce((a, b) => a.isAfter(b) ? a : b)
           : null,
     };
@@ -139,12 +141,12 @@ class _LazyScreenState extends State<LazyScreen> {
         widget.screenName,
         widget.screenBuilder,
       );
-      
+
       // Имитируем загрузку для лучшего UX
       if (widget.loadingDelay != null) {
         await Future.delayed(widget.loadingDelay!);
       }
-      
+
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -163,11 +165,12 @@ class _LazyScreenState extends State<LazyScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return widget.loadingWidget ?? const Center(
-        child: CircularProgressIndicator(),
-      );
+      return widget.loadingWidget ??
+          const Center(
+            child: CircularProgressIndicator(),
+          );
     }
-    
+
     return _cachedScreen ?? widget.screenBuilder();
   }
 }
@@ -253,7 +256,7 @@ class _PerformanceOptimizerState extends State<PerformanceOptimizer> {
       if (widget.enableCacheOptimization) {
         LazyLoadingService.optimizeCache();
       }
-      
+
       if (widget.enableMemoryOptimization) {
         // Здесь можно добавить дополнительную оптимизацию памяти
         debugPrint('🧹 Memory optimization performed');
@@ -312,7 +315,8 @@ class _PerformanceMonitorState extends State<PerformanceMonitor> {
   void _logPerformance() {
     if (widget.enableLogging) {
       final buildTime = _endTime.difference(_startTime);
-      debugPrint('📊 Performance: ${widget.screenName} built in ${buildTime.inMilliseconds}ms');
+      debugPrint(
+          '📊 Performance: ${widget.screenName} built in ${buildTime.inMilliseconds}ms');
     }
   }
 

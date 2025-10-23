@@ -7,16 +7,19 @@ import 'city_selection_widget.dart';
 
 /// Виджет расширенных фильтров поиска
 class AdvancedSearchFiltersWidget extends ConsumerStatefulWidget {
-  const AdvancedSearchFiltersWidget({super.key, required this.filters, this.onFiltersChanged});
+  const AdvancedSearchFiltersWidget(
+      {super.key, required this.filters, this.onFiltersChanged});
 
   final AdvancedSearchFilters filters;
   final Function(AdvancedSearchFilters)? onFiltersChanged;
 
   @override
-  ConsumerState<AdvancedSearchFiltersWidget> createState() => _AdvancedSearchFiltersWidgetState();
+  ConsumerState<AdvancedSearchFiltersWidget> createState() =>
+      _AdvancedSearchFiltersWidgetState();
 }
 
-class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFiltersWidget> {
+class _AdvancedSearchFiltersWidgetState
+    extends ConsumerState<AdvancedSearchFiltersWidget> {
   late AdvancedSearchFilters _filters;
   final PageController _pageController = PageController();
 
@@ -76,13 +79,15 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Местоположение', style: Theme.of(context).textTheme.titleLarge),
+            Text('Местоположение',
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
 
             // Выбор города
             CitySelectionWidget(
               selectedCity: _filters.selectedCity,
-              onCitySelected: (city) => _updateFilters(_filters.copyWith(selectedCity: city)),
+              onCitySelected: (city) =>
+                  _updateFilters(_filters.copyWith(selectedCity: city)),
               hintText: 'Выберите город',
             ),
 
@@ -144,7 +149,8 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Категории и услуги', style: Theme.of(context).textTheme.titleLarge),
+            Text('Категории и услуги',
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
 
             // Категории специалистов
@@ -160,13 +166,15 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
                   label: Text('${category.icon} ${category.displayName}'),
                   selected: isSelected,
                   onSelected: (selected) {
-                    final newCategories = List<SpecialistCategory>.from(_filters.categories);
+                    final newCategories =
+                        List<SpecialistCategory>.from(_filters.categories);
                     if (selected) {
                       newCategories.add(category);
                     } else {
                       newCategories.remove(category);
                     }
-                    _updateFilters(_filters.copyWith(categories: newCategories));
+                    _updateFilters(
+                        _filters.copyWith(categories: newCategories));
                   },
                 );
               }).toList(),
@@ -175,7 +183,8 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             const SizedBox(height: 24),
 
             // Подкатегории
-            Text('Подкатегории', style: Theme.of(context).textTheme.titleMedium),
+            Text('Подкатегории',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
 
             TextField(
@@ -184,8 +193,11 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                final subcategories =
-                    value.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
+                final subcategories = value
+                    .split(',')
+                    .map((s) => s.trim())
+                    .where((s) => s.isNotEmpty)
+                    .toList();
                 _updateFilters(_filters.copyWith(subcategories: subcategories));
               },
             ),
@@ -202,8 +214,11 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                final services =
-                    value.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
+                final services = value
+                    .split(',')
+                    .map((s) => s.trim())
+                    .where((s) => s.isNotEmpty)
+                    .toList();
                 _updateFilters(_filters.copyWith(services: services));
               },
             ),
@@ -220,24 +235,32 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             const SizedBox(height: 16),
 
             // Ценовой диапазон
-            Text('Ценовой диапазон', style: Theme.of(context).textTheme.titleMedium),
+            Text('Ценовой диапазон',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
 
             RangeSlider(
-              values: RangeValues(_filters.minPrice.toDouble(), _filters.maxPrice.toDouble()),
+              values: RangeValues(
+                  _filters.minPrice.toDouble(), _filters.maxPrice.toDouble()),
               max: 100000,
               divisions: 100,
-              labels: RangeLabels('${_filters.minPrice} ₽', '${_filters.maxPrice} ₽'),
+              labels: RangeLabels(
+                  '${_filters.minPrice} ₽', '${_filters.maxPrice} ₽'),
               onChanged: (values) {
                 _updateFilters(
-                  _filters.copyWith(minPrice: values.start.round(), maxPrice: values.end.round()),
+                  _filters.copyWith(
+                      minPrice: values.start.round(),
+                      maxPrice: values.end.round()),
                 );
               },
             ),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text('${_filters.minPrice} ₽'), Text('${_filters.maxPrice} ₽')],
+              children: [
+                Text('${_filters.minPrice} ₽'),
+                Text('${_filters.maxPrice} ₽')
+              ],
             ),
 
             const SizedBox(height: 24),
@@ -247,11 +270,12 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             const SizedBox(height: 8),
 
             RangeSlider(
-              values:
-                  RangeValues(_filters.minExperience.toDouble(), _filters.maxExperience.toDouble()),
+              values: RangeValues(_filters.minExperience.toDouble(),
+                  _filters.maxExperience.toDouble()),
               max: 50,
               divisions: 50,
-              labels: RangeLabels('${_filters.minExperience} лет', '${_filters.maxExperience} лет'),
+              labels: RangeLabels('${_filters.minExperience} лет',
+                  '${_filters.maxExperience} лет'),
               onChanged: (values) {
                 _updateFilters(
                   _filters.copyWith(
@@ -273,13 +297,15 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             const SizedBox(height: 24),
 
             // Уровень опыта
-            Text('Уровень опыта', style: Theme.of(context).textTheme.titleMedium),
+            Text('Уровень опыта',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
 
             DropdownButtonFormField<ExperienceLevel>(
               decoration: const InputDecoration(border: OutlineInputBorder()),
               items: [
-                const DropdownMenuItem<ExperienceLevel>(child: Text('Любой уровень')),
+                const DropdownMenuItem<ExperienceLevel>(
+                    child: Text('Любой уровень')),
                 ...ExperienceLevel.values.map(
                   (level) => DropdownMenuItem<ExperienceLevel>(
                       value: level, child: Text(level.displayName)),
@@ -299,7 +325,8 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Дополнительные фильтры', style: Theme.of(context).textTheme.titleLarge),
+            Text('Дополнительные фильтры',
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
 
             // Рейтинг
@@ -318,7 +345,8 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
                 _filters.maxRating.toStringAsFixed(1),
               ),
               onChanged: (values) {
-                _updateFilters(_filters.copyWith(minRating: values.start, maxRating: values.end));
+                _updateFilters(_filters.copyWith(
+                    minRating: values.start, maxRating: values.end));
               },
             ),
 
@@ -405,11 +433,13 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
         child: Row(
           children: [
             Expanded(
-              child: OutlinedButton(onPressed: _previousPage, child: const Text('Назад')),
+              child: OutlinedButton(
+                  onPressed: _previousPage, child: const Text('Назад')),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: ElevatedButton(onPressed: _nextPage, child: const Text('Далее')),
+              child: ElevatedButton(
+                  onPressed: _nextPage, child: const Text('Далее')),
             ),
           ],
         ),

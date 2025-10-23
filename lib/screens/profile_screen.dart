@@ -27,14 +27,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final currentUser = ref.watch(currentUserProvider);
-    final isCurrentUser = widget.userId == null || (currentUser.value?.uid == widget.userId);
+    final isCurrentUser =
+        widget.userId == null || (currentUser.value?.uid == widget.userId);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(isCurrentUser ? 'Мой профиль' : 'Профиль'),
         centerTitle: true,
         actions: [
-          if (isCurrentUser) 
+          if (isCurrentUser)
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: _editProfile,
@@ -63,17 +64,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               child: Column(
                 children: [
                   // Заголовок профиля
-                  ProfileHeaderWidget(user: user as dynamic, isCurrentUser: isCurrentUser),
+                  ProfileHeaderWidget(
+                      user: user as dynamic, isCurrentUser: isCurrentUser),
 
                   const SizedBox(height: 16),
 
                   // Статистика профиля
-                  ProfileStatsWidget(user: user as dynamic, isCurrentUser: isCurrentUser),
+                  ProfileStatsWidget(
+                      user: user as dynamic, isCurrentUser: isCurrentUser),
 
                   const SizedBox(height: 16),
 
                   // Действия профиля
-                  ProfileActionsWidget(user: user as dynamic, isCurrentUser: isCurrentUser),
+                  ProfileActionsWidget(
+                      user: user as dynamic, isCurrentUser: isCurrentUser),
 
                   // Кнопка "Написать сообщение" для других пользователей
                   if (!isCurrentUser) ...[
@@ -91,7 +95,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const SizedBox(height: 16),
 
                   // Вкладки профиля
-                  ProfileTabsWidget(user: user as dynamic, isCurrentUser: isCurrentUser),
+                  ProfileTabsWidget(
+                      user: user as dynamic, isCurrentUser: isCurrentUser),
                 ],
               ),
             ),
@@ -119,6 +124,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     // TODO: Реализовать шаринг профиля
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
   }
 }

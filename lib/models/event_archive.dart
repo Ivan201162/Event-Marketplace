@@ -34,16 +34,16 @@ class EventArchive {
 
   /// Создать из Map
   factory EventArchive.fromMap(Map<String, dynamic> data) => EventArchive(
-    id: data['id'] as String,
-    bookingId: data['bookingId'] as String,
-    fileUrl: data['fileUrl'] as String,
-    uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
-    fileName: data['fileName'] as String?,
-    fileSize: data['fileSize'] as int?,
-    description: data['description'] as String?,
-    uploadedBy: data['uploadedBy'] as String?,
-    metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
-  );
+        id: data['id'] as String,
+        bookingId: data['bookingId'] as String,
+        fileUrl: data['fileUrl'] as String,
+        uploadedAt: (data['uploadedAt'] as Timestamp).toDate(),
+        fileName: data['fileName'] as String?,
+        fileSize: data['fileSize'] as int?,
+        description: data['description'] as String?,
+        uploadedBy: data['uploadedBy'] as String?,
+        metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+      );
 
   final String id;
   final String bookingId;
@@ -57,15 +57,15 @@ class EventArchive {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'bookingId': bookingId,
-    'fileUrl': fileUrl,
-    'uploadedAt': Timestamp.fromDate(uploadedAt),
-    'fileName': fileName,
-    'fileSize': fileSize,
-    'description': description,
-    'uploadedBy': uploadedBy,
-    'metadata': metadata,
-  };
+        'bookingId': bookingId,
+        'fileUrl': fileUrl,
+        'uploadedAt': Timestamp.fromDate(uploadedAt),
+        'fileName': fileName,
+        'fileSize': fileSize,
+        'description': description,
+        'uploadedBy': uploadedBy,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   EventArchive copyWith({
@@ -78,17 +78,18 @@ class EventArchive {
     String? description,
     String? uploadedBy,
     Map<String, dynamic>? metadata,
-  }) => EventArchive(
-    id: id ?? this.id,
-    bookingId: bookingId ?? this.bookingId,
-    fileUrl: fileUrl ?? this.fileUrl,
-    uploadedAt: uploadedAt ?? this.uploadedAt,
-    fileName: fileName ?? this.fileName,
-    fileSize: fileSize ?? this.fileSize,
-    description: description ?? this.description,
-    uploadedBy: uploadedBy ?? this.uploadedBy,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      EventArchive(
+        id: id ?? this.id,
+        bookingId: bookingId ?? this.bookingId,
+        fileUrl: fileUrl ?? this.fileUrl,
+        uploadedAt: uploadedAt ?? this.uploadedAt,
+        fileName: fileName ?? this.fileName,
+        fileSize: fileSize ?? this.fileSize,
+        description: description ?? this.description,
+        uploadedBy: uploadedBy ?? this.uploadedBy,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Получить размер файла в читаемом формате
   String get formattedFileSize {

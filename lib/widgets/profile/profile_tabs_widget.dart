@@ -4,7 +4,8 @@ import '../../models/user.dart';
 
 /// Виджет вкладок профиля
 class ProfileTabsWidget extends StatefulWidget {
-  const ProfileTabsWidget({super.key, required this.user, required this.isCurrentUser});
+  const ProfileTabsWidget(
+      {super.key, required this.user, required this.isCurrentUser});
 
   final AppUser user;
   final bool isCurrentUser;
@@ -13,13 +14,15 @@ class ProfileTabsWidget extends StatefulWidget {
   State<ProfileTabsWidget> createState() => _ProfileTabsWidgetState();
 }
 
-class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTickerProviderStateMixin {
+class _ProfileTabsWidgetState extends State<ProfileTabsWidget>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: widget.user.isSpecialist ? 4 : 3, vsync: this);
+    _tabController =
+        TabController(length: widget.user.isSpecialist ? 4 : 3, vsync: this);
   }
 
   @override
@@ -52,8 +55,10 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
             controller: _tabController,
             indicatorColor: theme.primaryColor,
             labelColor: theme.primaryColor,
-            unselectedLabelColor: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
-            labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            unselectedLabelColor:
+                theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+            labelStyle:
+                const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             tabs: widget.user.isSpecialist
                 ? const [
                     Tab(text: 'Портфолио'),
@@ -61,7 +66,11 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
                     Tab(text: 'Отзывы'),
                     Tab(text: 'О себе'),
                   ]
-                : const [Tab(text: 'Заказы'), Tab(text: 'Избранное'), Tab(text: 'О себе')],
+                : const [
+                    Tab(text: 'Заказы'),
+                    Tab(text: 'Избранное'),
+                    Tab(text: 'О себе')
+                  ],
           ),
 
           // Содержимое табов
@@ -144,7 +153,8 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
             SizedBox(height: 16),
             Text('Избранное пусто'),
             SizedBox(height: 8),
-            Text('Добавьте специалистов в избранное', style: TextStyle(color: Colors.grey)),
+            Text('Добавьте специалистов в избранное',
+                style: TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -160,7 +170,8 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
           if (widget.user.bio != null && widget.user.bio!.isNotEmpty) ...[
             Text(
               'О себе',
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(widget.user.bio!, style: theme.textTheme.bodyMedium),
@@ -168,13 +179,16 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
           ],
           Text(
             'Информация',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           _buildInfoRow('Роль', widget.user.roleDisplayName),
           _buildInfoRow('Дата регистрации', _formatDate(widget.user.createdAt)),
-          if (widget.user.city != null) _buildInfoRow('Город', widget.user.city!),
-          if (widget.user.phone != null) _buildInfoRow('Телефон', widget.user.phone!),
+          if (widget.user.city != null)
+            _buildInfoRow('Город', widget.user.city!),
+          if (widget.user.phone != null)
+            _buildInfoRow('Телефон', widget.user.phone!),
         ],
       ),
     );
@@ -193,7 +207,8 @@ class _ProfileTabsWidgetState extends State<ProfileTabsWidget> with SingleTicker
             child: Text(
               '$label:',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                color:
+                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               ),
             ),
           ),

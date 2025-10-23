@@ -23,12 +23,14 @@ class DonationAmountCard extends StatelessWidget {
               width: isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
-            color: isSelected ? Colors.pink.withValues(alpha: 0.1) : Colors.white,
+            color:
+                isSelected ? Colors.pink.withValues(alpha: 0.1) : Colors.white,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.favorite, color: isSelected ? Colors.pink : Colors.grey[600], size: 24),
+              Icon(Icons.favorite,
+                  color: isSelected ? Colors.pink : Colors.grey[600], size: 24),
               const SizedBox(height: 8),
               Text(
                 '${amount.toInt()} ₽',

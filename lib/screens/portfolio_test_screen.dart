@@ -19,7 +19,8 @@ class PortfolioTestScreen extends StatefulWidget {
 class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
   final CustomerPortfolioService _portfolioService = CustomerPortfolioService();
   final BookingService _bookingService = BookingService();
-  final AnniversaryNotificationService _notificationService = AnniversaryNotificationService();
+  final AnniversaryNotificationService _notificationService =
+      AnniversaryNotificationService();
   final AuthService _authService = AuthService();
 
   String _testResults = '';
@@ -42,7 +43,8 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
   void _addTestResult(String result) {
     setState(() {
-      _testResults += '${DateTime.now().toString().substring(11, 19)}: $result\n';
+      _testResults +=
+          '${DateTime.now().toString().substring(11, 19)}: $result\n';
     });
   }
 
@@ -101,13 +103,15 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       _addTestResult('✅ Портфолио создано успешно');
 
       // Проверяем загрузку
-      final loadedPortfolio = await _portfolioService.getCustomerPortfolio(currentUser.uid);
+      final loadedPortfolio =
+          await _portfolioService.getCustomerPortfolio(currentUser.uid);
       if (loadedPortfolio == null) {
         throw Exception('Портфолио не загружено');
       }
 
       _addTestResult('✅ Портфолио загружено: ${loadedPortfolio.name}');
-      _addTestResult('✅ Избранных специалистов: ${loadedPortfolio.favoriteSpecialists.length}');
+      _addTestResult(
+          '✅ Избранных специалистов: ${loadedPortfolio.favoriteSpecialists.length}');
       _addTestResult('✅ Годовщин: ${loadedPortfolio.anniversaries.length}');
     } on Exception catch (e) {
       _addTestResult('❌ Ошибка создания портфолио: $e');
@@ -146,15 +150,18 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       _addTestResult('✅ Заказ добавлен в историю');
 
       // Проверяем загрузку истории
-      final orderHistory = await _portfolioService.getOrderHistory(currentUser.uid);
-      _addTestResult('✅ История заказов загружена: ${orderHistory.length} заказов');
+      final orderHistory =
+          await _portfolioService.getOrderHistory(currentUser.uid);
+      _addTestResult(
+          '✅ История заказов загружена: ${orderHistory.length} заказов');
 
       if (orderHistory.isNotEmpty) {
         final lastOrder = orderHistory.first;
         _addTestResult(
           '✅ Последний заказ: ${lastOrder.serviceName} за ${lastOrder.formattedPrice}',
         );
-        _addTestResult('✅ Скидка: ${lastOrder.discountAmount.toStringAsFixed(0)} ₽');
+        _addTestResult(
+            '✅ Скидка: ${lastOrder.discountAmount.toStringAsFixed(0)} ₽');
       }
     } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования истории заказов: $e');
@@ -183,11 +190,13 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       _addTestResult('✅ Специалист найден в избранном');
 
       // Получаем список избранных
-      final favorites = await _portfolioService.getFavoriteSpecialists(currentUser.uid);
+      final favorites =
+          await _portfolioService.getFavoriteSpecialists(currentUser.uid);
       _addTestResult('✅ Избранных специалистов: ${favorites.length}');
 
       // Удаляем из избранного
-      await _portfolioService.removeFromFavorites(currentUser.uid, testSpecialistId);
+      await _portfolioService.removeFromFavorites(
+          currentUser.uid, testSpecialistId);
       _addTestResult('✅ Специалист удален из избранного');
     } on Exception catch (e) {
       _addTestResult('❌ Ошибка тестирования избранного: $e');
@@ -208,11 +217,13 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       );
 
       // Получаем список годовщин
-      final anniversaries = await _portfolioService.getAnniversaries(currentUser.uid);
+      final anniversaries =
+          await _portfolioService.getAnniversaries(currentUser.uid);
       _addTestResult('✅ Годовщин в портфолио: ${anniversaries.length}');
 
       // Проверяем ближайшие годовщины
-      final portfolio = await _portfolioService.getCustomerPortfolio(currentUser.uid);
+      final portfolio =
+          await _portfolioService.getCustomerPortfolio(currentUser.uid);
       if (portfolio != null) {
         final upcoming = portfolio.upcomingAnniversaries;
         _addTestResult('✅ Ближайших годовщин: ${upcoming.length}');
@@ -281,11 +292,14 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
       _addTestResult('✅ Статистика портфолио:');
       _addTestResult('   - Всего заказов: ${stats['totalOrders']}');
       _addTestResult('   - Завершенных: ${stats['completedOrders']}');
-      _addTestResult('   - Потрачено: ${stats['totalSpent']?.toStringAsFixed(0)} ₽');
-      _addTestResult('   - Средний чек: ${stats['averageOrderValue']?.toStringAsFixed(0)} ₽');
+      _addTestResult(
+          '   - Потрачено: ${stats['totalSpent']?.toStringAsFixed(0)} ₽');
+      _addTestResult(
+          '   - Средний чек: ${stats['averageOrderValue']?.toStringAsFixed(0)} ₽');
 
       // Проверяем рекомендации
-      final recommendations = await _portfolioService.getRecommendations(currentUser.uid);
+      final recommendations =
+          await _portfolioService.getRecommendations(currentUser.uid);
       _addTestResult('✅ Рекомендаций: ${recommendations.length}');
       for (final recommendation in recommendations) {
         _addTestResult('   - $recommendation');
@@ -301,7 +315,8 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
     try {
       final currentUser = _authService.currentUser;
 
-      const testNotes = 'Это тестовые заметки для проверки функционала портфолио заказчика.';
+      const testNotes =
+          'Это тестовые заметки для проверки функционала портфолио заказчика.';
       await _portfolioService.updateNotes(currentUser.uid, testNotes);
       _addTestResult('✅ Заметки обновлены');
 
@@ -317,88 +332,92 @@ class _PortfolioTestScreenState extends State<PortfolioTestScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Тестирование портфолио'),
-      backgroundColor: Colors.purple,
-      foregroundColor: Colors.white,
-    ),
-    body: Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              ElevatedButton(
-                onPressed: _isRunningTests ? null : _runAllTests,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                child: _isRunningTests
-                    ? const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          ),
-                          SizedBox(width: 12),
-                          Text('Тестирование...'),
-                        ],
-                      )
-                    : const Text('Запустить все тесты'),
-              ),
-              const SizedBox(height: 16),
-              Row(
+        appBar: AppBar(
+          title: const Text('Тестирование портфолио'),
+          backgroundColor: Colors.purple,
+          foregroundColor: Colors.white,
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
                 children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _isRunningTests ? null : _testNotes,
-                      child: const Text('Тест заметок'),
+                  ElevatedButton(
+                    onPressed: _isRunningTests ? null : _runAllTests,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple,
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(double.infinity, 50),
                     ),
+                    child: _isRunningTests
+                        ? const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Text('Тестирование...'),
+                            ],
+                          )
+                        : const Text('Запустить все тесты'),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _isRunningTests
-                          ? null
-                          : () async {
-                              await _notificationService.sendTestNotification();
-                              _addTestResult('🔔 Тестовое уведомление отправлено');
-                            },
-                      child: const Text('Тест уведомлений'),
-                    ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: _isRunningTests ? null : _testNotes,
+                          child: const Text('Тест заметок'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: _isRunningTests
+                              ? null
+                              : () async {
+                                  await _notificationService
+                                      .sendTestNotification();
+                                  _addTestResult(
+                                      '🔔 Тестовое уведомление отправлено');
+                                },
+                          child: const Text('Тест уведомлений'),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey[300]!),
             ),
-            child: SingleChildScrollView(
-              child: Text(
-                _testResults.isEmpty
-                    ? 'Нажмите "Запустить все тесты" для начала тестирования'
-                    : _testResults,
-                style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: SingleChildScrollView(
+                  child: Text(
+                    _testResults.isEmpty
+                        ? 'Нажмите "Запустить все тесты" для начала тестирования'
+                        : _testResults,
+                    style:
+                        const TextStyle(fontFamily: 'monospace', fontSize: 12),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 }

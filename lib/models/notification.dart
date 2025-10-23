@@ -2,7 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 /// Notification type
-enum NotificationType { request, message, like, comment, system, reminder, promotion }
+enum NotificationType {
+  request,
+  message,
+  like,
+  comment,
+  system,
+  reminder,
+  promotion
+}
 
 /// Notification model
 class AppNotification extends Equatable {
@@ -227,23 +235,23 @@ class AppNotification extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    userId,
-    type,
-    title,
-    body,
-    createdAt,
-    read,
-    data,
-    imageUrl,
-    actionUrl,
-    senderId,
-    senderName,
-    senderAvatarUrl,
-    targetId,
-    message,
-    isRead,
-  ];
+        id,
+        userId,
+        type,
+        title,
+        body,
+        createdAt,
+        read,
+        data,
+        imageUrl,
+        actionUrl,
+        senderId,
+        senderName,
+        senderAvatarUrl,
+        targetId,
+        message,
+        isRead,
+      ];
 
   @override
   String toString() {

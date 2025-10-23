@@ -27,7 +27,8 @@ class MonetizationService {
         'userId': user.uid,
         'status': 'active',
         'startDate': FieldValue.serverTimestamp(),
-        'endDate': Timestamp.fromDate(DateTime.now().add(Duration(days: duration))),
+        'endDate':
+            Timestamp.fromDate(DateTime.now().add(Duration(days: duration))),
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       };
@@ -72,7 +73,10 @@ class MonetizationService {
       final user = _auth.currentUser;
       if (user == null) return false;
 
-      final subscriptionDoc = await _firestore.collection('subscriptions').doc(subscriptionId).get();
+      final subscriptionDoc = await _firestore
+          .collection('subscriptions')
+          .doc(subscriptionId)
+          .get();
       if (!subscriptionDoc.exists) return false;
 
       final subscriptionData = subscriptionDoc.data()!;
@@ -112,7 +116,8 @@ class MonetizationService {
         'userId': user.uid,
         'status': 'active',
         'startDate': FieldValue.serverTimestamp(),
-        'endDate': Timestamp.fromDate(DateTime.now().add(Duration(days: duration))),
+        'endDate':
+            Timestamp.fromDate(DateTime.now().add(Duration(days: duration))),
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
       };
@@ -126,7 +131,8 @@ class MonetizationService {
   }
 
   /// Получение активных продвижений специалиста
-  Future<List<Map<String, dynamic>>> getSpecialistPromotions(String specialistId) async {
+  Future<List<Map<String, dynamic>>> getSpecialistPromotions(
+      String specialistId) async {
     try {
       final querySnapshot = await _firestore
           .collection('promotions')
@@ -285,11 +291,13 @@ class MonetizationService {
           .where('status', isEqualTo: 'completed');
 
       if (startDate != null) {
-        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('createdAt',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final querySnapshot = await query.get();
@@ -441,11 +449,13 @@ class MonetizationService {
           .where('specialistId', isEqualTo: specialistId);
 
       if (startDate != null) {
-        viewsQuery.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        viewsQuery.where('createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        viewsQuery.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        viewsQuery.where('createdAt',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final viewsSnapshot = await viewsQuery.get();
@@ -456,11 +466,13 @@ class MonetizationService {
           .where('specialistId', isEqualTo: specialistId);
 
       if (startDate != null) {
-        requestsQuery.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        requestsQuery.where('createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        requestsQuery.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        requestsQuery.where('createdAt',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final requestsSnapshot = await requestsQuery.get();
@@ -471,11 +483,13 @@ class MonetizationService {
           .where('specialistId', isEqualTo: specialistId);
 
       if (startDate != null) {
-        reviewsQuery.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        reviewsQuery.where('createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        reviewsQuery.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        reviewsQuery.where('createdAt',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final reviewsSnapshot = await reviewsQuery.get();
@@ -487,8 +501,8 @@ class MonetizationService {
         totalRating += data['rating'] as double;
       }
 
-      final averageRating = reviewsSnapshot.docs.isNotEmpty 
-          ? totalRating / reviewsSnapshot.docs.length 
+      final averageRating = reviewsSnapshot.docs.isNotEmpty
+          ? totalRating / reviewsSnapshot.docs.length
           : 0.0;
 
       return {
@@ -496,8 +510,8 @@ class MonetizationService {
         'totalRequests': requestsSnapshot.docs.length,
         'totalReviews': reviewsSnapshot.docs.length,
         'averageRating': averageRating,
-        'conversionRate': viewsSnapshot.docs.isNotEmpty 
-            ? requestsSnapshot.docs.length / viewsSnapshot.docs.length 
+        'conversionRate': viewsSnapshot.docs.isNotEmpty
+            ? requestsSnapshot.docs.length / viewsSnapshot.docs.length
             : 0.0,
       };
     } catch (e) {

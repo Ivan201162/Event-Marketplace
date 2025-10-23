@@ -25,7 +25,9 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
         backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFiltersDialog),
+          IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFiltersDialog),
           IconButton(icon: const Icon(Icons.download), onPressed: _exportLogs),
         ],
       ),
@@ -64,10 +66,12 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: _getActionColor(log.action),
-                          child: Icon(_getActionIcon(log.action), color: Colors.white, size: 20),
+                          child: Icon(_getActionIcon(log.action),
+                              color: Colors.white, size: 20),
                         ),
                         title: Text(
-                          log.description ?? '${_getActionName(log.action)} ${log.target}',
+                          log.description ??
+                              '${_getActionName(log.action)} ${log.target}',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Column(
@@ -78,7 +82,8 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                               'Цель: ${log.target}${log.targetId != null ? ' (${log.targetId})' : ''}',
                             ),
                             Text('Время: ${_formatTimestamp(log.timestamp)}'),
-                            if (log.metadata != null && log.metadata!.isNotEmpty)
+                            if (log.metadata != null &&
+                                log.metadata!.isNotEmpty)
                               Text('Детали: ${log.metadata.toString()}'),
                             if (log.errorMessage != null)
                               Text(
@@ -170,8 +175,10 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                 border: OutlineInputBorder(),
               ),
               items: const [
-                DropdownMenuItem(value: 'admin_123', child: Text('admin@example.com')),
-                DropdownMenuItem(value: 'admin_456', child: Text('superadmin@example.com')),
+                DropdownMenuItem(
+                    value: 'admin_123', child: Text('admin@example.com')),
+                DropdownMenuItem(
+                    value: 'admin_456', child: Text('superadmin@example.com')),
               ],
               onChanged: (value) {
                 setState(() {
@@ -187,7 +194,8 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
                 border: OutlineInputBorder(),
               ),
               items: AdminAction.values.map((action) {
-                return DropdownMenuItem(value: action, child: Text(_getActionName(action)));
+                return DropdownMenuItem(
+                    value: action, child: Text(_getActionName(action)));
               }).toList(),
               onChanged: (value) {
                 setState(() {
@@ -198,20 +206,24 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
             const SizedBox(height: 16),
             ListTile(
               title: const Text('Начальная дата'),
-              subtitle: Text(_startDate != null ? _formatDate(_startDate!) : 'Не выбрана'),
+              subtitle: Text(
+                  _startDate != null ? _formatDate(_startDate!) : 'Не выбрана'),
               trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(true),
             ),
             ListTile(
               title: const Text('Конечная дата'),
-              subtitle: Text(_endDate != null ? _formatDate(_endDate!) : 'Не выбрана'),
+              subtitle: Text(
+                  _endDate != null ? _formatDate(_endDate!) : 'Не выбрана'),
               trailing: const Icon(Icons.calendar_today),
               onTap: () => _selectDate(false),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -227,7 +239,9 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
   Future<void> _selectDate(bool isStartDate) async {
     final date = await showDatePicker(
       context: context,
-      initialDate: isStartDate ? (_startDate ?? DateTime.now()) : (_endDate ?? DateTime.now()),
+      initialDate: isStartDate
+          ? (_startDate ?? DateTime.now())
+          : (_endDate ?? DateTime.now()),
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
       lastDate: DateTime.now(),
     );
@@ -263,9 +277,11 @@ class _AdminLogsScreenState extends State<AdminLogsScreen> {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Логи экспортированы успешно')));
+      ).showSnackBar(
+          const SnackBar(content: Text('Логи экспортированы успешно')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e')));
     }
   }
 

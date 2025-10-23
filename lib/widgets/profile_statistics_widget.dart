@@ -35,7 +35,8 @@ class ProfileStatisticsWidget extends StatelessWidget {
                 const Spacer(),
                 // Индикатор онлайн статуса
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: statistics.onlineStatus ? Colors.green : Colors.grey,
                     borderRadius: BorderRadius.circular(12),
@@ -46,8 +47,8 @@ class ProfileStatisticsWidget extends StatelessWidget {
                       Container(
                         width: 6,
                         height: 6,
-                        decoration:
-                            const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                        decoration: const BoxDecoration(
+                            color: Colors.white, shape: BoxShape.circle),
                       ),
                       const SizedBox(width: 4),
                       Text(
@@ -144,7 +145,9 @@ class ProfileStatisticsWidget extends StatelessWidget {
         ),
       );
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) => Container(
+  Widget _buildStatCard(
+          String title, String value, IconData icon, Color color) =>
+      Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
@@ -157,7 +160,8 @@ class ProfileStatisticsWidget extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               value,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold, color: color),
             ),
             const SizedBox(height: 2),
             Text(
@@ -171,13 +175,17 @@ class ProfileStatisticsWidget extends StatelessWidget {
 
   Widget _buildAdditionalInfo() => Column(
         children: [
-          _buildInfoRow('Время ответа', '${statistics.responseTime.toInt()} ч', Icons.access_time),
+          _buildInfoRow('Время ответа', '${statistics.responseTime.toInt()} ч',
+              Icons.access_time),
           const SizedBox(height: 8),
-          _buildInfoRow('Портфолио', '${statistics.portfolioItems} работ', Icons.photo_library),
+          _buildInfoRow('Портфолио', '${statistics.portfolioItems} работ',
+              Icons.photo_library),
           const SizedBox(height: 8),
-          _buildInfoRow('Соцсети', '${statistics.socialLinks} ссылок', Icons.link),
+          _buildInfoRow(
+              'Соцсети', '${statistics.socialLinks} ссылок', Icons.link),
           const SizedBox(height: 8),
-          _buildInfoRow('Закреплённые посты', '${statistics.pinnedPosts} постов', Icons.push_pin),
+          _buildInfoRow('Закреплённые посты',
+              '${statistics.pinnedPosts} постов', Icons.push_pin),
           if (statistics.lastActive != null) ...[
             const SizedBox(height: 8),
             _buildInfoRow(
@@ -195,7 +203,9 @@ class ProfileStatisticsWidget extends StatelessWidget {
           const SizedBox(width: 8),
           Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
           const Spacer(),
-          Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+          Text(value,
+              style:
+                  const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
         ],
       );
 

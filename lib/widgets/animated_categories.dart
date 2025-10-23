@@ -10,7 +10,8 @@ class AnimatedCategories extends StatefulWidget {
   State<AnimatedCategories> createState() => _AnimatedCategoriesState();
 }
 
-class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProviderStateMixin {
+class _AnimatedCategoriesState extends State<AnimatedCategories>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late List<AnimationController> _itemControllers;
   late List<Animation<double>> _itemAnimations;
@@ -89,7 +90,10 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
         children: [
           Text(
             'Категории',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
           SizedBox(
@@ -152,14 +156,14 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
                 ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected 
+            color: isSelected
                 ? (category['color'] as Color)
                 : Colors.grey.withOpacity(0.3),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: isSelected 
+              color: isSelected
                   ? (category['color'] as Color).withOpacity(0.4)
                   : Colors.grey.withOpacity(0.2),
               blurRadius: isSelected ? 12 : 6,
@@ -174,7 +178,7 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isSelected 
+                color: isSelected
                     ? Colors.white.withOpacity(0.2)
                     : (category['color'] as Color).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
@@ -183,10 +187,12 @@ class _AnimatedCategoriesState extends State<AnimatedCategories> with TickerProv
                 scale: isSelected ? 1.1 : 1.0,
                 duration: const Duration(milliseconds: 200),
                 child: Text(
-                  category['icon'] as String, 
+                  category['icon'] as String,
                   style: TextStyle(
                     fontSize: 28,
-                    color: isSelected ? Colors.white : (category['color'] as Color),
+                    color: isSelected
+                        ? Colors.white
+                        : (category['color'] as Color),
                   ),
                 ),
               ),

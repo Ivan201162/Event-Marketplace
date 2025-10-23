@@ -4,7 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Back Navigation Tests', () {
-    testWidgets('BackNav.exitOrHome should show snackbar on first press', (tester) async {
+    testWidgets('BackNav.exitOrHome should show snackbar on first press',
+        (tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

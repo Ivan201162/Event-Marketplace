@@ -3,42 +3,52 @@ import 'package:flutter/material.dart';
 import '../models/organizer_chat.dart';
 
 class OrganizerMessageBubble extends StatelessWidget {
-  const OrganizerMessageBubble({super.key, required this.message, required this.isFromCurrentUser});
+  const OrganizerMessageBubble(
+      {super.key, required this.message, required this.isFromCurrentUser});
   final OrganizerMessage message;
   final bool isFromCurrentUser;
 
   @override
   Widget build(BuildContext context) => Row(
-        mainAxisAlignment: isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isFromCurrentUser) ...[
             CircleAvatar(
               radius: 16,
               backgroundColor: Theme.of(context).colorScheme.primary,
               child: Text(
-                message.senderName.isNotEmpty ? message.senderName[0].toUpperCase() : '?',
-                style:
-                    const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                message.senderName.isNotEmpty
+                    ? message.senderName[0].toUpperCase()
+                    : '?',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(width: 8),
           ],
           Flexible(
             child: Container(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: isFromCurrentUser
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft:
-                      isFromCurrentUser ? const Radius.circular(20) : const Radius.circular(4),
-                  bottomRight:
-                      isFromCurrentUser ? const Radius.circular(4) : const Radius.circular(20),
+                  bottomLeft: isFromCurrentUser
+                      ? const Radius.circular(20)
+                      : const Radius.circular(4),
+                  bottomRight: isFromCurrentUser
+                      ? const Radius.circular(4)
+                      : const Radius.circular(20),
                 ),
-                border:
-                    !isFromCurrentUser ? Border.all(color: Theme.of(context).dividerColor) : null,
+                border: !isFromCurrentUser
+                    ? Border.all(color: Theme.of(context).dividerColor)
+                    : null,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,8 +80,14 @@ class OrganizerMessageBubble extends StatelessWidget {
                         _formatTime(message.createdAt),
                         style: TextStyle(
                           color: isFromCurrentUser
-                              ? Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7)
-                              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                              ? Theme.of(context)
+                                  .colorScheme
+                                  .onPrimary
+                                  .withValues(alpha: 0.7)
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.5),
                           fontSize: 12,
                         ),
                       ),
@@ -82,7 +98,10 @@ class OrganizerMessageBubble extends StatelessWidget {
                           size: 12,
                           color: message.isRead
                               ? Colors.blue
-                              : Theme.of(context).colorScheme.onPrimary.withValues(alpha: 0.7),
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .onPrimary
+                                  .withValues(alpha: 0.7),
                         ),
                       ],
                     ],
@@ -97,9 +116,13 @@ class OrganizerMessageBubble extends StatelessWidget {
               radius: 16,
               backgroundColor: Theme.of(context).colorScheme.primary,
               child: Text(
-                message.senderName.isNotEmpty ? message.senderName[0].toUpperCase() : '?',
-                style:
-                    const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                message.senderName.isNotEmpty
+                    ? message.senderName[0].toUpperCase()
+                    : '?',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -162,7 +185,8 @@ class OrganizerMessageBubble extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             message.displayType,
-            style: TextStyle(color: headerColor, fontSize: 12, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: headerColor, fontSize: 12, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -203,7 +227,8 @@ class SystemMessageWidget extends StatelessWidget {
             children: [
               Icon(Icons.info_outline, size: 16, color: Colors.grey.shade600),
               const SizedBox(width: 8),
-              Text(message.text, style: TextStyle(color: Colors.grey.shade700, fontSize: 12)),
+              Text(message.text,
+                  style: TextStyle(color: Colors.grey.shade700, fontSize: 12)),
             ],
           ),
         ),

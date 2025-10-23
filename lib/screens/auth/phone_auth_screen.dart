@@ -79,8 +79,12 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
       await authService.sendPhoneVerificationCode(phoneNumber);
 
       // Обновляем состояние
-      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.codeSent);
-      ref.read(phoneVerificationIdProvider.notifier).setVerificationId(authService.currentVerificationId);
+      ref
+          .read(phoneAuthStateProvider.notifier)
+          .setState(PhoneAuthState.codeSent);
+      ref
+          .read(phoneVerificationIdProvider.notifier)
+          .setVerificationId(authService.currentVerificationId);
 
       if (mounted) {
         // Переходим на экран ввода кода
@@ -103,7 +107,8 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
           errorMessage = 'Ошибка сети. Проверьте подключение к интернету';
           break;
         case 'billing-not-enabled':
-          errorMessage = 'Phone Authentication не настроена. Обратитесь к администратору';
+          errorMessage =
+              'Phone Authentication не настроена. Обратитесь к администратору';
           break;
         default:
           errorMessage = 'Ошибка отправки SMS: ${e.message ?? e.code}';
@@ -136,7 +141,8 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Вход по телефону'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -182,16 +188,19 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                     // Автоматически форматируем номер
                     if (value.isNotEmpty && !value.startsWith('+')) {
                       if (value.startsWith('8')) {
-                        _phoneController.value = _phoneController.value.copyWith(
+                        _phoneController.value =
+                            _phoneController.value.copyWith(
                           text: '+7${value.substring(1)}',
                           selection: TextSelection.collapsed(
                             offset: '+7${value.substring(1)}'.length,
                           ),
                         );
                       } else if (value.startsWith('7')) {
-                        _phoneController.value = _phoneController.value.copyWith(
+                        _phoneController.value =
+                            _phoneController.value.copyWith(
                           text: '+$value',
-                          selection: TextSelection.collapsed(offset: '+$value'.length),
+                          selection:
+                              TextSelection.collapsed(offset: '+$value'.length),
                         );
                       }
                     }
@@ -210,7 +219,8 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Отправить код', style: TextStyle(fontSize: 16)),
+                        : const Text('Отправить код',
+                            style: TextStyle(fontSize: 16)),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -229,7 +239,8 @@ class _PhoneAuthScreenState extends ConsumerState<PhoneAuthScreen> {
                         Icon(Icons.error_outline, color: Colors.red.shade700),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(_errorMessage!, style: TextStyle(color: Colors.red.shade700)),
+                          child: Text(_errorMessage!,
+                              style: TextStyle(color: Colors.red.shade700)),
                         ),
                       ],
                     ),

@@ -8,7 +8,8 @@ import '../services/firestore_service.dart';
 
 /// Виджет статистики специалиста
 class SpecialistStatsWidget extends ConsumerWidget {
-  const SpecialistStatsWidget({super.key, required this.specialistId, this.specialist});
+  const SpecialistStatsWidget(
+      {super.key, required this.specialistId, this.specialist});
 
   final String specialistId;
   final Specialist? specialist;
@@ -16,7 +17,8 @@ class SpecialistStatsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statsAsync = ref.watch(specialistStatsProvider(specialistId));
-    final reviewsStatsAsync = ref.watch(specialistReviewStatsProvider(specialistId));
+    final reviewsStatsAsync =
+        ref.watch(specialistReviewStatsProvider(specialistId));
 
     return Card(
       margin: const EdgeInsets.all(16),
@@ -27,7 +29,10 @@ class SpecialistStatsWidget extends ConsumerWidget {
           children: [
             Text(
               'Статистика',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
 
@@ -129,7 +134,10 @@ class SpecialistStatsWidget extends ConsumerWidget {
         children: [
           Text(
             'Детальная статистика',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
 
@@ -152,12 +160,17 @@ class SpecialistStatsWidget extends ConsumerWidget {
       );
 
   /// Построить статистику по статусам заявок
-  Widget _buildBookingStatusStats(BuildContext context, SpecialistStats stats) => Column(
+  Widget _buildBookingStatusStats(
+          BuildContext context, SpecialistStats stats) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Заявки по статусам',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Row(
@@ -207,7 +220,10 @@ class SpecialistStatsWidget extends ConsumerWidget {
       children: [
         Text(
           'Распределение рейтингов',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         ...List.generate(5, (index) {
@@ -225,7 +241,8 @@ class SpecialistStatsWidget extends ConsumerWidget {
                   child: LinearProgressIndicator(
                     value: percentage / 100,
                     backgroundColor: Colors.grey[300],
-                    valueColor: AlwaysStoppedAnimation<Color>(_getRatingColor(rating)),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(_getRatingColor(rating)),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -260,7 +277,8 @@ class SpecialistStatsWidget extends ConsumerWidget {
             const SizedBox(height: 8),
             Text(
               value,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
+              style: TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.bold, color: color),
             ),
             Text(
               title,
@@ -300,7 +318,8 @@ class SpecialistStatsWidget extends ConsumerWidget {
             const SizedBox(height: 4),
             Text(
               count.toString(),
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold, color: color),
             ),
             Text(
               label,
@@ -314,7 +333,9 @@ class SpecialistStatsWidget extends ConsumerWidget {
   /// Рассчитать процент завершения
   String _calculateCompletionRate(SpecialistStats stats) {
     if (stats.totalBookings == 0) return '0';
-    return ((stats.completedBookings / stats.totalBookings) * 100).round().toString();
+    return ((stats.completedBookings / stats.totalBookings) * 100)
+        .round()
+        .toString();
   }
 
   /// Получить цвет рейтинга
@@ -362,16 +383,24 @@ class SpecialistStats {
 }
 
 /// Провайдер для статистики специалиста
-final specialistStatsProvider = StreamProvider.family<SpecialistStats, String>((ref, specialistId) {
+final specialistStatsProvider =
+    StreamProvider.family<SpecialistStats, String>((ref, specialistId) {
   final firestoreService = ref.watch(firestoreServiceProvider);
 
-  return firestoreService.bookingsBySpecialistStream(specialistId).map((bookings) {
+  return firestoreService
+      .bookingsBySpecialistStream(specialistId)
+      .map((bookings) {
     final totalBookings = bookings.length;
-    final completedBookings = bookings.where((b) => b.status == BookingStatus.completed).length;
-    final pendingBookings = bookings.where((b) => b.status == BookingStatus.pending).length;
-    final confirmedBookings = bookings.where((b) => b.status == BookingStatus.confirmed).length;
-    final cancelledBookings = bookings.where((b) => b.status == BookingStatus.cancelled).length;
-    final rejectedBookings = bookings.where((b) => b.status == BookingStatus.rejected).length;
+    final completedBookings =
+        bookings.where((b) => b.status == BookingStatus.completed).length;
+    final pendingBookings =
+        bookings.where((b) => b.status == BookingStatus.pending).length;
+    final confirmedBookings =
+        bookings.where((b) => b.status == BookingStatus.confirmed).length;
+    final cancelledBookings =
+        bookings.where((b) => b.status == BookingStatus.cancelled).length;
+    final rejectedBookings =
+        bookings.where((b) => b.status == BookingStatus.rejected).length;
 
     final totalEarnings = bookings
         .where((b) => b.status == BookingStatus.completed)
@@ -392,10 +421,12 @@ final specialistStatsProvider = StreamProvider.family<SpecialistStats, String>((
 });
 
 /// Провайдер для сервиса Firestore
-final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());
+final firestoreServiceProvider =
+    Provider<FirestoreService>((ref) => FirestoreService());
 
 /// Провайдер для статистики отзывов специалиста
-final specialistReviewStatsProvider = StreamProvider.family<ReviewStats, String>((
+final specialistReviewStatsProvider =
+    StreamProvider.family<ReviewStats, String>((
   ref,
   specialistId,
 ) {

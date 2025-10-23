@@ -96,7 +96,9 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
               decoration: BoxDecoration(
                 color: isCurrentUser ? Colors.blue[50] : Colors.grey[50],
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: isCurrentUser ? Colors.blue[200]! : Colors.grey[200]!),
+                border: Border.all(
+                    color:
+                        isCurrentUser ? Colors.blue[200]! : Colors.grey[200]!),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,13 +111,16 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: isCurrentUser ? Colors.blue[700] : Colors.grey[700],
+                          color: isCurrentUser
+                              ? Colors.blue[700]
+                              : Colors.grey[700],
                         ),
                       ),
                       if (comment.isInternal) ...[
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.orange[100],
                             borderRadius: BorderRadius.circular(8),
@@ -141,7 +146,9 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                   const SizedBox(height: 8),
 
                   // Текст комментария
-                  Text(comment.text, style: const TextStyle(fontSize: 14, color: Colors.black87)),
+                  Text(comment.text,
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.black87)),
 
                   // Вложения
                   if (comment.attachments.isNotEmpty) ...[
@@ -167,7 +174,8 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                   // TODO: Открыть вложение
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
@@ -176,11 +184,13 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(attachment.type.icon, style: const TextStyle(fontSize: 12)),
+                      Text(attachment.type.icon,
+                          style: const TextStyle(fontSize: 12)),
                       const SizedBox(width: 4),
                       Text(
                         attachment.name,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -214,7 +224,8 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
                 const Spacer(),
                 if (_isInternal)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.orange[100],
                       borderRadius: BorderRadius.circular(8),
@@ -239,7 +250,8 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
               maxLines: 3,
               decoration: InputDecoration(
                 hintText: 'Добавить комментарий...',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                 contentPadding: const EdgeInsets.all(12),
               ),
             ),
@@ -260,7 +272,9 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
 
                 // Кнопка отправки
                 ElevatedButton(
-                  onPressed: _commentController.text.trim().isEmpty ? null : _sendComment,
+                  onPressed: _commentController.text.trim().isEmpty
+                      ? null
+                      : _sendComment,
                   child: const Text('Отправить'),
                 ),
               ],
@@ -286,9 +300,12 @@ class _OrderCommentsWidgetState extends State<OrderCommentsWidget> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Добавить вложение'),
-        content: const Text('Функция добавления вложений будет реализована позже'),
+        content:
+            const Text('Функция добавления вложений будет реализована позже'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK')),
         ],
       ),
     );

@@ -35,7 +35,8 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
     _animationController.forward();
   }
 
@@ -70,108 +71,121 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) => AppBar(
-    title: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            gradient: Colors.blue,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Icon(Icons.smart_toy_rounded, color: Colors.white, size: 24),
-        ),
-        const SizedBox(width: 12),
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
           children: [
-            Text('AI-помощник', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            Text('Помогу с планированием', style: TextStyle(fontSize: 12, color: Colors.grey)),
-          ],
-        ),
-      ],
-    ),
-    backgroundColor: Colors.transparent,
-    elevation: 0,
-    actions: [
-      IconButton(
-        icon: const Icon(Icons.clear_all_rounded),
-        onPressed: _showClearHistoryDialog,
-        tooltip: 'Очистить историю',
-      ),
-    ],
-  );
-
-  Widget _buildChatInterface(String userId) => FutureBuilder<List<ai_message.AIMessage>>(
-    future: Future.value([]), // Placeholder - getMessages method doesn't exist
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      if (snapshot.hasError) {
-        return _buildErrorWidget(snapshot.error.toString());
-      }
-
-      final messages = snapshot.data ?? [];
-
-      if (messages.isEmpty) {
-        return _buildWelcomeMessage();
-      }
-
-      return FadeTransition(
-        opacity: _fadeAnimation,
-        child: ListView.builder(
-          controller: _scrollController,
-          padding: const EdgeInsets.all(16),
-          itemCount: messages.length,
-          itemBuilder: (context, index) {
-            final message = messages[index];
-            return _buildMessageBubble(message);
-          },
-        ),
-      );
-    },
-  );
-
-  Widget _buildWelcomeMessage() => Center(
-    child: FadeTransition(
-      opacity: _fadeAnimation,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              gradient: Colors.blue,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.blue.withValues(alpha: 0.3),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                gradient: Colors.blue,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.smart_toy_rounded,
+                  color: Colors.white, size: 24),
+            ),
+            const SizedBox(width: 12),
+            const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('AI-помощник',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text('Помогу с планированием',
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
               ],
             ),
-            child: const Icon(Icons.smart_toy_rounded, size: 64, color: Colors.white),
+          ],
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.clear_all_rounded),
+            onPressed: _showClearHistoryDialog,
+            tooltip: 'Очистить историю',
           ),
-          const SizedBox(height: 24),
-          Text(
-            'Привет! Я ваш AI-помощник',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Я помогу вам найти специалистов для вашего мероприятия.\n'
-            'Просто опишите, что вам нужно!',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
-          ),
-          const SizedBox(height: 32),
-          _buildQuickActions(),
         ],
-      ),
-    ),
-  );
+      );
+
+  Widget _buildChatInterface(String userId) =>
+      FutureBuilder<List<ai_message.AIMessage>>(
+        future:
+            Future.value([]), // Placeholder - getMessages method doesn't exist
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return _buildErrorWidget(snapshot.error.toString());
+          }
+
+          final messages = snapshot.data ?? [];
+
+          if (messages.isEmpty) {
+            return _buildWelcomeMessage();
+          }
+
+          return FadeTransition(
+            opacity: _fadeAnimation,
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.all(16),
+              itemCount: messages.length,
+              itemBuilder: (context, index) {
+                final message = messages[index];
+                return _buildMessageBubble(message);
+              },
+            ),
+          );
+        },
+      );
+
+  Widget _buildWelcomeMessage() => Center(
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: Colors.blue,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withValues(alpha: 0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: const Icon(Icons.smart_toy_rounded,
+                    size: 64, color: Colors.white),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Привет! Я ваш AI-помощник',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Я помогу вам найти специалистов для вашего мероприятия.\n'
+                'Просто опишите, что вам нужно!',
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 32),
+              _buildQuickActions(),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildQuickActions() {
     final quickActions = [
@@ -185,7 +199,11 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
         'icon': Icons.account_balance_wallet_rounded,
         'color': Colors.green,
       },
-      {'text': 'Найди фотографа', 'icon': Icons.camera_alt_rounded, 'color': Colors.orange},
+      {
+        'text': 'Найди фотографа',
+        'icon': Icons.camera_alt_rounded,
+        'color': Colors.orange
+      },
     ];
 
     return Column(
@@ -196,16 +214,20 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
               child: AnimatedButton(
                 onPressed: () => _sendQuickMessage(action['text']! as String),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   decoration: BoxDecoration(
                     color: (action['color']! as Color).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: (action['color']! as Color).withValues(alpha: 0.3)),
+                    border: Border.all(
+                        color:
+                            (action['color']! as Color).withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(action['icon']! as IconData, color: action['color']! as Color, size: 20),
+                      Icon(action['icon']! as IconData,
+                          color: action['color']! as Color, size: 20),
                       const SizedBox(width: 12),
                       Text(
                         action['text']! as String,
@@ -230,7 +252,8 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
@@ -241,19 +264,25 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                 gradient: Colors.blue,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(Icons.smart_toy_rounded, color: Colors.white, size: 18),
+              child: const Icon(Icons.smart_toy_rounded,
+                  color: Colors.white, size: 18),
             ),
             const SizedBox(width: 8),
           ],
           Flexible(
             child: Container(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.75),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: isUser ? Colors.blue : Colors.grey[100],
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isUser ? const Radius.circular(20) : const Radius.circular(4),
-                  bottomRight: isUser ? const Radius.circular(4) : const Radius.circular(20),
+                  bottomLeft: isUser
+                      ? const Radius.circular(20)
+                      : const Radius.circular(4),
+                  bottomRight: isUser
+                      ? const Radius.circular(4)
+                      : const Radius.circular(20),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -272,13 +301,17 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                   ],
                   Text(
                     message.content,
-                    style: TextStyle(color: isUser ? Colors.white : Colors.black87, fontSize: 16),
+                    style: TextStyle(
+                        color: isUser ? Colors.white : Colors.black87,
+                        fontSize: 16),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     message.formattedTime,
                     style: TextStyle(
-                      color: isUser ? Colors.white.withValues(alpha: 0.7) : Colors.grey[500],
+                      color: isUser
+                          ? Colors.white.withValues(alpha: 0.7)
+                          : Colors.grey[500],
                       fontSize: 12,
                     ),
                   ),
@@ -295,7 +328,8 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(Icons.person_rounded, color: Colors.white, size: 18),
+              child: const Icon(Icons.person_rounded,
+                  color: Colors.white, size: 18),
             ),
           ],
         ],
@@ -332,10 +366,12 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                           message.specialistImageUrl!,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
-                              const Icon(Icons.person_rounded, color: Colors.white, size: 20),
+                              const Icon(Icons.person_rounded,
+                                  color: Colors.white, size: 20),
                         ),
                       )
-                    : const Icon(Icons.person_rounded, color: Colors.white, size: 20),
+                    : const Icon(Icons.person_rounded,
+                        color: Colors.white, size: 20),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -344,7 +380,8 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                   children: [
                     Text(
                       message.specialistName ?? 'Специалист',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                     if (message.specialistCategory != null)
                       Text(
@@ -357,11 +394,13 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
               if (message.specialistRating != null)
                 Row(
                   children: [
-                    const Icon(Icons.star_rounded, color: Colors.amber, size: 16),
+                    const Icon(Icons.star_rounded,
+                        color: Colors.amber, size: 16),
                     const SizedBox(width: 4),
                     Text(
                       message.specialistRating!.toStringAsFixed(1),
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12),
                     ),
                   ],
                 ),
@@ -383,14 +422,17 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => _viewSpecialistProfile(message.specialistId!),
+                  onPressed: () =>
+                      _viewSpecialistProfile(message.specialistId!),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text('Посмотреть профиль', style: TextStyle(fontSize: 12)),
+                  child: const Text('Посмотреть профиль',
+                      style: TextStyle(fontSize: 12)),
                 ),
               ),
               const SizedBox(width: 8),
@@ -401,9 +443,11 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
                     foregroundColor: Colors.blue,
                     side: const BorderSide(color: Colors.blue),
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text('Забронировать', style: TextStyle(fontSize: 12)),
+                  child: const Text('Забронировать',
+                      style: TextStyle(fontSize: 12)),
                 ),
               ),
             ],
@@ -414,66 +458,71 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
   }
 
   Widget _buildMessageInput() => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      border: Border(top: BorderSide(color: Colors.grey.withValues(alpha: 0.2))),
-    ),
-    child: SafeArea(
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: TextField(
-                controller: _messageController,
-                decoration: const InputDecoration(
-                  hintText: 'Опишите, что вам нужно...',
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          border: Border(
+              top: BorderSide(color: Colors.grey.withValues(alpha: 0.2))),
+        ),
+        child: SafeArea(
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: const InputDecoration(
+                      hintText: 'Опишите, что вам нужно...',
+                      border: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    ),
+                    maxLines: null,
+                    textCapitalization: TextCapitalization.sentences,
+                  ),
                 ),
-                maxLines: null,
-                textCapitalization: TextCapitalization.sentences,
               ),
-            ),
+              const SizedBox(width: 12),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: Colors.blue,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: IconButton(
+                  onPressed: _sendMessage,
+                  icon: const Icon(Icons.send_rounded, color: Colors.white),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          Container(
-            decoration: BoxDecoration(
-              gradient: Colors.blue,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: IconButton(
-              onPressed: _sendMessage,
-              icon: const Icon(Icons.send_rounded, color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildErrorWidget(String error) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.error_outline_rounded, size: 64, color: Colors.red[300]),
-        const SizedBox(height: 16),
-        Text('Произошла ошибка', style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 8),
-        Text(
-          error,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline_rounded, size: 64, color: Colors.red[300]),
+            const SizedBox(height: 16),
+            Text('Произошла ошибка',
+                style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: 8),
+            Text(
+              error,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+                onPressed: () => setState(() {}),
+                child: const Text('Попробовать снова')),
+          ],
         ),
-        const SizedBox(height: 16),
-        ElevatedButton(onPressed: () => setState(() {}), child: const Text('Попробовать снова')),
-      ],
-    ),
-  );
+      );
 
   void _sendMessage() {
     final message = _messageController.text.trim();
@@ -526,7 +575,9 @@ class _AIAssistantScreenState extends ConsumerState<AIAssistantScreen>
           'Вы уверены, что хотите очистить всю историю сообщений с AI-помощником?',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();

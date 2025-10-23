@@ -10,7 +10,8 @@ class CustomerService {
   /// Получить заказчика по ID
   Future<Customer?> getCustomerById(String customerId) async {
     try {
-      final doc = await _firestore.collection(_collection).doc(customerId).get();
+      final doc =
+          await _firestore.collection(_collection).doc(customerId).get();
 
       if (!doc.exists) return null;
       return Customer.fromDocument(doc);
@@ -87,7 +88,10 @@ class CustomerService {
         updateData['anniversaryRemindersEnabled'] = anniversaryRemindersEnabled;
       }
 
-      await _firestore.collection(_collection).doc(customerId).update(updateData);
+      await _firestore
+          .collection(_collection)
+          .doc(customerId)
+          .update(updateData);
     } on Exception catch (e) {
       throw Exception('Ошибка обновления профиля: $e');
     }
@@ -105,7 +109,8 @@ class CustomerService {
   }
 
   /// Удалить специалиста из избранного
-  Future<void> removeFromFavorites(String customerId, String specialistId) async {
+  Future<void> removeFromFavorites(
+      String customerId, String specialistId) async {
     try {
       await _firestore.collection(_collection).doc(customerId).update({
         'favoriteSpecialists': FieldValue.arrayRemove([specialistId]),
@@ -126,7 +131,8 @@ class CustomerService {
   }
 
   /// Проверить, является ли специалист избранным
-  Future<bool> isFavoriteSpecialist(String customerId, String specialistId) async {
+  Future<bool> isFavoriteSpecialist(
+      String customerId, String specialistId) async {
     try {
       final favorites = await getFavoriteSpecialists(customerId);
       return favorites.contains(specialistId);
@@ -144,7 +150,8 @@ class CustomerService {
 
       final querySnapshot = await _firestore
           .collection(_collection)
-          .where('weddingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(today))
+          .where('weddingDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(today))
           .where('weddingDate', isLessThan: Timestamp.fromDate(tomorrow))
           .get();
 
@@ -155,7 +162,8 @@ class CustomerService {
   }
 
   /// Получить заказчиков с годовщинами в ближайшие дни
-  Future<List<Customer>> getCustomersWithUpcomingAnniversaries(int daysAhead) async {
+  Future<List<Customer>> getCustomersWithUpcomingAnniversaries(
+      int daysAhead) async {
     try {
       final now = DateTime.now();
       final startDate = DateTime(now.year, now.month, now.day);
@@ -163,7 +171,8 @@ class CustomerService {
 
       final querySnapshot = await _firestore
           .collection(_collection)
-          .where('weddingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+          .where('weddingDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
           .where('weddingDate', isLessThan: Timestamp.fromDate(endDate))
           .get();
 

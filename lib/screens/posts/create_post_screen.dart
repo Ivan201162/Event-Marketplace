@@ -46,7 +46,8 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             child: Text(
               'Опубликовать',
               style: TextStyle(
-                color: _isLoading ? Colors.grey : Theme.of(context).primaryColor,
+                color:
+                    _isLoading ? Colors.grey : Theme.of(context).primaryColor,
                 fontWeight: FontWeight.bold,
               ),
             ),

@@ -4,15 +4,18 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('TransliterateUtils', () {
     test('transliterateNameToUsername - русские имена', () {
-      final result1 = TransliterateUtils.transliterateNameToUsername('Иван Иванов');
+      final result1 =
+          TransliterateUtils.transliterateNameToUsername('Иван Иванов');
       expect(result1, startsWith('ivan_ivanov_'));
       expect(result1, matches(RegExp(r'^ivan_ivanov_\d{4}$')));
 
-      final result2 = TransliterateUtils.transliterateNameToUsername('Анна-Мария');
+      final result2 =
+          TransliterateUtils.transliterateNameToUsername('Анна-Мария');
       expect(result2, startsWith('anna_mariya_'));
       expect(result2, matches(RegExp(r'^anna_mariya_\d{4}$')));
 
-      final result3 = TransliterateUtils.transliterateNameToUsername('Джон Доу');
+      final result3 =
+          TransliterateUtils.transliterateNameToUsername('Джон Доу');
       expect(result3, startsWith('dzhon_dou_'));
       expect(result3, matches(RegExp(r'^dzhon_dou_\d{4}$')));
     });
@@ -24,7 +27,8 @@ void main() {
     });
 
     test('transliterateNameToUsername - смешанные имена', () {
-      final result = TransliterateUtils.transliterateNameToUsername('Александр Smith');
+      final result =
+          TransliterateUtils.transliterateNameToUsername('Александр Smith');
       expect(result, startsWith('aleksandr_smith_'));
       expect(result, matches(RegExp(r'^aleksandr_smith_\d{4}$')));
     });
@@ -36,7 +40,8 @@ void main() {
     });
 
     test('transliterateNameToUsername - только спецсимволы', () {
-      final result = TransliterateUtils.transliterateNameToUsername(r'!@#$%^&*()');
+      final result =
+          TransliterateUtils.transliterateNameToUsername(r'!@#$%^&*()');
       expect(result, startsWith('user_'));
       expect(result, matches(RegExp(r'^user_\d+$')));
     });
@@ -65,8 +70,10 @@ void main() {
     });
 
     test('transliterateText - транслитерация текста', () {
-      expect(TransliterateUtils.transliterateText('Привет мир'), equals('Privet mir'));
-      expect(TransliterateUtils.transliterateText('Hello world'), equals('Hello world'));
+      expect(TransliterateUtils.transliterateText('Привет мир'),
+          equals('Privet mir'));
+      expect(TransliterateUtils.transliterateText('Hello world'),
+          equals('Hello world'));
       expect(TransliterateUtils.transliterateText(''), equals(''));
     });
 

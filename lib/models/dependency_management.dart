@@ -24,25 +24,29 @@ class Dependency {
   });
 
   factory Dependency.fromMap(Map<String, dynamic> map) => Dependency(
-    id: map['id'] as String? ?? '',
-    name: map['name'] as String? ?? '',
-    version: map['version'] as String? ?? '',
-    latestVersion: map['latestVersion'] as String?,
-    type: DependencyType.fromString(map['type'] as String? ?? 'package'),
-    status: DependencyStatus.fromString(map['status'] as String? ?? 'active'),
-    description: map['description'] as String?,
-    repositoryUrl: map['repositoryUrl'] as String?,
-    documentationUrl: map['documentationUrl'] as String?,
-    licenses: List<String>.from(map['licenses'] as List<dynamic>? ?? []),
-    authors: List<String>.from(map['authors'] as List<dynamic>? ?? []),
-    metadata: Map<String, dynamic>.from(map['metadata'] as Map<dynamic, dynamic>? ?? {}),
-    dependencies: List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
-    dependents: List<String>.from(map['dependents'] as List<dynamic>? ?? []),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    createdBy: map['createdBy'] as String? ?? '',
-    updatedBy: map['updatedBy'] as String? ?? '',
-  );
+        id: map['id'] as String? ?? '',
+        name: map['name'] as String? ?? '',
+        version: map['version'] as String? ?? '',
+        latestVersion: map['latestVersion'] as String?,
+        type: DependencyType.fromString(map['type'] as String? ?? 'package'),
+        status:
+            DependencyStatus.fromString(map['status'] as String? ?? 'active'),
+        description: map['description'] as String?,
+        repositoryUrl: map['repositoryUrl'] as String?,
+        documentationUrl: map['documentationUrl'] as String?,
+        licenses: List<String>.from(map['licenses'] as List<dynamic>? ?? []),
+        authors: List<String>.from(map['authors'] as List<dynamic>? ?? []),
+        metadata: Map<String, dynamic>.from(
+            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        dependencies:
+            List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
+        dependents:
+            List<String>.from(map['dependents'] as List<dynamic>? ?? []),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
+      );
   final String id;
   final String name;
   final String version;
@@ -63,25 +67,25 @@ class Dependency {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'version': version,
-    'latestVersion': latestVersion,
-    'type': type.value,
-    'status': status.value,
-    'description': description,
-    'repositoryUrl': repositoryUrl,
-    'documentationUrl': documentationUrl,
-    'licenses': licenses,
-    'authors': authors,
-    'metadata': metadata,
-    'dependencies': dependencies,
-    'dependents': dependents,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'createdBy': createdBy,
-    'updatedBy': updatedBy,
-  };
+        'id': id,
+        'name': name,
+        'version': version,
+        'latestVersion': latestVersion,
+        'type': type.value,
+        'status': status.value,
+        'description': description,
+        'repositoryUrl': repositoryUrl,
+        'documentationUrl': documentationUrl,
+        'licenses': licenses,
+        'authors': authors,
+        'metadata': metadata,
+        'dependencies': dependencies,
+        'dependents': dependents,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   Dependency copyWith({
     String? id,
@@ -102,26 +106,27 @@ class Dependency {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) => Dependency(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    version: version ?? this.version,
-    latestVersion: latestVersion ?? this.latestVersion,
-    type: type ?? this.type,
-    status: status ?? this.status,
-    description: description ?? this.description,
-    repositoryUrl: repositoryUrl ?? this.repositoryUrl,
-    documentationUrl: documentationUrl ?? this.documentationUrl,
-    licenses: licenses ?? this.licenses,
-    authors: authors ?? this.authors,
-    metadata: metadata ?? this.metadata,
-    dependencies: dependencies ?? this.dependencies,
-    dependents: dependents ?? this.dependents,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    createdBy: createdBy ?? this.createdBy,
-    updatedBy: updatedBy ?? this.updatedBy,
-  );
+  }) =>
+      Dependency(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        version: version ?? this.version,
+        latestVersion: latestVersion ?? this.latestVersion,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        description: description ?? this.description,
+        repositoryUrl: repositoryUrl ?? this.repositoryUrl,
+        documentationUrl: documentationUrl ?? this.documentationUrl,
+        licenses: licenses ?? this.licenses,
+        authors: authors ?? this.authors,
+        metadata: metadata ?? this.metadata,
+        dependencies: dependencies ?? this.dependencies,
+        dependents: dependents ?? this.dependents,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
   String toString() =>
@@ -155,10 +160,11 @@ enum DependencyType {
   final String value;
   final String displayName;
 
-  static DependencyType fromString(String value) => DependencyType.values.firstWhere(
-    (type) => type.value == value,
-    orElse: () => DependencyType.package,
-  );
+  static DependencyType fromString(String value) =>
+      DependencyType.values.firstWhere(
+        (type) => type.value == value,
+        orElse: () => DependencyType.package,
+      );
 
   String get icon {
     switch (this) {
@@ -226,10 +232,11 @@ enum DependencyStatus {
   final String value;
   final String displayName;
 
-  static DependencyStatus fromString(String value) => DependencyStatus.values.firstWhere(
-    (status) => status.value == value,
-    orElse: () => DependencyStatus.active,
-  );
+  static DependencyStatus fromString(String value) =>
+      DependencyStatus.values.firstWhere(
+        (status) => status.value == value,
+        orElse: () => DependencyStatus.active,
+      );
 
   String get icon {
     switch (this) {
@@ -292,25 +299,31 @@ class DependencyUpdate {
     required this.updatedBy,
   });
 
-  factory DependencyUpdate.fromMap(Map<String, dynamic> map) => DependencyUpdate(
-    id: map['id'] as String? ?? '',
-    dependencyId: map['dependencyId'] as String? ?? '',
-    currentVersion: map['currentVersion'] as String? ?? '',
-    newVersion: map['newVersion'] as String? ?? '',
-    type: UpdateType.fromString(map['type'] as String? ?? 'minor'),
-    priority: UpdatePriority.fromString(map['priority'] as String? ?? 'medium'),
-    changelog: map['changelog'] as String?,
-    breakingChanges: List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
-    securityFixes: List<String>.from(map['securityFixes'] as List<dynamic>? ?? []),
-    bugFixes: List<String>.from(map['bugFixes'] as List<dynamic>? ?? []),
-    newFeatures: List<String>.from(map['newFeatures'] as List<dynamic>? ?? []),
-    metadata: Map<String, dynamic>.from(map['metadata'] as Map<dynamic, dynamic>? ?? {}),
-    releaseDate: (map['releaseDate'] as Timestamp).toDate(),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    createdBy: map['createdBy'] as String? ?? '',
-    updatedBy: map['updatedBy'] as String? ?? '',
-  );
+  factory DependencyUpdate.fromMap(Map<String, dynamic> map) =>
+      DependencyUpdate(
+        id: map['id'] as String? ?? '',
+        dependencyId: map['dependencyId'] as String? ?? '',
+        currentVersion: map['currentVersion'] as String? ?? '',
+        newVersion: map['newVersion'] as String? ?? '',
+        type: UpdateType.fromString(map['type'] as String? ?? 'minor'),
+        priority:
+            UpdatePriority.fromString(map['priority'] as String? ?? 'medium'),
+        changelog: map['changelog'] as String?,
+        breakingChanges:
+            List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
+        securityFixes:
+            List<String>.from(map['securityFixes'] as List<dynamic>? ?? []),
+        bugFixes: List<String>.from(map['bugFixes'] as List<dynamic>? ?? []),
+        newFeatures:
+            List<String>.from(map['newFeatures'] as List<dynamic>? ?? []),
+        metadata: Map<String, dynamic>.from(
+            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        releaseDate: (map['releaseDate'] as Timestamp).toDate(),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
+      );
   final String id;
   final String dependencyId;
   final String currentVersion;
@@ -330,24 +343,24 @@ class DependencyUpdate {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'dependencyId': dependencyId,
-    'currentVersion': currentVersion,
-    'newVersion': newVersion,
-    'type': type.value,
-    'priority': priority.value,
-    'changelog': changelog,
-    'breakingChanges': breakingChanges,
-    'securityFixes': securityFixes,
-    'bugFixes': bugFixes,
-    'newFeatures': newFeatures,
-    'metadata': metadata,
-    'releaseDate': Timestamp.fromDate(releaseDate),
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'createdBy': createdBy,
-    'updatedBy': updatedBy,
-  };
+        'id': id,
+        'dependencyId': dependencyId,
+        'currentVersion': currentVersion,
+        'newVersion': newVersion,
+        'type': type.value,
+        'priority': priority.value,
+        'changelog': changelog,
+        'breakingChanges': breakingChanges,
+        'securityFixes': securityFixes,
+        'bugFixes': bugFixes,
+        'newFeatures': newFeatures,
+        'metadata': metadata,
+        'releaseDate': Timestamp.fromDate(releaseDate),
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   DependencyUpdate copyWith({
     String? id,
@@ -367,25 +380,26 @@ class DependencyUpdate {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) => DependencyUpdate(
-    id: id ?? this.id,
-    dependencyId: dependencyId ?? this.dependencyId,
-    currentVersion: currentVersion ?? this.currentVersion,
-    newVersion: newVersion ?? this.newVersion,
-    type: type ?? this.type,
-    priority: priority ?? this.priority,
-    changelog: changelog ?? this.changelog,
-    breakingChanges: breakingChanges ?? this.breakingChanges,
-    securityFixes: securityFixes ?? this.securityFixes,
-    bugFixes: bugFixes ?? this.bugFixes,
-    newFeatures: newFeatures ?? this.newFeatures,
-    metadata: metadata ?? this.metadata,
-    releaseDate: releaseDate ?? this.releaseDate,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    createdBy: createdBy ?? this.createdBy,
-    updatedBy: updatedBy ?? this.updatedBy,
-  );
+  }) =>
+      DependencyUpdate(
+        id: id ?? this.id,
+        dependencyId: dependencyId ?? this.dependencyId,
+        currentVersion: currentVersion ?? this.currentVersion,
+        newVersion: newVersion ?? this.newVersion,
+        type: type ?? this.type,
+        priority: priority ?? this.priority,
+        changelog: changelog ?? this.changelog,
+        breakingChanges: breakingChanges ?? this.breakingChanges,
+        securityFixes: securityFixes ?? this.securityFixes,
+        bugFixes: bugFixes ?? this.bugFixes,
+        newFeatures: newFeatures ?? this.newFeatures,
+        metadata: metadata ?? this.metadata,
+        releaseDate: releaseDate ?? this.releaseDate,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
   String toString() =>
@@ -414,7 +428,8 @@ enum UpdateType {
   final String displayName;
 
   static UpdateType fromString(String value) =>
-      UpdateType.values.firstWhere((type) => type.value == value, orElse: () => UpdateType.minor);
+      UpdateType.values.firstWhere((type) => type.value == value,
+          orElse: () => UpdateType.minor);
 
   String get icon {
     switch (this) {
@@ -455,10 +470,11 @@ enum UpdatePriority {
   final String value;
   final String displayName;
 
-  static UpdatePriority fromString(String value) => UpdatePriority.values.firstWhere(
-    (priority) => priority.value == value,
-    orElse: () => UpdatePriority.medium,
-  );
+  static UpdatePriority fromString(String value) =>
+      UpdatePriority.values.firstWhere(
+        (priority) => priority.value == value,
+        orElse: () => UpdatePriority.medium,
+      );
 
   String get icon {
     switch (this) {
@@ -509,37 +525,40 @@ class DependencyConfig {
     required this.updatedBy,
   });
 
-  factory DependencyConfig.fromMap(Map<String, dynamic> map) => DependencyConfig(
-    id: map['id'] as String? ?? '',
-    enableAutoUpdates: map['enableAutoUpdates'] as bool? ?? false,
-    enableSecurityUpdates: map['enableSecurityUpdates'] as bool? ?? true,
-    enableBreakingChangeNotifications: map['enableBreakingChangeNotifications'] as bool? ?? true,
-    allowedUpdateTypes:
-        (map['allowedUpdateTypes'] as List<dynamic>?)
-            ?.map((e) => UpdateType.fromString(e as String))
-            .toList() ??
-        UpdateType.values,
-    allowedPriorities:
-        (map['allowedPriorities'] as List<dynamic>?)
-            ?.map((e) => UpdatePriority.fromString(e as String))
-            .toList() ??
-        UpdatePriority.values,
-    maxConcurrentUpdates: map['maxConcurrentUpdates'] as int? ?? 3,
-    updateRetryAttempts: map['updateRetryAttempts'] as int? ?? 3,
-    updateTimeout: Duration(seconds: map['updateTimeoutSeconds'] as int? ?? 300),
-    excludedDependencies: List<String>.from((map['excludedDependencies'] as List<dynamic>?) ?? []),
-    requiredApprovals: List<String>.from((map['requiredApprovals'] as List<dynamic>?) ?? []),
-    updatePolicies: Map<String, dynamic>.from(
-      (map['updatePolicies'] as Map<dynamic, dynamic>?) ?? {},
-    ),
-    notificationSettings: Map<String, dynamic>.from(
-      (map['notificationSettings'] as Map<dynamic, dynamic>?) ?? {},
-    ),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    createdBy: map['createdBy'] as String? ?? '',
-    updatedBy: map['updatedBy'] as String? ?? '',
-  );
+  factory DependencyConfig.fromMap(Map<String, dynamic> map) =>
+      DependencyConfig(
+        id: map['id'] as String? ?? '',
+        enableAutoUpdates: map['enableAutoUpdates'] as bool? ?? false,
+        enableSecurityUpdates: map['enableSecurityUpdates'] as bool? ?? true,
+        enableBreakingChangeNotifications:
+            map['enableBreakingChangeNotifications'] as bool? ?? true,
+        allowedUpdateTypes: (map['allowedUpdateTypes'] as List<dynamic>?)
+                ?.map((e) => UpdateType.fromString(e as String))
+                .toList() ??
+            UpdateType.values,
+        allowedPriorities: (map['allowedPriorities'] as List<dynamic>?)
+                ?.map((e) => UpdatePriority.fromString(e as String))
+                .toList() ??
+            UpdatePriority.values,
+        maxConcurrentUpdates: map['maxConcurrentUpdates'] as int? ?? 3,
+        updateRetryAttempts: map['updateRetryAttempts'] as int? ?? 3,
+        updateTimeout:
+            Duration(seconds: map['updateTimeoutSeconds'] as int? ?? 300),
+        excludedDependencies: List<String>.from(
+            (map['excludedDependencies'] as List<dynamic>?) ?? []),
+        requiredApprovals: List<String>.from(
+            (map['requiredApprovals'] as List<dynamic>?) ?? []),
+        updatePolicies: Map<String, dynamic>.from(
+          (map['updatePolicies'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        notificationSettings: Map<String, dynamic>.from(
+          (map['notificationSettings'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
+      );
   final String id;
   final bool enableAutoUpdates;
   final bool enableSecurityUpdates;
@@ -559,24 +578,24 @@ class DependencyConfig {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'enableAutoUpdates': enableAutoUpdates,
-    'enableSecurityUpdates': enableSecurityUpdates,
-    'enableBreakingChangeNotifications': enableBreakingChangeNotifications,
-    'allowedUpdateTypes': allowedUpdateTypes.map((e) => e.value).toList(),
-    'allowedPriorities': allowedPriorities.map((e) => e.value).toList(),
-    'maxConcurrentUpdates': maxConcurrentUpdates,
-    'updateRetryAttempts': updateRetryAttempts,
-    'updateTimeoutSeconds': updateTimeout.inSeconds,
-    'excludedDependencies': excludedDependencies,
-    'requiredApprovals': requiredApprovals,
-    'updatePolicies': updatePolicies,
-    'notificationSettings': notificationSettings,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'createdBy': createdBy,
-    'updatedBy': updatedBy,
-  };
+        'id': id,
+        'enableAutoUpdates': enableAutoUpdates,
+        'enableSecurityUpdates': enableSecurityUpdates,
+        'enableBreakingChangeNotifications': enableBreakingChangeNotifications,
+        'allowedUpdateTypes': allowedUpdateTypes.map((e) => e.value).toList(),
+        'allowedPriorities': allowedPriorities.map((e) => e.value).toList(),
+        'maxConcurrentUpdates': maxConcurrentUpdates,
+        'updateRetryAttempts': updateRetryAttempts,
+        'updateTimeoutSeconds': updateTimeout.inSeconds,
+        'excludedDependencies': excludedDependencies,
+        'requiredApprovals': requiredApprovals,
+        'updatePolicies': updatePolicies,
+        'notificationSettings': notificationSettings,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   DependencyConfig copyWith({
     String? id,
@@ -596,26 +615,28 @@ class DependencyConfig {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) => DependencyConfig(
-    id: id ?? this.id,
-    enableAutoUpdates: enableAutoUpdates ?? this.enableAutoUpdates,
-    enableSecurityUpdates: enableSecurityUpdates ?? this.enableSecurityUpdates,
-    enableBreakingChangeNotifications:
-        enableBreakingChangeNotifications ?? this.enableBreakingChangeNotifications,
-    allowedUpdateTypes: allowedUpdateTypes ?? this.allowedUpdateTypes,
-    allowedPriorities: allowedPriorities ?? this.allowedPriorities,
-    maxConcurrentUpdates: maxConcurrentUpdates ?? this.maxConcurrentUpdates,
-    updateRetryAttempts: updateRetryAttempts ?? this.updateRetryAttempts,
-    updateTimeout: updateTimeout ?? this.updateTimeout,
-    excludedDependencies: excludedDependencies ?? this.excludedDependencies,
-    requiredApprovals: requiredApprovals ?? this.requiredApprovals,
-    updatePolicies: updatePolicies ?? this.updatePolicies,
-    notificationSettings: notificationSettings ?? this.notificationSettings,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    createdBy: createdBy ?? this.createdBy,
-    updatedBy: updatedBy ?? this.updatedBy,
-  );
+  }) =>
+      DependencyConfig(
+        id: id ?? this.id,
+        enableAutoUpdates: enableAutoUpdates ?? this.enableAutoUpdates,
+        enableSecurityUpdates:
+            enableSecurityUpdates ?? this.enableSecurityUpdates,
+        enableBreakingChangeNotifications: enableBreakingChangeNotifications ??
+            this.enableBreakingChangeNotifications,
+        allowedUpdateTypes: allowedUpdateTypes ?? this.allowedUpdateTypes,
+        allowedPriorities: allowedPriorities ?? this.allowedPriorities,
+        maxConcurrentUpdates: maxConcurrentUpdates ?? this.maxConcurrentUpdates,
+        updateRetryAttempts: updateRetryAttempts ?? this.updateRetryAttempts,
+        updateTimeout: updateTimeout ?? this.updateTimeout,
+        excludedDependencies: excludedDependencies ?? this.excludedDependencies,
+        requiredApprovals: requiredApprovals ?? this.requiredApprovals,
+        updatePolicies: updatePolicies ?? this.updatePolicies,
+        notificationSettings: notificationSettings ?? this.notificationSettings,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
   String toString() =>

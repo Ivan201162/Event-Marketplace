@@ -31,10 +31,10 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
     with TickerProviderStateMixin {
   final _messageController = TextEditingController();
   final _scrollController = ScrollController();
-  
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   bool _isLoading = false;
   bool _isSending = false;
 
@@ -95,7 +95,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
       }
 
       final firestore = FirebaseFirestore.instance;
-      
+
       // Создаем сообщение
       await firestore
           .collection('chats')
@@ -154,7 +154,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
             children: [
               // Заголовок чата
               _buildChatHeader(),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -194,7 +194,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
               size: 24,
             ),
           ),
-          
+
           // Аватар получателя
           CircleAvatar(
             radius: 20,
@@ -222,9 +222,9 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
                     size: 20,
                   ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // Информация о получателе
           Expanded(
             child: Column(
@@ -248,7 +248,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
               ],
             ),
           ),
-          
+
           // Действия
           IconButton(
             onPressed: () {
@@ -273,7 +273,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
         Expanded(
           child: _buildMessagesList(),
         ),
-        
+
         // Поле ввода сообщения
         _buildMessageInput(),
       ],
@@ -320,7 +320,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
             final data = doc.data() as Map<String, dynamic>;
-            
+
             return _buildMessageBubble(doc.id, data);
           },
         );
@@ -332,11 +332,12 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
   Widget _buildMessageBubble(String messageId, Map<String, dynamic> data) {
     final user = FirebaseAuth.instance.currentUser;
     final isMe = user?.uid == data['senderId'];
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
-        mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isMe) ...[
             CircleAvatar(
@@ -350,7 +351,6 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
             ),
             const SizedBox(width: 8),
           ],
-          
           Flexible(
             child: Container(
               constraints: BoxConstraints(
@@ -358,12 +358,14 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isMe 
-                    ? const Color(0xFF1E3A8A)
-                    : Colors.grey[100],
+                color: isMe ? const Color(0xFF1E3A8A) : Colors.grey[100],
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isMe ? const Radius.circular(20) : const Radius.circular(4),
-                  bottomRight: isMe ? const Radius.circular(4) : const Radius.circular(20),
+                  bottomLeft: isMe
+                      ? const Radius.circular(20)
+                      : const Radius.circular(4),
+                  bottomRight: isMe
+                      ? const Radius.circular(4)
+                      : const Radius.circular(20),
                 ),
               ),
               child: Column(
@@ -380,7 +382,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
                   Text(
                     _formatMessageTime(data['createdAt']),
                     style: TextStyle(
-                      color: isMe 
+                      color: isMe
                           ? Colors.white.withOpacity(0.7)
                           : Colors.grey[600],
                       fontSize: 12,
@@ -390,7 +392,6 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
               ),
             ),
           ),
-          
           if (isMe) ...[
             const SizedBox(width: 8),
             CircleAvatar(
@@ -430,7 +431,7 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
               color: Color(0xFF1E3A8A),
             ),
           ),
-          
+
           // Поле ввода
           Expanded(
             child: Container(
@@ -443,7 +444,8 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
                 decoration: const InputDecoration(
                   hintText: 'Введите сообщение...',
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
@@ -451,18 +453,16 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 8),
-          
+
           // Кнопка отправки
           GestureDetector(
             onTap: _isSending ? null : _sendMessage,
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: _isSending 
-                    ? Colors.grey[300]
-                    : const Color(0xFF1E3A8A),
+                color: _isSending ? Colors.grey[300] : const Color(0xFF1E3A8A),
                 shape: BoxShape.circle,
               ),
               child: _isSending
@@ -495,7 +495,9 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
           child: Row(
-            mainAxisAlignment: index % 2 == 0 ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: index % 2 == 0
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             children: [
               if (index % 2 != 0) ...[
                 ShimmerBox(width: 32, height: 32, borderRadius: 16),
@@ -619,7 +621,8 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
             ),
             ListTile(
               leading: const Icon(Icons.block, color: Colors.red),
-              title: const Text('Заблокировать', style: TextStyle(color: Colors.red)),
+              title: const Text('Заблокировать',
+                  style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 // TODO: Заблокировать пользователя
@@ -673,14 +676,14 @@ class _ChatScreenEnhancedState extends ConsumerState<ChatScreenEnhanced>
   /// Форматирование времени сообщения
   String _formatMessageTime(dynamic timestamp) {
     if (timestamp == null) return '';
-    
-    final date = timestamp is Timestamp 
-        ? timestamp.toDate() 
+
+    final date = timestamp is Timestamp
+        ? timestamp.toDate()
         : DateTime.parse(timestamp.toString());
-    
+
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${date.day}.${date.month} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
     } else if (difference.inHours > 0) {

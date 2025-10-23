@@ -87,7 +87,10 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
           Expanded(
             child: Text(
               widget.showAllStories ? 'Все сторис' : 'Мои сторис',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
 
@@ -129,7 +132,8 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
               child: StoryCircle(
                 story: story,
                 onTap: () => _viewStory(story),
-                onDelete: !widget.showAllStories ? () => _deleteStory(story) : null,
+                onDelete:
+                    !widget.showAllStories ? () => _deleteStory(story) : null,
               ),
             );
           },
@@ -144,15 +148,20 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
           children: [
             Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки сторис', style: Theme.of(context).textTheme.titleMedium),
+            Text('Ошибка загрузки сторис',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
               _error!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadStories, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadStories, child: const Text('Повторить')),
           ],
         ),
       );
@@ -161,18 +170,25 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.auto_stories_outlined, size: 64, color: Colors.grey[400]),
+            Icon(Icons.auto_stories_outlined,
+                size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               widget.showAllStories ? 'Нет активных сторис' : 'Нет сторис',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               widget.showAllStories
                   ? 'Специалисты еще не создали сторис'
                   : 'Создайте свою первую сторис',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             if (!widget.showAllStories) ...[
@@ -235,15 +251,17 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
         await _loadStories();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Сторис удалена'), backgroundColor: Colors.green),
+            const SnackBar(
+                content: Text('Сторис удалена'), backgroundColor: Colors.green),
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(
-              SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
+          ).showSnackBar(SnackBar(
+              content: Text('Ошибка удаления: $e'),
+              backgroundColor: Colors.red));
         }
       }
     }
@@ -252,7 +270,8 @@ class _StoryWidgetState extends ConsumerState<StoryWidget> {
 
 /// Круглая иконка сторис
 class StoryCircle extends StatelessWidget {
-  const StoryCircle({super.key, required this.story, this.onTap, this.onDelete});
+  const StoryCircle(
+      {super.key, required this.story, this.onTap, this.onDelete});
 
   final Story story;
   final VoidCallback? onTap;
@@ -267,7 +286,9 @@ class StoryCircle extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: story.expiresAt.isBefore(DateTime.now()) ? Colors.grey : Colors.blue,
+              color: story.expiresAt.isBefore(DateTime.now())
+                  ? Colors.grey
+                  : Colors.blue,
               width: 3,
             ),
           ),
@@ -287,7 +308,8 @@ class StoryCircle extends StatelessWidget {
                             width: 80,
                             height: 80,
                             color: Colors.grey[200],
-                            child: const Center(child: CircularProgressIndicator()),
+                            child: const Center(
+                                child: CircularProgressIndicator()),
                           );
                         },
                         errorBuilder: (context, error, stackTrace) => Container(
@@ -319,7 +341,9 @@ class StoryCircle extends StatelessWidget {
                                 ),
                               )
                             : Icon(
-                                story.isVideo ? Icons.video_library : Icons.image,
+                                story.isVideo
+                                    ? Icons.video_library
+                                    : Icons.image,
                                 color: Colors.grey[400],
                               ),
                       ),
@@ -351,8 +375,10 @@ class StoryCircle extends StatelessWidget {
                     child: Container(
                       width: 20,
                       height: 20,
-                      decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                      child: const Icon(Icons.close, color: Colors.white, size: 12),
+                      decoration: const BoxDecoration(
+                          color: Colors.red, shape: BoxShape.circle),
+                      child: const Icon(Icons.close,
+                          color: Colors.white, size: 12),
                     ),
                   ),
                 ),
@@ -363,7 +389,8 @@ class StoryCircle extends StatelessWidget {
                   bottom: 4,
                   left: 4,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(8),
@@ -371,7 +398,8 @@ class StoryCircle extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.visibility, color: Colors.white, size: 10),
+                        const Icon(Icons.visibility,
+                            color: Colors.white, size: 10),
                         const SizedBox(width: 2),
                         Text(
                           story.viewCount.toString(),

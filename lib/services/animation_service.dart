@@ -303,7 +303,8 @@ class AnimationService {
   }
 
   /// Создать последовательность анимаций
-  static Future<void> playSequence(List<String> keys, {Duration delay = const Duration(milliseconds: 100)}) async {
+  static Future<void> playSequence(List<String> keys,
+      {Duration delay = const Duration(milliseconds: 100)}) async {
     for (final key in keys) {
       await forward(key);
       await Future.delayed(delay);

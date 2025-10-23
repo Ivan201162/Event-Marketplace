@@ -73,7 +73,8 @@ class _StartChatButtonState extends ConsumerState<StartChatButton>
       }
 
       // Создаем или получаем чат
-      final chatId = await _chatService.getOrCreateChat(currentUser.uid, widget.userId);
+      final chatId =
+          await _chatService.getOrCreateChat(currentUser.uid, widget.userId);
 
       if (mounted) {
         context.push('/chat/$chatId', extra: {

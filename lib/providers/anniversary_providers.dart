@@ -8,15 +8,18 @@ part 'anniversary_providers.g.dart';
 
 /// Провайдер сервиса годовщин
 @riverpod
-AnniversaryService anniversaryService(AnniversaryServiceRef ref) => AnniversaryService();
+AnniversaryService anniversaryService(AnniversaryServiceRef ref) =>
+    AnniversaryService();
 
 /// Провайдер информации о годовщине пользователя
 @riverpod
-Future<Map<String, dynamic>> userAnniversaryInfo(UserAnniversaryInfoRef ref, String userId) async {
+Future<Map<String, dynamic>> userAnniversaryInfo(
+    UserAnniversaryInfoRef ref, String userId) async {
   final service = ref.watch(anniversaryServiceProvider);
 
   // Получаем пользователя из Firestore
-  final userDoc = await ref.watch(firestoreProvider).collection('users').doc(userId).get();
+  final userDoc =
+      await ref.watch(firestoreProvider).collection('users').doc(userId).get();
   if (!userDoc.exists) {
     return {'hasWeddingDate': false, 'message': 'Пользователь не найден'};
   }
@@ -72,10 +75,12 @@ class AnniversarySettingsNotifier extends _$AnniversarySettingsNotifier {
 
 /// Провайдер пользователей с годовщинами в ближайшие дни
 @riverpod
-Future<List<AppUser>> upcomingAnniversaries(UpcomingAnniversariesRef ref, int daysAhead) async {
+Future<List<AppUser>> upcomingAnniversaries(
+    UpcomingAnniversariesRef ref, int daysAhead) async {
   final service = ref.watch(anniversaryServiceProvider);
   final now = DateTime.now();
   final endDate = now.add(Duration(days: daysAhead));
 
-  return service.getUsersWithAnniversariesInPeriod(startDate: now, endDate: endDate);
+  return service.getUsersWithAnniversariesInPeriod(
+      startDate: now, endDate: endDate);
 }

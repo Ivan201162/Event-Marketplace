@@ -128,7 +128,8 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Выбранные файлы:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        const Text('Выбранные файлы:',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         const SizedBox(height: 8),
         ...(_selectedFiles.asMap().entries.map((entry) {
           final index = entry.key;
@@ -144,7 +145,8 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
         child: ListTile(
           leading: _getFileIcon(file.path),
           title: Text(file.name, style: const TextStyle(fontSize: 14)),
-          subtitle: Text(_getFileSize(file.path), style: const TextStyle(fontSize: 12)),
+          subtitle: Text(_getFileSize(file.path),
+              style: const TextStyle(fontSize: 12)),
           trailing: IconButton(
             onPressed: _isUploading ? null : () => _removeFile(index),
             icon: const Icon(Icons.close, color: Colors.red),
@@ -184,13 +186,17 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
   Widget _buildUploadButton() => SizedBox(
         width: double.infinity,
         child: ElevatedButton.icon(
-          onPressed: _selectedFiles.isEmpty || _isUploading ? null : _uploadFiles,
+          onPressed:
+              _selectedFiles.isEmpty || _isUploading ? null : _uploadFiles,
           icon: _isUploading
               ? const SizedBox(
-                  width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2))
               : const Icon(Icons.cloud_upload),
           label: Text(_isUploading ? 'Загрузка...' : 'Загрузить файлы'),
-          style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 12)),
+          style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12)),
         ),
       );
 
@@ -217,7 +223,8 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
             Icon(Icons.error, color: Colors.red.shade700),
             const SizedBox(width: 8),
             Expanded(
-              child: Text(_uploadError!, style: TextStyle(color: Colors.red.shade700)),
+              child: Text(_uploadError!,
+                  style: TextStyle(color: Colors.red.shade700)),
             ),
             IconButton(
               onPressed: () => setState(() => _uploadError = null),
@@ -295,8 +302,9 @@ class _MediaUploadWidgetState extends State<MediaUploadWidget> {
         bookingId: widget.bookingId,
         specialistId: widget.specialistId,
         files: _selectedFiles,
-        description:
-            _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+        description: _descriptionController.text.trim().isEmpty
+            ? null
+            : _descriptionController.text.trim(),
       );
 
       setState(() {

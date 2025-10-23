@@ -22,19 +22,22 @@ class PhotoStudioCard extends ConsumerWidget {
               Row(
                 children: [
                   Expanded(
-                      child: Text(studio.name, style: Theme.of(context).textTheme.headlineSmall)),
+                      child: Text(studio.name,
+                          style: Theme.of(context).textTheme.headlineSmall)),
                   ...[
                     const Icon(Icons.star, color: Colors.amber, size: 16),
                     const SizedBox(width: 4),
                     Text(
                       studio.rating.toStringAsFixed(1),
-                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.amber),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.amber),
                     ),
                     ...[
                       const SizedBox(width: 4),
                       Text(
                         '(${studio.reviewCount})',
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
                   ],
@@ -73,7 +76,8 @@ class PhotoStudioCard extends ConsumerWidget {
                 children: [
                   if (studio.priceRange != null) ...[
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
@@ -90,11 +94,13 @@ class PhotoStudioCard extends ConsumerWidget {
                   ],
                   Row(
                     children: [
-                      const Icon(Icons.photo_library, size: 16, color: Colors.grey),
+                      const Icon(Icons.photo_library,
+                          size: 16, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
                         '${studio.photosCount} фото',
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -108,7 +114,10 @@ class PhotoStudioCard extends ConsumerWidget {
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: studio.studioOptions.take(3).map(_buildOptionChip).toList(),
+                  children: studio.studioOptions
+                      .take(3)
+                      .map(_buildOptionChip)
+                      .toList(),
                 ),
                 if (studio.studioOptions.length > 3) ...[
                   const SizedBox(height: 4),
@@ -131,7 +140,8 @@ class PhotoStudioCard extends ConsumerWidget {
         ),
         child: Text(
           option.name,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.blue),
+          style: const TextStyle(
+              fontSize: 12, fontWeight: FontWeight.w500, color: Colors.blue),
         ),
       );
 }
@@ -143,7 +153,9 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Consumer(
-        builder: (context, ref, child) => ref.watch(photoStudioProvider(studioId)).when(
+        builder: (context, ref, child) => ref
+            .watch(photoStudioProvider(studioId))
+            .when(
               data: (studio) {
                 if (studio == null) {
                   return const Center(child: Text('Фотостудия не найдена'));
@@ -163,7 +175,9 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                                 Expanded(
                                   child: Text(
                                     studio.name,
-                                    style: Theme.of(context).textTheme.headlineSmall,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
                                   ),
                                 ),
                                 ...[
@@ -181,7 +195,8 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                                     const SizedBox(width: 4),
                                     Text(
                                       '(${studio.reviewCount} отзывов)',
-                                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                      style: const TextStyle(
+                                          fontSize: 14, color: Colors.grey),
                                     ),
                                   ],
                                 ],
@@ -195,12 +210,14 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                                const Icon(Icons.location_on,
+                                    size: 16, color: Colors.grey),
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
                                     studio.address,
-                                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                    style: const TextStyle(
+                                        fontSize: 14, color: Colors.grey),
                                   ),
                                 ),
                               ],
@@ -214,10 +231,12 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Опции студии', style: Theme.of(context).textTheme.headlineSmall),
+                            Text('Опции студии',
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall),
                             const SizedBox(height: 12),
-                            ...studio.studioOptions
-                                .map((option) => _buildOptionCard(context, option)),
+                            ...studio.studioOptions.map(
+                                (option) => _buildOptionCard(context, option)),
                           ],
                         ),
                       ),
@@ -230,17 +249,21 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                             Row(
                               children: [
                                 Text('Фотографии',
-                                    style: Theme.of(context).textTheme.headlineSmall),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall),
                                 const Spacer(),
                                 Text(
                                   '${studio.photosCount} фото',
-                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.grey),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 12),
                             if (studio.photos.isEmpty) ...[
-                              const Center(child: Text('Фотографии не загружены')),
+                              const Center(
+                                  child: Text('Фотографии не загружены')),
                             ] else ...[
                               _buildPhotosGrid(studio.photos),
                             ],
@@ -253,7 +276,8 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                         child: Column(
                           children: [
                             ElevatedButton.icon(
-                              onPressed: () => _showBookingDialog(context, ref, studio),
+                              onPressed: () =>
+                                  _showBookingDialog(context, ref, studio),
                               icon: const Icon(Icons.calendar_today),
                               label: const Text('Забронировать студию'),
                               style: ElevatedButton.styleFrom(
@@ -274,7 +298,8 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
             ),
       );
 
-  Widget _buildOptionCard(BuildContext context, StudioOption option) => Container(
+  Widget _buildOptionCard(BuildContext context, StudioOption option) =>
+      Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -288,10 +313,12 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(option.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+                  child: Text(option.name,
+                      style: const TextStyle(fontWeight: FontWeight.w500)),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
@@ -343,7 +370,8 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                   color: Colors.grey[300],
                   child: const Center(child: CircularProgressIndicator()),
                 ),
-                errorWidget: (context, url, error) => const Center(child: Icon(Icons.broken_image)),
+                errorWidget: (context, url, error) =>
+                    const Center(child: Icon(Icons.broken_image)),
               ),
             ),
           ),
@@ -375,7 +403,8 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                   color: Colors.grey[300],
                   child: const Center(child: CircularProgressIndicator()),
                 ),
-                errorWidget: (context, url, error) => const Center(child: Icon(Icons.broken_image)),
+                errorWidget: (context, url, error) =>
+                    const Center(child: Icon(Icons.broken_image)),
               ),
             ),
           ),
@@ -420,7 +449,8 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
     );
   }
 
-  void _showBookingDialog(BuildContext context, WidgetRef ref, PhotoStudio studio) {
+  void _showBookingDialog(
+      BuildContext context, WidgetRef ref, PhotoStudio studio) {
     showDialog<void>(
       context: context,
       builder: (context) => _BookingDialog(
@@ -428,7 +458,9 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
         onBookingCreated: () {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Бронирование создано'), backgroundColor: Colors.green),
+            const SnackBar(
+                content: Text('Бронирование создано'),
+                backgroundColor: Colors.green),
           );
         },
       ),
@@ -454,8 +486,11 @@ class PhotoStudioListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Consumer(
         builder: (context, ref, child) => ref
             .watch(
-              photoStudiosProvider(
-                  {'location': location, 'minPrice': minPrice, 'maxPrice': maxPrice}),
+              photoStudiosProvider({
+                'location': location,
+                'minPrice': minPrice,
+                'maxPrice': maxPrice
+              }),
             )
             .when(
               data: (studios) {
@@ -468,7 +503,8 @@ class PhotoStudioListWidget extends ConsumerWidget {
                   itemBuilder: (context, index) {
                     final studio = studios[index];
                     return PhotoStudioCard(
-                        studio: studio, onTap: () => onStudioSelected?.call(studio));
+                        studio: studio,
+                        onTap: () => onStudioSelected?.call(studio));
                   },
                 );
               },
@@ -533,7 +569,8 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
                     .map(
                       (option) => DropdownMenuItem(
                         value: option,
-                        child: Text('${option.name} - ${option.price.toStringAsFixed(0)} ₽/час'),
+                        child: Text(
+                            '${option.name} - ${option.price.toStringAsFixed(0)} ₽/час'),
                       ),
                     )
                     .toList(),
@@ -641,7 +678,8 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
   }
 
   Future<void> _selectStartTime() async {
-    final time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    final time =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
     if (time != null) {
       setState(() {
@@ -651,7 +689,8 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
   }
 
   Future<void> _selectEndTime() async {
-    final time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    final time =
+        await showTimePicker(context: context, initialTime: TimeOfDay.now());
 
     if (time != null) {
       setState(() {
@@ -681,7 +720,8 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
     } on Exception catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     } finally {
       setState(() {
         _isLoading = false;
@@ -691,13 +731,15 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
 }
 
 /// Провайдер для фотостудии
-final photoStudioProvider = FutureProvider.family<PhotoStudio?, String>((ref, studioId) async {
+final photoStudioProvider =
+    FutureProvider.family<PhotoStudio?, String>((ref, studioId) async {
   final service = ref.read(photoStudioServiceProvider);
   return service.getPhotoStudio(studioId);
 });
 
 /// Провайдер для списка фотостудий
-final photoStudiosProvider = FutureProvider.family<List<PhotoStudio>, Map<String, dynamic>>((
+final photoStudiosProvider =
+    FutureProvider.family<List<PhotoStudio>, Map<String, dynamic>>((
   ref,
   params,
 ) async {
@@ -706,4 +748,5 @@ final photoStudiosProvider = FutureProvider.family<List<PhotoStudio>, Map<String
 });
 
 /// Провайдер для сервиса фотостудий
-final photoStudioServiceProvider = Provider<PhotoStudioService>((ref) => PhotoStudioService());
+final photoStudioServiceProvider =
+    Provider<PhotoStudioService>((ref) => PhotoStudioService());

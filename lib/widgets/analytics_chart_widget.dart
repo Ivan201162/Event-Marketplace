@@ -25,10 +25,13 @@ class AnalyticsChartWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Заголовок
-              Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold)),
               if (subtitle != null) ...[
                 const SizedBox(height: 4),
-                Text(subtitle!, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                Text(subtitle!,
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600])),
               ],
               const SizedBox(height: 16),
 
@@ -67,8 +70,8 @@ class AnalyticsChartWidget extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 40,
-              getTitlesWidget: (value, meta) =>
-                  Text(value.toInt().toString(), style: const TextStyle(fontSize: 12)),
+              getTitlesWidget: (value, meta) => Text(value.toInt().toString(),
+                  style: const TextStyle(fontSize: 12)),
             ),
           ),
           bottomTitles: AxisTitles(
@@ -76,7 +79,8 @@ class AnalyticsChartWidget extends StatelessWidget {
               showTitles: true,
               getTitlesWidget: (value, meta) {
                 if (value.toInt() < data.length) {
-                  return Text(data[value.toInt()].label, style: const TextStyle(fontSize: 12));
+                  return Text(data[value.toInt()].label,
+                      style: const TextStyle(fontSize: 12));
                 }
                 return const Text('');
               },
@@ -120,8 +124,8 @@ class AnalyticsChartWidget extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 40,
-              getTitlesWidget: (value, meta) =>
-                  Text(value.toInt().toString(), style: const TextStyle(fontSize: 12)),
+              getTitlesWidget: (value, meta) => Text(value.toInt().toString(),
+                  style: const TextStyle(fontSize: 12)),
             ),
           ),
           bottomTitles: AxisTitles(
@@ -129,7 +133,8 @@ class AnalyticsChartWidget extends StatelessWidget {
               showTitles: true,
               getTitlesWidget: (value, meta) {
                 if (value.toInt() < data.length) {
-                  return Text(data[value.toInt()].label, style: const TextStyle(fontSize: 12));
+                  return Text(data[value.toInt()].label,
+                      style: const TextStyle(fontSize: 12));
                 }
                 return const Text('');
               },
@@ -150,7 +155,8 @@ class AnalyticsChartWidget extends StatelessWidget {
                     toY: entry.value.value,
                     color: entry.value.color ?? Theme.of(context).primaryColor,
                     width: 20,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(4)),
                   ),
                 ],
               ),
@@ -224,7 +230,8 @@ enum ChartType { line, bar, pie }
 
 /// Виджет для отображения статистики
 class AnalyticsStatsWidget extends StatelessWidget {
-  const AnalyticsStatsWidget({super.key, required this.stats, this.onViewDetails});
+  const AnalyticsStatsWidget(
+      {super.key, required this.stats, this.onViewDetails});
   final IncomeExpenseStats stats;
   final VoidCallback? onViewDetails;
 
@@ -238,10 +245,13 @@ class AnalyticsStatsWidget extends StatelessWidget {
               Row(
                 children: [
                   const Text('Статистика',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const Spacer(),
                   if (onViewDetails != null)
-                    TextButton(onPressed: onViewDetails, child: const Text('Подробнее')),
+                    TextButton(
+                        onPressed: onViewDetails,
+                        child: const Text('Подробнее')),
                 ],
               ),
               const SizedBox(height: 16),
@@ -250,8 +260,8 @@ class AnalyticsStatsWidget extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                    child: _buildStatCard(
-                        'Доходы', stats.totalIncome, Colors.green, Icons.trending_up),
+                    child: _buildStatCard('Доходы', stats.totalIncome,
+                        Colors.green, Icons.trending_up),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -342,14 +352,18 @@ class AnalyticsStatsWidget extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   title,
-                  style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      fontSize: 12, color: color, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
             const SizedBox(height: 8),
             Text(
-              isCount ? value.toInt().toString() : '${value.toStringAsFixed(0)} ₽',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+              isCount
+                  ? value.toInt().toString()
+                  : '${value.toStringAsFixed(0)} ₽',
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.bold, color: color),
             ),
           ],
         ),
@@ -375,14 +389,16 @@ class AnalyticsStatsWidget extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 title,
-                style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    fontSize: 12, color: color, fontWeight: FontWeight.w500),
               ),
             ],
           ),
           const SizedBox(height: 8),
           Text(
             '${isPositive ? '+' : ''}${percentage.toStringAsFixed(1)}%',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: color),
           ),
         ],
       ),
@@ -444,11 +460,13 @@ class BudgetGoalsWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     goal.name,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: _getGoalTypeColor(goal.type).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -467,7 +485,8 @@ class BudgetGoalsWidget extends StatelessWidget {
 
             if (goal.description != null) ...[
               const SizedBox(height: 4),
-              Text(goal.description!, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              Text(goal.description!,
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600])),
             ],
 
             const SizedBox(height: 12),
@@ -481,14 +500,17 @@ class BudgetGoalsWidget extends StatelessWidget {
                     children: [
                       Text(
                         '${goal.currentAmount.toStringAsFixed(0)} / ${goal.targetAmount.toStringAsFixed(0)} ₽',
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 4),
                       LinearProgressIndicator(
                         value: goal.progressPercentage / 100,
                         backgroundColor: Colors.grey[300],
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          goal.isAchieved ? Colors.green : Theme.of(context).primaryColor,
+                          goal.isAchieved
+                              ? Colors.green
+                              : Theme.of(context).primaryColor,
                         ),
                       ),
                     ],

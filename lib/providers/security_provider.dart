@@ -16,8 +16,8 @@ final securityStatsProvider = FutureProvider<SecurityStats>(
 /// Провайдер для валидации пароля
 final passwordValidationProvider =
     NotifierProvider<PasswordValidationNotifier, PasswordValidationState>(
-      (ref) => PasswordValidationNotifier(),
-    );
+  (ref) => PasswordValidationNotifier(),
+);
 
 /// Состояние безопасности
 class SecurityState {
@@ -40,13 +40,14 @@ class SecurityState {
     String? error,
     DateTime? lastUpdate,
     bool? hasEncryptionKey,
-  }) => SecurityState(
-    isEncryptionEnabled: isEncryptionEnabled ?? this.isEncryptionEnabled,
-    isLoading: isLoading ?? this.isLoading,
-    error: error ?? this.error,
-    lastUpdate: lastUpdate ?? this.lastUpdate,
-    hasEncryptionKey: hasEncryptionKey ?? this.hasEncryptionKey,
-  );
+  }) =>
+      SecurityState(
+        isEncryptionEnabled: isEncryptionEnabled ?? this.isEncryptionEnabled,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        lastUpdate: lastUpdate ?? this.lastUpdate,
+        hasEncryptionKey: hasEncryptionKey ?? this.hasEncryptionKey,
+      );
 
   /// Получить статус безопасности
   String get securityStatus {
@@ -81,12 +82,13 @@ class PasswordValidationState {
     PasswordValidation? validation,
     bool? isVisible,
     String? error,
-  }) => PasswordValidationState(
-    password: password ?? this.password,
-    validation: validation ?? this.validation,
-    isVisible: isVisible ?? this.isVisible,
-    error: error ?? this.error,
-  );
+  }) =>
+      PasswordValidationState(
+        password: password ?? this.password,
+        validation: validation ?? this.validation,
+        isVisible: isVisible ?? this.isVisible,
+        error: error ?? this.error,
+      );
 
   /// Получить цвет силы пароля
   int get strengthColor {
@@ -121,8 +123,10 @@ class SecurityNotifier extends Notifier<SecurityState> {
   /// Обновить статус безопасности
   Future<void> _updateSecurityStatus() async {
     try {
-      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
-      final hasEncryptionKey = await SecureStorageService.getEncryptionKey() != null;
+      final isEncryptionEnabled =
+          await SecureStorageService.isEncryptionEnabled();
+      final hasEncryptionKey =
+          await SecureStorageService.getEncryptionKey() != null;
       final lastUpdate = await SecureStorageService.getLastEncryptionUpdate();
 
       state = state.copyWith(
@@ -232,7 +236,8 @@ class PasswordValidationNotifier extends Notifier<PasswordValidationState> {
 }
 
 /// Провайдер для проверки безопасности данных
-final dataSecurityProvider = Provider<DataSecurityChecker>((ref) => DataSecurityChecker());
+final dataSecurityProvider =
+    Provider<DataSecurityChecker>((ref) => DataSecurityChecker());
 
 /// Класс для проверки безопасности данных
 class DataSecurityChecker {
@@ -298,7 +303,8 @@ class DataSecurityChecker {
 enum SecurityLevel { low, medium, high, critical }
 
 /// Провайдер для генерации безопасных токенов
-final secureTokenProvider = Provider<SecureTokenGenerator>((ref) => SecureTokenGenerator());
+final secureTokenProvider =
+    Provider<SecureTokenGenerator>((ref) => SecureTokenGenerator());
 
 /// Генератор безопасных токенов
 class SecureTokenGenerator {

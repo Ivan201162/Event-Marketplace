@@ -26,7 +26,8 @@ class FAQFilters extends Equatable {
       category: data['category'],
       searchQuery: data['searchQuery'],
       isPublished: data['isPublished'],
-      dateFrom: data['dateFrom'] != null ? DateTime.parse(data['dateFrom']) : null,
+      dateFrom:
+          data['dateFrom'] != null ? DateTime.parse(data['dateFrom']) : null,
       dateTo: data['dateTo'] != null ? DateTime.parse(data['dateTo']) : null,
       tags: data['tags'] != null ? List<String>.from(data['tags']) : null,
       language: data['language'],
@@ -82,7 +83,8 @@ class FAQFilters extends Equatable {
   bool get isNotEmpty => !isEmpty;
 
   @override
-  List<Object?> get props => [category, searchQuery, isPublished, dateFrom, dateTo, tags, language];
+  List<Object?> get props =>
+      [category, searchQuery, isPublished, dateFrom, dateTo, tags, language];
 
   @override
   String toString() {

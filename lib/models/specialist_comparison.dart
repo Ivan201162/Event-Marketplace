@@ -2,7 +2,8 @@ import '../models/specialist.dart';
 
 /// Модель для сравнения специалистов
 class SpecialistComparison {
-  const SpecialistComparison({required this.specialists, required this.createdAt});
+  const SpecialistComparison(
+      {required this.specialists, required this.createdAt});
 
   /// Создать пустое сравнение
   factory SpecialistComparison.empty() =>
@@ -16,28 +17,32 @@ class SpecialistComparison {
   /// Добавить специалиста для сравнения
   SpecialistComparison addSpecialist(Specialist specialist) {
     if (specialists.length >= maxSpecialists) {
-      throw Exception('Максимальное количество специалистов для сравнения: $maxSpecialists');
+      throw Exception(
+          'Максимальное количество специалистов для сравнения: $maxSpecialists');
     }
 
     if (specialists.any((s) => s.id == specialist.id)) {
       throw Exception('Специалист уже добавлен для сравнения');
     }
 
-    return SpecialistComparison(specialists: [...specialists, specialist], createdAt: createdAt);
+    return SpecialistComparison(
+        specialists: [...specialists, specialist], createdAt: createdAt);
   }
 
   /// Удалить специалиста из сравнения
-  SpecialistComparison removeSpecialist(String specialistId) => SpecialistComparison(
-    specialists: specialists.where((s) => s.id != specialistId).toList(),
-    createdAt: createdAt,
-  );
+  SpecialistComparison removeSpecialist(String specialistId) =>
+      SpecialistComparison(
+        specialists: specialists.where((s) => s.id != specialistId).toList(),
+        createdAt: createdAt,
+      );
 
   /// Очистить сравнение
   SpecialistComparison clear() => SpecialistComparison.empty();
 
   /// Проверить, можно ли добавить специалиста
   bool canAddSpecialist(Specialist specialist) =>
-      specialists.length < maxSpecialists && !specialists.any((s) => s.id == specialist.id);
+      specialists.length < maxSpecialists &&
+      !specialists.any((s) => s.id == specialist.id);
 
   /// Получить количество специалистов
   int get count => specialists.length;
@@ -104,14 +109,14 @@ class SpecialistComparison {
 
   /// Получить статистику сравнения
   ComparisonStats get stats => ComparisonStats(
-    totalSpecialists: specialists.length,
-    averageRating: averageRating,
-    priceRange: priceRange,
-    experienceRange: experienceRange,
-    commonCategories: commonCategories,
-    commonServices: commonServices,
-    commonLocations: commonLocations,
-  );
+        totalSpecialists: specialists.length,
+        averageRating: averageRating,
+        priceRange: priceRange,
+        experienceRange: experienceRange,
+        commonCategories: commonCategories,
+        commonServices: commonServices,
+        commonLocations: commonLocations,
+      );
 }
 
 /// Диапазон цен
@@ -200,7 +205,8 @@ class ComparisonStats {
   Specialist? getMostExperienced(List<Specialist> specialists) {
     if (specialists.isEmpty) return null;
 
-    return specialists.reduce((a, b) => a.yearsOfExperience > b.yearsOfExperience ? a : b);
+    return specialists
+        .reduce((a, b) => a.yearsOfExperience > b.yearsOfExperience ? a : b);
   }
 
   /// Получить специалиста с наибольшим количеством отзывов
@@ -228,7 +234,8 @@ enum ComparisonCriteria {
 
 /// Результат сравнения по критерию
 class ComparisonResult {
-  const ComparisonResult({required this.criteria, required this.values, this.winner});
+  const ComparisonResult(
+      {required this.criteria, required this.values, this.winner});
   final ComparisonCriteria criteria;
   final Map<String, dynamic> values;
   final String? winner;

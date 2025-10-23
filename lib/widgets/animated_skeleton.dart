@@ -45,7 +45,7 @@ class _AnimatedSkeletonState extends State<AnimatedSkeleton>
       parent: _controller,
       curve: Curves.easeInOut,
     ));
-    
+
     if (widget.isLoading) {
       _controller.repeat();
     }

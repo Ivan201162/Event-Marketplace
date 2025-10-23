@@ -12,10 +12,12 @@ class TransactionHistoryScreen extends ConsumerStatefulWidget {
   const TransactionHistoryScreen({super.key});
 
   @override
-  ConsumerState<TransactionHistoryScreen> createState() => _TransactionHistoryScreenState();
+  ConsumerState<TransactionHistoryScreen> createState() =>
+      _TransactionHistoryScreenState();
 }
 
-class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScreen> {
+class _TransactionHistoryScreenState
+    extends ConsumerState<TransactionHistoryScreen> {
   final FinancialReportService _reportService = FinancialReportService();
 
   List<Payment> _transactions = [];
@@ -67,12 +69,15 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('История транзакций'),
-      actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadTransactions)],
-    ),
-    body: _buildBody(),
-  );
+        appBar: AppBar(
+          title: const Text('История транзакций'),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.refresh), onPressed: _loadTransactions)
+          ],
+        ),
+        body: _buildBody(),
+      );
 
   Widget _buildBody() {
     if (_isLoading && _transactions.isEmpty) {
@@ -88,7 +93,8 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
             const SizedBox(height: 16),
             Text('Ошибка: $_error'),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadTransactions, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadTransactions, child: const Text('Повторить')),
           ],
         ),
       );
@@ -114,7 +120,8 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
               padding: const EdgeInsets.all(16),
               child: Center(
                 child: ElevatedButton(
-                  onPressed: _hasMore ? () => _loadTransactions(loadMore: true) : null,
+                  onPressed:
+                      _hasMore ? () => _loadTransactions(loadMore: true) : null,
                   child: const Text('Загрузить еще'),
                 ),
               ),
@@ -132,120 +139,134 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
   }
 
   Widget _buildTransactionCard(Payment transaction) => Card(
-    elevation: 2,
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок с типом и суммой
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Заголовок с типом и суммой
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(transaction.typeIcon, style: const TextStyle(fontSize: 24)),
-                  const SizedBox(width: 12),
+                  Row(
+                    children: [
+                      Text(transaction.typeIcon,
+                          style: const TextStyle(fontSize: 24)),
+                      const SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            transaction.typeName,
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            transaction.description,
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        transaction.typeName,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        transaction.formattedAmount,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: _getAmountColor(transaction),
+                        ),
                       ),
                       Text(
-                        transaction.description,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        transaction.statusName,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: _getStatusColor(transaction.status)),
                       ),
                     ],
                   ),
                 ],
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    transaction.formattedAmount,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: _getAmountColor(transaction),
-                    ),
-                  ),
-                  Text(
-                    transaction.statusName,
-                    style: TextStyle(fontSize: 12, color: _getStatusColor(transaction.status)),
-                  ),
-                ],
+
+              const SizedBox(height: 12),
+
+              // Детали транзакции
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  children: [
+                    _buildDetailRow('Метод оплаты', transaction.methodName),
+                    _buildDetailRow(
+                        'Дата создания', _formatDate(transaction.createdAt)),
+                    if (transaction.completedAt != null)
+                      _buildDetailRow('Дата завершения',
+                          _formatDate(transaction.completedAt!)),
+                    if (transaction.fee != null && transaction.fee! > 0)
+                      _buildDetailRow('Комиссия',
+                          '${transaction.fee!.toStringAsFixed(2)} ₽'),
+                    if (transaction.tax != null && transaction.tax! > 0)
+                      _buildDetailRow(
+                          'Налог', '${transaction.tax!.toStringAsFixed(2)} ₽'),
+                    if (transaction.totalAmount != null &&
+                        transaction.totalAmount != transaction.amount)
+                      _buildDetailRow(
+                          'Итого', transaction.formattedTotalAmount),
+                  ],
+                ),
               ),
+
+              // Действия (если доступны)
+              if (_canShowActions(transaction)) ...[
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (transaction.status == PaymentStatus.failed)
+                      TextButton.icon(
+                        onPressed: () => _retryPayment(transaction),
+                        icon: const Icon(Icons.refresh, size: 16),
+                        label: const Text('Повторить'),
+                      ),
+                    if (transaction.status == PaymentStatus.completed &&
+                        (transaction.type == PaymentType.deposit ||
+                            transaction.type == PaymentType.finalPayment))
+                      TextButton.icon(
+                        onPressed: () => _requestRefund(transaction),
+                        icon: const Icon(Icons.undo, size: 16),
+                        label: const Text('Возврат'),
+                        style: TextButton.styleFrom(
+                            foregroundColor: Colors.orange),
+                      ),
+                  ],
+                ),
+              ],
             ],
           ),
-
-          const SizedBox(height: 12),
-
-          // Детали транзакции
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              children: [
-                _buildDetailRow('Метод оплаты', transaction.methodName),
-                _buildDetailRow('Дата создания', _formatDate(transaction.createdAt)),
-                if (transaction.completedAt != null)
-                  _buildDetailRow('Дата завершения', _formatDate(transaction.completedAt!)),
-                if (transaction.fee != null && transaction.fee! > 0)
-                  _buildDetailRow('Комиссия', '${transaction.fee!.toStringAsFixed(2)} ₽'),
-                if (transaction.tax != null && transaction.tax! > 0)
-                  _buildDetailRow('Налог', '${transaction.tax!.toStringAsFixed(2)} ₽'),
-                if (transaction.totalAmount != null &&
-                    transaction.totalAmount != transaction.amount)
-                  _buildDetailRow('Итого', transaction.formattedTotalAmount),
-              ],
-            ),
-          ),
-
-          // Действия (если доступны)
-          if (_canShowActions(transaction)) ...[
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                if (transaction.status == PaymentStatus.failed)
-                  TextButton.icon(
-                    onPressed: () => _retryPayment(transaction),
-                    icon: const Icon(Icons.refresh, size: 16),
-                    label: const Text('Повторить'),
-                  ),
-                if (transaction.status == PaymentStatus.completed &&
-                    (transaction.type == PaymentType.deposit ||
-                        transaction.type == PaymentType.finalPayment))
-                  TextButton.icon(
-                    onPressed: () => _requestRefund(transaction),
-                    icon: const Icon(Icons.undo, size: 16),
-                    label: const Text('Возврат'),
-                    style: TextButton.styleFrom(foregroundColor: Colors.orange),
-                  ),
-              ],
-            ),
-          ],
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildDetailRow(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 2),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-        Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label,
+                style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+            Text(value,
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          ],
+        ),
+      );
 
   Color _getAmountColor(Payment transaction) {
     switch (transaction.type) {
@@ -292,14 +313,17 @@ class _TransactionHistoryScreenState extends ConsumerState<TransactionHistoryScr
   Future<void> _retryPayment(Payment transaction) async {
     // TODO(developer): Реализовать повторную попытку платежа
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Повторная попытка платежа будет добавлена в следующей версии')),
+      const SnackBar(
+          content: Text(
+              'Повторная попытка платежа будет добавлена в следующей версии')),
     );
   }
 
   Future<void> _requestRefund(Payment transaction) async {
     // TODO(developer): Реализовать запрос возврата
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Запрос возврата будет добавлен в следующей версии')),
+      const SnackBar(
+          content: Text('Запрос возврата будет добавлен в следующей версии')),
     );
   }
 }

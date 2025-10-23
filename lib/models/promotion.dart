@@ -56,20 +56,20 @@ class Promotion {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-    'title': title,
-    'description': description,
-    'category': category,
-    'discount': discount,
-    'startDate': Timestamp.fromDate(startDate),
-    'endDate': Timestamp.fromDate(endDate),
-    'imageUrl': imageUrl,
-    'specialistId': specialistId,
-    'specialistName': specialistName,
-    'city': city,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'title': title,
+        'description': description,
+        'category': category,
+        'discount': discount,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'imageUrl': imageUrl,
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'city': city,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Копирование с изменениями
   Promotion copyWith({
@@ -87,22 +87,23 @@ class Promotion {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => Promotion(
-    id: id ?? this.id,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    category: category ?? this.category,
-    discount: discount ?? this.discount,
-    startDate: startDate ?? this.startDate,
-    endDate: endDate ?? this.endDate,
-    imageUrl: imageUrl ?? this.imageUrl,
-    specialistId: specialistId ?? this.specialistId,
-    specialistName: specialistName ?? this.specialistName,
-    city: city ?? this.city,
-    isActive: isActive ?? this.isActive,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      Promotion(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        discount: discount ?? this.discount,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        imageUrl: imageUrl ?? this.imageUrl,
+        specialistId: specialistId ?? this.specialistId,
+        specialistName: specialistName ?? this.specialistName,
+        city: city ?? this.city,
+        isActive: isActive ?? this.isActive,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Проверка, активна ли акция
   bool get isCurrentlyActive {

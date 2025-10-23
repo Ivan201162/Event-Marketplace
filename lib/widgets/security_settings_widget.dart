@@ -22,7 +22,9 @@ class SecuritySettingsWidget extends ConsumerWidget {
             children: [
               Icon(Icons.security, color: Color(securityState.statusColor)),
               const SizedBox(width: 12),
-              const Expanded(child: ResponsiveText('Настройки безопасности', isTitle: true)),
+              const Expanded(
+                  child:
+                      ResponsiveText('Настройки безопасности', isTitle: true)),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => ref.read(securityProvider.notifier).refresh(),
@@ -64,16 +66,21 @@ class SecuritySettingsWidget extends ConsumerWidget {
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed:
-                      securityState.isLoading ? null : () => _showEncryptionDialog(context, ref),
-                  icon: Icon(securityState.isEncryptionEnabled ? Icons.lock_open : Icons.lock),
+                  onPressed: securityState.isLoading
+                      ? null
+                      : () => _showEncryptionDialog(context, ref),
+                  icon: Icon(securityState.isEncryptionEnabled
+                      ? Icons.lock_open
+                      : Icons.lock),
                   label: Text(
                     securityState.isEncryptionEnabled
                         ? 'Отключить шифрование'
                         : 'Включить шифрование',
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: securityState.isEncryptionEnabled ? Colors.red : Colors.green,
+                    backgroundColor: securityState.isEncryptionEnabled
+                        ? Colors.red
+                        : Colors.green,
                     foregroundColor: Colors.white,
                   ),
                 ),
@@ -81,7 +88,8 @@ class SecuritySettingsWidget extends ConsumerWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: securityState.isLoading || !securityState.isEncryptionEnabled
+                  onPressed: securityState.isLoading ||
+                          !securityState.isEncryptionEnabled
                       ? null
                       : () => _showUpdateKeyDialog(context, ref),
                   icon: const Icon(Icons.key),
@@ -156,7 +164,9 @@ class SecuritySettingsWidget extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          securityState.isEncryptionEnabled ? 'Отключить шифрование' : 'Включить шифрование',
+          securityState.isEncryptionEnabled
+              ? 'Отключить шифрование'
+              : 'Включить шифрование',
         ),
         content: Text(
           securityState.isEncryptionEnabled
@@ -164,7 +174,9 @@ class SecuritySettingsWidget extends ConsumerWidget {
               : 'Включение шифрования повысит безопасность ваших данных. Это действие нельзя отменить.',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -175,10 +187,12 @@ class SecuritySettingsWidget extends ConsumerWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: securityState.isEncryptionEnabled ? Colors.red : Colors.green,
+              backgroundColor:
+                  securityState.isEncryptionEnabled ? Colors.red : Colors.green,
               foregroundColor: Colors.white,
             ),
-            child: Text(securityState.isEncryptionEnabled ? 'Отключить' : 'Включить'),
+            child: Text(
+                securityState.isEncryptionEnabled ? 'Отключить' : 'Включить'),
           ),
         ],
       ),
@@ -194,7 +208,9 @@ class SecuritySettingsWidget extends ConsumerWidget {
           'Обновление ключа шифрования перешифрует все ваши данные. Это может занять некоторое время.',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -235,8 +251,12 @@ class PasswordValidationWidget extends ConsumerWidget {
             labelText: label ?? 'Пароль',
             hintText: hint ?? 'Введите пароль',
             suffixIcon: IconButton(
-              icon: Icon(passwordState.isVisible ? Icons.visibility : Icons.visibility_off),
-              onPressed: () => ref.read(passwordValidationProvider.notifier).toggleVisibility(),
+              icon: Icon(passwordState.isVisible
+                  ? Icons.visibility
+                  : Icons.visibility_off),
+              onPressed: () => ref
+                  .read(passwordValidationProvider.notifier)
+                  .toggleVisibility(),
             ),
             border: const OutlineInputBorder(),
           ),
@@ -255,7 +275,8 @@ class PasswordValidationWidget extends ConsumerWidget {
         ],
 
         // Ошибки валидации
-        if (passwordState.validation != null && passwordState.validation!.errors.isNotEmpty) ...[
+        if (passwordState.validation != null &&
+            passwordState.validation!.errors.isNotEmpty) ...[
           const SizedBox(height: 8),
           ...passwordState.validation!.errors.map(
             (error) => Padding(
@@ -265,7 +286,9 @@ class PasswordValidationWidget extends ConsumerWidget {
                   const Icon(Icons.error_outline, size: 16, color: Colors.red),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(error, style: const TextStyle(color: Colors.red, fontSize: 12)),
+                    child: Text(error,
+                        style:
+                            const TextStyle(color: Colors.red, fontSize: 12)),
                   ),
                 ],
               ),
@@ -285,7 +308,8 @@ class PasswordValidationWidget extends ConsumerWidget {
                 child: LinearProgressIndicator(
                   value: state.strengthProgress,
                   backgroundColor: Colors.grey[300],
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
                 ),
               ),
               const SizedBox(width: 8),
@@ -366,7 +390,9 @@ class SecurityStatsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatRow(String label, String value, IconData icon, Color color) => Padding(
+  Widget _buildStatRow(
+          String label, String value, IconData icon, Color color) =>
+      Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(
           children: [
@@ -399,9 +425,12 @@ class SecurityRecommendationsWidget extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(_getSecurityIcon(securityLevel), color: _getSecurityColor(securityLevel)),
+              Icon(_getSecurityIcon(securityLevel),
+                  color: _getSecurityColor(securityLevel)),
               const SizedBox(width: 12),
-              const Expanded(child: ResponsiveText('Рекомендации по безопасности', isTitle: true)),
+              const Expanded(
+                  child: ResponsiveText('Рекомендации по безопасности',
+                      isTitle: true)),
             ],
           ),
           const SizedBox(height: 16),
@@ -433,9 +462,11 @@ class SecurityRecommendationsWidget extends ConsumerWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.check_circle_outline, size: 16, color: Colors.green),
+                  const Icon(Icons.check_circle_outline,
+                      size: 16, color: Colors.green),
                   const SizedBox(width: 8),
-                  Expanded(child: ResponsiveText(recommendation, isSubtitle: true)),
+                  Expanded(
+                      child: ResponsiveText(recommendation, isSubtitle: true)),
                 ],
               ),
             ),

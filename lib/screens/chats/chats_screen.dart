@@ -26,7 +26,8 @@ class ChatsScreen extends StatelessWidget {
           return Card(
             margin: const EdgeInsets.only(bottom: 8),
             child: ListTile(
-              leading: const CircleAvatar(radius: 25, child: Icon(Icons.person)),
+              leading:
+                  const CircleAvatar(radius: 25, child: Icon(Icons.person)),
               title: Text(
                 'Пользователь ${index + 1}',
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -39,13 +40,15 @@ class ChatsScreen extends StatelessWidget {
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('12:${30 + index}', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  Text('12:${30 + index}',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                   if (index < 3) ...[
                     const SizedBox(height: 4),
                     Container(
                       width: 20,
                       height: 20,
-                      decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                      decoration: const BoxDecoration(
+                          color: Colors.red, shape: BoxShape.circle),
                       child: Center(
                         child: Text(
                           '${index + 1}',
@@ -111,7 +114,9 @@ class ChatsScreen extends StatelessWidget {
                             'Пользователь $chatId',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          Text('В сети', style: TextStyle(color: Colors.green[600], fontSize: 12)),
+                          Text('В сети',
+                              style: TextStyle(
+                                  color: Colors.green[600], fontSize: 12)),
                         ],
                       ),
                     ),
@@ -136,17 +141,20 @@ class ChatsScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final isMe = index % 2 == 0;
                     return Align(
-                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment:
+                          isMe ? Alignment.centerRight : Alignment.centerLeft,
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 8),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
                           color: isMe ? Colors.blue : Colors.grey[200],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
                           'Сообщение ${index + 1}',
-                          style: TextStyle(color: isMe ? Colors.white : Colors.black),
+                          style: TextStyle(
+                              color: isMe ? Colors.white : Colors.black),
                         ),
                       ),
                     );
@@ -167,8 +175,10 @@ class ChatsScreen extends StatelessWidget {
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Введите сообщение...',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25)),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                         ),
                       ),
                     ),
@@ -212,7 +222,8 @@ class ChatsScreen extends StatelessWidget {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(
                   context,
-                ).showSnackBar(const SnackBar(content: Text('Уведомления отключены')));
+                ).showSnackBar(
+                    const SnackBar(content: Text('Уведомления отключены')));
               },
             ),
             ListTile(
@@ -242,15 +253,19 @@ class ChatsScreen extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Заблокировать пользователя'),
-        content: const Text('Вы уверены, что хотите заблокировать этого пользователя?'),
+        content: const Text(
+            'Вы уверены, что хотите заблокировать этого пользователя?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(SnackBar(content: Text('Пользователь $chatId заблокирован')));
+              ).showSnackBar(
+                  SnackBar(content: Text('Пользователь $chatId заблокирован')));
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Заблокировать'),
@@ -267,7 +282,9 @@ class ChatsScreen extends StatelessWidget {
         title: const Text('Удалить чат'),
         content: const Text('Вы уверены, что хотите удалить этот чат?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -286,6 +303,7 @@ class ChatsScreen extends StatelessWidget {
   void _sendMessage(BuildContext context, int chatId) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Сообщение отправлено в чат $chatId')));
+    ).showSnackBar(
+        SnackBar(content: Text('Сообщение отправлено в чат $chatId')));
   }
 }

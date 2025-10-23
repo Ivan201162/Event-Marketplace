@@ -42,7 +42,8 @@ class LocalizationService {
   }
 
   /// Получить все доступные локализации
-  List<LocalizationModel> get availableLocalizations => _localizations.values.toList();
+  List<LocalizationModel> get availableLocalizations =>
+      _localizations.values.toList();
 
   /// Получить все поддерживаемые языки
   List<SupportedLanguage> get supportedLanguages => SupportedLanguage.values;
@@ -57,11 +58,13 @@ class LocalizationService {
         final settingsMap = jsonDecode(settingsJson) as Map<String, dynamic>;
         _settings = LocalizationSettings.fromMap(settingsMap);
       } else {
-        _settings = LocalizationSettings(currentLanguage: 'ru', lastUpdated: DateTime.now());
+        _settings = LocalizationSettings(
+            currentLanguage: 'ru', lastUpdated: DateTime.now());
       }
     } catch (e) {
       debugPrint('Ошибка загрузки настроек локализации: $e');
-      _settings = LocalizationSettings(currentLanguage: 'ru', lastUpdated: DateTime.now());
+      _settings = LocalizationSettings(
+          currentLanguage: 'ru', lastUpdated: DateTime.now());
     }
   }
 
@@ -88,7 +91,8 @@ class LocalizationService {
       // Загружаем другие языки по мере необходимости
       for (final language in SupportedLanguage.values) {
         if (!_localizations.containsKey(language.languageCode)) {
-          _localizations[language.languageCode] = await _loadLocalization(language.languageCode);
+          _localizations[language.languageCode] =
+              await _loadLocalization(language.languageCode);
         }
       }
     } catch (e) {
@@ -153,266 +157,266 @@ class LocalizationService {
 
   /// Русские переводы
   Map<String, String> _getRussianTranslations() => {
-    // Общие
-    'app_name': 'Event Marketplace',
-    'loading': 'Загрузка...',
-    'error': 'Ошибка',
-    'success': 'Успешно',
-    'cancel': 'Отмена',
-    'save': 'Сохранить',
-    'delete': 'Удалить',
-    'edit': 'Редактировать',
-    'add': 'Добавить',
-    'search': 'Поиск',
-    'filter': 'Фильтр',
-    'sort': 'Сортировка',
-    'refresh': 'Обновить',
-    'back': 'Назад',
-    'next': 'Далее',
-    'previous': 'Назад',
-    'done': 'Готово',
-    'close': 'Закрыть',
-    'yes': 'Да',
-    'no': 'Нет',
-    'ok': 'ОК',
+        // Общие
+        'app_name': 'Event Marketplace',
+        'loading': 'Загрузка...',
+        'error': 'Ошибка',
+        'success': 'Успешно',
+        'cancel': 'Отмена',
+        'save': 'Сохранить',
+        'delete': 'Удалить',
+        'edit': 'Редактировать',
+        'add': 'Добавить',
+        'search': 'Поиск',
+        'filter': 'Фильтр',
+        'sort': 'Сортировка',
+        'refresh': 'Обновить',
+        'back': 'Назад',
+        'next': 'Далее',
+        'previous': 'Назад',
+        'done': 'Готово',
+        'close': 'Закрыть',
+        'yes': 'Да',
+        'no': 'Нет',
+        'ok': 'ОК',
 
-    // Навигация
-    'home': 'Главная',
-    'events': 'События',
-    'profile': 'Профиль',
-    'settings': 'Настройки',
-    'notifications': 'Уведомления',
-    'messages': 'Сообщения',
-    'bookings': 'Бронирования',
-    'reviews': 'Отзывы',
-    'analytics': 'Аналитика',
-    'support': 'Поддержка',
-    'integrations': 'Интеграции',
+        // Навигация
+        'home': 'Главная',
+        'events': 'События',
+        'profile': 'Профиль',
+        'settings': 'Настройки',
+        'notifications': 'Уведомления',
+        'messages': 'Сообщения',
+        'bookings': 'Бронирования',
+        'reviews': 'Отзывы',
+        'analytics': 'Аналитика',
+        'support': 'Поддержка',
+        'integrations': 'Интеграции',
 
-    // События
-    'create_event': 'Создать событие',
-    'event_title': 'Название события',
-    'event_description': 'Описание события',
-    'event_date': 'Дата события',
-    'event_time': 'Время события',
-    'event_location': 'Место проведения',
-    'event_price': 'Цена',
-    'event_category': 'Категория',
-    'event_image': 'Изображение события',
+        // События
+        'create_event': 'Создать событие',
+        'event_title': 'Название события',
+        'event_description': 'Описание события',
+        'event_date': 'Дата события',
+        'event_time': 'Время события',
+        'event_location': 'Место проведения',
+        'event_price': 'Цена',
+        'event_category': 'Категория',
+        'event_image': 'Изображение события',
 
-    // Профиль
-    'profile_name': 'Имя',
-    'profile_email': 'Email',
-    'profile_phone': 'Телефон',
-    'profile_bio': 'О себе',
-    'profile_photo': 'Фото профиля',
-    'profile_rating': 'Рейтинг',
-    'profile_reviews': 'Отзывы',
-    'profile_events': 'События',
-    'profile_bookings': 'Бронирования',
+        // Профиль
+        'profile_name': 'Имя',
+        'profile_email': 'Email',
+        'profile_phone': 'Телефон',
+        'profile_bio': 'О себе',
+        'profile_photo': 'Фото профиля',
+        'profile_rating': 'Рейтинг',
+        'profile_reviews': 'Отзывы',
+        'profile_events': 'События',
+        'profile_bookings': 'Бронирования',
 
-    // Настройки
-    'language': 'Язык',
-    'theme': 'Тема',
-    'notifications_settings': 'Настройки уведомлений',
-    'privacy_settings': 'Настройки приватности',
-    'account_settings': 'Настройки аккаунта',
-    'about': 'О приложении',
-    'version': 'Версия',
-    'logout': 'Выйти',
+        // Настройки
+        'language': 'Язык',
+        'theme': 'Тема',
+        'notifications_settings': 'Настройки уведомлений',
+        'privacy_settings': 'Настройки приватности',
+        'account_settings': 'Настройки аккаунта',
+        'about': 'О приложении',
+        'version': 'Версия',
+        'logout': 'Выйти',
 
-    // Уведомления
-    'push_notifications': 'Push уведомления',
-    'email_notifications': 'Email уведомления',
-    'sms_notifications': 'SMS уведомления',
-    'notification_sound': 'Звук уведомлений',
-    'notification_vibration': 'Вибрация',
+        // Уведомления
+        'push_notifications': 'Push уведомления',
+        'email_notifications': 'Email уведомления',
+        'sms_notifications': 'SMS уведомления',
+        'notification_sound': 'Звук уведомлений',
+        'notification_vibration': 'Вибрация',
 
-    // Ошибки
-    'error_network': 'Ошибка сети',
-    'error_server': 'Ошибка сервера',
-    'error_unknown': 'Неизвестная ошибка',
-    'error_permission': 'Нет разрешения',
-    'error_location': 'Ошибка определения местоположения',
-    'error_camera': 'Ошибка камеры',
-    'error_gallery': 'Ошибка галереи',
+        // Ошибки
+        'error_network': 'Ошибка сети',
+        'error_server': 'Ошибка сервера',
+        'error_unknown': 'Неизвестная ошибка',
+        'error_permission': 'Нет разрешения',
+        'error_location': 'Ошибка определения местоположения',
+        'error_camera': 'Ошибка камеры',
+        'error_gallery': 'Ошибка галереи',
 
-    // Успех
-    'success_saved': 'Сохранено',
-    'success_deleted': 'Удалено',
-    'success_updated': 'Обновлено',
-    'success_created': 'Создано',
-    'success_sent': 'Отправлено',
-  };
+        // Успех
+        'success_saved': 'Сохранено',
+        'success_deleted': 'Удалено',
+        'success_updated': 'Обновлено',
+        'success_created': 'Создано',
+        'success_sent': 'Отправлено',
+      };
 
   /// Английские переводы
   Map<String, String> _getEnglishTranslations() => {
-    // Общие
-    'app_name': 'Event Marketplace',
-    'loading': 'Loading...',
-    'error': 'Error',
-    'success': 'Success',
-    'cancel': 'Cancel',
-    'save': 'Save',
-    'delete': 'Delete',
-    'edit': 'Edit',
-    'add': 'Add',
-    'search': 'Search',
-    'filter': 'Filter',
-    'sort': 'Sort',
-    'refresh': 'Refresh',
-    'back': 'Back',
-    'next': 'Next',
-    'previous': 'Previous',
-    'done': 'Done',
-    'close': 'Close',
-    'yes': 'Yes',
-    'no': 'No',
-    'ok': 'OK',
+        // Общие
+        'app_name': 'Event Marketplace',
+        'loading': 'Loading...',
+        'error': 'Error',
+        'success': 'Success',
+        'cancel': 'Cancel',
+        'save': 'Save',
+        'delete': 'Delete',
+        'edit': 'Edit',
+        'add': 'Add',
+        'search': 'Search',
+        'filter': 'Filter',
+        'sort': 'Sort',
+        'refresh': 'Refresh',
+        'back': 'Back',
+        'next': 'Next',
+        'previous': 'Previous',
+        'done': 'Done',
+        'close': 'Close',
+        'yes': 'Yes',
+        'no': 'No',
+        'ok': 'OK',
 
-    // Навигация
-    'home': 'Home',
-    'events': 'Events',
-    'profile': 'Profile',
-    'settings': 'Settings',
-    'notifications': 'Notifications',
-    'messages': 'Messages',
-    'bookings': 'Bookings',
-    'reviews': 'Reviews',
-    'analytics': 'Analytics',
-    'support': 'Support',
-    'integrations': 'Integrations',
+        // Навигация
+        'home': 'Home',
+        'events': 'Events',
+        'profile': 'Profile',
+        'settings': 'Settings',
+        'notifications': 'Notifications',
+        'messages': 'Messages',
+        'bookings': 'Bookings',
+        'reviews': 'Reviews',
+        'analytics': 'Analytics',
+        'support': 'Support',
+        'integrations': 'Integrations',
 
-    // События
-    'create_event': 'Create Event',
-    'event_title': 'Event Title',
-    'event_description': 'Event Description',
-    'event_date': 'Event Date',
-    'event_time': 'Event Time',
-    'event_location': 'Event Location',
-    'event_price': 'Price',
-    'event_category': 'Category',
-    'event_image': 'Event Image',
+        // События
+        'create_event': 'Create Event',
+        'event_title': 'Event Title',
+        'event_description': 'Event Description',
+        'event_date': 'Event Date',
+        'event_time': 'Event Time',
+        'event_location': 'Event Location',
+        'event_price': 'Price',
+        'event_category': 'Category',
+        'event_image': 'Event Image',
 
-    // Профиль
-    'profile_name': 'Name',
-    'profile_email': 'Email',
-    'profile_phone': 'Phone',
-    'profile_bio': 'Bio',
-    'profile_photo': 'Profile Photo',
-    'profile_rating': 'Rating',
-    'profile_reviews': 'Reviews',
-    'profile_events': 'Events',
-    'profile_bookings': 'Bookings',
+        // Профиль
+        'profile_name': 'Name',
+        'profile_email': 'Email',
+        'profile_phone': 'Phone',
+        'profile_bio': 'Bio',
+        'profile_photo': 'Profile Photo',
+        'profile_rating': 'Rating',
+        'profile_reviews': 'Reviews',
+        'profile_events': 'Events',
+        'profile_bookings': 'Bookings',
 
-    // Настройки
-    'language': 'Language',
-    'theme': 'Theme',
-    'notifications_settings': 'Notification Settings',
-    'privacy_settings': 'Privacy Settings',
-    'account_settings': 'Account Settings',
-    'about': 'About',
-    'version': 'Version',
-    'logout': 'Logout',
+        // Настройки
+        'language': 'Language',
+        'theme': 'Theme',
+        'notifications_settings': 'Notification Settings',
+        'privacy_settings': 'Privacy Settings',
+        'account_settings': 'Account Settings',
+        'about': 'About',
+        'version': 'Version',
+        'logout': 'Logout',
 
-    // Уведомления
-    'push_notifications': 'Push Notifications',
-    'email_notifications': 'Email Notifications',
-    'sms_notifications': 'SMS Notifications',
-    'notification_sound': 'Notification Sound',
-    'notification_vibration': 'Vibration',
+        // Уведомления
+        'push_notifications': 'Push Notifications',
+        'email_notifications': 'Email Notifications',
+        'sms_notifications': 'SMS Notifications',
+        'notification_sound': 'Notification Sound',
+        'notification_vibration': 'Vibration',
 
-    // Ошибки
-    'error_network': 'Network Error',
-    'error_server': 'Server Error',
-    'error_unknown': 'Unknown Error',
-    'error_permission': 'Permission Denied',
-    'error_location': 'Location Error',
-    'error_camera': 'Camera Error',
-    'error_gallery': 'Gallery Error',
+        // Ошибки
+        'error_network': 'Network Error',
+        'error_server': 'Server Error',
+        'error_unknown': 'Unknown Error',
+        'error_permission': 'Permission Denied',
+        'error_location': 'Location Error',
+        'error_camera': 'Camera Error',
+        'error_gallery': 'Gallery Error',
 
-    // Успех
-    'success_saved': 'Saved',
-    'success_deleted': 'Deleted',
-    'success_updated': 'Updated',
-    'success_created': 'Created',
-    'success_sent': 'Sent',
-  };
+        // Успех
+        'success_saved': 'Saved',
+        'success_deleted': 'Deleted',
+        'success_updated': 'Updated',
+        'success_created': 'Created',
+        'success_sent': 'Sent',
+      };
 
   /// Испанские переводы
   Map<String, String> _getSpanishTranslations() => {
-    'app_name': 'Event Marketplace',
-    'loading': 'Cargando...',
-    'error': 'Error',
-    'success': 'Éxito',
-    'cancel': 'Cancelar',
-    'save': 'Guardar',
-    'delete': 'Eliminar',
-    'edit': 'Editar',
-    'add': 'Agregar',
-    'search': 'Buscar',
-    'filter': 'Filtrar',
-    'sort': 'Ordenar',
-    'refresh': 'Actualizar',
-    'back': 'Atrás',
-    'next': 'Siguiente',
-    'previous': 'Anterior',
-    'done': 'Hecho',
-    'close': 'Cerrar',
-    'yes': 'Sí',
-    'no': 'No',
-    'ok': 'OK',
-  };
+        'app_name': 'Event Marketplace',
+        'loading': 'Cargando...',
+        'error': 'Error',
+        'success': 'Éxito',
+        'cancel': 'Cancelar',
+        'save': 'Guardar',
+        'delete': 'Eliminar',
+        'edit': 'Editar',
+        'add': 'Agregar',
+        'search': 'Buscar',
+        'filter': 'Filtrar',
+        'sort': 'Ordenar',
+        'refresh': 'Actualizar',
+        'back': 'Atrás',
+        'next': 'Siguiente',
+        'previous': 'Anterior',
+        'done': 'Hecho',
+        'close': 'Cerrar',
+        'yes': 'Sí',
+        'no': 'No',
+        'ok': 'OK',
+      };
 
   /// Французские переводы
   Map<String, String> _getFrenchTranslations() => {
-    'app_name': 'Event Marketplace',
-    'loading': 'Chargement...',
-    'error': 'Erreur',
-    'success': 'Succès',
-    'cancel': 'Annuler',
-    'save': 'Enregistrer',
-    'delete': 'Supprimer',
-    'edit': 'Modifier',
-    'add': 'Ajouter',
-    'search': 'Rechercher',
-    'filter': 'Filtrer',
-    'sort': 'Trier',
-    'refresh': 'Actualiser',
-    'back': 'Retour',
-    'next': 'Suivant',
-    'previous': 'Précédent',
-    'done': 'Terminé',
-    'close': 'Fermer',
-    'yes': 'Oui',
-    'no': 'Non',
-    'ok': 'OK',
-  };
+        'app_name': 'Event Marketplace',
+        'loading': 'Chargement...',
+        'error': 'Erreur',
+        'success': 'Succès',
+        'cancel': 'Annuler',
+        'save': 'Enregistrer',
+        'delete': 'Supprimer',
+        'edit': 'Modifier',
+        'add': 'Ajouter',
+        'search': 'Rechercher',
+        'filter': 'Filtrer',
+        'sort': 'Trier',
+        'refresh': 'Actualiser',
+        'back': 'Retour',
+        'next': 'Suivant',
+        'previous': 'Précédent',
+        'done': 'Terminé',
+        'close': 'Fermer',
+        'yes': 'Oui',
+        'no': 'Non',
+        'ok': 'OK',
+      };
 
   /// Немецкие переводы
   Map<String, String> _getGermanTranslations() => {
-    'app_name': 'Event Marketplace',
-    'loading': 'Laden...',
-    'error': 'Fehler',
-    'success': 'Erfolg',
-    'cancel': 'Abbrechen',
-    'save': 'Speichern',
-    'delete': 'Löschen',
-    'edit': 'Bearbeiten',
-    'add': 'Hinzufügen',
-    'search': 'Suchen',
-    'filter': 'Filtern',
-    'sort': 'Sortieren',
-    'refresh': 'Aktualisieren',
-    'back': 'Zurück',
-    'next': 'Weiter',
-    'previous': 'Vorherige',
-    'done': 'Fertig',
-    'close': 'Schließen',
-    'yes': 'Ja',
-    'no': 'Nein',
-    'ok': 'OK',
-  };
+        'app_name': 'Event Marketplace',
+        'loading': 'Laden...',
+        'error': 'Fehler',
+        'success': 'Erfolg',
+        'cancel': 'Abbrechen',
+        'save': 'Speichern',
+        'delete': 'Löschen',
+        'edit': 'Bearbeiten',
+        'add': 'Hinzufügen',
+        'search': 'Suchen',
+        'filter': 'Filtern',
+        'sort': 'Sortieren',
+        'refresh': 'Aktualisieren',
+        'back': 'Zurück',
+        'next': 'Weiter',
+        'previous': 'Vorherige',
+        'done': 'Fertig',
+        'close': 'Schließen',
+        'yes': 'Ja',
+        'no': 'Nein',
+        'ok': 'OK',
+      };
 
   /// Получить локализацию по умолчанию
   LocalizationModel _getDefaultLocalization(String languageCode) {
@@ -435,7 +439,8 @@ class LocalizationService {
   Future<void> setLanguage(String languageCode) async {
     try {
       await _setCurrentLanguage(languageCode);
-      _settings = _settings?.copyWith(currentLanguage: languageCode, lastUpdated: DateTime.now());
+      _settings = _settings?.copyWith(
+          currentLanguage: languageCode, lastUpdated: DateTime.now());
       await _saveSettings();
     } catch (e) {
       debugPrint('Ошибка установки языка: $e');
@@ -461,7 +466,8 @@ class LocalizationService {
   }
 
   /// Проверить наличие перевода
-  bool hasTranslation(String key) => _currentLocalization?.hasTranslation(key) ?? false;
+  bool hasTranslation(String key) =>
+      _currentLocalization?.hasTranslation(key) ?? false;
 
   /// Обновить настройки локализации
   Future<void> updateSettings(LocalizationSettings newSettings) async {
@@ -494,7 +500,8 @@ class LocalizationService {
           .where((value) => value.isNotEmpty)
           .length;
       final missingKeys = totalKeys - translatedKeys;
-      final completionPercentage = totalKeys > 0 ? (translatedKeys / totalKeys) * 100 : 0.0;
+      final completionPercentage =
+          totalKeys > 0 ? (translatedKeys / totalKeys) * 100 : 0.0;
 
       return LocalizationStats(
         language: languageCode,
@@ -559,7 +566,8 @@ class LocalizationService {
   }
 
   /// Импортировать переводы
-  Future<void> importTranslations(String languageCode, Map<String, String> translations) async {
+  Future<void> importTranslations(
+      String languageCode, Map<String, String> translations) async {
     try {
       final language = SupportedLanguage.values.firstWhere(
         (lang) => lang.languageCode == languageCode,

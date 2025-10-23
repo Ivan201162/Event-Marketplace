@@ -19,7 +19,8 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -47,8 +48,8 @@ class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProvid
         onTapCancel: () => _controller.reverse(),
         child: AnimatedBuilder(
           animation: _scaleAnimation,
-          builder: (context, child) =>
-              Transform.scale(scale: _scaleAnimation.value, child: widget.child),
+          builder: (context, child) => Transform.scale(
+              scale: _scaleAnimation.value, child: widget.child),
         ),
       );
 }

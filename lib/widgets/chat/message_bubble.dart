@@ -20,13 +20,12 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       child: Row(
-        mainAxisAlignment: isFromCurrentUser 
-            ? MainAxisAlignment.end 
-            : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isFromCurrentUser && showAvatar) ...[
@@ -42,11 +41,10 @@ class MessageBubble extends StatelessWidget {
             ),
             const SizedBox(width: 8),
           ],
-          
           Flexible(
             child: Column(
-              crossAxisAlignment: isFromCurrentUser 
-                  ? CrossAxisAlignment.end 
+              crossAxisAlignment: isFromCurrentUser
+                  ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: [
                 Container(
@@ -64,11 +62,11 @@ class MessageBubble extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(20),
                       topRight: const Radius.circular(20),
-                      bottomLeft: isFromCurrentUser 
-                          ? const Radius.circular(20) 
+                      bottomLeft: isFromCurrentUser
+                          ? const Radius.circular(20)
                           : const Radius.circular(4),
-                      bottomRight: isFromCurrentUser 
-                          ? const Radius.circular(4) 
+                      bottomRight: isFromCurrentUser
+                          ? const Radius.circular(4)
                           : const Radius.circular(20),
                     ),
                     boxShadow: [
@@ -97,15 +95,14 @@ class MessageBubble extends StatelessWidget {
                         message.text,
                         style: TextStyle(
                           fontSize: 16,
-                          color: isFromCurrentUser 
-                              ? Colors.white 
+                          color: isFromCurrentUser
+                              ? Colors.white
                               : theme.colorScheme.onSurface,
                         ),
                       ),
                     ],
                   ),
                 ),
-                
                 if (showTime) ...[
                   const SizedBox(height: 4),
                   Row(
@@ -115,7 +112,8 @@ class MessageBubble extends StatelessWidget {
                         message.timeString,
                         style: TextStyle(
                           fontSize: 12,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                       if (isFromCurrentUser) ...[
@@ -128,7 +126,6 @@ class MessageBubble extends StatelessWidget {
               ],
             ),
           ),
-          
           if (isFromCurrentUser && showAvatar) ...[
             const SizedBox(width: 8),
             CircleAvatar(
@@ -177,7 +174,7 @@ class SystemMessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Row(
@@ -224,7 +221,7 @@ class MessageTimeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Text(
       showRelative ? _getRelativeTime(timestamp) : _getTimeString(timestamp),
       style: TextStyle(
@@ -270,7 +267,7 @@ class TypingIndicator extends StatelessWidget {
     if (!isTyping) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       child: Row(
@@ -349,7 +346,7 @@ class _TypingDotState extends State<_TypingDot>
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
-    
+
     Future.delayed(widget.delay, () {
       if (mounted) {
         _controller.repeat(reverse: true);

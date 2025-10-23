@@ -20,7 +20,8 @@ class FavoriteSpecialistButton extends StatefulWidget {
   final double? size;
 
   @override
-  State<FavoriteSpecialistButton> createState() => _FavoriteSpecialistButtonState();
+  State<FavoriteSpecialistButton> createState() =>
+      _FavoriteSpecialistButtonState();
 }
 
 class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
@@ -71,10 +72,12 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
 
     try {
       if (_isFavorite) {
-        await _portfolioService.removeFromFavorites(currentUser.uid, widget.specialistId);
+        await _portfolioService.removeFromFavorites(
+            currentUser.uid, widget.specialistId);
         _showSnackBar('${widget.specialistName} удален из избранного');
       } else {
-        await _portfolioService.addToFavorites(currentUser.uid, widget.specialistId);
+        await _portfolioService.addToFavorites(
+            currentUser.uid, widget.specialistId);
         _showSnackBar('${widget.specialistName} добавлен в избранное');
       }
 
@@ -96,14 +99,17 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
 
   void _showAuthError() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Необходимо войти в систему'), backgroundColor: Colors.red),
+      const SnackBar(
+          content: Text('Необходимо войти в систему'),
+          backgroundColor: Colors.red),
     );
   }
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), duration: const Duration(seconds: 2)));
+    ).showSnackBar(
+        SnackBar(content: Text(message), duration: const Duration(seconds: 2)));
   }
 
   @override
@@ -114,7 +120,8 @@ class _FavoriteSpecialistButtonState extends State<FavoriteSpecialistButton> {
           decoration: BoxDecoration(
             color: _isFavorite ? Colors.red : Colors.grey[200],
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: _isFavorite ? Colors.red : Colors.grey[300]!),
+            border:
+                Border.all(color: _isFavorite ? Colors.red : Colors.grey[300]!),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

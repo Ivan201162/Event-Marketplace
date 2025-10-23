@@ -7,8 +7,10 @@ import 'dart:async' as _i4;
 
 import 'package:event_marketplace_app/models/payment_models.dart' as _i3;
 import 'package:event_marketplace_app/models/tax_models.dart' as _i6;
-import 'package:event_marketplace_app/services/russian_bank_service.dart' as _i2;
-import 'package:event_marketplace_app/services/tax_calculation_service.dart' as _i5;
+import 'package:event_marketplace_app/services/russian_bank_service.dart'
+    as _i2;
+import 'package:event_marketplace_app/services/tax_calculation_service.dart'
+    as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -26,50 +28,59 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: subtype_of_sealed_class
 // ignore_for_file: invalid_use_of_internal_member
 
-class _FakeSbpPaymentResponse_0 extends _i1.SmartFake implements _i2.SbpPaymentResponse {
+class _FakeSbpPaymentResponse_0 extends _i1.SmartFake
+    implements _i2.SbpPaymentResponse {
   _FakeSbpPaymentResponse_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
-class _FakeYooKassaPaymentResponse_1 extends _i1.SmartFake implements _i2.YooKassaPaymentResponse {
+class _FakeYooKassaPaymentResponse_1 extends _i1.SmartFake
+    implements _i2.YooKassaPaymentResponse {
   _FakeYooKassaPaymentResponse_1(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
-class _FakeTinkoffPaymentResponse_2 extends _i1.SmartFake implements _i2.TinkoffPaymentResponse {
+class _FakeTinkoffPaymentResponse_2 extends _i1.SmartFake
+    implements _i2.TinkoffPaymentResponse {
   _FakeTinkoffPaymentResponse_2(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
-class _FakeSbpPaymentStatus_3 extends _i1.SmartFake implements _i2.SbpPaymentStatus {
+class _FakeSbpPaymentStatus_3 extends _i1.SmartFake
+    implements _i2.SbpPaymentStatus {
   _FakeSbpPaymentStatus_3(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
-class _FakeYooKassaPaymentStatus_4 extends _i1.SmartFake implements _i2.YooKassaPaymentStatus {
+class _FakeYooKassaPaymentStatus_4 extends _i1.SmartFake
+    implements _i2.YooKassaPaymentStatus {
   _FakeYooKassaPaymentStatus_4(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
-class _FakeTinkoffPaymentStatus_5 extends _i1.SmartFake implements _i2.TinkoffPaymentStatus {
+class _FakeTinkoffPaymentStatus_5 extends _i1.SmartFake
+    implements _i2.TinkoffPaymentStatus {
   _FakeTinkoffPaymentStatus_5(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
-class _FakeRefundResponse_6 extends _i1.SmartFake implements _i2.RefundResponse {
+class _FakeRefundResponse_6 extends _i1.SmartFake
+    implements _i2.RefundResponse {
   _FakeRefundResponse_6(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
-class _FakeTaxCalculation_7 extends _i1.SmartFake implements _i6.TaxCalculation {
+class _FakeTaxCalculation_7 extends _i1.SmartFake
+    implements _i6.TaxCalculation {
   _FakeTaxCalculation_7(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
 /// A class which mocks [RussianBankService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockRussianBankService extends _i1.Mock implements _i2.RussianBankService {
+class MockRussianBankService extends _i1.Mock
+    implements _i2.RussianBankService {
   MockRussianBankService() {
     _i1.throwOnMissingStub(this);
   }
@@ -82,25 +93,24 @@ class MockRussianBankService extends _i1.Mock implements _i2.RussianBankService 
     required String? returnUrl,
   }) =>
       (super.noSuchMethod(
+        Invocation.method(#createSbpPayment, [], {
+          #paymentId: paymentId,
+          #amount: amount,
+          #description: description,
+          #returnUrl: returnUrl,
+        }),
+        returnValue: _i4.Future<_i2.SbpPaymentResponse>.value(
+          _FakeSbpPaymentResponse_0(
+            this,
             Invocation.method(#createSbpPayment, [], {
               #paymentId: paymentId,
               #amount: amount,
               #description: description,
               #returnUrl: returnUrl,
             }),
-            returnValue: _i4.Future<_i2.SbpPaymentResponse>.value(
-              _FakeSbpPaymentResponse_0(
-                this,
-                Invocation.method(#createSbpPayment, [], {
-                  #paymentId: paymentId,
-                  #amount: amount,
-                  #description: description,
-                  #returnUrl: returnUrl,
-                }),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.SbpPaymentResponse>);
+          ),
+        ),
+      ) as _i4.Future<_i2.SbpPaymentResponse>);
 
   @override
   _i4.Future<_i2.YooKassaPaymentResponse> createYooKassaPayment({
@@ -111,6 +121,16 @@ class MockRussianBankService extends _i1.Mock implements _i2.RussianBankService 
     required _i3.PaymentMethod? method,
   }) =>
       (super.noSuchMethod(
+        Invocation.method(#createYooKassaPayment, [], {
+          #paymentId: paymentId,
+          #amount: amount,
+          #description: description,
+          #returnUrl: returnUrl,
+          #method: method,
+        }),
+        returnValue: _i4.Future<_i2.YooKassaPaymentResponse>.value(
+          _FakeYooKassaPaymentResponse_1(
+            this,
             Invocation.method(#createYooKassaPayment, [], {
               #paymentId: paymentId,
               #amount: amount,
@@ -118,20 +138,9 @@ class MockRussianBankService extends _i1.Mock implements _i2.RussianBankService 
               #returnUrl: returnUrl,
               #method: method,
             }),
-            returnValue: _i4.Future<_i2.YooKassaPaymentResponse>.value(
-              _FakeYooKassaPaymentResponse_1(
-                this,
-                Invocation.method(#createYooKassaPayment, [], {
-                  #paymentId: paymentId,
-                  #amount: amount,
-                  #description: description,
-                  #returnUrl: returnUrl,
-                  #method: method,
-                }),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.YooKassaPaymentResponse>);
+          ),
+        ),
+      ) as _i4.Future<_i2.YooKassaPaymentResponse>);
 
   @override
   _i4.Future<_i2.TinkoffPaymentResponse> createTinkoffPayment({
@@ -141,64 +150,63 @@ class MockRussianBankService extends _i1.Mock implements _i2.RussianBankService 
     required String? returnUrl,
   }) =>
       (super.noSuchMethod(
+        Invocation.method(#createTinkoffPayment, [], {
+          #paymentId: paymentId,
+          #amount: amount,
+          #description: description,
+          #returnUrl: returnUrl,
+        }),
+        returnValue: _i4.Future<_i2.TinkoffPaymentResponse>.value(
+          _FakeTinkoffPaymentResponse_2(
+            this,
             Invocation.method(#createTinkoffPayment, [], {
               #paymentId: paymentId,
               #amount: amount,
               #description: description,
               #returnUrl: returnUrl,
             }),
-            returnValue: _i4.Future<_i2.TinkoffPaymentResponse>.value(
-              _FakeTinkoffPaymentResponse_2(
-                this,
-                Invocation.method(#createTinkoffPayment, [], {
-                  #paymentId: paymentId,
-                  #amount: amount,
-                  #description: description,
-                  #returnUrl: returnUrl,
-                }),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.TinkoffPaymentResponse>);
+          ),
+        ),
+      ) as _i4.Future<_i2.TinkoffPaymentResponse>);
 
   @override
-  _i4.Future<_i2.SbpPaymentStatus> getSbpPaymentStatus(String? externalPaymentId) =>
+  _i4.Future<_i2.SbpPaymentStatus> getSbpPaymentStatus(
+          String? externalPaymentId) =>
       (super.noSuchMethod(
+        Invocation.method(#getSbpPaymentStatus, [externalPaymentId]),
+        returnValue: _i4.Future<_i2.SbpPaymentStatus>.value(
+          _FakeSbpPaymentStatus_3(
+            this,
             Invocation.method(#getSbpPaymentStatus, [externalPaymentId]),
-            returnValue: _i4.Future<_i2.SbpPaymentStatus>.value(
-              _FakeSbpPaymentStatus_3(
-                this,
-                Invocation.method(#getSbpPaymentStatus, [externalPaymentId]),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.SbpPaymentStatus>);
+          ),
+        ),
+      ) as _i4.Future<_i2.SbpPaymentStatus>);
 
   @override
-  _i4.Future<_i2.YooKassaPaymentStatus> getYooKassaPaymentStatus(String? externalPaymentId) =>
+  _i4.Future<_i2.YooKassaPaymentStatus> getYooKassaPaymentStatus(
+          String? externalPaymentId) =>
       (super.noSuchMethod(
+        Invocation.method(#getYooKassaPaymentStatus, [externalPaymentId]),
+        returnValue: _i4.Future<_i2.YooKassaPaymentStatus>.value(
+          _FakeYooKassaPaymentStatus_4(
+            this,
             Invocation.method(#getYooKassaPaymentStatus, [externalPaymentId]),
-            returnValue: _i4.Future<_i2.YooKassaPaymentStatus>.value(
-              _FakeYooKassaPaymentStatus_4(
-                this,
-                Invocation.method(#getYooKassaPaymentStatus, [externalPaymentId]),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.YooKassaPaymentStatus>);
+          ),
+        ),
+      ) as _i4.Future<_i2.YooKassaPaymentStatus>);
 
   @override
-  _i4.Future<_i2.TinkoffPaymentStatus> getTinkoffPaymentStatus(String? externalPaymentId) =>
+  _i4.Future<_i2.TinkoffPaymentStatus> getTinkoffPaymentStatus(
+          String? externalPaymentId) =>
       (super.noSuchMethod(
+        Invocation.method(#getTinkoffPaymentStatus, [externalPaymentId]),
+        returnValue: _i4.Future<_i2.TinkoffPaymentStatus>.value(
+          _FakeTinkoffPaymentStatus_5(
+            this,
             Invocation.method(#getTinkoffPaymentStatus, [externalPaymentId]),
-            returnValue: _i4.Future<_i2.TinkoffPaymentStatus>.value(
-              _FakeTinkoffPaymentStatus_5(
-                this,
-                Invocation.method(#getTinkoffPaymentStatus, [externalPaymentId]),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.TinkoffPaymentStatus>);
+          ),
+        ),
+      ) as _i4.Future<_i2.TinkoffPaymentStatus>);
 
   @override
   _i4.Future<_i2.RefundResponse> processRefund({
@@ -208,39 +216,38 @@ class MockRussianBankService extends _i1.Mock implements _i2.RussianBankService 
     required String? reason,
   }) =>
       (super.noSuchMethod(
+        Invocation.method(#processRefund, [], {
+          #externalPaymentId: externalPaymentId,
+          #amount: amount,
+          #method: method,
+          #reason: reason,
+        }),
+        returnValue: _i4.Future<_i2.RefundResponse>.value(
+          _FakeRefundResponse_6(
+            this,
             Invocation.method(#processRefund, [], {
               #externalPaymentId: externalPaymentId,
               #amount: amount,
               #method: method,
               #reason: reason,
             }),
-            returnValue: _i4.Future<_i2.RefundResponse>.value(
-              _FakeRefundResponse_6(
-                this,
-                Invocation.method(#processRefund, [], {
-                  #externalPaymentId: externalPaymentId,
-                  #amount: amount,
-                  #method: method,
-                  #reason: reason,
-                }),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.RefundResponse>);
+          ),
+        ),
+      ) as _i4.Future<_i2.RefundResponse>);
 
   @override
   List<_i3.PaymentMethodInfo> getAvailablePaymentMethods() =>
       (super.noSuchMethod(
-            Invocation.method(#getAvailablePaymentMethods, []),
-            returnValue: <_i3.PaymentMethodInfo>[],
-          )
-          as List<_i3.PaymentMethodInfo>);
+        Invocation.method(#getAvailablePaymentMethods, []),
+        returnValue: <_i3.PaymentMethodInfo>[],
+      ) as List<_i3.PaymentMethodInfo>);
 }
 
 /// A class which mocks [TaxCalculationService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTaxCalculationService extends _i1.Mock implements _i5.TaxCalculationService {
+class MockTaxCalculationService extends _i1.Mock
+    implements _i5.TaxCalculationService {
   MockTaxCalculationService() {
     _i1.throwOnMissingStub(this);
   }
@@ -252,23 +259,22 @@ class MockTaxCalculationService extends _i1.Mock implements _i5.TaxCalculationSe
     required _i6.TaxStatus? taxStatus,
   }) =>
       (super.noSuchMethod(
+        Invocation.method(#calculateTax, [], {
+          #paymentId: paymentId,
+          #grossAmount: grossAmount,
+          #taxStatus: taxStatus,
+        }),
+        returnValue: _i4.Future<_i6.TaxCalculation>.value(
+          _FakeTaxCalculation_7(
+            this,
             Invocation.method(#calculateTax, [], {
               #paymentId: paymentId,
               #grossAmount: grossAmount,
               #taxStatus: taxStatus,
             }),
-            returnValue: _i4.Future<_i6.TaxCalculation>.value(
-              _FakeTaxCalculation_7(
-                this,
-                Invocation.method(#calculateTax, [], {
-                  #paymentId: paymentId,
-                  #grossAmount: grossAmount,
-                  #taxStatus: taxStatus,
-                }),
-              ),
-            ),
-          )
-          as _i4.Future<_i6.TaxCalculation>);
+          ),
+        ),
+      ) as _i4.Future<_i6.TaxCalculation>);
 
   @override
   _i6.TaxStatus getRecommendedTaxStatus({
@@ -278,33 +284,33 @@ class MockTaxCalculationService extends _i1.Mock implements _i5.TaxCalculationSe
     required double? amount,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#getRecommendedTaxStatus, [], {
-              #isIndividual: isIndividual,
-              #isSelfEmployed: isSelfEmployed,
-              #isEntrepreneur: isEntrepreneur,
-              #amount: amount,
-            }),
-            returnValue: _i6.TaxStatus.none,
-          )
-          as _i6.TaxStatus);
+        Invocation.method(#getRecommendedTaxStatus, [], {
+          #isIndividual: isIndividual,
+          #isSelfEmployed: isSelfEmployed,
+          #isEntrepreneur: isEntrepreneur,
+          #amount: amount,
+        }),
+        returnValue: _i6.TaxStatus.none,
+      ) as _i6.TaxStatus);
 
   @override
   _i4.Future<List<_i6.TaxCalculation>> calculateTaxesForPayments({
     required List<Map<String, dynamic>>? payments,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#calculateTaxesForPayments, [], {#payments: payments}),
-            returnValue: _i4.Future<List<_i6.TaxCalculation>>.value(<_i6.TaxCalculation>[]),
-          )
-          as _i4.Future<List<_i6.TaxCalculation>>);
+        Invocation.method(
+            #calculateTaxesForPayments, [], {#payments: payments}),
+        returnValue:
+            _i4.Future<List<_i6.TaxCalculation>>.value(<_i6.TaxCalculation>[]),
+      ) as _i4.Future<List<_i6.TaxCalculation>>);
 
   @override
   _i4.Future<Map<String, dynamic>> getTaxStatistics({
     required List<_i6.TaxCalculation>? calculations,
   }) =>
       (super.noSuchMethod(
-            Invocation.method(#getTaxStatistics, [], {#calculations: calculations}),
-            returnValue: _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
-          )
-          as _i4.Future<Map<String, dynamic>>);
+        Invocation.method(#getTaxStatistics, [], {#calculations: calculations}),
+        returnValue:
+            _i4.Future<Map<String, dynamic>>.value(<String, dynamic>{}),
+      ) as _i4.Future<Map<String, dynamic>>);
 }

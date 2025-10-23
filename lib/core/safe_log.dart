@@ -63,7 +63,8 @@ class SafeLog {
   }
 
   /// Логирование критических ошибок
-  static void critical(String message, [Object? error, StackTrace? stackTrace]) {
+  static void critical(String message,
+      [Object? error, StackTrace? stackTrace]) {
     if (kDebugMode) {
       developer.log(
         message,
@@ -89,7 +90,8 @@ class SafeLog {
 
     if (FeatureFlags.debugMode) {
       if (kDebugMode) {
-        developer.log(fullMessage, name: _tag, level: 700, error: error, stackTrace: stackTrace);
+        developer.log(fullMessage,
+            name: _tag, level: 700, error: error, stackTrace: stackTrace);
       }
     }
   }
@@ -108,7 +110,8 @@ class SafeLog {
   }
 
   /// Логирование сетевых запросов
-  static void network(String method, String url, {int? statusCode, Duration? duration}) {
+  static void network(String method, String url,
+      {int? statusCode, Duration? duration}) {
     if (FeatureFlags.debugMode && FeatureFlags.verboseLogging) {
       final status = statusCode != null ? ' ($statusCode)' : '';
       final time = duration != null ? ' (${duration.inMilliseconds}ms)' : '';

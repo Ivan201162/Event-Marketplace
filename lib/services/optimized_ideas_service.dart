@@ -22,7 +22,7 @@ class OptimizedIdeasService {
     try {
       // Проверяем кэш для первой загрузки
       if (lastDocument == null && !forceRefresh && _cachedIdeas.isNotEmpty) {
-        if (_ideasCacheTime != null && 
+        if (_ideasCacheTime != null &&
             DateTime.now().difference(_ideasCacheTime!) < _cacheExpiry) {
           return IdeasState(
             ideas: _cachedIdeas,
@@ -50,7 +50,7 @@ class OptimizedIdeasService {
       }
 
       final snapshot = await query.get();
-      
+
       final ideas = snapshot.docs.map((doc) {
         final data = doc.data();
         return Idea(
@@ -67,8 +67,10 @@ class OptimizedIdeasService {
           commentCount: data['commentCount']?.toInt() ?? 0,
           isLiked: data['isLiked'] ?? false,
           isSaved: data['isSaved'] ?? false,
-          createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-          updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          createdAt:
+              (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          updatedAt:
+              (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         );
       }).toList();
 
@@ -79,7 +81,7 @@ class OptimizedIdeasService {
       }
 
       debugPrint('✅ Загружено ${ideas.length} идей');
-      
+
       return IdeasState(
         ideas: ideas,
         isLoading: false,
@@ -129,7 +131,7 @@ class OptimizedIdeasService {
       };
 
       final docRef = await _firestore.collection('ideas').add(ideaData);
-      
+
       debugPrint('✅ Идея создана с ID: ${docRef.id}');
       return docRef.id;
     } catch (e) {
@@ -142,20 +144,20 @@ class OptimizedIdeasService {
   Future<bool> toggleLike(String ideaId, String userId) async {
     try {
       final ideaRef = _firestore.collection('ideas').doc(ideaId);
-      
+
       await _firestore.runTransaction((transaction) async {
         final ideaDoc = await transaction.get(ideaRef);
-        
+
         if (!ideaDoc.exists) {
           throw Exception('Идея не найдена');
         }
-        
+
         final data = ideaDoc.data()!;
         final likeCount = data['likeCount']?.toInt() ?? 0;
         final likedBy = List<String>.from(data['likedBy'] ?? []);
-        
+
         bool isLiked = likedBy.contains(userId);
-        
+
         if (isLiked) {
           likedBy.remove(userId);
           transaction.update(ideaRef, {
@@ -174,7 +176,7 @@ class OptimizedIdeasService {
           });
         }
       });
-      
+
       return true;
     } catch (e) {
       debugPrint('❌ Ошибка при лайке идеи: $e');
@@ -186,31 +188,31 @@ class OptimizedIdeasService {
   Future<bool> toggleSave(String ideaId, String userId) async {
     try {
       final userRef = _firestore.collection('users').doc(userId);
-      
+
       await _firestore.runTransaction((transaction) async {
         final userDoc = await transaction.get(userRef);
-        
+
         if (!userDoc.exists) {
           throw Exception('Пользователь не найден');
         }
-        
+
         final data = userDoc.data()!;
         final savedIdeas = List<String>.from(data['savedIdeas'] ?? []);
-        
+
         bool isSaved = savedIdeas.contains(ideaId);
-        
+
         if (isSaved) {
           savedIdeas.remove(ideaId);
         } else {
           savedIdeas.add(ideaId);
         }
-        
+
         transaction.update(userRef, {
           'savedIdeas': savedIdeas,
           'updatedAt': FieldValue.serverTimestamp(),
         });
       });
-      
+
       return true;
     } catch (e) {
       debugPrint('❌ Ошибка при сохранении идеи: $e');
@@ -245,8 +247,10 @@ class OptimizedIdeasService {
           commentCount: data['commentCount']?.toInt() ?? 0,
           isLiked: data['isLiked'] ?? false,
           isSaved: data['isSaved'] ?? false,
-          createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-          updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          createdAt:
+              (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          updatedAt:
+              (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         );
       }).toList();
     } catch (e) {
@@ -259,14 +263,14 @@ class OptimizedIdeasService {
   Future<List<Idea>> getSavedIdeas(String userId) async {
     try {
       final userDoc = await _firestore.collection('users').doc(userId).get();
-      
+
       if (!userDoc.exists) return [];
-      
+
       final data = userDoc.data()!;
       final savedIdeas = List<String>.from(data['savedIdeas'] ?? []);
-      
+
       if (savedIdeas.isEmpty) return [];
-      
+
       final snapshot = await _firestore
           .collection('ideas')
           .where(FieldPath.documentId, whereIn: savedIdeas)
@@ -289,8 +293,10 @@ class OptimizedIdeasService {
           commentCount: data['commentCount']?.toInt() ?? 0,
           isLiked: data['isLiked'] ?? false,
           isSaved: true, // Все сохранённые идеи помечены как сохранённые
-          createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-          updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          createdAt:
+              (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          updatedAt:
+              (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         );
       }).toList();
     } catch (e) {
@@ -325,8 +331,10 @@ class OptimizedIdeasService {
           commentCount: data['commentCount']?.toInt() ?? 0,
           isLiked: data['isLiked'] ?? false,
           isSaved: data['isSaved'] ?? false,
-          createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-          updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          createdAt:
+              (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          updatedAt:
+              (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         );
       }).toList();
     } catch (e) {

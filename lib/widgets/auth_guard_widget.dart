@@ -72,23 +72,25 @@ class AuthGuard extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.lock_outline, size: 64, color: Theme.of(context).colorScheme.primary),
+                Icon(Icons.lock_outline,
+                    size: 64, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(height: 24),
                 Text(
                   'Требуется авторизация',
                   style: Theme.of(
                     context,
-                  )
-                      .textTheme
-                      .headlineSmall
-                      ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  ).textTheme.headlineSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Для доступа к этому разделу необходимо войти в систему',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -98,7 +100,8 @@ class AuthGuard extends ConsumerWidget {
                     // TODO(developer): Навигация к экрану авторизации
                     ScaffoldMessenger.of(
                       context,
-                    ).showSnackBar(const SnackBar(content: Text('Переход к экрану авторизации')));
+                    ).showSnackBar(const SnackBar(
+                        content: Text('Переход к экрану авторизации')));
                   },
                   icon: const Icon(Icons.login),
                   label: const Text('Войти'),
@@ -110,27 +113,35 @@ class AuthGuard extends ConsumerWidget {
       );
 
   /// Виджет для пользователей без нужных прав
-  Widget _buildUnauthorizedWidget(BuildContext context, UserRole userRole) => Scaffold(
+  Widget _buildUnauthorizedWidget(BuildContext context, UserRole userRole) =>
+      Scaffold(
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.block, size: 64, color: Theme.of(context).colorScheme.error),
+                Icon(Icons.block,
+                    size: 64, color: Theme.of(context).colorScheme.error),
                 const SizedBox(height: 24),
                 Text(
                   'Недостаточно прав',
                   style: Theme.of(
                     context,
-                  ).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.error),
+                  )
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(color: Theme.of(context).colorScheme.error),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Ваша роль: ${userRole.roleDisplayName}\n\nДля доступа к этому разделу требуется другая роль',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -156,20 +167,27 @@ class AuthGuard extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
+                Icon(Icons.error_outline,
+                    size: 64, color: Theme.of(context).colorScheme.error),
                 const SizedBox(height: 24),
                 Text(
                   'Ошибка авторизации',
                   style: Theme.of(
                     context,
-                  ).textTheme.headlineSmall?.copyWith(color: Theme.of(context).colorScheme.error),
+                  )
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(color: Theme.of(context).colorScheme.error),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Произошла ошибка при проверке авторизации: ${error.toString()}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -179,7 +197,8 @@ class AuthGuard extends ConsumerWidget {
                     // TODO(developer): Попытка повторной авторизации
                     ScaffoldMessenger.of(
                       context,
-                    ).showSnackBar(const SnackBar(content: Text('Попытка повторной авторизации')));
+                    ).showSnackBar(const SnackBar(
+                        content: Text('Попытка повторной авторизации')));
                   },
                   icon: const Icon(Icons.refresh),
                   label: const Text('Повторить'),

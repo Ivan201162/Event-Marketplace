@@ -34,7 +34,8 @@ class FavoritesPage extends ConsumerWidget {
                       child: Center(
                         child: Text(
                           '$count',
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
                     );
@@ -78,7 +79,8 @@ class FavoritesPage extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (context) => EventDetailScreen(event: event),
+                              builder: (context) =>
+                                  EventDetailScreen(event: event),
                             ),
                           );
                         },
@@ -115,22 +117,22 @@ class FavoritesPage extends ConsumerWidget {
   }
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.favorite_border, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          'У вас нет избранных событий',
-          style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.favorite_border, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'У вас нет избранных событий',
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Добавляйте интересные мероприятия в избранное',
+              style: TextStyle(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Добавляйте интересные мероприятия в избранное',
-          style: TextStyle(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 }

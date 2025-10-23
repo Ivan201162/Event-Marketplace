@@ -58,41 +58,43 @@ class FeatureRequest {
 
   /// Создать из Map
   factory FeatureRequest.fromMap(Map<String, dynamic> data) => FeatureRequest(
-    id: data['id'] as String? ?? '',
-    userId: data['userId'] as String? ?? '',
-    userName: data['userName'] as String? ?? '',
-    userEmail: data['userEmail'] as String?,
-    userType: UserType.values.firstWhere(
-      (e) => e.name == data['userType'] as String?,
-      orElse: () => UserType.customer,
-    ),
-    title: data['title'] as String? ?? '',
-    description: data['description'] as String? ?? '',
-    category: FeatureCategory.values.firstWhere(
-      (e) => e.name == data['category'],
-      orElse: () => FeatureCategory.other,
-    ),
-    priority: FeaturePriority.values.firstWhere(
-      (e) => e.name == data['priority'],
-      orElse: () => FeaturePriority.medium,
-    ),
-    status: FeatureStatus.values.firstWhere(
-      (e) => e.name == data['status'],
-      orElse: () => FeatureStatus.submitted,
-    ),
-    tags: List<String>.from((data['tags'] as List<dynamic>?) ?? []),
-    attachments: List<String>.from((data['attachments'] as List<dynamic>?) ?? []),
-    metadata: Map<String, dynamic>.from((data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
-    votes: data['votes'] as int? ?? 0,
-    voters: List<String>.from((data['voters'] as List<dynamic>?) ?? []),
-    adminComment: data['adminComment'] as String?,
-    assignedTo: data['assignedTo'] as String?,
-    estimatedCompletion: data['estimatedCompletion'] != null
-        ? (data['estimatedCompletion'] as Timestamp).toDate()
-        : null,
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-  );
+        id: data['id'] as String? ?? '',
+        userId: data['userId'] as String? ?? '',
+        userName: data['userName'] as String? ?? '',
+        userEmail: data['userEmail'] as String?,
+        userType: UserType.values.firstWhere(
+          (e) => e.name == data['userType'] as String?,
+          orElse: () => UserType.customer,
+        ),
+        title: data['title'] as String? ?? '',
+        description: data['description'] as String? ?? '',
+        category: FeatureCategory.values.firstWhere(
+          (e) => e.name == data['category'],
+          orElse: () => FeatureCategory.other,
+        ),
+        priority: FeaturePriority.values.firstWhere(
+          (e) => e.name == data['priority'],
+          orElse: () => FeaturePriority.medium,
+        ),
+        status: FeatureStatus.values.firstWhere(
+          (e) => e.name == data['status'],
+          orElse: () => FeatureStatus.submitted,
+        ),
+        tags: List<String>.from((data['tags'] as List<dynamic>?) ?? []),
+        attachments:
+            List<String>.from((data['attachments'] as List<dynamic>?) ?? []),
+        metadata: Map<String, dynamic>.from(
+            (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+        votes: data['votes'] as int? ?? 0,
+        voters: List<String>.from((data['voters'] as List<dynamic>?) ?? []),
+        adminComment: data['adminComment'] as String?,
+        assignedTo: data['assignedTo'] as String?,
+        estimatedCompletion: data['estimatedCompletion'] != null
+            ? (data['estimatedCompletion'] as Timestamp).toDate()
+            : null,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
   final String id;
   final String userId;
   final String userName;
@@ -116,29 +118,29 @@ class FeatureRequest {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'userName': userName,
-    'userEmail': userEmail,
-    'userType': userType.name,
-    'title': title,
-    'description': description,
-    'category': category.name,
-    'priority': priority.name,
-    'status': status.name,
-    'tags': tags,
-    'attachments': attachments,
-    'metadata': metadata,
-    'votes': votes,
-    'voters': voters,
-    'adminComment': adminComment,
-    'assignedTo': assignedTo,
-    'estimatedCompletion': estimatedCompletion != null
-        ? Timestamp.fromDate(estimatedCompletion!)
-        : null,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'id': id,
+        'userId': userId,
+        'userName': userName,
+        'userEmail': userEmail,
+        'userType': userType.name,
+        'title': title,
+        'description': description,
+        'category': category.name,
+        'priority': priority.name,
+        'status': status.name,
+        'tags': tags,
+        'attachments': attachments,
+        'metadata': metadata,
+        'votes': votes,
+        'voters': voters,
+        'adminComment': adminComment,
+        'assignedTo': assignedTo,
+        'estimatedCompletion': estimatedCompletion != null
+            ? Timestamp.fromDate(estimatedCompletion!)
+            : null,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Копировать с изменениями
   FeatureRequest copyWith({
@@ -162,28 +164,29 @@ class FeatureRequest {
     DateTime? estimatedCompletion,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => FeatureRequest(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    userName: userName ?? this.userName,
-    userEmail: userEmail ?? this.userEmail,
-    userType: userType ?? this.userType,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    category: category ?? this.category,
-    priority: priority ?? this.priority,
-    status: status ?? this.status,
-    tags: tags ?? this.tags,
-    attachments: attachments ?? this.attachments,
-    metadata: metadata ?? this.metadata,
-    votes: votes ?? this.votes,
-    voters: voters ?? this.voters,
-    adminComment: adminComment ?? this.adminComment,
-    assignedTo: assignedTo ?? this.assignedTo,
-    estimatedCompletion: estimatedCompletion ?? this.estimatedCompletion,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      FeatureRequest(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        userName: userName ?? this.userName,
+        userEmail: userEmail ?? this.userEmail,
+        userType: userType ?? this.userType,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        priority: priority ?? this.priority,
+        status: status ?? this.status,
+        tags: tags ?? this.tags,
+        attachments: attachments ?? this.attachments,
+        metadata: metadata ?? this.metadata,
+        votes: votes ?? this.votes,
+        voters: voters ?? this.voters,
+        adminComment: adminComment ?? this.adminComment,
+        assignedTo: assignedTo ?? this.assignedTo,
+        estimatedCompletion: estimatedCompletion ?? this.estimatedCompletion,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить цвет статуса
   Color get statusColor {
@@ -281,7 +284,8 @@ class FeatureRequest {
   bool canVote(String userId) => !voters.contains(userId);
 
   /// Проверить, может ли пользователь редактировать
-  bool canEdit(String userId) => this.userId == userId && status == FeatureStatus.submitted;
+  bool canEdit(String userId) =>
+      this.userId == userId && status == FeatureStatus.submitted;
 
   /// Проверить, может ли пользователь удалить
   bool canDelete(String userId) =>
@@ -307,50 +311,53 @@ class FeatureRequestStats {
   });
 
   /// Создать из Map
-  factory FeatureRequestStats.fromMap(Map<String, dynamic> data) => FeatureRequestStats(
-    totalRequests: data['totalRequests'] as int? ?? 0,
-    submittedRequests: data['submittedRequests'] as int? ?? 0,
-    underReviewRequests: data['underReviewRequests'] as int? ?? 0,
-    approvedRequests: data['approvedRequests'] as int? ?? 0,
-    inDevelopmentRequests: data['inDevelopmentRequests'] as int? ?? 0,
-    completedRequests: data['completedRequests'] as int? ?? 0,
-    rejectedRequests: data['rejectedRequests'] as int? ?? 0,
-    categoryStats: Map<FeatureCategory, int>.from(
-      (data['categoryStats'] as Map?)?.map(
-            (key, value) => MapEntry(
-              FeatureCategory.values.firstWhere(
-                (e) => e.name == key,
-                orElse: () => FeatureCategory.other,
-              ),
-              value as int,
-            ),
-          ) ??
-          {},
-    ),
-    priorityStats: Map<FeaturePriority, int>.from(
-      (data['priorityStats'] as Map?)?.map(
-            (key, value) => MapEntry(
-              FeaturePriority.values.firstWhere(
-                (e) => e.name == key,
-                orElse: () => FeaturePriority.medium,
-              ),
-              value as int,
-            ),
-          ) ??
-          {},
-    ),
-    userTypeStats: Map<UserType, int>.from(
-      (data['userTypeStats'] as Map?)?.map(
-            (key, value) => MapEntry(
-              UserType.values.firstWhere((e) => e.name == key, orElse: () => UserType.customer),
-              value as int,
-            ),
-          ) ??
-          {},
-    ),
-    totalVotes: data['totalVotes'] as int? ?? 0,
-    averageVotesPerRequest: (data['averageVotesPerRequest'] as num? ?? 0.0).toDouble(),
-  );
+  factory FeatureRequestStats.fromMap(Map<String, dynamic> data) =>
+      FeatureRequestStats(
+        totalRequests: data['totalRequests'] as int? ?? 0,
+        submittedRequests: data['submittedRequests'] as int? ?? 0,
+        underReviewRequests: data['underReviewRequests'] as int? ?? 0,
+        approvedRequests: data['approvedRequests'] as int? ?? 0,
+        inDevelopmentRequests: data['inDevelopmentRequests'] as int? ?? 0,
+        completedRequests: data['completedRequests'] as int? ?? 0,
+        rejectedRequests: data['rejectedRequests'] as int? ?? 0,
+        categoryStats: Map<FeatureCategory, int>.from(
+          (data['categoryStats'] as Map?)?.map(
+                (key, value) => MapEntry(
+                  FeatureCategory.values.firstWhere(
+                    (e) => e.name == key,
+                    orElse: () => FeatureCategory.other,
+                  ),
+                  value as int,
+                ),
+              ) ??
+              {},
+        ),
+        priorityStats: Map<FeaturePriority, int>.from(
+          (data['priorityStats'] as Map?)?.map(
+                (key, value) => MapEntry(
+                  FeaturePriority.values.firstWhere(
+                    (e) => e.name == key,
+                    orElse: () => FeaturePriority.medium,
+                  ),
+                  value as int,
+                ),
+              ) ??
+              {},
+        ),
+        userTypeStats: Map<UserType, int>.from(
+          (data['userTypeStats'] as Map?)?.map(
+                (key, value) => MapEntry(
+                  UserType.values.firstWhere((e) => e.name == key,
+                      orElse: () => UserType.customer),
+                  value as int,
+                ),
+              ) ??
+              {},
+        ),
+        totalVotes: data['totalVotes'] as int? ?? 0,
+        averageVotesPerRequest:
+            (data['averageVotesPerRequest'] as num? ?? 0.0).toDouble(),
+      );
   final int totalRequests;
   final int submittedRequests;
   final int underReviewRequests;
@@ -366,17 +373,20 @@ class FeatureRequestStats {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'totalRequests': totalRequests,
-    'submittedRequests': submittedRequests,
-    'underReviewRequests': underReviewRequests,
-    'approvedRequests': approvedRequests,
-    'inDevelopmentRequests': inDevelopmentRequests,
-    'completedRequests': completedRequests,
-    'rejectedRequests': rejectedRequests,
-    'categoryStats': categoryStats.map((key, value) => MapEntry(key.name, value)),
-    'priorityStats': priorityStats.map((key, value) => MapEntry(key.name, value)),
-    'userTypeStats': userTypeStats.map((key, value) => MapEntry(key.name, value)),
-    'totalVotes': totalVotes,
-    'averageVotesPerRequest': averageVotesPerRequest,
-  };
+        'totalRequests': totalRequests,
+        'submittedRequests': submittedRequests,
+        'underReviewRequests': underReviewRequests,
+        'approvedRequests': approvedRequests,
+        'inDevelopmentRequests': inDevelopmentRequests,
+        'completedRequests': completedRequests,
+        'rejectedRequests': rejectedRequests,
+        'categoryStats':
+            categoryStats.map((key, value) => MapEntry(key.name, value)),
+        'priorityStats':
+            priorityStats.map((key, value) => MapEntry(key.name, value)),
+        'userTypeStats':
+            userTypeStats.map((key, value) => MapEntry(key.name, value)),
+        'totalVotes': totalVotes,
+        'averageVotesPerRequest': averageVotesPerRequest,
+      };
 }

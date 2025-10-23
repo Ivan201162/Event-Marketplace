@@ -31,10 +31,13 @@ class MonitoringStatusWidget extends ConsumerWidget {
                   monitoringState.isInitialized
                       ? Icons.monitor_heart
                       : Icons.monitor_heart_outlined,
-                  color: monitoringState.isInitialized ? Colors.green : Colors.orange,
+                  color: monitoringState.isInitialized
+                      ? Colors.green
+                      : Colors.orange,
                 ),
                 const SizedBox(width: 8),
-                Text('Мониторинг', style: Theme.of(context).textTheme.titleMedium),
+                Text('Мониторинг',
+                    style: Theme.of(context).textTheme.titleMedium),
                 const Spacer(),
                 _buildStatusChip(monitoringState.isInitialized),
               ],
@@ -93,7 +96,8 @@ class MonitoringStatusWidget extends ConsumerWidget {
         backgroundColor: isInitialized
             ? Colors.green.withValues(alpha: 0.2)
             : Colors.orange.withValues(alpha: 0.2),
-        labelStyle: TextStyle(color: isInitialized ? Colors.green : Colors.orange, fontSize: 12),
+        labelStyle: TextStyle(
+            color: isInitialized ? Colors.green : Colors.orange, fontSize: 12),
       );
 }
 
@@ -115,7 +119,8 @@ class AppMetricsWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Метрики приложения', style: Theme.of(context).textTheme.titleMedium),
+            Text('Метрики приложения',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
 
             // Состояние сети
@@ -128,7 +133,8 @@ class AppMetricsWidget extends ConsumerWidget {
                 Icons.wifi,
               ),
               loading: () => _buildLoadingRow(context, 'Сеть'),
-              error: (error, stack) => _buildErrorRow(context, 'Сеть', error.toString()),
+              error: (error, stack) =>
+                  _buildErrorRow(context, 'Сеть', error.toString()),
             ),
 
             const SizedBox(height: 8),
@@ -143,7 +149,8 @@ class AppMetricsWidget extends ConsumerWidget {
                 Icons.memory,
               ),
               loading: () => _buildLoadingRow(context, 'Память'),
-              error: (error, stack) => _buildErrorRow(context, 'Память', error.toString()),
+              error: (error, stack) =>
+                  _buildErrorRow(context, 'Память', error.toString()),
             ),
 
             const SizedBox(height: 8),
@@ -163,7 +170,8 @@ class AppMetricsWidget extends ConsumerWidget {
                 ],
               ),
               loading: () => _buildLoadingRow(context, 'Метрики'),
-              error: (error, stack) => _buildErrorRow(context, 'Метрики', error.toString()),
+              error: (error, stack) =>
+                  _buildErrorRow(context, 'Метрики', error.toString()),
             ),
           ],
         ),
@@ -187,27 +195,38 @@ class AppMetricsWidget extends ConsumerWidget {
             value,
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: color, fontWeight: FontWeight.bold),
+            )
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: color, fontWeight: FontWeight.bold),
           ),
         ],
       );
 
   Widget _buildLoadingRow(BuildContext context, String label) => Row(
         children: [
-          const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+          const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2)),
           const SizedBox(width: 8),
-          Text('$label: Загрузка...', style: Theme.of(context).textTheme.bodyMedium),
+          Text('$label: Загрузка...',
+              style: Theme.of(context).textTheme.bodyMedium),
         ],
       );
 
-  Widget _buildErrorRow(BuildContext context, String label, String error) => Row(
+  Widget _buildErrorRow(BuildContext context, String label, String error) =>
+      Row(
         children: [
           const Icon(Icons.error, color: Colors.red, size: 16),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               '$label: Ошибка - $error',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.red),
             ),
           ),
         ],
@@ -230,7 +249,8 @@ class MonitoringControlWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Управление мониторингом', style: Theme.of(context).textTheme.titleMedium),
+            Text('Управление мониторингом',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -303,7 +323,8 @@ class MonitoringLogsWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Логи мониторинга', style: Theme.of(context).textTheme.titleMedium),
+            Text('Логи мониторинга',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
             if (monitoringState.lastError != null) ...[
               Container(
@@ -323,20 +344,25 @@ class MonitoringLogsWidget extends ConsumerWidget {
                         const SizedBox(width: 8),
                         Text(
                           'Последняя ошибка',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text(monitoringState.lastError!, style: Theme.of(context).textTheme.bodySmall),
+                    Text(monitoringState.lastError!,
+                        style: Theme.of(context).textTheme.bodySmall),
                     if (monitoringState.lastErrorTime != null) ...[
                       const SizedBox(height: 4),
                       Text(
                         'Время: ${monitoringState.lastErrorTime!.toLocal().toString()}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.grey),
                       ),
                     ],
                   ],
@@ -349,15 +375,20 @@ class MonitoringLogsWidget extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                  border:
+                      Border.all(color: Colors.green.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                    const Icon(Icons.check_circle,
+                        color: Colors.green, size: 16),
                     const SizedBox(width: 8),
                     Text(
                       'Ошибок не обнаружено',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.green),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.green),
                     ),
                   ],
                 ),

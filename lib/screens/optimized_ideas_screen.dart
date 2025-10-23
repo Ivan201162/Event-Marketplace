@@ -11,7 +11,8 @@ class OptimizedIdeasScreen extends ConsumerStatefulWidget {
   const OptimizedIdeasScreen({super.key});
 
   @override
-  ConsumerState<OptimizedIdeasScreen> createState() => _OptimizedIdeasScreenState();
+  ConsumerState<OptimizedIdeasScreen> createState() =>
+      _OptimizedIdeasScreenState();
 }
 
 class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
@@ -33,7 +34,8 @@ class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       _loadMoreIdeas();
     }
   }
@@ -82,10 +84,10 @@ class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
         children: [
           // Категории
           _buildCategoriesFilter(),
-          
+
           // Сортировка
           _buildSortOptions(),
-          
+
           // Список идей
           Expanded(
             child: ideasAsync.when(
@@ -123,7 +125,7 @@ class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
 
   Widget _buildCategoryChip(String category, String label) {
     final isSelected = _selectedCategory == category;
-    
+
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: FilterChip(
@@ -302,7 +304,8 @@ class _OptimizedIdeasScreenState extends ConsumerState<OptimizedIdeasScreen> {
                 DropdownMenuItem(value: 'marketing', child: Text('Маркетинг')),
                 DropdownMenuItem(value: 'events', child: Text('События')),
                 DropdownMenuItem(value: 'business', child: Text('Бизнес')),
-                DropdownMenuItem(value: 'technology', child: Text('Технологии')),
+                DropdownMenuItem(
+                    value: 'technology', child: Text('Технологии')),
               ],
               onChanged: (value) {
                 setState(() {
@@ -383,7 +386,8 @@ class _IdeaCard extends ConsumerWidget {
           Expanded(
             flex: 3,
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               child: idea.imageUrl != null
                   ? CachedNetworkImage(
                       imageUrl: idea.imageUrl!,
@@ -404,7 +408,7 @@ class _IdeaCard extends ConsumerWidget {
                     ),
             ),
           ),
-          
+
           // Контент идеи
           Expanded(
             flex: 2,
@@ -423,9 +427,9 @@ class _IdeaCard extends ConsumerWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   const SizedBox(height: 4),
-                  
+
                   // Описание
                   Expanded(
                     child: Text(
@@ -438,9 +442,9 @@ class _IdeaCard extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Действия
                   Row(
                     children: [
@@ -452,7 +456,8 @@ class _IdeaCard extends ConsumerWidget {
                           size: 20,
                         ),
                       ),
-                      Text('${idea.likes}', style: const TextStyle(fontSize: 12)),
+                      Text('${idea.likes}',
+                          style: const TextStyle(fontSize: 12)),
                       const SizedBox(width: 8),
                       IconButton(
                         onPressed: () => _toggleSave(ideasService),

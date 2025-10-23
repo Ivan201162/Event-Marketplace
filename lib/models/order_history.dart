@@ -28,58 +28,59 @@ class OrderHistory {
   }
 
   /// Создать из Map
-  factory OrderHistory.fromMap(Map<String, dynamic> data, [String? id]) => OrderHistory(
-    id: id ?? data['id'] ?? '',
-    specialistId: data['specialistId'] ?? '',
-    specialistName: data['specialistName'] ?? '',
-    serviceName: data['serviceName'] ?? '',
-    date: data['date'] != null
-        ? (data['date'] is Timestamp
-              ? (data['date'] as Timestamp).toDate()
-              : DateTime.parse(data['date'].toString()))
-        : DateTime.now(),
-    price: (data['price'] as num?)?.toDouble() ?? 0.0,
-    status: data['status'] ?? 'completed',
-    eventType: data['eventType'],
-    location: data['location'],
-    notes: data['notes'],
-    reviewId: data['reviewId'],
-    rating: (data['rating'] as num?)?.toDouble(),
-    createdAt: data['createdAt'] != null
-        ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
-        : DateTime.now(),
-    updatedAt: data['updatedAt'] != null
-        ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.parse(data['updatedAt'].toString()))
-        : DateTime.now(),
-    additionalData: data['additionalData'],
-  );
+  factory OrderHistory.fromMap(Map<String, dynamic> data, [String? id]) =>
+      OrderHistory(
+        id: id ?? data['id'] ?? '',
+        specialistId: data['specialistId'] ?? '',
+        specialistName: data['specialistName'] ?? '',
+        serviceName: data['serviceName'] ?? '',
+        date: data['date'] != null
+            ? (data['date'] is Timestamp
+                ? (data['date'] as Timestamp).toDate()
+                : DateTime.parse(data['date'].toString()))
+            : DateTime.now(),
+        price: (data['price'] as num?)?.toDouble() ?? 0.0,
+        status: data['status'] ?? 'completed',
+        eventType: data['eventType'],
+        location: data['location'],
+        notes: data['notes'],
+        reviewId: data['reviewId'],
+        rating: (data['rating'] as num?)?.toDouble(),
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] is Timestamp
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
+            : DateTime.now(),
+        updatedAt: data['updatedAt'] != null
+            ? (data['updatedAt'] is Timestamp
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.parse(data['updatedAt'].toString()))
+            : DateTime.now(),
+        additionalData: data['additionalData'],
+      );
 
   /// Создать из Booking
   factory OrderHistory.fromBooking(Booking booking) => OrderHistory(
-    id: booking.id,
-    specialistId: booking.specialistId ?? '',
-    specialistName: booking.specialistName ?? 'Неизвестный специалист',
-    serviceName: booking.serviceName ?? booking.eventTitle,
-    date: booking.eventDate,
-    price: booking.effectivePrice,
-    status: booking.status.name,
-    eventType: booking.eventType,
-    location: booking.location ?? booking.eventLocation,
-    notes: booking.notes ?? booking.specialRequests,
-    createdAt: booking.createdAt,
-    updatedAt: booking.updatedAt,
-    additionalData: {
-      'bookingId': booking.id,
-      'participantsCount': booking.participantsCount,
-      'originalPrice': booking.totalPrice,
-      'discount': booking.discount,
-      'finalPrice': booking.finalPrice,
-    },
-  );
+        id: booking.id,
+        specialistId: booking.specialistId ?? '',
+        specialistName: booking.specialistName ?? 'Неизвестный специалист',
+        serviceName: booking.serviceName ?? booking.eventTitle,
+        date: booking.eventDate,
+        price: booking.effectivePrice,
+        status: booking.status.name,
+        eventType: booking.eventType,
+        location: booking.location ?? booking.eventLocation,
+        notes: booking.notes ?? booking.specialRequests,
+        createdAt: booking.createdAt,
+        updatedAt: booking.updatedAt,
+        additionalData: {
+          'bookingId': booking.id,
+          'participantsCount': booking.participantsCount,
+          'originalPrice': booking.totalPrice,
+          'discount': booking.discount,
+          'finalPrice': booking.finalPrice,
+        },
+      );
   final String id;
   final String specialistId;
   final String specialistName;
@@ -98,21 +99,21 @@ class OrderHistory {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'specialistName': specialistName,
-    'serviceName': serviceName,
-    'date': Timestamp.fromDate(date),
-    'price': price,
-    'status': status,
-    'eventType': eventType,
-    'location': location,
-    'notes': notes,
-    'reviewId': reviewId,
-    'rating': rating,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'additionalData': additionalData,
-  };
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'serviceName': serviceName,
+        'date': Timestamp.fromDate(date),
+        'price': price,
+        'status': status,
+        'eventType': eventType,
+        'location': location,
+        'notes': notes,
+        'reviewId': reviewId,
+        'rating': rating,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'additionalData': additionalData,
+      };
 
   /// Копировать с изменениями
   OrderHistory copyWith({
@@ -131,23 +132,24 @@ class OrderHistory {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? additionalData,
-  }) => OrderHistory(
-    id: id ?? this.id,
-    specialistId: specialistId ?? this.specialistId,
-    specialistName: specialistName ?? this.specialistName,
-    serviceName: serviceName ?? this.serviceName,
-    date: date ?? this.date,
-    price: price ?? this.price,
-    status: status ?? this.status,
-    eventType: eventType ?? this.eventType,
-    location: location ?? this.location,
-    notes: notes ?? this.notes,
-    reviewId: reviewId ?? this.reviewId,
-    rating: rating ?? this.rating,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    additionalData: additionalData ?? this.additionalData,
-  );
+  }) =>
+      OrderHistory(
+        id: id ?? this.id,
+        specialistId: specialistId ?? this.specialistId,
+        specialistName: specialistName ?? this.specialistName,
+        serviceName: serviceName ?? this.serviceName,
+        date: date ?? this.date,
+        price: price ?? this.price,
+        status: status ?? this.status,
+        eventType: eventType ?? this.eventType,
+        location: location ?? this.location,
+        notes: notes ?? this.notes,
+        reviewId: reviewId ?? this.reviewId,
+        rating: rating ?? this.rating,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        additionalData: additionalData ?? this.additionalData,
+      );
 
   /// Получить цвет статуса
   String get statusColor {
@@ -201,7 +203,8 @@ class OrderHistory {
   double get originalPrice => additionalData?['originalPrice'] ?? price;
 
   /// Проверить, была ли скидка
-  bool get hadDiscount => additionalData?['discount'] != null && additionalData!['discount'] > 0;
+  bool get hadDiscount =>
+      additionalData?['discount'] != null && additionalData!['discount'] > 0;
 
   /// Получить размер скидки
   double get discountAmount {

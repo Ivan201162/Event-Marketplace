@@ -35,7 +35,10 @@ class ProposalService {
         metadata: metadata,
       );
 
-      await _firestore.collection(_collection).doc(proposalId).set(proposal.toMap());
+      await _firestore
+          .collection(_collection)
+          .doc(proposalId)
+          .set(proposal.toMap());
 
       // Отправляем уведомление заказчику
       await NotificationService.sendProposalNotification(
@@ -108,7 +111,8 @@ class ProposalService {
   // Получение предложения по ID
   static Future<SpecialistProposal?> getProposal(String proposalId) async {
     try {
-      final doc = await _firestore.collection(_collection).doc(proposalId).get();
+      final doc =
+          await _firestore.collection(_collection).doc(proposalId).get();
       if (doc.exists) {
         return SpecialistProposal.fromFirestore(doc);
       }
@@ -119,20 +123,26 @@ class ProposalService {
   }
 
   // Получение всех предложений для заказчика
-  static Stream<List<SpecialistProposal>> getCustomerProposals(String customerId) => _firestore
-      .collection(_collection)
-      .where('customerId', isEqualTo: customerId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
+  static Stream<List<SpecialistProposal>> getCustomerProposals(
+          String customerId) =>
+      _firestore
+          .collection(_collection)
+          .where('customerId', isEqualTo: customerId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
 
   // Получение всех предложений от организатора
-  static Stream<List<SpecialistProposal>> getOrganizerProposals(String organizerId) => _firestore
-      .collection(_collection)
-      .where('organizerId', isEqualTo: organizerId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
+  static Stream<List<SpecialistProposal>> getOrganizerProposals(
+          String organizerId) =>
+      _firestore
+          .collection(_collection)
+          .where('organizerId', isEqualTo: organizerId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
 
   // Получение предложений по статусу
   static Stream<List<SpecialistProposal>> getProposalsByStatus(
@@ -147,7 +157,8 @@ class ProposalService {
         .where('status', isEqualTo: status)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
+        .map((snapshot) =>
+            snapshot.docs.map(SpecialistProposal.fromFirestore).toList());
   }
 
   // Получение активных предложений (pending)
@@ -164,7 +175,8 @@ class ProposalService {
   }
 
   // Обновление предложения
-  static Future<void> updateProposal(String proposalId, Map<String, dynamic> updates) async {
+  static Future<void> updateProposal(
+      String proposalId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection(_collection).doc(proposalId).update(updates);

@@ -13,7 +13,8 @@ class RequestsScreen extends ConsumerStatefulWidget {
   ConsumerState<RequestsScreen> createState() => _RequestsScreenState();
 }
 
-class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProviderStateMixin {
+class _RequestsScreenState extends ConsumerState<RequestsScreen>
+    with TickerProviderStateMixin {
   late TabController _tabController;
 
   List<Request> _myRequests = [];
@@ -47,7 +48,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
       final currentUserId = SupabaseService.currentUser?.id;
       if (currentUserId == null) return;
 
-      final requests = await SupabaseService.getUserRequests(userId: currentUserId);
+      final requests =
+          await SupabaseService.getUserRequests(userId: currentUserId);
 
       setState(() {
         _myRequests = requests;
@@ -164,7 +166,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
           children: [
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки заявок', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Ошибка загрузки заявок',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               error,
@@ -240,7 +243,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
                   Expanded(
                     child: Text(
                       request.title,
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   _buildStatusChip(request.status),
@@ -300,21 +304,25 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
                     if (request.assignee != null) ...[
                       CircleAvatar(
                         radius: 12,
-                        backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
+                        backgroundColor:
+                            theme.primaryColor.withValues(alpha: 0.1),
                         backgroundImage: request.assignee!.avatarUrl != null
                             ? NetworkImage(request.assignee!.avatarUrl!)
                             : null,
                         child: request.assignee!.avatarUrl == null
-                            ? Icon(Icons.person, size: 12, color: theme.primaryColor)
+                            ? Icon(Icons.person,
+                                size: 12, color: theme.primaryColor)
                             : null,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         'Исполнитель: ${request.assignee!.name}',
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                     ] else ...[
-                      Icon(Icons.person_outline, size: 16, color: Colors.grey[600]),
+                      Icon(Icons.person_outline,
+                          size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 4),
                       Text(
                         'Исполнитель не назначен',
@@ -325,18 +333,21 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
                     // Показываем заказчика
                     CircleAvatar(
                       radius: 12,
-                      backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
+                      backgroundColor:
+                          theme.primaryColor.withValues(alpha: 0.1),
                       backgroundImage: request.creator?.avatarUrl != null
                           ? NetworkImage(request.creator!.avatarUrl!)
                           : null,
                       child: request.creator?.avatarUrl == null
-                          ? Icon(Icons.person, size: 12, color: theme.primaryColor)
+                          ? Icon(Icons.person,
+                              size: 12, color: theme.primaryColor)
                           : null,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Заказчик: ${request.creator?.name ?? 'Неизвестный'}',
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w500),
                     ),
                   ],
                   const Spacer(),
@@ -388,7 +399,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> with TickerProv
       ),
       child: Text(
         label,
-        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+        style:
+            TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
       ),
     );
   }

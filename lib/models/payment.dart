@@ -2,7 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 /// Payment method enum
-enum PaymentMethod { card, bankTransfer, digitalWallet, cryptocurrency, cash, sbp }
+enum PaymentMethod {
+  card,
+  bankTransfer,
+  digitalWallet,
+  cryptocurrency,
+  cash,
+  sbp
+}
 
 /// PaymentMethod extensions
 extension PaymentMethodExtension on PaymentMethod {
@@ -83,7 +90,15 @@ extension PaymentMethodExtension on PaymentMethod {
 }
 
 /// Payment status enum
-enum PaymentStatus { pending, processing, completed, failed, cancelled, refunded, disputed }
+enum PaymentStatus {
+  pending,
+  processing,
+  completed,
+  failed,
+  cancelled,
+  refunded,
+  disputed
+}
 
 /// PaymentStatus extensions
 extension PaymentStatusExtension on PaymentStatus {
@@ -305,8 +320,12 @@ class Payment extends Equatable {
         orElse: () => PaymentType.booking,
       ),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
-      paidAt: data['paidAt'] != null ? (data['paidAt'] as Timestamp).toDate() : null,
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : null,
+      paidAt: data['paidAt'] != null
+          ? (data['paidAt'] as Timestamp).toDate()
+          : null,
       transactionId: data['transactionId'],
       description: data['description'],
       metadata: data['metadata'] as Map<String, dynamic>?,
@@ -324,7 +343,9 @@ class Payment extends Equatable {
       taxStatusDisplayName: data['taxStatusDisplayName'],
       isCompleted: data['isCompleted'] ?? false,
       netAmount: data['netAmount']?.toDouble(),
-      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+      completedAt: data['completedAt'] != null
+          ? (data['completedAt'] as Timestamp).toDate()
+          : null,
       isPending: data['isPending'] ?? false,
       failureReason: data['failureReason'],
       duration: data['duration'],
@@ -363,7 +384,8 @@ class Payment extends Equatable {
       'taxStatusDisplayName': taxStatusDisplayName,
       'isCompleted': isCompleted,
       'netAmount': netAmount,
-      'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      'completedAt':
+          completedAt != null ? Timestamp.fromDate(completedAt!) : null,
       'isPending': isPending,
       'failureReason': failureReason,
       'duration': duration,
@@ -560,41 +582,41 @@ class Payment extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    userId,
-    specialistId,
-    bookingId,
-    amount,
-    currency,
-    method,
-    status,
-    type,
-    createdAt,
-    updatedAt,
-    paidAt,
-    transactionId,
-    description,
-    metadata,
-    receiptUrl,
-    fee,
-    taxAmount,
-    taxStatus,
-    typeDisplayName,
-    methodDisplayName,
-    taxStatusDisplayName,
-    isCompleted,
-    netAmount,
-    completedAt,
-    isPending,
-    failureReason,
-    duration,
-    formattedDuration,
-    isFailed,
-    commission,
-    formattedCommission,
-    formattedNetAmount,
-    isSuccessful,
-  ];
+        id,
+        userId,
+        specialistId,
+        bookingId,
+        amount,
+        currency,
+        method,
+        status,
+        type,
+        createdAt,
+        updatedAt,
+        paidAt,
+        transactionId,
+        description,
+        metadata,
+        receiptUrl,
+        fee,
+        taxAmount,
+        taxStatus,
+        typeDisplayName,
+        methodDisplayName,
+        taxStatusDisplayName,
+        isCompleted,
+        netAmount,
+        completedAt,
+        isPending,
+        failureReason,
+        duration,
+        formattedDuration,
+        isFailed,
+        commission,
+        formattedCommission,
+        formattedNetAmount,
+        isSuccessful,
+      ];
 
   @override
   String toString() {

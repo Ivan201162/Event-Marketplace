@@ -34,7 +34,8 @@ class PromotedPostBadge extends StatelessWidget {
           SizedBox(width: 4),
           Text(
             'РЕКЛАМА',
-            style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
           ),
         ],
       ),

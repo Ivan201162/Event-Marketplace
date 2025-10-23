@@ -24,7 +24,8 @@ class TestNotificationsService {
           .get();
 
       if (existingNotifications.docs.isNotEmpty) {
-        debugPrint('Тестовые уведомления уже существуют для пользователя $userId');
+        debugPrint(
+            'Тестовые уведомления уже существуют для пользователя $userId');
         return;
       }
 
@@ -34,7 +35,11 @@ class TestNotificationsService {
           'title': 'Новое сообщение',
           'body': 'У вас новое сообщение от специалиста Анны Лебедевой',
           'type': 'message',
-          'data': {'chatId': 'chat_1', 'senderId': 'specialist_2', 'senderName': 'Анна Лебедева'},
+          'data': {
+            'chatId': 'chat_1',
+            'senderId': 'specialist_2',
+            'senderName': 'Анна Лебедева'
+          },
           'isRead': false,
           'createdAt': FieldValue.serverTimestamp(),
         },
@@ -55,16 +60,22 @@ class TestNotificationsService {
         {
           'userId': userId,
           'title': 'Новый отзыв',
-          'body': 'Кто-то оставил отзыв о вашей работе - "Отличная организация!"',
+          'body':
+              'Кто-то оставил отзыв о вашей работе - "Отличная организация!"',
           'type': 'review',
-          'data': {'reviewId': 'review_1', 'rating': 5, 'comment': 'Отличная организация!'},
+          'data': {
+            'reviewId': 'review_1',
+            'rating': 5,
+            'comment': 'Отличная организация!'
+          },
           'isRead': true,
           'createdAt': FieldValue.serverTimestamp(),
         },
         {
           'userId': userId,
           'title': 'Системное уведомление',
-          'body': 'Приложение обновлено до версии 1.0.0. Добавлены новые функции!',
+          'body':
+              'Приложение обновлено до версии 1.0.0. Добавлены новые функции!',
           'type': 'system',
           'data': {
             'version': '1.0.0',
@@ -78,7 +89,11 @@ class TestNotificationsService {
           'title': 'Напоминание о встрече',
           'body': 'Через 2 часа у вас встреча с фотографом',
           'type': 'system',
-          'data': {'reminderType': 'meeting', 'time': '14:00', 'specialist': 'Анна Лебедева'},
+          'data': {
+            'reminderType': 'meeting',
+            'time': '14:00',
+            'specialist': 'Анна Лебедева'
+          },
           'isRead': false,
           'createdAt': FieldValue.serverTimestamp(),
         },
@@ -124,9 +139,11 @@ class TestNotificationsService {
         await createTestNotifications(userId);
       }
 
-      debugPrint('Созданы тестовые уведомления для ${usersSnapshot.docs.length} пользователей');
+      debugPrint(
+          'Созданы тестовые уведомления для ${usersSnapshot.docs.length} пользователей');
     } catch (e) {
-      debugPrint('Ошибка создания тестовых уведомлений для всех пользователей: $e');
+      debugPrint(
+          'Ошибка создания тестовых уведомлений для всех пользователей: $e');
     }
   }
 

@@ -13,10 +13,12 @@ class AnimatedSpecialistsCarousel extends ConsumerStatefulWidget {
   const AnimatedSpecialistsCarousel({super.key});
 
   @override
-  ConsumerState<AnimatedSpecialistsCarousel> createState() => _AnimatedSpecialistsCarouselState();
+  ConsumerState<AnimatedSpecialistsCarousel> createState() =>
+      _AnimatedSpecialistsCarouselState();
 }
 
-class _AnimatedSpecialistsCarouselState extends ConsumerState<AnimatedSpecialistsCarousel>
+class _AnimatedSpecialistsCarouselState
+    extends ConsumerState<AnimatedSpecialistsCarousel>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late List<AnimationController> _cardControllers;
@@ -84,7 +86,8 @@ class _AnimatedSpecialistsCarouselState extends ConsumerState<AnimatedSpecialist
     return specialistsAsync.when(
       data: (specialists) {
         // Берем топ-5 специалистов по рейтингу
-        final topSpecialists = specialists..sort((a, b) => b.rating.compareTo(a.rating));
+        final topSpecialists = specialists
+          ..sort((a, b) => b.rating.compareTo(a.rating));
         final top5 = topSpecialists.take(5).toList();
 
         return Column(
@@ -99,9 +102,14 @@ class _AnimatedSpecialistsCarouselState extends ConsumerState<AnimatedSpecialist
                     'Лучшие специалисты недели',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  TextButton(onPressed: () => context.push('/search'), child: const Text('Все')),
+                  TextButton(
+                      onPressed: () => context.push('/search'),
+                      child: const Text('Все')),
                 ],
               ),
             ),
@@ -133,7 +141,8 @@ class _AnimatedSpecialistsCarouselState extends ConsumerState<AnimatedSpecialist
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const Center(child: Text('Ошибка загрузки специалистов')),
+      error: (_, __) =>
+          const Center(child: Text('Ошибка загрузки специалистов')),
     );
   }
 }
@@ -147,7 +156,8 @@ class _SpecialistCard extends StatefulWidget {
   State<_SpecialistCard> createState() => _SpecialistCardState();
 }
 
-class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProviderStateMixin {
+class _SpecialistCardState extends State<_SpecialistCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _hoverController;
   late Animation<double> _scaleAnimation;
   bool _isHovered = false;
@@ -163,7 +173,8 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.05,
-    ).animate(CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _hoverController, curve: Curves.easeInOut));
   }
 
   @override
@@ -178,7 +189,7 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
         builder: (context, child) {
           return Transform.scale(
             scale: _scaleAnimation.value,
-            child:             Container(
+            child: Container(
               width: 180,
               margin: const EdgeInsets.only(right: 16),
               decoration: BoxDecoration(
@@ -209,7 +220,8 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                 ],
               ),
               child: InkWell(
-                onTap: () => context.push('/specialist/${widget.specialist.id}'),
+                onTap: () =>
+                    context.push('/specialist/${widget.specialist.id}'),
                 onTapDown: (_) {
                   setState(() => _isHovered = true);
                   _hoverController.forward();
@@ -230,10 +242,12 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                     Container(
                       height: 120,
                       decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(20)),
                         image: widget.specialist.avatar != null
                             ? DecorationImage(
-                                image: CachedNetworkImageProvider(widget.specialist.avatar!),
+                                image: CachedNetworkImageProvider(
+                                    widget.specialist.avatar!),
                                 fit: BoxFit.cover,
                               )
                             : null,
@@ -242,8 +256,12 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  Theme.of(context).primaryColor.withOpacity(0.1),
-                                  Theme.of(context).primaryColor.withOpacity(0.05),
+                                  Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.1),
+                                  Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.05),
                                 ],
                               )
                             : null,
@@ -253,7 +271,9 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                               child: Container(
                                 padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                  color: Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.1),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
@@ -268,7 +288,8 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                                 // Градиентный оверлей
                                 Container(
                                   decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                                    borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(20)),
                                     gradient: LinearGradient(
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
@@ -284,7 +305,8 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                                   top: 8,
                                   right: 8,
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.9),
                                       borderRadius: BorderRadius.circular(12),
@@ -292,7 +314,8 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(Icons.star, color: Colors.amber[600], size: 12),
+                                        Icon(Icons.star,
+                                            color: Colors.amber[600], size: 12),
                                         const SizedBox(width: 2),
                                         Text(
                                           widget.specialist.rating.toString(),
@@ -318,7 +341,7 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                             Text(
                               widget.specialist.name,
                               style: const TextStyle(
-                                fontWeight: FontWeight.bold, 
+                                fontWeight: FontWeight.bold,
                                 fontSize: 15,
                                 color: Colors.black87,
                               ),
@@ -327,13 +350,17 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                             ),
                             const SizedBox(height: 4),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
-                                widget.specialist.category?.displayName ?? 'Категория',
+                                widget.specialist.category?.displayName ??
+                                    'Категория',
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColor,
                                   fontSize: 10,
@@ -347,12 +374,17 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                             // Цена с улучшенным дизайном
                             Container(
                               width: double.infinity,
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 6),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    Theme.of(context).primaryColor.withOpacity(0.1),
-                                    Theme.of(context).primaryColor.withOpacity(0.05),
+                                    Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.1),
+                                    Theme.of(context)
+                                        .primaryColor
+                                        .withOpacity(0.05),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(8),
@@ -378,13 +410,17 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                                       gradient: LinearGradient(
                                         colors: [
                                           Theme.of(context).primaryColor,
-                                          Theme.of(context).primaryColor.withOpacity(0.8),
+                                          Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.8),
                                         ],
                                       ),
                                       borderRadius: BorderRadius.circular(16),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                          color: Theme.of(context)
+                                              .primaryColor
+                                              .withOpacity(0.3),
                                           blurRadius: 4,
                                           offset: const Offset(0, 2),
                                         ),
@@ -415,7 +451,10 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
                                     height: 32,
                                     decoration: BoxDecoration(
                                       gradient: const LinearGradient(
-                                        colors: [Colors.green, Color(0xFF4CAF50)],
+                                        colors: [
+                                          Colors.green,
+                                          Color(0xFF4CAF50)
+                                        ],
                                       ),
                                       borderRadius: BorderRadius.circular(16),
                                       boxShadow: [
@@ -466,12 +505,14 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
       if (currentUser == null) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Необходимо войти в аккаунт')));
+        ).showSnackBar(
+            const SnackBar(content: Text('Необходимо войти в аккаунт')));
         return;
       }
 
       final chatsRepository = ChatsRepository();
-      final chatId = await chatsRepository.findOrCreateChat(currentUser.uid, widget.specialist.id);
+      final chatId = await chatsRepository.findOrCreateChat(
+          currentUser.uid, widget.specialist.id);
 
       if (chatId != null) {
         context.push('/chat/$chatId');
@@ -481,7 +522,8 @@ class _SpecialistCardState extends State<_SpecialistCard> with SingleTickerProvi
         ).showSnackBar(const SnackBar(content: Text('Ошибка создания чата')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 

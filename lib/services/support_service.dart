@@ -27,7 +27,9 @@ class SupportService {
         createdAt: DateTime.now(),
       );
 
-      final docRef = await _firestore.collection('support_messages').add(supportMessage.toMap());
+      final docRef = await _firestore
+          .collection('support_messages')
+          .add(supportMessage.toMap());
 
       // Если сообщение от пользователя, генерируем ответ бота
       if (type == MessageType.text && isFromUser) {
@@ -47,12 +49,14 @@ class SupportService {
       .where('userId', isEqualTo: userId)
       .orderBy('createdAt', descending: false)
       .snapshots()
-      .map((snapshot) => snapshot.docs.map(SupportMessage.fromDocument).toList());
+      .map((snapshot) =>
+          snapshot.docs.map(SupportMessage.fromDocument).toList());
 
   /// Получить FAQ
   Future<List<FAQItem>> getFAQ() async {
     try {
-      final snapshot = await _firestore.collection('faq').orderBy('order').get();
+      final snapshot =
+          await _firestore.collection('faq').orderBy('order').get();
 
       return snapshot.docs.map(FAQItem.fromDocument).toList();
     } on Exception {
@@ -70,8 +74,10 @@ class SupportService {
 
       // Простой поиск по заголовку и содержанию
       return allFAQ.where((item) {
-        final titleMatch = item.title.toLowerCase().contains(query.toLowerCase());
-        final contentMatch = item.content.toLowerCase().contains(query.toLowerCase());
+        final titleMatch =
+            item.title.toLowerCase().contains(query.toLowerCase());
+        final contentMatch =
+            item.content.toLowerCase().contains(query.toLowerCase());
         return titleMatch || contentMatch;
       }).toList();
     } on Exception {
@@ -158,10 +164,12 @@ class SupportService {
           .where('userId', isEqualTo: userId)
           .get();
 
-      final messages = messagesSnapshot.docs.map(SupportMessage.fromDocument).toList();
+      final messages =
+          messagesSnapshot.docs.map(SupportMessage.fromDocument).toList();
 
       final totalMessages = messages.length;
-      final unreadMessages = messages.where((m) => !m.isRead && !m.isFromUser).length;
+      final unreadMessages =
+          messages.where((m) => !m.isRead && !m.isFromUser).length;
       final lastMessage = messages.isNotEmpty ? messages.last.createdAt : null;
 
       return SupportStats(
@@ -180,7 +188,8 @@ class SupportService {
   // ========== ПРИВАТНЫЕ МЕТОДЫ ==========
 
   /// Генерировать ответ бота
-  Future<void> _generateBotResponse(String userId, String userMessage, String messageId) async {
+  Future<void> _generateBotResponse(
+      String userId, String userMessage, String messageId) async {
     try {
       // Простая логика ответов бота на основе ключевых слов
       final response = _getBotResponse(userMessage);
@@ -279,7 +288,9 @@ class SupportMessage {
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
+      readAt: data['readAt'] != null
+          ? (data['readAt'] as Timestamp).toDate()
+          : null,
     );
   }
 
@@ -295,16 +306,16 @@ class SupportMessage {
   final DateTime? readAt;
 
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'message': message,
-    'type': type.name,
-    'attachmentUrl': attachmentUrl,
-    'metadata': metadata,
-    'isFromUser': isFromUser,
-    'isRead': isRead,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-  };
+        'userId': userId,
+        'message': message,
+        'type': type.name,
+        'attachmentUrl': attachmentUrl,
+        'metadata': metadata,
+        'isFromUser': isFromUser,
+        'isRead': isRead,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+      };
 }
 
 /// Модель FAQ
@@ -348,8 +359,11 @@ class SupportStats {
     required this.lastUpdated,
   });
 
-  factory SupportStats.empty() =>
-      SupportStats(userId: '', totalMessages: 0, unreadMessages: 0, lastUpdated: DateTime.now());
+  factory SupportStats.empty() => SupportStats(
+      userId: '',
+      totalMessages: 0,
+      unreadMessages: 0,
+      lastUpdated: DateTime.now());
 
   final String userId;
   final int totalMessages;

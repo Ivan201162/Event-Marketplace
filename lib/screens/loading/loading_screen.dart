@@ -17,11 +17,11 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
   late AnimationController _logoController;
   late AnimationController _textController;
   late AnimationController _progressController;
-  
+
   late Animation<double> _logoAnimation;
   late Animation<double> _textAnimation;
   late Animation<double> _progressAnimation;
-  
+
   String _loadingText = 'Загрузка...';
   double _progress = 0.0;
 
@@ -37,12 +37,12 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _textController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _progressController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
@@ -77,19 +77,18 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
     try {
       // Запускаем анимации
       _logoController.forward();
-      
+
       await Future.delayed(const Duration(milliseconds: 500));
       _textController.forward();
-      
+
       await Future.delayed(const Duration(milliseconds: 300));
       _progressController.forward();
-      
+
       // Симулируем прогресс загрузки
       _simulateProgress();
-      
+
       // Проверяем сессию
       await _checkSession();
-      
     } catch (e) {
       debugPrint('❌ Error in loading: $e');
       _navigateToLogin();
@@ -104,7 +103,7 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
       {'text': 'Настройка интерфейса...', 'progress': 0.8},
       {'text': 'Готово!', 'progress': 1.0},
     ];
-    
+
     for (final step in steps) {
       await Future.delayed(const Duration(milliseconds: 400));
       if (mounted) {
@@ -119,9 +118,9 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
   Future<void> _checkSession() async {
     try {
       final hasSession = await SessionService.hasActiveSession();
-      
+
       await Future.delayed(const Duration(milliseconds: 500));
-      
+
       if (mounted) {
         if (hasSession) {
           NavigationService.safeGo(context, '/main');
@@ -197,9 +196,9 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
                   );
                 },
               ),
-              
+
               const SizedBox(height: 40),
-              
+
               // Название приложения
               AnimatedBuilder(
                 animation: _textAnimation,
@@ -229,9 +228,9 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
                   );
                 },
               ),
-              
+
               const SizedBox(height: 60),
-              
+
               // Прогресс загрузки
               AnimatedBuilder(
                 animation: _progressAnimation,
@@ -250,9 +249,9 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // Прогресс-бар
                       Container(
                         width: 200,
@@ -277,14 +276,16 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
                           },
                         ),
                       ),
-                      
+
                       const SizedBox(height: 12),
-                      
+
                       // Процент загрузки
                       AnimatedBuilder(
                         animation: _progressAnimation,
                         builder: (context, child) {
-                          final percentage = (_progress * _progressAnimation.value * 100).round();
+                          final percentage =
+                              (_progress * _progressAnimation.value * 100)
+                                  .round();
                           return Text(
                             '$percentage%',
                             style: TextStyle(
@@ -298,9 +299,9 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
                   );
                 },
               ),
-              
+
               const SizedBox(height: 60),
-              
+
               // Индикатор загрузки
               AnimatedBuilder(
                 animation: _progressAnimation,
@@ -311,7 +312,8 @@ class _LoadingScreenState extends ConsumerState<LoadingScreen>
                     child: CircularProgressIndicator(
                       value: _progress * _progressAnimation.value,
                       strokeWidth: 2,
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   );
                 },

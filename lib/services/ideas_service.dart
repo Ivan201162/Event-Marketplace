@@ -24,18 +24,21 @@ class IdeasService {
     String? searchQuery,
     int limit = 20,
     DocumentSnapshot? startAfter,
-  }) => _repository.streamList(
-    category: category,
-    searchQuery: searchQuery,
-    limit: limit,
-    startAfter: startAfter,
-  );
+  }) =>
+      _repository.streamList(
+        category: category,
+        searchQuery: searchQuery,
+        limit: limit,
+        startAfter: startAfter,
+      );
 
   /// Получение идей пользователя
-  Stream<List<Idea>> getUserIdeas(String userId) => _repository.getUserIdeas(userId);
+  Stream<List<Idea>> getUserIdeas(String userId) =>
+      _repository.getUserIdeas(userId);
 
   /// Получение сохраненных идей пользователя
-  Stream<List<Idea>> getSavedIdeas(String userId) => _repository.getSavedIdeas(userId);
+  Stream<List<Idea>> getSavedIdeas(String userId) =>
+      _repository.getSavedIdeas(userId);
 
   /// Получение конкретной идеи
   Future<Idea?> getIdea(String ideaId) async => _repository.getById(ideaId);
@@ -220,13 +223,14 @@ class IdeasService {
   }
 
   /// Получение комментариев к идее
-  Stream<List<Map<String, dynamic>>> getIdeaComments(String ideaId) => _firestore
-      .collection('idea_comments')
-      .where('ideaId', isEqualTo: ideaId)
-      .where('parentCommentId', isNull: true) // только основные комментарии
-      .orderBy('createdAt', descending: false)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
+  Stream<List<Map<String, dynamic>>> getIdeaComments(String ideaId) =>
+      _firestore
+          .collection('idea_comments')
+          .where('ideaId', isEqualTo: ideaId)
+          .where('parentCommentId', isNull: true) // только основные комментарии
+          .orderBy('createdAt', descending: false)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
 
   /// Добавление комментария
   Future<String?> addComment({
@@ -252,7 +256,8 @@ class IdeasService {
         'replies': [],
       };
 
-      final docRef = await _firestore.collection('idea_comments').add(commentData);
+      final docRef =
+          await _firestore.collection('idea_comments').add(commentData);
 
       // Обновляем счетчик комментариев в идее
       await _firestore.collection('ideas').doc(ideaId).update({
@@ -318,8 +323,10 @@ class IdeasService {
   /// Загрузка медиа файла в Firebase Storage
   Future<String?> _uploadMediaFile(File file, bool isVideo) async {
     try {
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
-      final path = isVideo ? 'ideas/videos/$fileName' : 'ideas/images/$fileName';
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}_${file.path.split('/').last}';
+      final path =
+          isVideo ? 'ideas/videos/$fileName' : 'ideas/images/$fileName';
 
       final ref = _storage.ref().child(path);
       final uploadTask = ref.putFile(file);
@@ -368,12 +375,13 @@ class IdeasService {
       .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
 
   /// Поиск идей по тегам
-  Stream<List<Idea>> searchIdeasByTags(List<String> tags, {int limit = 20}) => _firestore
-      .collection('ideas')
-      .where('isPublic', isEqualTo: true)
-      .where('tags', arrayContainsAny: tags)
-      .orderBy('createdAt', descending: true)
-      .limit(limit)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
+  Stream<List<Idea>> searchIdeasByTags(List<String> tags, {int limit = 20}) =>
+      _firestore
+          .collection('ideas')
+          .where('isPublic', isEqualTo: true)
+          .where('tags', arrayContainsAny: tags)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map(Idea.fromFirestore).toList());
 }

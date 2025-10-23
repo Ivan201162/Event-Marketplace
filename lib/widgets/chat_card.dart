@@ -50,7 +50,8 @@ class ChatCard extends StatelessWidget {
                             chat.getDisplayName(currentUserId),
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: hasUnread ? FontWeight.bold : FontWeight.w500,
+                              fontWeight:
+                                  hasUnread ? FontWeight.bold : FontWeight.w500,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -61,8 +62,10 @@ class ChatCard extends StatelessWidget {
                           chat.formattedLastMessageTime,
                           style: TextStyle(
                             fontSize: 12,
-                            color: hasUnread ? Colors.blue[600] : Colors.grey[600],
-                            fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
+                            color:
+                                hasUnread ? Colors.blue[600] : Colors.grey[600],
+                            fontWeight:
+                                hasUnread ? FontWeight.w500 : FontWeight.normal,
                           ),
                         ),
                       ],
@@ -77,8 +80,12 @@ class ChatCard extends StatelessWidget {
                             chat.lastMessage ?? 'Нет сообщений',
                             style: TextStyle(
                               fontSize: 14,
-                              color: hasUnread ? Colors.grey[800] : Colors.grey[600],
-                              fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
+                              color: hasUnread
+                                  ? Colors.grey[800]
+                                  : Colors.grey[600],
+                              fontWeight: hasUnread
+                                  ? FontWeight.w500
+                                  : FontWeight.normal,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -87,7 +94,8 @@ class ChatCard extends StatelessWidget {
                         if (hasUnread) ...[
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.blue[600],
                               borderRadius: BorderRadius.circular(12),
@@ -123,9 +131,11 @@ class ChatCard extends StatelessWidget {
         CircleAvatar(
           radius: 24,
           backgroundColor: Colors.grey[200],
-          backgroundImage: avatarUrl != null ? CachedNetworkImageProvider(avatarUrl) : null,
+          backgroundImage:
+              avatarUrl != null ? CachedNetworkImageProvider(avatarUrl) : null,
           child: avatarUrl == null
-              ? Icon(isGroup ? Icons.group : Icons.person, size: 24, color: Colors.grey[600])
+              ? Icon(isGroup ? Icons.group : Icons.person,
+                  size: 24, color: Colors.grey[600])
               : null,
         ),
         // Online indicator (placeholder for future implementation)

@@ -15,7 +15,8 @@ class PerformanceMonitoringService {
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   final Uuid _uuid = const Uuid();
 
-  static final PerformanceMonitoringService _instance = PerformanceMonitoringService._internal();
+  static final PerformanceMonitoringService _instance =
+      PerformanceMonitoringService._internal();
 
   Timer? _monitoringTimer;
   String? _currentSessionId;
@@ -172,7 +173,8 @@ class PerformanceMonitoringService {
         description: 'Задержка сети',
         timestamp: timestamp,
         metadata: {
-          'connectionType': 'wifi', // В реальном приложении получать из connectivity_plus
+          'connectionType':
+              'wifi', // В реальном приложении получать из connectivity_plus
         },
       );
     } catch (e) {
@@ -258,7 +260,8 @@ class PerformanceMonitoringService {
       _currentMetrics[name] = value;
 
       if (kDebugMode) {
-        debugPrint('Performance metric recorded: $name = ${metric.formattedValue}');
+        debugPrint(
+            'Performance metric recorded: $name = ${metric.formattedValue}');
       }
     } catch (e) {
       if (kDebugMode) {
@@ -288,7 +291,8 @@ class PerformanceMonitoringService {
   }
 
   /// Создать алерт
-  Future<void> _createAlert(String metricName, double value, double threshold) async {
+  Future<void> _createAlert(
+      String metricName, double value, double threshold) async {
     try {
       // Проверяем, не создан ли уже алерт для этой метрики
       final existingAlert = _activeAlerts.firstWhere(
@@ -319,7 +323,11 @@ class PerformanceMonitoringService {
         severity: severity,
         message: message,
         triggeredAt: DateTime.now(),
-        metadata: {'sessionId': _currentSessionId, 'userId': _currentUserId, 'deviceId': _deviceId},
+        metadata: {
+          'sessionId': _currentSessionId,
+          'userId': _currentUserId,
+          'deviceId': _deviceId
+        },
       );
 
       // Сохраняем алерт
@@ -357,7 +365,8 @@ class PerformanceMonitoringService {
   }
 
   /// Получить серьезность алерта
-  AlertSeverity _getAlertSeverity(String metricName, double value, double threshold) {
+  AlertSeverity _getAlertSeverity(
+      String metricName, double value, double threshold) {
     final ratio = value / threshold;
 
     if (ratio > 2) return AlertSeverity.critical;
@@ -367,7 +376,8 @@ class PerformanceMonitoringService {
   }
 
   /// Сгенерировать сообщение алерта
-  String _generateAlertMessage(String metricName, double value, double threshold) {
+  String _generateAlertMessage(
+      String metricName, double value, double threshold) {
     final metric = PerformanceMetric(
       id: '',
       name: metricName,
@@ -450,7 +460,8 @@ class PerformanceMonitoringService {
     int limit = 100,
   }) async {
     try {
-      Query<Map<String, dynamic>> query = _firestore.collection('performanceMetrics');
+      Query<Map<String, dynamic>> query =
+          _firestore.collection('performanceMetrics');
 
       if (metricName != null) {
         query = query.where('name', isEqualTo: metricName);
@@ -459,13 +470,16 @@ class PerformanceMonitoringService {
         query = query.where('category', isEqualTo: category);
       }
       if (startDate != null) {
-        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('timestamp',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('timestamp',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
-      final snapshot = await query.orderBy('timestamp', descending: true).limit(limit).get();
+      final snapshot =
+          await query.orderBy('timestamp', descending: true).limit(limit).get();
 
       return snapshot.docs.map(PerformanceMetric.fromDocument).toList();
     } catch (e) {
@@ -490,7 +504,8 @@ class PerformanceMonitoringService {
         limit: 1000,
       );
 
-      return PerformanceStatistics.fromMetrics(metricName, _getMetricCategory(metricName), metrics);
+      return PerformanceStatistics.fromMetrics(
+          metricName, _getMetricCategory(metricName), metrics);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Ошибка получения статистики метрики: $e');

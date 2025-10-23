@@ -128,11 +128,13 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Text(
                       'Популярные города',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                   ),
@@ -161,7 +163,8 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
         padding: const EdgeInsets.all(16),
         child: Text(
           'Город не найден',
-          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          style:
+              TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       );
     }
@@ -204,17 +207,20 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
         children: [
           Text(
             city.regionName,
-            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
           if (city.population > 0)
             Text(
               '${_formatPopulation(city.population)} жителей',
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
         ],
       ),
-      trailing:
-          city.isCapital ? Icon(Icons.star, color: theme.colorScheme.primary, size: 20) : null,
+      trailing: city.isCapital
+          ? Icon(Icons.star, color: theme.colorScheme.primary, size: 20)
+          : null,
       onTap: () {
         widget.onCitySelected?.call(city);
         _addToRecentSearches(city);

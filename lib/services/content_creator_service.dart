@@ -13,7 +13,9 @@ class ContentCreatorService {
     int limit = 20,
   }) async {
     try {
-      var query = _firestore.collection('contentCreators').where('isActive', isEqualTo: true);
+      var query = _firestore
+          .collection('contentCreators')
+          .where('isActive', isEqualTo: true);
 
       if (location != null) {
         query = query.where('location', isEqualTo: location);
@@ -23,14 +25,16 @@ class ContentCreatorService {
         query = query.where('categories', arrayContainsAny: categories);
       }
 
-      final snapshot = await query.orderBy('rating', descending: true).limit(limit).get();
+      final snapshot =
+          await query.orderBy('rating', descending: true).limit(limit).get();
 
       var creators = snapshot.docs.map(ContentCreator.fromDocument).toList();
 
       // Фильтрация по форматам на клиенте (если указаны)
       if (formats != null && formats.isNotEmpty) {
         creators = creators
-            .where((creator) => creator.formats.any((format) => formats.contains(format.name)))
+            .where((creator) =>
+                creator.formats.any((format) => formats.contains(format.name)))
             .toList();
       }
 
@@ -56,7 +60,8 @@ class ContentCreatorService {
   /// Создать контент-мейкера
   Future<String> createContentCreator(ContentCreator creator) async {
     try {
-      final docRef = await _firestore.collection('contentCreators').add(creator.toMap());
+      final docRef =
+          await _firestore.collection('contentCreators').add(creator.toMap());
       return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания контент-мейкера: $e');
@@ -88,7 +93,8 @@ class ContentCreatorService {
   }
 
   /// Добавить медиа в портфолио
-  Future<void> addMediaToPortfolio(String creatorId, MediaShowcase media) async {
+  Future<void> addMediaToPortfolio(
+      String creatorId, MediaShowcase media) async {
     try {
       await _firestore.collection('contentCreators').doc(creatorId).update({
         'mediaShowcase': FieldValue.arrayUnion([media.toMap()]),
@@ -100,10 +106,12 @@ class ContentCreatorService {
   }
 
   /// Удалить медиа из портфолио
-  Future<void> removeMediaFromPortfolio(String creatorId, String mediaId) async {
+  Future<void> removeMediaFromPortfolio(
+      String creatorId, String mediaId) async {
     try {
       // Получаем текущий контент-мейкер
-      final doc = await _firestore.collection('contentCreators').doc(creatorId).get();
+      final doc =
+          await _firestore.collection('contentCreators').doc(creatorId).get();
       if (!doc.exists) throw Exception('Контент-мейкер не найден');
 
       final creator = ContentCreator.fromDocument(doc);
@@ -124,7 +132,8 @@ class ContentCreatorService {
   /// Получить портфолио контент-мейкера
   Future<List<MediaShowcase>> getPortfolio(String creatorId) async {
     try {
-      final doc = await _firestore.collection('contentCreators').doc(creatorId).get();
+      final doc =
+          await _firestore.collection('contentCreators').doc(creatorId).get();
       if (!doc.exists) return [];
 
       final creator = ContentCreator.fromDocument(doc);
@@ -161,7 +170,8 @@ class ContentCreatorService {
                 creator.categories.any(
                   (category) => category.toLowerCase().contains(searchQuery),
                 ) ||
-                creator.formats.any((format) => format.name.toLowerCase().contains(searchQuery)),
+                creator.formats.any((format) =>
+                    format.name.toLowerCase().contains(searchQuery)),
           )
           .toList();
 
@@ -273,7 +283,8 @@ class ContentCreatorService {
         final data = doc.data();
         final categoryId = data['categoryId'] as String?;
         if (categoryId != null) {
-          preferredCategories[categoryId] = (preferredCategories[categoryId] ?? 0) + 1;
+          preferredCategories[categoryId] =
+              (preferredCategories[categoryId] ?? 0) + 1;
         }
       }
 
@@ -286,7 +297,8 @@ class ContentCreatorService {
 
         final categoryIds = topCategories.take(3).map((e) => e.key).toList();
 
-        final creators = await getContentCreators(categories: categoryIds, limit: limit * 2);
+        final creators =
+            await getContentCreators(categories: categoryIds, limit: limit * 2);
 
         recommendedCreators.addAll(creators);
       }

@@ -6,12 +6,11 @@ class GrowthMechanicsService {
   final Uuid _uuid = const Uuid();
 
   /// Добавление опыта пользователю
-  Future<void> addExperience(String userId, int experience, String reason) async {
+  Future<void> addExperience(
+      String userId, int experience, String reason) async {
     try {
-      final DocumentSnapshot userLevelDoc = await _firestore
-          .collection('user_levels')
-          .doc(userId)
-          .get();
+      final DocumentSnapshot userLevelDoc =
+          await _firestore.collection('user_levels').doc(userId).get();
 
       Map<String, dynamic> userLevel;
       if (userLevelDoc.exists) {
@@ -29,7 +28,8 @@ class GrowthMechanicsService {
 
       // Добавляем опыт
       int newExperience = (userLevel['experience'] ?? 0) + experience;
-      final int newTotalExperience = (userLevel['totalExperience'] ?? 0) + experience;
+      final int newTotalExperience =
+          (userLevel['totalExperience'] ?? 0) + experience;
 
       // Проверяем повышение уровня
       int newLevel = userLevel['level'] ?? 1;
@@ -61,9 +61,11 @@ class GrowthMechanicsService {
         await _sendLevelUpNotification(userId, newLevel, newTotalExperience);
       }
 
-      debugPrint('INFO: [GrowthMechanicsService] Experience added: $experience to user $userId');
+      debugPrint(
+          'INFO: [GrowthMechanicsService] Experience added: $experience to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to add experience: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to add experience: $e');
     }
   }
 
@@ -105,7 +107,8 @@ class GrowthMechanicsService {
   }
 
   /// Отправка уведомления о повышении уровня
-  Future<void> _sendLevelUpNotification(String userId, int newLevel, int totalExperience) async {
+  Future<void> _sendLevelUpNotification(
+      String userId, int newLevel, int totalExperience) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
@@ -120,11 +123,16 @@ class GrowthMechanicsService {
         'data': {'level': newLevel, 'totalExperience': totalExperience},
       };
 
-      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
+      await _firestore
+          .collection('growth_notifications')
+          .doc(notification['id'])
+          .set(notification);
 
-      debugPrint('INFO: [GrowthMechanicsService] Level up notification sent to user $userId');
+      debugPrint(
+          'INFO: [GrowthMechanicsService] Level up notification sent to user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to send level up notification: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to send level up notification: $e');
     }
   }
 
@@ -142,10 +150,12 @@ class GrowthMechanicsService {
           .get();
 
       for (final doc in achievementsSnapshot.docs) {
-        final Map<String, dynamic> achievement = doc.data() as Map<String, dynamic>;
+        final Map<String, dynamic> achievement =
+            doc.data() as Map<String, dynamic>;
 
         // Проверяем, не получено ли уже это достижение
-        final bool alreadyEarned = await _isAchievementEarned(userId, achievement['id']);
+        final bool alreadyEarned =
+            await _isAchievementEarned(userId, achievement['id']);
         if (alreadyEarned) continue;
 
         // Проверяем условие достижения
@@ -161,7 +171,8 @@ class GrowthMechanicsService {
         }
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to check achievements: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to check achievements: $e');
     }
   }
 
@@ -215,13 +226,15 @@ class GrowthMechanicsService {
           return false;
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to check achievement condition: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to check achievement condition: $e');
       return false;
     }
   }
 
   /// Выдача достижения
-  Future<void> _awardAchievement(String userId, Map<String, dynamic> achievement) async {
+  Future<void> _awardAchievement(
+      String userId, Map<String, dynamic> achievement) async {
     try {
       final Map<String, dynamic> userAchievement = {
         'id': _uuid.v4(),
@@ -241,7 +254,8 @@ class GrowthMechanicsService {
 
       // Добавляем опыт за достижение
       if (achievement['points'] != null) {
-        await addExperience(userId, achievement['points'], 'Achievement: ${achievement['name']}');
+        await addExperience(userId, achievement['points'],
+            'Achievement: ${achievement['name']}');
       }
 
       // Выдаем награду
@@ -254,12 +268,14 @@ class GrowthMechanicsService {
         'INFO: [GrowthMechanicsService] Achievement awarded: ${achievement['name']} to user $userId',
       );
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to award achievement: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to award achievement: $e');
     }
   }
 
   /// Выдача награды за достижение
-  Future<void> _giveAchievementReward(String userId, Map<String, dynamic> achievement) async {
+  Future<void> _giveAchievementReward(
+      String userId, Map<String, dynamic> achievement) async {
     try {
       final Map<String, dynamic> reward = achievement['reward'] ?? {};
       final String rewardType = reward['type'] ?? '';
@@ -279,23 +295,27 @@ class GrowthMechanicsService {
           break;
         case 'points':
           final int points = reward['value'] ?? 0;
-          await addExperience(userId, points, 'Achievement reward: ${achievement['name']}');
+          await addExperience(
+              userId, points, 'Achievement reward: ${achievement['name']}');
           break;
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to give achievement reward: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to give achievement reward: $e');
     }
   }
 
   /// Отправка уведомления о достижении
-  Future<void> _sendAchievementNotification(String userId, Map<String, dynamic> achievement) async {
+  Future<void> _sendAchievementNotification(
+      String userId, Map<String, dynamic> achievement) async {
     try {
       final Map<String, dynamic> notification = {
         'id': _uuid.v4(),
         'userId': userId,
         'type': 'achievement',
         'title': 'Достижение получено!',
-        'message': 'Поздравляем! Вы получили достижение "${achievement['name']}"',
+        'message':
+            'Поздравляем! Вы получили достижение "${achievement['name']}"',
         'isRead': false,
         'createdAt': DateTime.now(),
         'actionUrl': '/achievements',
@@ -307,9 +327,13 @@ class GrowthMechanicsService {
         },
       };
 
-      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
+      await _firestore
+          .collection('growth_notifications')
+          .doc(notification['id'])
+          .set(notification);
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to send achievement notification: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to send achievement notification: $e');
     }
   }
 
@@ -343,12 +367,17 @@ class GrowthMechanicsService {
         'category': category,
       };
 
-      await _firestore.collection('challenges').doc(challenge['id']).set(challenge);
+      await _firestore
+          .collection('challenges')
+          .doc(challenge['id'])
+          .set(challenge);
 
-      debugPrint('INFO: [GrowthMechanicsService] Challenge created: ${challenge['id']}');
+      debugPrint(
+          'INFO: [GrowthMechanicsService] Challenge created: ${challenge['id']}');
       return challenge['id'];
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to create challenge: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to create challenge: $e');
       rethrow;
     }
   }
@@ -360,16 +389,15 @@ class GrowthMechanicsService {
       final bool alreadyJoined = await _isUserInChallenge(userId, challengeId);
       if (alreadyJoined) return;
 
-      final DocumentSnapshot challengeDoc = await _firestore
-          .collection('challenges')
-          .doc(challengeId)
-          .get();
+      final DocumentSnapshot challengeDoc =
+          await _firestore.collection('challenges').doc(challengeId).get();
 
       if (!challengeDoc.exists) {
         throw Exception('Challenge not found');
       }
 
-      final Map<String, dynamic> challenge = challengeDoc.data() as Map<String, dynamic>;
+      final Map<String, dynamic> challenge =
+          challengeDoc.data() as Map<String, dynamic>;
 
       if (!challenge['isActive']) {
         throw Exception('Challenge is not active');
@@ -386,16 +414,21 @@ class GrowthMechanicsService {
         'progress': {},
       };
 
-      await _firestore.collection('user_challenges').doc(userChallenge['id']).set(userChallenge);
+      await _firestore
+          .collection('user_challenges')
+          .doc(userChallenge['id'])
+          .set(userChallenge);
 
       // Увеличиваем количество участников
       await _firestore.collection('challenges').doc(challengeId).update({
         'participants': FieldValue.increment(1),
       });
 
-      debugPrint('INFO: [GrowthMechanicsService] User $userId joined challenge $challengeId');
+      debugPrint(
+          'INFO: [GrowthMechanicsService] User $userId joined challenge $challengeId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to join challenge: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to join challenge: $e');
       rethrow;
     }
   }
@@ -419,30 +452,35 @@ class GrowthMechanicsService {
 
       final String userChallengeId = userChallengeSnapshot.docs.first.id;
 
-      await _firestore.collection('user_challenges').doc(userChallengeId).update({
+      await _firestore
+          .collection('user_challenges')
+          .doc(userChallengeId)
+          .update({
         'progress': progress,
       });
 
       // Проверяем, выполнен ли челлендж
       await _checkChallengeCompletion(userId, challengeId);
 
-      debugPrint('INFO: [GrowthMechanicsService] Challenge progress updated for user $userId');
+      debugPrint(
+          'INFO: [GrowthMechanicsService] Challenge progress updated for user $userId');
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to update challenge progress: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to update challenge progress: $e');
     }
   }
 
   /// Проверка выполнения челленджа
-  Future<void> _checkChallengeCompletion(String userId, String challengeId) async {
+  Future<void> _checkChallengeCompletion(
+      String userId, String challengeId) async {
     try {
-      final DocumentSnapshot challengeDoc = await _firestore
-          .collection('challenges')
-          .doc(challengeId)
-          .get();
+      final DocumentSnapshot challengeDoc =
+          await _firestore.collection('challenges').doc(challengeId).get();
 
       if (!challengeDoc.exists) return;
 
-      final Map<String, dynamic> challenge = challengeDoc.data() as Map<String, dynamic>;
+      final Map<String, dynamic> challenge =
+          challengeDoc.data() as Map<String, dynamic>;
       final QuerySnapshot userChallengeSnapshot = await _firestore
           .collection('user_challenges')
           .where('userId', isEqualTo: userId)
@@ -457,13 +495,15 @@ class GrowthMechanicsService {
           userChallengeSnapshot.docs.first.data() as Map<String, dynamic>;
 
       // Проверяем условия выполнения
-      final bool isCompleted = await _checkChallengeConditions(challenge, userChallenge);
+      final bool isCompleted =
+          await _checkChallengeConditions(challenge, userChallenge);
 
       if (isCompleted) {
         await _completeChallenge(userId, challengeId, challenge, userChallenge);
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to check challenge completion: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to check challenge completion: $e');
     }
   }
 
@@ -488,7 +528,8 @@ class GrowthMechanicsService {
 
       return true;
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to check challenge conditions: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to check challenge conditions: $e');
       return false;
     }
   }
@@ -502,7 +543,10 @@ class GrowthMechanicsService {
   ) async {
     try {
       // Обновляем статус пользовательского челленджа
-      await _firestore.collection('user_challenges').doc(userChallenge['id']).update({
+      await _firestore
+          .collection('user_challenges')
+          .doc(userChallenge['id'])
+          .update({
         'status': 'completed',
         'completedAt': FieldValue.serverTimestamp(),
       });
@@ -522,12 +566,14 @@ class GrowthMechanicsService {
         'INFO: [GrowthMechanicsService] Challenge completed: $challengeId by user $userId',
       );
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to complete challenge: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to complete challenge: $e');
     }
   }
 
   /// Выдача награды за челлендж
-  Future<void> _giveChallengeReward(String userId, Map<String, dynamic> challenge) async {
+  Future<void> _giveChallengeReward(
+      String userId, Map<String, dynamic> challenge) async {
     try {
       final Map<String, dynamic> rewards = challenge['rewards'] ?? {};
 
@@ -537,7 +583,8 @@ class GrowthMechanicsService {
 
         switch (rewardType) {
           case 'experience':
-            await addExperience(userId, rewardValue as int, 'Challenge: ${challenge['name']}');
+            await addExperience(
+                userId, rewardValue as int, 'Challenge: ${challenge['name']}');
             break;
           case 'premium_days':
             await _addPremiumDays(userId, rewardValue as int);
@@ -551,7 +598,8 @@ class GrowthMechanicsService {
         }
       }
     } catch (e) {
-      debugPrint('ERROR: [GrowthMechanicsService] Failed to give challenge reward: $e');
+      debugPrint(
+          'ERROR: [GrowthMechanicsService] Failed to give challenge reward: $e');
     }
   }
 
@@ -578,7 +626,10 @@ class GrowthMechanicsService {
         },
       };
 
-      await _firestore.collection('growth_notifications').doc(notification['id']).set(notification);
+      await _firestore
+          .collection('growth_notifications')
+          .doc(notification['id'])
+          .set(notification);
     } catch (e) {
       debugPrint(
         'ERROR: [GrowthMechanicsService] Failed to send challenge completion notification: $e',
@@ -636,7 +687,8 @@ class GrowthMechanicsService {
   }
 
   Future<int> _getUserLevel(String userId) async {
-    final DocumentSnapshot doc = await _firestore.collection('user_levels').doc(userId).get();
+    final DocumentSnapshot doc =
+        await _firestore.collection('user_levels').doc(userId).get();
 
     if (doc.exists) {
       final data = doc.data() as Map<String, dynamic>;
@@ -663,21 +715,25 @@ class GrowthMechanicsService {
   /// Вспомогательные методы для наград
   Future<void> _addPremiumDays(String userId, int days) async {
     // Логика добавления премиум дней
-    debugPrint('INFO: [GrowthMechanicsService] Added $days premium days to user $userId');
+    debugPrint(
+        'INFO: [GrowthMechanicsService] Added $days premium days to user $userId');
   }
 
   Future<void> _addDiscount(String userId, double discount) async {
     // Логика добавления скидки
-    debugPrint('INFO: [GrowthMechanicsService] Added $discount discount to user $userId');
+    debugPrint(
+        'INFO: [GrowthMechanicsService] Added $discount discount to user $userId');
   }
 
   Future<void> _awardBadge(String userId, String badgeId) async {
     try {
-      final DocumentSnapshot badgeDoc = await _firestore.collection('badges').doc(badgeId).get();
+      final DocumentSnapshot badgeDoc =
+          await _firestore.collection('badges').doc(badgeId).get();
 
       if (!badgeDoc.exists) return;
 
-      final Map<String, dynamic> badge = badgeDoc.data() as Map<String, dynamic>;
+      final Map<String, dynamic> badge =
+          badgeDoc.data() as Map<String, dynamic>;
 
       final Map<String, dynamic> userBadge = {
         'id': _uuid.v4(),
@@ -690,9 +746,13 @@ class GrowthMechanicsService {
         'category': badge['category'],
       };
 
-      await _firestore.collection('user_badges').doc(userBadge['id']).set(userBadge);
+      await _firestore
+          .collection('user_badges')
+          .doc(userBadge['id'])
+          .set(userBadge);
 
-      debugPrint('INFO: [GrowthMechanicsService] Badge awarded: ${badge['name']} to user $userId');
+      debugPrint(
+          'INFO: [GrowthMechanicsService] Badge awarded: ${badge['name']} to user $userId');
     } catch (e) {
       debugPrint('ERROR: [GrowthMechanicsService] Failed to award badge: $e');
     }

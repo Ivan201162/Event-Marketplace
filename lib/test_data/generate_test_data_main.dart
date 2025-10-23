@@ -11,17 +11,18 @@ class TestDataGeneratorApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Event Marketplace - Test Data Generator',
-    theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-    home: const TestDataGeneratorScreen(),
-  );
+        title: 'Event Marketplace - Test Data Generator',
+        theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+        home: const TestDataGeneratorScreen(),
+      );
 }
 
 class TestDataGeneratorScreen extends StatefulWidget {
   const TestDataGeneratorScreen({super.key});
 
   @override
-  State<TestDataGeneratorScreen> createState() => _TestDataGeneratorScreenState();
+  State<TestDataGeneratorScreen> createState() =>
+      _TestDataGeneratorScreenState();
 }
 
 class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
@@ -62,7 +63,8 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
 
     try {
       _addLog('🚀 Инициализация Firebase...');
-      await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
       _addLog('✅ Firebase инициализирован');
 
       final generator = TestDataGenerator();
@@ -83,7 +85,8 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
       _addLog('✅ Сгенерировано ${bookings.length} бронирований');
 
       _addLog('⭐ Генерация отзывов...');
-      final reviews = await generator.generateReviews(bookings, customers, specialists);
+      final reviews =
+          await generator.generateReviews(bookings, customers, specialists);
       _addLog('✅ Сгенерировано ${reviews.length} отзывов');
 
       _addLog('💡 Генерация идей...');
@@ -119,7 +122,8 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
       _addLog('✅ Чаты созданы');
 
       _addLog('🔔 Создание уведомлений...');
-      await chatGenerator.generateNotifications(customers, specialists, bookings);
+      await chatGenerator.generateNotifications(
+          customers, specialists, bookings);
       _addLog('✅ Уведомления созданы');
 
       _addLog('🔍 ЭТАП 4: Проверка данных');
@@ -139,7 +143,9 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
             title: const Text('Ошибка генерации'),
             content: Text('Произошла ошибка: $e'),
             actions: [
-              TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK')),
+              TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK')),
             ],
           ),
         );
@@ -153,175 +159,185 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Event Marketplace - Генератор тестовых данных'),
-      backgroundColor: Colors.blue[600],
-      foregroundColor: Colors.white,
-    ),
-    body: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Информационная карточка
-          Card(
-            color: Colors.blue[50],
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+        appBar: AppBar(
+          title: const Text('Event Marketplace - Генератор тестовых данных'),
+          backgroundColor: Colors.blue[600],
+          foregroundColor: Colors.white,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Информационная карточка
+              Card(
+                color: Colors.blue[50],
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.info_outline, color: Colors.blue[700]),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Генератор тестовых данных',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.blue[700],
-                          fontWeight: FontWeight.bold,
+                      Row(
+                        children: [
+                          Icon(Icons.info_outline, color: Colors.blue[700]),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Генератор тестовых данных',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  color: Colors.blue[700],
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Этот инструмент создаст полную базу тестовых данных для Event Marketplace:',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 8),
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('• ≥2000 специалистов по всей России'),
+                          Text('• ≥500 заказчиков'),
+                          Text('• ≥5000 бронирований'),
+                          Text('• ≥3000 отзывов'),
+                          Text('• ≥1000 идей для мероприятий'),
+                          Text('• ≥1000 чатов с переписками'),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange[100],
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.orange[300]!),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.warning_amber,
+                                color: Colors.orange[700]),
+                            const SizedBox(width: 8),
+                            const Expanded(
+                              child: Text(
+                                'Процесс может занять 10-30 минут. Убедитесь в стабильном подключении к интернету.',
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'Этот инструмент создаст полную базу тестовых данных для Event Marketplace:',
-                    style: TextStyle(fontSize: 16),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Кнопка запуска
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton.icon(
+                  onPressed: _isGenerating ? null : _generateTestData,
+                  icon: _isGenerating
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.play_arrow),
+                  label: Text(
+                    _isGenerating
+                        ? 'Генерация в процессе...'
+                        : 'Запустить генерацию данных',
+                    style: const TextStyle(fontSize: 16),
                   ),
-                  const SizedBox(height: 8),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('• ≥2000 специалистов по всей России'),
-                      Text('• ≥500 заказчиков'),
-                      Text('• ≥5000 бронирований'),
-                      Text('• ≥3000 отзывов'),
-                      Text('• ≥1000 идей для мероприятий'),
-                      Text('• ≥1000 чатов с переписками'),
-                    ],
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        _isGenerating ? Colors.grey : Colors.blue[600],
+                    foregroundColor: Colors.white,
                   ),
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.orange[100],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.orange[300]!),
-                    ),
-                    child: Row(
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Область логов
+              Expanded(
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.warning_amber, color: Colors.orange[700]),
-                        const SizedBox(width: 8),
-                        const Expanded(
-                          child: Text(
-                            'Процесс может занять 10-30 минут. Убедитесь в стабильном подключении к интернету.',
-                            style: TextStyle(fontSize: 14),
-                          ),
+                        Row(
+                          children: [
+                            const Icon(Icons.terminal),
+                            const SizedBox(width: 8),
+                            Text('Лог генерации',
+                                style: Theme.of(context).textTheme.titleMedium),
+                            const Spacer(),
+                            if (_logs.isNotEmpty)
+                              TextButton.icon(
+                                onPressed: () {
+                                  setState(_logs.clear);
+                                },
+                                icon: const Icon(Icons.clear, size: 16),
+                                label: const Text('Очистить'),
+                              ),
+                          ],
+                        ),
+                        const Divider(),
+                        Expanded(
+                          child: _logs.isEmpty
+                              ? const Center(
+                                  child: Text(
+                                    'Нажмите "Запустить генерацию данных" для начала',
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 16),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  controller: _scrollController,
+                                  itemCount: _logs.length,
+                                  itemBuilder: (context, index) {
+                                    final log = _logs[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 2),
+                                      child: Text(
+                                        log,
+                                        style: TextStyle(
+                                          fontFamily: 'monospace',
+                                          fontSize: 14,
+                                          color: log.contains('❌')
+                                              ? Colors.red
+                                              : log.contains('✅')
+                                                  ? Colors.green
+                                                  : log.contains('🎉')
+                                                      ? Colors.purple
+                                                      : Colors.black87,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Кнопка запуска
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton.icon(
-              onPressed: _isGenerating ? null : _generateTestData,
-              icon: _isGenerating
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.play_arrow),
-              label: Text(
-                _isGenerating ? 'Генерация в процессе...' : 'Запустить генерацию данных',
-                style: const TextStyle(fontSize: 16),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _isGenerating ? Colors.grey : Colors.blue[600],
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Область логов
-          Expanded(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.terminal),
-                        const SizedBox(width: 8),
-                        Text('Лог генерации', style: Theme.of(context).textTheme.titleMedium),
-                        const Spacer(),
-                        if (_logs.isNotEmpty)
-                          TextButton.icon(
-                            onPressed: () {
-                              setState(_logs.clear);
-                            },
-                            icon: const Icon(Icons.clear, size: 16),
-                            label: const Text('Очистить'),
-                          ),
-                      ],
-                    ),
-                    const Divider(),
-                    Expanded(
-                      child: _logs.isEmpty
-                          ? const Center(
-                              child: Text(
-                                'Нажмите "Запустить генерацию данных" для начала',
-                                style: TextStyle(color: Colors.grey, fontSize: 16),
-                              ),
-                            )
-                          : ListView.builder(
-                              controller: _scrollController,
-                              itemCount: _logs.length,
-                              itemBuilder: (context, index) {
-                                final log = _logs[index];
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 2),
-                                  child: Text(
-                                    log,
-                                    style: TextStyle(
-                                      fontFamily: 'monospace',
-                                      fontSize: 14,
-                                      color: log.contains('❌')
-                                          ? Colors.red
-                                          : log.contains('✅')
-                                          ? Colors.green
-                                          : log.contains('🎉')
-                                          ? Colors.purple
-                                          : Colors.black87,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                    ),
-                  ],
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
 
 /// Точка входа для запуска генератора данных через UI

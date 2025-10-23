@@ -68,7 +68,8 @@ class ImagePlaceholder extends StatelessWidget {
               height: 24,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).colorScheme.primary),
               ),
             ),
             const SizedBox(height: 8),
@@ -83,7 +84,8 @@ class ImagePlaceholder extends StatelessWidget {
             'Загрузка...',
             style: Theme.of(
               context,
-            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ],
       ),
@@ -115,7 +117,8 @@ class ImagePlaceholder extends StatelessWidget {
             'Ошибка загрузки',
             style: Theme.of(
               context,
-            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onErrorContainer),
+            ).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onErrorContainer),
             textAlign: TextAlign.center,
           ),
         ],
@@ -169,7 +172,8 @@ class AvatarPlaceholder extends StatelessWidget {
     return _buildInitialsPlaceholder(context, bgColor, txtColor);
   }
 
-  Widget _buildInitialsPlaceholder(BuildContext context, Color backgroundColor, Color textColor) {
+  Widget _buildInitialsPlaceholder(
+      BuildContext context, Color backgroundColor, Color textColor) {
     final initials = _getInitials(name);
     final radius = borderRadius ?? BorderRadius.circular(size / 2);
 
@@ -233,7 +237,8 @@ class LazyImage extends StatefulWidget {
   State<LazyImage> createState() => _LazyImageState();
 }
 
-class _LazyImageState extends State<LazyImage> with SingleTickerProviderStateMixin {
+class _LazyImageState extends State<LazyImage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isLoaded = false;
@@ -242,7 +247,8 @@ class _LazyImageState extends State<LazyImage> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.fadeInDuration, vsync: this);
+    _controller =
+        AnimationController(duration: widget.fadeInDuration, vsync: this);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
   }
 
@@ -288,14 +294,18 @@ class _LazyImageState extends State<LazyImage> with SingleTickerProviderStateMix
                         children: [
                           Icon(
                             Icons.broken_image_outlined,
-                            color: Theme.of(context).colorScheme.onErrorContainer,
+                            color:
+                                Theme.of(context).colorScheme.onErrorContainer,
                           ),
                           const SizedBox(height: 4),
                           Text(
                             'Ошибка загрузки',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onErrorContainer,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onErrorContainer,
+                                    ),
                           ),
                         ],
                       ),
@@ -341,7 +351,8 @@ class _LazyImageState extends State<LazyImage> with SingleTickerProviderStateMix
                     });
                     return const SizedBox.shrink();
                   },
-                  frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                  frameBuilder:
+                      (context, child, frame, wasSynchronouslyLoaded) {
                     if (wasSynchronouslyLoaded) {
                       setState(() {
                         _isLoaded = true;

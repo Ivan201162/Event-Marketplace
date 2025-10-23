@@ -9,7 +9,8 @@ class AppLocalizations {
       Localizations.of<AppLocalizations>(context, AppLocalizations) ??
       const AppLocalizations(Locale('en'));
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = [
     delegate,
@@ -119,16 +120,19 @@ class AppLocalizations {
   String get close => t('close');
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
   bool isSupported(Locale locale) => AppLocalizations.supportedLocales.any(
-    (supportedLocale) => supportedLocale.languageCode == locale.languageCode,
-  );
+        (supportedLocale) =>
+            supportedLocale.languageCode == locale.languageCode,
+      );
 
   @override
-  Future<AppLocalizations> load(Locale locale) async => AppLocalizations(locale);
+  Future<AppLocalizations> load(Locale locale) async =>
+      AppLocalizations(locale);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;

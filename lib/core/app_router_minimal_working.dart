@@ -42,7 +42,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'login',
         builder: (context, state) => const LoginScreenImproved(),
       ),
-      
+
       // Аутентификация по телефону
       GoRoute(
         path: '/phone-auth',
@@ -56,14 +56,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'main',
         builder: (context, state) => const MainNavigationScreen(),
       ),
-      
+
       // Редактирование профиля
       GoRoute(
         path: '/profile/edit',
         name: 'edit-profile',
         builder: (context, state) => const EditProfileAdvanced(),
       ),
-      
+
       // Чаты
       GoRoute(
         path: '/chats',

@@ -97,10 +97,18 @@ class PushNotification extends Equatable {
       read: data['read'] ?? false,
       delivered: data['delivered'] ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
-      deliveredAt: data['deliveredAt'] != null ? (data['deliveredAt'] as Timestamp).toDate() : null,
-      scheduledAt: data['scheduledAt'] != null ? (data['scheduledAt'] as Timestamp).toDate() : null,
-      expiresAt: data['expiresAt'] != null ? (data['expiresAt'] as Timestamp).toDate() : null,
+      readAt: data['readAt'] != null
+          ? (data['readAt'] as Timestamp).toDate()
+          : null,
+      deliveredAt: data['deliveredAt'] != null
+          ? (data['deliveredAt'] as Timestamp).toDate()
+          : null,
+      scheduledAt: data['scheduledAt'] != null
+          ? (data['scheduledAt'] as Timestamp).toDate()
+          : null,
+      expiresAt: data['expiresAt'] != null
+          ? (data['expiresAt'] as Timestamp).toDate()
+          : null,
     );
   }
 
@@ -122,8 +130,10 @@ class PushNotification extends Equatable {
       'delivered': delivered,
       'createdAt': Timestamp.fromDate(createdAt),
       'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-      'deliveredAt': deliveredAt != null ? Timestamp.fromDate(deliveredAt!) : null,
-      'scheduledAt': scheduledAt != null ? Timestamp.fromDate(scheduledAt!) : null,
+      'deliveredAt':
+          deliveredAt != null ? Timestamp.fromDate(deliveredAt!) : null,
+      'scheduledAt':
+          scheduledAt != null ? Timestamp.fromDate(scheduledAt!) : null,
       'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
     };
   }
@@ -280,24 +290,24 @@ class PushNotification extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    userId,
-    title,
-    body,
-    type,
-    priority,
-    data,
-    imageUrl,
-    actionUrl,
-    senderId,
-    senderName,
-    senderAvatarUrl,
-    read,
-    delivered,
-    createdAt,
-    readAt,
-    deliveredAt,
-    scheduledAt,
-    expiresAt,
-  ];
+        id,
+        userId,
+        title,
+        body,
+        type,
+        priority,
+        data,
+        imageUrl,
+        actionUrl,
+        senderId,
+        senderName,
+        senderAvatarUrl,
+        read,
+        delivered,
+        createdAt,
+        readAt,
+        deliveredAt,
+        scheduledAt,
+        expiresAt,
+      ];
 }

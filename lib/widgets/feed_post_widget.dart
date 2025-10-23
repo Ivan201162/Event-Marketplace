@@ -52,11 +52,13 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
 
   void _initializeVideoPlayer() {
     if (widget.post.media.isNotEmpty) {
-      final firstVideo =
-          widget.post.media.where((media) => media.type == FeedPostMediaType.video).firstOrNull;
+      final firstVideo = widget.post.media
+          .where((media) => media.type == FeedPostMediaType.video)
+          .firstOrNull;
 
       if (firstVideo != null) {
-        _videoController = VideoPlayerController.networkUrl(Uri.parse(firstVideo.url));
+        _videoController =
+            VideoPlayerController.networkUrl(Uri.parse(firstVideo.url));
         _videoController?.initialize().then((_) {
           setState(() {});
         });
@@ -93,7 +95,9 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                         'https://ui-avatars.com/api/?name=${widget.post.authorId}&size=40',
                       )
                     : null,
-                child: widget.post.authorId.isEmpty ? const Icon(Icons.person) : null,
+                child: widget.post.authorId.isEmpty
+                    ? const Icon(Icons.person)
+                    : null,
               ),
             ),
             const SizedBox(width: 12),
@@ -103,7 +107,8 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                 children: [
                   Text(
                     'Пользователь ${widget.post.authorId}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Text(
                     _formatDate(widget.post.createdAt),
@@ -112,9 +117,12 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                 ],
               ),
             ),
-            if (widget.post.isPinned) const Icon(Icons.push_pin, color: Colors.orange, size: 16),
-            if (widget.post.isSponsored) const Icon(Icons.ads_click, color: Colors.blue, size: 16),
-            IconButton(onPressed: widget.onMore, icon: const Icon(Icons.more_vert)),
+            if (widget.post.isPinned)
+              const Icon(Icons.push_pin, color: Colors.orange, size: 16),
+            if (widget.post.isSponsored)
+              const Icon(Icons.ads_click, color: Colors.blue, size: 16),
+            IconButton(
+                onPressed: widget.onMore, icon: const Icon(Icons.more_vert)),
           ],
         ),
       );
@@ -160,12 +168,15 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                     // TODO: Переход к поиску по тегу
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue[100],
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text('#$tag', style: TextStyle(color: Colors.blue[800], fontSize: 12)),
+                    child: Text('#$tag',
+                        style:
+                            TextStyle(color: Colors.blue[800], fontSize: 12)),
                   ),
                 ),
               )
@@ -179,7 +190,8 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
           children: [
             Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
             const SizedBox(width: 4),
-            Text(widget.post.location!, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+            Text(widget.post.location!,
+                style: TextStyle(color: Colors.grey[600], fontSize: 12)),
           ],
         ),
       );
@@ -216,8 +228,10 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                 color: Colors.grey[300],
                 child: const Center(child: CircularProgressIndicator()),
               ),
-              errorWidget: (context, url, error) =>
-                  Container(height: 200, color: Colors.grey[300], child: const Icon(Icons.error)),
+              errorWidget: (context, url, error) => Container(
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.error)),
             ),
           ),
         );
@@ -269,7 +283,8 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
               child: VideoPlayer(_videoController!),
             ),
             if (!_videoController!.value.isPlaying)
-              const Icon(Icons.play_circle_fill, size: 64, color: Colors.white70),
+              const Icon(Icons.play_circle_fill,
+                  size: 64, color: Colors.white70),
           ],
         ),
       ),
@@ -287,7 +302,8 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                 });
               },
               itemCount: widget.post.media.length,
-              itemBuilder: (context, index) => _buildSingleMedia(widget.post.media[index]),
+              itemBuilder: (context, index) =>
+                  _buildSingleMedia(widget.post.media[index]),
             ),
           ),
           if (widget.post.media.length > 1)
@@ -303,7 +319,9 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                     height: 8,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _currentMediaIndex == index ? Colors.blue : Colors.grey[300],
+                      color: _currentMediaIndex == index
+                          ? Colors.blue
+                          : Colors.grey[300],
                     ),
                   ),
                 ),
@@ -327,9 +345,11 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
               },
             ),
             const SizedBox(width: 16),
-            _buildActionButton(icon: Icons.chat_bubble_outline, onTap: widget.onComment),
+            _buildActionButton(
+                icon: Icons.chat_bubble_outline, onTap: widget.onComment),
             const SizedBox(width: 16),
-            _buildActionButton(icon: Icons.share_outlined, onTap: widget.onShare),
+            _buildActionButton(
+                icon: Icons.share_outlined, onTap: widget.onShare),
             const Spacer(),
             _buildActionButton(
               icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
@@ -345,7 +365,8 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
         ),
       );
 
-  Widget _buildActionButton({required IconData icon, Color? color, VoidCallback? onTap}) =>
+  Widget _buildActionButton(
+          {required IconData icon, Color? color, VoidCallback? onTap}) =>
       GestureDetector(
         onTap: onTap,
         child: Icon(icon, color: color ?? Colors.grey[600], size: 24),
@@ -386,7 +407,8 @@ class _FeedPostWidgetState extends ConsumerState<FeedPostWidget> {
                       children: [
                         TextSpan(
                           text: 'Пользователь ${comment.authorId} ',
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
                         ),
                         TextSpan(
                           text: comment.text,

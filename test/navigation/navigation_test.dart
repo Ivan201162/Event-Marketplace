@@ -12,7 +12,8 @@ import 'package:event_marketplace_app/screens/profile/profile_screen_enhanced.da
 /// Тесты навигации
 void main() {
   group('Navigation Tests', () {
-    testWidgets('Bottom navigation bar displays all tabs', (WidgetTester tester) async {
+    testWidgets('Bottom navigation bar displays all tabs',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -37,21 +38,22 @@ void main() {
       // Тестирование нажатия на все вкладки
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Заявки'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Чаты'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Идеи'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Главная'));
       await tester.pumpAndSettle();
     });
 
-    testWidgets('Navigation maintains state between tabs', (WidgetTester tester) async {
+    testWidgets('Navigation maintains state between tabs',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -61,20 +63,21 @@ void main() {
       // Переход на вкладку "Лента"
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       // Переход на вкладку "Заявки"
       await tester.tap(find.text('Заявки'));
       await tester.pumpAndSettle();
-      
+
       // Возврат на вкладку "Лента"
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       // Проверка, что состояние сохранилось
       expect(find.text('Лента'), findsOneWidget);
     });
 
-    testWidgets('Navigation handles rapid tab switching', (WidgetTester tester) async {
+    testWidgets('Navigation handles rapid tab switching',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -85,29 +88,30 @@ void main() {
       for (int i = 0; i < 5; i++) {
         await tester.tap(find.text('Лента'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Заявки'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Чаты'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Идеи'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Главная'));
         await tester.pump();
       }
-      
+
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('Navigation handles back button correctly', (WidgetTester tester) async {
+    testWidgets('Navigation handles back button correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -117,16 +121,17 @@ void main() {
       // Переход на вкладку "Лента"
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       // Нажатие кнопки "Назад"
       await tester.pageBack();
       await tester.pumpAndSettle();
-      
+
       // Проверка, что приложение не закрылось
       expect(find.byType(MaterialApp), findsOneWidget);
     });
 
-    testWidgets('Navigation handles system back button correctly', (WidgetTester tester) async {
+    testWidgets('Navigation handles system back button correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -136,16 +141,17 @@ void main() {
       // Переход на вкладку "Лента"
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       // Нажатие системной кнопки "Назад"
       await tester.pageBack();
       await tester.pumpAndSettle();
-      
+
       // Проверка, что приложение не закрылось
       expect(find.byType(MaterialApp), findsOneWidget);
     });
 
-    testWidgets('Navigation handles orientation changes', (WidgetTester tester) async {
+    testWidgets('Navigation handles orientation changes',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -155,16 +161,17 @@ void main() {
       // Переход на вкладку "Лента"
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       // Изменение ориентации
       await tester.binding.setSurfaceSize(const Size(800, 600));
       await tester.pumpAndSettle();
-      
+
       // Проверка, что навигация работает
       expect(find.text('Лента'), findsOneWidget);
     });
 
-    testWidgets('Navigation handles screen size changes', (WidgetTester tester) async {
+    testWidgets('Navigation handles screen size changes',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -174,16 +181,17 @@ void main() {
       // Переход на вкладку "Лента"
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       // Изменение размера экрана
       await tester.binding.setSurfaceSize(const Size(400, 800));
       await tester.pumpAndSettle();
-      
+
       // Проверка, что навигация работает
       expect(find.text('Лента'), findsOneWidget);
     });
 
-    testWidgets('Navigation handles memory pressure', (WidgetTester tester) async {
+    testWidgets('Navigation handles memory pressure',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -194,29 +202,30 @@ void main() {
       for (int i = 0; i < 20; i++) {
         await tester.tap(find.text('Лента'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Заявки'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Чаты'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Идеи'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Главная'));
         await tester.pump();
       }
-      
+
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок памяти
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('Navigation handles concurrent operations', (WidgetTester tester) async {
+    testWidgets('Navigation handles concurrent operations',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -225,7 +234,7 @@ void main() {
 
       // Одновременные операции навигации
       final futures = <Future>[];
-      
+
       for (int i = 0; i < 5; i++) {
         futures.add(tester.tap(find.text('Лента')));
         futures.add(tester.tap(find.text('Заявки')));
@@ -233,17 +242,18 @@ void main() {
         futures.add(tester.tap(find.text('Идеи')));
         futures.add(tester.tap(find.text('Главная')));
       }
-      
+
       await Future.wait(futures);
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('Navigation handles error states gracefully', (WidgetTester tester) async {
+    testWidgets('Navigation handles error states gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -254,16 +264,16 @@ void main() {
       try {
         await tester.tap(find.text('Лента'));
         await tester.pumpAndSettle();
-        
+
         await tester.tap(find.text('Заявки'));
         await tester.pumpAndSettle();
-        
+
         await tester.tap(find.text('Чаты'));
         await tester.pumpAndSettle();
-        
+
         await tester.tap(find.text('Идеи'));
         await tester.pumpAndSettle();
-        
+
         await tester.tap(find.text('Главная'));
         await tester.pumpAndSettle();
       } catch (e) {
@@ -272,7 +282,8 @@ void main() {
       }
     });
 
-    testWidgets('Navigation handles network errors gracefully', (WidgetTester tester) async {
+    testWidgets('Navigation handles network errors gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -283,16 +294,16 @@ void main() {
       try {
         await tester.tap(find.text('Лента'));
         await tester.pumpAndSettle();
-        
+
         await tester.tap(find.text('Заявки'));
         await tester.pumpAndSettle();
-        
+
         await tester.tap(find.text('Чаты'));
         await tester.pumpAndSettle();
-        
+
         await tester.tap(find.text('Идеи'));
         await tester.pumpAndSettle();
-        
+
         await tester.tap(find.text('Главная'));
         await tester.pumpAndSettle();
       } catch (e) {

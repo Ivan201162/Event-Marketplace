@@ -16,7 +16,8 @@ class PriceHistoryService {
   }) async {
     try {
       final now = DateTime.now();
-      final discountPercent = newPrice < oldPrice ? ((oldPrice - newPrice) / oldPrice) * 100 : null;
+      final discountPercent =
+          newPrice < oldPrice ? ((oldPrice - newPrice) / oldPrice) * 100 : null;
 
       final priceHistory = PriceHistory(
         id: '', // Будет сгенерирован Firestore
@@ -52,7 +53,8 @@ class PriceHistoryService {
   }
 
   /// Получить историю цен для специалиста
-  Future<List<PriceHistory>> getSpecialistPriceHistory(String specialistId) async {
+  Future<List<PriceHistory>> getSpecialistPriceHistory(
+      String specialistId) async {
     try {
       // Получаем все бронирования специалиста
       final bookingsSnapshot = await _firestore
@@ -92,9 +94,9 @@ class PriceHistoryService {
 
       final averageDiscount = discountOffers > 0
           ? priceHistory
-                    .where((p) => p.isDiscount)
-                    .fold(0, (sum, p) => sum + (p.discountPercent ?? 0)) /
-                discountOffers
+                  .where((p) => p.isDiscount)
+                  .fold(0, (sum, p) => sum + (p.discountPercent ?? 0)) /
+              discountOffers
           : 0;
 
       return {
@@ -103,7 +105,8 @@ class PriceHistoryService {
         'priceIncreases': priceIncreases,
         'totalSavings': totalSavings,
         'averageDiscount': averageDiscount,
-        'discountRate': totalChanges > 0 ? (discountOffers / totalChanges) * 100 : 0,
+        'discountRate':
+            totalChanges > 0 ? (discountOffers / totalChanges) * 100 : 0,
       };
     } catch (e) {
       throw Exception('Ошибка получения статистики изменений цен: $e');
@@ -134,7 +137,8 @@ class PriceHistoryService {
     try {
       var query = _firestore
           .collection('priceHistory')
-          .where('changedAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+          .where('changedAt',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
           .where('changedAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
 
       if (specialistId != null) {

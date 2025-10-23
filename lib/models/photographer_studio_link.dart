@@ -35,30 +35,35 @@ class PhotographerStudioLink {
       notes: data['notes']?.toString(),
       commissionRate: (data['commissionRate'] as num?)?.toDouble(),
       isPreferred: data['isPreferred'] == true,
-      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : null,
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
 
   /// Создать из Map
-  factory PhotographerStudioLink.fromMap(Map<String, dynamic> data) => PhotographerStudioLink(
-    id: data['id']?.toString() ?? '',
-    photographerId: data['photographerId']?.toString() ?? '',
-    studioId: data['studioId']?.toString() ?? '',
-    status: data['status']?.toString() ?? 'pending',
-    createdAt: data['createdAt'] != null
-        ? (data['createdAt'] as Timestamp).toDate()
-        : DateTime.now(),
-    photographerName: data['photographerName']?.toString(),
-    photographerAvatar: data['photographerAvatar']?.toString(),
-    studioName: data['studioName']?.toString(),
-    studioAvatar: data['studioAvatar']?.toString(),
-    notes: data['notes']?.toString(),
-    commissionRate: (data['commissionRate'] as num?)?.toDouble(),
-    isPreferred: data['isPreferred'] == true,
-    updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
-    metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
-  );
+  factory PhotographerStudioLink.fromMap(Map<String, dynamic> data) =>
+      PhotographerStudioLink(
+        id: data['id']?.toString() ?? '',
+        photographerId: data['photographerId']?.toString() ?? '',
+        studioId: data['studioId']?.toString() ?? '',
+        status: data['status']?.toString() ?? 'pending',
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        photographerName: data['photographerName']?.toString(),
+        photographerAvatar: data['photographerAvatar']?.toString(),
+        studioName: data['studioName']?.toString(),
+        studioAvatar: data['studioAvatar']?.toString(),
+        notes: data['notes']?.toString(),
+        commissionRate: (data['commissionRate'] as num?)?.toDouble(),
+        isPreferred: data['isPreferred'] == true,
+        updatedAt: data['updatedAt'] != null
+            ? (data['updatedAt'] as Timestamp).toDate()
+            : null,
+        metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+      );
 
   final String id;
   final String photographerId;
@@ -77,20 +82,20 @@ class PhotographerStudioLink {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'photographerId': photographerId,
-    'studioId': studioId,
-    'status': status,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'photographerName': photographerName,
-    'photographerAvatar': photographerAvatar,
-    'studioName': studioName,
-    'studioAvatar': studioAvatar,
-    'notes': notes,
-    'commissionRate': commissionRate,
-    'isPreferred': isPreferred,
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-    'metadata': metadata,
-  };
+        'photographerId': photographerId,
+        'studioId': studioId,
+        'status': status,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'photographerName': photographerName,
+        'photographerAvatar': photographerAvatar,
+        'studioName': studioName,
+        'studioAvatar': studioAvatar,
+        'notes': notes,
+        'commissionRate': commissionRate,
+        'isPreferred': isPreferred,
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   PhotographerStudioLink copyWith({
@@ -108,22 +113,23 @@ class PhotographerStudioLink {
     bool? isPreferred,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
-  }) => PhotographerStudioLink(
-    id: id ?? this.id,
-    photographerId: photographerId ?? this.photographerId,
-    studioId: studioId ?? this.studioId,
-    status: status ?? this.status,
-    createdAt: createdAt ?? this.createdAt,
-    photographerName: photographerName ?? this.photographerName,
-    photographerAvatar: photographerAvatar ?? this.photographerAvatar,
-    studioName: studioName ?? this.studioName,
-    studioAvatar: studioAvatar ?? this.studioAvatar,
-    notes: notes ?? this.notes,
-    commissionRate: commissionRate ?? this.commissionRate,
-    isPreferred: isPreferred ?? this.isPreferred,
-    updatedAt: updatedAt ?? this.updatedAt,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      PhotographerStudioLink(
+        id: id ?? this.id,
+        photographerId: photographerId ?? this.photographerId,
+        studioId: studioId ?? this.studioId,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        photographerName: photographerName ?? this.photographerName,
+        photographerAvatar: photographerAvatar ?? this.photographerAvatar,
+        studioName: studioName ?? this.studioName,
+        studioAvatar: studioAvatar ?? this.studioAvatar,
+        notes: notes ?? this.notes,
+        commissionRate: commissionRate ?? this.commissionRate,
+        isPreferred: isPreferred ?? this.isPreferred,
+        updatedAt: updatedAt ?? this.updatedAt,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, является ли связка активной
   bool get isActive => status == 'active';
@@ -200,7 +206,9 @@ class CreatePhotographerStudioLink {
   final Map<String, dynamic> metadata;
 
   bool get isValid =>
-      photographerId.isNotEmpty && studioId.isNotEmpty && photographerId != studioId;
+      photographerId.isNotEmpty &&
+      studioId.isNotEmpty &&
+      photographerId != studioId;
 
   List<String> get validationErrors {
     final errors = <String>[];
@@ -257,8 +265,12 @@ class StudioSuggestion {
       notes: data['notes']?.toString(),
       isAccepted: data['isAccepted'] == true,
       isRejected: data['isRejected'] == true,
-      acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
-      rejectedAt: data['rejectedAt'] != null ? (data['rejectedAt'] as Timestamp).toDate() : null,
+      acceptedAt: data['acceptedAt'] != null
+          ? (data['acceptedAt'] as Timestamp).toDate()
+          : null,
+      rejectedAt: data['rejectedAt'] != null
+          ? (data['rejectedAt'] as Timestamp).toDate()
+          : null,
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
@@ -285,25 +297,27 @@ class StudioSuggestion {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'bookingId': bookingId,
-    'photographerId': photographerId,
-    'studioId': studioId,
-    'suggestedAt': Timestamp.fromDate(suggestedAt),
-    'photographerName': photographerName,
-    'photographerAvatar': photographerAvatar,
-    'studioName': studioName,
-    'studioAvatar': studioAvatar,
-    'studioAddress': studioAddress,
-    'studioPhone': studioPhone,
-    'studioEmail': studioEmail,
-    'suggestedPrice': suggestedPrice,
-    'notes': notes,
-    'isAccepted': isAccepted,
-    'isRejected': isRejected,
-    'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
-    'rejectedAt': rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
-    'metadata': metadata,
-  };
+        'bookingId': bookingId,
+        'photographerId': photographerId,
+        'studioId': studioId,
+        'suggestedAt': Timestamp.fromDate(suggestedAt),
+        'photographerName': photographerName,
+        'photographerAvatar': photographerAvatar,
+        'studioName': studioName,
+        'studioAvatar': studioAvatar,
+        'studioAddress': studioAddress,
+        'studioPhone': studioPhone,
+        'studioEmail': studioEmail,
+        'suggestedPrice': suggestedPrice,
+        'notes': notes,
+        'isAccepted': isAccepted,
+        'isRejected': isRejected,
+        'acceptedAt':
+            acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
+        'rejectedAt':
+            rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
+        'metadata': metadata,
+      };
 
   /// Проверить, является ли предложение активным
   bool get isActive => !isAccepted && !isRejected;

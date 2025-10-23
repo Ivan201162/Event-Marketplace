@@ -26,7 +26,8 @@ class RealHostsProviders {
   });
 
   /// Провайдер для получения хостов по городу
-  static final hostsByCityProvider = StreamProvider.family<List<HostProfile>, String>((ref, city) {
+  static final hostsByCityProvider =
+      StreamProvider.family<List<HostProfile>, String>((ref, city) {
     if (!FeatureFlags.useRealHosts) {
       return Stream.value([]);
     }
@@ -45,7 +46,8 @@ class RealHostsProviders {
   });
 
   /// Провайдер для получения хостов по категории
-  static final hostsByCategoryProvider = StreamProvider.family<List<HostProfile>, String>((ref, categoryId) {
+  static final hostsByCategoryProvider =
+      StreamProvider.family<List<HostProfile>, String>((ref, categoryId) {
     if (!FeatureFlags.useRealHosts) {
       return Stream.value([]);
     }
@@ -84,7 +86,8 @@ class RealHostsProviders {
   });
 
   /// Провайдер для поиска хостов
-  static final searchHostsProvider = StreamProvider.family<List<HostProfile>, String>((ref, query) {
+  static final searchHostsProvider =
+      StreamProvider.family<List<HostProfile>, String>((ref, query) {
     if (!FeatureFlags.useRealHosts || query.isEmpty) {
       return Stream.value([]);
     }
@@ -103,16 +106,13 @@ class RealHostsProviders {
   });
 
   /// Провайдер для получения хоста по ID
-  static final hostByIdProvider = StreamProvider.family<HostProfile?, String>((ref, hostId) {
+  static final hostByIdProvider =
+      StreamProvider.family<HostProfile?, String>((ref, hostId) {
     if (!FeatureFlags.useRealHosts) {
       return Stream.value(null);
     }
 
-    return _firestore
-        .collection('hosts')
-        .doc(hostId)
-        .snapshots()
-        .map((doc) {
+    return _firestore.collection('hosts').doc(hostId).snapshots().map((doc) {
       if (doc.exists) {
         return HostProfile.fromFirestore(doc);
       }

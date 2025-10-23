@@ -7,12 +7,14 @@ import 'real_feed_providers.dart';
 
 /// Состояние ленты
 class EnhancedFeedState {
-  const EnhancedFeedState({this.posts = const [], this.isLoading = false, this.error});
+  const EnhancedFeedState(
+      {this.posts = const [], this.isLoading = false, this.error});
   final List<EnhancedFeedPost> posts;
   final bool isLoading;
   final String? error;
 
-  EnhancedFeedState copyWith({List<EnhancedFeedPost>? posts, bool? isLoading, String? error}) =>
+  EnhancedFeedState copyWith(
+          {List<EnhancedFeedPost>? posts, bool? isLoading, String? error}) =>
       EnhancedFeedState(
         posts: posts ?? this.posts,
         isLoading: isLoading ?? this.isLoading,
@@ -51,11 +53,12 @@ class EnhancedFeedNotifier extends ChangeNotifier {
       } else {
         posts = MockData.feedPosts;
       }
-      
+
       _state = _state.copyWith(posts: posts, isLoading: false);
       notifyListeners();
     } catch (e) {
-      _state = _state.copyWith(isLoading: false, error: 'Ошибка загрузки ленты: $e');
+      _state =
+          _state.copyWith(isLoading: false, error: 'Ошибка загрузки ленты: $e');
       notifyListeners();
     }
   }

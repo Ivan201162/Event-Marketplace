@@ -60,7 +60,8 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
-    _tabController = TabController(length: _navigationItems.length, vsync: this);
+    _tabController =
+        TabController(length: _navigationItems.length, vsync: this);
 
     // Слушаем изменения в TabController
     _tabController.addListener(() {
@@ -86,104 +87,108 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
 
   @override
   Widget build(BuildContext context) => PopScope(
-    canPop: false,
-    onPopInvokedWithResult: (didPop, result) {
-      if (!didPop) {
-        _handleSystemBack();
-      }
-    },
-    child: Scaffold(
-      body: wrapWithSwipeBack(
-        Column(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onPanEnd: (details) {
-                  // Определяем направление свайпа
-                  if (details.velocity.pixelsPerSecond.dx > 500) {
-                    // Свайп вправо - предыдущая вкладка
-                    if (_currentIndex > 0) {
-                      _animateToTab(_currentIndex - 1);
-                    }
-                  } else if (details.velocity.pixelsPerSecond.dx < -500) {
-                    // Свайп влево - следующая вкладка
-                    if (_currentIndex < _navigationItems.length - 1) {
-                      _animateToTab(_currentIndex + 1);
-                    }
-                  }
-                },
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  transitionBuilder: (child, animation) => SlideTransition(
-                    position: animation.drive(
-                      Tween<Offset>(
-                        begin: const Offset(1, 0),
-                        end: Offset.zero,
-                      ).chain(CurveTween(curve: Curves.easeInOut)),
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (!didPop) {
+            _handleSystemBack();
+          }
+        },
+        child: Scaffold(
+          body: wrapWithSwipeBack(
+            Column(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onPanEnd: (details) {
+                      // Определяем направление свайпа
+                      if (details.velocity.pixelsPerSecond.dx > 500) {
+                        // Свайп вправо - предыдущая вкладка
+                        if (_currentIndex > 0) {
+                          _animateToTab(_currentIndex - 1);
+                        }
+                      } else if (details.velocity.pixelsPerSecond.dx < -500) {
+                        // Свайп влево - следующая вкладка
+                        if (_currentIndex < _navigationItems.length - 1) {
+                          _animateToTab(_currentIndex + 1);
+                        }
+                      }
+                    },
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) => SlideTransition(
+                        position: animation.drive(
+                          Tween<Offset>(
+                            begin: const Offset(1, 0),
+                            end: Offset.zero,
+                          ).chain(CurveTween(curve: Curves.easeInOut)),
+                        ),
+                        child: child,
+                      ),
+                      child: Container(
+                        key: ValueKey(_currentIndex),
+                        child: _navigationItems[_currentIndex].page,
+                      ),
                     ),
-                    child: child,
-                  ),
-                  child: Container(
-                    key: ValueKey(_currentIndex),
-                    child: _navigationItems[_currentIndex].page,
                   ),
                 ),
-              ),
+                _buildBottomNavigation(),
+              ],
             ),
-            _buildBottomNavigation(),
-          ],
+          ),
+          floatingActionButton: _currentIndex == 1 // Лента
+              ? FloatingActionButton(
+                  onPressed: _createPost, child: const Icon(Icons.add))
+              : _currentIndex == 4 // Идеи
+                  ? FloatingActionButton(
+                      onPressed: _createIdea, child: const Icon(Icons.add))
+                  : null,
         ),
-      ),
-      floatingActionButton:
-          _currentIndex ==
-              1 // Лента
-          ? FloatingActionButton(onPressed: _createPost, child: const Icon(Icons.add))
-          : _currentIndex ==
-                4 // Идеи
-          ? FloatingActionButton(onPressed: _createIdea, child: const Icon(Icons.add))
-          : null,
-    ),
-  );
+      );
 
   Widget _buildPage(Widget page) => SwipeBackWrapper(child: page);
 
   Widget _buildBottomNavigation() => Container(
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.1),
-          blurRadius: 4,
-          offset: const Offset(0, -2),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 4,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
-      ],
-    ),
-    child: SafeArea(
-      child: TabBar(
-        controller: _tabController,
-        indicatorColor: Theme.of(context).colorScheme.primary,
-        labelColor: Theme.of(context).colorScheme.primary,
-        unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-        labelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-        unselectedLabelStyle: const TextStyle(fontSize: 12),
-        onTap: _animateToTab,
-        tabs: _navigationItems.map((item) {
-          final isSelected = _navigationItems.indexOf(item) == _currentIndex;
-          return Tab(
-            icon: Icon(isSelected ? item.selectedIcon : item.icon, size: 24),
-            text: item.title,
-          );
-        }).toList(),
-      ),
-    ),
-  );
+        child: SafeArea(
+          child: TabBar(
+            controller: _tabController,
+            indicatorColor: Theme.of(context).colorScheme.primary,
+            labelColor: Theme.of(context).colorScheme.primary,
+            unselectedLabelColor:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            labelStyle:
+                const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            unselectedLabelStyle: const TextStyle(fontSize: 12),
+            onTap: _animateToTab,
+            tabs: _navigationItems.map((item) {
+              final isSelected =
+                  _navigationItems.indexOf(item) == _currentIndex;
+              return Tab(
+                icon:
+                    Icon(isSelected ? item.selectedIcon : item.icon, size: 24),
+                text: item.title,
+              );
+            }).toList(),
+          ),
+        ),
+      );
 
   /// Создать новый пост
   void _createPost() {
     // TODO: Реализовать создание поста
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Создание поста будет реализовано')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Создание поста будет реализовано')));
   }
 
   /// Создать новую идею
@@ -191,12 +196,15 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
     // TODO: Реализовать создание идеи
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Создание идеи будет реализовано')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Создание идеи будет реализовано')));
   }
 
   /// Анимированное переключение на вкладку
   void _animateToTab(int index) {
-    if (index >= 0 && index < _navigationItems.length && index != _currentIndex) {
+    if (index >= 0 &&
+        index < _navigationItems.length &&
+        index != _currentIndex) {
       setState(() {
         _currentIndex = index;
       });
@@ -245,7 +253,9 @@ class _EnhancedMainScreenState extends ConsumerState<EnhancedMainScreen>
         title: const Text('Выход из приложения'),
         content: const Text('Вы действительно хотите выйти из приложения?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();

@@ -79,8 +79,11 @@ class _AddStoryWidgetState extends ConsumerState<AddStoryWidget> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
-          TextButton(onPressed: _showSourceDialog, child: const Text('Продолжить')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
+          TextButton(
+              onPressed: _showSourceDialog, child: const Text('Продолжить')),
         ],
       ),
     );
@@ -152,18 +155,23 @@ class _AddStoryWidgetState extends ConsumerState<AddStoryWidget> {
       if (mounted) {
         _captionController.clear();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Сторис успешно добавлен!'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Сторис успешно добавлен!'),
+              backgroundColor: Colors.green),
         );
         widget.onStoryAdded?.call();
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Файл не выбран'), backgroundColor: Colors.orange),
+          const SnackBar(
+              content: Text('Файл не выбран'), backgroundColor: Colors.orange),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки сториса: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка загрузки сториса: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -245,7 +253,8 @@ class UserStoriesWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStoryCircle(BuildContext context, Story story) => GestureDetector(
+  Widget _buildStoryCircle(BuildContext context, Story story) =>
+      GestureDetector(
         onTap: () => _openStory(context, story),
         child: Container(
           width: 70,
@@ -263,7 +272,8 @@ class UserStoriesWidget extends ConsumerWidget {
                 child: CircleAvatar(
                   radius: 27,
                   backgroundColor: Colors.blue.withValues(alpha: 0.1),
-                  child: const Icon(Icons.auto_stories, color: Colors.blue, size: 24),
+                  child: const Icon(Icons.auto_stories,
+                      color: Colors.blue, size: 24),
                 ),
               ),
               const SizedBox(height: 4),

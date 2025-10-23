@@ -82,14 +82,17 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Комментарий добавлен'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Комментарий добавлен'),
+              backgroundColor: Colors.green),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       setState(() {
@@ -107,7 +110,10 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
             padding: const EdgeInsets.all(16),
             child: Text(
               'Комментарии (${_comments.length})',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
 
@@ -187,15 +193,20 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
           children: [
             Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки комментариев', style: Theme.of(context).textTheme.titleMedium),
+            Text('Ошибка загрузки комментариев',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
               _error!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadComments, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadComments, child: const Text('Повторить')),
           ],
         ),
       );
@@ -208,12 +219,18 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
             const SizedBox(height: 16),
             Text(
               'Пока нет комментариев',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Будьте первым, кто оставит комментарий!',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -227,7 +244,8 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -242,7 +260,8 @@ class _IdeaCommentsWidgetState extends ConsumerState<IdeaCommentsWidget> {
 
 /// Карточка комментария
 class CommentCard extends StatelessWidget {
-  const CommentCard({super.key, required this.comment, this.onLike, this.onReply});
+  const CommentCard(
+      {super.key, required this.comment, this.onLike, this.onReply});
 
   final IdeaComment comment;
   final VoidCallback? onLike;
@@ -262,9 +281,13 @@ class CommentCard extends StatelessWidget {
                   // Аватар
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                    backgroundImage:
-                        comment.authorAvatar != null ? NetworkImage(comment.authorAvatar!) : null,
+                    backgroundColor: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1),
+                    backgroundImage: comment.authorAvatar != null
+                        ? NetworkImage(comment.authorAvatar!)
+                        : null,
                     child: comment.authorAvatar == null
                         ? Text(
                             (comment.authorName ?? 'П').isNotEmpty
@@ -289,13 +312,19 @@ class CommentCard extends StatelessWidget {
                           comment.authorName ?? 'Пользователь',
                           style: Theme.of(
                             context,
-                          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                          )
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         Text(
                           comment.timeAgo,
                           style: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                          )
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -319,12 +348,14 @@ class CommentCard extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.favorite_border, size: 16, color: Colors.grey[600]),
+                        Icon(Icons.favorite_border,
+                            size: 16, color: Colors.grey[600]),
                         if (comment.likes > 0) ...[
                           const SizedBox(width: 4),
                           Text(
                             comment.likes.toString(),
-                            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            style: TextStyle(
+                                fontSize: 12, color: Colors.grey[600]),
                           ),
                         ],
                       ],
@@ -342,7 +373,9 @@ class CommentCard extends StatelessWidget {
                         children: [
                           Icon(Icons.reply, size: 16, color: Colors.grey[600]),
                           const SizedBox(width: 4),
-                          Text('Ответить', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                          Text('Ответить',
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.grey[600])),
                         ],
                       ),
                     ),

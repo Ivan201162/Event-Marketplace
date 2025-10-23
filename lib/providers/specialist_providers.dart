@@ -6,7 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import '../models/specialist_enhanced.dart';
 
 /// Провайдер для получения ТОП специалистов по городу
-final topSpecialistsByCityProvider = FutureProvider.family<List<SpecialistEnhanced>, String>((ref, city) async {
+final topSpecialistsByCityProvider =
+    FutureProvider.family<List<SpecialistEnhanced>, String>((ref, city) async {
   try {
     final query = FirebaseFirestore.instance
         .collection('specialists')
@@ -27,7 +28,8 @@ final topSpecialistsByCityProvider = FutureProvider.family<List<SpecialistEnhanc
 });
 
 /// Провайдер для получения ТОП специалистов по России
-final topSpecialistsByRussiaProvider = FutureProvider<List<SpecialistEnhanced>>((ref) async {
+final topSpecialistsByRussiaProvider =
+    FutureProvider<List<SpecialistEnhanced>>((ref) async {
   try {
     final query = FirebaseFirestore.instance
         .collection('specialists')
@@ -48,7 +50,9 @@ final topSpecialistsByRussiaProvider = FutureProvider<List<SpecialistEnhanced>>(
 });
 
 /// Провайдер для поиска специалистов с фильтрами
-final searchSpecialistsProvider = FutureProvider.family<List<SpecialistEnhanced>, SearchFilters>((ref, filters) async {
+final searchSpecialistsProvider =
+    FutureProvider.family<List<SpecialistEnhanced>, SearchFilters>(
+        (ref, filters) async {
   try {
     Query query = FirebaseFirestore.instance.collection('specialists');
 
@@ -121,7 +125,7 @@ final searchSpecialistsProvider = FutureProvider.family<List<SpecialistEnhanced>
       specialists = specialists.where((specialist) {
         final minPrice = specialist.minPrice;
         final maxPrice = specialist.maxPrice;
-        
+
         if (filters.minPrice != null && maxPrice < filters.minPrice!) {
           return false;
         }
@@ -135,16 +139,16 @@ final searchSpecialistsProvider = FutureProvider.family<List<SpecialistEnhanced>
     // Фильтр по языкам
     if (filters.languages.isNotEmpty) {
       specialists = specialists.where((specialist) {
-        return filters.languages.any((language) => 
-            specialist.languages.contains(language));
+        return filters.languages
+            .any((language) => specialist.languages.contains(language));
       }).toList();
     }
 
     // Фильтр по доступным датам
     if (filters.availableDates.isNotEmpty) {
       specialists = specialists.where((specialist) {
-        return filters.availableDates.any((date) => 
-            specialist.availableDates.contains(date));
+        return filters.availableDates
+            .any((date) => specialist.availableDates.contains(date));
       }).toList();
     }
 
@@ -156,7 +160,9 @@ final searchSpecialistsProvider = FutureProvider.family<List<SpecialistEnhanced>
 });
 
 /// Провайдер для получения специалистов рядом с пользователем
-final nearbySpecialistsProvider = FutureProvider.family<List<SpecialistEnhanced>, Position>((ref, position) async {
+final nearbySpecialistsProvider =
+    FutureProvider.family<List<SpecialistEnhanced>, Position>(
+        (ref, position) async {
   try {
     // Получаем всех специалистов (пока без геолокации в Firestore)
     final query = FirebaseFirestore.instance
@@ -171,22 +177,24 @@ final nearbySpecialistsProvider = FutureProvider.family<List<SpecialistEnhanced>
 
     // Фильтруем по расстоянию (если есть координаты)
     final nearbySpecialists = <SpecialistEnhanced>[];
-    
+
     for (final specialist in specialists) {
-      if (specialist.location.containsKey('latitude') && 
+      if (specialist.location.containsKey('latitude') &&
           specialist.location.containsKey('longitude')) {
         final lat = specialist.location['latitude'] as double?;
         final lng = specialist.location['longitude'] as double?;
-        
+
         if (lat != null && lng != null) {
           final distance = Geolocator.distanceBetween(
-            position.latitude,
-            position.longitude,
-            lat,
-            lng,
-          ) / 1000; // в километрах
-          
-          if (distance <= 50) { // в радиусе 50 км
+                position.latitude,
+                position.longitude,
+                lat,
+                lng,
+              ) /
+              1000; // в километрах
+
+          if (distance <= 50) {
+            // в радиусе 50 км
             nearbySpecialists.add(specialist);
           }
         }
@@ -208,7 +216,8 @@ final nearbySpecialistsProvider = FutureProvider.family<List<SpecialistEnhanced>
 });
 
 /// Провайдер для получения категорий специалистов
-final specialistCategoriesProvider = FutureProvider<List<SpecialistCategory>>((ref) async {
+final specialistCategoriesProvider =
+    FutureProvider<List<SpecialistCategory>>((ref) async {
   try {
     // Возвращаем все доступные категории
     return SpecialistCategory.values;
@@ -241,17 +250,20 @@ final popularSearchQueriesProvider = FutureProvider<List<String>>((ref) async {
 });
 
 /// Провайдер для получения сохраненных фильтров пользователя
-final savedFiltersProvider = NotifierProvider<SavedFiltersNotifier, List<SearchFilters>>(() {
+final savedFiltersProvider =
+    NotifierProvider<SavedFiltersNotifier, List<SearchFilters>>(() {
   return SavedFiltersNotifier();
 });
 
 /// Провайдер для текущих фильтров поиска
-final currentSearchFiltersProvider = NotifierProvider<SearchFiltersNotifier, SearchFilters>(() {
+final currentSearchFiltersProvider =
+    NotifierProvider<SearchFiltersNotifier, SearchFilters>(() {
   return SearchFiltersNotifier();
 });
 
 /// Провайдер для избранных специалистов
-final favoriteSpecialistsProvider = NotifierProvider<FavoriteSpecialistsNotifier, List<String>>(() {
+final favoriteSpecialistsProvider =
+    NotifierProvider<FavoriteSpecialistsNotifier, List<String>>(() {
   return FavoriteSpecialistsNotifier();
 });
 
@@ -300,15 +312,16 @@ final userCityProvider = FutureProvider<String?>((ref) async {
 double _calculateDistance(Position position, Map<String, dynamic> location) {
   final lat = location['latitude'] as double?;
   final lng = location['longitude'] as double?;
-  
+
   if (lat == null || lng == null) return double.infinity;
-  
+
   return Geolocator.distanceBetween(
-    position.latitude,
-    position.longitude,
-    lat,
-    lng,
-  ) / 1000; // в километрах
+        position.latitude,
+        position.longitude,
+        lat,
+        lng,
+      ) /
+      1000; // в километрах
 }
 
 /// Нотификатор для сохраненных фильтров

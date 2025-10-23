@@ -8,7 +8,8 @@ import 'storage_service.dart';
 class SessionTimeoutService {
   factory SessionTimeoutService() => _instance;
   SessionTimeoutService._internal();
-  static final SessionTimeoutService _instance = SessionTimeoutService._internal();
+  static final SessionTimeoutService _instance =
+      SessionTimeoutService._internal();
 
   final AuthService _authService = AuthService();
   final StorageService _storageService = StorageService();
@@ -28,7 +29,8 @@ class SessionTimeoutService {
 
   /// Инициализировать отслеживание сессии
   void initialize() {
-    AppLogger.logI('Инициализация отслеживания сессии', 'session_timeout_service');
+    AppLogger.logI(
+        'Инициализация отслеживания сессии', 'session_timeout_service');
 
     // Запускаем таймер проверки активности
     _startActivityTimer();
@@ -49,7 +51,8 @@ class SessionTimeoutService {
   /// Отметить активность пользователя
   void markActivity() {
     _lastActivity = DateTime.now();
-    AppLogger.logD('Активность пользователя отмечена', 'session_timeout_service');
+    AppLogger.logD(
+        'Активность пользователя отмечена', 'session_timeout_service');
   }
 
   /// Запустить таймер проверки активности
@@ -88,17 +91,21 @@ class SessionTimeoutService {
   /// Обработать неактивность пользователя
   Future<void> _handleInactivity() async {
     try {
-      AppLogger.logI('Обработка неактивности пользователя', 'session_timeout_service');
+      AppLogger.logI(
+          'Обработка неактивности пользователя', 'session_timeout_service');
 
       // Сохраняем информацию о неактивности
-      await _storageService.setString('last_inactivity', DateTime.now().toIso8601String());
+      await _storageService.setString(
+          'last_inactivity', DateTime.now().toIso8601String());
 
       // Выходим из системы
       await _authService.signOut();
 
-      AppLogger.logI('Пользователь вышел из-за неактивности', 'session_timeout_service');
+      AppLogger.logI(
+          'Пользователь вышел из-за неактивности', 'session_timeout_service');
     } on Exception catch (e) {
-      AppLogger.logE('Ошибка обработки неактивности', 'session_timeout_service', e);
+      AppLogger.logE(
+          'Ошибка обработки неактивности', 'session_timeout_service', e);
     }
   }
 
@@ -108,14 +115,17 @@ class SessionTimeoutService {
       AppLogger.logI('Обработка таймаута сессии', 'session_timeout_service');
 
       // Сохраняем информацию о таймауте
-      await _storageService.setString('session_timeout', DateTime.now().toIso8601String());
+      await _storageService.setString(
+          'session_timeout', DateTime.now().toIso8601String());
 
       // Выходим из системы
       await _authService.signOut();
 
-      AppLogger.logI('Пользователь вышел из-за таймаута сессии', 'session_timeout_service');
+      AppLogger.logI('Пользователь вышел из-за таймаута сессии',
+          'session_timeout_service');
     } on Exception catch (e) {
-      AppLogger.logE('Ошибка обработки таймаута сессии', 'session_timeout_service', e);
+      AppLogger.logE(
+          'Ошибка обработки таймаута сессии', 'session_timeout_service', e);
     }
   }
 
@@ -172,12 +182,12 @@ class SessionTimeoutService {
 
   /// Получить статистику сессии
   Map<String, dynamic> getSessionStats() => {
-    'lastActivity': _lastActivity?.toIso8601String(),
-    'remainingSessionTime': remainingSessionTime?.inSeconds,
-    'remainingInactivityTime': remainingInactivityTime?.inSeconds,
-    'isSessionActive': isSessionActive,
-    'isUserActive': isUserActive,
-    'sessionTimeoutMinutes': _sessionTimeout.inMinutes,
-    'inactivityTimeoutMinutes': _inactivityTimeout.inMinutes,
-  };
+        'lastActivity': _lastActivity?.toIso8601String(),
+        'remainingSessionTime': remainingSessionTime?.inSeconds,
+        'remainingInactivityTime': remainingInactivityTime?.inSeconds,
+        'isSessionActive': isSessionActive,
+        'isUserActive': isUserActive,
+        'sessionTimeoutMinutes': _sessionTimeout.inMinutes,
+        'inactivityTimeoutMinutes': _inactivityTimeout.inMinutes,
+      };
 }

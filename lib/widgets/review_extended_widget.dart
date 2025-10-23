@@ -48,7 +48,8 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
 
               // Комментарий
               if (widget.review.comment.isNotEmpty) ...[
-                Text(widget.review.comment, style: const TextStyle(fontSize: 16)),
+                Text(widget.review.comment,
+                    style: const TextStyle(fontSize: 16)),
                 const SizedBox(height: 12),
               ],
 
@@ -59,7 +60,10 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
               ],
 
               // Теги
-              if (widget.review.tags.isNotEmpty) ...[_buildTags(), const SizedBox(height: 12)],
+              if (widget.review.tags.isNotEmpty) ...[
+                _buildTags(),
+                const SizedBox(height: 12)
+              ],
 
               // Детальная статистика
               _buildDetailedStats(),
@@ -103,7 +107,8 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                   children: [
                     Text(
                       widget.review.customerName,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     if (widget.review.isVerified) ...[
                       const SizedBox(width: 4),
@@ -123,7 +128,11 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: 'share',
-                child: Row(children: [Icon(Icons.share), SizedBox(width: 8), Text('Поделиться')]),
+                child: Row(children: [
+                  Icon(Icons.share),
+                  SizedBox(width: 8),
+                  Text('Поделиться')
+                ]),
               ),
               if (widget.currentUserId != null) ...[
                 const PopupMenuItem(
@@ -204,15 +213,18 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                           height: 100,
                           placeholder: (context, url) => Container(
                             color: Colors.grey[200],
-                            child: const Center(child: CircularProgressIndicator()),
+                            child: const Center(
+                                child: CircularProgressIndicator()),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Container(color: Colors.grey[200], child: const Icon(Icons.error)),
+                          errorWidget: (context, url, error) => Container(
+                              color: Colors.grey[200],
+                              child: const Icon(Icons.error)),
                         ),
                         if (media.type == MediaType.video)
                           const Positioned.fill(
                             child: Center(
-                              child: Icon(Icons.play_circle_filled, color: Colors.white, size: 32),
+                              child: Icon(Icons.play_circle_filled,
+                                  color: Colors.white, size: 32),
                             ),
                           ),
                       ],
@@ -237,7 +249,10 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
+                  border: Border.all(
+                      color: Theme.of(context)
+                          .primaryColor
+                          .withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   tag,
@@ -254,15 +269,18 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
 
   Widget _buildDetailedStats() => Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.grey[50], borderRadius: BorderRadius.circular(8)),
         child: Column(
           children: [
             Row(
               children: [
                 Expanded(
-                    child: _buildStatItem('Качество', widget.review.stats.quality, Icons.star)),
+                    child: _buildStatItem(
+                        'Качество', widget.review.stats.quality, Icons.star)),
                 Expanded(
-                  child: _buildStatItem('Общение', widget.review.stats.communication, Icons.chat),
+                  child: _buildStatItem(
+                      'Общение', widget.review.stats.communication, Icons.chat),
                 ),
               ],
             ),
@@ -277,8 +295,8 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
                   ),
                 ),
                 Expanded(
-                  child: _buildStatItem(
-                      'Цена/Качество', widget.review.stats.value, Icons.attach_money),
+                  child: _buildStatItem('Цена/Качество',
+                      widget.review.stats.value, Icons.attach_money),
                 ),
               ],
             ),
@@ -291,7 +309,8 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
           Icon(icon, size: 16, color: Colors.grey[600]),
           const SizedBox(width: 4),
           Expanded(
-            child: Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+            child: Text(label,
+                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
           ),
           Text(
             value > 0 ? value.toStringAsFixed(1) : '-',
@@ -377,7 +396,8 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
   void _showMediaViewer(ReviewMedia media, List<ReviewMedia> allMedia) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => MediaViewerScreen(media: media, allMedia: allMedia),
+        builder: (context) =>
+            MediaViewerScreen(media: media, allMedia: allMedia),
       ),
     );
   }
@@ -400,7 +420,9 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
         title: const Text('Пожаловаться на отзыв'),
         content: const Text('Выберите причину жалобы:'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -431,7 +453,8 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
 
 /// Экран просмотра медиа
 class MediaViewerScreen extends StatefulWidget {
-  const MediaViewerScreen({super.key, required this.media, required this.allMedia});
+  const MediaViewerScreen(
+      {super.key, required this.media, required this.allMedia});
   final ReviewMedia media;
   final List<ReviewMedia> allMedia;
 

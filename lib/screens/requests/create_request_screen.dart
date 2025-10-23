@@ -16,7 +16,8 @@ class CreateRequestScreen extends ConsumerStatefulWidget {
   const CreateRequestScreen({super.key});
 
   @override
-  ConsumerState<CreateRequestScreen> createState() => _CreateRequestScreenState();
+  ConsumerState<CreateRequestScreen> createState() =>
+      _CreateRequestScreenState();
 }
 
 class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
@@ -26,15 +27,15 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
   final _descriptionController = TextEditingController();
   final _budgetController = TextEditingController();
   final _cityController = TextEditingController();
-  
+
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   List<File> _selectedImages = [];
   bool _isLoading = false;
-  
+
   final List<String> _popularCities = [
     'Москва',
-    'Санкт-Петербург', 
+    'Санкт-Петербург',
     'Казань',
     'Екатеринбург',
     'Новосибирск',
@@ -69,7 +70,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
           .collection('users')
           .doc(user.uid)
           .get();
-      
+
       if (doc.exists) {
         final data = doc.data()!;
         final city = data['city'] as String?;
@@ -91,7 +92,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    
+
     if (date != null) {
       setState(() {
         _selectedDate = date;
@@ -104,7 +105,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
       context: context,
       initialTime: TimeOfDay.now(),
     );
-    
+
     if (time != null) {
       setState(() {
         _selectedTime = time;
@@ -119,7 +120,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
       maxHeight: 1080,
       imageQuality: 85,
     );
-    
+
     if (images != null && images.isNotEmpty) {
       setState(() {
         _selectedImages.addAll(images.map((image) => File(image.path)));
@@ -135,7 +136,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
 
   Future<void> _createRequest() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Пожалуйста, выберите дату события')),
@@ -157,13 +158,12 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
       // Загружаем изображения в Storage
       List<String> imageUrls = [];
       final storageService = StorageService();
-      
+
       for (int i = 0; i < _selectedImages.length; i++) {
         final imageUrl = await storageService.uploadRequestImage(
-          user.uid, 
-          _selectedImages[i], 
-          'request_${DateTime.now().millisecondsSinceEpoch}_$i'
-        );
+            user.uid,
+            _selectedImages[i],
+            'request_${DateTime.now().millisecondsSinceEpoch}_$i');
         if (imageUrl != null) {
           imageUrls.add(imageUrl);
         }
@@ -176,7 +176,7 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
         'budget': int.tryParse(_budgetController.text.trim()) ?? 0,
         'city': _cityController.text.trim(),
         'date': Timestamp.fromDate(_selectedDate!),
-        'time': _selectedTime != null 
+        'time': _selectedTime != null
             ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
             : null,
         'images': imageUrls,
@@ -190,12 +190,10 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
         'viewsCount': 0,
       };
 
-      await FirebaseFirestore.instance
-          .collection('requests')
-          .add(requestData);
+      await FirebaseFirestore.instance.collection('requests').add(requestData);
 
       _showSuccessSnackBar('Заявка успешно создана!');
-      
+
       // Возвращаемся назад
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
@@ -256,7 +254,8 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
                   )
                 : const Text(
                     'Создать',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
           ),
         ],
@@ -355,7 +354,8 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
                           'Создать заявку',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                 ),
               ),
@@ -454,7 +454,9 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
 
   Widget _buildCityDropdown() {
     return DropdownButtonFormField<String>(
-      value: _popularCities.contains(_cityController.text) ? _cityController.text : null,
+      value: _popularCities.contains(_cityController.text)
+          ? _cityController.text
+          : null,
       decoration: InputDecoration(
         labelText: 'Город',
         border: OutlineInputBorder(
@@ -521,7 +523,8 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen>
                 children: [
                   Icon(Icons.image, size: 32, color: Colors.grey),
                   SizedBox(height: 8),
-                  Text('Добавьте фотографии события', style: TextStyle(color: Colors.grey)),
+                  Text('Добавьте фотографии события',
+                      style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ),

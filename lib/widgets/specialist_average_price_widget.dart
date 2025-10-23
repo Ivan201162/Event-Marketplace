@@ -13,10 +13,12 @@ class SpecialistAveragePriceWidget extends StatefulWidget {
   final bool showHistory;
 
   @override
-  State<SpecialistAveragePriceWidget> createState() => _SpecialistAveragePriceWidgetState();
+  State<SpecialistAveragePriceWidget> createState() =>
+      _SpecialistAveragePriceWidgetState();
 }
 
-class _SpecialistAveragePriceWidgetState extends State<SpecialistAveragePriceWidget> {
+class _SpecialistAveragePriceWidgetState
+    extends State<SpecialistAveragePriceWidget> {
   final SpecialistPricingService _service = SpecialistPricingService();
   SpecialistPricingStats? _stats;
   List<PriceHistoryEntry> _history = [];
@@ -36,7 +38,8 @@ class _SpecialistAveragePriceWidgetState extends State<SpecialistAveragePriceWid
     });
 
     try {
-      final stats = await _service.getSpecialistPricingStats(widget.specialistId);
+      final stats =
+          await _service.getSpecialistPricingStats(widget.specialistId);
 
       var history = <PriceHistoryEntry>[];
       if (widget.showHistory) {
@@ -70,7 +73,8 @@ class _SpecialistAveragePriceWidgetState extends State<SpecialistAveragePriceWid
       return const _NoPricingDataWidget();
     }
 
-    return _PricingStatsWidget(stats: _stats!, history: _history, showHistory: widget.showHistory);
+    return _PricingStatsWidget(
+        stats: _stats!, history: _history, showHistory: widget.showHistory);
   }
 }
 
@@ -83,7 +87,10 @@ class _PricingLoadingWidget extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: const Row(
           children: [
-            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2)),
             SizedBox(width: 12),
             Text('Загружаем статистику цен...'),
           ],
@@ -128,7 +135,8 @@ class _NoPricingDataWidget extends StatelessWidget {
           children: [
             Icon(Icons.info_outline, color: Colors.grey, size: 20),
             SizedBox(width: 12),
-            Text('Нет данных о завершенных заказах', style: TextStyle(color: Colors.grey)),
+            Text('Нет данных о завершенных заказах',
+                style: TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -245,14 +253,16 @@ class _PricingStatsCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 12),
                         decoration: BoxDecoration(
                           color: Colors.grey.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           'Обновлено: ${_formatDate(stats.lastUpdated)}',
-                          style: const TextStyle(fontSize: 10, color: Colors.grey),
+                          style:
+                              const TextStyle(fontSize: 10, color: Colors.grey),
                         ),
                       ),
                     ),
@@ -293,14 +303,20 @@ class _PricingStatItem extends StatelessWidget {
           children: [
             Text(
               label,
-              style:
-                  TextStyle(fontSize: isMain ? 12 : 10, color: color, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: isMain ? 12 : 10,
+                  color: color,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 2),
             Text(
-              isCount ? value.toInt().toString() : '${value.toStringAsFixed(0)} ₽',
-              style:
-                  TextStyle(fontSize: isMain ? 16 : 12, color: color, fontWeight: FontWeight.bold),
+              isCount
+                  ? value.toInt().toString()
+                  : '${value.toStringAsFixed(0)} ₽',
+              style: TextStyle(
+                  fontSize: isMain ? 16 : 12,
+                  color: color,
+                  fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -328,7 +344,9 @@ class _PricingHistoryWidget extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 const SizedBox(height: 12),
-                ...history.take(6).map((entry) => _HistoryEntryWidget(entry: entry)),
+                ...history
+                    .take(6)
+                    .map((entry) => _HistoryEntryWidget(entry: entry)),
               ],
             ),
           ),
@@ -355,12 +373,16 @@ class _HistoryEntryWidget extends StatelessWidget {
             Expanded(
               child: Text(
                 _formatMonth(entry.month),
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
               ),
             ),
             Text(
               '${entry.averagePrice.toStringAsFixed(0)} ₽',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue),
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue),
             ),
             const SizedBox(width: 8),
             Text(

@@ -75,7 +75,8 @@ class _AnimatedPostCardState extends ConsumerState<AnimatedPostCard>
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserProvider).value;
-    final isLiked = currentUser != null && widget.post.isLikedBy(currentUser.uid);
+    final isLiked =
+        currentUser != null && widget.post.isLikedBy(currentUser.uid);
 
     return AnimatedBuilder(
       animation: _animationController,
@@ -225,7 +226,8 @@ class _AnimatedPostCardState extends ConsumerState<AnimatedPostCard>
                               ),
                               backgroundColor: Colors.blue[50],
                               labelStyle: TextStyle(color: Colors.blue[700]),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                             );
                           }).toList(),
                         ),
@@ -248,15 +250,20 @@ class _AnimatedPostCardState extends ConsumerState<AnimatedPostCard>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(
-                                    isLiked ? Icons.favorite : Icons.favorite_border,
-                                    color: isLiked ? Colors.red : Colors.grey[600],
+                                    isLiked
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color:
+                                        isLiked ? Colors.red : Colors.grey[600],
                                     size: 20,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
                                     widget.post.likesCount.toString(),
                                     style: TextStyle(
-                                      color: isLiked ? Colors.red : Colors.grey[600],
+                                      color: isLiked
+                                          ? Colors.red
+                                          : Colors.grey[600],
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -378,7 +385,8 @@ class _AnimatedPostCardState extends ConsumerState<AnimatedPostCard>
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Жалоба отправлена. Спасибо за обратную связь!'),
+                  content:
+                      Text('Жалоба отправлена. Спасибо за обратную связь!'),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -390,8 +398,3 @@ class _AnimatedPostCardState extends ConsumerState<AnimatedPostCard>
     );
   }
 }
-
-
-
-
-

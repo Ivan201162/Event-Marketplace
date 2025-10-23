@@ -16,7 +16,8 @@ class MyBookingsScreen extends ConsumerStatefulWidget {
   ConsumerState<MyBookingsScreen> createState() => _MyBookingsScreenState();
 }
 
-class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with TickerProviderStateMixin {
+class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
+    with TickerProviderStateMixin {
   final BookingService _bookingService = BookingService();
 
   List<Booking> _bookings = [];
@@ -106,7 +107,9 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки заявок: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка загрузки заявок: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -118,7 +121,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
       await FirebaseFirestore.instance.collection('bookings').add({
         'customerId': uid,
         'specialistId': 'spec_test_1',
-        'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 7))),
+        'eventDate':
+            Timestamp.fromDate(DateTime.now().add(const Duration(days: 7))),
         'status': 'pending',
         'details': 'Тестовая заявка на фотосессию',
         'totalPrice': 15000.0,
@@ -131,7 +135,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
       await FirebaseFirestore.instance.collection('bookings').add({
         'customerId': uid,
         'specialistId': 'spec_test_2',
-        'eventDate': Timestamp.fromDate(DateTime.now().add(const Duration(days: 14))),
+        'eventDate':
+            Timestamp.fromDate(DateTime.now().add(const Duration(days: 14))),
         'status': 'confirmed',
         'details': 'Тестовая заявка на видеосъемку',
         'totalPrice': 25000.0,
@@ -144,11 +149,13 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
       await FirebaseFirestore.instance.collection('bookings').add({
         'customerId': uid,
         'specialistId': 'spec_test_3',
-        'eventDate': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 7))),
+        'eventDate': Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(days: 7))),
         'status': 'completed',
         'details': 'Завершенная тестовая заявка',
         'totalPrice': 10000.0,
-        'createdAt': Timestamp.fromDate(DateTime.now().subtract(const Duration(days: 10))),
+        'createdAt': Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(days: 10))),
         'eventTitle': 'Фотосессия в студии',
         'customerName': 'Тестовый клиент',
         'customerPhone': '+7 (999) 123-45-67',
@@ -189,7 +196,9 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
         title: const Text('Отменить заявку'),
         content: const Text('Вы уверены, что хотите отменить эту заявку?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Нет')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Нет')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Да, отменить'),
@@ -204,13 +213,17 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
         await _loadBookings();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Заявка отменена'), backgroundColor: Colors.green),
+            const SnackBar(
+                content: Text('Заявка отменена'),
+                backgroundColor: Colors.green),
           );
         }
       } on Exception catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Ошибка отмены заявки: $e'), backgroundColor: Colors.red),
+            SnackBar(
+                content: Text('Ошибка отмены заявки: $e'),
+                backgroundColor: Colors.red),
           );
         }
       }
@@ -253,19 +266,25 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildDetailRow('Название', booking.eventTitle ?? 'Не указано'),
+                      _buildDetailRow(
+                          'Название', booking.eventTitle ?? 'Не указано'),
                       _buildDetailRow('Дата', _formatDate(booking.eventDate)),
                       _buildDetailRow('Время', _formatTime(booking.eventDate)),
                       _buildDetailRow('Адрес', booking.address ?? 'Не указан'),
-                      _buildDetailRow('Участники', '${booking.participantsCount} чел.'),
-                      _buildDetailRow('Стоимость', '${booking.totalPrice.toInt() ?? 0}₽'),
+                      _buildDetailRow(
+                          'Участники', '${booking.participantsCount} чел.'),
+                      _buildDetailRow(
+                          'Стоимость', '${booking.totalPrice.toInt() ?? 0}₽'),
                       _buildDetailRow('Статус', _getStatusText(booking.status)),
-                      if (booking.description != null && booking.description!.isNotEmpty)
+                      if (booking.description != null &&
+                          booking.description!.isNotEmpty)
                         _buildDetailRow('Описание', booking.description!),
-                      if (booking.comment != null && booking.comment!.isNotEmpty)
+                      if (booking.comment != null &&
+                          booking.comment!.isNotEmpty)
                         _buildDetailRow('Комментарий', booking.comment!),
                       if (booking.advancePaid == true)
-                        _buildDetailRow('Аванс', '${booking.advanceAmount?.toInt() ?? 0}₽'),
+                        _buildDetailRow(
+                            'Аванс', '${booking.advanceAmount?.toInt() ?? 0}₽'),
                     ],
                   ),
                 ),
@@ -289,7 +308,9 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
                           Navigator.of(context).pop();
                           // TODO(developer): Реализовать чат с специалистом
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Чат будет доступен после реализации')),
+                            const SnackBar(
+                                content: Text(
+                                    'Чат будет доступен после реализации')),
                           );
                         },
                         child: const Text('Написать'),
@@ -305,18 +326,19 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
   }
 
   Widget _buildDetailRow(String label, String value) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 100,
-          child: Text('$label:', style: const TextStyle(fontWeight: FontWeight.w500)),
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text('$label:',
+                  style: const TextStyle(fontWeight: FontWeight.w500)),
+            ),
+            Expanded(child: Text(value)),
+          ],
         ),
-        Expanded(child: Text(value)),
-      ],
-    ),
-  );
+      );
 
   String _formatDate(DateTime? date) {
     if (date == null) return 'Не указана';
@@ -345,83 +367,85 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
 
   @override
   Widget build(BuildContext context) => BackButtonHandler(
-    child: Scaffold(
-      appBar: AppBar(
-        title: const Text('Мои заявки'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Активные'),
-            Tab(text: 'Завершенные'),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          // Фильтры
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: _filters
-                    .map(
-                      (filter) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: FilterChip(
-                          label: Text(filter),
-                          selected: _selectedFilter == filter,
-                          onSelected: (selected) {
-                            setState(() {
-                              _selectedFilter = filter;
-                            });
-                          },
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-          ),
-
-          // Список заявок
-          Expanded(
-            child: TabBarView(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Мои заявки'),
+            leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => context.pop()),
+            bottom: TabBar(
               controller: _tabController,
-              children: [
-                _buildBookingsList(
-                  _filteredBookings
-                      .where(
-                        (b) =>
-                            b.status == BookingStatus.pending ||
-                            b.status == BookingStatus.confirmed,
-                      )
-                      .toList(),
-                ),
-                _buildBookingsList(
-                  _filteredBookings
-                      .where(
-                        (b) =>
-                            b.status == BookingStatus.completed ||
-                            b.status == BookingStatus.cancelled ||
-                            b.status == BookingStatus.rejected,
-                      )
-                      .toList(),
-                ),
+              tabs: const [
+                Tab(text: 'Активные'),
+                Tab(text: 'Завершенные'),
               ],
             ),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.push('/create_booking');
-        },
-        child: const Icon(Icons.add),
-      ),
-    ),
-  );
+          body: Column(
+            children: [
+              // Фильтры
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: _filters
+                        .map(
+                          (filter) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: FilterChip(
+                              label: Text(filter),
+                              selected: _selectedFilter == filter,
+                              onSelected: (selected) {
+                                setState(() {
+                                  _selectedFilter = filter;
+                                });
+                              },
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ),
+
+              // Список заявок
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildBookingsList(
+                      _filteredBookings
+                          .where(
+                            (b) =>
+                                b.status == BookingStatus.pending ||
+                                b.status == BookingStatus.confirmed,
+                          )
+                          .toList(),
+                    ),
+                    _buildBookingsList(
+                      _filteredBookings
+                          .where(
+                            (b) =>
+                                b.status == BookingStatus.completed ||
+                                b.status == BookingStatus.cancelled ||
+                                b.status == BookingStatus.rejected,
+                          )
+                          .toList(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              context.push('/create_booking');
+            },
+            child: const Icon(Icons.add),
+          ),
+        ),
+      );
 
   Widget _buildBookingsList(List<Booking> bookings) {
     if (_isLoading) {
@@ -435,7 +459,8 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
           children: [
             const Icon(Icons.event_busy, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
-            const Text('Заявки не найдены', style: TextStyle(fontSize: 18, color: Colors.grey)),
+            const Text('Заявки не найдены',
+                style: TextStyle(fontSize: 18, color: Colors.grey)),
             const SizedBox(height: 8),
             const Text(
               'Создайте новую заявку, найдя специалиста',
@@ -463,8 +488,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> with Ticker
             child: BookingCard(
               booking: booking,
               onTap: () => _showBookingDetails(booking),
-              onCancel:
-                  booking.status == BookingStatus.pending ||
+              onCancel: booking.status == BookingStatus.pending ||
                       booking.status == BookingStatus.confirmed
                   ? () => _cancelBooking(booking)
                   : null,

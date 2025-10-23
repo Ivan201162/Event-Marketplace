@@ -42,7 +42,10 @@ class PremiumBadgeWidget extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             _getText(tier),
-            style: TextStyle(color: _getColor(tier), fontWeight: FontWeight.bold, fontSize: 12),
+            style: TextStyle(
+                color: _getColor(tier),
+                fontWeight: FontWeight.bold,
+                fontSize: 12),
           ),
         ],
       ],
@@ -153,7 +156,8 @@ class PremiumCardWidget extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
 
-  const PremiumCardWidget({super.key, required this.tier, required this.child, this.padding});
+  const PremiumCardWidget(
+      {super.key, required this.tier, required this.child, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +180,8 @@ class PremiumCardWidget extends StatelessWidget {
           ),
           border: Border.all(color: _getColor(tier).withValues(alpha: 0.3)),
         ),
-        child: Padding(padding: padding ?? const EdgeInsets.all(16), child: child),
+        child:
+            Padding(padding: padding ?? const EdgeInsets.all(16), child: child),
       ),
     );
   }
@@ -198,7 +203,8 @@ class PremiumTextWidget extends StatelessWidget {
   final String text;
   final TextStyle? style;
 
-  const PremiumTextWidget({super.key, required this.tier, required this.text, this.style});
+  const PremiumTextWidget(
+      {super.key, required this.tier, required this.text, this.style});
 
   @override
   Widget build(BuildContext context) {

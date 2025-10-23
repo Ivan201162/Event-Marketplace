@@ -37,7 +37,8 @@ class RecommendationService {
   }
 
   /// Получить активность пользователя
-  Future<List<UserActivity>> getUserActivity(String userId, {int limit = 100}) async {
+  Future<List<UserActivity>> getUserActivity(String userId,
+      {int limit = 100}) async {
     try {
       final querySnapshot = await _firestore
           .collection(_activityCollection)
@@ -65,7 +66,8 @@ class RecommendationService {
       }
 
       // Анализируем активность и генерируем рекомендации
-      final recommendations = await _generateRecommendations(userId, activities);
+      final recommendations =
+          await _generateRecommendations(userId, activities);
 
       // Сохраняем рекомендации
       await _saveRecommendations(userId, recommendations);
@@ -170,14 +172,16 @@ class RecommendationService {
 
     for (final activity in activities) {
       final weight = categoryWeights[activity.activityType] ?? 1.0;
-      categoryCount[activity.category] = (categoryCount[activity.category] ?? 0) + weight.toInt();
+      categoryCount[activity.category] =
+          (categoryCount[activity.category] ?? 0) + weight.toInt();
     }
 
     // Нормализуем значения
     final total = categoryCount.values.fold(0, (sum, count) => sum + count);
     if (total == 0) return {};
 
-    return categoryCount.map((category, count) => MapEntry(category, count / total));
+    return categoryCount
+        .map((category, count) => MapEntry(category, count / total));
   }
 
   /// Анализ городов в активности
@@ -253,7 +257,8 @@ class RecommendationService {
   }
 
   /// Сохранить рекомендации
-  Future<void> _saveRecommendations(String userId, List<Recommendation> recommendations) async {
+  Future<void> _saveRecommendations(
+      String userId, List<Recommendation> recommendations) async {
     try {
       // Удаляем старые рекомендации
       final oldRecommendations = await _firestore
@@ -268,7 +273,9 @@ class RecommendationService {
 
       // Добавляем новые рекомендации
       for (final recommendation in recommendations) {
-        final docRef = _firestore.collection(_recommendationsCollection).doc(recommendation.id);
+        final docRef = _firestore
+            .collection(_recommendationsCollection)
+            .doc(recommendation.id);
         batch.set(docRef, recommendation.toFirestore());
       }
 
@@ -323,7 +330,12 @@ class RecommendationService {
       final activities = await getUserActivity(userId);
 
       if (activities.isEmpty) {
-        return {'totalActivities': 0, 'categories': {}, 'cities': {}, 'activityTypes': {}};
+        return {
+          'totalActivities': 0,
+          'categories': {},
+          'cities': {},
+          'activityTypes': {}
+        };
       }
 
       final categoryStats = <String, int>{};
@@ -331,7 +343,8 @@ class RecommendationService {
       final activityTypeStats = <String, int>{};
 
       for (final activity in activities) {
-        categoryStats[activity.category] = (categoryStats[activity.category] ?? 0) + 1;
+        categoryStats[activity.category] =
+            (categoryStats[activity.category] ?? 0) + 1;
         if (activity.city != null) {
           cityStats[activity.city!] = (cityStats[activity.city!] ?? 0) + 1;
         }
@@ -344,7 +357,8 @@ class RecommendationService {
         'categories': categoryStats,
         'cities': cityStats,
         'activityTypes': activityTypeStats,
-        'lastActivity': activities.isNotEmpty ? activities.first.timestamp : null,
+        'lastActivity':
+            activities.isNotEmpty ? activities.first.timestamp : null,
       };
     } catch (e) {
       debugPrint('Ошибка получения статистики активности: $e');

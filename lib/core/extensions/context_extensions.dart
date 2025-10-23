@@ -7,7 +7,8 @@ extension ContextExtensions on BuildContext {
 
   /// Проверка, является ли устройство планшетом
   bool get isTablet =>
-      MediaQuery.of(this).size.width >= 768 && MediaQuery.of(this).size.width < 1024;
+      MediaQuery.of(this).size.width >= 768 &&
+      MediaQuery.of(this).size.width < 1024;
 
   /// Проверка, является ли устройство десктопом
   bool get isDesktop => MediaQuery.of(this).size.width >= 1024;
@@ -45,6 +46,8 @@ extension ContextExtensions on BuildContext {
   Size get screenSize => MediaQuery.of(this).size;
 
   /// Проверка ориентации
-  bool get isPortrait => MediaQuery.of(this).orientation == Orientation.portrait;
-  bool get isLandscape => MediaQuery.of(this).orientation == Orientation.landscape;
+  bool get isPortrait =>
+      MediaQuery.of(this).orientation == Orientation.portrait;
+  bool get isLandscape =>
+      MediaQuery.of(this).orientation == Orientation.landscape;
 }

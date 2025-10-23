@@ -6,7 +6,8 @@ import '../services/vk_integration_service.dart';
 
 /// Виджет для работы с VK плейлистами
 class VkPlaylistWidget extends ConsumerStatefulWidget {
-  const VkPlaylistWidget({super.key, this.playlistUrl, this.onUrlChanged, this.readOnly = false});
+  const VkPlaylistWidget(
+      {super.key, this.playlistUrl, this.onUrlChanged, this.readOnly = false});
   final String? playlistUrl;
   final void Function(String?)? onUrlChanged;
   final bool readOnly;
@@ -110,9 +111,10 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                         color: _isValid ? Colors.green : Colors.red,
                       ),
                 border: const OutlineInputBorder(),
-                errorText: _urlController.text.isNotEmpty && !_isValid && !_isLoading
-                    ? 'Неверный формат ссылки на плейлист VK'
-                    : null,
+                errorText:
+                    _urlController.text.isNotEmpty && !_isValid && !_isLoading
+                        ? 'Неверный формат ссылки на плейлист VK'
+                        : null,
               ),
               onChanged: (value) {
                 widget.onUrlChanged?.call(value.isEmpty ? null : value);
@@ -122,7 +124,8 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
             const SizedBox(height: 8),
 
             // Примеры ссылок
-            Text('Примеры ссылок:', style: Theme.of(context).textTheme.bodySmall),
+            Text('Примеры ссылок:',
+                style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 4),
             ..._vkService.getExampleUrls().map(
                   (url) => Padding(
@@ -131,10 +134,8 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                       '• $url',
                       style: Theme.of(
                         context,
-                      )
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Colors.grey[600], fontFamily: 'monospace'),
+                      ).textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600], fontFamily: 'monospace'),
                     ),
                   ),
                 ),
@@ -160,7 +161,9 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                       Expanded(
                         child: Text(
                           (_playlistInfo!['title'] as String?) ?? 'Плейлист VK',
-                          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blue[800]),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blue[800]),
                         ),
                       ),
                       if (!widget.readOnly)
@@ -207,7 +210,8 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                   Expanded(
                     child: Text(
                       widget.playlistUrl!,
-                      style: TextStyle(color: Colors.grey[700], fontFamily: 'monospace'),
+                      style: TextStyle(
+                          color: Colors.grey[700], fontFamily: 'monospace'),
                     ),
                   ),
                   IconButton(
@@ -215,7 +219,8 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
                     onPressed: () async {
                       final url = Uri.parse(widget.playlistUrl!);
                       if (await canLaunchUrl(url)) {
-                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                        await launchUrl(url,
+                            mode: LaunchMode.externalApplication);
                       }
                     },
                     tooltip: 'Открыть плейлист',
@@ -230,7 +235,8 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
 
 /// Виджет для отображения VK плейлиста в чате
 class VkPlaylistChatWidget extends StatelessWidget {
-  const VkPlaylistChatWidget({super.key, required this.playlistUrl, required this.vkService});
+  const VkPlaylistChatWidget(
+      {super.key, required this.playlistUrl, required this.vkService});
   final String playlistUrl;
   final VkIntegrationService vkService;
 
@@ -260,7 +266,8 @@ class VkPlaylistChatWidget extends StatelessWidget {
                 children: [
                   Text(
                     'Плейлист VK',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blue[800]),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600, color: Colors.blue[800]),
                   ),
                   const SizedBox(height: 2),
                   Text(

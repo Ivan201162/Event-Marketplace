@@ -3,7 +3,8 @@ import 'package:shimmer/shimmer.dart';
 
 /// Виджет загрузки с shimmer эффектом
 class ShimmerLoading extends StatelessWidget {
-  const ShimmerLoading({super.key, required this.child, this.baseColor, this.highlightColor});
+  const ShimmerLoading(
+      {super.key, required this.child, this.baseColor, this.highlightColor});
 
   final Widget child;
   final Color? baseColor;
@@ -38,7 +39,8 @@ class SpecialistCardSkeleton extends StatelessWidget {
                     child: Container(
                       width: 64,
                       height: 64,
-                      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                      decoration: const BoxDecoration(
+                          color: Colors.white, shape: BoxShape.circle),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -163,8 +165,9 @@ class SpecialistsListSkeleton extends StatelessWidget {
   Widget build(BuildContext context) => ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: itemCount,
-        itemBuilder: (context, index) =>
-            const Padding(padding: EdgeInsets.only(bottom: 12), child: SpecialistCardSkeleton()),
+        itemBuilder: (context, index) => const Padding(
+            padding: EdgeInsets.only(bottom: 12),
+            child: SpecialistCardSkeleton()),
       );
 }
 
@@ -188,7 +191,8 @@ class ReviewCardSkeleton extends StatelessWidget {
                     child: Container(
                       width: 40,
                       height: 40,
-                      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                      decoration: const BoxDecoration(
+                          color: Colors.white, shape: BoxShape.circle),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -273,8 +277,8 @@ class ReviewsListSkeleton extends StatelessWidget {
   Widget build(BuildContext context) => ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: itemCount,
-        itemBuilder: (context, index) =>
-            const Padding(padding: EdgeInsets.only(bottom: 12), child: ReviewCardSkeleton()),
+        itemBuilder: (context, index) => const Padding(
+            padding: EdgeInsets.only(bottom: 12), child: ReviewCardSkeleton()),
       );
 }
 
@@ -390,8 +394,8 @@ class BookingsListSkeleton extends StatelessWidget {
   Widget build(BuildContext context) => ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: itemCount,
-        itemBuilder: (context, index) =>
-            const Padding(padding: EdgeInsets.only(bottom: 12), child: BookingCardSkeleton()),
+        itemBuilder: (context, index) => const Padding(
+            padding: EdgeInsets.only(bottom: 12), child: BookingCardSkeleton()),
       );
 }
 
@@ -469,7 +473,8 @@ class StatsSkeleton extends StatelessWidget {
               child: Container(
                 width: 24,
                 height: 24,
-                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                decoration: const BoxDecoration(
+                    color: Colors.white, shape: BoxShape.circle),
               ),
             ),
             const SizedBox(height: 8),
@@ -477,8 +482,9 @@ class StatsSkeleton extends StatelessWidget {
               child: Container(
                 height: 20,
                 width: 40,
-                decoration:
-                    BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4)),
               ),
             ),
             const SizedBox(height: 4),
@@ -486,8 +492,9 @@ class StatsSkeleton extends StatelessWidget {
               child: Container(
                 height: 12,
                 width: 60,
-                decoration:
-                    BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4)),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4)),
               ),
             ),
           ],
@@ -497,7 +504,8 @@ class StatsSkeleton extends StatelessWidget {
 
 /// Виджет для отображения состояния загрузки
 class LoadingState extends StatelessWidget {
-  const LoadingState({super.key, this.message = 'Загрузка...', this.showProgress = true});
+  const LoadingState(
+      {super.key, this.message = 'Загрузка...', this.showProgress = true});
 
   final String message;
   final bool showProgress;
@@ -507,10 +515,16 @@ class LoadingState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (showProgress) ...[const CircularProgressIndicator(), const SizedBox(height: 16)],
+            if (showProgress) ...[
+              const CircularProgressIndicator(),
+              const SizedBox(height: 16)
+            ],
             Text(
               message,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(color: Colors.grey[600]),
             ),
           ],
         ),
@@ -519,7 +533,11 @@ class LoadingState extends StatelessWidget {
 
 /// Виджет для отображения состояния ошибки
 class ErrorState extends StatelessWidget {
-  const ErrorState({super.key, required this.error, this.onRetry, this.retryText = 'Повторить'});
+  const ErrorState(
+      {super.key,
+      required this.error,
+      this.onRetry,
+      this.retryText = 'Повторить'});
 
   final String error;
   final VoidCallback? onRetry;
@@ -534,14 +552,20 @@ class ErrorState extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               'Произошла ошибка',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[800]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[800]),
             ),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Text(
                 error,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -560,7 +584,8 @@ class ErrorState extends StatelessWidget {
 
 /// Виджет для отображения пустого состояния
 class EmptyState extends StatelessWidget {
-  const EmptyState({super.key, required this.title, this.subtitle, this.icon, this.action});
+  const EmptyState(
+      {super.key, required this.title, this.subtitle, this.icon, this.action});
 
   final String title;
   final String? subtitle;
@@ -576,7 +601,10 @@ class EmptyState extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               title,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             if (subtitle != null) ...[
               const SizedBox(height: 8),
@@ -584,7 +612,10 @@ class EmptyState extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Text(
                   subtitle!,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: Colors.grey[500]),
                   textAlign: TextAlign.center,
                 ),
               ),

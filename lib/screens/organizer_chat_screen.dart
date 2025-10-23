@@ -11,7 +11,8 @@ class OrganizerChatScreen extends ConsumerStatefulWidget {
   final String chatId;
 
   @override
-  ConsumerState<OrganizerChatScreen> createState() => _OrganizerChatScreenState();
+  ConsumerState<OrganizerChatScreen> createState() =>
+      _OrganizerChatScreenState();
 }
 
 class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
@@ -80,7 +81,8 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки сообщений: $e')));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка загрузки сообщений: $e')));
       }
     }
   }
@@ -115,10 +117,13 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(_currentUserType == 'customer' ? _chat!.organizerName : _chat!.customerName),
+            Text(_currentUserType == 'customer'
+                ? _chat!.organizerName
+                : _chat!.customerName),
             Text(
               _chat!.eventTitle,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+              style:
+                  const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
             ),
           ],
         ),
@@ -129,12 +134,20 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
               const PopupMenuItem(
                 value: 'info',
                 child: Row(
-                  children: [Icon(Icons.info), SizedBox(width: 8), Text('Информация о чате')],
+                  children: [
+                    Icon(Icons.info),
+                    SizedBox(width: 8),
+                    Text('Информация о чате')
+                  ],
                 ),
               ),
               const PopupMenuItem(
                 value: 'close',
-                child: Row(children: [Icon(Icons.close), SizedBox(width: 8), Text('Закрыть чат')]),
+                child: Row(children: [
+                  Icon(Icons.close),
+                  SizedBox(width: 8),
+                  Text('Закрыть чат')
+                ]),
               ),
             ],
             onSelected: (value) {
@@ -163,41 +176,49 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
   }
 
   Widget _buildEventInfo() => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
-      border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
-    ),
-    child: Row(
-      children: [
-        Icon(Icons.event, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(_chat!.eventTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
-              if (_chat!.eventDescription != null)
-                Text(
-                  _chat!.eventDescription!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                    fontSize: 12,
-                  ),
-                ),
-              Text(
-                'Дата: ${_formatDate(_chat!.eventDate)}',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          border:
+              Border(bottom: BorderSide(color: Theme.of(context).dividerColor)),
         ),
-      ],
-    ),
-  );
+        child: Row(
+          children: [
+            Icon(Icons.event, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(_chat!.eventTitle,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  if (_chat!.eventDescription != null)
+                    Text(
+                      _chat!.eventDescription!,
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
+                        fontSize: 12,
+                      ),
+                    ),
+                  Text(
+                    'Дата: ${_formatDate(_chat!.eventDate)}',
+                    style: TextStyle(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.7),
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildMessagesList() {
     if (_messages.isEmpty) {
@@ -240,42 +261,45 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
           onReject: () => _rejectSpecialist(message),
         );
       default:
-        return OrganizerMessageBubble(message: message, isFromCurrentUser: isFromCurrentUser);
+        return OrganizerMessageBubble(
+            message: message, isFromCurrentUser: isFromCurrentUser);
     }
   }
 
   Widget _buildMessageInput() => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Theme.of(context).colorScheme.surface,
-      border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _messageController,
-            decoration: const InputDecoration(
-              hintText: 'Введите сообщение...',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          border:
+              Border(top: BorderSide(color: Theme.of(context).dividerColor)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _messageController,
+                decoration: const InputDecoration(
+                  hintText: 'Введите сообщение...',
+                  border: OutlineInputBorder(),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                ),
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
+              ),
             ),
-            maxLines: null,
-            textCapitalization: TextCapitalization.sentences,
-          ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: _sendMessage,
+              icon: const Icon(Icons.send),
+              style: IconButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 8),
-        IconButton(
-          onPressed: _sendMessage,
-          icon: const Icon(Icons.send),
-          style: IconButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 
   Future<void> _sendMessage() async {
     final text = _messageController.text.trim();
@@ -287,7 +311,9 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
       await _chatService.sendMessage(
         chatId: widget.chatId,
         senderId: _currentUserId!,
-        senderName: _currentUserType == 'customer' ? _chat!.customerName : _chat!.organizerName,
+        senderName: _currentUserType == 'customer'
+            ? _chat!.customerName
+            : _chat!.organizerName,
         senderType: _currentUserType!,
         type: OrganizerMessageType.text,
         text: text,
@@ -298,7 +324,8 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка отправки сообщения: $e')));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка отправки сообщения: $e')));
       }
     }
   }
@@ -323,7 +350,8 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка принятия специалиста: $e')));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка принятия специалиста: $e')));
       }
     }
   }
@@ -351,7 +379,8 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка отклонения специалиста: $e')));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка отклонения специалиста: $e')));
       }
     }
   }
@@ -372,7 +401,9 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
           maxLines: 3,
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('Отклонить'),
@@ -402,25 +433,28 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
         ],
       ),
     );
   }
 
   Widget _buildInfoRow(String label, String value) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 100,
-          child: Text('$label:', style: const TextStyle(fontWeight: FontWeight.bold)),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text('$label:',
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            Expanded(child: Text(value)),
+          ],
         ),
-        Expanded(child: Text(value)),
-      ],
-    ),
-  );
+      );
 
   Future<void> _closeChat() async {
     final confirmed = await showDialog<bool>(
@@ -429,7 +463,9 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
         title: const Text('Закрыть чат'),
         content: const Text('Вы уверены, что хотите закрыть этот чат?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -444,7 +480,8 @@ class _OrganizerChatScreenState extends ConsumerState<OrganizerChatScreen> {
 
     if (confirmed ?? false) {
       try {
-        await _chatService.updateChatStatus(widget.chatId, OrganizerChatStatus.closed);
+        await _chatService.updateChatStatus(
+            widget.chatId, OrganizerChatStatus.closed);
         if (mounted) {
           Navigator.pop(context);
         }

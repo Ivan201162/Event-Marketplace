@@ -53,7 +53,8 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
   AnalyticsService get analytics => ref.read(analyticsServiceProvider);
 
   /// Отправить событие
-  Future<void> trackEvent(AnalyticsEventType type, {Map<String, dynamic>? parameters}) async {
+  Future<void> trackEvent(AnalyticsEventType type,
+      {Map<String, dynamic>? parameters}) async {
     await analytics.logEventWithParams(type, parameters ?? {});
   }
 
@@ -68,7 +69,8 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
     String description, {
     Map<String, dynamic>? parameters,
   }) async {
-    await analytics.logError(error: error, description: description, parameters: parameters);
+    await analytics.logError(
+        error: error, description: description, parameters: parameters);
   }
 
   /// Отправить событие производительности
@@ -100,8 +102,10 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
   }
 
   /// Отправить пользовательское событие
-  Future<void> trackCustomEvent(String eventName, {Map<String, dynamic>? parameters}) async {
-    await analytics.logCustomEvent(eventName: eventName, parameters: parameters);
+  Future<void> trackCustomEvent(String eventName,
+      {Map<String, dynamic>? parameters}) async {
+    await analytics.logCustomEvent(
+        eventName: eventName, parameters: parameters);
   }
 }
 
@@ -153,7 +157,8 @@ class AnalyticsNavigator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Navigator(
         onGenerateRoute: (settings) {
           _trackNavigation(ref, settings.name ?? 'unknown');
-          return MaterialPageRoute<void>(builder: (context) => child, settings: settings);
+          return MaterialPageRoute<void>(
+              builder: (context) => child, settings: settings);
         },
       );
 
@@ -172,7 +177,8 @@ class AnalyticsNavigator extends ConsumerWidget {
 
 /// Виджет для отслеживания ошибок
 class AnalyticsErrorBoundary extends ConsumerWidget {
-  const AnalyticsErrorBoundary({super.key, required this.child, this.errorBuilder});
+  const AnalyticsErrorBoundary(
+      {super.key, required this.child, this.errorBuilder});
   final Widget child;
   final Widget Function(Object error, StackTrace stackTrace)? errorBuilder;
 

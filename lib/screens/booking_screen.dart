@@ -60,7 +60,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
 
   Future<void> _loadSpecialist() async {
     try {
-      final specialist = await _specialistService.getSpecialistById(widget.specialistId);
+      final specialist =
+          await _specialistService.getSpecialistById(widget.specialistId);
       setState(() {
         _specialist = specialist;
         _isLoading = false;
@@ -75,7 +76,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки специалиста: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка загрузки специалиста: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -138,7 +141,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     if (currentUserAsync is! AsyncData || currentUserAsync.value == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Необходимо войти в систему'), backgroundColor: Colors.red),
+          const SnackBar(
+              content: Text('Необходимо войти в систему'),
+              backgroundColor: Colors.red),
         );
       }
       return;
@@ -166,7 +171,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         clientName: currentUser.displayName ?? '',
         service: _eventTitleController.text,
         date: eventDateTime,
-        time: '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}',
+        time:
+            '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}',
         duration: _duration,
         totalPrice: _totalPrice.toInt(),
         notes: _commentController.text,
@@ -189,7 +195,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка создания заявки: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка создания заявки: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -211,7 +219,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
       return Scaffold(
         appBar: AppBar(
           title: const Text('Бронирование'),
-          leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => context.pop()),
         ),
         body: const Center(child: Text('Специалист не найден')),
       );
@@ -221,7 +231,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Бронирование'),
-          leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => context.pop()),
         ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -253,262 +265,275 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   }
 
   Widget _buildSpecialistInfo() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundImage: _specialist!.imageUrl != null
-                ? NetworkImage(_specialist!.imageUrl!)
-                : null,
-            child: _specialist!.imageUrl == null
-                ? Text(
-                    _specialist!.name.isNotEmpty ? _specialist!.name[0].toUpperCase() : '?',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  )
-                : null,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _specialist!.name,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  _specialist!.category?.name ?? 'Специалист',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                ),
-                Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: _specialist!.imageUrl != null
+                    ? NetworkImage(_specialist!.imageUrl!)
+                    : null,
+                child: _specialist!.imageUrl == null
+                    ? Text(
+                        _specialist!.name.isNotEmpty
+                            ? _specialist!.name[0].toUpperCase()
+                            : '?',
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
-                    const SizedBox(width: 4),
                     Text(
-                      _specialist!.rating.toStringAsFixed(1),
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      _specialist!.name,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      _specialist!.category?.name ?? 'Специалист',
+                      style:
+                          TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          _specialist!.rating.toStringAsFixed(1),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Text(
+                '${(_specialist!.price ?? 0).toInt()}₽/час',
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green),
+              ),
+            ],
           ),
-          Text(
-            '${(_specialist!.price ?? 0).toInt()}₽/час',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildBookingForm() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text('Детали мероприятия', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-      const SizedBox(height: 16),
-
-      CustomTextField(
-        controller: _eventTitleController,
-        labelText: 'Название мероприятия *',
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Введите название мероприятия';
-          }
-          return null;
-        },
-      ),
-      const SizedBox(height: 16),
-
-      CustomTextField(
-        controller: _descriptionController,
-        labelText: 'Описание мероприятия',
-        maxLines: 3,
-      ),
-      const SizedBox(height: 16),
-
-      CustomTextField(
-        controller: _addressController,
-        labelText: 'Адрес проведения *',
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Введите адрес проведения';
-          }
-          return null;
-        },
-      ),
-      const SizedBox(height: 16),
-
-      CustomTextField(
-        controller: _participantsController,
-        labelText: 'Количество участников',
-        keyboardType: TextInputType.number,
-      ),
-      const SizedBox(height: 16),
-
-      // Дата и время
-      Row(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: _selectDate,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Дата мероприятия *',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _selectedDate != null
-                          ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
-                          : 'Выберите дату',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: InkWell(
-              onTap: _selectTime,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Время начала *',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _selectedTime != null
-                          ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                          : 'Выберите время',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 16),
-
-      // Продолжительность
-      const Text(
-        'Продолжительность (часы)',
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-      ),
-      const SizedBox(height: 8),
-      Slider(
-        value: _duration.toDouble(),
-        min: 1,
-        max: 12,
-        divisions: 11,
-        label: '$_duration часов',
-        onChanged: (value) {
-          setState(() {
-            _duration = value.round();
-          });
-          _calculateTotalPrice();
-        },
-      ),
-      const SizedBox(height: 16),
-
-      CustomTextField(
-        controller: _commentController,
-        labelText: 'Дополнительные пожелания',
-        maxLines: 3,
-      ),
-    ],
-  );
-
-  Widget _buildPriceSection() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Стоимость', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text('Детали мероприятия',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('$_duration часов × ${(_specialist!.price ?? 0).toInt()}₽'),
-              Text('${_totalPrice.toInt()}₽'),
-            ],
+          CustomTextField(
+            controller: _eventTitleController,
+            labelText: 'Название мероприятия *',
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Введите название мероприятия';
+              }
+              return null;
+            },
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
 
-          const Divider(),
+          CustomTextField(
+            controller: _descriptionController,
+            labelText: 'Описание мероприятия',
+            maxLines: 3,
+          ),
+          const SizedBox(height: 16),
 
+          CustomTextField(
+            controller: _addressController,
+            labelText: 'Адрес проведения *',
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Введите адрес проведения';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+
+          CustomTextField(
+            controller: _participantsController,
+            labelText: 'Количество участников',
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: 16),
+
+          // Дата и время
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Итого:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              Text(
-                '${_totalPrice.toInt()}₽',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+              Expanded(
+                child: InkWell(
+                  onTap: _selectDate,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Дата мероприятия *',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _selectedDate != null
+                              ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                              : 'Выберите дату',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: InkWell(
+                  onTap: _selectTime,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Время начала *',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _selectedTime != null
+                              ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                              : 'Выберите время',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-
           const SizedBox(height: 16),
 
-          // Аванс
-          CheckboxListTile(
-            title: const Text('Оплатить аванс'),
-            subtitle: Text('${_advanceAmount.toInt()}₽ (30%)'),
-            value: _advancePayment,
+          // Продолжительность
+          const Text(
+            'Продолжительность (часы)',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 8),
+          Slider(
+            value: _duration.toDouble(),
+            min: 1,
+            max: 12,
+            divisions: 11,
+            label: '$_duration часов',
             onChanged: (value) {
               setState(() {
-                _advancePayment = value ?? false;
+                _duration = value.round();
               });
+              _calculateTotalPrice();
             },
           ),
+          const SizedBox(height: 16),
+
+          CustomTextField(
+            controller: _commentController,
+            labelText: 'Дополнительные пожелания',
+            maxLines: 3,
+          ),
         ],
-      ),
-    ),
-  );
+      );
+
+  Widget _buildPriceSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Стоимость',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                      '$_duration часов × ${(_specialist!.price ?? 0).toInt()}₽'),
+                  Text('${_totalPrice.toInt()}₽'),
+                ],
+              ),
+              const SizedBox(height: 8),
+
+              const Divider(),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Итого:',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    '${_totalPrice.toInt()}₽',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Аванс
+              CheckboxListTile(
+                title: const Text('Оплатить аванс'),
+                subtitle: Text('${_advanceAmount.toInt()}₽ (30%)'),
+                value: _advancePayment,
+                onChanged: (value) {
+                  setState(() {
+                    _advancePayment = value ?? false;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildSubmitButton() => SizedBox(
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: _isSubmitting ? null : _submitBooking,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
-      child: _isSubmitting
-          ? const CircularProgressIndicator(color: Colors.white)
-          : const Text(
-              'Отправить заявку',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-    ),
-  );
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: _isSubmitting ? null : _submitBooking,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+          ),
+          child: _isSubmitting
+              ? const CircularProgressIndicator(color: Colors.white)
+              : const Text(
+                  'Отправить заявку',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+        ),
+      );
 }

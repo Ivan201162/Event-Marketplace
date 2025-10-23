@@ -6,8 +6,8 @@ import '../models/specialist_comparison.dart';
 /// Провайдер для управления сравнением специалистов (мигрирован с StateNotifierProvider)
 final specialistComparisonProvider =
     NotifierProvider<SpecialistComparisonNotifier, SpecialistComparison>(
-      () => SpecialistComparisonNotifier(),
-    );
+  () => SpecialistComparisonNotifier(),
+);
 
 /// Нотификатор для сравнения специалистов (мигрирован с StateNotifier)
 class SpecialistComparisonNotifier extends Notifier<SpecialistComparison> {
@@ -37,10 +37,12 @@ class SpecialistComparisonNotifier extends Notifier<SpecialistComparison> {
   }
 
   /// Проверить, можно ли добавить специалиста
-  bool canAddSpecialist(Specialist specialist) => state.canAddSpecialist(specialist);
+  bool canAddSpecialist(Specialist specialist) =>
+      state.canAddSpecialist(specialist);
 
   /// Проверить, добавлен ли специалист
-  bool isSpecialistAdded(String specialistId) => state.specialists.any((s) => s.id == specialistId);
+  bool isSpecialistAdded(String specialistId) =>
+      state.specialists.any((s) => s.id == specialistId);
 
   /// Получить количество специалистов
   int get specialistCount => state.count;
@@ -130,7 +132,8 @@ final averageRatingProvider = Provider<double>((ref) {
 });
 
 /// Провайдер для проверки, добавлен ли конкретный специалист
-final isSpecialistInComparisonProvider = Provider.family<bool, String>((ref, specialistId) {
+final isSpecialistInComparisonProvider =
+    Provider.family<bool, String>((ref, specialistId) {
   final comparison = ref.watch(specialistComparisonProvider);
   return comparison.specialists.any((s) => s.id == specialistId);
 });
@@ -142,7 +145,8 @@ final comparisonCountProvider = Provider<int>((ref) {
 });
 
 /// Провайдер для проверки, можно ли добавить специалиста
-final canAddSpecialistProvider = Provider.family<bool, Specialist>((ref, specialist) {
+final canAddSpecialistProvider =
+    Provider.family<bool, Specialist>((ref, specialist) {
   final comparison = ref.watch(specialistComparisonProvider);
   return comparison.canAddSpecialist(specialist);
 });
@@ -190,17 +194,20 @@ final comparisonResultsProvider = Provider<List<ComparisonResult>>((ref) {
         case ComparisonCriteria.experience:
         case ComparisonCriteria.reviews:
           winner = values.entries
-              .reduce((a, b) => (a.value as Comparable).compareTo(b.value) > 0 ? a : b)
+              .reduce((a, b) =>
+                  (a.value as Comparable).compareTo(b.value) > 0 ? a : b)
               .key;
           break;
         case ComparisonCriteria.price:
           winner = values.entries
-              .reduce((a, b) => (a.value as double) < (b.value as double) ? a : b)
+              .reduce(
+                  (a, b) => (a.value as double) < (b.value as double) ? a : b)
               .key;
           break;
         case ComparisonCriteria.availability:
           winner = values.entries
-              .firstWhere((e) => e.value == true, orElse: () => values.entries.first)
+              .firstWhere((e) => e.value == true,
+                  orElse: () => values.entries.first)
               .key;
           break;
         case ComparisonCriteria.location:
@@ -209,7 +216,8 @@ final comparisonResultsProvider = Provider<List<ComparisonResult>>((ref) {
       }
     }
 
-    results.add(ComparisonResult(criteria: criteria, values: values, winner: winner));
+    results.add(
+        ComparisonResult(criteria: criteria, values: values, winner: winner));
   }
 
   return results;

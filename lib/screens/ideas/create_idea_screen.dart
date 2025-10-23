@@ -24,12 +24,12 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _tagsController = TextEditingController();
-  
+
   List<File> _selectedImages = [];
   List<File> _selectedVideos = [];
   bool _isLoading = false;
   bool _isVideo = false;
-  
+
   final List<String> _popularTags = [
     'Свадьба',
     'День рождения',
@@ -58,7 +58,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
       maxHeight: 1080,
       imageQuality: 85,
     );
-    
+
     if (images != null && images.isNotEmpty) {
       setState(() {
         _selectedImages.addAll(images.map((image) => File(image.path)));
@@ -73,7 +73,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
       source: ImageSource.gallery,
       maxDuration: const Duration(minutes: 5),
     );
-    
+
     if (video != null) {
       setState(() {
         _selectedVideos = [File(video.path)];
@@ -113,15 +113,14 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
       // Загружаем медиа в Storage
       List<String> mediaUrls = [];
       final storageService = StorageService();
-      
+
       if (_isVideo && _selectedVideos.isNotEmpty) {
         // Загружаем видео
         for (int i = 0; i < _selectedVideos.length; i++) {
           final videoUrl = await storageService.uploadIdeaVideo(
-            user.uid, 
-            _selectedVideos[i], 
-            'idea_video_${DateTime.now().millisecondsSinceEpoch}_$i'
-          );
+              user.uid,
+              _selectedVideos[i],
+              'idea_video_${DateTime.now().millisecondsSinceEpoch}_$i');
           if (videoUrl != null) {
             mediaUrls.add(videoUrl);
           }
@@ -130,10 +129,9 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
         // Загружаем изображения
         for (int i = 0; i < _selectedImages.length; i++) {
           final imageUrl = await storageService.uploadIdeaImage(
-            user.uid, 
-            _selectedImages[i], 
-            'idea_image_${DateTime.now().millisecondsSinceEpoch}_$i'
-          );
+              user.uid,
+              _selectedImages[i],
+              'idea_image_${DateTime.now().millisecondsSinceEpoch}_$i');
           if (imageUrl != null) {
             mediaUrls.add(imageUrl);
           }
@@ -166,12 +164,10 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
         'updatedAt': Timestamp.now(),
       };
 
-      await FirebaseFirestore.instance
-          .collection('ideas')
-          .add(ideaData);
+      await FirebaseFirestore.instance.collection('ideas').add(ideaData);
 
       _showSuccessSnackBar('Идея успешно опубликована!');
-      
+
       // Возвращаемся назад
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
@@ -232,7 +228,8 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
                   )
                 : const Text(
                     'Опубликовать',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
           ),
         ],
@@ -262,7 +259,8 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
               _buildTextField(
                 controller: _descriptionController,
                 label: 'Описание',
-                hint: 'Расскажите подробнее о вашей идее, что вдохновило, как реализовать...',
+                hint:
+                    'Расскажите подробнее о вашей идее, что вдохновило, как реализовать...',
                 maxLines: 5,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -298,7 +296,8 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
                       ? const CircularProgressIndicator(color: Colors.white)
                       : const Text(
                           'Опубликовать идею',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                 ),
               ),
@@ -430,7 +429,8 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
                 children: [
                   Icon(Icons.add_a_photo, size: 48, color: Colors.grey),
                   SizedBox(height: 8),
-                  Text('Добавьте фото или видео', style: TextStyle(color: Colors.grey)),
+                  Text('Добавьте фото или видео',
+                      style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ),

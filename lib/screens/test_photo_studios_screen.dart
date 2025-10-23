@@ -112,7 +112,8 @@ class _TestPhotoStudiosScreenState extends State<TestPhotoStudiosScreen> {
               children: [
                 Text(
                   _statusMessage,
-                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -135,7 +136,8 @@ class _TestPhotoStudiosScreenState extends State<TestPhotoStudiosScreen> {
                         onPressed: _isLoading ? null : _clearTestData,
                         icon: const Icon(Icons.clear),
                         label: const Text('Очистить данные'),
-                        style: OutlinedButton.styleFrom(foregroundColor: theme.colorScheme.error),
+                        style: OutlinedButton.styleFrom(
+                            foregroundColor: theme.colorScheme.error),
                       ),
                     ),
                   ],
@@ -156,7 +158,11 @@ class _TestPhotoStudiosScreenState extends State<TestPhotoStudiosScreen> {
       return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Загрузка...')],
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Загрузка...')
+          ],
         ),
       );
     }
@@ -166,9 +172,11 @@ class _TestPhotoStudiosScreenState extends State<TestPhotoStudiosScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.photo_camera_outlined, size: 64, color: Colors.grey[400]),
+            Icon(Icons.photo_camera_outlined,
+                size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Фотостудии не найдены', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Фотостудии не найдены',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Создайте тестовые данные для проверки функционала',
@@ -225,7 +233,9 @@ class _TestPhotoStudiosScreenState extends State<TestPhotoStudiosScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );

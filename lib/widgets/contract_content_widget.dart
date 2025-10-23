@@ -20,7 +20,10 @@ class ContractContentWidget extends StatelessWidget {
                     'Содержимое договора',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                     icon: const Icon(Icons.fullscreen),
@@ -42,7 +45,10 @@ class ContractContentWidget extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Text(
                     contract.content,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.5),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(height: 1.5),
                   ),
                 ),
               ),
@@ -58,7 +64,10 @@ class ContractContentWidget extends StatelessWidget {
         children: [
           Text(
             'Условия договора',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           ...contract.terms.entries.map(
@@ -112,7 +121,9 @@ class ContractContentWidget extends StatelessWidget {
 
   String _formatTermValue(value) {
     if (value is Map<String, dynamic>) {
-      return value.entries.map((e) => '${_getTermTitle(e.key)}: ${e.value}').join('\n');
+      return value.entries
+          .map((e) => '${_getTermTitle(e.key)}: ${e.value}')
+          .join('\n');
     } else if (value is List) {
       return value.join(', ');
     } else {
@@ -137,7 +148,10 @@ class ContractContentWidget extends StatelessWidget {
                     'Договор ${contract.contractNumber}',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -150,7 +164,10 @@ class ContractContentWidget extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Text(
                     contract.content,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(height: 1.5),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(height: 1.5),
                   ),
                 ),
               ),

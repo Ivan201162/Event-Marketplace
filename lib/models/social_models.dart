@@ -191,7 +191,11 @@ class Message {
       'sender_id': senderId,
       'text': text,
       'created_at': createdAt.toIso8601String(),
-      'profiles': {'username': senderUsername, 'name': senderName, 'avatar_url': senderAvatarUrl},
+      'profiles': {
+        'username': senderUsername,
+        'name': senderName,
+        'avatar_url': senderAvatarUrl
+      },
     };
   }
 
@@ -365,9 +369,12 @@ class Request {
       title: json['title'] as String,
       description: json['description'] as String?,
       category: json['category'] as String?,
-      budget: json['budget'] != null ? (json['budget'] as num).toDouble() : null,
+      budget:
+          json['budget'] != null ? (json['budget'] as num).toDouble() : null,
       status: json['status'] as String? ?? 'open',
-      deadline: json['deadline'] != null ? DateTime.parse(json['deadline'] as String) : null,
+      deadline: json['deadline'] != null
+          ? DateTime.parse(json['deadline'] as String)
+          : null,
       location: json['location'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),

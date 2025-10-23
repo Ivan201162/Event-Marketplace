@@ -76,7 +76,8 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                         Icon(Icons.error_outline, color: Colors.red[600]),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(_error!, style: TextStyle(color: Colors.red[600])),
+                          child: Text(_error!,
+                              style: TextStyle(color: Colors.red[600])),
                         ),
                       ],
                     ),
@@ -108,7 +109,8 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
   Widget _buildContentTypeSelector() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Тип контента', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('Тип контента',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           RadioGroup<StoryContentType>(
             value: _selectedType,
@@ -171,7 +173,8 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Текст сторис', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('Текст сторис',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           TextFormField(
             controller: _textController,
@@ -193,7 +196,8 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Выберите файл', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('Выберите файл',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           if (_selectedFile == null) ...[
             Row(
@@ -225,7 +229,9 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
               child: Row(
                 children: [
                   Icon(
-                    _selectedType == StoryContentType.image ? Icons.image : Icons.video_library,
+                    _selectedType == StoryContentType.image
+                        ? Icons.image
+                        : Icons.video_library,
                     color: Colors.grey[600],
                   ),
                   const SizedBox(width: 8),
@@ -240,8 +246,10 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          _formatFileSize(File(_selectedFile!.path).lengthSync()),
-                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                          _formatFileSize(
+                              File(_selectedFile!.path).lengthSync()),
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 12),
                         ),
                       ],
                     ),
@@ -266,7 +274,8 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
   Widget _buildTextSettings() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Настройки текста', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('Настройки текста',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
 
           // Цвет фона
@@ -299,7 +308,9 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                               color: color,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: _backgroundColor == color ? Colors.blue : Colors.grey,
+                                color: _backgroundColor == color
+                                    ? Colors.blue
+                                    : Colors.grey,
                                 width: 2,
                               ),
                             ),
@@ -343,7 +354,9 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
                               color: color,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: _textColor == color ? Colors.blue : Colors.grey,
+                                color: _textColor == color
+                                    ? Colors.blue
+                                    : Colors.grey,
                                 width: 2,
                               ),
                             ),
@@ -385,7 +398,7 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
       final file = _selectedType == StoryContentType.image
           ? await _storyService.pickImage()
           : await _storyService.pickVideo();
-      
+
       if (file != null) {
         setState(() {
           _selectedFile = XFile(file.path);
@@ -449,14 +462,16 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
         // Загружаем файл
         if (_selectedType == StoryContentType.image) {
           content = await _storyService.uploadStoryImage(
-            File(_selectedFile!.path),
-            currentUser.uid,
-          ) ?? '';
+                File(_selectedFile!.path),
+                currentUser.uid,
+              ) ??
+              '';
         } else {
           content = await _storyService.uploadStoryVideo(
-            File(_selectedFile!.path),
-            currentUser.uid,
-          ) ?? '';
+                File(_selectedFile!.path),
+                currentUser.uid,
+              ) ??
+              '';
         }
       }
 
@@ -464,7 +479,9 @@ class _CreateStoryDialogState extends ConsumerState<CreateStoryDialog> {
       final success = await _storyService.createStory(
         specialistId: currentUser.uid,
         mediaUrl: content,
-        text: _selectedType == StoryContentType.text ? _textController.text.trim() : '',
+        text: _selectedType == StoryContentType.text
+            ? _textController.text.trim()
+            : '',
         metadata: {
           'contentType': _selectedType.toString(),
           'backgroundColor': _selectedType == StoryContentType.text

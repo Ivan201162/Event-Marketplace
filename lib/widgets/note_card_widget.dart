@@ -32,13 +32,15 @@ class NoteCardWidget extends StatelessWidget {
                 Row(
                   children: [
                     if (note.isPinned) ...[
-                      const Icon(Icons.push_pin, color: Colors.orange, size: 16),
+                      const Icon(Icons.push_pin,
+                          color: Colors.orange, size: 16),
                       const SizedBox(width: 4),
                     ],
                     Expanded(
                       child: Text(
                         note.title,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -63,8 +65,11 @@ class NoteCardWidget extends StatelessWidget {
                           child: Row(
                             children: [
                               Icon(
-                                note.isPinned ? Icons.push_pin_outlined : Icons.push_pin,
-                                color: note.isPinned ? Colors.grey : Colors.orange,
+                                note.isPinned
+                                    ? Icons.push_pin_outlined
+                                    : Icons.push_pin,
+                                color:
+                                    note.isPinned ? Colors.grey : Colors.orange,
                               ),
                               const SizedBox(width: 8),
                               Text(note.isPinned ? 'Открепить' : 'Закрепить'),
@@ -74,7 +79,11 @@ class NoteCardWidget extends StatelessWidget {
                         const PopupMenuItem(
                           value: 'edit',
                           child: Row(
-                            children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')],
+                            children: [
+                              Icon(Icons.edit),
+                              SizedBox(width: 8),
+                              Text('Редактировать')
+                            ],
                           ),
                         ),
                         const PopupMenuItem(
@@ -83,7 +92,8 @@ class NoteCardWidget extends StatelessWidget {
                             children: [
                               Icon(Icons.delete, color: Colors.red),
                               SizedBox(width: 8),
-                              Text('Удалить', style: TextStyle(color: Colors.red)),
+                              Text('Удалить',
+                                  style: TextStyle(color: Colors.red)),
                             ],
                           ),
                         ),
@@ -112,8 +122,10 @@ class NoteCardWidget extends StatelessWidget {
                         .take(3)
                         .map(
                           (tag) => Chip(
-                            label: Text(tag, style: const TextStyle(fontSize: 12)),
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            label:
+                                Text(tag, style: const TextStyle(fontSize: 12)),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
                             visualDensity: VisualDensity.compact,
                           ),
                         )
@@ -145,13 +157,17 @@ class NoteCardWidget extends StatelessWidget {
                       const SizedBox(width: 16),
                       Icon(Icons.event, size: 14, color: Colors.blue[600]),
                       const SizedBox(width: 4),
-                      Text('Событие', style: TextStyle(fontSize: 12, color: Colors.blue[600])),
+                      Text('Событие',
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.blue[600])),
                     ],
                     if (note.specialistId != null) ...[
                       const SizedBox(width: 16),
                       Icon(Icons.person, size: 14, color: Colors.green[600]),
                       const SizedBox(width: 4),
-                      Text('Специалист', style: TextStyle(fontSize: 12, color: Colors.green[600])),
+                      Text('Специалист',
+                          style: TextStyle(
+                              fontSize: 12, color: Colors.green[600])),
                     ],
                   ],
                 ),

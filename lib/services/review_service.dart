@@ -10,7 +10,9 @@ class ReviewService {
   /// Add a new review
   Future<String> addReview(Review review) async {
     try {
-      final docRef = await _firestore.collection(_reviewsCollection).add(review.toFirestore());
+      final docRef = await _firestore
+          .collection(_reviewsCollection)
+          .add(review.toFirestore());
       return docRef.id;
     } catch (e) {
       throw Exception('Error adding review: $e');
@@ -41,7 +43,9 @@ class ReviewService {
         updatedAt: updatedAt,
       );
 
-      final docRef = await _firestore.collection(_reviewsCollection).add(review.toFirestore());
+      final docRef = await _firestore
+          .collection(_reviewsCollection)
+          .add(review.toFirestore());
       return docRef.id;
     } catch (e) {
       throw Exception('Error creating review: $e');
@@ -49,7 +53,8 @@ class ReviewService {
   }
 
   /// Get reviews by specialist
-  Future<List<Review>> getReviewsBySpecialist(String specialistId, {int limit = 20}) async {
+  Future<List<Review>> getReviewsBySpecialist(String specialistId,
+      {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_reviewsCollection)
@@ -118,7 +123,8 @@ class ReviewService {
         return null;
       }
 
-      final reviews = snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+      final reviews =
+          snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
 
       if (reviews.isEmpty) {
         return null;
@@ -126,16 +132,19 @@ class ReviewService {
 
       // Calculate statistics
       final totalReviews = reviews.length;
-      final averageRating = reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
+      final averageRating =
+          reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
 
       final ratingDistribution = <int, int>{};
       for (final review in reviews) {
-        ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
+        ratingDistribution[review.rating] =
+            (ratingDistribution[review.rating] ?? 0) + 1;
       }
 
       final verifiedReviews = reviews.where((r) => r.isVerified).length;
       final recentReviews = reviews
-          .where((r) => r.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30))))
+          .where((r) => r.createdAt
+              .isAfter(DateTime.now().subtract(const Duration(days: 30))))
           .length;
 
       return ReviewStats(
@@ -162,7 +171,8 @@ class ReviewService {
         return null;
       }
 
-      final reviews = snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+      final reviews =
+          snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
 
       if (reviews.isEmpty) {
         return null;
@@ -170,11 +180,13 @@ class ReviewService {
 
       // Calculate statistics
       final totalReviews = reviews.length;
-      final averageRating = reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
+      final averageRating =
+          reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
 
       final ratingDistribution = <int, int>{};
       for (final review in reviews) {
-        ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
+        ratingDistribution[review.rating] =
+            (ratingDistribution[review.rating] ?? 0) + 1;
       }
 
       // Get top tags from all reviews
@@ -188,7 +200,8 @@ class ReviewService {
         tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
       }
 
-      final topTags = tagCounts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+      final topTags = tagCounts.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
 
       final topTagsList = topTags.take(5).map((e) => e.key).toList();
 
@@ -196,7 +209,8 @@ class ReviewService {
       final serviceRatings = <String, double>{};
       for (final review in reviews) {
         for (final serviceTag in review.serviceTags) {
-          serviceRatings[serviceTag] = (serviceRatings[serviceTag] ?? 0) + review.rating;
+          serviceRatings[serviceTag] =
+              (serviceRatings[serviceTag] ?? 0) + review.rating;
         }
       }
 
@@ -206,7 +220,8 @@ class ReviewService {
         ratingDistribution: ratingDistribution,
         verifiedReviews: reviews.where((r) => r.isVerified).length,
         recentReviews: reviews
-            .where((r) => r.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30))))
+            .where((r) => r.createdAt
+                .isAfter(DateTime.now().subtract(const Duration(days: 30))))
             .length,
         topTags: topTagsList,
       );

@@ -22,7 +22,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
   UserType _selectedType = UserType.physical;
   bool _isLoading = false;
-  
+
   late AnimationController _fadeController;
   late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
@@ -52,7 +52,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -60,7 +60,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       parent: _fadeController,
       curve: Curves.easeInOut,
     ));
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -68,7 +68,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       parent: _slideController,
       curve: Curves.easeOutCubic,
     ));
-    
+
     // Start animations
     _fadeController.forward();
     _slideController.forward();
@@ -97,7 +97,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       await authService.updateUserProfile(
         name: _nameController.text.trim(),
         city: _cityController.text.trim(),
-        status: _statusController.text.trim().isEmpty ? null : _statusController.text.trim(),
+        status: _statusController.text.trim().isEmpty
+            ? null
+            : _statusController.text.trim(),
         type: _selectedType,
       );
 
@@ -116,7 +118,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showCityPicker() {
@@ -201,11 +204,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                           },
                         ),
                         const SizedBox(height: 24),
-                        
+
                         // Welcome text
                         const Text(
                           'Добро пожаловать!',
-                          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         const SizedBox(height: 8),
                         const Text(
@@ -230,126 +236,129 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
                   animationType: AnimationType.fadeSlideIn,
                   delay: const Duration(milliseconds: 300),
                   child: Container(
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.15),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                    children: [
-                      // Name field
-                      TextField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Ваше имя *',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.person),
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.15),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // City field
-                      TextField(
-                        controller: _cityController,
-                        decoration: InputDecoration(
-                          labelText: 'Город *',
-                          border: const OutlineInputBorder(),
-                          prefixIcon: const Icon(Icons.location_city),
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.arrow_drop_down),
-                            onPressed: _showCityPicker,
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        // Name field
+                        TextField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Ваше имя *',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.person),
                           ),
                         ),
-                        readOnly: true,
-                        onTap: _showCityPicker,
-                      ),
-                      const SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
-                      // Status field
-                      TextField(
-                        controller: _statusController,
-                        decoration: const InputDecoration(
-                          labelText: 'Статус (необязательно)',
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.info),
-                          hintText: 'Например: Фотограф, Ведущий, DJ',
+                        // City field
+                        TextField(
+                          controller: _cityController,
+                          decoration: InputDecoration(
+                            labelText: 'Город *',
+                            border: const OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.location_city),
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.arrow_drop_down),
+                              onPressed: _showCityPicker,
+                            ),
+                          ),
+                          readOnly: true,
+                          onTap: _showCityPicker,
                         ),
-                      ),
-                      const SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
-                      // User type selection
-                      const Text(
-                        'Тип аккаунта',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      ...UserType.values.map(
-                        (type) => RadioListTile<UserType>(
-                          title: Text(type.displayName),
-                          value: type,
-                          groupValue: _selectedType,
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() => _selectedType = value);
-                            }
+                        // Status field
+                        TextField(
+                          controller: _statusController,
+                          decoration: const InputDecoration(
+                            labelText: 'Статус (необязательно)',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.info),
+                            hintText: 'Например: Фотограф, Ведущий, DJ',
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // User type selection
+                        const Text(
+                          'Тип аккаунта',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        ...UserType.values.map(
+                          (type) => RadioListTile<UserType>(
+                            title: Text(type.displayName),
+                            value: type,
+                            groupValue: _selectedType,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() => _selectedType = value);
+                              }
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // Animated complete button
+                        TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          duration: const Duration(milliseconds: 1200),
+                          builder: (context, value, child) {
+                            return Transform.scale(
+                              scale: value,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed:
+                                      _isLoading ? null : _completeOnboarding,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF6C5CE7),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    elevation: 4,
+                                  ),
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Text(
+                                          'Завершить настройку',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                            );
                           },
                         ),
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Animated complete button
-                      TweenAnimationBuilder<double>(
-                        tween: Tween(begin: 0.0, end: 1.0),
-                        duration: const Duration(milliseconds: 1200),
-                        builder: (context, value, child) {
-                          return Transform.scale(
-                            scale: value,
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: _isLoading ? null : _completeOnboarding,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF6C5CE7),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  elevation: 4,
-                                ),
-                                child: _isLoading
-                                    ? const SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                          strokeWidth: 2,
-                                        ),
-                                      )
-                                    : const Text(
-                                        'Завершить настройку',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
+                ),
 
                 const Spacer(),
               ],

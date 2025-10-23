@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 /// Виджет с ленивой загрузкой
 class LazyLoadWidget extends StatefulWidget {
-  const LazyLoadWidget({super.key, required this.child, this.height, this.onVisible});
+  const LazyLoadWidget(
+      {super.key, required this.child, this.height, this.onVisible});
   final Widget child;
   final double? height;
   final VoidCallback? onVisible;
@@ -36,7 +37,8 @@ class _LazyLoadWidgetState extends State<LazyLoadWidget> {
 
 /// Простой детектор видимости
 class VisibilityDetector extends StatefulWidget {
-  const VisibilityDetector({super.key, required this.child, required this.onVisibilityChanged});
+  const VisibilityDetector(
+      {super.key, required this.child, required this.onVisibilityChanged});
   final Widget child;
   final void Function(VisibilityInfo) onVisibilityChanged;
 
@@ -48,7 +50,8 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
   final GlobalKey _key = GlobalKey();
 
   @override
-  Widget build(BuildContext context) => NotificationListener<ScrollNotification>(
+  Widget build(BuildContext context) =>
+      NotificationListener<ScrollNotification>(
         onNotification: (notification) {
           _checkVisibility();
           return false;
@@ -67,11 +70,13 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
       final visibleBottom = position.dy + size.height > 0;
 
       if (visibleTop && visibleBottom) {
-        final visibleHeight = (position.dy + size.height).clamp(0.0, screenSize.height) -
-            position.dy.clamp(0.0, screenSize.height);
+        final visibleHeight =
+            (position.dy + size.height).clamp(0.0, screenSize.height) -
+                position.dy.clamp(0.0, screenSize.height);
         final visibleFraction = visibleHeight / size.height;
 
-        widget.onVisibilityChanged(VisibilityInfo(visibleFraction: visibleFraction));
+        widget.onVisibilityChanged(
+            VisibilityInfo(visibleFraction: visibleFraction));
       }
     }
   }
@@ -111,7 +116,9 @@ class CachedImageWidget extends StatelessWidget {
           placeholder: (context, url) =>
               placeholder ?? const Center(child: CircularProgressIndicator()),
           errorWidget: (context, url, error) =>
-              errorWidget ?? Container(color: Colors.grey[300], child: const Icon(Icons.error)),
+              errorWidget ??
+              Container(
+                  color: Colors.grey[300], child: const Icon(Icons.error)),
         ),
       );
 }
@@ -140,7 +147,8 @@ class VirtualizedList extends StatelessWidget {
         itemBuilder: itemBuilder,
       );
     } else {
-      return ListView.builder(padding: padding, itemCount: itemCount, itemBuilder: itemBuilder);
+      return ListView.builder(
+          padding: padding, itemCount: itemCount, itemBuilder: itemBuilder);
     }
   }
 }
@@ -237,7 +245,8 @@ class _PaginatedListState extends State<PaginatedList> {
     }
 
     if (_items.isEmpty && _isLoading) {
-      return widget.loadingWidget ?? const Center(child: CircularProgressIndicator());
+      return widget.loadingWidget ??
+          const Center(child: CircularProgressIndicator());
     }
 
     if (_items.isEmpty) {
@@ -247,7 +256,8 @@ class _PaginatedListState extends State<PaginatedList> {
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification is ScrollEndNotification &&
-            notification.metrics.pixels >= notification.metrics.maxScrollExtent - 200) {
+            notification.metrics.pixels >=
+                notification.metrics.maxScrollExtent - 200) {
           _loadMore();
         }
         return false;
@@ -300,7 +310,8 @@ class _DebouncedWidgetState extends State<DebouncedWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(onTap: _debounce, child: widget.child);
+  Widget build(BuildContext context) =>
+      GestureDetector(onTap: _debounce, child: widget.child);
 }
 
 /// Виджет с троттлингом
@@ -331,7 +342,8 @@ class _ThrottledWidgetState extends State<ThrottledWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(onTap: _throttle, child: widget.child);
+  Widget build(BuildContext context) =>
+      GestureDetector(onTap: _throttle, child: widget.child);
 }
 
 /// Виджет с предзагрузкой
@@ -381,7 +393,8 @@ class _PreloadWidgetState extends State<PreloadWidget> {
   @override
   Widget build(BuildContext context) {
     if (_isPreloading) {
-      return widget.loadingWidget ?? const Center(child: CircularProgressIndicator());
+      return widget.loadingWidget ??
+          const Center(child: CircularProgressIndicator());
     }
 
     if (_error != null) {

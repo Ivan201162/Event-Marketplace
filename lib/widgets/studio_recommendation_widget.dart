@@ -27,18 +27,19 @@ class StudioRecommendationWidget extends ConsumerWidget {
                 const Icon(Icons.photo_library, color: Colors.blue, size: 24),
                 const SizedBox(width: 8),
                 Expanded(
-                  child:
-                      Text('Рекомендуем студию', style: Theme.of(context).textTheme.headlineSmall),
+                  child: Text('Рекомендуем студию',
+                      style: Theme.of(context).textTheme.headlineSmall),
                 ),
                 if (recommendation.isExpired) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.grey.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child:
-                        const Text('Истекло', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    child: const Text('Истекло',
+                        style: TextStyle(fontSize: 12, color: Colors.grey)),
                   ),
                 ],
               ],
@@ -59,7 +60,8 @@ class StudioRecommendationWidget extends ConsumerWidget {
                 children: [
                   Text(
                     recommendation.studioName,
-                    style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 16),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -185,7 +187,8 @@ class _CreateStudioRecommendationWidgetState
               children: [
                 const Icon(Icons.photo_library, color: Colors.blue),
                 const SizedBox(width: 8),
-                Text('Рекомендовать студию', style: Theme.of(context).textTheme.headlineSmall),
+                Text('Рекомендовать студию',
+                    style: Theme.of(context).textTheme.headlineSmall),
               ],
             ),
 
@@ -209,7 +212,8 @@ class _CreateStudioRecommendationWidgetState
                 setState(() {
                   _selectedStudio = value;
                   if (value != null) {
-                    _studioUrlController.text = 'https://example.com/studio/${value.id}';
+                    _studioUrlController.text =
+                        'https://example.com/studio/${value.id}';
                   }
                 });
               },
@@ -247,7 +251,9 @@ class _CreateStudioRecommendationWidgetState
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: _canCreateRecommendation() ? _createRecommendation : null,
+                    onPressed: _canCreateRecommendation()
+                        ? _createRecommendation
+                        : null,
                     icon: _isLoading
                         ? const SizedBox(
                             width: 16,
@@ -255,7 +261,8 @@ class _CreateStudioRecommendationWidgetState
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.send),
-                    label: Text(_isLoading ? 'Создание...' : 'Создать рекомендацию'),
+                    label: Text(
+                        _isLoading ? 'Создание...' : 'Создать рекомендацию'),
                   ),
                 ),
               ],
@@ -267,14 +274,18 @@ class _CreateStudioRecommendationWidgetState
   List<DropdownMenuItem<PhotoStudio>> _getStudioDropdownItems() =>
       ref.watch(recommendedStudiosProvider(widget.photographerId)).when(
             data: (studios) => studios
-                .map((studio) => DropdownMenuItem(value: studio, child: Text(studio.name)))
+                .map((studio) =>
+                    DropdownMenuItem(value: studio, child: Text(studio.name)))
                 .toList(),
             loading: () => [const DropdownMenuItem(child: Text('Загрузка...'))],
-            error: (error, stack) => [DropdownMenuItem(child: Text('Ошибка: $error'))],
+            error: (error, stack) =>
+                [DropdownMenuItem(child: Text('Ошибка: $error'))],
           );
 
   bool _canCreateRecommendation() =>
-      _selectedStudio != null && _studioUrlController.text.isNotEmpty && !_isLoading;
+      _selectedStudio != null &&
+      _studioUrlController.text.isNotEmpty &&
+      !_isLoading;
 
   void _loadRecommendedStudios() {
     // Загружаем рекомендуемые студии через провайдер
@@ -293,13 +304,17 @@ class _CreateStudioRecommendationWidgetState
         studioId: _selectedStudio!.id,
         studioName: _selectedStudio!.name,
         studioUrl: _studioUrlController.text.trim(),
-        message: _messageController.text.trim().isEmpty ? null : _messageController.text.trim(),
+        message: _messageController.text.trim().isEmpty
+            ? null
+            : _messageController.text.trim(),
         expiresIn: const Duration(days: 7),
       );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Рекомендация создана'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Рекомендация создана'),
+              backgroundColor: Colors.green),
         );
 
         widget.onRecommendationCreated?.call();
@@ -308,7 +323,8 @@ class _CreateStudioRecommendationWidgetState
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       setState(() {
@@ -320,7 +336,8 @@ class _CreateStudioRecommendationWidgetState
 
 /// Виджет для двойного бронирования
 class DualBookingWidget extends ConsumerWidget {
-  const DualBookingWidget({super.key, required this.booking, this.onBookingTapped});
+  const DualBookingWidget(
+      {super.key, required this.booking, this.onBookingTapped});
   final DualBooking booking;
   final VoidCallback? onBookingTapped;
 
@@ -358,7 +375,8 @@ class DualBookingWidget extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Дата и время:', style: Theme.of(context).textTheme.bodyMedium),
+                      Text('Дата и время:',
+                          style: Theme.of(context).textTheme.bodyMedium),
                       Text(
                         '${_formatDateTime(booking.startTime)} - ${_formatTime(booking.endTime)}',
                         style: const TextStyle(fontWeight: FontWeight.w500),
@@ -369,7 +387,8 @@ class DualBookingWidget extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Продолжительность:', style: Theme.of(context).textTheme.bodyMedium),
+                      Text('Продолжительность:',
+                          style: Theme.of(context).textTheme.bodyMedium),
                       Text(
                         '${booking.durationInHours.toStringAsFixed(1)} ч',
                         style: const TextStyle(fontWeight: FontWeight.w500),
@@ -380,10 +399,12 @@ class DualBookingWidget extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Общая стоимость:', style: Theme.of(context).textTheme.bodyMedium),
+                      Text('Общая стоимость:',
+                          style: Theme.of(context).textTheme.bodyMedium),
                       Text(
                         '${booking.totalPrice.toStringAsFixed(0)} ₽',
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.green),
                       ),
                     ],
                   ),
@@ -392,10 +413,13 @@ class DualBookingWidget extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Экономия:', style: Theme.of(context).textTheme.bodyMedium),
+                        Text('Экономия:',
+                            style: Theme.of(context).textTheme.bodyMedium),
                         Text(
                           '-${booking.savings.toStringAsFixed(0)} ₽',
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.orange),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange),
                         ),
                       ],
                     ),
@@ -406,7 +430,8 @@ class DualBookingWidget extends ConsumerWidget {
 
             // Детализация стоимости
             const SizedBox(height: 12),
-            Text('Детализация:', style: Theme.of(context).textTheme.headlineSmall),
+            Text('Детализация:',
+                style: Theme.of(context).textTheme.headlineSmall),
 
             const SizedBox(height: 8),
 
@@ -446,7 +471,8 @@ class DualBookingWidget extends ConsumerWidget {
                     const Icon(Icons.note, color: Colors.grey, size: 20),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(booking.notes!, style: Theme.of(context).textTheme.bodyMedium),
+                      child: Text(booking.notes!,
+                          style: Theme.of(context).textTheme.bodyMedium),
                     ),
                   ],
                 ),
@@ -508,12 +534,15 @@ class DualBookingWidget extends ConsumerWidget {
       ),
       child: Text(
         statusText,
-        style: TextStyle(color: statusColor, fontSize: 12, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: statusColor, fontSize: 12, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  Widget _buildPriceItem(String label, String price, IconData icon, Color color) => Container(
+  Widget _buildPriceItem(
+          String label, String price, IconData icon, Color color) =>
+      Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: color.withValues(alpha: 0.1),
@@ -526,9 +555,11 @@ class DualBookingWidget extends ConsumerWidget {
             const SizedBox(height: 4),
             Text(
               price,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
+              style: TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.bold, color: color),
             ),
-            Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            Text(label,
+                style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
         ),
       );
@@ -543,12 +574,14 @@ class DualBookingWidget extends ConsumerWidget {
 }
 
 /// Провайдер для сервиса рекомендаций студий
-final studioRecommendationServiceProvider = Provider<StudioRecommendationService>(
+final studioRecommendationServiceProvider =
+    Provider<StudioRecommendationService>(
   (ref) => StudioRecommendationService(),
 );
 
 /// Провайдер для рекомендуемых студий
-final recommendedStudiosProvider = FutureProvider.family<List<PhotoStudio>, String>((
+final recommendedStudiosProvider =
+    FutureProvider.family<List<PhotoStudio>, String>((
   ref,
   photographerId,
 ) async {

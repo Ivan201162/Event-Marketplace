@@ -5,7 +5,8 @@ import '../models/payment_models.dart';
 import '../services/payment_integration_service.dart';
 
 class ContractDetailsDialog extends StatefulWidget {
-  const ContractDetailsDialog({super.key, required this.contract, this.onStatusUpdate});
+  const ContractDetailsDialog(
+      {super.key, required this.contract, this.onStatusUpdate});
   final Contract contract;
   final Function(ContractStatus)? onStatusUpdate;
 
@@ -14,7 +15,8 @@ class ContractDetailsDialog extends StatefulWidget {
 }
 
 class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
-  final PaymentIntegrationService _paymentIntegrationService = PaymentIntegrationService();
+  final PaymentIntegrationService _paymentIntegrationService =
+      PaymentIntegrationService();
   List<Payment> _payments = [];
   bool _isLoadingPayments = true;
 
@@ -58,10 +60,13 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                 Expanded(
                   child: Text(
                     'Контракт #${widget.contract.id.substring(0, 8)}',
-                    style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
-                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
+                IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close)),
               ],
             ),
 
@@ -71,10 +76,12 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: _getStatusColor(widget.contract.status).withValues(alpha: 0.1),
+                color: _getStatusColor(widget.contract.status)
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: _getStatusColor(widget.contract.status).withValues(alpha: 0.3),
+                  color: _getStatusColor(widget.contract.status)
+                      .withValues(alpha: 0.3),
                 ),
               ),
               child: Text(
@@ -95,19 +102,25 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildDetailSection(theme, 'Основная информация', [
-                      _buildDetailRow(theme, 'ID контракта', widget.contract.id),
-                      _buildDetailRow(theme, 'ID бронирования', widget.contract.bookingId),
-                      _buildDetailRow(theme, 'ID заказчика', widget.contract.customerId),
-                      _buildDetailRow(theme, 'ID специалиста', widget.contract.specialistId),
+                      _buildDetailRow(
+                          theme, 'ID контракта', widget.contract.id),
+                      _buildDetailRow(
+                          theme, 'ID бронирования', widget.contract.bookingId),
+                      _buildDetailRow(
+                          theme, 'ID заказчика', widget.contract.customerId),
+                      _buildDetailRow(theme, 'ID специалиста',
+                          widget.contract.specialistId),
                       _buildDetailRow(
                         theme,
                         'Дата создания',
-                        DateFormat('dd.MM.yyyy HH:mm').format(widget.contract.createdAt),
+                        DateFormat('dd.MM.yyyy HH:mm')
+                            .format(widget.contract.createdAt),
                       ),
                       _buildDetailRow(
                         theme,
                         'Дата обновления',
-                        DateFormat('dd.MM.yyyy HH:mm').format(widget.contract.updatedAt),
+                        DateFormat('dd.MM.yyyy HH:mm')
+                            .format(widget.contract.updatedAt),
                       ),
                     ]),
                     const SizedBox(height: 24),
@@ -129,7 +142,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                       ),
                     ]),
                     const SizedBox(height: 24),
-                    _buildDetailSection(theme, 'Платежи', _buildPaymentsList(theme)),
+                    _buildDetailSection(
+                        theme, 'Платежи', _buildPaymentsList(theme)),
                   ],
                 ),
               ),
@@ -157,7 +171,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                         widget.onStatusUpdate?.call(ContractStatus.cancelled);
                         Navigator.pop(context);
                       },
-                      style: OutlinedButton.styleFrom(foregroundColor: theme.colorScheme.error),
+                      style: OutlinedButton.styleFrom(
+                          foregroundColor: theme.colorScheme.error),
                       child: const Text('Отменить контракт'),
                     ),
                   ),
@@ -181,7 +196,9 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
     );
   }
 
-  Widget _buildDetailSection(ThemeData theme, String title, List<Widget> children) => Column(
+  Widget _buildDetailSection(
+          ThemeData theme, String title, List<Widget> children) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -195,7 +212,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              color: theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(children: children),
@@ -203,7 +221,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
         ],
       );
 
-  Widget _buildDetailRow(ThemeData theme, String label, String value) => Padding(
+  Widget _buildDetailRow(ThemeData theme, String label, String value) =>
+      Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,7 +239,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
             Expanded(
               child: Text(
                 value,
-                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w500),
               ),
             ),
           ],
@@ -231,7 +251,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
     if (_isLoadingPayments) {
       return [
         const Center(
-          child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
+          child: Padding(
+              padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
         ),
       ];
     }
@@ -252,7 +273,9 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
       ];
     }
 
-    return _payments.map((payment) => _buildPaymentItem(theme, payment)).toList();
+    return _payments
+        .map((payment) => _buildPaymentItem(theme, payment))
+        .toList();
   }
 
   Widget _buildPaymentItem(ThemeData theme, Payment payment) => Container(
@@ -261,7 +284,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+          border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
@@ -280,7 +304,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                 children: [
                   Text(
                     _getPaymentTypeDisplayName(payment.type),
-                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
                   ),
                   Text(
                     '${payment.amount.toStringAsFixed(0)} ₽ • ${_getPaymentMethodDisplayName(payment.method)}',

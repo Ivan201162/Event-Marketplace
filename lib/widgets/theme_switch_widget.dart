@@ -4,7 +4,8 @@ import '../providers/theme_provider.dart';
 
 /// Виджет для переключения темы
 class ThemeSwitchWidget extends ConsumerWidget {
-  const ThemeSwitchWidget({super.key, this.showLabel = true, this.compact = false});
+  const ThemeSwitchWidget(
+      {super.key, this.showLabel = true, this.compact = false});
 
   final bool showLabel;
   final bool compact;
@@ -32,7 +33,8 @@ class ThemeSwitchWidget extends ConsumerWidget {
         tooltip: _getThemeTooltip(themeMode),
       );
 
-  Widget _buildFullSwitch(BuildContext context, ThemeMode themeMode, ThemeNotifier themeNotifier) =>
+  Widget _buildFullSwitch(BuildContext context, ThemeMode themeMode,
+          ThemeNotifier themeNotifier) =>
       Card(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -42,7 +44,8 @@ class ThemeSwitchWidget extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  Icon(_getThemeIcon(themeMode), color: Theme.of(context).colorScheme.primary),
+                  Icon(_getThemeIcon(themeMode),
+                      color: Theme.of(context).colorScheme.primary),
                   const SizedBox(width: 12),
                   Text('Тема', style: Theme.of(context).textTheme.titleMedium),
                 ],

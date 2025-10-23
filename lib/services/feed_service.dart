@@ -13,7 +13,8 @@ class FeedService {
         .collection('posts')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
   }
 
   /// Get post comments stream
@@ -24,7 +25,9 @@ class FeedService {
         .collection('comments')
         .orderBy('createdAt', descending: false)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => FeedComment.fromFirestore(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => FeedComment.fromFirestore(doc))
+            .toList());
   }
 
   /// Create a new post
@@ -60,7 +63,8 @@ class FeedService {
         likedBy.add(userId);
       }
 
-      transaction.update(postRef, {'likedBy': likedBy, 'likesCount': likedBy.length});
+      transaction
+          .update(postRef, {'likedBy': likedBy, 'likesCount': likedBy.length});
     });
   }
 
@@ -81,7 +85,8 @@ class FeedService {
   }
 
   /// Like/unlike a comment
-  Future<void> toggleCommentLike(String postId, String commentId, String userId) async {
+  Future<void> toggleCommentLike(
+      String postId, String commentId, String userId) async {
     final commentRef = _firestore
         .collection('posts')
         .doc(postId)
@@ -101,13 +106,19 @@ class FeedService {
         likedBy.add(userId);
       }
 
-      transaction.update(commentRef, {'likedBy': likedBy, 'likesCount': likedBy.length});
+      transaction.update(
+          commentRef, {'likedBy': likedBy, 'likesCount': likedBy.length});
     });
   }
 
   /// Delete a comment
   Future<void> deleteComment(String postId, String commentId) async {
-    await _firestore.collection('posts').doc(postId).collection('comments').doc(commentId).delete();
+    await _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(commentId)
+        .delete();
 
     // Update post comments count
     await _firestore.collection('posts').doc(postId).update({

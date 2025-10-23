@@ -8,7 +8,8 @@ class BookingWidget extends ConsumerStatefulWidget {
   final Specialist specialist;
   final Function(BookingData) onBookingConfirmed;
 
-  const BookingWidget({super.key, required this.specialist, required this.onBookingConfirmed});
+  const BookingWidget(
+      {super.key, required this.specialist, required this.onBookingConfirmed});
 
   @override
   ConsumerState<BookingWidget> createState() => _BookingWidgetState();
@@ -62,7 +63,8 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                     children: [
                       Text(
                         widget.specialist.name,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         widget.specialist.specialization,
@@ -157,7 +159,8 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                 ElevatedButton(
                   onPressed: _canBook() ? _confirmBooking : null,
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 12),
                   ),
                   child: const Text('Забронировать'),
                 ),
@@ -173,7 +176,8 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Выберите услугу', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('Выберите услугу',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         if (widget.specialist.services.isNotEmpty)
           ...widget.specialist.services.map(
@@ -190,7 +194,8 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
           )
         else
           const Card(
-            child: Padding(padding: EdgeInsets.all(16), child: Text('Услуги не указаны')),
+            child: Padding(
+                padding: EdgeInsets.all(16), child: Text('Услуги не указаны')),
           ),
       ],
     );
@@ -200,7 +205,8 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Выберите дату', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('Выберите дату',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         InkWell(
           onTap: _selectDate,
@@ -221,7 +227,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                         : 'Выберите дату',
                     style: TextStyle(
                       fontSize: 16,
-                      color: _selectedDate != null ? Colors.black : Colors.grey[600],
+                      color: _selectedDate != null
+                          ? Colors.black
+                          : Colors.grey[600],
                     ),
                   ),
                 ),
@@ -238,7 +246,8 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Выберите время', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('Выберите время',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         InkWell(
           onTap: _selectTime,
@@ -259,7 +268,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                         : 'Выберите время',
                     style: TextStyle(
                       fontSize: 16,
-                      color: _selectedTime != null ? Colors.black : Colors.grey[600],
+                      color: _selectedTime != null
+                          ? Colors.black
+                          : Colors.grey[600],
                     ),
                   ),
                 ),
@@ -276,12 +287,14 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Длительность', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('Длительность',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         Row(
           children: [
             IconButton(
-              onPressed: _duration > 1 ? () => setState(() => _duration--) : null,
+              onPressed:
+                  _duration > 1 ? () => setState(() => _duration--) : null,
               icon: const Icon(Icons.remove),
             ),
             Container(
@@ -296,7 +309,8 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
               ),
             ),
             IconButton(
-              onPressed: _duration < 8 ? () => setState(() => _duration++) : null,
+              onPressed:
+                  _duration < 8 ? () => setState(() => _duration++) : null,
               icon: const Icon(Icons.add),
             ),
           ],
@@ -352,7 +366,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Итого:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const Text('Итого:',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 Text(
                   '$totalPrice ₽',
                   style: const TextStyle(
@@ -402,7 +418,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
   }
 
   bool _canBook() {
-    return _selectedDate != null && _selectedTime != null && _selectedService != null;
+    return _selectedDate != null &&
+        _selectedTime != null &&
+        _selectedService != null;
   }
 
   void _confirmBooking() {

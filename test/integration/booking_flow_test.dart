@@ -7,9 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Booking Flow Integration Tests', () {
-    testWidgets('Complete booking flow from search to confirmation', (tester) async {
+    testWidgets('Complete booking flow from search to confirmation',
+        (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -76,7 +78,8 @@ void main() {
 
     testWidgets('Booking form validation', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -112,7 +115,8 @@ void main() {
 
     testWidgets('Date and time picker functionality', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -178,7 +182,8 @@ void main() {
 
     testWidgets('Duration selection', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -219,7 +224,8 @@ void main() {
 
     testWidgets('Price calculation', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 

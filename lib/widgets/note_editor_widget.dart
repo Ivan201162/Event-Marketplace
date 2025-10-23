@@ -54,8 +54,9 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
           child: Column(
             children: [
               AppBar(
-                title:
-                    Text(widget.existingNote == null ? 'Новая заметка' : 'Редактировать заметку'),
+                title: Text(widget.existingNote == null
+                    ? 'Новая заметка'
+                    : 'Редактировать заметку'),
                 actions: [
                   TextButton(
                     onPressed: _isSaving ? null : _saveNote,
@@ -119,7 +120,8 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
   Widget _buildTagsSection() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Теги', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Теги',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
 
           // Поле ввода тегов
@@ -137,7 +139,8 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
               ),
               const SizedBox(width: 8),
               IconButton(
-                  onPressed: () => _addTag(_tagsController.text), icon: const Icon(Icons.add)),
+                  onPressed: () => _addTag(_tagsController.text),
+                  icon: const Icon(Icons.add)),
             ],
           ),
           const SizedBox(height: 8),
@@ -183,7 +186,8 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 8),
-        const Text('Предложенные теги:', style: TextStyle(fontSize: 12, color: Colors.grey)),
+        const Text('Предложенные теги:',
+            style: TextStyle(fontSize: 12, color: Colors.grey)),
         const SizedBox(height: 4),
         Wrap(
           spacing: 4,
@@ -206,11 +210,13 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
   Widget _buildSettingsSection() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Настройки', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Настройки',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           SwitchListTile(
             title: const Text('Закрепить заметку'),
-            subtitle: const Text('Закреплённые заметки отображаются вверху списка'),
+            subtitle:
+                const Text('Закреплённые заметки отображаются вверху списка'),
             value: _isPinned,
             onChanged: (value) {
               setState(() {
@@ -244,7 +250,8 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
     if (title.isEmpty || content.isEmpty) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Заполните заголовок и содержимое')));
+      ).showSnackBar(
+          const SnackBar(content: Text('Заполните заголовок и содержимое')));
       return;
     }
 
@@ -282,7 +289,9 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(widget.existingNote == null ? 'Заметка создана' : 'Заметка обновлена'),
+            content: Text(widget.existingNote == null
+                ? 'Заметка создана'
+                : 'Заметка обновлена'),
           ),
         );
       }

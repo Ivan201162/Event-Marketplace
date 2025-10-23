@@ -26,7 +26,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
 
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
+
   String _selectedCategory = '';
   bool _isSearchExpanded = false;
   bool _showFilters = false;
@@ -94,7 +94,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
             children: [
               // Заголовок с поиском
               _buildHeader(user, userCity),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -165,7 +165,8 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                                   height: 50,
                                   borderRadius: 25,
                                 ),
-                                errorWidget: (context, url, error) => const Icon(
+                                errorWidget: (context, url, error) =>
+                                    const Icon(
                                   Icons.person,
                                   color: Colors.white,
                                   size: 30,
@@ -191,9 +192,9 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               // Приветствие
               Expanded(
                 child: Column(
@@ -201,7 +202,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                   children: [
                     user.when(
                       data: (userData) => Text(
-                        userData != null 
+                        userData != null
                             ? '${_getGreetingByTime()}, ${_getUserDisplayName(userData)}!'
                             : '${_getGreetingByTime()}!',
                         style: const TextStyle(
@@ -251,17 +252,17 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                   ],
                 ),
               ),
-              
+
               // Уведомления
               _buildNotificationsButton(user),
             ],
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // Поисковая строка
           _buildSearchBar(),
-          
+
           // Категории
           if (!_isSearchExpanded) _buildCategoryFilters(),
         ],
@@ -308,7 +309,8 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
@@ -325,7 +327,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
         itemBuilder: (context, index) {
           final category = SpecialistCategory.values[index];
           final isSelected = _selectedCategory == category.name;
-          
+
           return Container(
             margin: const EdgeInsets.only(right: 12),
             child: GestureDetector(
@@ -336,12 +338,16 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                 _filterByCategory(category.name);
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isSelected ? Colors.white : Colors.white.withOpacity(0.2),
+                  color:
+                      isSelected ? Colors.white : Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(25),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF1E3A8A) : Colors.transparent,
+                    color: isSelected
+                        ? const Color(0xFF1E3A8A)
+                        : Colors.transparent,
                     width: 2,
                   ),
                 ),
@@ -356,8 +362,10 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                     Text(
                       category.name,
                       style: TextStyle(
-                        color: isSelected ? const Color(0xFF1E3A8A) : Colors.white,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        color:
+                            isSelected ? const Color(0xFF1E3A8A) : Colors.white,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                         fontSize: 14,
                       ),
                     ),
@@ -372,7 +380,8 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
   }
 
   /// Основной контент
-  Widget _buildContent(AsyncValue<String?> userCity, SearchFilters currentFilters) {
+  Widget _buildContent(
+      AsyncValue<String?> userCity, SearchFilters currentFilters) {
     return RefreshIndicator(
       onRefresh: () async {
         // Обновляем данные
@@ -388,22 +397,22 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
           children: [
             // ТОП специалисты по городу
             _buildTopSpecialistsByCity(userCity),
-            
+
             const SizedBox(height: 32),
-            
+
             // ТОП специалисты по России
             _buildTopSpecialistsByRussia(),
-            
+
             const SizedBox(height: 32),
-            
+
             // Рядом с вами
             _buildNearbySpecialists(),
-            
+
             const SizedBox(height: 32),
-            
+
             // Быстрые действия
             _buildQuickActions(),
-            
+
             const SizedBox(height: 20),
           ],
         ),
@@ -423,12 +432,12 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
             isLoading: false,
           );
         }
-        
+
         final specialistsAsync = ref.watch(topSpecialistsByCityProvider(city));
         return specialistsAsync.when(
           data: (specialists) => _buildTopSpecialistsSection(
             title: '🏙️ ТОП специалисты в $city',
-            subtitle: specialists.isEmpty 
+            subtitle: specialists.isEmpty
                 ? 'Пока нет лидеров в вашем городе'
                 : 'Лучшие специалисты вашего города',
             specialists: specialists,
@@ -466,7 +475,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
   /// ТОП специалисты по России
   Widget _buildTopSpecialistsByRussia() {
     final specialistsAsync = ref.watch(topSpecialistsByRussiaProvider);
-    
+
     return specialistsAsync.when(
       data: (specialists) => _buildTopSpecialistsSection(
         title: '🇷🇺 ТОП специалисты России',
@@ -540,9 +549,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
               ),
           ],
         ),
-        
         const SizedBox(height: 16),
-        
         if (isLoading)
           _buildLoadingCards()
         else if (specialists.isEmpty)
@@ -699,7 +706,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                         ),
                       ),
               ),
-              
+
               // Информация
               Padding(
                 padding: const EdgeInsets.all(12),
@@ -727,9 +734,9 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    
+
                     const SizedBox(height: 8),
-                    
+
                     // Рейтинг и заказы
                     Row(
                       children: [
@@ -756,16 +763,17 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 8),
-                    
+
                     // Бейджи
                     if (specialist.badges.isNotEmpty)
                       Wrap(
                         spacing: 4,
                         children: specialist.badges.take(2).map((badge) {
                           return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
                               color: Color(badge.color).withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12),
@@ -794,23 +802,24 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
   /// Рядом с вами
   Widget _buildNearbySpecialists() {
     final location = ref.watch(userLocationProvider);
-    
+
     return location.when(
       data: (position) {
         if (position == null) {
           return _buildNearbySection(
             title: '🌍 Рядом с вами',
-            subtitle: 'Разрешите геолокацию для просмотра ближайших специалистов',
+            subtitle:
+                'Разрешите геолокацию для просмотра ближайших специалистов',
             specialists: const [],
             isLoading: false,
           );
         }
-        
+
         final specialistsAsync = ref.watch(nearbySpecialistsProvider(position));
         return specialistsAsync.when(
           data: (specialists) => _buildNearbySection(
             title: '🌍 Рядом с вами',
-            subtitle: specialists.isEmpty 
+            subtitle: specialists.isEmpty
                 ? 'Поблизости нет специалистов'
                 : 'Специалисты в радиусе 50 км',
             specialists: specialists,
@@ -871,9 +880,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
             color: Colors.grey[600],
           ),
         ),
-        
         const SizedBox(height: 16),
-        
         if (isLoading)
           _buildLoadingCards()
         else if (specialists.isEmpty)
@@ -897,9 +904,7 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
             color: Color(0xFF1E3A8A),
           ),
         ),
-        
         const SizedBox(height: 16),
-        
         Row(
           children: [
             Expanded(
@@ -942,7 +947,8 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              onPressed: () => NavigationService.safeGo(context, '/notifications'),
+              onPressed: () =>
+                  NavigationService.safeGo(context, '/notifications'),
               icon: const Icon(
                 Icons.notifications_outlined,
                 color: Colors.white,
@@ -951,13 +957,12 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
             ),
           );
         }
-        
+
         return Consumer(
           builder: (context, ref, child) {
-            final unreadCountAsync = ref.watch(
-              NotificationProviders.unreadCountProvider(userData.uid)
-            );
-            
+            final unreadCountAsync = ref
+                .watch(NotificationProviders.unreadCountProvider(userData.uid));
+
             return Stack(
               children: [
                 Container(
@@ -966,7 +971,8 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
-                    onPressed: () => NavigationService.safeGo(context, '/notifications'),
+                    onPressed: () =>
+                        NavigationService.safeGo(context, '/notifications'),
                     icon: const Icon(
                       Icons.notifications_outlined,
                       color: Colors.white,
@@ -1046,15 +1052,15 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
   /// Выполнить поиск
   void _performSearch(String query) {
     if (query.isEmpty) return;
-    
+
     // Обновляем фильтры поиска
     final currentFilters = ref.read(currentSearchFiltersProvider);
     ref.read(currentSearchFiltersProvider.notifier).updateFilters(
-      currentFilters.copyWith(
-        // Здесь можно добавить поиск по имени/специализации
-      ),
-    );
-    
+          currentFilters.copyWith(
+              // Здесь можно добавить поиск по имени/специализации
+              ),
+        );
+
     // Переходим к экрану поиска
     NavigationService.safeGo(context, '/search');
   }
@@ -1063,17 +1069,17 @@ class _HomeScreenModernState extends ConsumerState<HomeScreenModern>
   void _filterByCategory(String category) {
     final currentFilters = ref.read(currentSearchFiltersProvider);
     final categories = currentFilters.categories;
-    
+
     List<String> newCategories;
     if (categories.contains(category)) {
       newCategories = categories.where((c) => c != category).toList();
     } else {
       newCategories = [...categories, category];
     }
-    
+
     ref.read(currentSearchFiltersProvider.notifier).updateFilters(
-      currentFilters.copyWith(categories: newCategories),
-    );
+          currentFilters.copyWith(categories: newCategories),
+        );
   }
 
   /// Получить приветствие

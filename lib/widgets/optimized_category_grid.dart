@@ -77,7 +77,7 @@ class OptimizedCategoryGrid extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              
+
               // Название категории
               Text(
                 category.displayName,
@@ -90,7 +90,7 @@ class OptimizedCategoryGrid extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 4),
-              
+
               // Количество специалистов
               Text(
                 '${category.specialistCount} специалистов',

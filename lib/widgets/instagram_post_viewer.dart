@@ -4,7 +4,8 @@ import '../models/specialist.dart';
 import '../services/post_service.dart';
 
 class InstagramPostViewer extends StatefulWidget {
-  const InstagramPostViewer({super.key, required this.post, required this.specialist});
+  const InstagramPostViewer(
+      {super.key, required this.post, required this.specialist});
   final Post post;
   final Specialist specialist;
 
@@ -47,7 +48,8 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -74,7 +76,8 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
       return Container(
         height: 300,
         color: Colors.grey.shade200,
-        child: const Center(child: Icon(Icons.image, size: 100, color: Colors.grey)),
+        child: const Center(
+            child: Icon(Icons.image, size: 100, color: Colors.grey)),
       );
     }
 
@@ -86,7 +89,8 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => Container(
             color: Colors.grey.shade200,
-            child: const Center(child: Icon(Icons.image, size: 100, color: Colors.grey)),
+            child: const Center(
+                child: Icon(Icons.image, size: 100, color: Colors.grey)),
           ),
         ),
       );
@@ -102,7 +106,8 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) => Container(
             color: Colors.grey.shade200,
-            child: const Center(child: Icon(Icons.image, size: 100, color: Colors.grey)),
+            child: const Center(
+                child: Icon(Icons.image, size: 100, color: Colors.grey)),
           ),
         ),
       ),
@@ -118,7 +123,9 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
               backgroundImage: widget.specialist.imageUrl != null
                   ? NetworkImage(widget.specialist.imageUrl!)
                   : null,
-              child: widget.specialist.imageUrl == null ? const Icon(Icons.person) : null,
+              child: widget.specialist.imageUrl == null
+                  ? const Icon(Icons.person)
+                  : null,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -127,7 +134,8 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
                 children: [
                   Text(
                     widget.specialist.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                   Text(
                     _formatTime(widget.post.createdAt),
@@ -178,7 +186,8 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
                     width: 6,
                     height: 6,
                     margin: const EdgeInsets.symmetric(horizontal: 2),
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.shade400),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.grey.shade400),
                   ),
                 ),
               ),
@@ -239,7 +248,8 @@ class _InstagramPostViewerState extends State<InstagramPostViewer> {
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text('Публикация', style: TextStyle(color: Colors.black)),
+          title:
+              const Text('Публикация', style: TextStyle(color: Colors.black)),
           actions: [
             IconButton(
               icon: const Icon(Icons.share, color: Colors.black),

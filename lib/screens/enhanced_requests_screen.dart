@@ -12,7 +12,8 @@ class EnhancedRequestsScreen extends ConsumerStatefulWidget {
   const EnhancedRequestsScreen({super.key});
 
   @override
-  ConsumerState<EnhancedRequestsScreen> createState() => _EnhancedRequestsScreenState();
+  ConsumerState<EnhancedRequestsScreen> createState() =>
+      _EnhancedRequestsScreenState();
 }
 
 class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
@@ -35,62 +36,63 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
   @override
   Widget build(BuildContext context) => Column(
-    children: [
-      // Поиск и фильтры
-      _buildSearchAndFilters(),
+        children: [
+          // Поиск и фильтры
+          _buildSearchAndFilters(),
 
-      // Табы заявок
-      TabBar(
-        controller: _tabController,
-        isScrollable: true,
-        tabs: const [
-          Tab(text: 'Мои заявки'),
-          Tab(text: 'Заявки мне'),
+          // Табы заявок
+          TabBar(
+            controller: _tabController,
+            isScrollable: true,
+            tabs: const [
+              Tab(text: 'Мои заявки'),
+              Tab(text: 'Заявки мне'),
+            ],
+          ),
+
+          // Список заявок
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [_buildMyRequestsList(), _buildRequestsForMeList()],
+            ),
+          ),
         ],
-      ),
-
-      // Список заявок
-      Expanded(
-        child: TabBarView(
-          controller: _tabController,
-          children: [_buildMyRequestsList(), _buildRequestsForMeList()],
-        ),
-      ),
-    ],
-  );
+      );
 
   Widget _buildSearchAndFilters() => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      children: [
-        // Поиск
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Поиск по заявкам...',
-            prefixIcon: const Icon(Icons.search),
-            suffixIcon: _searchQuery.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      setState(() {
-                        _searchQuery = '';
-                      });
-                    },
-                  )
-                : null,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-          onChanged: (value) {
-            setState(() {
-              _searchQuery = value;
-            });
-          },
-        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Поиск
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Поиск по заявкам...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchQuery.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            _searchQuery = '';
+                          });
+                        },
+                      )
+                    : null,
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
 
-        const SizedBox(height: 12),
-      ],
-    ),
-  );
+            const SizedBox(height: 12),
+          ],
+        ),
+      );
 
   Widget _buildMyRequestsList() {
     // Заявки, созданные текущим пользователем
@@ -182,7 +184,10 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
           const SizedBox(height: 16),
           Text(
             title,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[600]),
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(
@@ -211,7 +216,8 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         customerId: currentUserId,
         specialistId: 'specialist_1',
         title: 'Свадебная фотосъёмка',
-        description: 'Нужен фотограф на свадьбу 15 июня. Съёмка в парке, около 6 часов.',
+        description:
+            'Нужен фотограф на свадьбу 15 июня. Съёмка в парке, около 6 часов.',
         status: OrderStatus.pending,
         createdAt: DateTime.now().subtract(const Duration(days: 2)),
         budget: 25000,
@@ -317,7 +323,8 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         customerId: 'customer_2',
         specialistId: currentUserId,
         title: 'Фотосессия для портфолио',
-        description: 'Нужна профессиональная фотосессия для обновления портфолио модели',
+        description:
+            'Нужна профессиональная фотосессия для обновления портфолио модели',
         status: OrderStatus.pending,
         createdAt: DateTime.now().subtract(const Duration(days: 1)),
         budget: 12000,
@@ -373,11 +380,17 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
     switch (status) {
       case 'pending':
-        return allOrders.where((order) => order.status == OrderStatus.pending).toList();
+        return allOrders
+            .where((order) => order.status == OrderStatus.pending)
+            .toList();
       case 'in_progress':
-        return allOrders.where((order) => order.status == OrderStatus.inProgress).toList();
+        return allOrders
+            .where((order) => order.status == OrderStatus.inProgress)
+            .toList();
       case 'completed':
-        return allOrders.where((order) => order.status == OrderStatus.completed).toList();
+        return allOrders
+            .where((order) => order.status == OrderStatus.completed)
+            .toList();
       default:
         return allOrders;
     }
@@ -390,7 +403,9 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
     final allOrders = _getTestOrders('all');
 
-    return allOrders.where((order) => order.customerId == currentUser.uid).toList();
+    return allOrders
+        .where((order) => order.customerId == currentUser.uid)
+        .toList();
   }
 
   List<EnhancedOrder> _getRequestsForMe() {
@@ -400,7 +415,9 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
     final allOrders = _getTestOrders('all');
 
-    return allOrders.where((order) => order.specialistId == currentUser.uid).toList();
+    return allOrders
+        .where((order) => order.specialistId == currentUser.uid)
+        .toList();
   }
 
   void _openOrderDetails(EnhancedOrder order) {
@@ -422,7 +439,8 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
                   Expanded(
                     child: Text(
                       order.title,
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   IconButton(
@@ -436,7 +454,8 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
 
               // Статус
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: _getStatusColor(order.status).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
@@ -453,7 +472,8 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
               const SizedBox(height: 16),
 
               // Описание
-              const Text('Описание', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text('Описание',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               Text(order.description),
 
@@ -480,38 +500,44 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
   }
 
   Widget _buildOrderDetails(EnhancedOrder order) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _buildDetailRow('Бюджет', '${order.budget} ₽'),
-      _buildDetailRow('Срок', order.deadline != null ? _formatDate(order.deadline!) : 'Не указан'),
-      _buildDetailRow('Место', order.location ?? 'Не указано'),
-      _buildDetailRow('Категория', order.category ?? 'Не указана'),
-      _buildDetailRow('Приоритет', _getPriorityText(order.priority)),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildDetailRow('Бюджет', '${order.budget} ₽'),
+          _buildDetailRow(
+              'Срок',
+              order.deadline != null
+                  ? _formatDate(order.deadline!)
+                  : 'Не указан'),
+          _buildDetailRow('Место', order.location ?? 'Не указано'),
+          _buildDetailRow('Категория', order.category ?? 'Не указана'),
+          _buildDetailRow('Приоритет', _getPriorityText(order.priority)),
+        ],
+      );
 
   Widget _buildDetailRow(String label, String value) => Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 80,
-          child: Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.grey),
-          ),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 80,
+              child: Text(
+                label,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500, color: Colors.grey),
+              ),
+            ),
+            Expanded(child: Text(value)),
+          ],
         ),
-        Expanded(child: Text(value)),
-      ],
-    ),
-  );
+      );
 
   void _editOrder(EnhancedOrder order) {
     // TODO: Реализовать редактирование заявки
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Редактирование заявки будет реализовано')));
+    ).showSnackBar(const SnackBar(
+        content: Text('Редактирование заявки будет реализовано')));
   }
 
   void _cancelOrder(EnhancedOrder order) {
@@ -521,7 +547,9 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
         title: const Text('Отменить заявку'),
         content: const Text('Вы уверены, что хотите отменить эту заявку?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Нет')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Нет')),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
@@ -541,7 +569,8 @@ class _EnhancedRequestsScreenState extends ConsumerState<EnhancedRequestsScreen>
     // TODO: Реализовать завершение заявки
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Завершение заявки будет реализовано')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Завершение заявки будет реализовано')));
   }
 
   void _createNewOrder() {

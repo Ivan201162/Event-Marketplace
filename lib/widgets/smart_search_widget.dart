@@ -125,7 +125,8 @@ class _SmartSearchWidgetState extends ConsumerState<SmartSearchWidget> {
                           },
                         )
                       : null,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
               fillColor: Theme.of(context).cardColor,
             ),
@@ -162,10 +163,12 @@ class _SmartSearchWidgetState extends ConsumerState<SmartSearchWidget> {
       );
 
   Widget _buildSuggestionItem(SearchSuggestion suggestion) => ListTile(
-        leading: Icon(suggestion.icon, color: _getSuggestionColor(suggestion.type), size: 20),
-        title: Text(suggestion.text, style: const TextStyle(fontWeight: FontWeight.w500)),
-        subtitle:
-            Text(suggestion.subtitle, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+        leading: Icon(suggestion.icon,
+            color: _getSuggestionColor(suggestion.type), size: 20),
+        title: Text(suggestion.text,
+            style: const TextStyle(fontWeight: FontWeight.w500)),
+        subtitle: Text(suggestion.subtitle,
+            style: TextStyle(color: Colors.grey[600], fontSize: 12)),
         trailing: _getSuggestionTrailing(suggestion.type),
         onTap: () => _onSuggestionSelected(suggestion),
       );

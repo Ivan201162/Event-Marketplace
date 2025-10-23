@@ -39,9 +39,11 @@ class PortfolioGridWidget extends StatelessWidget {
           children: [
             Icon(Icons.photo_library, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text('Портфолио пусто', style: TextStyle(color: Colors.grey, fontSize: 16)),
+            Text('Портфолио пусто',
+                style: TextStyle(color: Colors.grey, fontSize: 16)),
             SizedBox(height: 8),
-            Text('Добавьте работы в портфолио', style: TextStyle(color: Colors.grey, fontSize: 12)),
+            Text('Добавьте работы в портфолио',
+                style: TextStyle(color: Colors.grey, fontSize: 12)),
           ],
         ),
       );
@@ -91,7 +93,8 @@ class PortfolioGridWidget extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => _buildPlaceholder(type),
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildPlaceholder(type),
                 )
               else
                 _buildPlaceholder(type),
@@ -107,7 +110,8 @@ class PortfolioGridWidget extends StatelessWidget {
                       color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.play_arrow, color: Colors.white, size: 16),
+                    child: const Icon(Icons.play_arrow,
+                        color: Colors.white, size: 16),
                   ),
                 ),
 
@@ -121,7 +125,10 @@ class PortfolioGridWidget extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.7)
+                      ],
                     ),
                   ),
                   padding: const EdgeInsets.all(8),
@@ -143,7 +150,8 @@ class PortfolioGridWidget extends StatelessWidget {
                       if (description.isNotEmpty)
                         Text(
                           description,
-                          style: const TextStyle(color: Colors.white70, fontSize: 10),
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 10),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -181,7 +189,8 @@ class PortfolioGridWidget extends StatelessWidget {
               width: double.infinity,
               height: double.infinity,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => _buildPlaceholder('image'),
+              errorBuilder: (context, error, stackTrace) =>
+                  _buildPlaceholder('image'),
             ),
           ),
         ),
@@ -200,7 +209,8 @@ class PortfolioGridWidget extends StatelessWidget {
               children: [
                 Icon(Icons.add_circle_outline, size: 32, color: Colors.grey),
                 SizedBox(height: 8),
-                Text('Добавить', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                Text('Добавить',
+                    style: TextStyle(color: Colors.grey, fontSize: 12)),
               ],
             ),
           ),

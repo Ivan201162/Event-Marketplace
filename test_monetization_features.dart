@@ -7,7 +7,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Monetization Features Tests', () {
-    testWidgets('Test Monetization Hub Navigation', (WidgetTester tester) async {
+    testWidgets('Test Monetization Hub Navigation',
+        (WidgetTester tester) async {
       // Запуск приложения
       app.main();
       await tester.pumpAndSettle();
@@ -50,7 +51,7 @@ void main() {
       // Проверка отображения планов
       expect(find.text('Платные Подписки'), findsOneWidget);
       expect(find.text('Выберите свой план:'), findsOneWidget);
-      
+
       // Проверка наличия планов
       expect(find.text('Бесплатный'), findsOneWidget);
       expect(find.text('Премиум (месяц)'), findsOneWidget);
@@ -71,15 +72,17 @@ void main() {
 
       // Проверка отображения пакетов продвижения
       expect(find.text('Пакеты Продвижения'), findsOneWidget);
-      expect(find.text('Выберите пакет для продвижения вашего профиля:'), findsOneWidget);
-      
+      expect(find.text('Выберите пакет для продвижения вашего профиля:'),
+          findsOneWidget);
+
       // Проверка наличия пакетов
       expect(find.text('Топ-1 на 3 дня'), findsOneWidget);
       expect(find.text('Топ-3 на 7 дней'), findsOneWidget);
       expect(find.text('Топ-5 на 14 дней'), findsOneWidget);
     });
 
-    testWidgets('Test Advertisement Campaigns Screen', (WidgetTester tester) async {
+    testWidgets('Test Advertisement Campaigns Screen',
+        (WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -94,7 +97,7 @@ void main() {
       // Проверка отображения типов рекламы
       expect(find.text('Рекламные Кампании'), findsOneWidget);
       expect(find.text('Выберите тип рекламной кампании:'), findsOneWidget);
-      
+
       // Проверка наличия типов рекламы
       expect(find.text('Баннерная Реклама'), findsOneWidget);
       expect(find.text('Продвижение Профиля'), findsOneWidget);
@@ -123,7 +126,7 @@ void main() {
         expect(find.text('Оплата'), findsOneWidget);
         expect(find.text('Детали заказа:'), findsOneWidget);
         expect(find.text('Выберите способ оплаты:'), findsOneWidget);
-        
+
         // Проверка методов оплаты
         expect(find.text('Банковская карта (Mock)'), findsOneWidget);
         expect(find.text('Apple Pay (Mock)'), findsOneWidget);
@@ -138,13 +141,14 @@ void main() {
       // Проверка отображения премиум-бейджей в интерфейсе
       // Это может быть в профилях пользователей или в списках
       final premiumBadges = find.byType(Container);
-      
+
       // Премиум-бейджи должны отображаться для премиум-пользователей
       // В тестовых данных есть премиум-пользователи
       expect(premiumBadges, findsWidgets);
     });
 
-    testWidgets('Test Advertisement Widget Display', (WidgetTester tester) async {
+    testWidgets('Test Advertisement Widget Display',
+        (WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -157,7 +161,8 @@ void main() {
       // Рекламные виджеты должны отображаться
     });
 
-    testWidgets('Test Navigation Between Monetization Screens', (WidgetTester tester) async {
+    testWidgets('Test Navigation Between Monetization Screens',
+        (WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
@@ -168,19 +173,19 @@ void main() {
       // Тестирование навигации между экранами
       await tester.tap(find.text('Платные Подписки'));
       await tester.pumpAndSettle();
-      
+
       // Возврат назад
       await tester.pageBack();
       await tester.pumpAndSettle();
-      
+
       // Переход к продвижению
       await tester.tap(find.text('Продвижение Профиля'));
       await tester.pumpAndSettle();
-      
+
       // Возврат назад
       await tester.pageBack();
       await tester.pumpAndSettle();
-      
+
       // Переход к рекламе
       await tester.tap(find.text('Рекламные Кампании'));
       await tester.pumpAndSettle();
@@ -255,7 +260,8 @@ void main() {
       }
     });
 
-    testWidgets('Test Create Advertisement Screen', (WidgetTester tester) async {
+    testWidgets('Test Create Advertisement Screen',
+        (WidgetTester tester) async {
       app.main();
       await tester.pumpAndSettle(const Duration(seconds: 3));
 

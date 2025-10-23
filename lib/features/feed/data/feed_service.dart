@@ -16,7 +16,8 @@ class FeedService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final ImagePicker _imagePicker = ImagePicker();
-  final FeedNotificationService _notificationService = FeedNotificationService();
+  final FeedNotificationService _notificationService =
+      FeedNotificationService();
 
   /// Получение постов по городу
   Stream<List<FeedPost>> getPostsByCity(String city) => _firestore
@@ -25,7 +26,8 @@ class FeedService {
       .orderBy('createdAt', descending: true)
       .limit(50)
       .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
 
   /// Получение постов от подписанных пользователей
   Stream<List<FeedPost>> getPostsBySubscriptions(List<String> followedIds) {
@@ -39,7 +41,8 @@ class FeedService {
         .orderBy('createdAt', descending: true)
         .limit(50)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
   }
 
   /// Комбинированный поток постов (город + подписки)
@@ -86,17 +89,21 @@ class FeedService {
       case FeedFilter.photos:
         baseStream = getPostsByCity(
           city,
-        ).map((posts) => posts.where((post) => post.type == PostType.photo).toList());
+        ).map((posts) =>
+            posts.where((post) => post.type == PostType.photo).toList());
         break;
       case FeedFilter.videos:
         baseStream = getPostsByCity(
           city,
-        ).map((posts) => posts.where((post) => post.type == PostType.video).toList());
+        ).map((posts) =>
+            posts.where((post) => post.type == PostType.video).toList());
         break;
       case FeedFilter.categories:
         if (category != null) {
           baseStream = getPostsByCity(city).map(
-            (posts) => posts.where((post) => post.taggedCategories.contains(category)).toList(),
+            (posts) => posts
+                .where((post) => post.taggedCategories.contains(category))
+                .toList(),
           );
         } else {
           baseStream = getPostsByCity(city);
@@ -138,7 +145,8 @@ class FeedService {
         }
 
         finalLikedBy = likedBy;
-        final updatedPost = post.copyWith(likes: likedBy.length, likedBy: likedBy);
+        final updatedPost =
+            post.copyWith(likes: likedBy.length, likedBy: likedBy);
 
         transaction.update(postRef, updatedPost.toMap());
       });
@@ -153,7 +161,8 @@ class FeedService {
             postId: postId,
             postAuthorId: originalPost!.authorId,
             likerId: userId,
-            likerName: 'Пользователь', // TODO(developer): Получить имя пользователя
+            likerName:
+                'Пользователь', // TODO(developer): Получить имя пользователя
           );
         }
       }
@@ -180,7 +189,8 @@ class FeedService {
         final comments = List<FeedComment>.from(post.comments);
         comments.add(comment);
 
-        final updatedPost = post.copyWith(comments: comments, commentsCount: comments.length);
+        final updatedPost =
+            post.copyWith(comments: comments, commentsCount: comments.length);
 
         transaction.update(postRef, updatedPost.toMap());
       });
@@ -342,5 +352,6 @@ class FeedService {
       .where('authorId', isEqualTo: userId)
       .orderBy('createdAt', descending: true)
       .snapshots()
-      .map((snapshot) => snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => FeedPost.fromMap(doc.data())).toList());
 }

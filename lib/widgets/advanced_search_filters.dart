@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/specialist_filters.dart';
 
 class AdvancedSearchFilters extends StatefulWidget {
-  const AdvancedSearchFilters({super.key, required this.filters, required this.onFiltersChanged});
+  const AdvancedSearchFilters(
+      {super.key, required this.filters, required this.onFiltersChanged});
   final SpecialistFilters filters;
   final Function(SpecialistFilters) onFiltersChanged;
 
@@ -21,8 +22,10 @@ class _AdvancedSearchFiltersState extends State<AdvancedSearchFilters> {
   void initState() {
     super.initState();
     _currentFilters = widget.filters;
-    _priceRange = RangeValues(_currentFilters.minPrice ?? 0, _currentFilters.maxPrice ?? 100000);
-    _ratingRange = RangeValues(_currentFilters.minRating ?? 0, _currentFilters.maxRating ?? 5);
+    _priceRange = RangeValues(
+        _currentFilters.minPrice ?? 0, _currentFilters.maxPrice ?? 100000);
+    _ratingRange = RangeValues(
+        _currentFilters.minRating ?? 0, _currentFilters.maxRating ?? 5);
     _selectedDate = _currentFilters.availableDate;
   }
 
@@ -41,7 +44,9 @@ class _AdvancedSearchFiltersState extends State<AdvancedSearchFilters> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const Spacer(),
-                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context)),
               ],
             ),
             const Divider(),
@@ -94,7 +99,8 @@ class _AdvancedSearchFiltersState extends State<AdvancedSearchFilters> {
             values: _priceRange,
             max: 100000,
             divisions: 100,
-            labels: RangeLabels('${_priceRange.start.round()} ₽', '${_priceRange.end.round()} ₽'),
+            labels: RangeLabels('${_priceRange.start.round()} ₽',
+                '${_priceRange.end.round()} ₽'),
             onChanged: (values) {
               setState(() {
                 _priceRange = values;
@@ -137,7 +143,8 @@ class _AdvancedSearchFiltersState extends State<AdvancedSearchFilters> {
   Widget _buildDateFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Доступная дата', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Доступная дата',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           InkWell(
             onTap: _selectDate,
@@ -176,14 +183,16 @@ class _AdvancedSearchFiltersState extends State<AdvancedSearchFilters> {
   Widget _buildCityFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Город', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Город',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           TextField(
-            decoration:
-                const InputDecoration(hintText: 'Введите город', border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+                hintText: 'Введите город', border: OutlineInputBorder()),
             onChanged: (value) {
               setState(() {
-                _currentFilters = _currentFilters.copyWith(city: value.isEmpty ? null : value);
+                _currentFilters = _currentFilters.copyWith(
+                    city: value.isEmpty ? null : value);
               });
             },
           ),
@@ -193,7 +202,8 @@ class _AdvancedSearchFiltersState extends State<AdvancedSearchFilters> {
   Widget _buildVerificationFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Верификация', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Верификация',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           CheckboxListTile(
             title: const Text('Только верифицированные'),
@@ -210,7 +220,8 @@ class _AdvancedSearchFiltersState extends State<AdvancedSearchFilters> {
   Widget _buildAvailabilityFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Доступность', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Доступность',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           CheckboxListTile(
             title: const Text('Только доступные сейчас'),
@@ -227,11 +238,13 @@ class _AdvancedSearchFiltersState extends State<AdvancedSearchFilters> {
   Widget _buildActionButtons() => Row(
         children: [
           Expanded(
-            child: OutlinedButton(onPressed: _clearFilters, child: const Text('Очистить')),
+            child: OutlinedButton(
+                onPressed: _clearFilters, child: const Text('Очистить')),
           ),
           const SizedBox(width: 16),
           Expanded(
-            child: ElevatedButton(onPressed: _applyFilters, child: const Text('Применить')),
+            child: ElevatedButton(
+                onPressed: _applyFilters, child: const Text('Применить')),
           ),
         ],
       );

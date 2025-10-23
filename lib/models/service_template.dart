@@ -44,16 +44,16 @@ class ServiceTemplate {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'categoryId': categoryId,
-    'categoryName': categoryName,
-    'serviceName': serviceName,
-    'description': description,
-    'requiredFields': requiredFields,
-    'defaultPricing': defaultPricing,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'categoryId': categoryId,
+        'categoryName': categoryName,
+        'serviceName': serviceName,
+        'description': description,
+        'requiredFields': requiredFields,
+        'defaultPricing': defaultPricing,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   @override
   bool operator ==(Object other) {
@@ -116,17 +116,17 @@ class SpecialistService {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'serviceName': serviceName,
-    'description': description,
-    'priceMin': priceMin,
-    'priceMax': priceMax,
-    'currency': currency,
-    'pricingDetails': pricingDetails,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'specialistId': specialistId,
+        'serviceName': serviceName,
+        'description': description,
+        'priceMin': priceMin,
+        'priceMax': priceMax,
+        'currency': currency,
+        'pricingDetails': pricingDetails,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Получить среднюю цену
   double get averagePrice => (priceMin + priceMax) / 2;

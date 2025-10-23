@@ -79,7 +79,8 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
   }
 
   void removeTag(String tag) {
-    state = state.copyWith(selectedTags: state.selectedTags.where((t) => t != tag).toList());
+    state = state.copyWith(
+        selectedTags: state.selectedTags.where((t) => t != tag).toList());
   }
 
   void togglePublic() {
@@ -104,19 +105,22 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
 }
 
 /// Review form provider
-final reviewFormProvider = NotifierProvider<ReviewFormNotifier, ReviewFormState>(
+final reviewFormProvider =
+    NotifierProvider<ReviewFormNotifier, ReviewFormState>(
   ReviewFormNotifier.new,
 );
 
 /// Review state
 class ReviewState {
-  const ReviewState({this.reviews = const [], this.isLoading = false, this.error});
+  const ReviewState(
+      {this.reviews = const [], this.isLoading = false, this.error});
 
   final List<Review> reviews;
   final bool isLoading;
   final String? error;
 
-  ReviewState copyWith({List<Review>? reviews, bool? isLoading, String? error}) {
+  ReviewState copyWith(
+      {List<Review>? reviews, bool? isLoading, String? error}) {
     return ReviewState(
       reviews: reviews ?? this.reviews,
       isLoading: isLoading ?? this.isLoading,
@@ -153,13 +157,16 @@ class ReviewStateNotifier extends Notifier<ReviewState> {
     }
   }
 
-  Future<void> updateReview(String reviewId, Map<String, dynamic> updates) async {
+  Future<void> updateReview(
+      String reviewId, Map<String, dynamic> updates) async {
     try {
       final service = ref.read(reviewServiceProvider);
-      await service.updateReview(reviewId, updates['rating'] ?? 0, updates['comment'] ?? '');
+      await service.updateReview(
+          reviewId, updates['rating'] ?? 0, updates['comment'] ?? '');
       // Reload reviews
       final currentReviews = state.reviews;
-      final specialistId = currentReviews.isNotEmpty ? currentReviews.first.specialistId : '';
+      final specialistId =
+          currentReviews.isNotEmpty ? currentReviews.first.specialistId : '';
       if (specialistId.isNotEmpty) {
         await loadReviews(specialistId);
       }
@@ -174,7 +181,8 @@ class ReviewStateNotifier extends Notifier<ReviewState> {
       await service.deleteReview(reviewId);
       // Reload reviews
       final currentReviews = state.reviews;
-      final specialistId = currentReviews.isNotEmpty ? currentReviews.first.specialistId : '';
+      final specialistId =
+          currentReviews.isNotEmpty ? currentReviews.first.specialistId : '';
       if (specialistId.isNotEmpty) {
         await loadReviews(specialistId);
       }
@@ -190,7 +198,8 @@ final reviewStateProvider = NotifierProvider<ReviewStateNotifier, ReviewState>(
 );
 
 /// Reviews by specialist provider
-final reviewsBySpecialistProvider = FutureProvider.family<List<Review>, String>((
+final reviewsBySpecialistProvider =
+    FutureProvider.family<List<Review>, String>((
   ref,
   specialistId,
 ) async {
@@ -199,13 +208,15 @@ final reviewsBySpecialistProvider = FutureProvider.family<List<Review>, String>(
 });
 
 /// Review stats provider
-final reviewStatsProvider = FutureProvider.family<ReviewStats?, String>((ref, specialistId) async {
+final reviewStatsProvider =
+    FutureProvider.family<ReviewStats?, String>((ref, specialistId) async {
   final service = ref.read(reviewServiceProvider);
   return service.getReviewStats(specialistId);
 });
 
 /// Specialist review stats provider
-final specialistReviewStatsProvider = FutureProvider.family<SpecialistReviewStats?, String>((
+final specialistReviewStatsProvider =
+    FutureProvider.family<SpecialistReviewStats?, String>((
   ref,
   specialistId,
 ) async {

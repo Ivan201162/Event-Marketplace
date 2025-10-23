@@ -52,7 +52,8 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
                         },
                       )
                     : null,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
               onChanged: (value) {
                 setState(() {
@@ -69,12 +70,16 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
                 final filteredFaqs = _searchQuery.isEmpty
                     ? faqs
                     : faqs
-                          .where(
-                            (faq) =>
-                                faq.question.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                                faq.answer.toLowerCase().contains(_searchQuery.toLowerCase()),
-                          )
-                          .toList();
+                        .where(
+                          (faq) =>
+                              faq.question
+                                  .toLowerCase()
+                                  .contains(_searchQuery.toLowerCase()) ||
+                              faq.answer
+                                  .toLowerCase()
+                                  .contains(_searchQuery.toLowerCase()),
+                        )
+                        .toList();
 
                 if (filteredFaqs.isEmpty) {
                   return _buildEmptyState();
@@ -94,7 +99,8 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(Icons.error_outline,
+                        size: 64, color: Colors.red),
                     const SizedBox(height: 16),
                     Text('Ошибка загрузки: $error'),
                     const SizedBox(height: 16),
@@ -117,7 +123,8 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
                 onPressed: _showContactSupportDialog,
                 icon: const Icon(Icons.support_agent),
                 label: const Text('Связаться с поддержкой'),
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16)),
               ),
             ),
           ),
@@ -127,47 +134,51 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
   }
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.help_outline, size: 64, color: Colors.grey),
-        const SizedBox(height: 16),
-        Text(
-          _searchQuery.isEmpty ? 'Нет вопросов' : 'Ничего не найдено',
-          style: const TextStyle(fontSize: 18, color: Colors.grey),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.help_outline, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              _searchQuery.isEmpty ? 'Нет вопросов' : 'Ничего не найдено',
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _searchQuery.isEmpty
+                  ? 'Вопросы и ответы появятся здесь'
+                  : 'Попробуйте изменить поисковый запрос',
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          _searchQuery.isEmpty
-              ? 'Вопросы и ответы появятся здесь'
-              : 'Попробуйте изменить поисковый запрос',
-          style: const TextStyle(color: Colors.grey),
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildFaqCard(FAQ faq) => Card(
-    margin: const EdgeInsets.only(bottom: 8),
-    child: ExpansionTile(
-      title: Text(faq.question, style: const TextStyle(fontWeight: FontWeight.w500)),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Text(faq.answer, style: const TextStyle(height: 1.5)),
+        margin: const EdgeInsets.only(bottom: 8),
+        child: ExpansionTile(
+          title: Text(faq.question,
+              style: const TextStyle(fontWeight: FontWeight.w500)),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(faq.answer, style: const TextStyle(height: 1.5)),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   void _showContactSupportDialog() {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Связаться с поддержкой'),
-        content: const Text('Выберите удобный способ связи с нашей службой поддержки:'),
+        content: const Text(
+            'Выберите удобный способ связи с нашей службой поддержки:'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();

@@ -5,7 +5,8 @@ import '../models/specialist_story.dart';
 import '../screens/story_viewer_screen.dart';
 
 class StoriesListWidget extends ConsumerWidget {
-  const StoriesListWidget({super.key, required this.storyGroups, required this.userId});
+  const StoriesListWidget(
+      {super.key, required this.storyGroups, required this.userId});
   final List<SpecialistStoryGroup> storyGroups;
   final String userId;
 
@@ -30,7 +31,8 @@ class StoriesListWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStoryGroup(BuildContext context, SpecialistStoryGroup group) => GestureDetector(
+  Widget _buildStoryGroup(BuildContext context, SpecialistStoryGroup group) =>
+      GestureDetector(
         onTap: () => _openStories(context, group),
         child: Container(
           width: 80,
@@ -55,7 +57,10 @@ class StoriesListWidget extends ConsumerWidget {
                     ),
                     child: CircleAvatar(
                       radius: 28,
-                      backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.1),
                       backgroundImage: group.specialistAvatar != null
                           ? NetworkImage(group.specialistAvatar!)
                           : null,
@@ -107,7 +112,8 @@ class StoriesListWidget extends ConsumerWidget {
               // Имя специалиста
               Text(
                 group.specialistName,
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                style:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -121,7 +127,8 @@ class StoriesListWidget extends ConsumerWidget {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => StoryViewerScreen(stories: group.stories, userId: userId),
+        builder: (context) =>
+            StoryViewerScreen(stories: group.stories, userId: userId),
       ),
     );
   }
@@ -140,7 +147,8 @@ class SpecialistStoriesWidget extends ConsumerWidget {
   final bool isOwner;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => StreamBuilder<List<SpecialistStory>>(
+  Widget build(BuildContext context, WidgetRef ref) =>
+      StreamBuilder<List<SpecialistStory>>(
         stream: _getStoriesStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -148,7 +156,8 @@ class SpecialistStoriesWidget extends ConsumerWidget {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('Ошибка загрузки сторис: ${snapshot.error}'));
+            return Center(
+                child: Text('Ошибка загрузки сторис: ${snapshot.error}'));
           }
 
           final stories = snapshot.data ?? [];
@@ -165,10 +174,13 @@ class SpecialistStoriesWidget extends ConsumerWidget {
         padding: const EdgeInsets.all(32),
         child: Column(
           children: [
-            Icon(Icons.auto_stories, size: 64, color: Theme.of(context).colorScheme.outline),
+            Icon(Icons.auto_stories,
+                size: 64, color: Theme.of(context).colorScheme.outline),
             const SizedBox(height: 16),
             Text(
-              isOwner ? 'У вас пока нет сторис' : 'У специалиста пока нет сторис',
+              isOwner
+                  ? 'У вас пока нет сторис'
+                  : 'У специалиста пока нет сторис',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
@@ -178,7 +190,10 @@ class SpecialistStoriesWidget extends ConsumerWidget {
                   : 'Следите за обновлениями, чтобы не пропустить новые сторис',
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
+              )
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.outline),
               textAlign: TextAlign.center,
             ),
             if (isOwner) ...[
@@ -193,7 +208,9 @@ class SpecialistStoriesWidget extends ConsumerWidget {
         ),
       );
 
-  Widget _buildStoriesGrid(BuildContext context, List<SpecialistStory> stories) => Column(
+  Widget _buildStoriesGrid(
+          BuildContext context, List<SpecialistStory> stories) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Заголовок
@@ -201,7 +218,9 @@ class SpecialistStoriesWidget extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                const Text('Сторис', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text('Сторис',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const Spacer(),
                 if (isOwner)
                   IconButton(
@@ -232,7 +251,8 @@ class SpecialistStoriesWidget extends ConsumerWidget {
         ],
       );
 
-  Widget _buildStoryThumbnail(BuildContext context, SpecialistStory story) => GestureDetector(
+  Widget _buildStoryThumbnail(BuildContext context, SpecialistStory story) =>
+      GestureDetector(
         onTap: () => _openStory(context, story),
         child: Container(
           decoration: BoxDecoration(
@@ -255,14 +275,16 @@ class SpecialistStoriesWidget extends ConsumerWidget {
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: double.infinity,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Container(color: Colors.grey.shade200, child: const Icon(Icons.error)),
+                    errorBuilder: (context, error, stackTrace) => Container(
+                        color: Colors.grey.shade200,
+                        child: const Icon(Icons.error)),
                   )
                 else if (story.contentType == StoryContentType.video)
                   Container(
                     color: Colors.black,
                     child: const Center(
-                      child: Icon(Icons.play_circle_outline, color: Colors.white, size: 32),
+                      child: Icon(Icons.play_circle_outline,
+                          color: Colors.white, size: 32),
                     ),
                   )
                 else
@@ -299,7 +321,8 @@ class SpecialistStoriesWidget extends ConsumerWidget {
                       color: Colors.black54,
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: Text(story.contentTypeIcon, style: const TextStyle(fontSize: 12)),
+                    child: Text(story.contentTypeIcon,
+                        style: const TextStyle(fontSize: 12)),
                   ),
                 ),
 
@@ -314,7 +337,8 @@ class SpecialistStoriesWidget extends ConsumerWidget {
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: const Icon(Icons.check, color: Colors.white, size: 12),
+                      child: const Icon(Icons.check,
+                          color: Colors.white, size: 12),
                     ),
                   ),
               ],
@@ -335,7 +359,8 @@ class SpecialistStoriesWidget extends ConsumerWidget {
       '/create-story',
       arguments: {
         'specialistId': specialistId,
-        'specialistName': 'Имя специалиста', // TODO(developer): Получить из контекста
+        'specialistName':
+            'Имя специалиста', // TODO(developer): Получить из контекста
         'specialistAvatar': null,
       },
     );
@@ -345,7 +370,8 @@ class SpecialistStoriesWidget extends ConsumerWidget {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => StoryViewerScreen(stories: [story], userId: userId),
+        builder: (context) =>
+            StoryViewerScreen(stories: [story], userId: userId),
       ),
     );
   }

@@ -11,7 +11,8 @@ class OptimizedFeedScreen extends ConsumerStatefulWidget {
   const OptimizedFeedScreen({super.key});
 
   @override
-  ConsumerState<OptimizedFeedScreen> createState() => _OptimizedFeedScreenState();
+  ConsumerState<OptimizedFeedScreen> createState() =>
+      _OptimizedFeedScreenState();
 }
 
 class _OptimizedFeedScreenState extends ConsumerState<OptimizedFeedScreen> {
@@ -32,7 +33,8 @@ class _OptimizedFeedScreenState extends ConsumerState<OptimizedFeedScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       _loadMorePosts();
     }
   }
@@ -245,7 +247,9 @@ class _FeedPostCard extends ConsumerWidget {
                   backgroundImage: post.authorAvatar != null
                       ? CachedNetworkImageProvider(post.authorAvatar!)
                       : null,
-                  child: post.authorAvatar == null ? const Icon(Icons.person) : null,
+                  child: post.authorAvatar == null
+                      ? const Icon(Icons.person)
+                      : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -272,9 +276,12 @@ class _FeedPostCard extends ConsumerWidget {
                 PopupMenuButton<String>(
                   onSelected: (value) => _handlePostAction(context, value),
                   itemBuilder: (context) => [
-                    const PopupMenuItem(value: 'save', child: Text('Сохранить')),
-                    const PopupMenuItem(value: 'share', child: Text('Поделиться')),
-                    const PopupMenuItem(value: 'report', child: Text('Пожаловаться')),
+                    const PopupMenuItem(
+                        value: 'save', child: Text('Сохранить')),
+                    const PopupMenuItem(
+                        value: 'share', child: Text('Поделиться')),
+                    const PopupMenuItem(
+                        value: 'report', child: Text('Пожаловаться')),
                   ],
                 ),
               ],
@@ -308,7 +315,9 @@ class _FeedPostCard extends ConsumerWidget {
                     .map(
                       (tag) => Chip(
                         label: Text('#$tag'),
-                        backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                        backgroundColor: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.1),
                         labelStyle: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 12,
@@ -404,7 +413,8 @@ class _FeedPostCard extends ConsumerWidget {
                 width: double.infinity,
               ),
               const Center(
-                child: Icon(Icons.play_circle_filled, size: 64, color: Colors.white),
+                child: Icon(Icons.play_circle_filled,
+                    size: 64, color: Colors.white),
               ),
             ],
           ),

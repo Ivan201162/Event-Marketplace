@@ -57,7 +57,10 @@ class RatingSummaryWidget extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 '$totalReviews ${_getReviewsText(totalReviews)}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
@@ -92,7 +95,8 @@ class RatingSummaryWidget extends StatelessWidget {
       children: [
         SizedBox(
           width: 60,
-          child: Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+          child: Text(label,
+              style: TextStyle(fontSize: 12, color: Colors.grey[700])),
         ),
         const SizedBox(width: 8),
         Expanded(
@@ -121,7 +125,10 @@ class RatingSummaryWidget extends StatelessWidget {
         children: [
           Text(
             'Распределение оценок',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
 
@@ -131,7 +138,8 @@ class RatingSummaryWidget extends StatelessWidget {
             children: List.generate(5, (index) {
               final rating = 5 - index;
               final count = ratingDistribution[rating] ?? 0;
-              final percentage = totalReviews > 0 ? (count / totalReviews * 100) : 0.0;
+              final percentage =
+                  totalReviews > 0 ? (count / totalReviews * 100) : 0.0;
 
               return Column(
                 children: [
@@ -165,12 +173,14 @@ class RatingSummaryWidget extends StatelessWidget {
 
                   // Рейтинг
                   Text('$rating',
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold)),
 
                   const SizedBox(height: 4),
 
                   // Количество
-                  Text('$count', style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+                  Text('$count',
+                      style: TextStyle(fontSize: 10, color: Colors.grey[600])),
                 ],
               );
             }),

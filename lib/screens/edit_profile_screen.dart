@@ -192,14 +192,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 60,
-                backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                backgroundColor:
+                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
                 backgroundImage: _selectedAvatar != null
                     ? FileImage(_selectedAvatar!)
                     : (widget.initialProfile?.avatarUrl != null
-                              ? NetworkImage(widget.initialProfile!.avatarUrl!)
-                              : null)
-                          as ImageProvider?,
-                child: _selectedAvatar == null && widget.initialProfile?.avatarUrl == null
+                        ? NetworkImage(widget.initialProfile!.avatarUrl!)
+                        : null) as ImageProvider?,
+                child: _selectedAvatar == null &&
+                        widget.initialProfile?.avatarUrl == null
                     ? const Icon(Icons.person, size: 60, color: Colors.grey)
                     : null,
               ),
@@ -210,18 +211,22 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2),
+                    border: Border.all(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        width: 2),
                   ),
                   child: IconButton(
                     onPressed: _pickAvatar,
-                    icon: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
+                    icon: const Icon(Icons.camera_alt,
+                        color: Colors.white, size: 20),
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          TextButton(onPressed: _pickAvatar, child: const Text('Изменить фото')),
+          TextButton(
+              onPressed: _pickAvatar, child: const Text('Изменить фото')),
         ],
       ),
     );
@@ -292,7 +297,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       // Создаем обновленный профиль
       final updatedProfile = Profile(
         id: currentUser.uid,
-        username: widget.initialProfile?.username ?? currentUser.email.split('@').first ?? 'user',
+        username: widget.initialProfile?.username ??
+            currentUser.email.split('@').first ??
+            'user',
         name: _nameController.text.trim(),
         avatarUrl: avatarUrl,
         city: _cityController.text.trim(),
@@ -309,7 +316,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Профиль успешно обновлен!')));
+        ).showSnackBar(
+            const SnackBar(content: Text('Профиль успешно обновлен!')));
         context.pop();
       }
     } catch (e) {

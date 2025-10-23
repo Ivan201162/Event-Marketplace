@@ -42,7 +42,8 @@ void main() {
         const requestedCapacity = 5;
         const maxCapacity = 10;
 
-        expect(_isWithinCapacity(serviceId, requestedCapacity, maxCapacity), isTrue);
+        expect(_isWithinCapacity(serviceId, requestedCapacity, maxCapacity),
+            isTrue);
         expect(_isWithinCapacity(serviceId, 15, maxCapacity), isFalse);
       });
 
@@ -51,7 +52,8 @@ void main() {
         const duration = 2; // hours
         const expectedPrice = basePrice * duration;
 
-        expect(_calculateServicePrice(basePrice, duration), equals(expectedPrice));
+        expect(
+            _calculateServicePrice(basePrice, duration), equals(expectedPrice));
       });
     });
 
@@ -78,7 +80,8 @@ void main() {
         const serviceLocation = 'Moscow';
         const maxDistance = 50; // km
 
-        expect(_isLocationValid(customerLocation, serviceLocation, maxDistance), isTrue);
+        expect(_isLocationValid(customerLocation, serviceLocation, maxDistance),
+            isTrue);
       });
     });
 
@@ -88,7 +91,8 @@ void main() {
         const paymentAmount = 100.0;
         const discount = 0.0;
 
-        expect(_isPaymentAmountValid(servicePrice, paymentAmount, discount), isTrue);
+        expect(_isPaymentAmountValid(servicePrice, paymentAmount, discount),
+            isTrue);
         expect(_isPaymentAmountValid(servicePrice, 50, discount), isFalse);
       });
 
@@ -97,7 +101,8 @@ void main() {
         const discountPercent = 10.0;
         const expectedPrice = 90.0;
 
-        expect(_applyDiscount(originalPrice, discountPercent), equals(expectedPrice));
+        expect(_applyDiscount(originalPrice, discountPercent),
+            equals(expectedPrice));
       });
 
       test('should validate payment methods', () {
@@ -130,7 +135,8 @@ void main() {
         expect(_canCancelBooking(bookingDate, cancellationDeadline), isTrue);
 
         final lateBookingDate = DateTime.now().add(const Duration(minutes: 30));
-        expect(_canCancelBooking(lateBookingDate, cancellationDeadline), isFalse);
+        expect(
+            _canCancelBooking(lateBookingDate, cancellationDeadline), isFalse);
       });
     });
 
@@ -172,7 +178,8 @@ void main() {
           'endTime': DateTime(2024, 1, 1, 19),
         };
 
-        expect(_hasBookingConflict(existingBooking, nonConflictingBooking), isFalse);
+        expect(_hasBookingConflict(existingBooking, nonConflictingBooking),
+            isFalse);
       });
 
       test('should suggest alternative time slots', () {
@@ -227,7 +234,8 @@ bool _isValidBookingTime(DateTime? time) {
 
 /// Helper function to validate booking duration
 bool _isValidBookingDuration(DateTime startTime, DateTime endTime) {
-  return endTime.isAfter(startTime) && endTime.difference(startTime).inHours <= 8; // Max 8 hours
+  return endTime.isAfter(startTime) &&
+      endTime.difference(startTime).inHours <= 8; // Max 8 hours
 }
 
 /// Helper function to check service availability
@@ -242,7 +250,8 @@ bool _isWithinCapacity(String serviceId, int requested, int maxCapacity) =>
     requested > 0 && requested <= maxCapacity;
 
 /// Helper function to calculate service price
-double _calculateServicePrice(double basePrice, int duration) => basePrice * duration;
+double _calculateServicePrice(double basePrice, int duration) =>
+    basePrice * duration;
 
 /// Helper function to check customer eligibility
 bool _isCustomerEligible(String? customerId, String? serviceId) {
@@ -253,19 +262,23 @@ bool _isCustomerEligible(String? customerId, String? serviceId) {
 }
 
 /// Helper function to validate age
-bool _isAgeValid(int age, int minAge, int maxAge) => age >= minAge && age <= maxAge;
+bool _isAgeValid(int age, int minAge, int maxAge) =>
+    age >= minAge && age <= maxAge;
 
 /// Helper function to validate location
-bool _isLocationValid(String customerLocation, String serviceLocation, int maxDistance) {
+bool _isLocationValid(
+    String customerLocation, String serviceLocation, int maxDistance) {
   // Mock implementation - in real app would calculate actual distance
   return customerLocation == serviceLocation;
 }
 
 /// Helper function to validate payment amount
-bool _isPaymentAmountValid(double servicePrice, double paymentAmount, double discount) {
+bool _isPaymentAmountValid(
+    double servicePrice, double paymentAmount, double discount) {
   if (servicePrice < 0 || paymentAmount < 0) return false;
   final expectedAmount = servicePrice - discount;
-  return (paymentAmount - expectedAmount).abs() < 0.01; // Allow small rounding errors
+  return (paymentAmount - expectedAmount).abs() <
+      0.01; // Allow small rounding errors
 }
 
 /// Helper function to apply discount
@@ -311,7 +324,8 @@ bool _isNotificationEnabled(String customerId, String notificationType) {
 }
 
 /// Helper function to detect booking conflicts
-bool _hasBookingConflict(Map<String, DateTime> existing, Map<String, DateTime> newBooking) {
+bool _hasBookingConflict(
+    Map<String, DateTime> existing, Map<String, DateTime> newBooking) {
   final existingStart = existing['startTime']!;
   final existingEnd = existing['endTime']!;
   final newStart = newBooking['startTime']!;
@@ -321,7 +335,8 @@ bool _hasBookingConflict(Map<String, DateTime> existing, Map<String, DateTime> n
 }
 
 /// Helper function to get alternative time slots
-List<DateTime> _getAlternativeSlots(DateTime requestedTime, List<DateTime> availableSlots) =>
+List<DateTime> _getAlternativeSlots(
+        DateTime requestedTime, List<DateTime> availableSlots) =>
     availableSlots.where((slot) {
       final timeDiff = slot.difference(requestedTime).abs();
       return timeDiff.inHours <= 2; // Within 2 hours of requested time

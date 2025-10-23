@@ -8,10 +8,12 @@ class HomeSearchFiltersWidget extends ConsumerStatefulWidget {
   final Function(Map<String, dynamic>) onFiltersChanged;
 
   @override
-  ConsumerState<HomeSearchFiltersWidget> createState() => _HomeSearchFiltersWidgetState();
+  ConsumerState<HomeSearchFiltersWidget> createState() =>
+      _HomeSearchFiltersWidgetState();
 }
 
-class _HomeSearchFiltersWidgetState extends ConsumerState<HomeSearchFiltersWidget> {
+class _HomeSearchFiltersWidgetState
+    extends ConsumerState<HomeSearchFiltersWidget> {
   // Фильтры
   double _minPrice = 0;
   double _maxPrice = 10000;
@@ -66,9 +68,12 @@ class _HomeSearchFiltersWidgetState extends ConsumerState<HomeSearchFiltersWidge
               children: [
                 const Icon(Icons.filter_list, size: 20),
                 const SizedBox(width: 8),
-                const Text('Фильтры', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const Text('Фильтры',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 const Spacer(),
-                TextButton(onPressed: _resetFilters, child: const Text('Сбросить')),
+                TextButton(
+                    onPressed: _resetFilters, child: const Text('Сбросить')),
               ],
             ),
 
@@ -151,7 +156,8 @@ class _HomeSearchFiltersWidgetState extends ConsumerState<HomeSearchFiltersWidge
   Widget _buildCityFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Город', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          const Text('Город',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             initialValue: _selectedCity,
@@ -162,7 +168,8 @@ class _HomeSearchFiltersWidgetState extends ConsumerState<HomeSearchFiltersWidge
             ),
             items: [
               const DropdownMenuItem<String>(child: Text('Все города')),
-              ..._cities.map((city) => DropdownMenuItem<String>(value: city, child: Text(city))),
+              ..._cities.map((city) =>
+                  DropdownMenuItem<String>(value: city, child: Text(city))),
             ],
             onChanged: (value) {
               setState(() {
@@ -178,7 +185,8 @@ class _HomeSearchFiltersWidgetState extends ConsumerState<HomeSearchFiltersWidge
   Widget _buildCategoryFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Категория', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          const Text('Категория',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             initialValue: _selectedCategory,
@@ -227,8 +235,10 @@ class _HomeSearchFiltersWidgetState extends ConsumerState<HomeSearchFiltersWidge
                     _selectedDate != null
                         ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
                         : 'Выберите дату',
-                    style:
-                        TextStyle(color: _selectedDate != null ? Colors.black : Colors.grey[600]),
+                    style: TextStyle(
+                        color: _selectedDate != null
+                            ? Colors.black
+                            : Colors.grey[600]),
                   ),
                   const Spacer(),
                   if (_selectedDate != null)

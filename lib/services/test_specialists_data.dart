@@ -9,14 +9,14 @@ class TestSpecialistsDataService {
   static Future<void> createTestSpecialists() async {
     try {
       final specialists = _generateTestSpecialists();
-      
+
       for (final specialist in specialists) {
         await _firestore
             .collection('specialists')
             .doc(specialist.id)
             .set(specialist.toFirestore());
       }
-      
+
       print('✅ Test specialists created successfully');
     } catch (e) {
       print('❌ Error creating test specialists: $e');
@@ -33,8 +33,10 @@ class TestSpecialistsDataService {
         specialization: 'Ведущий мероприятий',
         city: 'Москва',
         region: 'Россия',
-        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-        bio: 'Профессиональный ведущий с 10-летним опытом. Провожу свадьбы, корпоративы, детские праздники.',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+        bio:
+            'Профессиональный ведущий с 10-летним опытом. Провожу свадьбы, корпоративы, детские праздники.',
         rating: 4.9,
         totalOrders: 156,
         successfulOrders: 152,
@@ -72,7 +74,8 @@ class TestSpecialistsDataService {
             id: 'review_1',
             userId: 'user_1',
             userName: 'Анна Смирнова',
-            userAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
+            userAvatar:
+                'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face',
             rating: 5.0,
             comment: 'Отличный ведущий! Все прошло идеально.',
             createdAt: DateTime.now().subtract(const Duration(days: 5)),
@@ -92,8 +95,10 @@ class TestSpecialistsDataService {
         specialization: 'Фотограф',
         city: 'Москва',
         region: 'Россия',
-        avatarUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-        bio: 'Свадебный и портретный фотограф. Снимаю в стиле репортаж и постановка.',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+        bio:
+            'Свадебный и портретный фотограф. Снимаю в стиле репортаж и постановка.',
         rating: 4.8,
         totalOrders: 89,
         successfulOrders: 87,
@@ -140,8 +145,10 @@ class TestSpecialistsDataService {
         specialization: 'Кейтеринг',
         city: 'Санкт-Петербург',
         region: 'Россия',
-        avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-        bio: 'Профессиональный кейтеринг для любых мероприятий. Европейская и азиатская кухня.',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+        bio:
+            'Профессиональный кейтеринг для любых мероприятий. Европейская и азиатская кухня.',
         rating: 4.7,
         totalOrders: 67,
         successfulOrders: 65,
@@ -188,8 +195,10 @@ class TestSpecialistsDataService {
         specialization: 'Декор и оформление',
         city: 'Москва',
         region: 'Россия',
-        avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-        bio: 'Дизайнер интерьеров и декоратор. Создаю уникальные пространства для ваших мероприятий.',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+        bio:
+            'Дизайнер интерьеров и декоратор. Создаю уникальные пространства для ваших мероприятий.',
         rating: 4.9,
         totalOrders: 45,
         successfulOrders: 44,
@@ -236,8 +245,10 @@ class TestSpecialistsDataService {
         specialization: 'DJ и музыкант',
         city: 'Москва',
         region: 'Россия',
-        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-        bio: 'DJ с 15-летним опытом. Играю на свадьбах, корпоративах, клубах. Современная и ретро музыка.',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+        bio:
+            'DJ с 15-летним опытом. Играю на свадьбах, корпоративах, клубах. Современная и ретро музыка.',
         rating: 4.6,
         totalOrders: 234,
         successfulOrders: 228,
@@ -284,8 +295,10 @@ class TestSpecialistsDataService {
         specialization: 'Визажист',
         city: 'Москва',
         region: 'Россия',
-        avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
-        bio: 'Молодой визажист с креативным подходом. Специализируюсь на свадебном и вечернем макияже.',
+        avatarUrl:
+            'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face',
+        bio:
+            'Молодой визажист с креативным подходом. Специализируюсь на свадебном и вечернем макияже.',
         rating: 4.5,
         totalOrders: 12,
         successfulOrders: 11,
@@ -332,11 +345,11 @@ class TestSpecialistsDataService {
     try {
       final batch = _firestore.batch();
       final specialists = await _firestore.collection('specialists').get();
-      
+
       for (final doc in specialists.docs) {
         batch.delete(doc.reference);
       }
-      
+
       await batch.commit();
       print('✅ Test data cleared successfully');
     } catch (e) {

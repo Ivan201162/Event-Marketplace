@@ -10,12 +10,15 @@ class TestingMonitoringScreen extends ConsumerStatefulWidget {
   const TestingMonitoringScreen({super.key});
 
   @override
-  ConsumerState<TestingMonitoringScreen> createState() => _TestingMonitoringScreenState();
+  ConsumerState<TestingMonitoringScreen> createState() =>
+      _TestingMonitoringScreenState();
 }
 
-class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScreen> {
+class _TestingMonitoringScreenState
+    extends ConsumerState<TestingMonitoringScreen> {
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
-  final PerformanceTestingService _performanceTester = PerformanceTestingService();
+  final PerformanceTestingService _performanceTester =
+      PerformanceTestingService();
   final AppOptimizationService _optimizer = AppOptimizationService();
 
   bool _isRunningTests = false;
@@ -31,7 +34,8 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
   }
 
   Future<void> _loadInitialData() async {
-    await Future.wait([_loadCacheInfo(), _loadRecommendations(), _loadErrorStats()]);
+    await Future.wait(
+        [_loadCacheInfo(), _loadRecommendations(), _loadErrorStats()]);
   }
 
   Future<void> _loadCacheInfo() async {
@@ -88,7 +92,8 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
     try {
       final result = await _optimizer.clearCache();
       if (result['success'] == true) {
-        _showSuccessSnackBar('Кэш очищен. Освобождено: ${result['freedSpaceMB']} МБ');
+        _showSuccessSnackBar(
+            'Кэш очищен. Освобождено: ${result['freedSpaceMB']} МБ');
         await _loadCacheInfo();
       } else {
         _showErrorSnackBar('Ошибка очистки кэша: ${result['error']}');
@@ -105,7 +110,8 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
         _showSuccessSnackBar('Рекомендация применена успешно');
         await _loadInitialData();
       } else {
-        _showErrorSnackBar('Ошибка применения рекомендации: ${result['error']}');
+        _showErrorSnackBar(
+            'Ошибка применения рекомендации: ${result['error']}');
       }
     } catch (e) {
       _showErrorSnackBar('Ошибка применения рекомендации: $e');
@@ -115,131 +121,140 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Тестирование и Мониторинг'),
-      backgroundColor: Colors.blue,
-      foregroundColor: Colors.white,
-    ),
-    body: SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Кэш и оптимизация
-          _buildCacheSection(),
-          const SizedBox(height: 24),
+        appBar: AppBar(
+          title: const Text('Тестирование и Мониторинг'),
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Кэш и оптимизация
+              _buildCacheSection(),
+              const SizedBox(height: 24),
 
-          // Рекомендации по оптимизации
-          _buildRecommendationsSection(),
-          const SizedBox(height: 24),
+              // Рекомендации по оптимизации
+              _buildRecommendationsSection(),
+              const SizedBox(height: 24),
 
-          // Статистика ошибок
-          _buildErrorStatsSection(),
-          const SizedBox(height: 24),
+              // Статистика ошибок
+              _buildErrorStatsSection(),
+              const SizedBox(height: 24),
 
-          // Тесты производительности
-          _buildPerformanceTestsSection(),
-          const SizedBox(height: 24),
+              // Тесты производительности
+              _buildPerformanceTestsSection(),
+              const SizedBox(height: 24),
 
-          // Результаты тестов
-          if (_testResults != null) _buildTestResultsSection(),
-        ],
-      ),
-    ),
-  );
+              // Результаты тестов
+              if (_testResults != null) _buildTestResultsSection(),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildCacheSection() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.storage, color: Colors.blue),
-              const SizedBox(width: 8),
-              const Text(
-                'Кэш и Оптимизация',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  const Icon(Icons.storage, color: Colors.blue),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Кэш и Оптимизация',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                      onPressed: _loadCacheInfo,
+                      icon: const Icon(Icons.refresh)),
+                ],
               ),
-              const Spacer(),
-              IconButton(onPressed: _loadCacheInfo, icon: const Icon(Icons.refresh)),
+              const SizedBox(height: 16),
+              if (_cacheInfo != null) ...[
+                _buildInfoRow(
+                    'Временный кэш', '${_cacheInfo!['tempCacheSizeMB']} МБ'),
+                _buildInfoRow(
+                    'Документы', '${_cacheInfo!['documentsSizeMB']} МБ'),
+                _buildInfoRow(
+                    'Общий размер', '${_cacheInfo!['totalSizeMB']} МБ'),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _clearCache,
+                    icon: const Icon(Icons.cleaning_services),
+                    label: const Text('Очистить кэш'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ] else
+                const CircularProgressIndicator(),
             ],
           ),
-          const SizedBox(height: 16),
-          if (_cacheInfo != null) ...[
-            _buildInfoRow('Временный кэш', '${_cacheInfo!['tempCacheSizeMB']} МБ'),
-            _buildInfoRow('Документы', '${_cacheInfo!['documentsSizeMB']} МБ'),
-            _buildInfoRow('Общий размер', '${_cacheInfo!['totalSizeMB']} МБ'),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: _clearCache,
-                icon: const Icon(Icons.cleaning_services),
-                label: const Text('Очистить кэш'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  foregroundColor: Colors.white,
-                ),
-              ),
-            ),
-          ] else
-            const CircularProgressIndicator(),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildRecommendationsSection() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.lightbulb, color: Colors.amber),
-              const SizedBox(width: 8),
-              const Text(
-                'Рекомендации по Оптимизации',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  const Icon(Icons.lightbulb, color: Colors.amber),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Рекомендации по Оптимизации',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                      onPressed: _loadRecommendations,
+                      icon: const Icon(Icons.refresh)),
+                ],
               ),
-              const Spacer(),
-              IconButton(onPressed: _loadRecommendations, icon: const Icon(Icons.refresh)),
+              const SizedBox(height: 16),
+              if (_recommendations != null) ...[
+                if (_recommendations!.isEmpty)
+                  const Text('Нет рекомендаций по оптимизации')
+                else
+                  ..._recommendations!.map(_buildRecommendationCard),
+              ] else
+                const CircularProgressIndicator(),
             ],
           ),
-          const SizedBox(height: 16),
-          if (_recommendations != null) ...[
-            if (_recommendations!.isEmpty)
-              const Text('Нет рекомендаций по оптимизации')
-            else
-              ..._recommendations!.map(_buildRecommendationCard),
-          ] else
-            const CircularProgressIndicator(),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildRecommendationCard(Map<String, dynamic> recommendation) {
     final priority = recommendation['priority'] as String;
     final priorityColor = priority == 'high'
         ? Colors.red
         : priority == 'medium'
-        ? Colors.orange
-        : Colors.blue;
+            ? Colors.orange
+            : Colors.blue;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -251,7 +266,8 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: priorityColor,
                     borderRadius: BorderRadius.circular(12),
@@ -280,14 +296,16 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
               const SizedBox(height: 4),
               Text(
                 'Экономия: ${recommendation['estimatedSavings']}',
-                style: TextStyle(color: Colors.green[700], fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: Colors.green[700], fontWeight: FontWeight.w500),
               ),
             ],
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => _applyRecommendation(recommendation['action'] as String),
+                onPressed: () =>
+                    _applyRecommendation(recommendation['action'] as String),
                 child: const Text('Применить'),
               ),
             ),
@@ -298,79 +316,86 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
   }
 
   Widget _buildErrorStatsSection() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.bug_report, color: Colors.red),
-              const SizedBox(width: 8),
-              const Text(
-                'Статистика Ошибок',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  const Icon(Icons.bug_report, color: Colors.red),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Статистика Ошибок',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                      onPressed: _loadErrorStats,
+                      icon: const Icon(Icons.refresh)),
+                ],
               ),
-              const Spacer(),
-              IconButton(onPressed: _loadErrorStats, icon: const Icon(Icons.refresh)),
+              const SizedBox(height: 16),
+              if (_errorStats != null) ...[
+                _buildInfoRow('Всего ошибок', '${_errorStats!['totalErrors']}'),
+                if (_errorStats!['errorsByScreen'] != null) ...[
+                  const SizedBox(height: 8),
+                  const Text('Ошибки по экранам:',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  ...(_errorStats!['errorsByScreen'] as Map<String, dynamic>)
+                      .entries
+                      .map(
+                        (entry) =>
+                            _buildInfoRow('  ${entry.key}', '${entry.value}'),
+                      ),
+                ],
+              ] else
+                const CircularProgressIndicator(),
             ],
           ),
-          const SizedBox(height: 16),
-          if (_errorStats != null) ...[
-            _buildInfoRow('Всего ошибок', '${_errorStats!['totalErrors']}'),
-            if (_errorStats!['errorsByScreen'] != null) ...[
-              const SizedBox(height: 8),
-              const Text('Ошибки по экранам:', style: TextStyle(fontWeight: FontWeight.bold)),
-              ...(_errorStats!['errorsByScreen'] as Map<String, dynamic>).entries.map(
-                (entry) => _buildInfoRow('  ${entry.key}', '${entry.value}'),
-              ),
-            ],
-          ] else
-            const CircularProgressIndicator(),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildPerformanceTestsSection() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.speed, color: Colors.green),
-              SizedBox(width: 8),
-              Text(
-                'Тесты Производительности',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              const Row(
+                children: [
+                  Icon(Icons.speed, color: Colors.green),
+                  SizedBox(width: 8),
+                  Text(
+                    'Тесты Производительности',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _isRunningTests ? null : _runPerformanceTests,
+                  icon: _isRunningTests
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.play_arrow),
+                  label: Text(
+                      _isRunningTests ? 'Запуск тестов...' : 'Запустить тесты'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _isRunningTests ? null : _runPerformanceTests,
-              icon: _isRunningTests
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.play_arrow),
-              label: Text(_isRunningTests ? 'Запуск тестов...' : 'Запустить тесты'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildTestResultsSection() {
     if (_testResults == null) return const SizedBox.shrink();
@@ -393,14 +418,16 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
             ),
             const SizedBox(height: 16),
             _buildInfoRow('Общее время', '${_testResults!['totalTime']} мс'),
-            _buildInfoRow('Статус', _testResults!['success'] ? 'Успешно' : 'Ошибка'),
+            _buildInfoRow(
+                'Статус', _testResults!['success'] ? 'Успешно' : 'Ошибка'),
             const SizedBox(height: 16),
             if (_testResults!['tests'] != null) ...[
-              const Text('Детали тестов:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Детали тестов:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               ...(_testResults!['tests'] as Map<String, dynamic>).entries.map(
-                (entry) => _buildTestResult(entry.key, entry.value),
-              ),
+                    (entry) => _buildTestResult(entry.key, entry.value),
+                  ),
             ],
           ],
         ),
@@ -425,7 +452,8 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
         children: [
           Row(
             children: [
-              Icon(success ? Icons.check_circle : Icons.error, color: color, size: 16),
+              Icon(success ? Icons.check_circle : Icons.error,
+                  color: color, size: 16),
               const SizedBox(width: 8),
               Text(
                 testName,
@@ -433,22 +461,24 @@ class _TestingMonitoringScreenState extends ConsumerState<TestingMonitoringScree
               ),
             ],
           ),
-          if (result['totalTime'] != null) _buildInfoRow('Время', '${result['totalTime']} мс'),
+          if (result['totalTime'] != null)
+            _buildInfoRow('Время', '${result['totalTime']} мс'),
           if (result['error'] != null)
-            Text('Ошибка: ${result['error']}', style: TextStyle(color: Colors.red[700])),
+            Text('Ошибка: ${result['error']}',
+                style: TextStyle(color: Colors.red[700])),
         ],
       ),
     );
   }
 
   Widget _buildInfoRow(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(label),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label),
+            Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+      );
 }

@@ -11,10 +11,12 @@ class CustomerPaymentReportScreen extends ConsumerStatefulWidget {
   const CustomerPaymentReportScreen({super.key});
 
   @override
-  ConsumerState<CustomerPaymentReportScreen> createState() => _CustomerPaymentReportScreenState();
+  ConsumerState<CustomerPaymentReportScreen> createState() =>
+      _CustomerPaymentReportScreenState();
 }
 
-class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentReportScreen>
+class _CustomerPaymentReportScreenState
+    extends ConsumerState<CustomerPaymentReportScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final FinancialReportService _reportService = FinancialReportService();
@@ -68,23 +70,25 @@ class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentRep
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Отчет по платежам'),
-      actions: [
-        IconButton(icon: const Icon(Icons.date_range), onPressed: _selectDateRange),
-        IconButton(icon: const Icon(Icons.refresh), onPressed: _loadReport),
-      ],
-      bottom: TabBar(
-        controller: _tabController,
-        tabs: const [
-          Tab(text: 'Обзор', icon: Icon(Icons.dashboard)),
-          Tab(text: 'По месяцам', icon: Icon(Icons.calendar_month)),
-          Tab(text: 'По типам', icon: Icon(Icons.category)),
-        ],
-      ),
-    ),
-    body: _buildBody(),
-  );
+        appBar: AppBar(
+          title: const Text('Отчет по платежам'),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.date_range),
+                onPressed: _selectDateRange),
+            IconButton(icon: const Icon(Icons.refresh), onPressed: _loadReport),
+          ],
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Обзор', icon: Icon(Icons.dashboard)),
+              Tab(text: 'По месяцам', icon: Icon(Icons.calendar_month)),
+              Tab(text: 'По типам', icon: Icon(Icons.category)),
+            ],
+          ),
+        ),
+        body: _buildBody(),
+      );
 
   Widget _buildBody() {
     if (_isLoading) {
@@ -100,7 +104,8 @@ class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentRep
             const SizedBox(height: 16),
             Text('Ошибка: $_error'),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadReport, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadReport, child: const Text('Повторить')),
           ],
         ),
       );
@@ -140,7 +145,8 @@ class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentRep
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  Text(report.period, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+                  Text(report.period,
+                      style: TextStyle(fontSize: 16, color: Colors.grey[600])),
                 ],
               ),
             ),
@@ -280,7 +286,8 @@ class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentRep
           ),
           const SizedBox(height: 16),
           ...report.monthlyBreakdown.entries.map((entry) {
-            final maxAmount = report.monthlyBreakdown.values.reduce((a, b) => a > b ? a : b);
+            final maxAmount =
+                report.monthlyBreakdown.values.reduce((a, b) => a > b ? a : b);
             final percentage = entry.value / maxAmount;
 
             return Card(
@@ -294,7 +301,8 @@ class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentRep
                       children: [
                         Text(
                           _formatMonth(entry.key),
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           '${entry.value.toStringAsFixed(2)} ₽',
@@ -310,7 +318,8 @@ class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentRep
                     LinearProgressIndicator(
                       value: percentage,
                       backgroundColor: Colors.grey[300],
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.green),
                     ),
                   ],
                 ),
@@ -356,13 +365,15 @@ class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentRep
                       flex: 2,
                       child: Text(
                         entry.key,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Expanded(
                       child: Text(
                         '${entry.value.toStringAsFixed(2)} ₽',
-                        style: const TextStyle(fontSize: 16, color: Colors.green),
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.green),
                         textAlign: TextAlign.right,
                       ),
                     ),
@@ -389,46 +400,51 @@ class _CustomerPaymentReportScreenState extends ConsumerState<CustomerPaymentRep
     IconData icon,
     Color color, {
     bool isFullWidth = false,
-  }) => Container(
-    width: isFullWidth ? double.infinity : null,
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: color.withValues(alpha: 0.3)),
-    ),
-    child: Column(
-      children: [
-        Icon(icon, color: color, size: 32),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
+  }) =>
+      Container(
+        width: isFullWidth ? double.infinity : null,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
-        Text(
-          title,
-          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-          textAlign: TextAlign.center,
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.bold, color: color),
+            ),
+            Text(
+              title,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
-  Widget _buildStatItem(String title, String value, IconData icon, Color color) => Column(
-    children: [
-      Icon(icon, color: color, size: 24),
-      const SizedBox(height: 8),
-      Text(
-        value,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
-      ),
-      Text(
-        title,
-        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-        textAlign: TextAlign.center,
-      ),
-    ],
-  );
+  Widget _buildStatItem(
+          String title, String value, IconData icon, Color color) =>
+      Column(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: color),
+          ),
+          Text(
+            title,
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
 
   String _formatMonth(String monthKey) {
     final parts = monthKey.split('-');

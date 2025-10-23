@@ -9,7 +9,8 @@ class LoginScreenImproved extends ConsumerStatefulWidget {
   const LoginScreenImproved({super.key});
 
   @override
-  ConsumerState<LoginScreenImproved> createState() => _LoginScreenImprovedState();
+  ConsumerState<LoginScreenImproved> createState() =>
+      _LoginScreenImprovedState();
 }
 
 class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
@@ -39,7 +40,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      
+
       if (_isSignUp) {
         if (_nameController.text.isEmpty) {
           _showError('Введите имя');
@@ -111,7 +112,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
   @override
   Widget build(BuildContext context) {
     final authLoading = ref.watch(authLoadingProvider);
-    
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -132,7 +133,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 40),
-                
+
                 // Логотип
                 Container(
                   width: 100,
@@ -154,9 +155,9 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                     color: Color(0xFF1E3A8A),
                   ),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Заголовок
                 Text(
                   _isSignUp ? 'Создать аккаунт' : 'Добро пожаловать!',
@@ -167,22 +168,22 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 Text(
-                  _isSignUp 
-                    ? 'Заполните форму для регистрации'
-                    : 'Войдите в свой аккаунт',
+                  _isSignUp
+                      ? 'Заполните форму для регистрации'
+                      : 'Войдите в свой аккаунт',
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white70,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Карточка с формой
                 Container(
                   padding: const EdgeInsets.all(24),
@@ -211,16 +212,21 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                               child: GestureDetector(
                                 onTap: () => setState(() => _isSignUp = false),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
                                   decoration: BoxDecoration(
-                                    color: _isSignUp ? Colors.transparent : const Color(0xFF1E3A8A),
+                                    color: _isSignUp
+                                        ? Colors.transparent
+                                        : const Color(0xFF1E3A8A),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     'Вход',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color: _isSignUp ? Colors.grey[600] : Colors.white,
+                                      color: _isSignUp
+                                          ? Colors.grey[600]
+                                          : Colors.white,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -231,16 +237,21 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                               child: GestureDetector(
                                 onTap: () => setState(() => _isSignUp = true),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
                                   decoration: BoxDecoration(
-                                    color: _isSignUp ? const Color(0xFF1E3A8A) : Colors.transparent,
+                                    color: _isSignUp
+                                        ? const Color(0xFF1E3A8A)
+                                        : Colors.transparent,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     'Регистрация',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      color: _isSignUp ? Colors.white : Colors.grey[600],
+                                      color: _isSignUp
+                                          ? Colors.white
+                                          : Colors.grey[600],
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -250,64 +261,70 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                           ],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Поля ввода
                       if (_isSignUp) ...[
                         TextField(
                           controller: _nameController,
                           decoration: InputDecoration(
                             labelText: 'Имя',
-                            prefixIcon: const Icon(Icons.person, color: Color(0xFF1E3A8A)),
+                            prefixIcon: const Icon(Icons.person,
+                                color: Color(0xFF1E3A8A)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFF1E3A8A), width: 2),
+                              borderSide: const BorderSide(
+                                  color: Color(0xFF1E3A8A), width: 2),
                             ),
                           ),
                         ),
                         const SizedBox(height: 16),
                       ],
-                      
+
                       TextField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          prefixIcon: const Icon(Icons.email, color: Color(0xFF1E3A8A)),
+                          prefixIcon:
+                              const Icon(Icons.email, color: Color(0xFF1E3A8A)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Color(0xFF1E3A8A), width: 2),
+                            borderSide: const BorderSide(
+                                color: Color(0xFF1E3A8A), width: 2),
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       TextField(
                         controller: _passwordController,
                         obscureText: true,
                         decoration: InputDecoration(
                           labelText: 'Пароль',
-                          prefixIcon: const Icon(Icons.lock, color: Color(0xFF1E3A8A)),
+                          prefixIcon:
+                              const Icon(Icons.lock, color: Color(0xFF1E3A8A)),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Color(0xFF1E3A8A), width: 2),
+                            borderSide: const BorderSide(
+                                color: Color(0xFF1E3A8A), width: 2),
                           ),
                         ),
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Кнопка входа/регистрации
                       SizedBox(
                         width: double.infinity,
@@ -323,40 +340,44 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                             elevation: 2,
                           ),
                           child: authLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  ),
+                                )
+                              : Text(
+                                  _isSignUp ? 'Создать аккаунт' : 'Войти',
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                              )
-                            : Text(
-                                _isSignUp ? 'Создать аккаунт' : 'Войти',
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                              ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Разделитель
                 const Row(
                   children: [
                     Expanded(child: Divider(color: Colors.white30)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('или', style: TextStyle(color: Colors.white70)),
+                      child:
+                          Text('или', style: TextStyle(color: Colors.white70)),
                     ),
                     Expanded(child: Divider(color: Colors.white30)),
                   ],
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Google Sign In
                 Container(
                   width: double.infinity,
@@ -376,7 +397,8 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                     icon: const Icon(Icons.login, color: Colors.red, size: 20),
                     label: const Text(
                       'Войти через Google',
-                      style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          color: Colors.black87, fontWeight: FontWeight.w500),
                     ),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -387,9 +409,9 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Phone Sign In
                 Container(
                   width: double.infinity,
@@ -406,10 +428,12 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                   ),
                   child: OutlinedButton.icon(
                     onPressed: authLoading ? null : _signInWithPhone,
-                    icon: const Icon(Icons.phone, color: Colors.green, size: 20),
+                    icon:
+                        const Icon(Icons.phone, color: Colors.green, size: 20),
                     label: const Text(
                       'Войти по телефону',
-                      style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          color: Colors.black87, fontWeight: FontWeight.w500),
                     ),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -420,7 +444,7 @@ class _LoginScreenImprovedState extends ConsumerState<LoginScreenImproved> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
               ],
             ),

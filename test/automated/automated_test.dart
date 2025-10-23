@@ -26,7 +26,8 @@ void main() {
       expect(find.text('Crash'), findsNothing);
     });
 
-    testWidgets('All navigation tabs are accessible', (WidgetTester tester) async {
+    testWidgets('All navigation tabs are accessible',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -35,7 +36,7 @@ void main() {
 
       // Проверка доступности всех вкладок
       final tabs = ['Главная', 'Лента', 'Заявки', 'Чаты', 'Идеи'];
-      
+
       for (final tab in tabs) {
         expect(find.text(tab), findsOneWidget);
       }
@@ -75,19 +76,19 @@ void main() {
       // Тестирование навигации
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Заявки'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Чаты'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Идеи'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Главная'));
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
@@ -106,10 +107,10 @@ void main() {
       if (searchField.evaluate().isNotEmpty) {
         await tester.tap(searchField.first);
         await tester.pumpAndSettle();
-        
+
         await tester.enterText(searchField.first, 'тест');
         await tester.pumpAndSettle();
-        
+
         expect(find.text('тест'), findsOneWidget);
       }
     });
@@ -126,7 +127,7 @@ void main() {
       if (filterButton.evaluate().isNotEmpty) {
         await tester.tap(filterButton.first);
         await tester.pumpAndSettle();
-        
+
         expect(find.byType(BottomSheet), findsOneWidget);
       }
     });
@@ -159,7 +160,8 @@ void main() {
       expect(find.byType(BottomNavigationBar), findsOneWidget);
     });
 
-    testWidgets('App handles network errors gracefully', (WidgetTester tester) async {
+    testWidgets('App handles network errors gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreenEnhanced(),
@@ -172,7 +174,8 @@ void main() {
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles concurrent operations', (WidgetTester tester) async {
+    testWidgets('App handles concurrent operations',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -185,7 +188,8 @@ void main() {
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles rapid user interactions', (WidgetTester tester) async {
+    testWidgets('App handles rapid user interactions',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -196,22 +200,22 @@ void main() {
       for (int i = 0; i < 10; i++) {
         await tester.tap(find.text('Лента'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Заявки'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Чаты'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Идеи'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Главная'));
         await tester.pump();
       }
-      
+
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
@@ -228,16 +232,16 @@ void main() {
       // Изменение размера экрана
       await tester.binding.setSurfaceSize(const Size(320, 568));
       await tester.pumpAndSettle();
-      
+
       await tester.binding.setSurfaceSize(const Size(375, 667));
       await tester.pumpAndSettle();
-      
+
       await tester.binding.setSurfaceSize(const Size(414, 896));
       await tester.pumpAndSettle();
-      
+
       await tester.binding.setSurfaceSize(const Size(768, 1024));
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
@@ -254,17 +258,18 @@ void main() {
       // Изменение ориентации
       await tester.binding.setSurfaceSize(const Size(800, 600));
       await tester.pumpAndSettle();
-      
+
       await tester.binding.setSurfaceSize(const Size(600, 800));
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles back button correctly', (WidgetTester tester) async {
+    testWidgets('App handles back button correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -274,16 +279,17 @@ void main() {
       // Переход на вкладку "Лента"
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       // Нажатие кнопки "Назад"
       await tester.pageBack();
       await tester.pumpAndSettle();
-      
+
       // Проверка, что приложение не закрылось
       expect(find.byType(MaterialApp), findsOneWidget);
     });
 
-    testWidgets('App handles system back button correctly', (WidgetTester tester) async {
+    testWidgets('App handles system back button correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -293,11 +299,11 @@ void main() {
       // Переход на вкладку "Лента"
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       // Нажатие системной кнопки "Назад"
       await tester.pageBack();
       await tester.pumpAndSettle();
-      
+
       // Проверка, что приложение не закрылось
       expect(find.byType(MaterialApp), findsOneWidget);
     });
@@ -313,29 +319,30 @@ void main() {
       for (int i = 0; i < 50; i++) {
         await tester.tap(find.text('Лента'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Заявки'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Чаты'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Идеи'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Главная'));
         await tester.pump();
       }
-      
+
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок памяти
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles error states gracefully', (WidgetTester tester) async {
+    testWidgets('App handles error states gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -348,7 +355,8 @@ void main() {
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles loading states gracefully', (WidgetTester tester) async {
+    testWidgets('App handles loading states gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreenEnhanced(),
@@ -361,7 +369,8 @@ void main() {
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles empty states gracefully', (WidgetTester tester) async {
+    testWidgets('App handles empty states gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: FeedScreenEnhanced(),

@@ -16,10 +16,12 @@ class SpecialistProfileScreen extends ConsumerStatefulWidget {
   const SpecialistProfileScreen({super.key, required this.specialistId});
 
   @override
-  ConsumerState<SpecialistProfileScreen> createState() => _SpecialistProfileScreenState();
+  ConsumerState<SpecialistProfileScreen> createState() =>
+      _SpecialistProfileScreenState();
 }
 
-class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScreen>
+class _SpecialistProfileScreenState
+    extends ConsumerState<SpecialistProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -37,7 +39,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
 
   @override
   Widget build(BuildContext context) {
-    final specialistAsync = ref.watch(specialistByIdProvider(widget.specialistId));
+    final specialistAsync =
+        ref.watch(specialistByIdProvider(widget.specialistId));
 
     return Scaffold(
       body: specialistAsync.when(
@@ -109,7 +112,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           fit: StackFit.expand,
           children: [
             // Background image
-            if (specialist.avatarUrl != null && specialist.avatarUrl!.isNotEmpty)
+            if (specialist.avatarUrl != null &&
+                specialist.avatarUrl!.isNotEmpty)
               CachedNetworkImage(
                 imageUrl: specialist.avatarUrl!,
                 fit: BoxFit.cover,
@@ -117,11 +121,14 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                   color: Colors.grey[300],
                   child: const Center(child: CircularProgressIndicator()),
                 ),
-                errorWidget: (context, url, error) =>
-                    Container(color: Colors.grey[300], child: const Icon(Icons.person, size: 100)),
+                errorWidget: (context, url, error) => Container(
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.person, size: 100)),
               )
             else
-              Container(color: Colors.grey[300], child: const Icon(Icons.person, size: 100)),
+              Container(
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.person, size: 100)),
 
             // Gradient overlay
             Container(
@@ -166,15 +173,18 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                             ),
                             Text(
                               specialist.specialization,
-                              style: const TextStyle(color: Colors.white70, fontSize: 16),
+                              style: const TextStyle(
+                                  color: Colors.white70, fontSize: 16),
                             ),
                             Row(
                               children: [
-                                const Icon(Icons.location_on, color: Colors.white70, size: 16),
+                                const Icon(Icons.location_on,
+                                    color: Colors.white70, size: 16),
                                 const SizedBox(width: 4),
                                 Text(
                                   specialist.city,
-                                  style: const TextStyle(color: Colors.white70, fontSize: 14),
+                                  style: const TextStyle(
+                                      color: Colors.white70, fontSize: 14),
                                 ),
                               ],
                             ),
@@ -196,7 +206,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
             // TODO: Add to favorites
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(const SnackBar(content: Text('Добавлено в избранное')));
+            ).showSnackBar(
+                const SnackBar(content: Text('Добавлено в избранное')));
           },
         ),
         IconButton(
@@ -205,7 +216,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
             // TODO: Share profile
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(const SnackBar(content: Text('Профиль скопирован в буфер обмена')));
+            ).showSnackBar(const SnackBar(
+                content: Text('Профиль скопирован в буфер обмена')));
           },
         ),
       ],
@@ -241,7 +253,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           const SizedBox(height: 16),
 
           // Description
-          if (specialist.description != null && specialist.description!.isNotEmpty)
+          if (specialist.description != null &&
+              specialist.description!.isNotEmpty)
             _buildDescriptionCard(specialist),
 
           const SizedBox(height: 16),
@@ -263,7 +276,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
       portfolio: specialist.portfolio,
       onImageTap: (imageUrl) {
         // TODO: Show full screen image
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Просмотр: $imageUrl')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Просмотр: $imageUrl')));
       },
     );
   }
@@ -275,7 +289,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
         // TODO: Show write review dialog
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Написание отзыва пока не реализовано')));
+        ).showSnackBar(const SnackBar(
+            content: Text('Написание отзыва пока не реализовано')));
       },
     );
   }
@@ -286,13 +301,17 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Услуги и цены', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const Text('Услуги и цены',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           if (specialist.services.isNotEmpty)
-            ...specialist.services.map((service) => _buildServiceCard(service, specialist))
+            ...specialist.services
+                .map((service) => _buildServiceCard(service, specialist))
           else
             const Card(
-              child: Padding(padding: EdgeInsets.all(16), child: Text('Услуги не указаны')),
+              child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text('Услуги не указаны')),
             ),
         ],
       ),
@@ -318,7 +337,9 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                 Row(
                   children: List.generate(5, (index) {
                     return Icon(
-                      index < specialist.rating.floor() ? Icons.star : Icons.star_border,
+                      index < specialist.rating.floor()
+                          ? Icons.star
+                          : Icons.star_border,
                       color: Colors.orange,
                       size: 20,
                     );
@@ -333,7 +354,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                 children: [
                   Text(
                     '${specialist.completedEvents} выполненных заказов',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -380,12 +402,15 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Опыт работы', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Опыт работы',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text(specialist.experienceText, style: const TextStyle(fontSize: 16)),
+            Text(specialist.experienceText,
+                style: const TextStyle(fontSize: 16)),
             if (specialist.languages.isNotEmpty) ...[
               const SizedBox(height: 12),
-              const Text('Языки:', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              const Text('Языки:',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
               const SizedBox(height: 4),
               Wrap(
                 spacing: 8,
@@ -451,11 +476,13 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
         title: Text(service),
         trailing: Text(
           'от ${specialist.formattedPrice}/час',
-          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+          style:
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
         ),
         onTap: () {
           // TODO: Show service details
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Услуга: $service')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Услуга: $service')));
         },
       ),
     );
@@ -527,7 +554,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           // TODO: Process booking
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('Бронирование создано!')));
+          ).showSnackBar(
+              const SnackBar(content: Text('Бронирование создано!')));
         },
       ),
     );
@@ -576,8 +604,10 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(color: Theme.of(context).scaffoldBackgroundColor, child: _tabBar);
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+        color: Theme.of(context).scaffoldBackgroundColor, child: _tabBar);
   }
 
   @override

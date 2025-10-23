@@ -12,7 +12,8 @@ class FollowService {
     try {
       final currentUserId = _auth.currentUser?.uid;
       if (currentUserId == null) throw Exception('User not authenticated');
-      if (currentUserId == targetUserId) throw Exception('Cannot follow yourself');
+      if (currentUserId == targetUserId)
+        throw Exception('Cannot follow yourself');
 
       final batch = _firestore.batch();
 
@@ -63,7 +64,8 @@ class FollowService {
     try {
       final currentUserId = _auth.currentUser?.uid;
       if (currentUserId == null) throw Exception('User not authenticated');
-      if (currentUserId == targetUserId) throw Exception('Cannot unfollow yourself');
+      if (currentUserId == targetUserId)
+        throw Exception('Cannot unfollow yourself');
 
       final batch = _firestore.batch();
 
@@ -136,7 +138,8 @@ class FollowService {
       final followers = <FollowUser>[];
       for (final doc in snapshot.docs) {
         final followerId = doc.data()['userId'] as String;
-        final userDoc = await _firestore.collection('users').doc(followerId).get();
+        final userDoc =
+            await _firestore.collection('users').doc(followerId).get();
         if (userDoc.exists) {
           followers.add(FollowUser.fromFirestore(userDoc));
         }
@@ -157,7 +160,8 @@ class FollowService {
       final following = <FollowUser>[];
       for (final doc in snapshot.docs) {
         final followingId = doc.data()['userId'] as String;
-        final userDoc = await _firestore.collection('users').doc(followingId).get();
+        final userDoc =
+            await _firestore.collection('users').doc(followingId).get();
         if (userDoc.exists) {
           following.add(FollowUser.fromFirestore(userDoc));
         }
@@ -187,7 +191,8 @@ class FollowService {
   }
 
   /// Получить рекомендуемых пользователей для подписки
-  Future<List<FollowUser>> getRecommendedUsers(String userId, {int limit = 10}) async {
+  Future<List<FollowUser>> getRecommendedUsers(String userId,
+      {int limit = 10}) async {
     try {
       // Получаем пользователей, на которых подписан текущий пользователь
       final followingSnapshot = await _firestore
@@ -294,7 +299,8 @@ class FollowUser {
       'followingCount': followingCount,
       'isVerified': isVerified,
       'isProAccount': isProAccount,
-      'lastActiveAt': lastActiveAt != null ? Timestamp.fromDate(lastActiveAt!) : null,
+      'lastActiveAt':
+          lastActiveAt != null ? Timestamp.fromDate(lastActiveAt!) : null,
     };
   }
 

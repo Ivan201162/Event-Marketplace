@@ -107,7 +107,8 @@ class Request extends Equatable {
       'location': location,
       'requirements': requirements,
       'notes': notes,
-      'responseDate': responseDate != null ? Timestamp.fromDate(responseDate!) : null,
+      'responseDate':
+          responseDate != null ? Timestamp.fromDate(responseDate!) : null,
     };
   }
 
@@ -275,35 +276,36 @@ class Request extends Equatable {
   }
 
   /// Check if request is active (pending or accepted)
-  bool get isActive => status == RequestStatus.pending || status == RequestStatus.accepted;
+  bool get isActive =>
+      status == RequestStatus.pending || status == RequestStatus.accepted;
 
   /// Check if request can be responded to
   bool get canRespond => status == RequestStatus.pending;
 
   @override
   List<Object?> get props => [
-    id,
-    fromUserId,
-    toUserId,
-    city,
-    date,
-    budget,
-    category,
-    status,
-    createdAt,
-    updatedAt,
-    description,
-    fromUserName,
-    fromUserAvatarUrl,
-    toUserName,
-    toUserAvatarUrl,
-    eventType,
-    guestCount,
-    location,
-    requirements,
-    notes,
-    responseDate,
-  ];
+        id,
+        fromUserId,
+        toUserId,
+        city,
+        date,
+        budget,
+        category,
+        status,
+        createdAt,
+        updatedAt,
+        description,
+        fromUserName,
+        fromUserAvatarUrl,
+        toUserName,
+        toUserAvatarUrl,
+        eventType,
+        guestCount,
+        location,
+        requirements,
+        notes,
+        responseDate,
+      ];
 
   @override
   String toString() {

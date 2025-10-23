@@ -33,11 +33,14 @@ class GuestWidget extends StatelessWidget {
                 // Аватар гостя
                 CircleAvatar(
                   radius: 24,
-                  backgroundImage:
-                      guest.guestPhotoUrl != null ? NetworkImage(guest.guestPhotoUrl!) : null,
+                  backgroundImage: guest.guestPhotoUrl != null
+                      ? NetworkImage(guest.guestPhotoUrl!)
+                      : null,
                   child: guest.guestPhotoUrl == null
                       ? Text(
-                          guest.guestName.isNotEmpty ? guest.guestName[0].toUpperCase() : '?',
+                          guest.guestName.isNotEmpty
+                              ? guest.guestName[0].toUpperCase()
+                              : '?',
                           style: const TextStyle(fontSize: 18),
                         )
                       : null,
@@ -53,7 +56,8 @@ class GuestWidget extends StatelessWidget {
                       // Имя гостя
                       Text(
                         guest.guestName,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
 
                       const SizedBox(height: 4),
@@ -69,7 +73,8 @@ class GuestWidget extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           guest.guestPhone!,
-                          style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[600]),
                         ),
                       ],
 
@@ -80,7 +85,8 @@ class GuestWidget extends StatelessWidget {
                         children: [
                           // Статус
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: ColorUtils.getStatusColor(
                                 guest.statusColor,
@@ -96,7 +102,8 @@ class GuestWidget extends StatelessWidget {
                               guest.statusText,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: ColorUtils.getStatusColor(guest.statusColor),
+                                color: ColorUtils.getStatusColor(
+                                    guest.statusColor),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -108,7 +115,8 @@ class GuestWidget extends StatelessWidget {
                           if (guest.greetingsCount > 0) ...[
                             Row(
                               children: [
-                                Icon(Icons.celebration, size: 16, color: Colors.pink[600]),
+                                Icon(Icons.celebration,
+                                    size: 16, color: Colors.pink[600]),
                                 const SizedBox(width: 4),
                                 Text(
                                   guest.greetingsCount.toString(),
@@ -151,7 +159,8 @@ class GuestWidget extends StatelessWidget {
                       }
                     },
                     itemBuilder: (context) => [
-                      if (onCheckIn != null && guest.status == GuestStatus.registered)
+                      if (onCheckIn != null &&
+                          guest.status == GuestStatus.registered)
                         const PopupMenuItem(
                           value: 'checkin',
                           child: Row(
@@ -162,7 +171,8 @@ class GuestWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                      if (onCheckOut != null && guest.status == GuestStatus.checkedIn)
+                      if (onCheckOut != null &&
+                          guest.status == GuestStatus.checkedIn)
                         const PopupMenuItem(
                           value: 'checkout',
                           child: Row(
@@ -173,7 +183,8 @@ class GuestWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                      if (onCancel != null && guest.status != GuestStatus.cancelled)
+                      if (onCancel != null &&
+                          guest.status != GuestStatus.cancelled)
                         const PopupMenuItem(
                           value: 'cancel',
                           child: Row(
@@ -188,7 +199,11 @@ class GuestWidget extends StatelessWidget {
                         const PopupMenuItem(
                           value: 'share',
                           child: Row(
-                            children: [Icon(Icons.share), SizedBox(width: 8), Text('Поделиться')],
+                            children: [
+                              Icon(Icons.share),
+                              SizedBox(width: 8),
+                              Text('Поделиться')
+                            ],
                           ),
                         ),
                     ],
@@ -222,15 +237,20 @@ class GuestListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
         leading: CircleAvatar(
-          backgroundImage: guest.guestPhotoUrl != null ? NetworkImage(guest.guestPhotoUrl!) : null,
+          backgroundImage: guest.guestPhotoUrl != null
+              ? NetworkImage(guest.guestPhotoUrl!)
+              : null,
           child: guest.guestPhotoUrl == null
               ? Text(
-                  guest.guestName.isNotEmpty ? guest.guestName[0].toUpperCase() : '?',
+                  guest.guestName.isNotEmpty
+                      ? guest.guestName[0].toUpperCase()
+                      : '?',
                   style: const TextStyle(fontSize: 16),
                 )
               : null,
         ),
-        title: Text(guest.guestName, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(guest.guestName,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -240,12 +260,15 @@ class GuestListTile extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.1),
+                    color: ColorUtils.getStatusColor(guest.statusColor)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.3),
+                      color: ColorUtils.getStatusColor(guest.statusColor)
+                          .withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
@@ -261,7 +284,8 @@ class GuestListTile extends StatelessWidget {
                   const SizedBox(width: 8),
                   Row(
                     children: [
-                      Icon(Icons.celebration, size: 14, color: Colors.pink[600]),
+                      Icon(Icons.celebration,
+                          size: 14, color: Colors.pink[600]),
                       const SizedBox(width: 2),
                       Text(
                         guest.greetingsCount.toString(),
@@ -300,7 +324,10 @@ class GuestListTile extends StatelessWidget {
                 tooltip: 'Отменить',
               ),
             if (onShare != null)
-              IconButton(icon: const Icon(Icons.share), onPressed: onShare, tooltip: 'Поделиться'),
+              IconButton(
+                  icon: const Icon(Icons.share),
+                  onPressed: onShare,
+                  tooltip: 'Поделиться'),
           ],
         ),
         onTap: onTap,
@@ -338,11 +365,14 @@ class GuestGridTile extends StatelessWidget {
                 // Аватар
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage:
-                      guest.guestPhotoUrl != null ? NetworkImage(guest.guestPhotoUrl!) : null,
+                  backgroundImage: guest.guestPhotoUrl != null
+                      ? NetworkImage(guest.guestPhotoUrl!)
+                      : null,
                   child: guest.guestPhotoUrl == null
                       ? Text(
-                          guest.guestName.isNotEmpty ? guest.guestName[0].toUpperCase() : '?',
+                          guest.guestName.isNotEmpty
+                              ? guest.guestName[0].toUpperCase()
+                              : '?',
                           style: const TextStyle(fontSize: 24),
                         )
                       : null,
@@ -353,7 +383,8 @@ class GuestGridTile extends StatelessWidget {
                 // Имя
                 Text(
                   guest.guestName,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -363,12 +394,15 @@ class GuestGridTile extends StatelessWidget {
 
                 // Статус
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.1),
+                    color: ColorUtils.getStatusColor(guest.statusColor)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.3),
+                      color: ColorUtils.getStatusColor(guest.statusColor)
+                          .withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
@@ -388,7 +422,8 @@ class GuestGridTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.celebration, size: 12, color: Colors.pink[600]),
+                      Icon(Icons.celebration,
+                          size: 12, color: Colors.pink[600]),
                       const SizedBox(width: 2),
                       Text(
                         guest.greetingsCount.toString(),
@@ -429,18 +464,22 @@ class GuestStatsWidget extends StatelessWidget {
               // Основная информация
               _buildInfoRow('Имя', guest.guestName),
               _buildInfoRow('Email', guest.guestEmail ?? ''),
-              if (guest.guestPhone != null) _buildInfoRow('Телефон', guest.guestPhone!),
+              if (guest.guestPhone != null)
+                _buildInfoRow('Телефон', guest.guestPhone!),
               _buildInfoRow('Статус', guest.statusText),
 
               const SizedBox(height: 16),
 
               // Временные метки
               if (guest.registeredAt != null)
-                _buildInfoRow('Зарегистрирован', _formatDateTime(guest.registeredAt!)),
+                _buildInfoRow(
+                    'Зарегистрирован', _formatDateTime(guest.registeredAt!)),
               if (guest.confirmedAt != null)
-                _buildInfoRow('Подтвержден', _formatDateTime(guest.confirmedAt!)),
+                _buildInfoRow(
+                    'Подтвержден', _formatDateTime(guest.confirmedAt!)),
               if (guest.checkedInAt != null)
-                _buildInfoRow('На мероприятии', _formatDateTime(guest.checkedInAt!)),
+                _buildInfoRow(
+                    'На мероприятии', _formatDateTime(guest.checkedInAt!)),
               if (guest.checkedOutAt != null)
                 _buildInfoRow('Покинул', _formatDateTime(guest.checkedOutAt!)),
 
@@ -463,7 +502,8 @@ class GuestStatsWidget extends StatelessWidget {
               width: 120,
               child: Text(
                 '$label:',
-                style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.grey),
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500, color: Colors.grey),
               ),
             ),
             Expanded(child: Text(value)),

@@ -15,14 +15,14 @@ class ServicePrice extends Equatable {
   });
 
   factory ServicePrice.fromMap(Map<String, dynamic> map) => ServicePrice(
-    id: map['id'] ?? '',
-    name: map['name'] ?? '',
-    description: map['description'] ?? '',
-    price: (map['price'] ?? 0.0).toDouble(),
-    currency: map['currency'] ?? 'RUB',
-    duration: map['duration'],
-    isActive: map['isActive'] ?? true,
-  );
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        description: map['description'] ?? '',
+        price: (map['price'] ?? 0.0).toDouble(),
+        currency: map['currency'] ?? 'RUB',
+        duration: map['duration'],
+        isActive: map['isActive'] ?? true,
+      );
   final String id;
   final String name;
   final String description;
@@ -32,14 +32,14 @@ class ServicePrice extends Equatable {
   final bool isActive;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'description': description,
-    'price': price,
-    'currency': currency,
-    'duration': duration,
-    'isActive': isActive,
-  };
+        'id': id,
+        'name': name,
+        'description': description,
+        'price': price,
+        'currency': currency,
+        'duration': duration,
+        'isActive': isActive,
+      };
 
   ServicePrice copyWith({
     String? id,
@@ -49,18 +49,20 @@ class ServicePrice extends Equatable {
     String? currency,
     int? duration,
     bool? isActive,
-  }) => ServicePrice(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    price: price ?? this.price,
-    currency: currency ?? this.currency,
-    duration: duration ?? this.duration,
-    isActive: isActive ?? this.isActive,
-  );
+  }) =>
+      ServicePrice(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        price: price ?? this.price,
+        currency: currency ?? this.currency,
+        duration: duration ?? this.duration,
+        isActive: isActive ?? this.isActive,
+      );
 
   @override
-  List<Object?> get props => [id, name, description, price, currency, duration, isActive];
+  List<Object?> get props =>
+      [id, name, description, price, currency, duration, isActive];
 }
 
 /// Модель поста пользователя
@@ -80,18 +82,18 @@ class UserPost extends Equatable {
   });
 
   factory UserPost.fromMap(Map<String, dynamic> map) => UserPost(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    imageUrl: map['imageUrl'],
-    videoUrl: map['videoUrl'],
-    caption: map['caption'] ?? '',
-    timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    likes: map['likes'] ?? 0,
-    comments: map['comments'] ?? 0,
-    likedBy: List<String>.from(map['likedBy'] ?? []),
-    isVideo: map['isVideo'] ?? false,
-    thumbnailUrl: map['thumbnailUrl'],
-  );
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        imageUrl: map['imageUrl'],
+        videoUrl: map['videoUrl'],
+        caption: map['caption'] ?? '',
+        timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        likes: map['likes'] ?? 0,
+        comments: map['comments'] ?? 0,
+        likedBy: List<String>.from(map['likedBy'] ?? []),
+        isVideo: map['isVideo'] ?? false,
+        thumbnailUrl: map['thumbnailUrl'],
+      );
   final String id;
   final String userId;
   final String? imageUrl;
@@ -105,18 +107,18 @@ class UserPost extends Equatable {
   final String? thumbnailUrl;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'imageUrl': imageUrl,
-    'videoUrl': videoUrl,
-    'caption': caption,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'likes': likes,
-    'comments': comments,
-    'likedBy': likedBy,
-    'isVideo': isVideo,
-    'thumbnailUrl': thumbnailUrl,
-  };
+        'id': id,
+        'userId': userId,
+        'imageUrl': imageUrl,
+        'videoUrl': videoUrl,
+        'caption': caption,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'likes': likes,
+        'comments': comments,
+        'likedBy': likedBy,
+        'isVideo': isVideo,
+        'thumbnailUrl': thumbnailUrl,
+      };
 
   UserPost copyWith({
     String? id,
@@ -130,34 +132,35 @@ class UserPost extends Equatable {
     List<String>? likedBy,
     bool? isVideo,
     String? thumbnailUrl,
-  }) => UserPost(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    imageUrl: imageUrl ?? this.imageUrl,
-    videoUrl: videoUrl ?? this.videoUrl,
-    caption: caption ?? this.caption,
-    timestamp: timestamp ?? this.timestamp,
-    likes: likes ?? this.likes,
-    comments: comments ?? this.comments,
-    likedBy: likedBy ?? this.likedBy,
-    isVideo: isVideo ?? this.isVideo,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-  );
+  }) =>
+      UserPost(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        imageUrl: imageUrl ?? this.imageUrl,
+        videoUrl: videoUrl ?? this.videoUrl,
+        caption: caption ?? this.caption,
+        timestamp: timestamp ?? this.timestamp,
+        likes: likes ?? this.likes,
+        comments: comments ?? this.comments,
+        likedBy: likedBy ?? this.likedBy,
+        isVideo: isVideo ?? this.isVideo,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      );
 
   @override
   List<Object?> get props => [
-    id,
-    userId,
-    imageUrl,
-    videoUrl,
-    caption,
-    timestamp,
-    likes,
-    comments,
-    likedBy,
-    isVideo,
-    thumbnailUrl,
-  ];
+        id,
+        userId,
+        imageUrl,
+        videoUrl,
+        caption,
+        timestamp,
+        likes,
+        comments,
+        likedBy,
+        isVideo,
+        thumbnailUrl,
+      ];
 }
 
 /// Модель сторис пользователя
@@ -176,18 +179,18 @@ class UserStory extends Equatable {
   });
 
   factory UserStory.fromMap(Map<String, dynamic> map) => UserStory(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    imageUrl: map['imageUrl'],
-    videoUrl: map['videoUrl'],
-    caption: map['caption'],
-    timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    expiresAt:
-        (map['expiresAt'] as Timestamp?)?.toDate() ?? DateTime.now().add(const Duration(hours: 24)),
-    isVideo: map['isVideo'] ?? false,
-    thumbnailUrl: map['thumbnailUrl'],
-    viewedBy: List<String>.from(map['viewedBy'] ?? []),
-  );
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        imageUrl: map['imageUrl'],
+        videoUrl: map['videoUrl'],
+        caption: map['caption'],
+        timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        expiresAt: (map['expiresAt'] as Timestamp?)?.toDate() ??
+            DateTime.now().add(const Duration(hours: 24)),
+        isVideo: map['isVideo'] ?? false,
+        thumbnailUrl: map['thumbnailUrl'],
+        viewedBy: List<String>.from(map['viewedBy'] ?? []),
+      );
   final String id;
   final String userId;
   final String? imageUrl;
@@ -200,17 +203,17 @@ class UserStory extends Equatable {
   final List<String> viewedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'imageUrl': imageUrl,
-    'videoUrl': videoUrl,
-    'caption': caption,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'expiresAt': Timestamp.fromDate(expiresAt),
-    'isVideo': isVideo,
-    'thumbnailUrl': thumbnailUrl,
-    'viewedBy': viewedBy,
-  };
+        'id': id,
+        'userId': userId,
+        'imageUrl': imageUrl,
+        'videoUrl': videoUrl,
+        'caption': caption,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'isVideo': isVideo,
+        'thumbnailUrl': thumbnailUrl,
+        'viewedBy': viewedBy,
+      };
 
   UserStory copyWith({
     String? id,
@@ -223,34 +226,35 @@ class UserStory extends Equatable {
     bool? isVideo,
     String? thumbnailUrl,
     List<String>? viewedBy,
-  }) => UserStory(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    imageUrl: imageUrl ?? this.imageUrl,
-    videoUrl: videoUrl ?? this.videoUrl,
-    caption: caption ?? this.caption,
-    timestamp: timestamp ?? this.timestamp,
-    expiresAt: expiresAt ?? this.expiresAt,
-    isVideo: isVideo ?? this.isVideo,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-    viewedBy: viewedBy ?? this.viewedBy,
-  );
+  }) =>
+      UserStory(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        imageUrl: imageUrl ?? this.imageUrl,
+        videoUrl: videoUrl ?? this.videoUrl,
+        caption: caption ?? this.caption,
+        timestamp: timestamp ?? this.timestamp,
+        expiresAt: expiresAt ?? this.expiresAt,
+        isVideo: isVideo ?? this.isVideo,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        viewedBy: viewedBy ?? this.viewedBy,
+      );
 
   bool get isExpired => DateTime.now().isAfter(expiresAt);
 
   @override
   List<Object?> get props => [
-    id,
-    userId,
-    imageUrl,
-    videoUrl,
-    caption,
-    timestamp,
-    expiresAt,
-    isVideo,
-    thumbnailUrl,
-    viewedBy,
-  ];
+        id,
+        userId,
+        imageUrl,
+        videoUrl,
+        caption,
+        timestamp,
+        expiresAt,
+        isVideo,
+        thumbnailUrl,
+        viewedBy,
+      ];
 }
 
 /// Модель отзыва
@@ -268,16 +272,16 @@ class UserReview extends Equatable {
   });
 
   factory UserReview.fromMap(Map<String, dynamic> map) => UserReview(
-    id: map['id'] ?? '',
-    specialistId: map['specialistId'] ?? '',
-    customerId: map['customerId'] ?? '',
-    customerName: map['customerName'] ?? '',
-    customerAvatarUrl: map['customerAvatarUrl'],
-    rating: (map['rating'] ?? 0.0).toDouble(),
-    comment: map['comment'] ?? '',
-    timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    bookingId: map['bookingId'],
-  );
+        id: map['id'] ?? '',
+        specialistId: map['specialistId'] ?? '',
+        customerId: map['customerId'] ?? '',
+        customerName: map['customerName'] ?? '',
+        customerAvatarUrl: map['customerAvatarUrl'],
+        rating: (map['rating'] ?? 0.0).toDouble(),
+        comment: map['comment'] ?? '',
+        timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        bookingId: map['bookingId'],
+      );
   final String id;
   final String specialistId;
   final String customerId;
@@ -289,16 +293,16 @@ class UserReview extends Equatable {
   final String? bookingId;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'specialistId': specialistId,
-    'customerId': customerId,
-    'customerName': customerName,
-    'customerAvatarUrl': customerAvatarUrl,
-    'rating': rating,
-    'comment': comment,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'bookingId': bookingId,
-  };
+        'id': id,
+        'specialistId': specialistId,
+        'customerId': customerId,
+        'customerName': customerName,
+        'customerAvatarUrl': customerAvatarUrl,
+        'rating': rating,
+        'comment': comment,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'bookingId': bookingId,
+      };
 
   UserReview copyWith({
     String? id,
@@ -310,30 +314,31 @@ class UserReview extends Equatable {
     String? comment,
     DateTime? timestamp,
     String? bookingId,
-  }) => UserReview(
-    id: id ?? this.id,
-    specialistId: specialistId ?? this.specialistId,
-    customerId: customerId ?? this.customerId,
-    customerName: customerName ?? this.customerName,
-    customerAvatarUrl: customerAvatarUrl ?? this.customerAvatarUrl,
-    rating: rating ?? this.rating,
-    comment: comment ?? this.comment,
-    timestamp: timestamp ?? this.timestamp,
-    bookingId: bookingId ?? this.bookingId,
-  );
+  }) =>
+      UserReview(
+        id: id ?? this.id,
+        specialistId: specialistId ?? this.specialistId,
+        customerId: customerId ?? this.customerId,
+        customerName: customerName ?? this.customerName,
+        customerAvatarUrl: customerAvatarUrl ?? this.customerAvatarUrl,
+        rating: rating ?? this.rating,
+        comment: comment ?? this.comment,
+        timestamp: timestamp ?? this.timestamp,
+        bookingId: bookingId ?? this.bookingId,
+      );
 
   @override
   List<Object?> get props => [
-    id,
-    specialistId,
-    customerId,
-    customerName,
-    customerAvatarUrl,
-    rating,
-    comment,
-    timestamp,
-    bookingId,
-  ];
+        id,
+        specialistId,
+        customerId,
+        customerName,
+        customerAvatarUrl,
+        rating,
+        comment,
+        timestamp,
+        bookingId,
+      ];
 }
 
 /// Расширенная модель профиля пользователя в стиле Instagram/VK
@@ -371,58 +376,60 @@ class UserProfile extends Equatable {
   }
 
   /// Создать профиль из Map
-  factory UserProfile.fromMap(Map<String, dynamic> data, [String? id]) => UserProfile(
-    id: id ?? data['id'] as String? ?? '',
-    name: data['name'] as String? ?? '',
-    role: _parseUserRole(data['role']),
-    bio: data['bio'] ?? '',
-    avatarUrl: data['avatarUrl'] ?? '',
-    coverUrl: data['coverUrl'] ?? '',
-    city: data['city'] ?? '',
-    photos: List<String>.from(data['photos'] ?? []),
-    videos: List<String>.from(data['videos'] ?? []),
-    stories: List<String>.from(data['stories'] ?? []),
-    services:
-        (data['services'] as List<dynamic>?)
-            ?.map((service) => ServicePrice.fromMap(service as Map<String, dynamic>))
-            .toList() ??
-        [],
-    rating: (data['rating'] as num? ?? 0.0).toDouble(),
-    followers: data['followers'] as int? ?? 0,
-    following: data['following'] as int? ?? 0,
-    phone: data['phone'] ?? '',
-    email: data['email'] ?? '',
-    favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
-    recentBookings: List<String>.from(data['recentBookings'] ?? []),
-    isVerified: data['isVerified'] as bool? ?? false,
-    isPrivate: data['isPrivate'] as bool? ?? false,
-    createdAt: data['createdAt'] != null
-        ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
-        : DateTime.now(),
-    updatedAt: data['updatedAt'] != null
-        ? (data['updatedAt'] is Timestamp
-              ? (data['updatedAt'] as Timestamp).toDate()
-              : DateTime.parse(data['updatedAt'].toString()))
-        : DateTime.now(),
-    additionalData: Map<String, dynamic>.from(data['additionalData'] ?? {}),
-  );
+  factory UserProfile.fromMap(Map<String, dynamic> data, [String? id]) =>
+      UserProfile(
+        id: id ?? data['id'] as String? ?? '',
+        name: data['name'] as String? ?? '',
+        role: _parseUserRole(data['role']),
+        bio: data['bio'] ?? '',
+        avatarUrl: data['avatarUrl'] ?? '',
+        coverUrl: data['coverUrl'] ?? '',
+        city: data['city'] ?? '',
+        photos: List<String>.from(data['photos'] ?? []),
+        videos: List<String>.from(data['videos'] ?? []),
+        stories: List<String>.from(data['stories'] ?? []),
+        services: (data['services'] as List<dynamic>?)
+                ?.map((service) =>
+                    ServicePrice.fromMap(service as Map<String, dynamic>))
+                .toList() ??
+            [],
+        rating: (data['rating'] as num? ?? 0.0).toDouble(),
+        followers: data['followers'] as int? ?? 0,
+        following: data['following'] as int? ?? 0,
+        phone: data['phone'] ?? '',
+        email: data['email'] ?? '',
+        favoriteSpecialists:
+            List<String>.from(data['favoriteSpecialists'] ?? []),
+        recentBookings: List<String>.from(data['recentBookings'] ?? []),
+        isVerified: data['isVerified'] as bool? ?? false,
+        isPrivate: data['isPrivate'] as bool? ?? false,
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] is Timestamp
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
+            : DateTime.now(),
+        updatedAt: data['updatedAt'] != null
+            ? (data['updatedAt'] is Timestamp
+                ? (data['updatedAt'] as Timestamp).toDate()
+                : DateTime.parse(data['updatedAt'].toString()))
+            : DateTime.now(),
+        additionalData: Map<String, dynamic>.from(data['additionalData'] ?? {}),
+      );
 
   /// Создать профиль из AppUser
   factory UserProfile.fromAppUser(AppUser user) => UserProfile(
-    id: user.id,
-    name: user.displayName ?? user.email.split('@').first,
-    role: user.role,
-    bio: user.bio ?? '',
-    avatarUrl: user.photoURL ?? '',
-    phone: user.phone ?? '',
-    email: user.email,
-    isVerified: user.isVerified,
-    createdAt: user.createdAt,
-    updatedAt: DateTime.now(),
-    additionalData: user.additionalData ?? {},
-  );
+        id: user.id,
+        name: user.displayName ?? user.email.split('@').first,
+        role: user.role,
+        bio: user.bio ?? '',
+        avatarUrl: user.photoURL ?? '',
+        phone: user.phone ?? '',
+        email: user.email,
+        isVerified: user.isVerified,
+        createdAt: user.createdAt,
+        updatedAt: DateTime.now(),
+        additionalData: user.additionalData ?? {},
+      );
   final String id;
   final String name;
   final UserRole role;
@@ -449,30 +456,30 @@ class UserProfile extends Equatable {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'role': role.name,
-    'bio': bio,
-    'avatarUrl': avatarUrl,
-    'coverUrl': coverUrl,
-    'city': city,
-    'photos': photos,
-    'videos': videos,
-    'stories': stories,
-    'services': services.map((service) => service.toMap()).toList(),
-    'rating': rating,
-    'followers': followers,
-    'following': following,
-    'phone': phone,
-    'email': email,
-    'favoriteSpecialists': favoriteSpecialists,
-    'recentBookings': recentBookings,
-    'isVerified': isVerified,
-    'isPrivate': isPrivate,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'additionalData': additionalData,
-  };
+        'id': id,
+        'name': name,
+        'role': role.name,
+        'bio': bio,
+        'avatarUrl': avatarUrl,
+        'coverUrl': coverUrl,
+        'city': city,
+        'photos': photos,
+        'videos': videos,
+        'stories': stories,
+        'services': services.map((service) => service.toMap()).toList(),
+        'rating': rating,
+        'followers': followers,
+        'following': following,
+        'phone': phone,
+        'email': email,
+        'favoriteSpecialists': favoriteSpecialists,
+        'recentBookings': recentBookings,
+        'isVerified': isVerified,
+        'isPrivate': isPrivate,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'additionalData': additionalData,
+      };
 
   /// Копировать с изменениями
   UserProfile copyWith({
@@ -499,31 +506,32 @@ class UserProfile extends Equatable {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? additionalData,
-  }) => UserProfile(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    role: role ?? this.role,
-    bio: bio ?? this.bio,
-    avatarUrl: avatarUrl ?? this.avatarUrl,
-    coverUrl: coverUrl ?? this.coverUrl,
-    city: city ?? this.city,
-    photos: photos ?? this.photos,
-    videos: videos ?? this.videos,
-    stories: stories ?? this.stories,
-    services: services ?? this.services,
-    rating: rating ?? this.rating,
-    followers: followers ?? this.followers,
-    following: following ?? this.following,
-    phone: phone ?? this.phone,
-    email: email ?? this.email,
-    favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
-    recentBookings: recentBookings ?? this.recentBookings,
-    isVerified: isVerified ?? this.isVerified,
-    isPrivate: isPrivate ?? this.isPrivate,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    additionalData: additionalData ?? this.additionalData,
-  );
+  }) =>
+      UserProfile(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        role: role ?? this.role,
+        bio: bio ?? this.bio,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        coverUrl: coverUrl ?? this.coverUrl,
+        city: city ?? this.city,
+        photos: photos ?? this.photos,
+        videos: videos ?? this.videos,
+        stories: stories ?? this.stories,
+        services: services ?? this.services,
+        rating: rating ?? this.rating,
+        followers: followers ?? this.followers,
+        following: following ?? this.following,
+        phone: phone ?? this.phone,
+        email: email ?? this.email,
+        favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
+        recentBookings: recentBookings ?? this.recentBookings,
+        isVerified: isVerified ?? this.isVerified,
+        isPrivate: isPrivate ?? this.isPrivate,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        additionalData: additionalData ?? this.additionalData,
+      );
 
   /// Проверить, является ли пользователь специалистом
   bool get isSpecialist => role == UserRole.specialist;
@@ -564,30 +572,30 @@ class UserProfile extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    name,
-    role,
-    bio,
-    avatarUrl,
-    coverUrl,
-    city,
-    photos,
-    videos,
-    stories,
-    services,
-    rating,
-    followers,
-    following,
-    phone,
-    email,
-    favoriteSpecialists,
-    recentBookings,
-    isVerified,
-    isPrivate,
-    createdAt,
-    updatedAt,
-    additionalData,
-  ];
+        id,
+        name,
+        role,
+        bio,
+        avatarUrl,
+        coverUrl,
+        city,
+        photos,
+        videos,
+        stories,
+        services,
+        rating,
+        followers,
+        following,
+        phone,
+        email,
+        favoriteSpecialists,
+        recentBookings,
+        isVerified,
+        isPrivate,
+        createdAt,
+        updatedAt,
+        additionalData,
+      ];
 
   @override
   String toString() => 'UserProfile(id: $id, name: $name, role: $role)';

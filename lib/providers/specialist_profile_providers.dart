@@ -11,7 +11,8 @@ final specialistProfileServiceProvider = Provider<SpecialistProfileService>(
 );
 
 /// Провайдер статистики профиля
-final profileStatisticsProvider = FutureProvider.family<ProfileStatistics, String>((
+final profileStatisticsProvider =
+    FutureProvider.family<ProfileStatistics, String>((
   ref,
   specialistId,
 ) async {
@@ -38,7 +39,8 @@ final socialLinksProvider = FutureProvider.family<List<SocialLink>, String>((
 });
 
 /// Провайдер закреплённых постов
-final pinnedPostsProvider = FutureProvider.family<List<Map<String, dynamic>>, String>((
+final pinnedPostsProvider =
+    FutureProvider.family<List<Map<String, dynamic>>, String>((
   ref,
   specialistId,
 ) async {
@@ -48,10 +50,12 @@ final pinnedPostsProvider = FutureProvider.family<List<Map<String, dynamic>>, St
 
 /// Провайдер календаря занятости
 final availabilityCalendarProvider =
-    FutureProvider.family<List<Map<String, dynamic>>, AvailabilityParams>((ref, params) async {
-      final service = ref.read(specialistProfileServiceProvider);
-      return service.getAvailabilityCalendar(params.specialistId, params.startDate, params.endDate);
-    });
+    FutureProvider.family<List<Map<String, dynamic>>, AvailabilityParams>(
+        (ref, params) async {
+  final service = ref.read(specialistProfileServiceProvider);
+  return service.getAvailabilityCalendar(
+      params.specialistId, params.startDate, params.endDate);
+});
 
 /// Параметры для получения календаря занятости
 class AvailabilityParams {

@@ -11,30 +11,30 @@ import 'services/test_specialists_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   try {
     // Инициализация Firebase
     await Firebase.initializeApp();
-    
+
     // Настройка Crashlytics
     FlutterError.onError = (errorDetails) {
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
     };
-    
+
     // Настройка обработки ошибок для платформы
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
-    
+
     debugPrint('✅ Firebase initialized successfully');
-    
+
     // Создание тестовых данных специалистов
     await TestSpecialistsDataService.createTestSpecialists();
   } catch (e) {
     debugPrint('❌ Firebase initialization failed: $e');
   }
-  
+
   runApp(const ProviderScope(child: EventMarketplaceApp()));
 }
 
@@ -44,7 +44,7 @@ class EventMarketplaceApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
-    
+
     return MaterialApp.router(
       title: 'Event Marketplace',
       debugShowCheckedModeBanner: false,
@@ -100,12 +100,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _initializeApp() async {
     try {
       debugPrint('🚀 Инициализация приложения...');
-      
+
       // Имитация инициализации
       await Future.delayed(const Duration(seconds: 1));
-      
+
       debugPrint('✅ Инициализация завершена');
-      
+
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     debugPrint('🔄 Построение HomeScreen, isLoading: $_isLoading');
-    
+
     if (_isLoading) {
       return const Scaffold(
         body: Center(
@@ -201,7 +201,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
-

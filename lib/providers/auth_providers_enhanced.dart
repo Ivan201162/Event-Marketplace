@@ -27,17 +27,20 @@ final currentUserProvider = FutureProvider<AppUser?>((ref) async {
 });
 
 /// Провайдер состояния загрузки авторизации
-final authLoadingProvider = StateNotifierProvider<AuthLoadingNotifier, bool>((ref) {
+final authLoadingProvider =
+    StateNotifierProvider<AuthLoadingNotifier, bool>((ref) {
   return AuthLoadingNotifier();
 });
 
 /// Провайдер ошибок авторизации
-final authErrorProvider = StateNotifierProvider<AuthErrorNotifier, String?>((ref) {
+final authErrorProvider =
+    StateNotifierProvider<AuthErrorNotifier, String?>((ref) {
   return AuthErrorNotifier();
 });
 
 /// Провайдер состояния онлайн
-final onlineStatusProvider = StateNotifierProvider<OnlineStatusNotifier, bool>((ref) {
+final onlineStatusProvider =
+    StateNotifierProvider<OnlineStatusNotifier, bool>((ref) {
   return OnlineStatusNotifier();
 });
 

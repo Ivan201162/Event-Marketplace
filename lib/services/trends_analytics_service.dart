@@ -64,8 +64,7 @@ class TrendsAnalyticsService {
           .collection('bookings')
           .where('eventDate', isGreaterThanOrEqualTo: startDate)
           .where('eventDate', isLessThanOrEqualTo: endDate)
-          .where('status', whereIn: ['confirmed', 'paid', 'completed'])
-          .get();
+          .where('status', whereIn: ['confirmed', 'paid', 'completed']).get();
 
       final bookings = bookingsSnapshot.docs.map((doc) => doc.data()).toList();
 
@@ -134,10 +133,14 @@ class TrendsAnalyticsService {
         weeklyTrends: weeklyCounts,
         totalEvents: events.length,
         peakMonth: monthlyCounts.entries.isNotEmpty
-            ? monthlyCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key
+            ? monthlyCounts.entries
+                .reduce((a, b) => a.value > b.value ? a : b)
+                .key
             : null,
         peakWeekday: weeklyCounts.entries.isNotEmpty
-            ? weeklyCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key
+            ? weeklyCounts.entries
+                .reduce((a, b) => a.value > b.value ? a : b)
+                .key
             : null,
       );
     } catch (e) {
@@ -178,7 +181,8 @@ class TrendsAnalyticsService {
               location: entry.key,
               count: entry.value,
               percentage: (entry.value / events.length * 100).round(),
-              averagePrice: _calculateAveragePrice(entry.key, startDate, endDate),
+              averagePrice:
+                  _calculateAveragePrice(entry.key, startDate, endDate),
             ),
           )
           .toList();
@@ -197,8 +201,7 @@ class TrendsAnalyticsService {
           .collection('bookings')
           .where('eventDate', isGreaterThanOrEqualTo: startDate)
           .where('eventDate', isLessThanOrEqualTo: endDate)
-          .where('status', whereIn: ['confirmed', 'paid', 'completed'])
-          .get();
+          .where('status', whereIn: ['confirmed', 'paid', 'completed']).get();
 
       final bookings = bookingsSnapshot.docs.map((doc) => doc.data()).toList();
 
@@ -260,10 +263,14 @@ class TrendsAnalyticsService {
     required DateTime endDate,
   }) async {
     try {
-      final categoryTrends = await getCategoryTrends(startDate: startDate, endDate: endDate);
-      final serviceTrends = await getServiceTrends(startDate: startDate, endDate: endDate);
-      final geographicTrends = await getGeographicTrends(startDate: startDate, endDate: endDate);
-      final priceTrends = await getPriceTrends(startDate: startDate, endDate: endDate);
+      final categoryTrends =
+          await getCategoryTrends(startDate: startDate, endDate: endDate);
+      final serviceTrends =
+          await getServiceTrends(startDate: startDate, endDate: endDate);
+      final geographicTrends =
+          await getGeographicTrends(startDate: startDate, endDate: endDate);
+      final priceTrends =
+          await getPriceTrends(startDate: startDate, endDate: endDate);
 
       return TrendsAnalytics(
         period: AnalyticsPeriod(startDate: startDate, endDate: endDate),
@@ -280,17 +287,20 @@ class TrendsAnalyticsService {
 
   // Приватные методы
 
-  double _calculateGrowth(String category, DateTime startDate, DateTime endDate) {
+  double _calculateGrowth(
+      String category, DateTime startDate, DateTime endDate) {
     // TODO(developer): Реализовать расчет роста по сравнению с предыдущим периодом
     return 0;
   }
 
-  double _calculateServiceGrowth(String service, DateTime startDate, DateTime endDate) {
+  double _calculateServiceGrowth(
+      String service, DateTime startDate, DateTime endDate) {
     // TODO(developer): Реализовать расчет роста услуги по сравнению с предыдущим периодом
     return 0;
   }
 
-  double _calculateAveragePrice(String location, DateTime startDate, DateTime endDate) {
+  double _calculateAveragePrice(
+      String location, DateTime startDate, DateTime endDate) {
     // TODO(developer): Реализовать расчет средней цены для локации
     return 0;
   }

@@ -10,7 +10,8 @@ class NotificationService {
   NotificationService._internal();
 
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  static final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -18,7 +19,8 @@ class NotificationService {
   Future<void> initialize() async {
     try {
       // Инициализация локальных уведомлений
-      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+      const androidSettings =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosSettings = DarwinInitializationSettings();
       const initSettings = InitializationSettings(
         android: androidSettings,
@@ -35,7 +37,6 @@ class NotificationService {
 
       // Получение токена
       await _getFCMToken();
-
     } catch (e) {
       print('Ошибка инициализации уведомлений: $e');
     }
@@ -59,7 +60,8 @@ class NotificationService {
 
       // Запрос разрешений для локальных уведомлений
       await _localNotifications
-          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
           ?.requestNotificationsPermission();
     } catch (e) {
       print('Ошибка запроса разрешений: $e');
@@ -70,7 +72,8 @@ class NotificationService {
   Future<void> _setupMessageHandlers() async {
     try {
       // Обработка сообщений в фоне
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
 
       // Обработка сообщений в активном состоянии
       FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
@@ -114,8 +117,9 @@ class NotificationService {
   /// Обработка сообщений в активном состоянии
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
     try {
-      print('Получено сообщение в активном состоянии: ${message.notification?.title}');
-      
+      print(
+          'Получено сообщение в активном состоянии: ${message.notification?.title}');
+
       // Показ локального уведомления
       await _showLocalNotification(message);
     } catch (e) {
@@ -127,7 +131,7 @@ class NotificationService {
   static Future<void> _handleNotificationTap(RemoteMessage message) async {
     try {
       print('Нажато на уведомление: ${message.notification?.title}');
-      
+
       // Обработка навигации в зависимости от типа уведомления
       final data = message.data;
       if (data['type'] == 'chat') {
@@ -218,7 +222,7 @@ class NotificationService {
 
       final chatData = chatDoc.data()!;
       final participants = List<String>.from(chatData['participants'] ?? []);
-      
+
       // Найти получателя (не отправителя)
       final recipientId = participants.firstWhere(
         (id) => id != senderId,
@@ -331,7 +335,7 @@ class NotificationService {
   Future<void> clearOldNotifications() async {
     try {
       final cutoffDate = DateTime.now().subtract(const Duration(days: 30));
-      
+
       final querySnapshot = await _firestore
           .collection('notifications')
           .where('createdAt', isLessThan: Timestamp.fromDate(cutoffDate))
@@ -341,7 +345,7 @@ class NotificationService {
       for (final doc in querySnapshot.docs) {
         batch.delete(doc.reference);
       }
-      
+
       await batch.commit();
     } catch (e) {
       print('Ошибка очистки старых уведомлений: $e');
@@ -354,7 +358,7 @@ class NotificationService {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   try {
     print('Получено сообщение в фоне: ${message.notification?.title}');
-    
+
     // Обработка фоновых сообщений
     // Здесь можно добавить логику для обработки данных
   } catch (e) {

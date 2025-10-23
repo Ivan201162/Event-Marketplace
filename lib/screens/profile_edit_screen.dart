@@ -91,7 +91,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка выбора изображения: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка выбора изображения: $e'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -109,21 +111,28 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       // Загружаем аватар, если выбран новый
       if (_selectedImage != null) {
         final bytes = await _selectedImage!.readAsBytes();
-        avatarUrl = await SupabaseService.uploadAvatar(_selectedImage!.path, bytes);
+        avatarUrl =
+            await SupabaseService.uploadAvatar(_selectedImage!.path, bytes);
       }
 
       // Обновляем профиль
       final success = await SupabaseService.updateProfile(
         name: _nameController.text.trim(),
-        bio: _bioController.text.trim().isEmpty ? null : _bioController.text.trim(),
-        city: _cityController.text.trim().isEmpty ? null : _cityController.text.trim(),
+        bio: _bioController.text.trim().isEmpty
+            ? null
+            : _bioController.text.trim(),
+        city: _cityController.text.trim().isEmpty
+            ? null
+            : _cityController.text.trim(),
         skills: _skills,
         avatarUrl: avatarUrl,
       );
 
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Профиль обновлен успешно!'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Профиль обновлен успешно!'),
+              backgroundColor: Colors.green),
         );
         context.pop();
       } else {
@@ -132,7 +141,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка обновления профиля: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка обновления профиля: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -181,7 +192,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   )
-                : const Text('Сохранить', style: TextStyle(color: Colors.white)),
+                : const Text('Сохранить',
+                    style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -212,7 +224,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadCurrentProfile, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadCurrentProfile, child: const Text('Повторить')),
           ],
         ),
       );
@@ -257,11 +270,12 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
               backgroundImage: _selectedImage != null
                   ? FileImage(_selectedImage!)
                   : (_currentProfile?.avatarUrl != null
-                        ? NetworkImage(_currentProfile!.avatarUrl!)
-                        : null),
-              child: _selectedImage == null && _currentProfile?.avatarUrl == null
-                  ? Icon(Icons.person, size: 60, color: theme.primaryColor)
-                  : null,
+                      ? NetworkImage(_currentProfile!.avatarUrl!)
+                      : null),
+              child:
+                  _selectedImage == null && _currentProfile?.avatarUrl == null
+                      ? Icon(Icons.person, size: 60, color: theme.primaryColor)
+                      : null,
             ),
             Positioned(
               bottom: 0,
@@ -337,7 +351,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Навыки', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('Навыки',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
 
         // Поле для добавления навыков

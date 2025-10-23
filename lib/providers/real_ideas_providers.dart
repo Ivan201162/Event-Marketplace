@@ -39,7 +39,8 @@ class RealIdeasProviders {
   });
 
   /// Провайдер для получения идей по категории
-  static final ideasByCategoryProvider = StreamProvider.family<List<Idea>, String>((ref, category) {
+  static final ideasByCategoryProvider =
+      StreamProvider.family<List<Idea>, String>((ref, category) {
     if (!FeatureFlags.useRealIdeasData) {
       return Stream.value([]);
     }
@@ -73,7 +74,8 @@ class RealIdeasProviders {
   });
 
   /// Провайдер для поиска идей
-  static final searchIdeasProvider = FutureProvider.family<List<Idea>, String>((ref, query) async {
+  static final searchIdeasProvider =
+      FutureProvider.family<List<Idea>, String>((ref, query) async {
     if (!FeatureFlags.useRealIdeasData) {
       return [];
     }
@@ -112,7 +114,8 @@ class RealIdeasProviders {
   });
 
   /// Провайдер для получения идей пользователя
-  static final userIdeasProvider = StreamProvider.family<List<Idea>, String>((ref, userId) {
+  static final userIdeasProvider =
+      StreamProvider.family<List<Idea>, String>((ref, userId) {
     if (!FeatureFlags.useRealIdeasData) {
       return Stream.value([]);
     }
@@ -180,7 +183,8 @@ class RealIdeasProviders {
   });
 
   /// Провайдер для получения рекомендуемых идей
-  static final recommendedIdeasProvider = StreamProvider.family<List<Idea>, String>((ref, userId) {
+  static final recommendedIdeasProvider =
+      StreamProvider.family<List<Idea>, String>((ref, userId) {
     if (!FeatureFlags.useRealIdeasData) {
       return Stream.value([]);
     }

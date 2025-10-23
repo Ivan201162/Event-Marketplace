@@ -13,7 +13,8 @@ class CustomerNotesScreen extends ConsumerStatefulWidget {
   final String userId;
 
   @override
-  ConsumerState<CustomerNotesScreen> createState() => _CustomerNotesScreenState();
+  ConsumerState<CustomerNotesScreen> createState() =>
+      _CustomerNotesScreenState();
 }
 
 class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
@@ -52,8 +53,11 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
           ],
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: _showSearchDialog),
-          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
+          IconButton(
+              icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+          IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog),
         ],
       ),
       body: Column(
@@ -69,7 +73,11 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [_buildAllNotesTab(notesAsync), _buildPinnedNotesTab(), _buildTagsTab()],
+              children: [
+                _buildAllNotesTab(notesAsync),
+                _buildPinnedNotesTab(),
+                _buildTagsTab()
+              ],
             ),
           ),
         ],
@@ -82,66 +90,69 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
   }
 
   Widget _buildStatsCard(CustomerProfileStats stats) => Card(
-    margin: const EdgeInsets.all(8),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStatItem('Всего заметок', stats.totalNotes, Icons.note),
-          _buildStatItem('Закреплённых', stats.pinnedNotes, Icons.push_pin),
-          _buildStatItem('Тегов', stats.totalTags, Icons.tag),
-        ],
-      ),
-    ),
-  );
+        margin: const EdgeInsets.all(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildStatItem('Всего заметок', stats.totalNotes, Icons.note),
+              _buildStatItem('Закреплённых', stats.pinnedNotes, Icons.push_pin),
+              _buildStatItem('Тегов', stats.totalTags, Icons.tag),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildStatItem(String label, int value, IconData icon) => Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(icon, size: 24),
-      const SizedBox(height: 4),
-      Text(value.toString(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-    ],
-  );
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 24),
+          const SizedBox(height: 4),
+          Text(value.toString(),
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        ],
+      );
 
-  Widget _buildAllNotesTab(AsyncValue<List<CustomerNote>> notesAsync) => notesAsync.when(
-    data: (notes) {
-      if (notes.isEmpty) {
-        return _buildEmptyState(
-          'Нет заметок',
-          'Создайте заметку, чтобы сохранить важную информацию',
-          Icons.note_outlined,
-        );
-      }
+  Widget _buildAllNotesTab(AsyncValue<List<CustomerNote>> notesAsync) =>
+      notesAsync.when(
+        data: (notes) {
+          if (notes.isEmpty) {
+            return _buildEmptyState(
+              'Нет заметок',
+              'Создайте заметку, чтобы сохранить важную информацию',
+              Icons.note_outlined,
+            );
+          }
 
-      // Сортируем заметки: сначала закреплённые, потом по дате обновления
-      final sortedNotes = List<CustomerNote>.from(notes);
-      sortedNotes.sort((a, b) {
-        if (a.isPinned && !b.isPinned) return -1;
-        if (!a.isPinned && b.isPinned) return 1;
-        return b.updatedAt.compareTo(a.updatedAt);
-      });
+          // Сортируем заметки: сначала закреплённые, потом по дате обновления
+          final sortedNotes = List<CustomerNote>.from(notes);
+          sortedNotes.sort((a, b) {
+            if (a.isPinned && !b.isPinned) return -1;
+            if (!a.isPinned && b.isPinned) return 1;
+            return b.updatedAt.compareTo(a.updatedAt);
+          });
 
-      return ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: sortedNotes.length,
-        itemBuilder: (context, index) {
-          final note = sortedNotes[index];
-          return NoteCardWidget(
-            note: note,
-            onTap: () => _showNoteDetails(note),
-            onEdit: () => _showEditNoteDialog(note),
-            onDelete: () => _deleteNote(note),
-            onTogglePin: () => _togglePin(note),
+          return ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: sortedNotes.length,
+            itemBuilder: (context, index) {
+              final note = sortedNotes[index];
+              return NoteCardWidget(
+                note: note,
+                onTap: () => _showNoteDetails(note),
+                onEdit: () => _showEditNoteDialog(note),
+                onDelete: () => _deleteNote(note),
+                onTogglePin: () => _togglePin(note),
+              );
+            },
           );
         },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => _buildErrorState(error.toString()),
       );
-    },
-    loading: () => const Center(child: CircularProgressIndicator()),
-    error: (error, stack) => _buildErrorState(error.toString()),
-  );
 
   Widget _buildPinnedNotesTab() {
     final pinnedNotesAsync = ref.watch(pinnedNotesProvider(widget.userId));
@@ -222,38 +233,42 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
     );
   }
 
-  Widget _buildEmptyState(String title, String subtitle, IconData icon) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, size: 64, color: Colors.grey),
-        const SizedBox(height: 16),
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        Text(
-          subtitle,
-          style: const TextStyle(color: Colors.grey),
-          textAlign: TextAlign.center,
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) =>
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(title,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildErrorState(String error) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.error_outline, size: 64, color: Colors.red),
-        const SizedBox(height: 16),
-        Text('Ошибка: $error'),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: () => ref.refresh(customerNotesProvider(widget.userId)),
-          child: const Text('Повторить'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Ошибка: $error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () =>
+                  ref.refresh(customerNotesProvider(widget.userId)),
+              child: const Text('Повторить'),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   void _showAddNoteDialog() {
     showDialog<void>(
@@ -281,7 +296,9 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               final query = _searchController.text.trim();
@@ -321,7 +338,9 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
                 title: Text(note.title),
                 actions: [
                   IconButton(
-                    icon: Icon(note.isPinned ? Icons.push_pin : Icons.push_pin_outlined),
+                    icon: Icon(note.isPinned
+                        ? Icons.push_pin
+                        : Icons.push_pin_outlined),
                     onPressed: () {
                       Navigator.pop(context);
                       _togglePin(note);
@@ -362,13 +381,15 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
                         children: [
                           Text(
                             'Создано: ${_formatDate(note.createdAt)}',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
                           ),
                           if (note.updatedAt != note.createdAt) ...[
                             const SizedBox(width: 16),
                             Text(
                               'Обновлено: ${_formatDate(note.updatedAt)}',
-                              style: const TextStyle(color: Colors.grey, fontSize: 12),
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 12),
                             ),
                           ],
                         ],
@@ -405,7 +426,9 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
         title: const Text('Удалить заметку?'),
         content: const Text('Это действие нельзя отменить.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -443,7 +466,8 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => NoteSearchResultsScreen(userId: widget.userId, query: query),
+        builder: (context) =>
+            NoteSearchResultsScreen(userId: widget.userId, query: query),
       ),
     );
   }
@@ -494,7 +518,8 @@ class NotesByTagScreen extends ConsumerWidget {
     // TODO(developer): Показать детали заметки
   }
 
-  void _showEditNoteDialog(BuildContext context, WidgetRef ref, CustomerNote note) {
+  void _showEditNoteDialog(
+      BuildContext context, WidgetRef ref, CustomerNote note) {
     // TODO(developer): Редактировать заметку
   }
 
@@ -509,7 +534,8 @@ class NotesByTagScreen extends ConsumerWidget {
 
 /// Экран результатов поиска заметок
 class NoteSearchResultsScreen extends ConsumerWidget {
-  const NoteSearchResultsScreen({super.key, required this.userId, required this.query});
+  const NoteSearchResultsScreen(
+      {super.key, required this.userId, required this.query});
   final String userId;
   final String query;
 
@@ -550,7 +576,8 @@ class NoteSearchResultsScreen extends ConsumerWidget {
     // TODO(developer): Показать детали заметки
   }
 
-  void _showEditNoteDialog(BuildContext context, WidgetRef ref, CustomerNote note) {
+  void _showEditNoteDialog(
+      BuildContext context, WidgetRef ref, CustomerNote note) {
     // TODO(developer): Редактировать заметку
   }
 

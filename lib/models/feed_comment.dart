@@ -131,21 +131,21 @@ class FeedComment extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    postId,
-    authorId,
-    authorName,
-    authorAvatarUrl,
-    content,
-    userPhotoUrl,
-    userName,
-    createdAt,
-    updatedAt,
-    likesCount,
-    likedBy,
-    parentCommentId,
-    replies,
-  ];
+        id,
+        postId,
+        authorId,
+        authorName,
+        authorAvatarUrl,
+        content,
+        userPhotoUrl,
+        userName,
+        createdAt,
+        updatedAt,
+        likesCount,
+        likedBy,
+        parentCommentId,
+        replies,
+      ];
 
   @override
   String toString() {

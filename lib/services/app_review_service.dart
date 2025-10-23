@@ -70,7 +70,8 @@ class AppReviewService {
       // Проверяем время последнего запроса
       final lastRequest = await _getLastReviewRequest();
       if (lastRequest != null) {
-        final daysSinceLastRequest = DateTime.now().difference(lastRequest).inDays;
+        final daysSinceLastRequest =
+            DateTime.now().difference(lastRequest).inDays;
         if (daysSinceLastRequest < _minDaysBetweenReviews) return false;
       }
 
@@ -101,7 +102,8 @@ class AppReviewService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_lastFeatureUsedKey, featureName);
-      await prefs.setInt('${_lastFeatureUsedKey}_time', DateTime.now().millisecondsSinceEpoch);
+      await prefs.setInt(
+          '${_lastFeatureUsedKey}_time', DateTime.now().millisecondsSinceEpoch);
     } catch (e) {
       debugPrint('Ошибка отметки использования функции: $e');
     }
@@ -154,7 +156,8 @@ class AppReviewService {
       );
     } catch (e) {
       debugPrint('Ошибка получения статистики отзывов: $e');
-      return const ReviewStats(appLaunchCount: 0, reviewRequestCount: 0, isDismissed: false);
+      return const ReviewStats(
+          appLaunchCount: 0, reviewRequestCount: 0, isDismissed: false);
     }
   }
 
@@ -163,7 +166,9 @@ class AppReviewService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final timestamp = prefs.getInt(_lastReviewRequestKey);
-      return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
+      return timestamp != null
+          ? DateTime.fromMillisecondsSinceEpoch(timestamp)
+          : null;
     } catch (e) {
       debugPrint('Ошибка получения времени последнего запроса: $e');
       return null;
@@ -174,7 +179,8 @@ class AppReviewService {
   static Future<void> _updateLastReviewRequest() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(_lastReviewRequestKey, DateTime.now().millisecondsSinceEpoch);
+      await prefs.setInt(
+          _lastReviewRequestKey, DateTime.now().millisecondsSinceEpoch);
     } catch (e) {
       debugPrint('Ошибка обновления времени запроса: $e');
     }
@@ -229,7 +235,8 @@ class AppReviewService {
     try {
       String url;
       if (Platform.isAndroid) {
-        url = 'https://play.google.com/store/apps/details?id=com.example.event_marketplace_app';
+        url =
+            'https://play.google.com/store/apps/details?id=com.example.event_marketplace_app';
       } else if (Platform.isIOS) {
         url = 'https://apps.apple.com/app/id1234567890';
       } else {
@@ -258,9 +265,11 @@ class AppReviewService {
       if (launchCount >= _minLaunchesBeforeReview &&
           reviewCount < _maxReviewRequests &&
           (lastRequest == null ||
-              DateTime.now().difference(lastRequest).inDays >= _minDaysBetweenReviews)) {
+              DateTime.now().difference(lastRequest).inDays >=
+                  _minDaysBetweenReviews)) {
         // Проверяем, использовалась ли недавно функция
-        if (lastFeatureTime != null && DateTime.now().difference(lastFeatureTime).inMinutes < 5) {
+        if (lastFeatureTime != null &&
+            DateTime.now().difference(lastFeatureTime).inMinutes < 5) {
           return ReviewTiming.now;
         }
 
@@ -342,4 +351,13 @@ class ReviewStats {
 enum ReviewTiming { now, soon, notYet }
 
 /// Типы функций для отслеживания
-enum FeatureType { booking, search, chat, profile, payment, review, share, favorite }
+enum FeatureType {
+  booking,
+  search,
+  chat,
+  profile,
+  payment,
+  review,
+  share,
+  favorite
+}

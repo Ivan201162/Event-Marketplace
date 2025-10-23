@@ -7,7 +7,8 @@ import 'responsive_card.dart';
 
 /// Виджет для отображения статуса офлайн-режима
 class OfflineStatusWidget extends ConsumerWidget {
-  const OfflineStatusWidget({super.key, this.showDetails = false, this.padding, this.onTap});
+  const OfflineStatusWidget(
+      {super.key, this.showDetails = false, this.padding, this.onTap});
   final bool showDetails;
   final EdgeInsets? padding;
   final VoidCallback? onTap;
@@ -19,7 +20,8 @@ class OfflineStatusWidget extends ConsumerWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding:
+            padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: Color(offlineState.statusColor).withValues(alpha: 0.1),
           border: Border.all(color: Color(offlineState.statusColor)),
@@ -32,11 +34,14 @@ class OfflineStatusWidget extends ConsumerWidget {
             const SizedBox(width: 8),
             ResponsiveText(
               offlineState.connectionStatus,
-              style: TextStyle(color: Color(offlineState.statusColor), fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  color: Color(offlineState.statusColor),
+                  fontWeight: FontWeight.w500),
             ),
             if (showDetails) ...[
               const SizedBox(width: 8),
-              Icon(Icons.info_outline, size: 16, color: Color(offlineState.statusColor)),
+              Icon(Icons.info_outline,
+                  size: 16, color: Color(offlineState.statusColor)),
             ],
           ],
         ),
@@ -62,12 +67,15 @@ class OfflineDetailsWidget extends ConsumerWidget {
           // Заголовок
           Row(
             children: [
-              Text(offlineState.statusIcon, style: const TextStyle(fontSize: 24)),
+              Text(offlineState.statusIcon,
+                  style: const TextStyle(fontSize: 24)),
               const SizedBox(width: 12),
-              const Expanded(child: ResponsiveText('Статус подключения', isTitle: true)),
+              const Expanded(
+                  child: ResponsiveText('Статус подключения', isTitle: true)),
               IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: () => ref.read(offlineModeProvider.notifier).refresh(),
+                onPressed: () =>
+                    ref.read(offlineModeProvider.notifier).refresh(),
               ),
             ],
           ),
@@ -89,10 +97,12 @@ class OfflineDetailsWidget extends ConsumerWidget {
             ),
 
           // Размер кэша
-          _buildStatusRow('Размер кэша', cacheInfo.formattedCacheSize, Colors.grey[600]!),
+          _buildStatusRow(
+              'Размер кэша', cacheInfo.formattedCacheSize, Colors.grey[600]!),
 
           // Количество элементов в кэше
-          _buildStatusRow('Элементов в кэше', '${cacheInfo.cacheItemsCount}', Colors.grey[600]!),
+          _buildStatusRow('Элементов в кэше', '${cacheInfo.cacheItemsCount}',
+              Colors.grey[600]!),
 
           // Статус кэша
           if (offlineState.isCacheStale)
@@ -106,10 +116,17 @@ class OfflineDetailsWidget extends ConsumerWidget {
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: offlineState.isOfflineMode
-                      ? () => ref.read(offlineModeProvider.notifier).disableOfflineMode()
-                      : () => ref.read(offlineModeProvider.notifier).enableOfflineMode(),
-                  icon: Icon(offlineState.isOfflineMode ? Icons.wifi : Icons.wifi_off),
-                  label: Text(offlineState.isOfflineMode ? 'Включить онлайн' : 'Включить офлайн'),
+                      ? () => ref
+                          .read(offlineModeProvider.notifier)
+                          .disableOfflineMode()
+                      : () => ref
+                          .read(offlineModeProvider.notifier)
+                          .enableOfflineMode(),
+                  icon: Icon(
+                      offlineState.isOfflineMode ? Icons.wifi : Icons.wifi_off),
+                  label: Text(offlineState.isOfflineMode
+                      ? 'Включить онлайн'
+                      : 'Включить офлайн'),
                 ),
               ),
               const SizedBox(width: 8),
@@ -125,7 +142,9 @@ class OfflineDetailsWidget extends ConsumerWidget {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.sync),
-                  label: Text(syncState.isSyncing ? 'Синхронизация...' : 'Синхронизировать'),
+                  label: Text(syncState.isSyncing
+                      ? 'Синхронизация...'
+                      : 'Синхронизировать'),
                 ),
               ),
             ],
@@ -139,7 +158,8 @@ class OfflineDetailsWidget extends ConsumerWidget {
               backgroundColor: Colors.grey[300],
             ),
             const SizedBox(height: 8),
-            ResponsiveText(syncState.currentOperation ?? 'Синхронизация...', isSubtitle: true),
+            ResponsiveText(syncState.currentOperation ?? 'Синхронизация...',
+                isSubtitle: true),
           ],
 
           // Ошибки
@@ -202,7 +222,8 @@ class CacheInfoWidget extends ConsumerWidget {
             children: [
               const Icon(Icons.storage),
               const SizedBox(width: 12),
-              const Expanded(child: ResponsiveText('Информация о кэше', isTitle: true)),
+              const Expanded(
+                  child: ResponsiveText('Информация о кэше', isTitle: true)),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 onPressed: () => ref.read(cacheInfoProvider.notifier).refresh(),
@@ -226,7 +247,9 @@ class CacheInfoWidget extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: cacheInfo.isLoading ? null : () => _showClearCacheDialog(context, ref),
+              onPressed: cacheInfo.isLoading
+                  ? null
+                  : () => _showClearCacheDialog(context, ref),
               icon: cacheInfo.isLoading
                   ? const SizedBox(
                       width: 16,
@@ -277,7 +300,8 @@ class CacheInfoWidget extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ResponsiveText(label, isSubtitle: true),
-            ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+            ResponsiveText(value,
+                style: const TextStyle(fontWeight: FontWeight.w500)),
           ],
         ),
       );
@@ -291,7 +315,9 @@ class CacheInfoWidget extends ConsumerWidget {
           'Вы уверены, что хотите очистить весь кэш? Это действие нельзя отменить.',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -336,7 +362,8 @@ class OfflineLimitationsWidget extends ConsumerWidget {
           const Icon(Icons.warning, color: Colors.orange),
           const SizedBox(width: 12),
           Expanded(
-            child: ResponsiveText(limitationMessage, style: const TextStyle(color: Colors.orange)),
+            child: ResponsiveText(limitationMessage,
+                style: const TextStyle(color: Colors.orange)),
           ),
         ],
       ),
@@ -370,9 +397,11 @@ class OfflineRecommendationsWidget extends ConsumerWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.check_circle_outline, size: 16, color: Colors.green),
+                  const Icon(Icons.check_circle_outline,
+                      size: 16, color: Colors.green),
                   const SizedBox(width: 8),
-                  Expanded(child: ResponsiveText(recommendation, isSubtitle: true)),
+                  Expanded(
+                      child: ResponsiveText(recommendation, isSubtitle: true)),
                 ],
               ),
             ),
@@ -400,7 +429,9 @@ class SyncStatusWidget extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3)),
+        border: Border.all(
+            color:
+                Theme.of(context).colorScheme.outline.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -414,7 +445,9 @@ class SyncStatusWidget extends ConsumerWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: ResponsiveText(
-                  syncState.isSyncing ? 'Синхронизация...' : 'Последняя синхронизация',
+                  syncState.isSyncing
+                      ? 'Синхронизация...'
+                      : 'Последняя синхронизация',
                   isTitle: true,
                 ),
               ),
@@ -427,7 +460,8 @@ class SyncStatusWidget extends ConsumerWidget {
               backgroundColor: Colors.grey[300],
             ),
             const SizedBox(height: 8),
-            ResponsiveText(syncState.currentOperation ?? 'Синхронизация...', isSubtitle: true),
+            ResponsiveText(syncState.currentOperation ?? 'Синхронизация...',
+                isSubtitle: true),
           ] else ...[
             ResponsiveText(syncState.formattedLastSyncTime, isSubtitle: true),
           ],

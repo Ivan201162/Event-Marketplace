@@ -5,12 +5,14 @@ import '../models/specialist_filters_simple.dart';
 import '../services/mock_data_service.dart';
 
 /// Провайдер для состояния фильтров специалистов (мигрирован с StateNotifierProvider)
-final specialistFiltersProvider = NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(
+final specialistFiltersProvider =
+    NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(
   () => SpecialistFiltersNotifier(),
 );
 
 /// Провайдер для отфильтрованных специалистов
-final filteredSpecialistsProvider = FutureProvider.family<List<Specialist>, FilterParams>(
+final filteredSpecialistsProvider =
+    FutureProvider.family<List<Specialist>, FilterParams>(
   (ref, params) async => MockDataService.getFilteredSpecialists(
     categoryId: params.categoryId,
     filters: params.filters,
@@ -26,7 +28,9 @@ class FilterParams {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is FilterParams && other.categoryId == categoryId && other.filters == filters;
+    return other is FilterParams &&
+        other.categoryId == categoryId &&
+        other.filters == filters;
   }
 
   @override
@@ -129,15 +133,18 @@ class SpecialistFiltersNotifier extends Notifier<SpecialistFilters> {
 /// Провайдер для получения уникальных городов из всех специалистов
 final allCitiesProvider = FutureProvider<List<String>>((ref) async {
   final allSpecialists = MockDataService.getAllSpecialists();
-  final cities = allSpecialists.map((specialist) => specialist.city).toSet().toList();
+  final cities =
+      allSpecialists.map((specialist) => specialist.city).toSet().toList();
   cities.sort();
   return cities;
 });
 
 /// Провайдер для получения уникальных городов по категории
-final categoryCitiesProvider = FutureProvider.family<List<String>, String>((ref, categoryId) async {
+final categoryCitiesProvider =
+    FutureProvider.family<List<String>, String>((ref, categoryId) async {
   final specialists = MockDataService.getSpecialistsByCategory(categoryId);
-  final cities = specialists.map((specialist) => specialist.city).toSet().toList();
+  final cities =
+      specialists.map((specialist) => specialist.city).toSet().toList();
   cities.sort();
   return cities;
 });
@@ -160,7 +167,8 @@ final allPriceRangeProvider = FutureProvider<Map<String, double>>((ref) async {
 });
 
 /// Провайдер для получения ценового диапазона по категории
-final categoryPriceRangeProvider = FutureProvider.family<Map<String, double>, String>((
+final categoryPriceRangeProvider =
+    FutureProvider.family<Map<String, double>, String>((
   ref,
   categoryId,
 ) async {
@@ -180,7 +188,8 @@ final categoryPriceRangeProvider = FutureProvider.family<Map<String, double>, St
 });
 
 /// Провайдер для получения подкатегорий по категории
-final categorySubcategoriesProvider = FutureProvider.family<List<String>, String>((
+final categorySubcategoriesProvider =
+    FutureProvider.family<List<String>, String>((
   ref,
   categoryId,
 ) async {
@@ -197,21 +206,25 @@ final categorySubcategoriesProvider = FutureProvider.family<List<String>, String
 });
 
 /// Провайдер для статистики фильтров
-final filterStatsProvider = Provider.family<FilterStats, FilterParams>((ref, params) {
+final filterStatsProvider =
+    Provider.family<FilterStats, FilterParams>((ref, params) {
   final specialists = ref.watch(filteredSpecialistsProvider(params));
 
   return specialists.when(
     data: (specialists) => FilterStats(
       totalCount: specialists.length,
       averageRating: specialists.isNotEmpty
-          ? specialists.map((s) => s.rating).reduce((a, b) => a + b) / specialists.length
+          ? specialists.map((s) => s.rating).reduce((a, b) => a + b) /
+              specialists.length
           : 0,
-      priceRange: specialists.isNotEmpty ? _calculatePriceRange(specialists) : null,
+      priceRange:
+          specialists.isNotEmpty ? _calculatePriceRange(specialists) : null,
       cities: specialists.map((s) => s.city).toSet().toList(),
     ),
-    loading: () => const FilterStats(totalCount: 0, averageRating: 0, priceRange: null, cities: []),
-    error: (_, __) =>
-        const FilterStats(totalCount: 0, averageRating: 0, priceRange: null, cities: []),
+    loading: () => const FilterStats(
+        totalCount: 0, averageRating: 0, priceRange: null, cities: []),
+    error: (_, __) => const FilterStats(
+        totalCount: 0, averageRating: 0, priceRange: null, cities: []),
   );
 });
 
@@ -246,5 +259,6 @@ PriceRange? _calculatePriceRange(List<Specialist> specialists) {
 
   if (!hasPrice) return null;
 
-  return PriceRange(min: minPrice == double.infinity ? 0 : minPrice, max: maxPrice);
+  return PriceRange(
+      min: minPrice == double.infinity ? 0 : minPrice, max: maxPrice);
 }

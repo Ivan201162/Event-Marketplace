@@ -82,7 +82,8 @@ class ReviewsBlock extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+        border:
+            Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -121,7 +122,8 @@ class ReviewsBlock extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
+        border:
+            Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +137,8 @@ class ReviewsBlock extends StatelessWidget {
                 height: isMobile ? 32 : 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+                  border: Border.all(
+                      color: theme.colorScheme.outline.withValues(alpha: 0.2)),
                 ),
                 child: ClipOval(
                   child: review.userPhotoUrl != null
@@ -147,7 +150,8 @@ class ReviewsBlock extends StatelessWidget {
                             child: Icon(
                               Icons.person,
                               size: isMobile ? 16 : 20,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.5),
                             ),
                           ),
                           errorWidget: (context, url, error) => Container(
@@ -155,7 +159,8 @@ class ReviewsBlock extends StatelessWidget {
                             child: Icon(
                               Icons.person,
                               size: isMobile ? 16 : 20,
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.5),
                             ),
                           ),
                         )
@@ -164,7 +169,8 @@ class ReviewsBlock extends StatelessWidget {
                           child: Icon(
                             Icons.person,
                             size: isMobile ? 16 : 20,
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.5),
                           ),
                         ),
                 ),
@@ -188,7 +194,9 @@ class ReviewsBlock extends StatelessWidget {
                         ...List.generate(
                           5,
                           (index) => Icon(
-                            index < review.rating ? Icons.star : Icons.star_border,
+                            index < review.rating
+                                ? Icons.star
+                                : Icons.star_border,
                             size: 14,
                             color: Colors.amber,
                           ),
@@ -197,7 +205,8 @@ class ReviewsBlock extends StatelessWidget {
                         Text(
                           review.eventType,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                           ),
                         ),
                       ],

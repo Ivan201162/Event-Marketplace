@@ -22,7 +22,8 @@ String formatTime(DateTime time, [String pattern = 'HH:mm']) {
 }
 
 /// Форматирование даты и времени
-String formatDateTime(DateTime dateTime, [String pattern = 'dd.MM.yyyy HH:mm']) {
+String formatDateTime(DateTime dateTime,
+    [String pattern = 'dd.MM.yyyy HH:mm']) {
   final formatter = DateFormat(pattern, 'ru_RU');
   return formatter.format(dateTime);
 }
@@ -55,13 +56,10 @@ String formatName(String name) {
   if (name.isEmpty) {
     return name;
   }
-  return name
-      .split(' ')
-      .map((word) {
-        if (word.isEmpty) return word;
-        return word[0].toUpperCase() + word.substring(1).toLowerCase();
-      })
-      .join(' ');
+  return name.split(' ').map((word) {
+    if (word.isEmpty) return word;
+    return word[0].toUpperCase() + word.substring(1).toLowerCase();
+  }).join(' ');
 }
 
 /// Форматирование рейтинга

@@ -18,7 +18,8 @@ class ReviewRepository {
   }
 
   /// Get reviews by specialist
-  Future<List<Review>> getReviewsBySpecialist(String specialistId, {int limit = 20}) async {
+  Future<List<Review>> getReviewsBySpecialist(String specialistId,
+      {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_reviewsCollection)
@@ -55,7 +56,8 @@ class ReviewRepository {
         .where('specialistId', isEqualTo: specialistId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList());
   }
 
   /// Get review by booking ID
@@ -77,9 +79,13 @@ class ReviewRepository {
   }
 
   /// Update a review
-  Future<bool> updateReview(String reviewId, Map<String, dynamic> updates) async {
+  Future<bool> updateReview(
+      String reviewId, Map<String, dynamic> updates) async {
     try {
-      await _firestore.collection(_reviewsCollection).doc(reviewId).update(updates);
+      await _firestore
+          .collection(_reviewsCollection)
+          .doc(reviewId)
+          .update(updates);
       return true;
     } catch (e) {
       return false;
@@ -108,7 +114,8 @@ class ReviewRepository {
         return null;
       }
 
-      final reviews = snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
+      final reviews =
+          snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList();
 
       if (reviews.isEmpty) {
         return null;
@@ -116,16 +123,19 @@ class ReviewRepository {
 
       // Calculate statistics
       final totalReviews = reviews.length;
-      final averageRating = reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
+      final averageRating =
+          reviews.map((r) => r.rating).reduce((a, b) => a + b) / totalReviews;
 
       final ratingDistribution = <int, int>{};
       for (final review in reviews) {
-        ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
+        ratingDistribution[review.rating] =
+            (ratingDistribution[review.rating] ?? 0) + 1;
       }
 
       final verifiedReviews = reviews.where((r) => r.isVerified).length;
       final recentReviews = reviews
-          .where((r) => r.createdAt.isAfter(DateTime.now().subtract(const Duration(days: 30))))
+          .where((r) => r.createdAt
+              .isAfter(DateTime.now().subtract(const Duration(days: 30))))
           .length;
 
       return ReviewStats(

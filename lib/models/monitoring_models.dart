@@ -37,8 +37,8 @@ class PerformanceMetric {
       labels: Map<String, String>.from(data['labels'] ?? {}),
       timestamp: data['timestamp'] != null
           ? (data['timestamp'] is Timestamp
-                ? (data['timestamp'] as Timestamp).toDate()
-                : DateTime.tryParse(data['timestamp'].toString()))
+              ? (data['timestamp'] as Timestamp).toDate()
+              : DateTime.tryParse(data['timestamp'].toString()))
           : null,
       description: data['description'] as String?,
       unit: data['unit'] as String?,
@@ -58,15 +58,15 @@ class PerformanceMetric {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'type': type.name,
-    'value': value,
-    'labels': labels,
-    'timestamp': timestamp != null ? Timestamp.fromDate(timestamp!) : null,
-    'description': description,
-    'unit': unit,
-    'metadata': metadata,
-  };
+        'name': name,
+        'type': type.name,
+        'value': value,
+        'labels': labels,
+        'timestamp': timestamp != null ? Timestamp.fromDate(timestamp!) : null,
+        'description': description,
+        'unit': unit,
+        'metadata': metadata,
+      };
 
   /// Копировать с изменениями
   PerformanceMetric copyWith({
@@ -79,17 +79,18 @@ class PerformanceMetric {
     String? description,
     String? unit,
     Map<String, dynamic>? metadata,
-  }) => PerformanceMetric(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    type: type ?? this.type,
-    value: value ?? this.value,
-    labels: labels ?? this.labels,
-    timestamp: timestamp ?? this.timestamp,
-    description: description ?? this.description,
-    unit: unit ?? this.unit,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      PerformanceMetric(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        type: type ?? this.type,
+        value: value ?? this.value,
+        labels: labels ?? this.labels,
+        timestamp: timestamp ?? this.timestamp,
+        description: description ?? this.description,
+        unit: unit ?? this.unit,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Парсинг типа из строки
   static MetricType _parseType(String? type) {
@@ -190,14 +191,14 @@ class MonitoringEvent {
       data: Map<String, dynamic>.from(data['data'] ?? {}),
       timestamp: data['timestamp'] != null
           ? (data['timestamp'] is Timestamp
-                ? (data['timestamp'] as Timestamp).toDate()
-                : DateTime.tryParse(data['timestamp'].toString()))
+              ? (data['timestamp'] as Timestamp).toDate()
+              : DateTime.tryParse(data['timestamp'].toString()))
           : null,
       resolved: data['resolved'] as bool? ?? false,
       resolvedAt: data['resolvedAt'] != null
           ? (data['resolvedAt'] is Timestamp
-                ? (data['resolvedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['resolvedAt'].toString()))
+              ? (data['resolvedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['resolvedAt'].toString()))
           : null,
       resolvedBy: data['resolvedBy'] as String?,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
@@ -216,20 +217,21 @@ class MonitoringEvent {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'eventType': eventType,
-    'severity': severity,
-    'message': message,
-    'source': source,
-    'userId': userId,
-    'sessionId': sessionId,
-    'tags': tags,
-    'data': data,
-    'timestamp': timestamp != null ? Timestamp.fromDate(timestamp!) : null,
-    'resolved': resolved,
-    'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-    'resolvedBy': resolvedBy,
-    'metadata': metadata,
-  };
+        'eventType': eventType,
+        'severity': severity,
+        'message': message,
+        'source': source,
+        'userId': userId,
+        'sessionId': sessionId,
+        'tags': tags,
+        'data': data,
+        'timestamp': timestamp != null ? Timestamp.fromDate(timestamp!) : null,
+        'resolved': resolved,
+        'resolvedAt':
+            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'resolvedBy': resolvedBy,
+        'metadata': metadata,
+      };
 
   /// Копировать с изменениями
   MonitoringEvent copyWith({
@@ -247,22 +249,23 @@ class MonitoringEvent {
     DateTime? resolvedAt,
     String? resolvedBy,
     Map<String, dynamic>? metadata,
-  }) => MonitoringEvent(
-    id: id ?? this.id,
-    eventType: eventType ?? this.eventType,
-    severity: severity ?? this.severity,
-    message: message ?? this.message,
-    source: source ?? this.source,
-    userId: userId ?? this.userId,
-    sessionId: sessionId ?? this.sessionId,
-    tags: tags ?? this.tags,
-    data: data ?? this.data,
-    timestamp: timestamp ?? this.timestamp,
-    resolved: resolved ?? this.resolved,
-    resolvedAt: resolvedAt ?? this.resolvedAt,
-    resolvedBy: resolvedBy ?? this.resolvedBy,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      MonitoringEvent(
+        id: id ?? this.id,
+        eventType: eventType ?? this.eventType,
+        severity: severity ?? this.severity,
+        message: message ?? this.message,
+        source: source ?? this.source,
+        userId: userId ?? this.userId,
+        sessionId: sessionId ?? this.sessionId,
+        tags: tags ?? this.tags,
+        data: data ?? this.data,
+        timestamp: timestamp ?? this.timestamp,
+        resolved: resolved ?? this.resolved,
+        resolvedAt: resolvedAt ?? this.resolvedAt,
+        resolvedBy: resolvedBy ?? this.resolvedBy,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Получить отображаемое название серьезности
   String get severityDisplayName {
@@ -369,7 +372,8 @@ class MonitoringStats {
       criticalEvents: data['criticalEvents'] as int? ?? 0,
       resolvedEvents: data['resolvedEvents'] as int? ?? 0,
       unresolvedEvents: data['unresolvedEvents'] as int? ?? 0,
-      averageResponseTime: (data['averageResponseTime'] as num?)?.toDouble() ?? 0.0,
+      averageResponseTime:
+          (data['averageResponseTime'] as num?)?.toDouble() ?? 0.0,
       uptime: (data['uptime'] as num?)?.toDouble() ?? 100.0,
       errorRate: (data['errorRate'] as num?)?.toDouble() ?? 0.0,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
@@ -378,20 +382,20 @@ class MonitoringStats {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'period': period,
-    'totalEvents': totalEvents,
-    'errorEvents': errorEvents,
-    'warningEvents': warningEvents,
-    'infoEvents': infoEvents,
-    'debugEvents': debugEvents,
-    'criticalEvents': criticalEvents,
-    'resolvedEvents': resolvedEvents,
-    'unresolvedEvents': unresolvedEvents,
-    'averageResponseTime': averageResponseTime,
-    'uptime': uptime,
-    'errorRate': errorRate,
-    'metadata': metadata,
-  };
+        'period': period,
+        'totalEvents': totalEvents,
+        'errorEvents': errorEvents,
+        'warningEvents': warningEvents,
+        'infoEvents': infoEvents,
+        'debugEvents': debugEvents,
+        'criticalEvents': criticalEvents,
+        'resolvedEvents': resolvedEvents,
+        'unresolvedEvents': unresolvedEvents,
+        'averageResponseTime': averageResponseTime,
+        'uptime': uptime,
+        'errorRate': errorRate,
+        'metadata': metadata,
+      };
 
   /// Копировать с изменениями
   MonitoringStats copyWith({
@@ -408,21 +412,22 @@ class MonitoringStats {
     double? uptime,
     double? errorRate,
     Map<String, dynamic>? metadata,
-  }) => MonitoringStats(
-    period: period ?? this.period,
-    totalEvents: totalEvents ?? this.totalEvents,
-    errorEvents: errorEvents ?? this.errorEvents,
-    warningEvents: warningEvents ?? this.warningEvents,
-    infoEvents: infoEvents ?? this.infoEvents,
-    debugEvents: debugEvents ?? this.debugEvents,
-    criticalEvents: criticalEvents ?? this.criticalEvents,
-    resolvedEvents: resolvedEvents ?? this.resolvedEvents,
-    unresolvedEvents: unresolvedEvents ?? this.unresolvedEvents,
-    averageResponseTime: averageResponseTime ?? this.averageResponseTime,
-    uptime: uptime ?? this.uptime,
-    errorRate: errorRate ?? this.errorRate,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      MonitoringStats(
+        period: period ?? this.period,
+        totalEvents: totalEvents ?? this.totalEvents,
+        errorEvents: errorEvents ?? this.errorEvents,
+        warningEvents: warningEvents ?? this.warningEvents,
+        infoEvents: infoEvents ?? this.infoEvents,
+        debugEvents: debugEvents ?? this.debugEvents,
+        criticalEvents: criticalEvents ?? this.criticalEvents,
+        resolvedEvents: resolvedEvents ?? this.resolvedEvents,
+        unresolvedEvents: unresolvedEvents ?? this.unresolvedEvents,
+        averageResponseTime: averageResponseTime ?? this.averageResponseTime,
+        uptime: uptime ?? this.uptime,
+        errorRate: errorRate ?? this.errorRate,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Получить процент ошибок
   double get errorPercentage {

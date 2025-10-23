@@ -46,7 +46,7 @@ class _EnhancedCardState extends State<EnhancedCard>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.98,
@@ -54,7 +54,7 @@ class _EnhancedCardState extends State<EnhancedCard>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _elevationAnimation = Tween<double>(
       begin: widget.elevation ?? 2,
       end: (widget.elevation ?? 2) + 4,
@@ -88,8 +88,8 @@ class _EnhancedCardState extends State<EnhancedCard>
       margin: widget.margin,
       child: Material(
         color: widget.backgroundColor ?? Theme.of(context).cardColor,
-        elevation: widget.isAnimated 
-            ? _elevationAnimation.value 
+        elevation: widget.isAnimated
+            ? _elevationAnimation.value
             : (widget.elevation ?? 2),
         shadowColor: Colors.black.withOpacity(0.1),
         borderRadius: widget.borderRadius ?? BorderRadius.circular(16),
@@ -101,13 +101,11 @@ class _EnhancedCardState extends State<EnhancedCard>
             decoration: BoxDecoration(
               borderRadius: widget.borderRadius ?? BorderRadius.circular(16),
               border: widget.border,
-              color: widget.isSelected 
+              color: widget.isSelected
                   ? Theme.of(context).primaryColor.withOpacity(0.1)
                   : null,
             ),
-            child: widget.isLoading 
-                ? _buildLoadingContent()
-                : widget.child,
+            child: widget.isLoading ? _buildLoadingContent() : widget.child,
           ),
         ),
       ),
@@ -331,7 +329,7 @@ class ActionCard extends StatelessWidget {
         children: [
           Icon(
             icon,
-            color: isEnabled 
+            color: isEnabled
                 ? (color ?? Theme.of(context).primaryColor)
                 : Colors.grey,
             size: 32,

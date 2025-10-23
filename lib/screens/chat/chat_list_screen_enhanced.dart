@@ -15,16 +15,17 @@ class ChatListScreenEnhanced extends ConsumerStatefulWidget {
   const ChatListScreenEnhanced({super.key});
 
   @override
-  ConsumerState<ChatListScreenEnhanced> createState() => _ChatListScreenEnhancedState();
+  ConsumerState<ChatListScreenEnhanced> createState() =>
+      _ChatListScreenEnhancedState();
 }
 
 class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
     with TickerProviderStateMixin {
   final _searchController = TextEditingController();
-  
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   bool _isSearching = false;
 
   @override
@@ -79,7 +80,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
             children: [
               // Заголовок
               _buildHeader(),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -146,7 +147,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
       children: [
         // Поиск
         _buildSearchSection(),
-        
+
         // Список чатов
         Expanded(
           child: _buildChatsList(),
@@ -179,7 +180,8 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Поиск чатов...',
-                  prefixIcon: const Icon(Icons.search, color: Color(0xFF1E3A8A)),
+                  prefixIcon:
+                      const Icon(Icons.search, color: Color(0xFF1E3A8A)),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
                           onPressed: () {
@@ -190,7 +192,8 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
                         )
                       : null,
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -239,7 +242,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
             final data = doc.data() as Map<String, dynamic>;
-            
+
             return _buildChatCard(doc.id, data);
           },
         );
@@ -270,7 +273,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
       (id) => id != user?.uid,
       orElse: () => '',
     );
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -323,9 +326,9 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
                       ),
                   ],
                 ),
-                
+
                 const SizedBox(width: 12),
-                
+
                 // Информация о чате
                 Expanded(
                   child: Column(
@@ -367,10 +370,12 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          if (data['unreadCount'] != null && data['unreadCount'] > 0) ...[
+                          if (data['unreadCount'] != null &&
+                              data['unreadCount'] > 0) ...[
                             const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                               decoration: const BoxDecoration(
                                 color: Color(0xFF1E3A8A),
                                 shape: BoxShape.circle,
@@ -647,14 +652,14 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
   /// Форматирование времени последнего сообщения
   String _formatLastMessageTime(dynamic timestamp) {
     if (timestamp == null) return '';
-    
-    final date = timestamp is Timestamp 
-        ? timestamp.toDate() 
+
+    final date = timestamp is Timestamp
+        ? timestamp.toDate()
         : DateTime.parse(timestamp.toString());
-    
+
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${date.day}.${date.month}';
     } else if (difference.inHours > 0) {

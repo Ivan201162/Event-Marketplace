@@ -80,7 +80,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHighest,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Row(
               children: [
@@ -94,7 +95,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                     children: [
                       Text(
                         'Фильтры',
-                        style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       if (category != null)
                         Text(
@@ -159,21 +161,25 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
   Widget _buildSearchSection(ThemeData theme) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Поиск', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text('Поиск',
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
               hintText: 'Поиск по имени или описанию...',
               prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
-              fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              fillColor: theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.3),
             ),
             onChanged: (value) {
               setState(() {
-                _currentFilters =
-                    _currentFilters.copyWith(searchQuery: value.isEmpty ? null : value);
+                _currentFilters = _currentFilters.copyWith(
+                    searchQuery: value.isEmpty ? null : value);
               });
             },
           ),
@@ -185,7 +191,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
         children: [
           Text(
             'Ценовой диапазон',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
@@ -231,8 +238,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                         minPrice: option.minPrice,
                         maxPrice: option.maxPrice,
                       );
-                      _priceRangeValues =
-                          RangeValues(option.minPrice ?? 0, option.maxPrice ?? 100000);
+                      _priceRangeValues = RangeValues(
+                          option.minPrice ?? 0, option.maxPrice ?? 100000);
                     } else {
                       _currentFilters = _currentFilters.copyWith();
                       _priceRangeValues = const RangeValues(0, 100000);
@@ -249,7 +256,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Рейтинг',
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Text(
             'от ${_ratingRangeValues.start.toStringAsFixed(1)} до ${_ratingRangeValues.end.toStringAsFixed(1)} звезд',
@@ -297,7 +305,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                 onSelected: (selected) {
                   setState(() {
                     if (selected) {
-                      _currentFilters = _currentFilters.copyWith(minRating: option.minRating);
+                      _currentFilters =
+                          _currentFilters.copyWith(minRating: option.minRating);
                       _ratingRangeValues = RangeValues(option.minRating, 5);
                     } else {
                       _currentFilters = _currentFilters.copyWith();
@@ -316,7 +325,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
         children: [
           Text(
             'Доступная дата',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           InkWell(
@@ -329,7 +339,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               );
               if (selectedDate != null) {
                 setState(() {
-                  _currentFilters = _currentFilters.copyWith(availableDate: selectedDate);
+                  _currentFilters =
+                      _currentFilters.copyWith(availableDate: selectedDate);
                 });
               }
             },
@@ -346,7 +357,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
                   Expanded(
                     child: Text(
                       _currentFilters.availableDate != null
-                          ? DateFormat('dd.MM.yyyy').format(_currentFilters.availableDate!)
+                          ? DateFormat('dd.MM.yyyy')
+                              .format(_currentFilters.availableDate!)
                           : 'Выберите дату',
                       style: theme.textTheme.bodyLarge,
                     ),
@@ -368,12 +380,20 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
       );
 
   Widget _buildCityFilter(ThemeData theme) {
-    final cities = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань'];
+    final cities = [
+      'Москва',
+      'Санкт-Петербург',
+      'Новосибирск',
+      'Екатеринбург',
+      'Казань'
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Город', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+        Text('Город',
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _currentFilters.city,
@@ -381,11 +401,13 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             filled: true,
-            fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            fillColor: theme.colorScheme.surfaceContainerHighest
+                .withValues(alpha: 0.3),
           ),
           items: [
             const DropdownMenuItem(child: Text('Все города')),
-            ...cities.map((city) => DropdownMenuItem(value: city, child: Text(city))),
+            ...cities.map(
+                (city) => DropdownMenuItem(value: city, child: Text(city))),
           ],
           onChanged: (value) {
             setState(() {
@@ -402,7 +424,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
         children: [
           Text(
             'Дополнительно',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           CheckboxListTile(
@@ -437,7 +460,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               onPressed: _resetFilters,
               icon: const Icon(Icons.refresh),
               label: const Text('Сбросить'),
-              style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+              style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16)),
             ),
           ),
           const SizedBox(width: 16),
@@ -449,7 +473,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               },
               icon: const Icon(Icons.check),
               label: const Text('Применить'),
-              style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
+              style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16)),
             ),
           ),
         ],

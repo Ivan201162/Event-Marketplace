@@ -124,7 +124,9 @@ class AttachmentPicker extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Отмена')),
             ],
           ),
         ),
@@ -154,7 +156,8 @@ class AttachmentPicker extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 label,
-                style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: color, fontSize: 12, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -167,8 +170,12 @@ class AttachmentPicker extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отправить местоположение'),
-        content: const Text('Функция отправки местоположения будет добавлена в следующих версиях.'),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
+        content: const Text(
+            'Функция отправки местоположения будет добавлена в следующих версиях.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: const Text('OK'))
+        ],
       ),
     );
   }
@@ -178,8 +185,12 @@ class AttachmentPicker extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отправить контакт'),
-        content: const Text('Функция отправки контактов будет добавлена в следующих версиях.'),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
+        content: const Text(
+            'Функция отправки контактов будет добавлена в следующих версиях.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: const Text('OK'))
+        ],
       ),
     );
   }
@@ -189,8 +200,12 @@ class AttachmentPicker extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отправить событие'),
-        content: const Text('Функция отправки событий будет добавлена в следующих версиях.'),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
+        content: const Text(
+            'Функция отправки событий будет добавлена в следующих версиях.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: const Text('OK'))
+        ],
       ),
     );
   }
@@ -200,8 +215,12 @@ class AttachmentPicker extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Создать опрос'),
-        content: const Text('Функция создания опросов будет добавлена в следующих версиях.'),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
+        content: const Text(
+            'Функция создания опросов будет добавлена в следующих версиях.'),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context), child: const Text('OK'))
+        ],
       ),
     );
   }

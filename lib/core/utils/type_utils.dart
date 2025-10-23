@@ -12,7 +12,8 @@ Map<String, dynamic> safeMapFromDynamic(Map<dynamic, dynamic>? data) {
 }
 
 /// Безопасное преобразование List<dynamic> в List<T>
-List<T> safeListFromDynamic<T>(List<dynamic>? data, T Function(dynamic) converter) {
+List<T> safeListFromDynamic<T>(
+    List<dynamic>? data, T Function(dynamic) converter) {
   if (data == null) return <T>[];
   return data.map<T>(converter).toList();
 }
@@ -68,7 +69,8 @@ DateTime safeDateTimeFromTimestamp(dynamic data) {
 }
 
 /// Безопасное преобразование enum из String
-T safeEnumFromString<T extends Enum>(List<T> values, dynamic data, T defaultValue) {
+T safeEnumFromString<T extends Enum>(
+    List<T> values, dynamic data, T defaultValue) {
   if (data == null) return defaultValue;
   final stringValue = data.toString();
   return values.firstWhere(

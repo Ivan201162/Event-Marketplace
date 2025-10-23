@@ -170,7 +170,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
             Text(
               'Попробуйте изменить параметры поиска',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                color:
+                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -191,7 +192,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
     );
   }
 
-  Widget _buildSpecialistCard(BuildContext context, Map<String, dynamic> specialist) {
+  Widget _buildSpecialistCard(
+      BuildContext context, Map<String, dynamic> specialist) {
     final theme = Theme.of(context);
     final name = specialist['name'] as String? ?? 'Неизвестно';
     final city = specialist['city'] as String? ?? '';
@@ -227,13 +229,15 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                             width: 60,
                             height: 60,
                             color: theme.primaryColor.withValues(alpha: 0.1),
-                            child: Icon(Icons.person, size: 30, color: theme.primaryColor),
+                            child: Icon(Icons.person,
+                                size: 30, color: theme.primaryColor),
                           ),
                           errorWidget: (context, url, error) => Container(
                             width: 60,
                             height: 60,
                             color: theme.primaryColor.withValues(alpha: 0.1),
-                            child: Icon(Icons.person, size: 30, color: theme.primaryColor),
+                            child: Icon(Icons.person,
+                                size: 30, color: theme.primaryColor),
                           ),
                         ),
                       )
@@ -250,7 +254,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                     // Имя
                     Text(
                       name,
-                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
 
                     const SizedBox(height: 4),
@@ -260,7 +265,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                       Text(
                         city,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                          color: theme.textTheme.bodySmall?.color
+                              ?.withValues(alpha: 0.7),
                         ),
                       ),
 
@@ -275,9 +281,11 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                             .take(2)
                             .map(
                               (specialty) => Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: theme.primaryColor.withValues(alpha: 0.1),
+                                  color:
+                                      theme.primaryColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
@@ -302,13 +310,15 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
                         const SizedBox(width: 4),
                         Text(
                           rating.toStringAsFixed(1),
-                          style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+                          style: theme.textTheme.bodySmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           '($reviewsCount)',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                            color: theme.textTheme.bodySmall?.color
+                                ?.withValues(alpha: 0.7),
                           ),
                         ),
 
@@ -331,7 +341,8 @@ class _SpecialistsListWidgetState extends State<SpecialistsListWidget> {
               // Стрелка
               Icon(
                 Icons.chevron_right,
-                color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
+                color:
+                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.5),
               ),
             ],
           ),

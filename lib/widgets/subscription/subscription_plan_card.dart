@@ -23,7 +23,8 @@ class SubscriptionPlanCard extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            border: Border.all(color: _getBorderColor(), width: isSelected ? 2 : 1),
+            border:
+                Border.all(color: _getBorderColor(), width: isSelected ? 2 : 1),
             borderRadius: BorderRadius.circular(12),
             color: _getBackgroundColor(),
           ),
@@ -39,7 +40,8 @@ class SubscriptionPlanCard extends StatelessWidget {
                       color: _getIconColor().withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(_getPlanIcon(), color: _getIconColor(), size: 24),
+                    child:
+                        Icon(_getPlanIcon(), color: _getIconColor(), size: 24),
                   ),
                   const SizedBox(width: 16),
 
@@ -61,7 +63,8 @@ class SubscriptionPlanCard extends StatelessWidget {
                             if (isCurrentPlan) ...[
                               const SizedBox(width: 8),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: Colors.green,
                                   borderRadius: BorderRadius.circular(12),
@@ -81,7 +84,8 @@ class SubscriptionPlanCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           _getPlanDescription(),
-                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 14),
                         ),
                       ],
                     ),
@@ -102,7 +106,8 @@ class SubscriptionPlanCard extends StatelessWidget {
                       if (price > 0)
                         Text(
                           '${(price / 30).round()} ₽/день',
-                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 12),
                         ),
                     ],
                   ),
@@ -120,8 +125,9 @@ class SubscriptionPlanCard extends StatelessWidget {
                       Icon(Icons.check, color: _getIconColor(), size: 16),
                       const SizedBox(width: 8),
                       Expanded(
-                        child:
-                            Text(feature, style: TextStyle(color: Colors.grey[700], fontSize: 14)),
+                        child: Text(feature,
+                            style: TextStyle(
+                                color: Colors.grey[700], fontSize: 14)),
                       ),
                     ],
                   ),

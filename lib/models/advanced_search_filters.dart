@@ -34,55 +34,58 @@ class AdvancedSearchFilters {
   });
 
   /// Создать из JSON
-  factory AdvancedSearchFilters.fromJson(Map<String, dynamic> json) => AdvancedSearchFilters(
-    searchQuery: json['searchQuery'] as String? ?? '',
-    categories:
-        (json['categories'] as List<dynamic>?)
-            ?.map(
-              (e) => SpecialistCategory.values.firstWhere(
-                (cat) => cat.name == e,
-                orElse: () => SpecialistCategory.other,
-              ),
-            )
-            .toList() ??
-        [],
-    subcategories: (json['subcategories'] as List<dynamic>?)?.cast<String>() ?? [],
-    selectedCity: json['selectedCity'] != null
-        ? CityRegion.fromMap(json['selectedCity'] as Map<String, dynamic>)
-        : null,
-    selectedRegion: json['selectedRegion'] as String?,
-    radiusKm: (json['radiusKm'] as num?)?.toDouble() ?? 50.0,
-    minPrice: json['minPrice'] as int? ?? 0,
-    maxPrice: json['maxPrice'] as int? ?? 100000,
-    minRating: (json['minRating'] as num?)?.toDouble() ?? 0.0,
-    maxRating: (json['maxRating'] as num?)?.toDouble() ?? 5.0,
-    minExperience: json['minExperience'] as int? ?? 0,
-    maxExperience: json['maxExperience'] as int? ?? 50,
-    experienceLevel: json['experienceLevel'] != null
-        ? ExperienceLevel.values.firstWhere(
-            (e) => e.name == json['experienceLevel'],
-            orElse: () => ExperienceLevel.beginner,
-          )
-        : null,
-    isAvailableNow: json['isAvailableNow'] as bool? ?? false,
-    availableFrom: json['availableFrom'] != null
-        ? DateTime.parse(json['availableFrom'] as String)
-        : null,
-    availableTo: json['availableTo'] != null ? DateTime.parse(json['availableTo'] as String) : null,
-    hasPortfolio: json['hasPortfolio'] as bool? ?? false,
-    isVerified: json['isVerified'] as bool? ?? false,
-    hasReviews: json['hasReviews'] as bool? ?? false,
-    languages: (json['languages'] as List<dynamic>?)?.cast<String>() ?? [],
-    equipment: (json['equipment'] as List<dynamic>?)?.cast<String>() ?? [],
-    services: (json['services'] as List<dynamic>?)?.cast<String>() ?? [],
-    sortBy: AdvancedSearchSortBy.values.firstWhere(
-      (e) => e.name == json['sortBy'],
-      orElse: () => AdvancedSearchSortBy.relevance,
-    ),
-    sortAscending: json['sortAscending'] as bool? ?? false,
-    includeNearbyCities: json['includeNearbyCities'] as bool? ?? true,
-    maxDistance: (json['maxDistance'] as num?)?.toDouble() ?? 200.0,
-  );
+  factory AdvancedSearchFilters.fromJson(Map<String, dynamic> json) =>
+      AdvancedSearchFilters(
+        searchQuery: json['searchQuery'] as String? ?? '',
+        categories: (json['categories'] as List<dynamic>?)
+                ?.map(
+                  (e) => SpecialistCategory.values.firstWhere(
+                    (cat) => cat.name == e,
+                    orElse: () => SpecialistCategory.other,
+                  ),
+                )
+                .toList() ??
+            [],
+        subcategories:
+            (json['subcategories'] as List<dynamic>?)?.cast<String>() ?? [],
+        selectedCity: json['selectedCity'] != null
+            ? CityRegion.fromMap(json['selectedCity'] as Map<String, dynamic>)
+            : null,
+        selectedRegion: json['selectedRegion'] as String?,
+        radiusKm: (json['radiusKm'] as num?)?.toDouble() ?? 50.0,
+        minPrice: json['minPrice'] as int? ?? 0,
+        maxPrice: json['maxPrice'] as int? ?? 100000,
+        minRating: (json['minRating'] as num?)?.toDouble() ?? 0.0,
+        maxRating: (json['maxRating'] as num?)?.toDouble() ?? 5.0,
+        minExperience: json['minExperience'] as int? ?? 0,
+        maxExperience: json['maxExperience'] as int? ?? 50,
+        experienceLevel: json['experienceLevel'] != null
+            ? ExperienceLevel.values.firstWhere(
+                (e) => e.name == json['experienceLevel'],
+                orElse: () => ExperienceLevel.beginner,
+              )
+            : null,
+        isAvailableNow: json['isAvailableNow'] as bool? ?? false,
+        availableFrom: json['availableFrom'] != null
+            ? DateTime.parse(json['availableFrom'] as String)
+            : null,
+        availableTo: json['availableTo'] != null
+            ? DateTime.parse(json['availableTo'] as String)
+            : null,
+        hasPortfolio: json['hasPortfolio'] as bool? ?? false,
+        isVerified: json['isVerified'] as bool? ?? false,
+        hasReviews: json['hasReviews'] as bool? ?? false,
+        languages: (json['languages'] as List<dynamic>?)?.cast<String>() ?? [],
+        equipment: (json['equipment'] as List<dynamic>?)?.cast<String>() ?? [],
+        services: (json['services'] as List<dynamic>?)?.cast<String>() ?? [],
+        sortBy: AdvancedSearchSortBy.values.firstWhere(
+          (e) => e.name == json['sortBy'],
+          orElse: () => AdvancedSearchSortBy.relevance,
+        ),
+        sortAscending: json['sortAscending'] as bool? ?? false,
+        includeNearbyCities: json['includeNearbyCities'] as bool? ?? true,
+        maxDistance: (json['maxDistance'] as num?)?.toDouble() ?? 200.0,
+      );
 
   final String searchQuery;
   final List<SpecialistCategory> categories;
@@ -113,33 +116,33 @@ class AdvancedSearchFilters {
 
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {
-    'searchQuery': searchQuery,
-    'categories': categories.map((e) => e.name).toList(),
-    'subcategories': subcategories,
-    'selectedCity': selectedCity?.toMap(),
-    'selectedRegion': selectedRegion,
-    'radiusKm': radiusKm,
-    'minPrice': minPrice,
-    'maxPrice': maxPrice,
-    'minRating': minRating,
-    'maxRating': maxRating,
-    'minExperience': minExperience,
-    'maxExperience': maxExperience,
-    'experienceLevel': experienceLevel?.name,
-    'isAvailableNow': isAvailableNow,
-    'availableFrom': availableFrom?.toIso8601String(),
-    'availableTo': availableTo?.toIso8601String(),
-    'hasPortfolio': hasPortfolio,
-    'isVerified': isVerified,
-    'hasReviews': hasReviews,
-    'languages': languages,
-    'equipment': equipment,
-    'services': services,
-    'sortBy': sortBy.name,
-    'sortAscending': sortAscending,
-    'includeNearbyCities': includeNearbyCities,
-    'maxDistance': maxDistance,
-  };
+        'searchQuery': searchQuery,
+        'categories': categories.map((e) => e.name).toList(),
+        'subcategories': subcategories,
+        'selectedCity': selectedCity?.toMap(),
+        'selectedRegion': selectedRegion,
+        'radiusKm': radiusKm,
+        'minPrice': minPrice,
+        'maxPrice': maxPrice,
+        'minRating': minRating,
+        'maxRating': maxRating,
+        'minExperience': minExperience,
+        'maxExperience': maxExperience,
+        'experienceLevel': experienceLevel?.name,
+        'isAvailableNow': isAvailableNow,
+        'availableFrom': availableFrom?.toIso8601String(),
+        'availableTo': availableTo?.toIso8601String(),
+        'hasPortfolio': hasPortfolio,
+        'isVerified': isVerified,
+        'hasReviews': hasReviews,
+        'languages': languages,
+        'equipment': equipment,
+        'services': services,
+        'sortBy': sortBy.name,
+        'sortAscending': sortAscending,
+        'includeNearbyCities': includeNearbyCities,
+        'maxDistance': maxDistance,
+      };
 
   /// Копировать с изменениями
   AdvancedSearchFilters copyWith({
@@ -169,34 +172,35 @@ class AdvancedSearchFilters {
     bool? sortAscending,
     bool? includeNearbyCities,
     double? maxDistance,
-  }) => AdvancedSearchFilters(
-    searchQuery: searchQuery ?? this.searchQuery,
-    categories: categories ?? this.categories,
-    subcategories: subcategories ?? this.subcategories,
-    selectedCity: selectedCity ?? this.selectedCity,
-    selectedRegion: selectedRegion ?? this.selectedRegion,
-    radiusKm: radiusKm ?? this.radiusKm,
-    minPrice: minPrice ?? this.minPrice,
-    maxPrice: maxPrice ?? this.maxPrice,
-    minRating: minRating ?? this.minRating,
-    maxRating: maxRating ?? this.maxRating,
-    minExperience: minExperience ?? this.minExperience,
-    maxExperience: maxExperience ?? this.maxExperience,
-    experienceLevel: experienceLevel ?? this.experienceLevel,
-    isAvailableNow: isAvailableNow ?? this.isAvailableNow,
-    availableFrom: availableFrom ?? this.availableFrom,
-    availableTo: availableTo ?? this.availableTo,
-    hasPortfolio: hasPortfolio ?? this.hasPortfolio,
-    isVerified: isVerified ?? this.isVerified,
-    hasReviews: hasReviews ?? this.hasReviews,
-    languages: languages ?? this.languages,
-    equipment: equipment ?? this.equipment,
-    services: services ?? this.services,
-    sortBy: sortBy ?? this.sortBy,
-    sortAscending: sortAscending ?? this.sortAscending,
-    includeNearbyCities: includeNearbyCities ?? this.includeNearbyCities,
-    maxDistance: maxDistance ?? this.maxDistance,
-  );
+  }) =>
+      AdvancedSearchFilters(
+        searchQuery: searchQuery ?? this.searchQuery,
+        categories: categories ?? this.categories,
+        subcategories: subcategories ?? this.subcategories,
+        selectedCity: selectedCity ?? this.selectedCity,
+        selectedRegion: selectedRegion ?? this.selectedRegion,
+        radiusKm: radiusKm ?? this.radiusKm,
+        minPrice: minPrice ?? this.minPrice,
+        maxPrice: maxPrice ?? this.maxPrice,
+        minRating: minRating ?? this.minRating,
+        maxRating: maxRating ?? this.maxRating,
+        minExperience: minExperience ?? this.minExperience,
+        maxExperience: maxExperience ?? this.maxExperience,
+        experienceLevel: experienceLevel ?? this.experienceLevel,
+        isAvailableNow: isAvailableNow ?? this.isAvailableNow,
+        availableFrom: availableFrom ?? this.availableFrom,
+        availableTo: availableTo ?? this.availableTo,
+        hasPortfolio: hasPortfolio ?? this.hasPortfolio,
+        isVerified: isVerified ?? this.isVerified,
+        hasReviews: hasReviews ?? this.hasReviews,
+        languages: languages ?? this.languages,
+        equipment: equipment ?? this.equipment,
+        services: services ?? this.services,
+        sortBy: sortBy ?? this.sortBy,
+        sortAscending: sortAscending ?? this.sortAscending,
+        includeNearbyCities: includeNearbyCities ?? this.includeNearbyCities,
+        maxDistance: maxDistance ?? this.maxDistance,
+      );
 
   /// Проверить, применены ли фильтры
   bool get hasFilters =>
@@ -339,19 +343,25 @@ class AdvancedSearchResult {
   });
 
   /// Создать из JSON
-  factory AdvancedSearchResult.fromJson(Map<String, dynamic> json) => AdvancedSearchResult(
-    specialist: Specialist.fromMap(json['specialist'] as Map<String, dynamic>),
-    relevanceScore: (json['relevanceScore'] as num).toDouble(),
-    distance: (json['distance'] as num?)?.toDouble(),
-    city: json['city'] as String?,
-    region: json['region'] as String?,
-    matchingCategories: (json['matchingCategories'] as List<dynamic>?)?.cast<String>() ?? [],
-    matchingServices: (json['matchingServices'] as List<dynamic>?)?.cast<String>() ?? [],
-    availabilityScore: (json['availabilityScore'] as num?)?.toDouble() ?? 0.0,
-    priceScore: (json['priceScore'] as num?)?.toDouble() ?? 0.0,
-    ratingScore: (json['ratingScore'] as num?)?.toDouble() ?? 0.0,
-    experienceScore: (json['experienceScore'] as num?)?.toDouble() ?? 0.0,
-  );
+  factory AdvancedSearchResult.fromJson(Map<String, dynamic> json) =>
+      AdvancedSearchResult(
+        specialist:
+            Specialist.fromMap(json['specialist'] as Map<String, dynamic>),
+        relevanceScore: (json['relevanceScore'] as num).toDouble(),
+        distance: (json['distance'] as num?)?.toDouble(),
+        city: json['city'] as String?,
+        region: json['region'] as String?,
+        matchingCategories:
+            (json['matchingCategories'] as List<dynamic>?)?.cast<String>() ??
+                [],
+        matchingServices:
+            (json['matchingServices'] as List<dynamic>?)?.cast<String>() ?? [],
+        availabilityScore:
+            (json['availabilityScore'] as num?)?.toDouble() ?? 0.0,
+        priceScore: (json['priceScore'] as num?)?.toDouble() ?? 0.0,
+        ratingScore: (json['ratingScore'] as num?)?.toDouble() ?? 0.0,
+        experienceScore: (json['experienceScore'] as num?)?.toDouble() ?? 0.0,
+      );
 
   final Specialist specialist;
   final double relevanceScore;
@@ -367,18 +377,18 @@ class AdvancedSearchResult {
 
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {
-    'specialist': specialist.toMap(),
-    'relevanceScore': relevanceScore,
-    'distance': distance,
-    'city': city,
-    'region': region,
-    'matchingCategories': matchingCategories,
-    'matchingServices': matchingServices,
-    'availabilityScore': availabilityScore,
-    'priceScore': priceScore,
-    'ratingScore': ratingScore,
-    'experienceScore': experienceScore,
-  };
+        'specialist': specialist.toMap(),
+        'relevanceScore': relevanceScore,
+        'distance': distance,
+        'city': city,
+        'region': region,
+        'matchingCategories': matchingCategories,
+        'matchingServices': matchingServices,
+        'availabilityScore': availabilityScore,
+        'priceScore': priceScore,
+        'ratingScore': ratingScore,
+        'experienceScore': experienceScore,
+      };
 
   /// Получить общий балл релевантности
   double get totalScore =>
@@ -429,36 +439,36 @@ class AdvancedSearchState {
   });
 
   /// Создать из JSON
-  factory AdvancedSearchState.fromJson(Map<String, dynamic> json) => AdvancedSearchState(
-    results:
-        (json['results'] as List<dynamic>?)
-            ?.map((e) => AdvancedSearchResult.fromJson(e as Map<String, dynamic>))
-            .toList() ??
-        [],
-    isLoading: json['isLoading'] as bool? ?? false,
-    hasMore: json['hasMore'] as bool? ?? false,
-    error: json['error'] as String? ?? '',
-    filters: json['filters'] != null
-        ? AdvancedSearchFilters.fromJson(json['filters'] as Map<String, dynamic>)
-        : const AdvancedSearchFilters(),
-    totalCount: json['totalCount'] as int? ?? 0,
-    searchTime: json['searchTime'] as int? ?? 0,
-    suggestedCities:
-        (json['suggestedCities'] as List<dynamic>?)
-            ?.map((e) => CityRegion.fromMap(e as Map<String, dynamic>))
-            .toList() ??
-        [],
-    popularCategories:
-        (json['popularCategories'] as List<dynamic>?)
-            ?.map(
-              (e) => SpecialistCategory.values.firstWhere(
-                (cat) => cat.name == e,
-                orElse: () => SpecialistCategory.other,
-              ),
-            )
-            .toList() ??
-        [],
-  );
+  factory AdvancedSearchState.fromJson(Map<String, dynamic> json) =>
+      AdvancedSearchState(
+        results: (json['results'] as List<dynamic>?)
+                ?.map((e) =>
+                    AdvancedSearchResult.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        isLoading: json['isLoading'] as bool? ?? false,
+        hasMore: json['hasMore'] as bool? ?? false,
+        error: json['error'] as String? ?? '',
+        filters: json['filters'] != null
+            ? AdvancedSearchFilters.fromJson(
+                json['filters'] as Map<String, dynamic>)
+            : const AdvancedSearchFilters(),
+        totalCount: json['totalCount'] as int? ?? 0,
+        searchTime: json['searchTime'] as int? ?? 0,
+        suggestedCities: (json['suggestedCities'] as List<dynamic>?)
+                ?.map((e) => CityRegion.fromMap(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        popularCategories: (json['popularCategories'] as List<dynamic>?)
+                ?.map(
+                  (e) => SpecialistCategory.values.firstWhere(
+                    (cat) => cat.name == e,
+                    orElse: () => SpecialistCategory.other,
+                  ),
+                )
+                .toList() ??
+            [],
+      );
 
   final List<AdvancedSearchResult> results;
   final bool isLoading;
@@ -472,16 +482,16 @@ class AdvancedSearchState {
 
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {
-    'results': results.map((e) => e.toJson()).toList(),
-    'isLoading': isLoading,
-    'hasMore': hasMore,
-    'error': error,
-    'filters': filters.toJson(),
-    'totalCount': totalCount,
-    'searchTime': searchTime,
-    'suggestedCities': suggestedCities.map((e) => e.toMap()).toList(),
-    'popularCategories': popularCategories.map((e) => e.name).toList(),
-  };
+        'results': results.map((e) => e.toJson()).toList(),
+        'isLoading': isLoading,
+        'hasMore': hasMore,
+        'error': error,
+        'filters': filters.toJson(),
+        'totalCount': totalCount,
+        'searchTime': searchTime,
+        'suggestedCities': suggestedCities.map((e) => e.toMap()).toList(),
+        'popularCategories': popularCategories.map((e) => e.name).toList(),
+      };
 
   /// Копировать с изменениями
   AdvancedSearchState copyWith({
@@ -494,15 +504,16 @@ class AdvancedSearchState {
     int? searchTime,
     List<CityRegion>? suggestedCities,
     List<SpecialistCategory>? popularCategories,
-  }) => AdvancedSearchState(
-    results: results ?? this.results,
-    isLoading: isLoading ?? this.isLoading,
-    hasMore: hasMore ?? this.hasMore,
-    error: error ?? this.error,
-    filters: filters ?? this.filters,
-    totalCount: totalCount ?? this.totalCount,
-    searchTime: searchTime ?? this.searchTime,
-    suggestedCities: suggestedCities ?? this.suggestedCities,
-    popularCategories: popularCategories ?? this.popularCategories,
-  );
+  }) =>
+      AdvancedSearchState(
+        results: results ?? this.results,
+        isLoading: isLoading ?? this.isLoading,
+        hasMore: hasMore ?? this.hasMore,
+        error: error ?? this.error,
+        filters: filters ?? this.filters,
+        totalCount: totalCount ?? this.totalCount,
+        searchTime: searchTime ?? this.searchTime,
+        suggestedCities: suggestedCities ?? this.suggestedCities,
+        popularCategories: popularCategories ?? this.popularCategories,
+      );
 }

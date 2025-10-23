@@ -19,10 +19,12 @@ class MessageReactionsWidget extends ConsumerStatefulWidget {
   final bool isOwnMessage;
 
   @override
-  ConsumerState<MessageReactionsWidget> createState() => _MessageReactionsWidgetState();
+  ConsumerState<MessageReactionsWidget> createState() =>
+      _MessageReactionsWidgetState();
 }
 
-class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget> {
+class _MessageReactionsWidgetState
+    extends ConsumerState<MessageReactionsWidget> {
   final MessageReactionService _reactionService = MessageReactionService();
   bool _showEmojiPicker = false;
 
@@ -40,7 +42,10 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
           _buildAddReactionButton(),
 
           // Эмодзи пикер
-          if (_showEmojiPicker) ...[const SizedBox(height: 8), _buildEmojiPicker()],
+          if (_showEmojiPicker) ...[
+            const SizedBox(height: 8),
+            _buildEmojiPicker()
+          ],
         ],
       );
 
@@ -58,7 +63,8 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
         final emoji = entry.key;
         final reactions = entry.value;
         final count = reactions.length;
-        final hasCurrentUserReaction = reactions.any((r) => r.userId == widget.currentUserId);
+        final hasCurrentUserReaction =
+            reactions.any((r) => r.userId == widget.currentUserId);
 
         return GestureDetector(
           onTap: () => _toggleReaction(emoji),
@@ -152,7 +158,8 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Популярные эмодзи
-          _buildEmojiCategory('Популярные', _reactionService.getPopularEmojis().take(12).toList()),
+          _buildEmojiCategory('Популярные',
+              _reactionService.getPopularEmojis().take(12).toList()),
 
           const SizedBox(height: 12),
 
@@ -160,7 +167,10 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
           ...emojisByCategory.entries.map(
             (entry) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [_buildEmojiCategory(entry.key, entry.value), const SizedBox(height: 8)],
+              children: [
+                _buildEmojiCategory(entry.key, entry.value),
+                const SizedBox(height: 8)
+              ],
             ),
           ),
         ],
@@ -173,7 +183,10 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey[600]),
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[600]),
           ),
           const SizedBox(height: 4),
           Wrap(
@@ -231,13 +244,15 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 }
 
 /// Виджет для отображения детальной информации о реакциях
 class ReactionDetailsWidget extends StatelessWidget {
-  const ReactionDetailsWidget({super.key, required this.reactions, required this.emoji});
+  const ReactionDetailsWidget(
+      {super.key, required this.reactions, required this.emoji});
   final List<MessageReaction> reactions;
   final String emoji;
 
@@ -261,7 +276,9 @@ class ReactionDetailsWidget extends StatelessWidget {
               ),
               automaticallyImplyLeading: false,
               actions: [
-                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context)),
               ],
             ),
             Expanded(
@@ -274,8 +291,11 @@ class ReactionDetailsWidget extends StatelessWidget {
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey[300],
                       child: Text(
-                        reaction.userName.isNotEmpty ? reaction.userName[0].toUpperCase() : '?',
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                        reaction.userName.isNotEmpty
+                            ? reaction.userName[0].toUpperCase()
+                            : '?',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                     title: Text(reaction.userName),

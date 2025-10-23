@@ -11,7 +11,8 @@ class IdeaService {
   static const String _collection = 'ideas';
 
   /// Get all ideas with pagination
-  Future<List<Idea>> getIdeas({int limit = 20, DocumentSnapshot? lastDocument}) async {
+  Future<List<Idea>> getIdeas(
+      {int limit = 20, DocumentSnapshot? lastDocument}) async {
     try {
       Query query = _firestore
           .collection(_collection)
@@ -31,7 +32,8 @@ class IdeaService {
   }
 
   /// Get ideas by category
-  Future<List<Idea>> getIdeasByCategory(String category, {int limit = 20}) async {
+  Future<List<Idea>> getIdeasByCategory(String category,
+      {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -65,7 +67,8 @@ class IdeaService {
   }
 
   /// Get ideas by difficulty
-  Future<List<Idea>> getIdeasByDifficulty(String difficulty, {int limit = 20}) async {
+  Future<List<Idea>> getIdeasByDifficulty(String difficulty,
+      {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -147,7 +150,8 @@ class IdeaService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef = await _firestore.collection(_collection).add(idea.toFirestore());
+      final docRef =
+          await _firestore.collection(_collection).add(idea.toFirestore());
       return docRef.id;
     } catch (e) {
       debugPrint('Error creating idea: $e');
@@ -213,7 +217,10 @@ class IdeaService {
   /// Save idea to user's favorites
   Future<bool> saveIdea(String ideaId, String userId) async {
     try {
-      await _firestore.collection('user_favorites').doc('${userId}_$ideaId').set({
+      await _firestore
+          .collection('user_favorites')
+          .doc('${userId}_$ideaId')
+          .set({
         'userId': userId,
         'ideaId': ideaId,
         'savedAt': DateTime.now(),
@@ -228,7 +235,10 @@ class IdeaService {
   /// Remove idea from user's favorites
   Future<bool> unsaveIdea(String ideaId, String userId) async {
     try {
-      await _firestore.collection('user_favorites').doc('${userId}_$ideaId').delete();
+      await _firestore
+          .collection('user_favorites')
+          .doc('${userId}_$ideaId')
+          .delete();
       return true;
     } catch (e) {
       debugPrint('Error unsaving idea: $e');
@@ -273,7 +283,8 @@ class IdeaService {
           .limit(limit)
           .get();
 
-      final ideas = snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
+      final ideas =
+          snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList();
 
       // Filter ideas that contain the query in title, description, or tags
       return ideas.where((idea) {
@@ -343,7 +354,8 @@ class IdeaService {
     }
     try {
       final ref = _storage.ref().child('ideas/$fileName');
-      final uploadTask = await ref.putFile(filePath as dynamic); // In real app, use File
+      final uploadTask =
+          await ref.putFile(filePath as dynamic); // In real app, use File
       final downloadUrl = await uploadTask.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
@@ -359,18 +371,21 @@ class IdeaService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList());
   }
 
   /// Stream of ideas by category
-  Stream<List<Idea>> getIdeasByCategoryStream(String category, {int limit = 20}) {
+  Stream<List<Idea>> getIdeasByCategoryStream(String category,
+      {int limit = 20}) {
     return _firestore
         .collection(_collection)
         .where('category', isEqualTo: category)
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Idea.fromFirestore(doc)).toList());
   }
 
   /// Get idea statistics
@@ -379,7 +394,10 @@ class IdeaService {
       final doc = await _firestore.collection(_collection).doc(ideaId).get();
       if (doc.exists) {
         final data = doc.data()!;
-        return {'likes': data['likesCount'] ?? 0, 'views': data['viewsCount'] ?? 0};
+        return {
+          'likes': data['likesCount'] ?? 0,
+          'views': data['viewsCount'] ?? 0
+        };
       }
       return {'likes': 0, 'views': 0};
     } catch (e) {

@@ -50,7 +50,8 @@ class HomeScreen extends ConsumerWidget {
                 const SizedBox(height: 24),
 
                 // Top specialists section
-                _buildTopSpecialistsSection(context, ref, 'Топ-10 недели по России', true),
+                _buildTopSpecialistsSection(
+                    context, ref, 'Топ-10 недели по России', true),
                 const SizedBox(height: 24),
                 _buildTopSpecialistsSection(
                   context,
@@ -80,8 +81,11 @@ class HomeScreen extends ConsumerWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
-              child: user.avatarUrl == null ? const Icon(Icons.person, size: 30) : null,
+              backgroundImage:
+                  user.avatarUrl != null ? NetworkImage(user.avatarUrl!) : null,
+              child: user.avatarUrl == null
+                  ? const Icon(Icons.person, size: 30)
+                  : null,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -90,15 +94,20 @@ class HomeScreen extends ConsumerWidget {
                 children: [
                   Text(
                     user.name,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   if (user.city != null) ...[
                     const SizedBox(height: 4),
-                    Text(user.city!, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                    Text(user.city!,
+                        style:
+                            TextStyle(color: Colors.grey[600], fontSize: 14)),
                   ],
                   if (user.status != null) ...[
                     const SizedBox(height: 4),
-                    Text(user.status!, style: TextStyle(color: Colors.blue[600], fontSize: 14)),
+                    Text(user.status!,
+                        style:
+                            TextStyle(color: Colors.blue[600], fontSize: 14)),
                   ],
                 ],
               ),
@@ -186,7 +195,8 @@ class HomeScreen extends ConsumerWidget {
 
                 return GestureDetector(
                   onTap: () {
-                    context.push('/search?specialization=${Uri.encodeComponent(specialization)}');
+                    context.push(
+                        '/search?specialization=${Uri.encodeComponent(specialization)}');
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -201,7 +211,8 @@ class HomeScreen extends ConsumerWidget {
                         const SizedBox(height: 8),
                         Text(
                           specialization,
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500),
                           textAlign: TextAlign.center,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -300,7 +311,9 @@ class HomeScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(title,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -348,7 +361,8 @@ class HomeScreen extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Быстрые действия', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const Text('Быстрые действия',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         Row(
           children: [

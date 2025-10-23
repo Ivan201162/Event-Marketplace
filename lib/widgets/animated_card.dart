@@ -23,7 +23,8 @@ class AnimatedCard extends StatefulWidget {
   State<AnimatedCard> createState() => _AnimatedCardState();
 }
 
-class _AnimatedCardState extends State<AnimatedCard> with SingleTickerProviderStateMixin {
+class _AnimatedCardState extends State<AnimatedCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -56,8 +57,9 @@ class _AnimatedCardState extends State<AnimatedCard> with SingleTickerProviderSt
             child: Card(
               elevation: widget.elevation,
               margin: widget.margin,
-              child:
-                  Padding(padding: widget.padding ?? const EdgeInsets.all(16), child: widget.child),
+              child: Padding(
+                  padding: widget.padding ?? const EdgeInsets.all(16),
+                  child: widget.child),
             ),
           ),
         ),

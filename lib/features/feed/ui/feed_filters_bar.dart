@@ -40,7 +40,8 @@ class FeedFiltersBar extends ConsumerWidget {
 
                           // Сбрасываем категорию при смене фильтра
                           if (filter != FeedFilter.categories) {
-                            ref.read(selectedCategoryProvider.notifier).state = null;
+                            ref.read(selectedCategoryProvider.notifier).state =
+                                null;
                           }
                         }
                       },
@@ -49,7 +50,8 @@ class FeedFiltersBar extends ConsumerWidget {
                       checkmarkColor: Colors.blue,
                       labelStyle: TextStyle(
                         color: isSelected ? Colors.blue : Colors.grey[700],
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.w600 : FontWeight.normal,
                       ),
                     ),
                   );
@@ -119,7 +121,9 @@ class FeedFiltersBar extends ConsumerWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
         ],
       ),
     );

@@ -85,9 +85,8 @@ class Chat extends Equatable {
       'lastMessageId': lastMessageId,
       'lastMessageContent': lastMessageContent,
       'lastMessageSenderId': lastMessageSenderId,
-      'lastMessageAt': lastMessageAt != null
-          ? Timestamp.fromDate(lastMessageAt!)
-          : null,
+      'lastMessageAt':
+          lastMessageAt != null ? Timestamp.fromDate(lastMessageAt!) : null,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'metadata': metadata,
@@ -155,7 +154,7 @@ class Chat extends Equatable {
   /// Получить отформатированное время последнего сообщения
   String get formattedLastMessageTime {
     if (lastMessageAt == null) return '';
-    
+
     final now = DateTime.now();
     final difference = now.difference(lastMessageAt!);
 

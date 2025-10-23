@@ -85,7 +85,8 @@ void main() {
         city: 'Москва',
       );
 
-      final updatedUser = user.copyWith(city: 'Санкт-Петербург', region: 'Ленинградская область');
+      final updatedUser = user.copyWith(
+          city: 'Санкт-Петербург', region: 'Ленинградская область');
 
       expect(updatedUser.city, 'Санкт-Петербург');
       expect(updatedUser.region, 'Ленинградская область');

@@ -36,7 +36,8 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
           _showProfileCard = false;
         });
       }
-    } else if (currentOffset < _lastScrollOffset || currentOffset <= threshold) {
+    } else if (currentOffset < _lastScrollOffset ||
+        currentOffset <= threshold) {
       // Скролл вверх - показываем плашку профиля
       if (!_showProfileCard) {
         setState(() {
@@ -63,7 +64,9 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
                 height: _showProfileCard ? null : 0,
-                child: _showProfileCard ? _buildProfileCard(theme) : const SizedBox.shrink(),
+                child: _showProfileCard
+                    ? _buildProfileCard(theme)
+                    : const SizedBox.shrink(),
               ),
             ),
 
@@ -72,12 +75,14 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
 
             // Лучшие специалисты недели
             SliverToBoxAdapter(
-              child: _buildTopSpecialistsSection(theme, 'Лучшие специалисты недели по России'),
+              child: _buildTopSpecialistsSection(
+                  theme, 'Лучшие специалисты недели по России'),
             ),
 
             // Лучшие специалисты по городу
             SliverToBoxAdapter(
-              child: _buildTopSpecialistsSection(theme, 'Лучшие специалисты по вашему городу'),
+              child: _buildTopSpecialistsSection(
+                  theme, 'Лучшие специалисты по вашему городу'),
             ),
 
             // Дополнительный контент
@@ -124,19 +129,22 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
               children: [
                 Text(
                   'Александр Иванов',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.location_on, size: 16, color: theme.textTheme.bodySmall?.color),
+                    Icon(Icons.location_on,
+                        size: 16, color: theme.textTheme.bodySmall?.color),
                     const SizedBox(width: 4),
                     Text('Москва', style: theme.textTheme.bodySmall),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -185,7 +193,8 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
         children: [
           Text(
             'Найти специалиста',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 12),
 
@@ -194,7 +203,8 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
             decoration: InputDecoration(
               hintText: 'Поиск по имени, специализации...',
               prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
               fillColor: theme.scaffoldBackgroundColor,
             ),
@@ -243,7 +253,8 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
             children: [
               Text(
                 title,
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               TextButton(
                 onPressed: () {
@@ -273,11 +284,36 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
 
   Widget _buildSpecialistCard(ThemeData theme, int index) {
     final specialists = [
-      {'name': 'Анна Петрова', 'specialty': 'Фотограф', 'rating': 4.9, 'price': '5000₽'},
-      {'name': 'Михаил Сидоров', 'specialty': 'Видеограф', 'rating': 4.8, 'price': '8000₽'},
-      {'name': 'Елена Козлова', 'specialty': 'Организатор', 'rating': 4.9, 'price': '12000₽'},
-      {'name': 'Дмитрий Волков', 'specialty': 'Диджей', 'rating': 4.7, 'price': '15000₽'},
-      {'name': 'Ольга Морозова', 'specialty': 'Декоратор', 'rating': 4.8, 'price': '6000₽'},
+      {
+        'name': 'Анна Петрова',
+        'specialty': 'Фотограф',
+        'rating': 4.9,
+        'price': '5000₽'
+      },
+      {
+        'name': 'Михаил Сидоров',
+        'specialty': 'Видеограф',
+        'rating': 4.8,
+        'price': '8000₽'
+      },
+      {
+        'name': 'Елена Козлова',
+        'specialty': 'Организатор',
+        'rating': 4.9,
+        'price': '12000₽'
+      },
+      {
+        'name': 'Дмитрий Волков',
+        'specialty': 'Диджей',
+        'rating': 4.7,
+        'price': '15000₽'
+      },
+      {
+        'name': 'Ольга Морозова',
+        'specialty': 'Декоратор',
+        'rating': 4.8,
+        'price': '6000₽'
+      },
     ];
 
     final specialist = specialists[index];
@@ -303,7 +339,8 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                 topRight: Radius.circular(12),
               ),
             ),
-            child: Center(child: Icon(Icons.person, size: 40, color: theme.primaryColor)),
+            child: Center(
+                child: Icon(Icons.person, size: 40, color: theme.primaryColor)),
           ),
 
           // Информация о специалисте
@@ -314,7 +351,8 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
               children: [
                 Text(
                   specialist['name'] as String,
-                  style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -332,7 +370,8 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
                     const SizedBox(width: 2),
                     Text(
                       specialist['rating'] as String,
-                      style: theme.textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -356,13 +395,15 @@ class _SocialHomeScreenState extends ConsumerState<SocialHomeScreen> {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: theme.cardColor, borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+          color: theme.cardColor, borderRadius: BorderRadius.circular(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Популярные категории',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           GridView.count(

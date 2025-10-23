@@ -10,8 +10,10 @@ import '../services/chat_file_service.dart';
 
 /// Виджет для прикрепления файлов в чате
 class ChatFileAttachment extends ConsumerStatefulWidget {
-  const ChatFileAttachment({super.key, required this.onFileSelected, this.onCancel});
-  final Function(String fileUrl, String fileName, int fileSize, String fileType) onFileSelected;
+  const ChatFileAttachment(
+      {super.key, required this.onFileSelected, this.onCancel});
+  final Function(String fileUrl, String fileName, int fileSize, String fileType)
+      onFileSelected;
   final Function()? onCancel;
 
   @override
@@ -39,7 +41,8 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
                   'Прикрепить файл',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                IconButton(icon: const Icon(Icons.close), onPressed: widget.onCancel),
+                IconButton(
+                    icon: const Icon(Icons.close), onPressed: widget.onCancel),
               ],
             ),
             const SizedBox(height: 16),
@@ -176,8 +179,12 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
-                    Text(description, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                    Text(label,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 16)),
+                    Text(description,
+                        style:
+                            TextStyle(color: Colors.grey[600], fontSize: 12)),
                   ],
                 ),
               ),
@@ -187,7 +194,8 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
         ),
       );
 
-  Future<void> _pickFiles(FileType fileType, {List<String>? allowedExtensions}) async {
+  Future<void> _pickFiles(FileType fileType,
+      {List<String>? allowedExtensions}) async {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: fileType,
@@ -293,7 +301,8 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
   void _showError(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 }
 
@@ -338,7 +347,8 @@ class ChatFileMessage extends StatelessWidget {
                     children: [
                       Text(
                         fileName,
-                        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 14),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

@@ -53,7 +53,9 @@ class OfflineService {
   static Future<DateTime?> getLastSyncTime() async {
     final prefs = await SharedPreferences.getInstance();
     final timestamp = prefs.getInt(_lastSyncKey);
-    return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
+    return timestamp != null
+        ? DateTime.fromMillisecondsSinceEpoch(timestamp)
+        : null;
   }
 
   /// Обновить время последней синхронизации
@@ -181,7 +183,8 @@ class OfflineService {
       await for (final entity in cacheDir.list()) {
         if (entity is File && entity.path.endsWith('.json')) {
           final fileName = path.basename(entity.path);
-          final key = fileName.substring(0, fileName.length - 5); // Убираем .json
+          final key =
+              fileName.substring(0, fileName.length - 5); // Убираем .json
           keys.add(key);
         }
       }
@@ -303,7 +306,8 @@ class OfflineUtils {
       isOnline ? 'Подключено к интернету' : 'Работа в офлайн-режиме';
 
   /// Получить иконку статуса подключения
-  static String getConnectionStatusIcon(bool isOnline) => isOnline ? '🌐' : '📱';
+  static String getConnectionStatusIcon(bool isOnline) =>
+      isOnline ? '🌐' : '📱';
 
   /// Получить цвет статуса подключения
   static int getConnectionStatusColor(bool isOnline) {
@@ -347,9 +351,9 @@ class OfflineUtils {
 
   /// Получить рекомендации для офлайн-режима
   static List<String> getOfflineRecommendations() => [
-    'Проверьте подключение к интернету',
-    'Некоторые функции могут быть ограничены',
-    'Данные будут синхронизированы при восстановлении связи',
-    'Используйте кэшированные данные для просмотра',
-  ];
+        'Проверьте подключение к интернету',
+        'Некоторые функции могут быть ограничены',
+        'Данные будут синхронизированы при восстановлении связи',
+        'Используйте кэшированные данные для просмотра',
+      ];
 }

@@ -4,16 +4,19 @@ import '../models/event_archive.dart';
 import '../services/archive_service.dart';
 
 /// Провайдер сервиса архивов
-final archiveServiceProvider = Provider<ArchiveService>((ref) => ArchiveService());
+final archiveServiceProvider =
+    Provider<ArchiveService>((ref) => ArchiveService());
 
 /// Провайдер архивов бронирования
-final bookingArchivesProvider = StreamProvider.family<List<EventArchive>, String>((ref, bookingId) {
+final bookingArchivesProvider =
+    StreamProvider.family<List<EventArchive>, String>((ref, bookingId) {
   final archiveService = ref.read(archiveServiceProvider);
   return archiveService.getArchivesByBookingStream(bookingId);
 });
 
 /// Провайдер статистики архивов
-final archiveStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, bookingId) {
+final archiveStatsProvider =
+    FutureProvider.family<Map<String, int>, String>((ref, bookingId) {
   final archiveService = ref.read(archiveServiceProvider);
   return archiveService.getArchiveStats(bookingId);
 });
@@ -37,16 +40,18 @@ class ArchiveUploadState {
     String? error,
     double? progress,
     EventArchive? uploadedArchive,
-  }) => ArchiveUploadState(
-    isUploading: isUploading ?? this.isUploading,
-    error: error,
-    progress: progress,
-    uploadedArchive: uploadedArchive ?? this.uploadedArchive,
-  );
+  }) =>
+      ArchiveUploadState(
+        isUploading: isUploading ?? this.isUploading,
+        error: error,
+        progress: progress,
+        uploadedArchive: uploadedArchive ?? this.uploadedArchive,
+      );
 }
 
 /// Провайдер состояния загрузки архива (мигрирован с StateNotifierProvider)
-final archiveUploadStateProvider = NotifierProvider<ArchiveUploadNotifier, ArchiveUploadState>(
+final archiveUploadStateProvider =
+    NotifierProvider<ArchiveUploadNotifier, ArchiveUploadState>(
   () => ArchiveUploadNotifier(),
 );
 
@@ -121,7 +126,8 @@ class ArchiveUploadNotifier extends Notifier<ArchiveUploadState> {
   }
 
   /// Обновить описание архива
-  Future<void> updateArchiveDescription(String archiveId, String description) async {
+  Future<void> updateArchiveDescription(
+      String archiveId, String description) async {
     state = state.copyWith(isUploading: true);
     try {
       await _archiveService.updateArchiveDescription(archiveId, description);

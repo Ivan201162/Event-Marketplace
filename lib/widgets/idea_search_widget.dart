@@ -99,7 +99,8 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
     });
 
     try {
-      final results = await _ideaService.getAllIdeas(category: category, limit: 50);
+      final results =
+          await _ideaService.getAllIdeas(category: category, limit: 50);
 
       setState(() {
         _searchResults = results;
@@ -239,7 +240,10 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
                     'Популярные теги',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
@@ -323,12 +327,18 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
             const SizedBox(height: 16),
             Text(
               'Поиск идей мероприятий',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Введите ключевые слова или выберите категорию',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -341,15 +351,20 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
           children: [
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Ошибка поиска', style: Theme.of(context).textTheme.titleLarge),
+            Text('Ошибка поиска',
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
               _error!,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _performSearch, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _performSearch, child: const Text('Повторить')),
           ],
         ),
       );
@@ -362,12 +377,18 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
             const SizedBox(height: 16),
             Text(
               'Ничего не найдено',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Попробуйте изменить поисковый запрос или выбрать другую категорию',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -418,13 +439,15 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
               Text(idea.description),
               const SizedBox(height: 16),
               if (idea.tags.isNotEmpty) ...[
-                const Text('Теги:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Теги:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 Wrap(
                   children: idea.tags
                       .map(
-                        (tag) =>
-                            Chip(label: Text('#$tag'), labelStyle: const TextStyle(fontSize: 12)),
+                        (tag) => Chip(
+                            label: Text('#$tag'),
+                            labelStyle: const TextStyle(fontSize: 12)),
                       )
                       .toList(),
                 ),
@@ -433,7 +456,9 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -446,7 +471,8 @@ class _IdeaSearchWidgetState extends ConsumerState<IdeaSearchWidget> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 

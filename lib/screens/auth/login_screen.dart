@@ -110,7 +110,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       String errorMessage = 'Ошибка входа через Google';
 
       if (e.code == 'account-exists-with-different-credential') {
-        errorMessage = 'Аккаунт с таким email уже существует с другим способом входа';
+        errorMessage =
+            'Аккаунт с таким email уже существует с другим способом входа';
       } else if (e.code == 'invalid-credential') {
         errorMessage = 'Неверные учетные данные Google';
       } else if (e.code == 'operation-not-allowed') {
@@ -130,7 +131,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       String errorMessage = 'Ошибка входа через Google';
 
       if (e.toString().contains('ApiException: 10')) {
-        errorMessage = 'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
+        errorMessage =
+            'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
       } else {
         errorMessage = 'Ошибка входа через Google: ${e.toString()}';
       }
@@ -147,7 +149,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   String _getErrorMessage(String errorCode) {
@@ -241,9 +244,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 children: [
                                   Expanded(
                                     child: ElevatedButton(
-                                      onPressed: () => setState(() => _isSignUp = false),
+                                      onPressed: () =>
+                                          setState(() => _isSignUp = false),
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: _isSignUp ? Colors.grey[200] : Colors.blue,
+                                        backgroundColor: _isSignUp
+                                            ? Colors.grey[200]
+                                            : Colors.blue,
                                         foregroundColor: _isSignUp
                                             ? Colors.grey[600]
                                             : Colors.white,
@@ -254,9 +260,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   const SizedBox(width: 12),
                                   Expanded(
                                     child: ElevatedButton(
-                                      onPressed: () => setState(() => _isSignUp = true),
+                                      onPressed: () =>
+                                          setState(() => _isSignUp = true),
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: _isSignUp ? Colors.blue : Colors.grey[200],
+                                        backgroundColor: _isSignUp
+                                            ? Colors.blue
+                                            : Colors.grey[200],
                                         foregroundColor: _isSignUp
                                             ? Colors.white
                                             : Colors.grey[600],
@@ -312,15 +321,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 child: ElevatedButton(
                                   onPressed: _isLoading
                                       ? null
-                                      : (_isSignUp ? _signUpWithEmail : _signInWithEmail),
+                                      : (_isSignUp
+                                          ? _signUpWithEmail
+                                          : _signInWithEmail),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
                                   ),
                                   child: _isLoading
-                                      ? const CircularProgressIndicator(color: Colors.white)
-                                      : Text(_isSignUp ? 'Зарегистрироваться' : 'Войти'),
+                                      ? const CircularProgressIndicator(
+                                          color: Colors.white)
+                                      : Text(_isSignUp
+                                          ? 'Зарегистрироваться'
+                                          : 'Войти'),
                                 ),
                               ),
 
@@ -331,7 +346,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 children: [
                                   Expanded(child: Divider()),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 16),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
                                     child: Text('или'),
                                   ),
                                   Expanded(child: Divider()),
@@ -344,7 +360,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               SizedBox(
                                 width: double.infinity,
                                 child: OutlinedButton.icon(
-                                  onPressed: _isLoading ? null : _signInWithPhone,
+                                  onPressed:
+                                      _isLoading ? null : _signInWithPhone,
                                   icon: const Icon(Icons.phone),
                                   label: const Text('Войти по телефону'),
                                 ),
@@ -356,7 +373,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               SizedBox(
                                 width: double.infinity,
                                 child: OutlinedButton.icon(
-                                  onPressed: _isLoading ? null : _signInWithGoogle,
+                                  onPressed:
+                                      _isLoading ? null : _signInWithGoogle,
                                   icon: const Icon(Icons.account_circle),
                                   label: const Text('Войти через Google'),
                                 ),

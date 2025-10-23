@@ -7,7 +7,8 @@ import 'responsive_layout.dart';
 
 /// Виджет для отображения кросс-селл предложения
 class CrossSellSuggestionWidget extends ConsumerWidget {
-  const CrossSellSuggestionWidget({super.key, required this.suggestion, this.onSuggestionChanged});
+  const CrossSellSuggestionWidget(
+      {super.key, required this.suggestion, this.onSuggestionChanged});
   final CrossSellSuggestion suggestion;
   final VoidCallback? onSuggestionChanged;
 
@@ -19,9 +20,12 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
             // Заголовок с статусом
             Row(
               children: [
-                Icon(_getSuggestionIcon(), color: suggestion.status.color, size: 24),
+                Icon(_getSuggestionIcon(),
+                    color: suggestion.status.color, size: 24),
                 const SizedBox(width: 8),
-                Expanded(child: ResponsiveText('Рекомендуем дополнить заказ', isTitle: true)),
+                Expanded(
+                    child: ResponsiveText('Рекомендуем дополнить заказ',
+                        isTitle: true)),
                 _buildStatusChip(),
               ],
             ),
@@ -45,8 +49,9 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                       ResponsiveText('Дополнительных услуг:', isSubtitle: true),
                       ResponsiveText(
                         '${suggestion.itemCount}',
-                        style:
-                            TextStyle(color: suggestion.status.color, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: suggestion.status.color,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -57,8 +62,9 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                       ResponsiveText('Общая стоимость:', isSubtitle: true),
                       ResponsiveText(
                         '${suggestion.totalCost.toStringAsFixed(0)} ₽',
-                        style:
-                            TextStyle(color: suggestion.status.color, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: suggestion.status.color,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -80,7 +86,9 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                   children: [
                     const Icon(Icons.message, color: Colors.blue, size: 20),
                     const SizedBox(width: 8),
-                    Expanded(child: ResponsiveText(suggestion.message!, isSubtitle: true)),
+                    Expanded(
+                        child: ResponsiveText(suggestion.message!,
+                            isSubtitle: true)),
                   ],
                 ),
               ),
@@ -116,7 +124,8 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                       onPressed: () => _rejectSuggestion(context, ref),
                       icon: const Icon(Icons.close),
                       label: const Text('Отклонить'),
-                      style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                      style:
+                          OutlinedButton.styleFrom(foregroundColor: Colors.red),
                     ),
                   ),
                 ],
@@ -129,7 +138,8 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
               children: [
                 const Icon(Icons.access_time, size: 16, color: Colors.grey),
                 const SizedBox(width: 4),
-                ResponsiveText('Создано: ${_formatDate(suggestion.createdAt)}', isSubtitle: true),
+                ResponsiveText('Создано: ${_formatDate(suggestion.createdAt)}',
+                    isSubtitle: true),
               ],
             ),
           ],
@@ -145,8 +155,10 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
         ),
         child: Text(
           suggestion.status.displayName,
-          style:
-              TextStyle(color: suggestion.status.color, fontSize: 12, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: suggestion.status.color,
+              fontSize: 12,
+              fontWeight: FontWeight.bold),
         ),
       );
 
@@ -259,7 +271,8 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -291,7 +304,8 @@ class CreateCrossSellWidget extends ConsumerStatefulWidget {
   final VoidCallback? onSuggestionCreated;
 
   @override
-  ConsumerState<CreateCrossSellWidget> createState() => _CreateCrossSellWidgetState();
+  ConsumerState<CreateCrossSellWidget> createState() =>
+      _CreateCrossSellWidgetState();
 }
 
 class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
@@ -320,7 +334,8 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
               children: [
                 const Icon(Icons.shopping_cart, color: Colors.blue),
                 const SizedBox(width: 8),
-                ResponsiveText('Рекомендовать дополнительные услуги', isTitle: true),
+                ResponsiveText('Рекомендовать дополнительные услуги',
+                    isTitle: true),
               ],
             ),
 
@@ -341,7 +356,8 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.refresh),
-              label: Text(_isLoading ? 'Загрузка...' : 'Загрузить рекомендации'),
+              label:
+                  Text(_isLoading ? 'Загрузка...' : 'Загрузить рекомендации'),
             ),
 
             // Список рекомендуемых специалистов
@@ -370,7 +386,8 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: _canCreateSuggestion() ? _createSuggestion : null,
+                    onPressed:
+                        _canCreateSuggestion() ? _createSuggestion : null,
                     icon: _isLoading
                         ? const SizedBox(
                             width: 16,
@@ -378,7 +395,8 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.send),
-                    label: Text(_isLoading ? 'Создание...' : 'Создать предложение'),
+                    label: Text(
+                        _isLoading ? 'Создание...' : 'Создать предложение'),
                   ),
                 ),
               ],
@@ -449,7 +467,9 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка загрузки рекомендаций: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка загрузки рекомендаций: $e'),
+            backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -476,7 +496,9 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
         customerId: widget.customerId,
         specialistId: widget.specialistId,
         suggestedItems: _selectedItems,
-        message: _messageController.text.trim().isEmpty ? null : _messageController.text.trim(),
+        message: _messageController.text.trim().isEmpty
+            ? null
+            : _messageController.text.trim(),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -490,7 +512,8 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     } finally {
       setState(() {
         _isLoading = false;
@@ -501,12 +524,14 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
 
 /// Диалог для отклонения предложения
 class _RejectSuggestionDialog extends StatefulWidget {
-  const _RejectSuggestionDialog({required this.suggestion, required this.onRejected});
+  const _RejectSuggestionDialog(
+      {required this.suggestion, required this.onRejected});
   final CrossSellSuggestion suggestion;
   final VoidCallback onRejected;
 
   @override
-  State<_RejectSuggestionDialog> createState() => _RejectSuggestionDialogState();
+  State<_RejectSuggestionDialog> createState() =>
+      _RejectSuggestionDialogState();
 }
 
 class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
@@ -567,19 +592,24 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
       await service.rejectCrossSellSuggestion(
         suggestionId: widget.suggestion.id,
         customerId: 'current_user_id', // TODO(developer): Получить из контекста
-        reason: _reasonController.text.trim().isEmpty ? null : _reasonController.text.trim(),
+        reason: _reasonController.text.trim().isEmpty
+            ? null
+            : _reasonController.text.trim(),
       );
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Предложение отклонено'), backgroundColor: Colors.orange),
+        const SnackBar(
+            content: Text('Предложение отклонено'),
+            backgroundColor: Colors.orange),
       );
 
       widget.onRejected();
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     } finally {
       setState(() {
         _isLoading = false;
@@ -589,4 +619,5 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
 }
 
 /// Провайдер для сервиса кросс-селл
-final crossSellServiceProvider = Provider<CrossSellService>((ref) => CrossSellService());
+final crossSellServiceProvider =
+    Provider<CrossSellService>((ref) => CrossSellService());

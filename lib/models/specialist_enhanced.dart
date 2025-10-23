@@ -158,14 +158,14 @@ class SpecialistEnhanced {
   /// Получить бейджи для отображения
   List<SpecialistBadge> get badges {
     final badges = <SpecialistBadge>[];
-    
+
     if (isTopWeek) badges.add(SpecialistBadge.topWeek);
     if (isVerified) badges.add(SpecialistBadge.verified);
     if (isNewcomer) badges.add(SpecialistBadge.newcomer);
     if (rating >= 4.8) badges.add(SpecialistBadge.highRating);
     if (successRate >= 95) badges.add(SpecialistBadge.reliable);
     if (totalOrders >= 100) badges.add(SpecialistBadge.experienced);
-    
+
     return badges;
   }
 
@@ -290,7 +290,7 @@ enum SpecialistBadge {
   experienced('🎯', 'Опытный', 0xFFEF4444);
 
   const SpecialistBadge(this.emoji, this.label, this.color);
-  
+
   final String emoji;
   final String label;
   final int color;
@@ -310,7 +310,7 @@ enum SpecialistCategory {
   beauty('💄', 'Красота', 'Визажисты и стилисты');
 
   const SpecialistCategory(this.emoji, this.name, this.description);
-  
+
   final String emoji;
   final String name;
   final String description;

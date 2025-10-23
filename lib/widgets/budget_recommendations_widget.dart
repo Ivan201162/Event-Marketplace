@@ -15,13 +15,16 @@ class BudgetRecommendationsWidget extends StatefulWidget {
   final double currentBudget;
   final List<String> selectedSpecialistIds;
   final String userId;
-  final void Function(double additionalBudget, SpecialistCategory category)? onBudgetIncrease;
+  final void Function(double additionalBudget, SpecialistCategory category)?
+      onBudgetIncrease;
 
   @override
-  State<BudgetRecommendationsWidget> createState() => _BudgetRecommendationsWidgetState();
+  State<BudgetRecommendationsWidget> createState() =>
+      _BudgetRecommendationsWidgetState();
 }
 
-class _BudgetRecommendationsWidgetState extends State<BudgetRecommendationsWidget> {
+class _BudgetRecommendationsWidgetState
+    extends State<BudgetRecommendationsWidget> {
   final BudgetRecommendationService _service = BudgetRecommendationService();
   List<BudgetRecommendation> _recommendations = [];
   bool _isLoading = false;
@@ -118,7 +121,10 @@ class _BudgetLoadingWidget extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: const Row(
           children: [
-            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2)),
             SizedBox(width: 12),
             Text('Анализируем бюджет...'),
           ],
@@ -161,7 +167,8 @@ class _BudgetRecommendationsList extends StatelessWidget {
   });
 
   final List<BudgetRecommendation> recommendations;
-  final void Function(double additionalBudget, SpecialistCategory category)? onBudgetIncrease;
+  final void Function(double additionalBudget, SpecialistCategory category)?
+      onBudgetIncrease;
   final void Function(String)? onRecommendationShown;
 
   @override
@@ -174,7 +181,8 @@ class _BudgetRecommendationsList extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
-                  Icon(Icons.account_balance_wallet, color: Colors.green, size: 20),
+                  Icon(Icons.account_balance_wallet,
+                      color: Colors.green, size: 20),
                   SizedBox(width: 8),
                   Text(
                     'Предложения по бюджету',
@@ -188,7 +196,8 @@ class _BudgetRecommendationsList extends StatelessWidget {
                 recommendation: recommendation,
                 onTap: () {
                   onRecommendationShown?.call(recommendation.id);
-                  onBudgetIncrease?.call(recommendation.additionalBudget, recommendation.category);
+                  onBudgetIncrease?.call(
+                      recommendation.additionalBudget, recommendation.category);
                 },
               ),
             ),
@@ -199,7 +208,8 @@ class _BudgetRecommendationsList extends StatelessWidget {
 
 /// Карточка рекомендации по бюджету
 class _BudgetRecommendationCard extends StatelessWidget {
-  const _BudgetRecommendationCard({required this.recommendation, required this.onTap});
+  const _BudgetRecommendationCard(
+      {required this.recommendation, required this.onTap});
 
   final BudgetRecommendation recommendation;
   final VoidCallback onTap;
@@ -228,12 +238,14 @@ class _BudgetRecommendationCard extends StatelessWidget {
                           children: [
                             Text(
                               recommendation.reason,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               'Категория: ${recommendation.category.displayName}',
-                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.grey),
                             ),
                           ],
                         ),
@@ -301,7 +313,8 @@ class _BudgetRecommendationCard extends StatelessWidget {
 
 /// Виджет информации о бюджете
 class _BudgetInfo extends StatelessWidget {
-  const _BudgetInfo({required this.label, required this.amount, required this.color});
+  const _BudgetInfo(
+      {required this.label, required this.amount, required this.color});
 
   final String label;
   final double amount;
@@ -319,12 +332,14 @@ class _BudgetInfo extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 10, color: color, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 2),
             Text(
               '${amount.toStringAsFixed(0)} ₽',
-              style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 12, color: color, fontWeight: FontWeight.bold),
             ),
           ],
         ),

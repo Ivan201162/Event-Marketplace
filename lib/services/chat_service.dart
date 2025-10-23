@@ -32,7 +32,7 @@ class ChatService {
         .where('isActive', isEqualTo: true)
         .orderBy('lastMessageAt', descending: true)
         .get();
-    
+
     return snapshot.docs.map((doc) => Chat.fromFirestore(doc)).toList();
   }
 
@@ -58,7 +58,7 @@ class ChatService {
         .orderBy('createdAt', descending: true)
         .limit(50)
         .get();
-    
+
     return snapshot.docs.map((doc) => ChatMessage.fromFirestore(doc)).toList();
   }
 
@@ -82,7 +82,9 @@ class ChatService {
         .limit(50)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => ChatMessage.fromFirestore(doc)).toList();
+      return snapshot.docs
+          .map((doc) => ChatMessage.fromFirestore(doc))
+          .toList();
     });
   }
 
@@ -110,13 +112,10 @@ class ChatService {
       };
 
       final docRef = await _firestore.collection('chats').add(chatData);
-      
+
       // Инициализируем счетчики непрочитанных сообщений
       for (final participantId in participants) {
-        await _firestore
-            .collection('chats')
-            .doc(docRef.id)
-            .update({
+        await _firestore.collection('chats').doc(docRef.id).update({
           'unreadCounts.$participantId': 0,
         });
       }
@@ -263,7 +262,7 @@ class ChatService {
 
       for (final doc in existingChats.docs) {
         final chat = Chat.fromFirestore(doc);
-        if (chat.participants.contains(otherUserId) && 
+        if (chat.participants.contains(otherUserId) &&
             chat.participants.length == 2) {
           return doc.id;
         }

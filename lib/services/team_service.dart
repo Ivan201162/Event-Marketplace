@@ -73,8 +73,10 @@ class TeamService {
 
       final teamData = teamDoc.data()!;
       final specialists = List<String>.from(teamData['specialists'] ?? []);
-      final specialistRoles = Map<String, String>.from(teamData['specialistRoles'] ?? {});
-      final paymentSplit = Map<String, double>.from(teamData['paymentSplit'] ?? {});
+      final specialistRoles =
+          Map<String, String>.from(teamData['specialistRoles'] ?? {});
+      final paymentSplit =
+          Map<String, double>.from(teamData['paymentSplit'] ?? {});
 
       // Проверяем, не добавлен ли уже специалист
       if (specialists.contains(specialistId)) {
@@ -114,8 +116,10 @@ class TeamService {
 
       final teamData = teamDoc.data()!;
       final specialists = List<String>.from(teamData['specialists'] ?? []);
-      final specialistRoles = Map<String, String>.from(teamData['specialistRoles'] ?? {});
-      final paymentSplit = Map<String, double>.from(teamData['paymentSplit'] ?? {});
+      final specialistRoles =
+          Map<String, String>.from(teamData['specialistRoles'] ?? {});
+      final paymentSplit =
+          Map<String, double>.from(teamData['paymentSplit'] ?? {});
 
       specialists.remove(specialistId);
       specialistRoles.remove(specialistId);
@@ -144,7 +148,8 @@ class TeamService {
   }
 
   /// Отклонить команду
-  Future<void> rejectTeam({required String teamId, required String reason}) async {
+  Future<void> rejectTeam(
+      {required String teamId, required String reason}) async {
     final teamRef = _firestore.collection(_collection).doc(teamId);
     final now = DateTime.now();
 
@@ -187,7 +192,9 @@ class TeamService {
     Map<String, double>? paymentSplit,
   }) async {
     final teamRef = _firestore.collection(_collection).doc(teamId);
-    final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
+    final updateData = <String, dynamic>{
+      'updatedAt': Timestamp.fromDate(DateTime.now())
+    };
 
     if (teamName != null) updateData['teamName'] = teamName;
     if (description != null) updateData['description'] = description;
@@ -253,20 +260,25 @@ class TeamService {
       .map((doc) => doc.exists ? SpecialistTeam.fromDocument(doc) : null);
 
   /// Слушать команды организатора
-  Stream<List<SpecialistTeam>> watchOrganizerTeams(String organizerId) => _firestore
-      .collection(_collection)
-      .where('organizerId', isEqualTo: organizerId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(SpecialistTeam.fromDocument).toList());
+  Stream<List<SpecialistTeam>> watchOrganizerTeams(
+          String organizerId) =>
+      _firestore
+          .collection(_collection)
+          .where('organizerId', isEqualTo: organizerId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map(SpecialistTeam.fromDocument).toList());
 
   /// Слушать команды специалиста
-  Stream<List<SpecialistTeam>> watchSpecialistTeams(String specialistId) => _firestore
-      .collection(_collection)
-      .where('specialists', arrayContains: specialistId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(SpecialistTeam.fromDocument).toList());
+  Stream<List<SpecialistTeam>> watchSpecialistTeams(String specialistId) =>
+      _firestore
+          .collection(_collection)
+          .where('specialists', arrayContains: specialistId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map(SpecialistTeam.fromDocument).toList());
 
   /// Удалить команду
   Future<void> deleteTeam(String teamId) async {

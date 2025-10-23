@@ -29,10 +29,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       // Auth check route
-      GoRoute(path: '/', name: 'auth-check', builder: (context, state) => const AuthCheckScreen()),
+      GoRoute(
+          path: '/',
+          name: 'auth-check',
+          builder: (context, state) => const AuthCheckScreen()),
 
       // Auth routes
-      GoRoute(path: '/login', name: 'login', builder: (context, state) => const LoginScreen()),
+      GoRoute(
+          path: '/login',
+          name: 'login',
+          builder: (context, state) => const LoginScreen()),
 
       GoRoute(
         path: '/forgot-password',
@@ -53,7 +59,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final phoneNumber = state.extra as String?;
           if (phoneNumber == null) {
-            return const Scaffold(body: Center(child: Text('Ошибка: номер телефона не найден')));
+            return const Scaffold(
+                body: Center(child: Text('Ошибка: номер телефона не найден')));
           }
           return PhoneVerificationScreen(phoneNumber: phoneNumber);
         },
@@ -66,7 +73,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
 
       // Search route
-      GoRoute(path: '/search', name: 'search', builder: (context, state) => const SearchScreen()),
+      GoRoute(
+          path: '/search',
+          name: 'search',
+          builder: (context, state) => const SearchScreen()),
 
       // Profile routes
       GoRoute(

@@ -9,7 +9,8 @@ class CreateRequestScreen extends ConsumerStatefulWidget {
   const CreateRequestScreen({super.key});
 
   @override
-  ConsumerState<CreateRequestScreen> createState() => _CreateRequestScreenState();
+  ConsumerState<CreateRequestScreen> createState() =>
+      _CreateRequestScreenState();
 }
 
 class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
@@ -48,7 +49,8 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
   Future<void> _selectDeadline() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
+      initialDate:
+          _selectedDeadline ?? DateTime.now().add(const Duration(days: 7)),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
@@ -80,12 +82,16 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
         category: _selectedCategory,
         budget: budget,
         deadline: _selectedDeadline,
-        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+        location: _locationController.text.trim().isEmpty
+            ? null
+            : _locationController.text.trim(),
       );
 
       if (request != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Заявка создана успешно!'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Заявка создана успешно!'),
+              backgroundColor: Colors.green),
         );
         context.pop();
       } else {
@@ -94,7 +100,9 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка создания заявки: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка создания заявки: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -178,7 +186,8 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
                   border: OutlineInputBorder(),
                 ),
                 items: _categories.map((category) {
-                  return DropdownMenuItem(value: category, child: Text(category));
+                  return DropdownMenuItem(
+                      value: category, child: Text(category));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -245,7 +254,9 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
                         ? '${_selectedDeadline!.day}.${_selectedDeadline!.month}.${_selectedDeadline!.year}'
                         : 'Выберите дату',
                     style: TextStyle(
-                      color: _selectedDeadline != null ? Colors.black87 : Colors.grey[600],
+                      color: _selectedDeadline != null
+                          ? Colors.black87
+                          : Colors.grey[600],
                     ),
                   ),
                 ),
@@ -258,16 +269,19 @@ class _CreateRequestScreenState extends ConsumerState<CreateRequestScreen> {
                 decoration: BoxDecoration(
                   color: theme.primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: theme.primaryColor.withValues(alpha: 0.3)),
+                  border: Border.all(
+                      color: theme.primaryColor.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: theme.primaryColor, size: 20),
+                    Icon(Icons.info_outline,
+                        color: theme.primaryColor, size: 20),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         'После создания заявки специалисты смогут откликнуться на неё. Вы сможете выбрать подходящего исполнителя.',
-                        style: TextStyle(color: theme.primaryColor, fontSize: 14),
+                        style:
+                            TextStyle(color: theme.primaryColor, fontSize: 14),
                       ),
                     ),
                   ],

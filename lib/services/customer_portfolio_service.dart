@@ -14,7 +14,10 @@ class CustomerPortfolioService {
   /// Получить портфолио заказчика
   Future<CustomerPortfolio?> getCustomerPortfolio(String customerId) async {
     try {
-      final doc = await _firestore.collection(_customersCollection).doc(customerId).get();
+      final doc = await _firestore
+          .collection(_customersCollection)
+          .doc(customerId)
+          .get();
 
       if (!doc.exists) return null;
       return CustomerPortfolio.fromDocument(doc);
@@ -24,7 +27,8 @@ class CustomerPortfolioService {
   }
 
   /// Создать или обновить портфолио заказчика
-  Future<CustomerPortfolio> createOrUpdatePortfolio(CustomerPortfolio portfolio) async {
+  Future<CustomerPortfolio> createOrUpdatePortfolio(
+      CustomerPortfolio portfolio) async {
     try {
       await _firestore
           .collection(_customersCollection)
@@ -90,7 +94,8 @@ class CustomerPortfolioService {
   }
 
   /// Обновить заказ в истории
-  Future<void> updateOrderInHistory(String customerId, OrderHistory order) async {
+  Future<void> updateOrderInHistory(
+      String customerId, OrderHistory order) async {
     try {
       await _firestore
           .collection(_customersCollection)
@@ -143,7 +148,8 @@ class CustomerPortfolioService {
   }
 
   /// Удалить специалиста из избранного
-  Future<void> removeFromFavorites(String customerId, String specialistId) async {
+  Future<void> removeFromFavorites(
+      String customerId, String specialistId) async {
     try {
       final portfolio = await getCustomerPortfolio(customerId);
       if (portfolio == null) {
@@ -158,7 +164,8 @@ class CustomerPortfolioService {
   }
 
   /// Проверить, является ли специалист избранным
-  Future<bool> isFavoriteSpecialist(String customerId, String specialistId) async {
+  Future<bool> isFavoriteSpecialist(
+      String customerId, String specialistId) async {
     try {
       final favorites = await getFavoriteSpecialists(customerId);
       return favorites.contains(specialistId);
@@ -193,7 +200,8 @@ class CustomerPortfolioService {
   }
 
   /// Удалить годовщину
-  Future<void> removeAnniversary(String customerId, DateTime anniversary) async {
+  Future<void> removeAnniversary(
+      String customerId, DateTime anniversary) async {
     try {
       final portfolio = await getCustomerPortfolio(customerId);
       if (portfolio == null) {
@@ -240,7 +248,8 @@ class CustomerPortfolioService {
         throw Exception('Портфолио заказчика не найдено');
       }
 
-      final updatedPortfolio = portfolio.copyWith(anniversaryRemindersEnabled: enabled);
+      final updatedPortfolio =
+          portfolio.copyWith(anniversaryRemindersEnabled: enabled);
       await createOrUpdatePortfolio(updatedPortfolio);
     } on Exception catch (e) {
       throw Exception('Ошибка настройки напоминаний: $e');
@@ -256,7 +265,8 @@ class CustomerPortfolioService {
 
       final querySnapshot = await _firestore
           .collection(_customersCollection)
-          .where('weddingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(today))
+          .where('weddingDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(today))
           .where('weddingDate', isLessThan: Timestamp.fromDate(tomorrow))
           .where('anniversaryRemindersEnabled', isEqualTo: true)
           .get();
@@ -268,7 +278,8 @@ class CustomerPortfolioService {
   }
 
   /// Получить заказчиков с годовщинами в ближайшие дни
-  Future<List<CustomerPortfolio>> getCustomersWithUpcomingAnniversaries(int daysAhead) async {
+  Future<List<CustomerPortfolio>> getCustomersWithUpcomingAnniversaries(
+      int daysAhead) async {
     try {
       final now = DateTime.now();
       final startDate = DateTime(now.year, now.month, now.day);
@@ -276,7 +287,8 @@ class CustomerPortfolioService {
 
       final querySnapshot = await _firestore
           .collection(_customersCollection)
-          .where('weddingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+          .where('weddingDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
           .where('weddingDate', isLessThan: Timestamp.fromDate(endDate))
           .where('anniversaryRemindersEnabled', isEqualTo: true)
           .get();
@@ -296,16 +308,20 @@ class CustomerPortfolioService {
       }
 
       final orderHistory = await getOrderHistory(customerId);
-      final totalSpent = orderHistory.fold(0, (sum, order) => sum + order.price);
-      final completedOrders = orderHistory.where((order) => order.status == 'completed').length;
+      final totalSpent =
+          orderHistory.fold(0, (sum, order) => sum + order.price);
+      final completedOrders =
+          orderHistory.where((order) => order.status == 'completed').length;
 
       return {
         ...portfolio.portfolioStats,
         'totalOrders': orderHistory.length,
         'completedOrders': completedOrders,
         'totalSpent': totalSpent,
-        'averageOrderValue': orderHistory.isNotEmpty ? totalSpent / orderHistory.length : 0.0,
-        'lastOrderDate': orderHistory.isNotEmpty ? orderHistory.first.date : null,
+        'averageOrderValue':
+            orderHistory.isNotEmpty ? totalSpent / orderHistory.length : 0.0,
+        'lastOrderDate':
+            orderHistory.isNotEmpty ? orderHistory.first.date : null,
       };
     } on Exception catch (e) {
       throw Exception('Ошибка получения статистики: $e');
@@ -360,7 +376,8 @@ class CustomerPortfolioService {
 
       // Рекомендации на основе избранного
       if (favoriteSpecialists.isNotEmpty) {
-        recommendations.add('У вас ${favoriteSpecialists.length} избранных специалистов');
+        recommendations
+            .add('У вас ${favoriteSpecialists.length} избранных специалистов');
       }
 
       // Рекомендации на основе годовщин

@@ -10,7 +10,8 @@ class ReviewCard extends StatelessWidget {
   final VoidCallback? onLike;
   final VoidCallback? onReply;
 
-  const ReviewCard({super.key, required this.review, this.onTap, this.onLike, this.onReply});
+  const ReviewCard(
+      {super.key, required this.review, this.onTap, this.onLike, this.onReply});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,9 @@ class ReviewCard extends StatelessWidget {
               // Header with user info and rating
               Row(
                 children: [
-                  CircleAvatar(radius: 20, child: Text(review.clientName.substring(0, 1))),
+                  CircleAvatar(
+                      radius: 20,
+                      child: Text(review.clientName.substring(0, 1))),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -35,11 +38,13 @@ class ReviewCard extends StatelessWidget {
                       children: [
                         Text(
                           review.clientName,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         Text(
                           review.timeAgo,
-                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 12),
                         ),
                       ],
                     ),
@@ -54,7 +59,10 @@ class ReviewCard extends StatelessWidget {
               Text(review.comment ?? '', style: const TextStyle(fontSize: 14)),
 
               // Images
-              if (review.hasImages) ...[const SizedBox(height: 12), _buildImagesGrid()],
+              if (review.hasImages) ...[
+                const SizedBox(height: 12),
+                _buildImagesGrid()
+              ],
 
               const SizedBox(height: 12),
 
@@ -63,7 +71,9 @@ class ReviewCard extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: Icon(
-                      review.likesCount > 0 ? Icons.thumb_up : Icons.thumb_up_outlined,
+                      review.likesCount > 0
+                          ? Icons.thumb_up
+                          : Icons.thumb_up_outlined,
                       color: review.likesCount > 0 ? Colors.blue : Colors.grey,
                       size: 20,
                     ),
@@ -75,7 +85,9 @@ class ReviewCard extends StatelessWidget {
                       style: TextStyle(color: Colors.grey[600], fontSize: 12),
                     ),
                   const SizedBox(width: 16),
-                  IconButton(icon: const Icon(Icons.reply, size: 20), onPressed: onReply),
+                  IconButton(
+                      icon: const Icon(Icons.reply, size: 20),
+                      onPressed: onReply),
                   const Text('Ответить', style: TextStyle(fontSize: 12)),
                 ],
               ),

@@ -12,7 +12,8 @@ class SocialProfileScreen extends ConsumerStatefulWidget {
   const SocialProfileScreen({super.key, required this.username});
 
   @override
-  ConsumerState<SocialProfileScreen> createState() => _SocialProfileScreenState();
+  ConsumerState<SocialProfileScreen> createState() =>
+      _SocialProfileScreenState();
 }
 
 class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
@@ -36,7 +37,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
         _error = null;
       });
 
-      final profile = await SupabaseService.getProfileByUsername(widget.username);
+      final profile =
+          await SupabaseService.getProfileByUsername(widget.username);
       if (profile == null) {
         setState(() {
           _error = 'Профиль не найден';
@@ -51,7 +53,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
       int followingCount = 0;
 
       if (currentUser != null) {
-        isFollowing = await SupabaseService.isFollowing(currentUser.id, profile.id);
+        isFollowing =
+            await SupabaseService.isFollowing(currentUser.id, profile.id);
         followersCount = await SupabaseService.getFollowersCount(profile.id);
         followingCount = await SupabaseService.getFollowingCount(profile.id);
       }
@@ -102,7 +105,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {
       setState(() {
         _isUpdatingFollow = false;
@@ -123,7 +127,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
         ).showSnackBar(const SnackBar(content: Text('Ошибка создания чата')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -151,7 +156,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              ElevatedButton(onPressed: _loadProfile, child: const Text('Повторить')),
+              ElevatedButton(
+                  onPressed: _loadProfile, child: const Text('Повторить')),
             ],
           ),
         ),
@@ -213,7 +219,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
             height: 120,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Theme.of(context).primaryColor, width: 3),
+              border:
+                  Border.all(color: Theme.of(context).primaryColor, width: 3),
             ),
             child: ClipOval(
               child: _profile!.avatarUrl != null
@@ -221,17 +228,25 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
                       imageUrl: _profile!.avatarUrl!,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                        child: Icon(Icons.person, color: Theme.of(context).primaryColor, size: 60),
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.1),
+                        child: Icon(Icons.person,
+                            color: Theme.of(context).primaryColor, size: 60),
                       ),
                       errorWidget: (context, url, error) => Container(
-                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                        child: Icon(Icons.person, color: Theme.of(context).primaryColor, size: 60),
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.1),
+                        child: Icon(Icons.person,
+                            color: Theme.of(context).primaryColor, size: 60),
                       ),
                     )
                   : Container(
-                      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                      child: Icon(Icons.person, color: Theme.of(context).primaryColor, size: 60),
+                      color:
+                          Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                      child: Icon(Icons.person,
+                          color: Theme.of(context).primaryColor, size: 60),
                     ),
             ),
           ),
@@ -240,7 +255,10 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
           // Имя и username
           Text(
             _profile!.name,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall
+                ?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4),
@@ -248,7 +266,10 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
             '@${_profile!.username}',
             style: Theme.of(
               context,
-            ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color),
+            )
+                .textTheme
+                .bodyLarge
+                ?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
@@ -264,7 +285,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
                   color: Theme.of(context).textTheme.bodySmall?.color,
                 ),
                 const SizedBox(width: 4),
-                Text(_profile!.city!, style: Theme.of(context).textTheme.bodyMedium),
+                Text(_profile!.city!,
+                    style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
         ],
@@ -283,7 +305,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
             _followStats?.followersCount.toString() ?? '0',
             () => context.push('/profile/${_profile!.username}/followers'),
           ),
-          Container(width: 1, height: 40, color: Theme.of(context).dividerColor),
+          Container(
+              width: 1, height: 40, color: Theme.of(context).dividerColor),
           _buildStatItem(
             'Подписки',
             _followStats?.followingCount.toString() ?? '0',
@@ -301,14 +324,20 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
         children: [
           Text(
             value,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color),
+            )
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color),
           ),
         ],
       ),
@@ -324,7 +353,10 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
           if (_profile!.bio != null && _profile!.bio!.isNotEmpty) ...[
             Text(
               'О себе',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(_profile!.bio!, style: Theme.of(context).textTheme.bodyMedium),
@@ -333,7 +365,10 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
           if (_profile!.skills.isNotEmpty) ...[
             Text(
               'Навыки',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -341,12 +376,15 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
               runSpacing: 8,
               children: _profile!.skills.map((skill) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                      color:
+                          Theme.of(context).primaryColor.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
@@ -421,7 +459,10 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
         children: [
           Text(
             'Информация',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           _buildInfoItem(
@@ -430,7 +471,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
             _formatDate(_profile!.createdAt),
           ),
           const SizedBox(height: 12),
-          _buildInfoItem(Icons.update, 'Последнее обновление', _formatDate(_profile!.updatedAt)),
+          _buildInfoItem(Icons.update, 'Последнее обновление',
+              _formatDate(_profile!.updatedAt)),
         ],
       ),
     );
@@ -439,7 +481,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
   Widget _buildInfoItem(IconData icon, String label, String value) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: Theme.of(context).textTheme.bodySmall?.color),
+        Icon(icon,
+            size: 20, color: Theme.of(context).textTheme.bodySmall?.color),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -448,8 +491,8 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
               Text(
                 label,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).textTheme.bodySmall?.color,
-                ),
+                      color: Theme.of(context).textTheme.bodySmall?.color,
+                    ),
               ),
               Text(value, style: Theme.of(context).textTheme.bodyMedium),
             ],
@@ -482,12 +525,15 @@ class _SocialProfileScreenState extends ConsumerState<SocialProfileScreen> {
     // TODO: Реализовать функционал шаринга
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Функция шаринга будет добавлена позже')));
   }
 
   bool _isOwnProfile() {
     final currentUser = SupabaseService.currentUser;
-    return currentUser != null && _profile != null && currentUser.id == _profile!.id;
+    return currentUser != null &&
+        _profile != null &&
+        currentUser.id == _profile!.id;
   }
 
   void _editProfile() {

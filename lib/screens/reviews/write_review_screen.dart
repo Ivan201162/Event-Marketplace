@@ -12,7 +12,8 @@ class WriteReviewScreen extends ConsumerStatefulWidget {
   final Specialist specialist;
   final String? bookingId;
 
-  const WriteReviewScreen({super.key, required this.specialist, this.bookingId});
+  const WriteReviewScreen(
+      {super.key, required this.specialist, this.bookingId});
 
   @override
   ConsumerState<WriteReviewScreen> createState() => _WriteReviewScreenState();
@@ -54,7 +55,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
       body: currentUserAsync.when(
         data: (user) {
           if (user == null) {
-            return const Center(child: Text('Войдите в аккаунт для написания отзыва'));
+            return const Center(
+                child: Text('Войдите в аккаунт для написания отзыва'));
           }
 
           return SingleChildScrollView(
@@ -98,7 +100,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
             children: [
               const Icon(Icons.error_outline, size: 80, color: Colors.red),
               const SizedBox(height: 16),
-              Text('Ошибка загрузки', style: TextStyle(fontSize: 18, color: Colors.red[700])),
+              Text('Ошибка загрузки',
+                  style: TextStyle(fontSize: 18, color: Colors.red[700])),
               const SizedBox(height: 8),
               Text(
                 error.toString(),
@@ -141,7 +144,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
                 children: [
                   Text(
                     widget.specialist.name,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -201,7 +205,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
         const SizedBox(height: 8),
         Text(
           _getRatingText(_rating),
-          style: TextStyle(color: _getRatingColor(_rating), fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: _getRatingColor(_rating), fontWeight: FontWeight.w500),
         ),
       ],
     );
@@ -295,7 +300,9 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.add, size: 24, color: Colors.grey),
-                          Text('Добавить', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                          Text('Добавить',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12)),
                         ],
                       ),
                     ),
@@ -304,7 +311,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
 
                 return Container(
                   width: 100,
-                  margin: EdgeInsets.only(right: index < _images.length - 1 ? 8 : 0),
+                  margin: EdgeInsets.only(
+                      right: index < _images.length - 1 ? 8 : 0),
                   child: Stack(
                     children: [
                       ClipRRect(
@@ -314,7 +322,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
                           width: 100,
                           height: 100,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
                             width: 100,
                             height: 100,
                             color: Colors.grey[300],
@@ -337,7 +346,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
                               color: Colors.red,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.close, color: Colors.white, size: 16),
+                            child: const Icon(Icons.close,
+                                color: Colors.white, size: 16),
                           ),
                         ),
                       ),
@@ -415,7 +425,8 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
     // TODO: Implement image picker
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Добавление фото пока не реализовано')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Добавление фото пока не реализовано')));
   }
 
   Future<void> _submitReview() async {
@@ -449,10 +460,12 @@ class _WriteReviewScreenState extends ConsumerState<WriteReviewScreen> {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Отзыв отправлен на модерацию')));
+      ).showSnackBar(
+          const SnackBar(content: Text('Отзыв отправлен на модерацию')));
       context.pop();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {
       setState(() {
         _isSubmitting = false;

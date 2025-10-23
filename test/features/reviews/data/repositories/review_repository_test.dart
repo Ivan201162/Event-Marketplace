@@ -30,8 +30,9 @@ void main() {
 
       mockDocumentRef = MockDocumentReference<Map<String, dynamic>>();
       mockQuery = MockQuery<Map<String, dynamic>>();
-      
-      when(mockFirestore.collection('reviews')).thenReturn(mockReviewsCollection);
+
+      when(mockFirestore.collection('reviews'))
+          .thenReturn(mockReviewsCollection);
       when(mockReviewsCollection.doc(any)).thenReturn(mockDocumentRef!);
 
       repository = ReviewRepository();
@@ -110,11 +111,13 @@ void main() {
           'responses': [],
         };
 
-        final mockQueryDocSnapshot = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        final mockQueryDocSnapshot =
+            MockQueryDocumentSnapshot<Map<String, dynamic>>();
         when(mockQueryDocSnapshot.id).thenReturn('review_1');
         when(mockQueryDocSnapshot.data()).thenReturn(reviewData);
 
-        when(mockReviewsCollection.orderBy('createdAt', descending: true)).thenReturn(mockQuery);
+        when(mockReviewsCollection.orderBy('createdAt', descending: true))
+            .thenReturn(mockQuery);
         when(mockQuery.limit(any)).thenReturn(mockQuery);
         when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([mockQueryDocSnapshot]);
@@ -167,20 +170,23 @@ void main() {
           'responses': [],
         };
 
-        final mockQueryDocSnapshot = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        final mockQueryDocSnapshot =
+            MockQueryDocumentSnapshot<Map<String, dynamic>>();
         when(mockQueryDocSnapshot.id).thenReturn('review_1');
         when(mockQueryDocSnapshot.data()).thenReturn(reviewData);
 
         when(
           mockReviewsCollection.where('specialistId', isEqualTo: specialistId),
         ).thenReturn(mockQuery);
-        when(mockQuery.orderBy('createdAt', descending: true)).thenReturn(mockQuery);
+        when(mockQuery.orderBy('createdAt', descending: true))
+            .thenReturn(mockQuery);
         when(mockQuery.limit(any)).thenReturn(mockQuery);
         when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([mockQueryDocSnapshot]);
 
         // Act
-        final reviews = await repository.getReviewsBySpecialist(specialistId, limit: 10);
+        final reviews =
+            await repository.getReviewsBySpecialist(specialistId, limit: 10);
 
         // Assert
         expect(reviews.length, 1);
@@ -209,7 +215,8 @@ void main() {
         const reviewId = 'review_1';
         final updates = {'comment': 'Updated comment'};
 
-        when(mockDocumentRef.update(any)).thenThrow(Exception('Database error'));
+        when(mockDocumentRef.update(any))
+            .thenThrow(Exception('Database error'));
 
         // Act
         final result = await repository.updateReview(reviewId, updates);
@@ -294,11 +301,13 @@ void main() {
           'responses': [],
         };
 
-        final mockQueryDocSnapshot1 = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        final mockQueryDocSnapshot1 =
+            MockQueryDocumentSnapshot<Map<String, dynamic>>();
         when(mockQueryDocSnapshot1.id).thenReturn('review_1');
         when(mockQueryDocSnapshot1.data()).thenReturn(reviewData1);
 
-        final mockQueryDocSnapshot2 = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+        final mockQueryDocSnapshot2 =
+            MockQueryDocumentSnapshot<Map<String, dynamic>>();
         when(mockQueryDocSnapshot2.id).thenReturn('review_2');
         when(mockQueryDocSnapshot2.data()).thenReturn(reviewData2);
 
@@ -306,7 +315,8 @@ void main() {
           mockReviewsCollection.where('specialistId', isEqualTo: specialistId),
         ).thenReturn(mockQuery);
         when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
-        when(mockQuerySnapshot.docs).thenReturn([mockQueryDocSnapshot1, mockQueryDocSnapshot2]);
+        when(mockQuerySnapshot.docs)
+            .thenReturn([mockQueryDocSnapshot1, mockQueryDocSnapshot2]);
 
         // Act
         final stats = await repository.getReviewStats(specialistId);

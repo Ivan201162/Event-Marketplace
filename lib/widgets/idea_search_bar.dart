@@ -62,23 +62,28 @@ class _IdeaSearchBarState extends State<IdeaSearchBar> {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+        border:
+            Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
       ),
       child: TextField(
         controller: _controller,
         onChanged: _onSearchChanged,
         decoration: InputDecoration(
           hintText: widget.hintText,
-          hintStyle: TextStyle(color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
-          prefixIcon: Icon(Icons.search, color: theme.colorScheme.onSurfaceVariant),
+          hintStyle: TextStyle(
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
+          prefixIcon:
+              Icon(Icons.search, color: theme.colorScheme.onSurfaceVariant),
           suffixIcon: _isSearching
               ? IconButton(
                   onPressed: _clearSearch,
-                  icon: Icon(Icons.clear, color: theme.colorScheme.onSurfaceVariant),
+                  icon: Icon(Icons.clear,
+                      color: theme.colorScheme.onSurfaceVariant),
                 )
               : null,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
         style: theme.textTheme.bodyMedium,
       ),

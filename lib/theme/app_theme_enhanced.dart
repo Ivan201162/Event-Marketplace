@@ -19,7 +19,7 @@ class AppThemeEnhanced {
         seedColor: primaryColor,
         brightness: Brightness.light,
       ),
-      
+
       // AppBar
       appBarTheme: const AppBarTheme(
         backgroundColor: primaryColor,
@@ -32,7 +32,7 @@ class AppThemeEnhanced {
           fontWeight: FontWeight.bold,
         ),
       ),
-      
+
       // Кнопки
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -46,7 +46,7 @@ class AppThemeEnhanced {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
-      
+
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: primaryColor,
@@ -57,7 +57,7 @@ class AppThemeEnhanced {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
-      
+
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primaryColor,
@@ -67,7 +67,7 @@ class AppThemeEnhanced {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         ),
       ),
-      
+
       // Карточки
       cardTheme: CardTheme(
         elevation: 2,
@@ -77,7 +77,7 @@ class AppThemeEnhanced {
         ),
         color: Colors.white,
       ),
-      
+
       // Поля ввода
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -98,9 +98,10 @@ class AppThemeEnhanced {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: errorColor),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
-      
+
       // Чипы
       chipTheme: ChipThemeData(
         backgroundColor: Colors.grey[100],
@@ -110,7 +111,7 @@ class AppThemeEnhanced {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      
+
       // Диалоги
       dialogTheme: DialogTheme(
         shape: RoundedRectangleBorder(
@@ -118,7 +119,7 @@ class AppThemeEnhanced {
         ),
         elevation: 8,
       ),
-      
+
       // Bottom Sheet
       bottomSheetTheme: const BottomSheetThemeData(
         shape: RoundedRectangleBorder(
@@ -126,7 +127,7 @@ class AppThemeEnhanced {
         ),
         elevation: 8,
       ),
-      
+
       // SnackBar
       snackBarTheme: SnackBarThemeData(
         backgroundColor: Colors.grey[800],
@@ -136,14 +137,14 @@ class AppThemeEnhanced {
         ),
         behavior: SnackBarBehavior.floating,
       ),
-      
+
       // FloatingActionButton
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         elevation: 4,
       ),
-      
+
       // Bottom Navigation Bar
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
@@ -164,7 +165,7 @@ class AppThemeEnhanced {
         seedColor: primaryColor,
         brightness: Brightness.dark,
       ),
-      
+
       // AppBar
       appBarTheme: const AppBarTheme(
         backgroundColor: Color(0xFF1A1A1A),
@@ -177,7 +178,7 @@ class AppThemeEnhanced {
           fontWeight: FontWeight.bold,
         ),
       ),
-      
+
       // Кнопки
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -191,7 +192,7 @@ class AppThemeEnhanced {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
-      
+
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: primaryColor,
@@ -202,7 +203,7 @@ class AppThemeEnhanced {
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         ),
       ),
-      
+
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primaryColor,
@@ -212,7 +213,7 @@ class AppThemeEnhanced {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         ),
       ),
-      
+
       // Карточки
       cardTheme: CardTheme(
         elevation: 2,
@@ -222,7 +223,7 @@ class AppThemeEnhanced {
         ),
         color: const Color(0xFF2A2A2A),
       ),
-      
+
       // Поля ввода
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -243,9 +244,10 @@ class AppThemeEnhanced {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: errorColor),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
-      
+
       // Чипы
       chipTheme: ChipThemeData(
         backgroundColor: const Color(0xFF3A3A3A),
@@ -255,7 +257,7 @@ class AppThemeEnhanced {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      
+
       // Диалоги
       dialogTheme: DialogTheme(
         backgroundColor: const Color(0xFF2A2A2A),
@@ -264,7 +266,7 @@ class AppThemeEnhanced {
         ),
         elevation: 8,
       ),
-      
+
       // Bottom Sheet
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: Color(0xFF2A2A2A),
@@ -273,7 +275,7 @@ class AppThemeEnhanced {
         ),
         elevation: 8,
       ),
-      
+
       // SnackBar
       snackBarTheme: SnackBarThemeData(
         backgroundColor: const Color(0xFF1A1A1A),
@@ -283,14 +285,14 @@ class AppThemeEnhanced {
         ),
         behavior: SnackBarBehavior.floating,
       ),
-      
+
       // FloatingActionButton
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         elevation: 4,
       ),
-      
+
       // Bottom Navigation Bar
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: Color(0xFF1A1A1A),
@@ -329,20 +331,20 @@ class AppThemeEnhanced {
 
   /// Тени
   static List<BoxShadow> get cardShadow => [
-    BoxShadow(
-      color: Colors.black.withOpacity(0.05),
-      blurRadius: 10,
-      offset: const Offset(0, 2),
-    ),
-  ];
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 2),
+        ),
+      ];
 
   static List<BoxShadow> get elevatedShadow => [
-    BoxShadow(
-      color: Colors.black.withOpacity(0.1),
-      blurRadius: 20,
-      offset: const Offset(0, 5),
-    ),
-  ];
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 20,
+          offset: const Offset(0, 5),
+        ),
+      ];
 
   /// Анимации
   static const Duration fastAnimation = Duration(milliseconds: 200);

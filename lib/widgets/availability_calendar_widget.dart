@@ -16,10 +16,12 @@ class AvailabilityCalendarWidget extends StatefulWidget {
   final bool isReadOnly;
 
   @override
-  State<AvailabilityCalendarWidget> createState() => _AvailabilityCalendarWidgetState();
+  State<AvailabilityCalendarWidget> createState() =>
+      _AvailabilityCalendarWidgetState();
 }
 
-class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget> {
+class _AvailabilityCalendarWidgetState
+    extends State<AvailabilityCalendarWidget> {
   late final ValueNotifier<List<DateTime>> _selectedDates;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -63,7 +65,8 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
               firstDay: DateTime.utc(2020),
               lastDay: DateTime.utc(2030, 12, 31),
               focusedDay: _focusedDay,
-              selectedDayPredicate: (day) => _selectedDay != null && isSameDay(_selectedDay, day),
+              selectedDayPredicate: (day) =>
+                  _selectedDay != null && isSameDay(_selectedDay, day),
               onDaySelected: (selectedDay, focusedDay) {
                 if (!widget.isReadOnly) {
                   setState(() {
@@ -80,15 +83,22 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
                 outsideDaysVisible: false,
                 weekendTextStyle: const TextStyle(color: Colors.red),
                 holidayTextStyle: const TextStyle(color: Colors.red),
-                selectedDecoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-                todayDecoration: BoxDecoration(color: Colors.blue.shade200, shape: BoxShape.circle),
-                markerDecoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                selectedDecoration: const BoxDecoration(
+                    color: Colors.blue, shape: BoxShape.circle),
+                todayDecoration: BoxDecoration(
+                    color: Colors.blue.shade200, shape: BoxShape.circle),
+                markerDecoration: const BoxDecoration(
+                    color: Colors.red, shape: BoxShape.circle),
               ),
-              headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+              headerStyle: const HeaderStyle(
+                  formatButtonVisible: false, titleCentered: true),
               calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, day, focusedDay) => _buildDayCell(day),
-                todayBuilder: (context, day, focusedDay) => _buildDayCell(day, isToday: true),
-                selectedBuilder: (context, day, focusedDay) => _buildDayCell(day, isSelected: true),
+                defaultBuilder: (context, day, focusedDay) =>
+                    _buildDayCell(day),
+                todayBuilder: (context, day, focusedDay) =>
+                    _buildDayCell(day, isToday: true),
+                selectedBuilder: (context, day, focusedDay) =>
+                    _buildDayCell(day, isSelected: true),
               ),
             ),
           ),
@@ -102,8 +112,8 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
 
   Widget _buildLegend() => Container(
         padding: const EdgeInsets.all(12),
-        decoration:
-            BoxDecoration(color: Colors.grey.shade50, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.grey.shade50, borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -127,7 +137,8 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
         ],
       );
 
-  Widget _buildDayCell(DateTime day, {bool isToday = false, bool isSelected = false}) {
+  Widget _buildDayCell(DateTime day,
+      {bool isToday = false, bool isSelected = false}) {
     final isBusy = _isDateBusy(day);
     final isAvailable = _isDateAvailable(day);
 
@@ -164,8 +175,9 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
   }
 
   Widget _buildStatistics() {
-    final totalDays =
-        DateTime.now().difference(DateTime.now().subtract(const Duration(days: 30))).inDays;
+    final totalDays = DateTime.now()
+        .difference(DateTime.now().subtract(const Duration(days: 30)))
+        .inDays;
     final busyDays = widget.busyDates.length;
     final availableDays = widget.availableDates.length;
     final freeDays = totalDays - busyDays;
@@ -187,8 +199,11 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _buildStatItem('Занятых дней', busyDays, Colors.red)),
-              Expanded(child: _buildStatItem('Свободных дней', freeDays, Colors.green)),
+              Expanded(
+                  child: _buildStatItem('Занятых дней', busyDays, Colors.red)),
+              Expanded(
+                  child:
+                      _buildStatItem('Свободных дней', freeDays, Colors.green)),
             ],
           ),
         ],
@@ -200,7 +215,8 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
         children: [
           Text(
             '$value',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold, color: color),
           ),
           const SizedBox(height: 4),
           Text(
@@ -213,7 +229,9 @@ class _AvailabilityCalendarWidgetState extends State<AvailabilityCalendarWidget>
 
   bool _isDateBusy(DateTime date) => widget.busyDates.any(
         (busyDate) =>
-            busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day,
+            busyDate.year == date.year &&
+            busyDate.month == date.month &&
+            busyDate.day == date.day,
       );
 
   bool _isDateAvailable(DateTime date) => widget.availableDates.any(

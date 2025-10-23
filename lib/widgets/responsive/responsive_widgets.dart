@@ -31,12 +31,14 @@ class ResponsiveContainer extends StatelessWidget {
       height: height,
       padding: padding ?? ResponsiveUtils.getResponsivePadding(context),
       margin: margin,
-      decoration: decoration ?? BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(
-          borderRadius ?? ResponsiveUtils.getResponsiveBorderRadius(context),
-        ),
-      ),
+      decoration: decoration ??
+          BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(
+              borderRadius ??
+                  ResponsiveUtils.getResponsiveBorderRadius(context),
+            ),
+          ),
       child: child,
     );
   }
@@ -64,10 +66,11 @@ class ResponsiveText extends StatelessWidget {
     return Text(
       text,
       style: style?.copyWith(
-        fontSize: ResponsiveUtils.getResponsiveFontSize(context),
-      ) ?? TextStyle(
-        fontSize: ResponsiveUtils.getResponsiveFontSize(context),
-      ),
+            fontSize: ResponsiveUtils.getResponsiveFontSize(context),
+          ) ??
+          TextStyle(
+            fontSize: ResponsiveUtils.getResponsiveFontSize(context),
+          ),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
@@ -108,13 +111,15 @@ class ResponsiveButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
-          padding: padding ?? EdgeInsets.symmetric(
-            horizontal: ResponsiveUtils.getResponsiveSpacing(context) * 2,
-            vertical: ResponsiveUtils.getResponsiveSpacing(context),
-          ),
+          padding: padding ??
+              EdgeInsets.symmetric(
+                horizontal: ResponsiveUtils.getResponsiveSpacing(context) * 2,
+                vertical: ResponsiveUtils.getResponsiveSpacing(context),
+              ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
-              borderRadius ?? ResponsiveUtils.getResponsiveBorderRadius(context),
+              borderRadius ??
+                  ResponsiveUtils.getResponsiveBorderRadius(context),
             ),
           ),
         ),
@@ -181,7 +186,8 @@ class ResponsiveCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: elevation ?? 2.0,
-      margin: margin ?? EdgeInsets.all(ResponsiveUtils.getResponsiveSpacing(context)),
+      margin: margin ??
+          EdgeInsets.all(ResponsiveUtils.getResponsiveSpacing(context)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
           borderRadius ?? ResponsiveUtils.getResponsiveBorderRadius(context),
@@ -191,12 +197,14 @@ class ResponsiveCard extends StatelessWidget {
         width: width,
         height: height,
         padding: padding ?? ResponsiveUtils.getResponsivePadding(context),
-        decoration: decoration ?? BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(
-            borderRadius ?? ResponsiveUtils.getResponsiveBorderRadius(context),
-          ),
-        ),
+        decoration: decoration ??
+            BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(
+                borderRadius ??
+                    ResponsiveUtils.getResponsiveBorderRadius(context),
+              ),
+            ),
         child: child,
       ),
     );
@@ -224,8 +232,9 @@ class ResponsiveGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final columns = crossAxisCount ?? ResponsiveUtils.getResponsiveColumns(context);
-    
+    final columns =
+        crossAxisCount ?? ResponsiveUtils.getResponsiveColumns(context);
+
     return GridView.count(
       crossAxisCount: columns,
       crossAxisSpacing: spacing,
@@ -306,7 +315,8 @@ class ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(ResponsiveUtils.getResponsiveAppBarHeight(null));
+  Size get preferredSize =>
+      Size.fromHeight(ResponsiveUtils.getResponsiveAppBarHeight(null));
 }
 
 /// Адаптивный BottomNavigationBar
@@ -340,8 +350,8 @@ class ResponsiveBottomNavBar extends StatelessWidget {
       selectedItemColor: selectedItemColor,
       unselectedItemColor: unselectedItemColor,
       elevation: elevation ?? 8.0,
-      type: ResponsiveUtils.isDesktop(context) 
-          ? BottomNavigationBarType.fixed 
+      type: ResponsiveUtils.isDesktop(context)
+          ? BottomNavigationBarType.fixed
           : BottomNavigationBarType.fixed,
     );
   }
@@ -392,7 +402,7 @@ class ResponsiveSpacing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final spacing = ResponsiveUtils.getResponsiveSpacing(context) * multiplier;
-    
+
     return SizedBox(
       width: width ?? spacing,
       height: height ?? spacing,

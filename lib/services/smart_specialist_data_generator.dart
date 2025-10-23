@@ -120,8 +120,8 @@ class SmartSpecialistDataGenerator {
 
         // Генерируем цены в зависимости от категории
         final priceRange = _getPriceRangeForCategory(category);
-        final price =
-            priceRange['min'] + _random.nextDouble() * (priceRange['max'] - priceRange['min']);
+        final price = priceRange['min'] +
+            _random.nextDouble() * (priceRange['max'] - priceRange['min']);
 
         // Генерируем рейтинг
         final rating = 3.0 + _random.nextDouble() * 2.0; // 3.0-5.0
@@ -176,18 +176,22 @@ class SmartSpecialistDataGenerator {
           workingHours: _generateWorkingHours(),
           availableDates: availableDates,
           busyDates: busyDates,
-          createdAt: DateTime.now().subtract(Duration(days: _random.nextInt(365))),
+          createdAt:
+              DateTime.now().subtract(Duration(days: _random.nextInt(365))),
           updatedAt: DateTime.now(),
-          lastActiveAt: DateTime.now().subtract(Duration(hours: _random.nextInt(24))),
+          lastActiveAt:
+              DateTime.now().subtract(Duration(hours: _random.nextInt(24))),
           // Новые поля для интеллектуального поиска
           styles: specialistStyles,
           keywords: _generateKeywords(category, city, specialistStyles),
-          reputationScore: _calculateReputationScore(rating, reviewCount, experienceYears),
+          reputationScore:
+              _calculateReputationScore(rating, reviewCount, experienceYears),
           searchTags: _generateSearchTags(category, city, specialistStyles),
           eventTypes: _generateEventTypes(category),
           specializations: _generateSpecializations(category),
           workingStyle: _generateWorkingStyle(category),
-          personalityTraits: _generatePersonalityTraits(rating, experienceYears),
+          personalityTraits:
+              _generatePersonalityTraits(rating, experienceYears),
           availabilityPattern: _generateAvailabilityPattern(),
           clientPreferences: _generateClientPreferences(price),
           performanceMetrics: _generatePerformanceMetrics(rating, reviewCount),
@@ -210,7 +214,8 @@ class SmartSpecialistDataGenerator {
 
       await batch.commit();
 
-      debugPrint('✅ Сгенерировано и сохранено ${specialists.length} тестовых специалистов');
+      debugPrint(
+          '✅ Сгенерировано и сохранено ${specialists.length} тестовых специалистов');
     } catch (e) {
       debugPrint('❌ Ошибка генерации тестовых данных: $e');
     }
@@ -275,12 +280,14 @@ class SmartSpecialistDataGenerator {
       ],
     };
 
-    final categoryDescriptions = descriptions[category] ?? ['Профессиональный специалист'];
+    final categoryDescriptions =
+        descriptions[category] ?? ['Профессиональный специалист'];
     return categoryDescriptions[_random.nextInt(categoryDescriptions.length)];
   }
 
   /// Сгенерировать биографию
-  String _generateBio(SpecialistCategory category, String firstName, int experienceYears) =>
+  String _generateBio(
+          SpecialistCategory category, String firstName, int experienceYears) =>
       'Привет! Меня зовут $firstName, и я работаю в сфере ${category.displayName.toLowerCase()} уже $experienceYears лет. '
       'Люблю создавать незабываемые моменты для моих клиентов. '
       'Имею опыт работы с различными типами мероприятий и всегда нахожу индивидуальный подход к каждому клиенту.';
@@ -295,7 +302,11 @@ class SmartSpecialistDataGenerator {
         'репортажная съемка',
       ],
       SpecialistCategory.dj: ['электронная музыка', 'поп-музыка', 'рок-музыка'],
-      SpecialistCategory.musician: ['живая музыка', 'каверы', 'авторские композиции'],
+      SpecialistCategory.musician: [
+        'живая музыка',
+        'каверы',
+        'авторские композиции'
+      ],
     };
 
     return subcategories[category] ?? ['услуги'];
@@ -307,7 +318,8 @@ class SmartSpecialistDataGenerator {
     final images = <String>[];
 
     for (var i = 0; i < count; i++) {
-      images.add('https://picsum.photos/400/300?random=${_random.nextInt(1000)}');
+      images
+          .add('https://picsum.photos/400/300?random=${_random.nextInt(1000)}');
     }
 
     return images;
@@ -316,7 +328,10 @@ class SmartSpecialistDataGenerator {
   /// Сгенерировать видео портфолио
   List<String> _generatePortfolioVideos(SpecialistCategory category) {
     if (_random.nextBool()) {
-      return ['https://example.com/video1.mp4', 'https://example.com/video2.mp4'];
+      return [
+        'https://example.com/video1.mp4',
+        'https://example.com/video2.mp4'
+      ];
     }
     return [];
   }
@@ -329,8 +344,16 @@ class SmartSpecialistDataGenerator {
         'развлекательная программа',
         'игры и конкурсы',
       ],
-      SpecialistCategory.photographer: ['фотосъемка', 'обработка фото', 'печать фотографий'],
-      SpecialistCategory.dj: ['музыкальное сопровождение', 'звуковое оборудование', 'световое шоу'],
+      SpecialistCategory.photographer: [
+        'фотосъемка',
+        'обработка фото',
+        'печать фотографий'
+      ],
+      SpecialistCategory.dj: [
+        'музыкальное сопровождение',
+        'звуковое оборудование',
+        'световое шоу'
+      ],
       SpecialistCategory.musician: [
         'живое выступление',
         'музыкальное сопровождение',
@@ -344,10 +367,22 @@ class SmartSpecialistDataGenerator {
   /// Сгенерировать оборудование
   List<String> _generateEquipment(SpecialistCategory category) {
     final equipment = {
-      SpecialistCategory.host: ['микрофон', 'колонки', 'музыкальное оборудование'],
-      SpecialistCategory.photographer: ['профессиональная камера', 'объективы', 'освещение'],
+      SpecialistCategory.host: [
+        'микрофон',
+        'колонки',
+        'музыкальное оборудование'
+      ],
+      SpecialistCategory.photographer: [
+        'профессиональная камера',
+        'объективы',
+        'освещение'
+      ],
       SpecialistCategory.dj: ['DJ-пульт', 'колонки', 'микрофоны'],
-      SpecialistCategory.musician: ['музыкальные инструменты', 'усилители', 'микрофоны'],
+      SpecialistCategory.musician: [
+        'музыкальные инструменты',
+        'усилители',
+        'микрофоны'
+      ],
     };
 
     return equipment[category] ?? ['оборудование'];
@@ -364,17 +399,18 @@ class SmartSpecialistDataGenerator {
 
   /// Сгенерировать рабочие часы
   Map<String, String> _generateWorkingHours() => {
-    'monday': '09:00-18:00',
-    'tuesday': '09:00-18:00',
-    'wednesday': '09:00-18:00',
-    'thursday': '09:00-18:00',
-    'friday': '09:00-18:00',
-    'saturday': '10:00-16:00',
-    'sunday': 'Выходной',
-  };
+        'monday': '09:00-18:00',
+        'tuesday': '09:00-18:00',
+        'wednesday': '09:00-18:00',
+        'thursday': '09:00-18:00',
+        'friday': '09:00-18:00',
+        'saturday': '10:00-16:00',
+        'sunday': 'Выходной',
+      };
 
   /// Сгенерировать ключевые слова
-  List<String> _generateKeywords(SpecialistCategory category, String city, List<String> styles) {
+  List<String> _generateKeywords(
+      SpecialistCategory category, String city, List<String> styles) {
     final keywords = <String>[];
 
     keywords.add(category.displayName.toLowerCase());
@@ -382,14 +418,20 @@ class SmartSpecialistDataGenerator {
     keywords.addAll(styles);
 
     // Добавляем дополнительные ключевые слова
-    final additionalKeywords = ['профессиональный', 'опытный', 'качественный', 'надежный'];
+    final additionalKeywords = [
+      'профессиональный',
+      'опытный',
+      'качественный',
+      'надежный'
+    ];
     keywords.addAll(additionalKeywords);
 
     return keywords;
   }
 
   /// Вычислить балл репутации
-  int _calculateReputationScore(double rating, int reviewCount, int experienceYears) {
+  int _calculateReputationScore(
+      double rating, int reviewCount, int experienceYears) {
     var score = 0;
 
     // Базовый балл за рейтинг
@@ -408,7 +450,8 @@ class SmartSpecialistDataGenerator {
   }
 
   /// Сгенерировать теги для поиска
-  List<String> _generateSearchTags(SpecialistCategory category, String city, List<String> styles) {
+  List<String> _generateSearchTags(
+      SpecialistCategory category, String city, List<String> styles) {
     final tags = <String>[];
 
     tags.add(category.displayName);
@@ -421,10 +464,30 @@ class SmartSpecialistDataGenerator {
   /// Сгенерировать типы мероприятий
   List<String> _generateEventTypes(SpecialistCategory category) {
     final eventTypes = {
-      SpecialistCategory.host: ['свадьба', 'корпоратив', 'день рождения', 'юбилей'],
-      SpecialistCategory.photographer: ['свадьба', 'фотосессия', 'корпоратив', 'день рождения'],
-      SpecialistCategory.dj: ['свадьба', 'корпоратив', 'день рождения', 'вечеринка'],
-      SpecialistCategory.musician: ['свадьба', 'корпоратив', 'день рождения', 'концерт'],
+      SpecialistCategory.host: [
+        'свадьба',
+        'корпоратив',
+        'день рождения',
+        'юбилей'
+      ],
+      SpecialistCategory.photographer: [
+        'свадьба',
+        'фотосессия',
+        'корпоратив',
+        'день рождения'
+      ],
+      SpecialistCategory.dj: [
+        'свадьба',
+        'корпоратив',
+        'день рождения',
+        'вечеринка'
+      ],
+      SpecialistCategory.musician: [
+        'свадьба',
+        'корпоратив',
+        'день рождения',
+        'концерт'
+      ],
     };
 
     return eventTypes[category] ?? ['мероприятие'];
@@ -445,11 +508,11 @@ class SmartSpecialistDataGenerator {
 
   /// Сгенерировать стиль работы
   Map<String, dynamic> _generateWorkingStyle(SpecialistCategory category) => {
-    'communication': _random.nextBool() ? 'отличная' : 'хорошая',
-    'punctuality': 0.8 + _random.nextDouble() * 0.2,
-    'flexibility': _random.nextBool() ? 'высокая' : 'средняя',
-    'creativity': _random.nextBool() ? 'высокая' : 'средняя',
-  };
+        'communication': _random.nextBool() ? 'отличная' : 'хорошая',
+        'punctuality': 0.8 + _random.nextDouble() * 0.2,
+        'flexibility': _random.nextBool() ? 'высокая' : 'средняя',
+        'creativity': _random.nextBool() ? 'высокая' : 'средняя',
+      };
 
   /// Сгенерировать черты характера
   List<String> _generatePersonalityTraits(double rating, int experienceYears) {
@@ -473,11 +536,11 @@ class SmartSpecialistDataGenerator {
 
   /// Сгенерировать паттерн доступности
   Map<String, dynamic> _generateAvailabilityPattern() => {
-    'weekdays': true,
-    'weekends': _random.nextBool(),
-    'evenings': _random.nextBool(),
-    'flexible': _random.nextBool(),
-  };
+        'weekdays': true,
+        'weekends': _random.nextBool(),
+        'evenings': _random.nextBool(),
+        'flexible': _random.nextBool(),
+      };
 
   /// Сгенерировать предпочтения клиентов
   Map<String, dynamic> _generateClientPreferences(double price) {
@@ -498,23 +561,26 @@ class SmartSpecialistDataGenerator {
   }
 
   /// Сгенерировать метрики производительности
-  Map<String, dynamic> _generatePerformanceMetrics(double rating, int reviewCount) => {
-    'responseTime': _random.nextBool() ? 'быстрый' : 'средний',
-    'completionRate': 0.9 + _random.nextDouble() * 0.1,
-    'cancellationRate': _random.nextDouble() * 0.1,
-    'clientSatisfaction': rating,
-  };
+  Map<String, dynamic> _generatePerformanceMetrics(
+          double rating, int reviewCount) =>
+      {
+        'responseTime': _random.nextBool() ? 'быстрый' : 'средний',
+        'completionRate': 0.9 + _random.nextDouble() * 0.1,
+        'cancellationRate': _random.nextDouble() * 0.1,
+        'clientSatisfaction': rating,
+      };
 
   /// Сгенерировать факторы рекомендаций
   Map<String, dynamic> _generateRecommendationFactors(
     double rating,
     int reviewCount,
     int experienceYears,
-  ) => {
-    'popularity': reviewCount,
-    'quality': rating,
-    'experience': experienceYears,
-    'availability': true,
-    'verification': _random.nextBool(),
-  };
+  ) =>
+      {
+        'popularity': reviewCount,
+        'quality': rating,
+        'experience': experienceYears,
+        'availability': true,
+        'verification': _random.nextBool(),
+      };
 }

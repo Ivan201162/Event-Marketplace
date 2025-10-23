@@ -45,7 +45,8 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       _loadMoreIdeas();
     }
   }
@@ -156,7 +157,10 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
                     widget.showUserIdeas ? 'Мои идеи' : 'Идеи мероприятий',
                     style: Theme.of(
                       context,
-                    ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .headlineSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
 
@@ -177,7 +181,8 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
               decoration: InputDecoration(
                 hintText: 'Поиск идей...',
                 prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 filled: true,
                 fillColor: Colors.grey[100],
               ),
@@ -245,7 +250,9 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
         itemBuilder: (context, index) {
           if (index == _ideas.length) {
             return const Center(
-              child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
+              child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: CircularProgressIndicator()),
             );
           }
 
@@ -268,15 +275,20 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
           children: [
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки идей', style: Theme.of(context).textTheme.titleLarge),
+            Text('Ошибка загрузки идей',
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
               _error!,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadIdeas, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadIdeas, child: const Text('Повторить')),
           ],
         ),
       );
@@ -289,14 +301,20 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
             const SizedBox(height: 16),
             Text(
               widget.showUserIdeas ? 'Нет идей' : 'Нет идей мероприятий',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               widget.showUserIdeas
                   ? 'Создайте свою первую идею мероприятия'
                   : 'Специалисты еще не поделились идеями',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             if (!widget.showUserIdeas) ...[
@@ -314,7 +332,8 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
   void _viewIdea(EventIdea idea) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (context) => IdeaDetailScreen(idea: idea)));
+    ).push(MaterialPageRoute<void>(
+        builder: (context) => IdeaDetailScreen(idea: idea)));
   }
 
   Future<void> _toggleLike(EventIdea idea) async {
@@ -324,7 +343,8 @@ class _EventIdeasFeedState extends ConsumerState<EventIdeasFeed> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 

@@ -9,13 +9,15 @@ import 'error_logging_service.dart';
 class PerformanceTestingService {
   factory PerformanceTestingService() => _instance;
   PerformanceTestingService._internal();
-  static final PerformanceTestingService _instance = PerformanceTestingService._internal();
+  static final PerformanceTestingService _instance =
+      PerformanceTestingService._internal();
 
   final ErrorLoggingService _errorLogger = ErrorLoggingService();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Тестировать производительность ленты
-  Future<Map<String, dynamic>> testFeedPerformance({int postsCount = 10, String? userId}) async {
+  Future<Map<String, dynamic>> testFeedPerformance(
+      {int postsCount = 10, String? userId}) async {
     final stopwatch = Stopwatch()..start();
 
     try {
@@ -30,9 +32,12 @@ class PerformanceTestingService {
 
       // Тест загрузки пользователей для постов
       final usersStopwatch = Stopwatch()..start();
-      final userIds = postsSnapshot.docs.map((doc) => doc.data()['authorId'] as String).toSet();
+      final userIds = postsSnapshot.docs
+          .map((doc) => doc.data()['authorId'] as String)
+          .toSet();
 
-      final usersPromises = userIds.map((uid) => _firestore.collection('users').doc(uid).get());
+      final usersPromises =
+          userIds.map((uid) => _firestore.collection('users').doc(uid).get());
       await Future.wait(usersPromises);
       usersStopwatch.stop();
 
@@ -80,7 +85,8 @@ class PerformanceTestingService {
   }
 
   /// Тестировать производительность чатов
-  Future<Map<String, dynamic>> testChatsPerformance({int chatsCount = 5, String? userId}) async {
+  Future<Map<String, dynamic>> testChatsPerformance(
+      {int chatsCount = 5, String? userId}) async {
     final stopwatch = Stopwatch()..start();
 
     try {
@@ -270,9 +276,11 @@ class PerformanceTestingService {
       results['totalTime'] = stopwatch.elapsedMilliseconds;
       results['averageLoadTime'] = results['loadTimes'].isNotEmpty
           ? (results['loadTimes'] as List<int>)
-                    .where((time) => time > 0)
-                    .fold(0, (sum, time) => sum + time) /
-                (results['loadTimes'] as List<int>).where((time) => time > 0).length
+                  .where((time) => time > 0)
+                  .fold(0, (sum, time) => sum + time) /
+              (results['loadTimes'] as List<int>)
+                  .where((time) => time > 0)
+                  .length
           : 0;
 
       await _errorLogger.logPerformance(
@@ -333,14 +341,16 @@ class PerformanceTestingService {
 
       // Тест загрузки изображений
       developer.log('Testing image loading performance...');
-      results['tests']['images'] = await testImageLoadingPerformance(userId: userId);
+      results['tests']['images'] =
+          await testImageLoadingPerformance(userId: userId);
 
       stopwatch.stop();
       results['totalTime'] = stopwatch.elapsedMilliseconds;
       results['endTime'] = DateTime.now().millisecondsSinceEpoch;
 
       // Проверяем, все ли тесты прошли успешно
-      final allTestsSuccessful = results['tests'].values.every((test) => test['success'] == true);
+      final allTestsSuccessful =
+          results['tests'].values.every((test) => test['success'] == true);
       results['success'] = allTestsSuccessful;
 
       await _errorLogger.logInfo(
@@ -351,7 +361,8 @@ class PerformanceTestingService {
         additionalData: results,
       );
 
-      developer.log('Full performance test completed in ${stopwatch.elapsedMilliseconds}ms');
+      developer.log(
+          'Full performance test completed in ${stopwatch.elapsedMilliseconds}ms');
       return results;
     } catch (e, stackTrace) {
       stopwatch.stop();
@@ -375,7 +386,8 @@ class PerformanceTestingService {
   }
 
   /// Получить статистику производительности
-  Future<Map<String, dynamic>> getPerformanceStats({DateTime? startDate, DateTime? endDate}) async {
+  Future<Map<String, dynamic>> getPerformanceStats(
+      {DateTime? startDate, DateTime? endDate}) async {
     try {
       Query query = _firestore.collection('performance_logs');
 
@@ -417,7 +429,8 @@ class PerformanceTestingService {
         stats['operationStats'][operation] = {
           'count': times.length,
           'totalTime': times.fold(0, (sum, time) => sum + time),
-          'averageTime': times.fold(0, (sum, time) => sum + time) / times.length,
+          'averageTime':
+              times.fold(0, (sum, time) => sum + time) / times.length,
           'minTime': times.first,
           'maxTime': times.last,
           'medianTime': times[times.length ~/ 2],

@@ -46,7 +46,8 @@ class OptimizedCard extends StatelessWidget {
   Widget build(BuildContext context) => Card(
         margin: margin,
         elevation: elevation,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius)),
         child: Padding(padding: padding, child: child),
       );
 }
@@ -125,8 +126,11 @@ class OptimizedText extends StatelessWidget {
   final TextOverflow overflow;
 
   @override
-  Widget build(BuildContext context) =>
-      Text(text, style: style, textAlign: textAlign, maxLines: maxLines, overflow: overflow);
+  Widget build(BuildContext context) => Text(text,
+      style: style,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow);
 }
 
 /// Оптимизированная иконка
@@ -218,7 +222,8 @@ class OptimizedShadowContainer extends StatelessWidget {
 
 /// Оптимизированный индикатор загрузки
 class OptimizedLoadingIndicator extends StatelessWidget {
-  const OptimizedLoadingIndicator({super.key, this.size = 24, this.strokeWidth = 2, this.color});
+  const OptimizedLoadingIndicator(
+      {super.key, this.size = 24, this.strokeWidth = 2, this.color});
 
   final double size;
   final double strokeWidth;
@@ -230,7 +235,8 @@ class OptimizedLoadingIndicator extends StatelessWidget {
         height: size,
         child: CircularProgressIndicator(
           strokeWidth: strokeWidth,
-          valueColor: AlwaysStoppedAnimation<Color>(color ?? Theme.of(context).primaryColor),
+          valueColor: AlwaysStoppedAnimation<Color>(
+              color ?? Theme.of(context).primaryColor),
         ),
       );
 }

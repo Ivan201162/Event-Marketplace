@@ -14,10 +14,12 @@ class PhoneVerificationScreen extends ConsumerStatefulWidget {
   const PhoneVerificationScreen({super.key, required this.phoneNumber});
 
   @override
-  ConsumerState<PhoneVerificationScreen> createState() => _PhoneVerificationScreenState();
+  ConsumerState<PhoneVerificationScreen> createState() =>
+      _PhoneVerificationScreenState();
 }
 
-class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScreen> {
+class _PhoneVerificationScreenState
+    extends ConsumerState<PhoneVerificationScreen> {
   final _codeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
@@ -80,7 +82,9 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
     });
 
     // Обновляем состояние
-    ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.verifying);
+    ref
+        .read(phoneAuthStateProvider.notifier)
+        .setState(PhoneAuthState.verifying);
 
     try {
       final authService = ref.read(authServiceProvider);
@@ -99,7 +103,9 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
       );
 
       // Обновляем состояние
-      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.verified);
+      ref
+          .read(phoneAuthStateProvider.notifier)
+          .setState(PhoneAuthState.verified);
 
       if (mounted) {
         // Переходим на главный экран
@@ -164,17 +170,23 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
       await authService.sendPhoneVerificationCode(widget.phoneNumber);
 
       // Обновляем verification ID
-      ref.read(phoneVerificationIdProvider.notifier).setVerificationId(authService.currentVerificationId);
+      ref
+          .read(phoneVerificationIdProvider.notifier)
+          .setVerificationId(authService.currentVerificationId);
 
       // Запускаем новый таймер
       _startCountdown();
 
       // Обновляем состояние
-      ref.read(phoneAuthStateProvider.notifier).setState(PhoneAuthState.codeSent);
+      ref
+          .read(phoneAuthStateProvider.notifier)
+          .setState(PhoneAuthState.codeSent);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Код отправлен повторно'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Код отправлен повторно'),
+              backgroundColor: Colors.green),
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -221,7 +233,8 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
     return Scaffold(
       appBar: AppBar(
         title: const Text('Подтверждение номера'),
-        leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back), onPressed: () => context.pop()),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -285,7 +298,8 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text('Подтвердить', style: TextStyle(fontSize: 16)),
+                        : const Text('Подтвердить',
+                            style: TextStyle(fontSize: 16)),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -300,7 +314,8 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
                 else
                   TextButton(
                     onPressed: _isLoading ? null : _resendCode,
-                    child: const Text('Отправить код повторно', style: TextStyle(fontSize: 16)),
+                    child: const Text('Отправить код повторно',
+                        style: TextStyle(fontSize: 16)),
                   ),
 
                 const SizedBox(height: 16),
@@ -319,7 +334,8 @@ class _PhoneVerificationScreenState extends ConsumerState<PhoneVerificationScree
                         Icon(Icons.error_outline, color: Colors.red.shade700),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(_errorMessage!, style: TextStyle(color: Colors.red.shade700)),
+                          child: Text(_errorMessage!,
+                              style: TextStyle(color: Colors.red.shade700)),
                         ),
                       ],
                     ),

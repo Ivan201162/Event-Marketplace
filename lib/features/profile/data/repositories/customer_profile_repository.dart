@@ -11,7 +11,8 @@ class CustomerProfileRepository {
   /// Получить профиль заказчика по ID
   Future<CustomerProfile?> getProfile(String customerId) async {
     try {
-      final doc = await _firestore.collection(_collection).doc(customerId).get();
+      final doc =
+          await _firestore.collection(_collection).doc(customerId).get();
       if (doc.exists) {
         return CustomerProfile.fromFirestore(doc);
       }
@@ -37,7 +38,8 @@ class CustomerProfileRepository {
   }
 
   /// Обновить профиль заказчика
-  Future<bool> updateProfile(String customerId, Map<String, dynamic> updates) async {
+  Future<bool> updateProfile(
+      String customerId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _firestore.collection(_collection).doc(customerId).update(updates);

@@ -36,7 +36,8 @@ class PaymentCardWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         _getPaymentTypeText(),
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     _buildStatusChip(),
@@ -156,10 +157,12 @@ class PaymentCardWidget extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+          color: backgroundColor, borderRadius: BorderRadius.circular(12)),
       child: Text(
         _getStatusText(),
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: textColor),
+        style: TextStyle(
+            fontSize: 12, fontWeight: FontWeight.w500, color: textColor),
       ),
     );
   }
@@ -196,7 +199,8 @@ class PaymentCardWidget extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.bold, color: color),
           ),
         ],
       );
@@ -207,10 +211,12 @@ class PaymentCardWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Прогресс оплаты', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+              Text('Прогресс оплаты',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600])),
               Text(
                 '${payment.paymentProgress.toStringAsFixed(1)}%',
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -238,7 +244,10 @@ class PaymentCardWidget extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               '... и ещё ${payment.installments.length - 3}',
-              style: TextStyle(fontSize: 12, color: Colors.grey[600], fontStyle: FontStyle.italic),
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontStyle: FontStyle.italic),
             ),
           ],
         ],
@@ -255,7 +264,8 @@ class PaymentCardWidget extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Expanded(
-              child: Text(_formatDate(installment.dueDate), style: const TextStyle(fontSize: 12)),
+              child: Text(_formatDate(installment.dueDate),
+                  style: const TextStyle(fontSize: 12)),
             ),
             Text(
               '${installment.amount.toStringAsFixed(2)} ₽',

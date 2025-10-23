@@ -4,12 +4,14 @@ import '../../models/specialist_filters.dart';
 import '../../providers/search_providers.dart';
 
 class SearchFiltersWidget extends ConsumerStatefulWidget {
-  const SearchFiltersWidget({super.key, this.onFiltersChanged, this.showTitle = true});
+  const SearchFiltersWidget(
+      {super.key, this.onFiltersChanged, this.showTitle = true});
   final VoidCallback? onFiltersChanged;
   final bool showTitle;
 
   @override
-  ConsumerState<SearchFiltersWidget> createState() => _SearchFiltersWidgetState();
+  ConsumerState<SearchFiltersWidget> createState() =>
+      _SearchFiltersWidgetState();
 }
 
 class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
@@ -40,7 +42,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
               children: [
                 if (hasActiveFilters) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(12),
@@ -57,7 +60,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                   const SizedBox(width: 8),
                 ],
                 IconButton(
-                  icon: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
+                  icon:
+                      Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
                   onPressed: () {
                     setState(() {
                       _isExpanded = !_isExpanded;
@@ -110,7 +114,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Категория', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const Text('Категория',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -124,12 +129,16 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                 setState(() {
                   if (selected) {
                     _currentFilters = _currentFilters.copyWith(
-                      subcategories: [..._currentFilters.subcategories, category],
+                      subcategories: [
+                        ..._currentFilters.subcategories,
+                        category
+                      ],
                     );
                   } else {
                     _currentFilters = _currentFilters.copyWith(
-                      subcategories:
-                          _currentFilters.subcategories.where((cat) => cat != category).toList(),
+                      subcategories: _currentFilters.subcategories
+                          .where((cat) => cat != category)
+                          .toList(),
                     );
                   }
                 });
@@ -144,7 +153,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   Widget _buildPriceFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Цена за час', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Цена за час',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -160,7 +170,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                     final price = double.tryParse(value);
                     if (price != null) {
                       setState(() {
-                        _currentFilters = _currentFilters.copyWith(minPrice: price);
+                        _currentFilters =
+                            _currentFilters.copyWith(minPrice: price);
                       });
                     }
                   },
@@ -179,7 +190,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                     final price = double.tryParse(value);
                     if (price != null) {
                       setState(() {
-                        _currentFilters = _currentFilters.copyWith(maxPrice: price);
+                        _currentFilters =
+                            _currentFilters.copyWith(maxPrice: price);
                       });
                     }
                   },
@@ -201,8 +213,10 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
         ],
       );
 
-  Widget _buildQuickPriceOption(String label, double? minPrice, double? maxPrice) {
-    final isSelected = _currentFilters.minPrice == minPrice && _currentFilters.maxPrice == maxPrice;
+  Widget _buildQuickPriceOption(
+      String label, double? minPrice, double? maxPrice) {
+    final isSelected = _currentFilters.minPrice == minPrice &&
+        _currentFilters.maxPrice == maxPrice;
 
     return FilterChip(
       label: Text(label),
@@ -259,7 +273,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       selected: isSelected,
       onSelected: (selected) {
         setState(() {
-          _currentFilters = _currentFilters.copyWith(minRating: selected ? rating : null);
+          _currentFilters =
+              _currentFilters.copyWith(minRating: selected ? rating : null);
         });
       },
     );
@@ -271,7 +286,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Город', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const Text('Город',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           initialValue: _currentFilters.city,
@@ -282,7 +298,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           ),
           items: [
             const DropdownMenuItem<String>(child: Text('Все города')),
-            ...citiesAsync.map((city) => DropdownMenuItem<String>(value: city, child: Text(city))),
+            ...citiesAsync.map((city) =>
+                DropdownMenuItem<String>(value: city, child: Text(city))),
           ],
           onChanged: (value) {
             setState(() {
@@ -297,7 +314,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   Widget _buildDateFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Доступная дата', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Доступная дата',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           InkWell(
             onTap: () async {
@@ -309,7 +327,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
               );
               if (date != null) {
                 setState(() {
-                  _currentFilters = _currentFilters.copyWith(availableDate: date);
+                  _currentFilters =
+                      _currentFilters.copyWith(availableDate: date);
                 });
               }
             },
@@ -328,7 +347,9 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                         ? '${_currentFilters.availableDate!.day}.${_currentFilters.availableDate!.month}.${_currentFilters.availableDate!.year}'
                         : 'Выберите дату',
                     style: TextStyle(
-                      color: _currentFilters.availableDate != null ? Colors.black : Colors.grey,
+                      color: _currentFilters.availableDate != null
+                          ? Colors.black
+                          : Colors.grey,
                     ),
                   ),
                   const Spacer(),
@@ -351,7 +372,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   Widget _buildVerificationFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Верификация', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Верификация',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -361,8 +383,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                   selected: _currentFilters.isVerified ?? false,
                   onSelected: (selected) {
                     setState(() {
-                      _currentFilters =
-                          _currentFilters.copyWith(isVerified: selected ? true : null);
+                      _currentFilters = _currentFilters.copyWith(
+                          isVerified: selected ? true : null);
                     });
                   },
                 ),
@@ -375,7 +397,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   Widget _buildAvailabilityFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Доступность', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Доступность',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -385,8 +408,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                   selected: _currentFilters.isAvailable ?? false,
                   onSelected: (selected) {
                     setState(() {
-                      _currentFilters =
-                          _currentFilters.copyWith(isAvailable: selected ? true : null);
+                      _currentFilters = _currentFilters.copyWith(
+                          isAvailable: selected ? true : null);
                     });
                   },
                 ),
@@ -446,9 +469,8 @@ class QuickFiltersWidget extends ConsumerWidget {
               ref,
               'Высокий рейтинг',
               Icons.star,
-              () => ref
-                  .read(searchFiltersProvider.notifier)
-                  .updateFilters(ref.read(searchFiltersProvider).copyWith(minRating: 4.5)),
+              () => ref.read(searchFiltersProvider.notifier).updateFilters(
+                  ref.read(searchFiltersProvider).copyWith(minRating: 4.5)),
             ),
             const SizedBox(width: 8),
             _buildQuickFilter(
@@ -456,9 +478,8 @@ class QuickFiltersWidget extends ConsumerWidget {
               ref,
               'До 10 000₽',
               Icons.attach_money,
-              () => ref
-                  .read(searchFiltersProvider.notifier)
-                  .updateFilters(ref.read(searchFiltersProvider).copyWith(maxPrice: 10000)),
+              () => ref.read(searchFiltersProvider.notifier).updateFilters(
+                  ref.read(searchFiltersProvider).copyWith(maxPrice: 10000)),
             ),
             const SizedBox(width: 8),
             _buildQuickFilter(
@@ -466,9 +487,8 @@ class QuickFiltersWidget extends ConsumerWidget {
               ref,
               'Верифицированные',
               Icons.verified,
-              () => ref
-                  .read(searchFiltersProvider.notifier)
-                  .updateFilters(ref.read(searchFiltersProvider).copyWith(isVerified: true)),
+              () => ref.read(searchFiltersProvider.notifier).updateFilters(
+                  ref.read(searchFiltersProvider).copyWith(isVerified: true)),
             ),
             const SizedBox(width: 8),
             _buildQuickFilter(
@@ -476,9 +496,8 @@ class QuickFiltersWidget extends ConsumerWidget {
               ref,
               'Доступные',
               Icons.check_circle,
-              () => ref
-                  .read(searchFiltersProvider.notifier)
-                  .updateFilters(ref.read(searchFiltersProvider).copyWith(isAvailable: true)),
+              () => ref.read(searchFiltersProvider.notifier).updateFilters(
+                  ref.read(searchFiltersProvider).copyWith(isAvailable: true)),
             ),
           ],
         ),
@@ -545,7 +564,8 @@ class ActiveFiltersWidget extends ConsumerWidget {
     if (filters.minPrice != null || filters.maxPrice != null) {
       var priceText = '';
       if (filters.minPrice != null && filters.maxPrice != null) {
-        priceText = '${filters.minPrice!.toInt()} - ${filters.maxPrice!.toInt()}₽';
+        priceText =
+            '${filters.minPrice!.toInt()} - ${filters.maxPrice!.toInt()}₽';
       } else if (filters.minPrice != null) {
         priceText = 'От ${filters.minPrice!.toInt()}₽';
       } else if (filters.maxPrice != null) {
@@ -556,7 +576,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           priceText,
           Icons.attach_money,
-          () => ref.read(searchFiltersProvider.notifier).updateFilters(filters.copyWith()),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
@@ -567,7 +589,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           'Рейтинг ${filters.minRating!.toStringAsFixed(1)}+',
           Icons.star,
-          () => ref.read(searchFiltersProvider.notifier).updateFilters(filters.copyWith()),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
@@ -602,7 +626,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           'Верифицированные',
           Icons.verified,
-          () => ref.read(searchFiltersProvider.notifier).updateFilters(filters.copyWith()),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
@@ -613,7 +639,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           'Доступные',
           Icons.check_circle,
-          () => ref.read(searchFiltersProvider.notifier).updateFilters(filters.copyWith()),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
@@ -625,7 +653,9 @@ class ActiveFiltersWidget extends ConsumerWidget {
         _buildFilterChip(
           '${date.day}.${date.month}.${date.year}',
           Icons.calendar_today,
-          () => ref.read(searchFiltersProvider.notifier).updateFilters(filters.copyWith()),
+          () => ref
+              .read(searchFiltersProvider.notifier)
+              .updateFilters(filters.copyWith()),
         ),
       );
     }
@@ -662,7 +692,8 @@ class ActiveFiltersWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildFilterChip(String label, IconData icon, VoidCallback onRemove) => Container(
+  Widget _buildFilterChip(String label, IconData icon, VoidCallback onRemove) =>
+      Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.blue.shade100,
@@ -674,7 +705,8 @@ class ActiveFiltersWidget extends ConsumerWidget {
           children: [
             Icon(icon, size: 14, color: Colors.blue.shade700),
             const SizedBox(width: 4),
-            Text(label, style: TextStyle(fontSize: 12, color: Colors.blue.shade700)),
+            Text(label,
+                style: TextStyle(fontSize: 12, color: Colors.blue.shade700)),
             const SizedBox(width: 4),
             GestureDetector(
               onTap: onRemove,

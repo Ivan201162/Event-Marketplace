@@ -3,7 +3,8 @@ import '../services/notification_service.dart';
 
 /// Виджет для отображения счетчика непрочитанных уведомлений
 class NotificationBadgeWidget extends StatelessWidget {
-  const NotificationBadgeWidget({super.key, required this.userId, required this.child, this.onTap});
+  const NotificationBadgeWidget(
+      {super.key, required this.userId, required this.child, this.onTap});
 
   final String userId;
   final Widget child;
@@ -30,7 +31,8 @@ class NotificationBadgeWidget extends StatelessWidget {
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+                      constraints:
+                          const BoxConstraints(minWidth: 20, minHeight: 20),
                       child: Text(
                         unreadCount > 99 ? '99+' : unreadCount.toString(),
                         style: const TextStyle(
@@ -91,6 +93,7 @@ class NotificationButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) => NotificationBadgeWidget(
         userId: userId,
         onTap: onTap,
-        child: ElevatedButton.icon(onPressed: onTap, icon: Icon(icon), label: Text(label)),
+        child: ElevatedButton.icon(
+            onPressed: onTap, icon: Icon(icon), label: Text(label)),
       );
 }

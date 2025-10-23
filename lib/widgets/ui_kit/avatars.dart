@@ -144,7 +144,8 @@ class UIAvatars {
               child: Center(
                 child: badge ??
                     Text(
-                      badgeText ?? (badgeCount != null ? badgeCount.toString() : ''),
+                      badgeText ??
+                          (badgeCount != null ? badgeCount.toString() : ''),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 10,
@@ -260,7 +261,8 @@ class UIAvatars {
                               backgroundColor: backgroundColor,
                               textColor: textColor,
                             ),
-                            errorWidget: (context, url, error) => _buildPlaceholder(
+                            errorWidget: (context, url, error) =>
+                                _buildPlaceholder(
                               size: size,
                               backgroundColor: backgroundColor,
                               textColor: textColor,

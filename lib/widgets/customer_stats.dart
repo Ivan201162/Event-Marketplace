@@ -28,14 +28,18 @@ class CustomerStats extends ConsumerWidget {
           ],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.2)),
+        border: Border.all(
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Статистика',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           Row(
@@ -119,12 +123,18 @@ class CustomerStats extends ConsumerWidget {
               value,
               style: Theme.of(
                 context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: color),
+              )
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(fontWeight: FontWeight.bold, color: color),
             ),
             const SizedBox(height: 4),
             Text(
               title,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
           ],

@@ -29,7 +29,8 @@ class PortfolioWidget extends StatelessWidget {
           children: [
             const Icon(Icons.photo_library, color: Colors.blue),
             const SizedBox(width: 8),
-            const Text('Портфолио', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Портфолио',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const Spacer(),
             Text(
               '${portfolioItems.length} работ',
@@ -61,14 +62,18 @@ class PortfolioWidget extends StatelessWidget {
 
   Widget _buildEmptyState() => Container(
         padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
         child: const Column(
           children: [
             Icon(Icons.photo_library_outlined, size: 48, color: Colors.grey),
             SizedBox(height: 16),
             Text(
               'Портфолио пусто',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey),
             ),
             SizedBox(height: 8),
             Text(
@@ -103,16 +108,18 @@ class PortfolioWidget extends StatelessWidget {
                       ? Image.network(
                           item.mediaUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
                             color: Colors.grey[300],
-                            child:
-                                const Icon(Icons.image_not_supported, color: Colors.grey, size: 32),
+                            child: const Icon(Icons.image_not_supported,
+                                color: Colors.grey, size: 32),
                           ),
                         )
                       : Container(
                           color: Colors.black,
                           child: const Center(
-                            child: Icon(Icons.play_circle_outline, color: Colors.white, size: 48),
+                            child: Icon(Icons.play_circle_outline,
+                                color: Colors.white, size: 48),
                           ),
                         ),
                 ),
@@ -128,7 +135,10 @@ class PortfolioWidget extends StatelessWidget {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 0.7)
+                        ],
                       ),
                     ),
                   ),
@@ -156,7 +166,8 @@ class PortfolioWidget extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           item.category,
-                          style: const TextStyle(color: Colors.white70, fontSize: 10),
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 10),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -185,7 +196,8 @@ class PortfolioWidget extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.favorite_border, color: Colors.white, size: 14),
+                                const Icon(Icons.favorite_border,
+                                    color: Colors.white, size: 14),
                                 if (item.likes > 0) ...[
                                   const SizedBox(width: 4),
                                   Text(
@@ -210,7 +222,8 @@ class PortfolioWidget extends StatelessWidget {
                     top: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.black.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(8),
@@ -227,7 +240,9 @@ class PortfolioWidget extends StatelessWidget {
                           ),
                           const SizedBox(width: 2),
                           Text(
-                            item.mediaType == PortfolioMediaType.image ? 'Фото' : 'Видео',
+                            item.mediaType == PortfolioMediaType.image
+                                ? 'Фото'
+                                : 'Видео',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 8,

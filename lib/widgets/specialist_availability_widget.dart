@@ -8,15 +8,18 @@ import '../services/availability_service.dart';
 class SpecialistAvailabilityWidget extends ConsumerStatefulWidget {
   // Является ли текущий пользователь владельцем профиля
 
-  const SpecialistAvailabilityWidget({super.key, required this.specialistId, this.isOwner = false});
+  const SpecialistAvailabilityWidget(
+      {super.key, required this.specialistId, this.isOwner = false});
   final String specialistId;
   final bool isOwner;
 
   @override
-  ConsumerState<SpecialistAvailabilityWidget> createState() => _SpecialistAvailabilityWidgetState();
+  ConsumerState<SpecialistAvailabilityWidget> createState() =>
+      _SpecialistAvailabilityWidgetState();
 }
 
-class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailabilityWidget> {
+class _SpecialistAvailabilityWidgetState
+    extends ConsumerState<SpecialistAvailabilityWidget> {
   final AvailabilityService _availabilityService = AvailabilityService();
 
   DateTime _focusedDay = DateTime.now();
@@ -103,7 +106,8 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
         calendarStyle: const CalendarStyle(
           outsideDaysVisible: false,
           markersMaxCount: 1,
-          markerDecoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+          markerDecoration:
+              BoxDecoration(color: Colors.red, shape: BoxShape.circle),
           cellMargin: EdgeInsets.all(2),
           cellPadding: EdgeInsets.all(4),
         ),
@@ -223,7 +227,8 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
               ],
               if (availability.timeSlots.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                const Text('Временные слоты:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Временные слоты:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 ...availability.timeSlots.map(_buildTimeSlotInfo),
               ],
@@ -231,7 +236,9 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
           if (widget.isOwner) ...[
             if (availability == null)
               ElevatedButton(
@@ -268,7 +275,8 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: slot.isAvailable ? Colors.green.shade50 : Colors.red.shade50,
-          border: Border.all(color: slot.isAvailable ? Colors.green : Colors.red),
+          border:
+              Border.all(color: slot.isAvailable ? Colors.green : Colors.red),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Row(
@@ -285,7 +293,8 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
             ),
             if (slot.note != null) ...[
               const Spacer(),
-              Text(slot.note!, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+              Text(slot.note!,
+                  style: const TextStyle(color: Colors.grey, fontSize: 10)),
             ],
           ],
         ),
@@ -306,7 +315,8 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
   Future<void> _markDayAsBusy(DateTime date) async {
     final note = await _showNoteDialog('Добавить примечание (необязательно)');
 
-    final success = await _availabilityService.addBusyDate(widget.specialistId, date, note: note);
+    final success = await _availabilityService
+        .addBusyDate(widget.specialistId, date, note: note);
 
     if (success) {
       await _loadAvailabilityData();
@@ -325,7 +335,8 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
   }
 
   Future<void> _unmarkDayAsBusy(DateTime date) async {
-    final success = await _availabilityService.removeBusyDate(widget.specialistId, date);
+    final success =
+        await _availabilityService.removeBusyDate(widget.specialistId, date);
 
     if (success) {
       await _loadAvailabilityData();
@@ -338,7 +349,8 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Ошибка освобождения даты')));
+        ).showSnackBar(
+            const SnackBar(content: Text('Ошибка освобождения даты')));
       }
     }
   }
@@ -359,7 +371,9 @@ class _SpecialistAvailabilityWidgetState extends ConsumerState<SpecialistAvailab
           maxLines: 3,
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('Добавить'),

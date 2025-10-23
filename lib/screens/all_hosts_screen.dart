@@ -32,7 +32,8 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       // Загружаем больше данных при приближении к концу списка
       ref.read(mockPaginatedHostsProvider.notifier).loadMore();
     }
@@ -71,7 +72,8 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
             IconButton(
               icon: const Icon(Icons.clear_all),
               onPressed: () {
-                ref.read(hostFiltersProvider.notifier).state = const HostFilters();
+                ref.read(hostFiltersProvider.notifier).state =
+                    const HostFilters();
                 ref.read(mockPaginatedHostsProvider.notifier).clearFilters();
               },
               tooltip: 'Сбросить фильтры',
@@ -97,7 +99,9 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
               child: HostFiltersWidget(
                 onFiltersChanged: (newFilters) {
                   ref.read(hostFiltersProvider.notifier).state = newFilters;
-                  ref.read(mockPaginatedHostsProvider.notifier).applyFilters(newFilters);
+                  ref
+                      .read(mockPaginatedHostsProvider.notifier)
+                      .applyFilters(newFilters);
                 },
               ),
             ),
@@ -112,7 +116,9 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
 
                 return RefreshIndicator(
                   onRefresh: () async {
-                    await ref.read(mockPaginatedHostsProvider.notifier).loadHosts(refresh: true);
+                    await ref
+                        .read(mockPaginatedHostsProvider.notifier)
+                        .loadHosts(refresh: true);
                   },
                   child: _buildHostsList(hosts, isMobile),
                 );
@@ -155,7 +161,8 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
-              ref.read(hostFiltersProvider.notifier).state = const HostFilters();
+              ref.read(hostFiltersProvider.notifier).state =
+                  const HostFilters();
               ref.read(mockPaginatedHostsProvider.notifier).clearFilters();
             },
             child: const Text('Сбросить фильтры'),
@@ -172,7 +179,8 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor)),
+          CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor)),
           const SizedBox(height: 16),
           Text(
             'Загрузка ведущих...',
@@ -196,7 +204,8 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
           const SizedBox(height: 16),
           Text(
             'Ошибка загрузки',
-            style: theme.textTheme.headlineSmall?.copyWith(color: theme.colorScheme.error),
+            style: theme.textTheme.headlineSmall
+                ?.copyWith(color: theme.colorScheme.error),
           ),
           const SizedBox(height: 8),
           Text(
@@ -209,7 +218,9 @@ class _AllHostsScreenState extends ConsumerState<AllHostsScreen> {
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () {
-              ref.read(mockPaginatedHostsProvider.notifier).loadHosts(refresh: true);
+              ref
+                  .read(mockPaginatedHostsProvider.notifier)
+                  .loadHosts(refresh: true);
             },
             child: const Text('Повторить'),
           ),

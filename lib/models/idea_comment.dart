@@ -119,19 +119,19 @@ class IdeaComment extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    ideaId,
-    authorId,
-    authorName,
-    authorAvatar,
-    content,
-    createdAt,
-    updatedAt,
-    likesCount,
-    likedBy,
-    parentCommentId,
-    replies,
-  ];
+        id,
+        ideaId,
+        authorId,
+        authorName,
+        authorAvatar,
+        content,
+        createdAt,
+        updatedAt,
+        likesCount,
+        likedBy,
+        parentCommentId,
+        replies,
+      ];
 
   @override
   String toString() {

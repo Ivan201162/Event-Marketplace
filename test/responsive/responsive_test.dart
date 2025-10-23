@@ -12,9 +12,10 @@ import 'package:event_marketplace_app/screens/responsive/responsive_profile_scre
 /// Тесты адаптивности
 void main() {
   group('Responsive Design Tests', () {
-    testWidgets('ResponsiveMainNavigationScreen adapts to mobile screens', (WidgetTester tester) async {
+    testWidgets('ResponsiveMainNavigationScreen adapts to mobile screens',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(375, 667));
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveMainNavigationScreen(),
@@ -25,16 +26,17 @@ void main() {
       expect(find.byType(MaterialApp), findsOneWidget);
       expect(find.byType(Scaffold), findsOneWidget);
       expect(find.byType(BottomNavigationBar), findsOneWidget);
-      
+
       // Проверка отсутствия переполнения
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('ResponsiveMainNavigationScreen adapts to tablet screens', (WidgetTester tester) async {
+    testWidgets('ResponsiveMainNavigationScreen adapts to tablet screens',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(768, 1024));
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveMainNavigationScreen(),
@@ -44,16 +46,17 @@ void main() {
       // Проверка адаптации к планшетам
       expect(find.byType(MaterialApp), findsOneWidget);
       expect(find.byType(Scaffold), findsOneWidget);
-      
+
       // Проверка отсутствия переполнения
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('ResponsiveMainNavigationScreen adapts to desktop screens', (WidgetTester tester) async {
+    testWidgets('ResponsiveMainNavigationScreen adapts to desktop screens',
+        (WidgetTester tester) async {
       await tester.binding.setSurfaceSize(const Size(1024, 768));
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveMainNavigationScreen(),
@@ -63,24 +66,25 @@ void main() {
       // Проверка адаптации к десктопам
       expect(find.byType(MaterialApp), findsOneWidget);
       expect(find.byType(Scaffold), findsOneWidget);
-      
+
       // Проверка отсутствия переполнения
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('ResponsiveHomeScreen adapts to different screen sizes', (WidgetTester tester) async {
+    testWidgets('ResponsiveHomeScreen adapts to different screen sizes',
+        (WidgetTester tester) async {
       final screenSizes = [
-        const Size(375, 667),   // iPhone 8
-        const Size(414, 896),  // iPhone 11 Pro Max
-        const Size(768, 1024),  // iPad
-        const Size(1024, 768),  // iPad landscape
+        const Size(375, 667), // iPhone 8
+        const Size(414, 896), // iPhone 11 Pro Max
+        const Size(768, 1024), // iPad
+        const Size(1024, 768), // iPad landscape
       ];
 
       for (final size in screenSizes) {
         await tester.binding.setSurfaceSize(size);
-        
+
         await tester.pumpWidget(
           MaterialApp(
             home: ResponsiveHomeScreen(),
@@ -90,7 +94,7 @@ void main() {
         // Проверка адаптации к разным размерам экрана
         expect(find.byType(MaterialApp), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
-        
+
         // Проверка отсутствия переполнения
         expect(find.text('Ошибка'), findsNothing);
         expect(find.text('Error'), findsNothing);
@@ -98,17 +102,18 @@ void main() {
       }
     });
 
-    testWidgets('ResponsiveFeedScreen adapts to different screen sizes', (WidgetTester tester) async {
+    testWidgets('ResponsiveFeedScreen adapts to different screen sizes',
+        (WidgetTester tester) async {
       final screenSizes = [
-        const Size(375, 667),   // iPhone 8
-        const Size(414, 896),  // iPhone 11 Pro Max
-        const Size(768, 1024),  // iPad
-        const Size(1024, 768),  // iPad landscape
+        const Size(375, 667), // iPhone 8
+        const Size(414, 896), // iPhone 11 Pro Max
+        const Size(768, 1024), // iPad
+        const Size(1024, 768), // iPad landscape
       ];
 
       for (final size in screenSizes) {
         await tester.binding.setSurfaceSize(size);
-        
+
         await tester.pumpWidget(
           MaterialApp(
             home: ResponsiveFeedScreen(),
@@ -118,7 +123,7 @@ void main() {
         // Проверка адаптации к разным размерам экрана
         expect(find.byType(MaterialApp), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
-        
+
         // Проверка отсутствия переполнения
         expect(find.text('Ошибка'), findsNothing);
         expect(find.text('Error'), findsNothing);
@@ -126,17 +131,18 @@ void main() {
       }
     });
 
-    testWidgets('ResponsiveRequestsScreen adapts to different screen sizes', (WidgetTester tester) async {
+    testWidgets('ResponsiveRequestsScreen adapts to different screen sizes',
+        (WidgetTester tester) async {
       final screenSizes = [
-        const Size(375, 667),   // iPhone 8
-        const Size(414, 896),  // iPhone 11 Pro Max
-        const Size(768, 1024),  // iPad
-        const Size(1024, 768),  // iPad landscape
+        const Size(375, 667), // iPhone 8
+        const Size(414, 896), // iPhone 11 Pro Max
+        const Size(768, 1024), // iPad
+        const Size(1024, 768), // iPad landscape
       ];
 
       for (final size in screenSizes) {
         await tester.binding.setSurfaceSize(size);
-        
+
         await tester.pumpWidget(
           MaterialApp(
             home: ResponsiveRequestsScreen(),
@@ -146,7 +152,7 @@ void main() {
         // Проверка адаптации к разным размерам экрана
         expect(find.byType(MaterialApp), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
-        
+
         // Проверка отсутствия переполнения
         expect(find.text('Ошибка'), findsNothing);
         expect(find.text('Error'), findsNothing);
@@ -154,17 +160,18 @@ void main() {
       }
     });
 
-    testWidgets('ResponsiveChatScreen adapts to different screen sizes', (WidgetTester tester) async {
+    testWidgets('ResponsiveChatScreen adapts to different screen sizes',
+        (WidgetTester tester) async {
       final screenSizes = [
-        const Size(375, 667),   // iPhone 8
-        const Size(414, 896),  // iPhone 11 Pro Max
-        const Size(768, 1024),  // iPad
-        const Size(1024, 768),  // iPad landscape
+        const Size(375, 667), // iPhone 8
+        const Size(414, 896), // iPhone 11 Pro Max
+        const Size(768, 1024), // iPad
+        const Size(1024, 768), // iPad landscape
       ];
 
       for (final size in screenSizes) {
         await tester.binding.setSurfaceSize(size);
-        
+
         await tester.pumpWidget(
           MaterialApp(
             home: ResponsiveChatScreen(),
@@ -174,7 +181,7 @@ void main() {
         // Проверка адаптации к разным размерам экрана
         expect(find.byType(MaterialApp), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
-        
+
         // Проверка отсутствия переполнения
         expect(find.text('Ошибка'), findsNothing);
         expect(find.text('Error'), findsNothing);
@@ -182,17 +189,18 @@ void main() {
       }
     });
 
-    testWidgets('ResponsiveIdeasScreen adapts to different screen sizes', (WidgetTester tester) async {
+    testWidgets('ResponsiveIdeasScreen adapts to different screen sizes',
+        (WidgetTester tester) async {
       final screenSizes = [
-        const Size(375, 667),   // iPhone 8
-        const Size(414, 896),  // iPhone 11 Pro Max
-        const Size(768, 1024),  // iPad
-        const Size(1024, 768),  // iPad landscape
+        const Size(375, 667), // iPhone 8
+        const Size(414, 896), // iPhone 11 Pro Max
+        const Size(768, 1024), // iPad
+        const Size(1024, 768), // iPad landscape
       ];
 
       for (final size in screenSizes) {
         await tester.binding.setSurfaceSize(size);
-        
+
         await tester.pumpWidget(
           MaterialApp(
             home: ResponsiveIdeasScreen(),
@@ -202,7 +210,7 @@ void main() {
         // Проверка адаптации к разным размерам экрана
         expect(find.byType(MaterialApp), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
-        
+
         // Проверка отсутствия переполнения
         expect(find.text('Ошибка'), findsNothing);
         expect(find.text('Error'), findsNothing);
@@ -210,17 +218,18 @@ void main() {
       }
     });
 
-    testWidgets('ResponsiveProfileScreen adapts to different screen sizes', (WidgetTester tester) async {
+    testWidgets('ResponsiveProfileScreen adapts to different screen sizes',
+        (WidgetTester tester) async {
       final screenSizes = [
-        const Size(375, 667),   // iPhone 8
-        const Size(414, 896),  // iPhone 11 Pro Max
-        const Size(768, 1024),  // iPad
-        const Size(1024, 768),  // iPad landscape
+        const Size(375, 667), // iPhone 8
+        const Size(414, 896), // iPhone 11 Pro Max
+        const Size(768, 1024), // iPad
+        const Size(1024, 768), // iPad landscape
       ];
 
       for (final size in screenSizes) {
         await tester.binding.setSurfaceSize(size);
-        
+
         await tester.pumpWidget(
           MaterialApp(
             home: ResponsiveProfileScreen(),
@@ -230,7 +239,7 @@ void main() {
         // Проверка адаптации к разным размерам экрана
         expect(find.byType(MaterialApp), findsOneWidget);
         expect(find.byType(Scaffold), findsOneWidget);
-        
+
         // Проверка отсутствия переполнения
         expect(find.text('Ошибка'), findsNothing);
         expect(find.text('Error'), findsNothing);
@@ -238,7 +247,8 @@ void main() {
       }
     });
 
-    testWidgets('App handles dynamic screen size changes', (WidgetTester tester) async {
+    testWidgets('App handles dynamic screen size changes',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveMainNavigationScreen(),
@@ -247,16 +257,16 @@ void main() {
 
       // Динамическое изменение размера экрана
       final screenSizes = [
-        const Size(375, 667),   // iPhone 8
-        const Size(414, 896),  // iPhone 11 Pro Max
-        const Size(768, 1024),  // iPad
-        const Size(1024, 768),  // iPad landscape
+        const Size(375, 667), // iPhone 8
+        const Size(414, 896), // iPhone 11 Pro Max
+        const Size(768, 1024), // iPad
+        const Size(1024, 768), // iPad landscape
       ];
 
       for (final size in screenSizes) {
         await tester.binding.setSurfaceSize(size);
         await tester.pumpAndSettle();
-        
+
         // Проверка отсутствия ошибок при изменении размера
         expect(find.text('Ошибка'), findsNothing);
         expect(find.text('Error'), findsNothing);
@@ -264,7 +274,8 @@ void main() {
       }
     });
 
-    testWidgets('App handles orientation changes gracefully', (WidgetTester tester) async {
+    testWidgets('App handles orientation changes gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveMainNavigationScreen(),
@@ -274,17 +285,18 @@ void main() {
       // Изменение ориентации
       await tester.binding.setSurfaceSize(const Size(800, 600));
       await tester.pumpAndSettle();
-      
+
       await tester.binding.setSurfaceSize(const Size(600, 800));
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок при изменении ориентации
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles screen rotation during navigation', (WidgetTester tester) async {
+    testWidgets('App handles screen rotation during navigation',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ResponsiveMainNavigationScreen(),
@@ -294,15 +306,15 @@ void main() {
       // Переход на вкладку "Лента"
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       // Изменение ориентации
       await tester.binding.setSurfaceSize(const Size(800, 600));
       await tester.pumpAndSettle();
-      
+
       // Переход на вкладку "Заявки"
       await tester.tap(find.text('Заявки'));
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);

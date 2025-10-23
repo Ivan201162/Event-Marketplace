@@ -36,7 +36,8 @@ class ShareService {
   }
 
   /// Поделиться профилем пользователя
-  static Future<bool> shareProfile(AppUser user, {String? customMessage}) async {
+  static Future<bool> shareProfile(AppUser user,
+      {String? customMessage}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -59,7 +60,8 @@ class ShareService {
   }
 
   /// Поделиться бронированием
-  static Future<bool> shareBooking(Booking booking, {String? customMessage}) async {
+  static Future<bool> shareBooking(Booking booking,
+      {String? customMessage}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -102,7 +104,8 @@ class ShareService {
   }
 
   /// Поделиться файлом
-  static Future<bool> shareFile(String filePath, {String? text, String? subject}) async {
+  static Future<bool> shareFile(String filePath,
+      {String? text, String? subject}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -113,7 +116,8 @@ class ShareService {
 
       final file = XFile(filePath);
 
-      await SharePlus.instance.shareXFiles([file], text: text, subject: subject);
+      await SharePlus.instance
+          .shareXFiles([file], text: text, subject: subject);
 
       SafeLog.info('ShareService: File shared successfully');
       return true;
@@ -124,7 +128,8 @@ class ShareService {
   }
 
   /// Поделиться несколькими файлами
-  static Future<bool> shareFiles(List<String> filePaths, {String? text, String? subject}) async {
+  static Future<bool> shareFiles(List<String> filePaths,
+      {String? text, String? subject}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -146,7 +151,8 @@ class ShareService {
   }
 
   /// Поделиться ссылкой
-  static Future<bool> shareLink(String url, {String? title, String? description}) async {
+  static Future<bool> shareLink(String url,
+      {String? title, String? description}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -190,11 +196,15 @@ class ShareService {
   }
 
   /// Открыть email клиент
-  static Future<bool> openEmail(String email, {String? subject, String? body}) async {
+  static Future<bool> openEmail(String email,
+      {String? subject, String? body}) async {
     try {
       SafeLog.info('ShareService: Opening email: $email');
 
-      final uri = Uri(scheme: 'mailto', path: email, query: _buildEmailQuery(subject, body));
+      final uri = Uri(
+          scheme: 'mailto',
+          path: email,
+          query: _buildEmailQuery(subject, body));
 
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
@@ -331,7 +341,8 @@ class ShareService {
   }
 
   /// Построить сообщение для шаринга ссылки
-  static String _buildLinkShareMessage(String url, String? title, String? description) {
+  static String _buildLinkShareMessage(
+      String url, String? title, String? description) {
     final buffer = StringBuffer();
 
     if (title != null) {
@@ -386,12 +397,12 @@ class ShareService {
 
   /// Получить информацию о шаринге
   static Map<String, dynamic> get shareInfo => {
-    'isEnabled': isEnabled,
-    'supportedPlatforms': supportedPlatforms,
-    'isWeb': kIsWeb,
-    'isAndroid': !kIsWeb && Platform.isAndroid,
-    'isIOS': !kIsWeb && Platform.isIOS,
-  };
+        'isEnabled': isEnabled,
+        'supportedPlatforms': supportedPlatforms,
+        'isWeb': kIsWeb,
+        'isAndroid': !kIsWeb && Platform.isAndroid,
+        'isIOS': !kIsWeb && Platform.isIOS,
+      };
 
   /// Построить сообщение для шаринга события
   static String buildEventShareMessage(Event event) {

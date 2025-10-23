@@ -12,7 +12,8 @@ import 'package:event_marketplace_app/screens/profile/profile_screen_enhanced.da
 /// Тесты UI компонентов
 void main() {
   group('UI Component Tests', () {
-    testWidgets('MainNavigationScreenEnhanced displays correctly', (WidgetTester tester) async {
+    testWidgets('MainNavigationScreenEnhanced displays correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -28,7 +29,8 @@ void main() {
       expect(find.text('Идеи'), findsOneWidget);
     });
 
-    testWidgets('HomeScreenEnhanced displays correctly', (WidgetTester tester) async {
+    testWidgets('HomeScreenEnhanced displays correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreenEnhanced(),
@@ -42,7 +44,8 @@ void main() {
       expect(find.text('Быстрые действия'), findsOneWidget);
     });
 
-    testWidgets('FeedScreenEnhanced displays correctly', (WidgetTester tester) async {
+    testWidgets('FeedScreenEnhanced displays correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: FeedScreenEnhanced(),
@@ -56,7 +59,8 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('RequestsScreenEnhanced displays correctly', (WidgetTester tester) async {
+    testWidgets('RequestsScreenEnhanced displays correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: RequestsScreenEnhanced(),
@@ -69,7 +73,8 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('ChatListScreenEnhanced displays correctly', (WidgetTester tester) async {
+    testWidgets('ChatListScreenEnhanced displays correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ChatListScreenEnhanced(),
@@ -83,7 +88,8 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('IdeasScreenEnhanced displays correctly', (WidgetTester tester) async {
+    testWidgets('IdeasScreenEnhanced displays correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: IdeasScreenEnhanced(),
@@ -97,7 +103,8 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('ProfileScreenEnhanced displays correctly', (WidgetTester tester) async {
+    testWidgets('ProfileScreenEnhanced displays correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: ProfileScreenEnhanced(),
@@ -120,16 +127,16 @@ void main() {
       // Проверка нажатия на кнопки навигации
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Заявки'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Чаты'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Идеи'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Главная'));
       await tester.pumpAndSettle();
     });
@@ -146,10 +153,10 @@ void main() {
       if (searchField.evaluate().isNotEmpty) {
         await tester.tap(searchField.first);
         await tester.pumpAndSettle();
-        
+
         await tester.enterText(searchField.first, 'тест');
         await tester.pumpAndSettle();
-        
+
         expect(find.text('тест'), findsOneWidget);
       }
     });
@@ -166,7 +173,7 @@ void main() {
       if (filterButton.evaluate().isNotEmpty) {
         await tester.tap(filterButton.first);
         await tester.pumpAndSettle();
-        
+
         expect(find.byType(BottomSheet), findsOneWidget);
       }
     });
@@ -186,7 +193,8 @@ void main() {
       }
     });
 
-    testWidgets('App handles empty states gracefully', (WidgetTester tester) async {
+    testWidgets('App handles empty states gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: FeedScreenEnhanced(),
@@ -199,7 +207,8 @@ void main() {
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles loading states gracefully', (WidgetTester tester) async {
+    testWidgets('App handles loading states gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreenEnhanced(),

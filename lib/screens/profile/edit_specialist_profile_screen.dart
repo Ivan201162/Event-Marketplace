@@ -10,23 +10,25 @@ class EditSpecialistProfileScreen extends ConsumerStatefulWidget {
   const EditSpecialistProfileScreen({super.key});
 
   @override
-  ConsumerState<EditSpecialistProfileScreen> createState() => _EditSpecialistProfileScreenState();
+  ConsumerState<EditSpecialistProfileScreen> createState() =>
+      _EditSpecialistProfileScreenState();
 }
 
-class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProfileScreen> {
+class _EditSpecialistProfileScreenState
+    extends ConsumerState<EditSpecialistProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _cityController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
-  
+
   String? _selectedSpecialistType;
   String? _avatarUrl;
   bool _isLoading = false;
-  
+
   final List<String> _specialistTypes = [
     'Фотограф',
-    'Видеограф', 
+    'Видеограф',
     'Ведущий',
     'Диджей',
     'Декоратор',
@@ -65,19 +67,20 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.gallery);
-    
+
     if (image != null) {
       setState(() {
         _isLoading = true;
       });
-      
+
       try {
         final user = ref.read(currentUserProvider).value;
         if (user != null) {
-          final ref = FirebaseStorage.instance.ref().child('avatars/${user.uid}');
+          final ref =
+              FirebaseStorage.instance.ref().child('avatars/${user.uid}');
           await ref.putFile(image as dynamic);
           final url = await ref.getDownloadURL();
-          
+
           setState(() {
             _avatarUrl = url;
             _isLoading = false;
@@ -98,17 +101,17 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
 
   Future<void> _saveProfile() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       final user = ref.read(currentUserProvider).value;
       if (user == null) return;
-      
+
       final authService = ref.read(authServiceProvider);
-      
+
       await authService.updateUserProfile(
         name: _nameController.text.trim(),
         city: _cityController.text.trim(),
@@ -117,7 +120,7 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
         hourlyRate: double.tryParse(_priceController.text),
         avatarUrl: _avatarUrl,
       );
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Профиль успешно обновлен')),
@@ -151,13 +154,13 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
         actions: [
           TextButton(
             onPressed: _isLoading ? null : _saveProfile,
-            child: _isLoading 
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Сохранить'),
+            child: _isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Сохранить'),
           ),
         ],
       ),
@@ -174,12 +177,11 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
                   children: [
                     CircleAvatar(
                       radius: 60,
-                      backgroundImage: _avatarUrl != null 
-                        ? NetworkImage(_avatarUrl!)
-                        : null,
-                      child: _avatarUrl == null 
-                        ? const Icon(Icons.person, size: 60)
-                        : null,
+                      backgroundImage:
+                          _avatarUrl != null ? NetworkImage(_avatarUrl!) : null,
+                      child: _avatarUrl == null
+                          ? const Icon(Icons.person, size: 60)
+                          : null,
                     ),
                     Positioned(
                       bottom: 0,
@@ -193,7 +195,7 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
                 ),
               ),
               const SizedBox(height: 32),
-              
+
               // Имя
               TextFormField(
                 controller: _nameController,
@@ -209,7 +211,7 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Город
               TextFormField(
                 controller: _cityController,
@@ -225,11 +227,11 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Тип специалиста
               _buildSpecialistTypeDropdown(),
               const SizedBox(height: 16),
-              
+
               // Описание
               TextFormField(
                 controller: _descriptionController,
@@ -246,7 +248,7 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Цена за час
               TextFormField(
                 controller: _priceController,
@@ -275,14 +277,14 @@ class _EditSpecialistProfileScreenState extends ConsumerState<EditSpecialistProf
 
   Widget _buildSpecialistTypeDropdown() {
     // Обеспечиваем безопасную обработку значений
-    final uniqueItems = _specialistTypes
-        .where((e) => e.trim().isNotEmpty)
-        .toSet()
-        .toList();
-    
+    final uniqueItems =
+        _specialistTypes.where((e) => e.trim().isNotEmpty).toSet().toList();
+
     // Безопасное значение value
-    final safeValue = uniqueItems.contains(_selectedSpecialistType) ? _selectedSpecialistType : null;
-    
+    final safeValue = uniqueItems.contains(_selectedSpecialistType)
+        ? _selectedSpecialistType
+        : null;
+
     return DropdownButtonFormField<String>(
       value: safeValue,
       decoration: const InputDecoration(

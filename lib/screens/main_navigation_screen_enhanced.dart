@@ -12,10 +12,12 @@ class MainNavigationScreenEnhanced extends ConsumerStatefulWidget {
   const MainNavigationScreenEnhanced({super.key});
 
   @override
-  ConsumerState<MainNavigationScreenEnhanced> createState() => _MainNavigationScreenEnhancedState();
+  ConsumerState<MainNavigationScreenEnhanced> createState() =>
+      _MainNavigationScreenEnhancedState();
 }
 
-class _MainNavigationScreenEnhancedState extends ConsumerState<MainNavigationScreenEnhanced>
+class _MainNavigationScreenEnhancedState
+    extends ConsumerState<MainNavigationScreenEnhanced>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
   late PageController _pageController;
@@ -60,12 +62,12 @@ class _MainNavigationScreenEnhancedState extends ConsumerState<MainNavigationScr
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
-    
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.1,
@@ -73,7 +75,7 @@ class _MainNavigationScreenEnhancedState extends ConsumerState<MainNavigationScr
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -153,27 +155,34 @@ class _MainNavigationScreenEnhancedState extends ConsumerState<MainNavigationScr
                 final index = entry.key;
                 final item = entry.value;
                 final isActive = index == _currentIndex;
-                
+
                 return Expanded(
                   child: GestureDetector(
                     onTap: () => _onTabTapped(index),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       curve: Curves.easeInOut,
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
                       decoration: BoxDecoration(
                         gradient: isActive
                             ? LinearGradient(
                                 colors: [
-                                  Theme.of(context).primaryColor.withOpacity(0.1),
-                                  Theme.of(context).primaryColor.withOpacity(0.05),
+                                  Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.1),
+                                  Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.05),
                                 ],
                               )
                             : null,
                         borderRadius: BorderRadius.circular(16),
                         border: isActive
                             ? Border.all(
-                                color: Theme.of(context).primaryColor.withOpacity(0.3),
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(0.3),
                                 width: 1,
                               )
                             : null,
@@ -188,7 +197,7 @@ class _MainNavigationScreenEnhancedState extends ConsumerState<MainNavigationScr
                                 scale: isActive ? _scaleAnimation.value : 1.0,
                                 child: Icon(
                                   isActive ? item.activeIcon : item.icon,
-                                  color: isActive 
+                                  color: isActive
                                       ? Theme.of(context).primaryColor
                                       : Colors.grey[600],
                                   size: isActive ? 26 : 24,
@@ -201,8 +210,9 @@ class _MainNavigationScreenEnhancedState extends ConsumerState<MainNavigationScr
                             item.label,
                             style: TextStyle(
                               fontSize: 11,
-                              fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-                              color: isActive 
+                              fontWeight:
+                                  isActive ? FontWeight.bold : FontWeight.w500,
+                              color: isActive
                                   ? Theme.of(context).primaryColor
                                   : Colors.grey[600],
                             ),

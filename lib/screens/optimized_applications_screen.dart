@@ -11,10 +11,12 @@ class OptimizedApplicationsScreen extends ConsumerStatefulWidget {
   const OptimizedApplicationsScreen({super.key});
 
   @override
-  ConsumerState<OptimizedApplicationsScreen> createState() => _OptimizedApplicationsScreenState();
+  ConsumerState<OptimizedApplicationsScreen> createState() =>
+      _OptimizedApplicationsScreenState();
 }
 
-class _OptimizedApplicationsScreenState extends ConsumerState<OptimizedApplicationsScreen>
+class _OptimizedApplicationsScreenState
+    extends ConsumerState<OptimizedApplicationsScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   String _selectedStatus = 'all';
@@ -61,7 +63,7 @@ class _OptimizedApplicationsScreenState extends ConsumerState<OptimizedApplicati
         children: [
           // Фильтры
           _buildFiltersSection(),
-          
+
           // Список заявок
           Expanded(
             child: TabBarView(
@@ -112,9 +114,9 @@ class _OptimizedApplicationsScreenState extends ConsumerState<OptimizedApplicati
               ),
             ],
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Сортировка
           Row(
             children: [
@@ -142,7 +144,7 @@ class _OptimizedApplicationsScreenState extends ConsumerState<OptimizedApplicati
 
   Widget _buildStatusChip(String status, String label) {
     final isSelected = _selectedStatus == status;
-    
+
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: FilterChip(
@@ -396,7 +398,8 @@ class _ApplicationCard extends ConsumerWidget {
                 CircleAvatar(
                   radius: 24,
                   backgroundImage: application.specialistAvatar != null
-                      ? CachedNetworkImageProvider(application.specialistAvatar!)
+                      ? CachedNetworkImageProvider(
+                          application.specialistAvatar!)
                       : null,
                   child: application.specialistAvatar == null
                       ? const Icon(Icons.person)
@@ -449,7 +452,8 @@ class _ApplicationCard extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
+                    Icon(Icons.calendar_today,
+                        size: 16, color: Colors.grey[600]),
                     const SizedBox(width: 8),
                     Text(
                       _formatDate(application.eventDate),
@@ -509,7 +513,8 @@ class _ApplicationCard extends ConsumerWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => _rejectApplication(applicationsService),
                       icon: const Icon(Icons.close, color: Colors.red),
-                      label: const Text('Отклонить', style: TextStyle(color: Colors.red)),
+                      label: const Text('Отклонить',
+                          style: TextStyle(color: Colors.red)),
                     ),
                   ),
                   const SizedBox(width: 12),

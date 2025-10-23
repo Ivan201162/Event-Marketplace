@@ -15,49 +15,48 @@ class SpecialistSchedule {
   });
 
   /// Создать из Map
-  factory SpecialistSchedule.fromMap(Map<String, dynamic> data) => SpecialistSchedule(
-    specialistId: data['specialistId'] ?? '',
-    startDate: data['startDate'] != null
-        ? (data['startDate'] as Timestamp).toDate()
-        : DateTime.now(),
-    endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : DateTime.now(),
-    bookings:
-        (data['bookings'] as List<dynamic>?)
-            ?.map((e) => Booking.fromDocument(e as DocumentSnapshot))
-            .toList() ??
-        [],
-    workingHours:
-        (data['workingHours'] as Map<String, dynamic>?)
-            ?.map(
-              (key, value) =>
-                  MapEntry(int.parse(key), WorkingHours.fromMap(value as Map<String, dynamic>)),
-            )
-            .cast<int, WorkingHours>() ??
-        {},
-    exceptions:
-        (data['exceptions'] as List<dynamic>?)
-            ?.map((e) => ScheduleException.fromMap(e as Map<String, dynamic>))
-            .toList() ??
-        [],
-    availability:
-        (data['availability'] as Map<String, dynamic>?)
-            ?.map(
-              (key, value) => MapEntry(
-                DateTime.parse(key),
-                AvailabilityStatus.values.firstWhere(
-                  (status) => status.name == value,
-                  orElse: () => AvailabilityStatus.available,
-                ),
-              ),
-            )
-            .cast<DateTime, AvailabilityStatus>() ??
-        {},
-    events:
-        (data['events'] as List<dynamic>?)
-            ?.map((e) => ScheduleEvent.fromMap(e as Map<String, dynamic>))
-            .toList() ??
-        [],
-  );
+  factory SpecialistSchedule.fromMap(Map<String, dynamic> data) =>
+      SpecialistSchedule(
+        specialistId: data['specialistId'] ?? '',
+        startDate: data['startDate'] != null
+            ? (data['startDate'] as Timestamp).toDate()
+            : DateTime.now(),
+        endDate: data['endDate'] != null
+            ? (data['endDate'] as Timestamp).toDate()
+            : DateTime.now(),
+        bookings: (data['bookings'] as List<dynamic>?)
+                ?.map((e) => Booking.fromDocument(e as DocumentSnapshot))
+                .toList() ??
+            [],
+        workingHours: (data['workingHours'] as Map<String, dynamic>?)
+                ?.map(
+                  (key, value) => MapEntry(int.parse(key),
+                      WorkingHours.fromMap(value as Map<String, dynamic>)),
+                )
+                .cast<int, WorkingHours>() ??
+            {},
+        exceptions: (data['exceptions'] as List<dynamic>?)
+                ?.map(
+                    (e) => ScheduleException.fromMap(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        availability: (data['availability'] as Map<String, dynamic>?)
+                ?.map(
+                  (key, value) => MapEntry(
+                    DateTime.parse(key),
+                    AvailabilityStatus.values.firstWhere(
+                      (status) => status.name == value,
+                      orElse: () => AvailabilityStatus.available,
+                    ),
+                  ),
+                )
+                .cast<DateTime, AvailabilityStatus>() ??
+            {},
+        events: (data['events'] as List<dynamic>?)
+                ?.map((e) => ScheduleEvent.fromMap(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+      );
   final String specialistId;
   final DateTime startDate;
   final DateTime endDate;
@@ -80,7 +79,8 @@ class SpecialistSchedule {
           id: booking.id,
           title: booking.eventTitle ?? '',
           startTime: booking.eventDate,
-          endTime: booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)),
+          endTime: booking.endDate ??
+              booking.eventDate.add(const Duration(hours: 2)),
           type: ScheduleEventType.booking,
           bookingId: booking.id,
         ),
@@ -92,22 +92,25 @@ class SpecialistSchedule {
 class WorkingHours {
   // В часах (например, 18.0 = 18:00)
 
-  const WorkingHours({required this.isWorking, required this.startHour, required this.endHour});
+  const WorkingHours(
+      {required this.isWorking,
+      required this.startHour,
+      required this.endHour});
 
   factory WorkingHours.fromMap(Map<String, dynamic> map) => WorkingHours(
-    isWorking: map['isWorking'] ?? false,
-    startHour: (map['startHour'] as num?)?.toDouble() ?? 0.0,
-    endHour: (map['endHour'] as num?)?.toDouble() ?? 0.0,
-  );
+        isWorking: map['isWorking'] ?? false,
+        startHour: (map['startHour'] as num?)?.toDouble() ?? 0.0,
+        endHour: (map['endHour'] as num?)?.toDouble() ?? 0.0,
+      );
   final bool isWorking;
   final double startHour; // В часах (например, 9.5 = 9:30)
   final double endHour;
 
   Map<String, dynamic> toMap() => {
-    'isWorking': isWorking,
-    'startHour': startHour,
-    'endHour': endHour,
-  };
+        'isWorking': isWorking,
+        'startHour': startHour,
+        'endHour': endHour,
+      };
 }
 
 /// Исключение в расписании
@@ -140,19 +143,20 @@ class ScheduleException {
     );
   }
 
-  factory ScheduleException.fromMap(Map<String, dynamic> data) => ScheduleException(
-    id: data['id'] ?? '',
-    specialistId: data['specialistId'] ?? '',
-    type: ScheduleExceptionType.values.firstWhere(
-      (e) => e.name == data['type'],
-      orElse: () => ScheduleExceptionType.blocked,
-    ),
-    startDate: (data['startDate'] as Timestamp).toDate(),
-    endDate: (data['endDate'] as Timestamp).toDate(),
-    reason: data['reason'] ?? '',
-    description: data['description'],
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-  );
+  factory ScheduleException.fromMap(Map<String, dynamic> data) =>
+      ScheduleException(
+        id: data['id'] ?? '',
+        specialistId: data['specialistId'] ?? '',
+        type: ScheduleExceptionType.values.firstWhere(
+          (e) => e.name == data['type'],
+          orElse: () => ScheduleExceptionType.blocked,
+        ),
+        startDate: (data['startDate'] as Timestamp).toDate(),
+        endDate: (data['endDate'] as Timestamp).toDate(),
+        reason: data['reason'] ?? '',
+        description: data['description'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+      );
   final String id;
   final String specialistId;
   final ScheduleExceptionType type;
@@ -163,14 +167,14 @@ class ScheduleException {
   final DateTime createdAt;
 
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'type': type.name,
-    'startDate': Timestamp.fromDate(startDate),
-    'endDate': Timestamp.fromDate(endDate),
-    'reason': reason,
-    'description': description,
-    'createdAt': Timestamp.fromDate(createdAt),
-  };
+        'specialistId': specialistId,
+        'type': type.name,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'reason': reason,
+        'description': description,
+        'createdAt': Timestamp.fromDate(createdAt),
+      };
 }
 
 /// Типы исключений в расписании
@@ -183,7 +187,10 @@ enum ScheduleExceptionType {
 
 /// Временной слот
 class TimeSlot {
-  const TimeSlot({required this.startTime, required this.endTime, required this.isAvailable});
+  const TimeSlot(
+      {required this.startTime,
+      required this.endTime,
+      required this.isAvailable});
   final DateTime startTime;
   final DateTime endTime;
   final bool isAvailable;
@@ -220,19 +227,21 @@ class ScheduleEvent {
 
   /// Создать из Map
   factory ScheduleEvent.fromMap(Map<String, dynamic> data) => ScheduleEvent(
-    id: data['id'] ?? '',
-    title: data['title'] ?? '',
-    startTime: data['startTime'] != null
-        ? (data['startTime'] as Timestamp).toDate()
-        : DateTime.now(),
-    endTime: data['endTime'] != null ? (data['endTime'] as Timestamp).toDate() : DateTime.now(),
-    type: ScheduleEventType.values.firstWhere(
-      (e) => e.name == data['type'],
-      orElse: () => ScheduleEventType.booking,
-    ),
-    bookingId: data['bookingId'],
-    description: data['description'],
-  );
+        id: data['id'] ?? '',
+        title: data['title'] ?? '',
+        startTime: data['startTime'] != null
+            ? (data['startTime'] as Timestamp).toDate()
+            : DateTime.now(),
+        endTime: data['endTime'] != null
+            ? (data['endTime'] as Timestamp).toDate()
+            : DateTime.now(),
+        type: ScheduleEventType.values.firstWhere(
+          (e) => e.name == data['type'],
+          orElse: () => ScheduleEventType.booking,
+        ),
+        bookingId: data['bookingId'],
+        description: data['description'],
+      );
   final String id;
   final String title;
   final DateTime startTime;
@@ -246,12 +255,12 @@ class ScheduleEvent {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'title': title,
-    'startTime': Timestamp.fromDate(startTime),
-    'endTime': Timestamp.fromDate(endTime),
-    'type': type.name,
-    'bookingId': bookingId,
-    'description': description,
-  };
+        'id': id,
+        'title': title,
+        'startTime': Timestamp.fromDate(startTime),
+        'endTime': Timestamp.fromDate(endTime),
+        'type': type.name,
+        'bookingId': bookingId,
+        'description': description,
+      };
 }

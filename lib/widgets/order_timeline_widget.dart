@@ -34,9 +34,11 @@ class OrderTimelineWidget extends StatelessWidget {
               Container(
                 width: 12,
                 height: 12,
-                decoration: BoxDecoration(color: _getTypeColor(event.type), shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                    color: _getTypeColor(event.type), shape: BoxShape.circle),
               ),
-              if (!isLast) Container(width: 2, height: 40, color: Colors.grey[300]),
+              if (!isLast)
+                Container(width: 2, height: 40, color: Colors.grey[300]),
             ],
           ),
 
@@ -48,10 +50,12 @@ class OrderTimelineWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(event.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14)),
                 if (event.description.isNotEmpty) ...[
                   const SizedBox(height: 4),
-                  Text(event.description, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                  Text(event.description,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                 ],
                 const SizedBox(height: 4),
                 Text(
@@ -83,5 +87,6 @@ class OrderTimelineWidget extends StatelessWidget {
     }
   }
 
-  String _formatDate(DateTime date) => DateFormat('dd.MM.yyyy HH:mm').format(date);
+  String _formatDate(DateTime date) =>
+      DateFormat('dd.MM.yyyy HH:mm').format(date);
 }

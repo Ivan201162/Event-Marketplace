@@ -30,7 +30,8 @@ class _ReviewsToWriteScreenState extends State<ReviewsToWriteScreen> {
     try {
       setState(() => _isLoading = true);
 
-      final bookings = await _reviewService.getCompletedBookingsForReview(widget.userId);
+      final bookings =
+          await _reviewService.getCompletedBookingsForReview(widget.userId);
 
       setState(() {
         _bookings = bookings;
@@ -45,60 +46,67 @@ class _ReviewsToWriteScreenState extends State<ReviewsToWriteScreen> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Оставить отзыв'),
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
-      elevation: 1,
-    ),
-    body: _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : _bookings.isEmpty
-        ? _buildEmptyState()
-        : RefreshIndicator(
-            onRefresh: _loadBookings,
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _bookings.length,
-              itemBuilder: (context, index) {
-                final booking = _bookings[index];
-                return BookingCard(
-                  booking: booking,
-                  onTap: () => _writeReview(booking),
-                  trailing: ElevatedButton(
-                    onPressed: () => _writeReview(booking),
-                    child: const Text('Оставить отзыв'),
+        appBar: AppBar(
+          title: const Text('Оставить отзыв'),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 1,
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _bookings.isEmpty
+                ? _buildEmptyState()
+                : RefreshIndicator(
+                    onRefresh: _loadBookings,
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _bookings.length,
+                      itemBuilder: (context, index) {
+                        final booking = _bookings[index];
+                        return BookingCard(
+                          booking: booking,
+                          onTap: () => _writeReview(booking),
+                          trailing: ElevatedButton(
+                            onPressed: () => _writeReview(booking),
+                            child: const Text('Оставить отзыв'),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                );
-              },
-            ),
-          ),
-  );
+      );
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          'Нет заказов для отзыва',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.rate_review_outlined, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Нет заказов для отзыва',
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Завершите заказ, чтобы оставить отзыв специалисту',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Завершите заказ, чтобы оставить отзыв специалисту',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 
   Future<void> _writeReview(Booking booking) async {
     // Получаем информацию о специалисте

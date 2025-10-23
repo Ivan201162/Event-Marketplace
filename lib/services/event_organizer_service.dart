@@ -8,7 +8,8 @@ import 'error_logging_service.dart';
 class EventOrganizerService {
   factory EventOrganizerService() => _instance;
   EventOrganizerService._internal();
-  static final EventOrganizerService _instance = EventOrganizerService._internal();
+  static final EventOrganizerService _instance =
+      EventOrganizerService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -93,15 +94,16 @@ class EventOrganizerService {
       // Дополнительная фильтрация на клиенте
       if (eventTypes != null && eventTypes.isNotEmpty) {
         organizers = organizers
-            .where((organizer) => eventTypes.any((type) => organizer.eventTypes.contains(type)))
+            .where((organizer) =>
+                eventTypes.any((type) => organizer.eventTypes.contains(type)))
             .toList();
       }
 
       if (specializations != null && specializations.isNotEmpty) {
         organizers = organizers
             .where(
-              (organizer) =>
-                  specializations.any((spec) => organizer.specializations.contains(spec)),
+              (organizer) => specializations
+                  .any((spec) => organizer.specializations.contains(spec)),
             )
             .toList();
       }
@@ -173,7 +175,10 @@ class EventOrganizerService {
         taxId: taxId,
       );
 
-      await _firestore.collection('event_organizers').doc(organizerId).set(organizer.toMap());
+      await _firestore
+          .collection('event_organizers')
+          .doc(organizerId)
+          .set(organizer.toMap());
 
       await _errorLogger.logInfo(
         message: 'Event organizer created',
@@ -195,11 +200,15 @@ class EventOrganizerService {
   }
 
   /// Обновить организатора
-  Future<bool> updateOrganizer(String organizerId, Map<String, dynamic> updates) async {
+  Future<bool> updateOrganizer(
+      String organizerId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = FieldValue.serverTimestamp();
 
-      await _firestore.collection('event_organizers').doc(organizerId).update(updates);
+      await _firestore
+          .collection('event_organizers')
+          .doc(organizerId)
+          .update(updates);
 
       await _errorLogger.logInfo(
         message: 'Event organizer updated',
@@ -261,14 +270,17 @@ class EventOrganizerService {
         firestoreQuery = firestoreQuery.where('city', isEqualTo: city);
       }
       if (isVerified != null) {
-        firestoreQuery = firestoreQuery.where('isVerified', isEqualTo: isVerified);
+        firestoreQuery =
+            firestoreQuery.where('isVerified', isEqualTo: isVerified);
       }
       if (minRating != null) {
-        firestoreQuery = firestoreQuery.where('rating', isGreaterThanOrEqualTo: minRating);
+        firestoreQuery =
+            firestoreQuery.where('rating', isGreaterThanOrEqualTo: minRating);
       }
 
       // Сортировка
-      firestoreQuery = firestoreQuery.orderBy('rating', descending: true).limit(limit * 2);
+      firestoreQuery =
+          firestoreQuery.orderBy('rating', descending: true).limit(limit * 2);
 
       final snapshot = await firestoreQuery.get();
       var organizers = snapshot.docs.map(EventOrganizer.fromDoc).toList();
@@ -280,33 +292,37 @@ class EventOrganizerService {
             .where(
               (organizer) =>
                   organizer.companyName.toLowerCase().contains(lowerQuery) ||
-                  (organizer.description?.toLowerCase().contains(lowerQuery) ?? false) ||
+                  (organizer.description?.toLowerCase().contains(lowerQuery) ??
+                      false) ||
                   organizer.specializations.any(
                     (spec) => spec.toLowerCase().contains(lowerQuery),
                   ) ||
-                  organizer.eventTypes.any((type) => type.toLowerCase().contains(lowerQuery)),
+                  organizer.eventTypes
+                      .any((type) => type.toLowerCase().contains(lowerQuery)),
             )
             .toList();
       }
 
       if (eventTypes != null && eventTypes.isNotEmpty) {
         organizers = organizers
-            .where((organizer) => eventTypes.any((type) => organizer.eventTypes.contains(type)))
+            .where((organizer) =>
+                eventTypes.any((type) => organizer.eventTypes.contains(type)))
             .toList();
       }
 
       if (specializations != null && specializations.isNotEmpty) {
         organizers = organizers
             .where(
-              (organizer) =>
-                  specializations.any((spec) => organizer.specializations.contains(spec)),
+              (organizer) => specializations
+                  .any((spec) => organizer.specializations.contains(spec)),
             )
             .toList();
       }
 
       if (maxRating != null) {
         organizers = organizers
-            .where((organizer) => organizer.rating == null || organizer.rating! <= maxRating)
+            .where((organizer) =>
+                organizer.rating == null || organizer.rating! <= maxRating)
             .toList();
       }
 
@@ -331,7 +347,8 @@ class EventOrganizerService {
   }
 
   /// Получить топ организаторов
-  Future<List<EventOrganizer>> getTopOrganizers({int limit = 10, String? city}) async {
+  Future<List<EventOrganizer>> getTopOrganizers(
+      {int limit = 10, String? city}) async {
     try {
       Query query = _firestore.collection('event_organizers');
 
@@ -359,7 +376,8 @@ class EventOrganizerService {
   }
 
   /// Обновить рейтинг организатора
-  Future<bool> updateOrganizerRating(String organizerId, double newRating) async {
+  Future<bool> updateOrganizerRating(
+      String organizerId, double newRating) async {
     try {
       await _firestore.collection('event_organizers').doc(organizerId).update({
         'rating': newRating,
@@ -379,7 +397,8 @@ class EventOrganizerService {
   }
 
   /// Увеличить счетчик мероприятий
-  Future<bool> incrementEventCount(String organizerId, {bool completed = false}) async {
+  Future<bool> incrementEventCount(String organizerId,
+      {bool completed = false}) async {
     try {
       final updates = <String, dynamic>{
         'totalEvents': FieldValue.increment(1),
@@ -390,7 +409,10 @@ class EventOrganizerService {
         updates['completedEvents'] = FieldValue.increment(1);
       }
 
-      await _firestore.collection('event_organizers').doc(organizerId).update(updates);
+      await _firestore
+          .collection('event_organizers')
+          .doc(organizerId)
+          .update(updates);
 
       return true;
     } catch (e, stackTrace) {
@@ -419,8 +441,10 @@ class EventOrganizerService {
       final reviews = reviewsSnapshot.docs;
       final totalReviews = reviews.length;
       final averageRating = totalReviews > 0
-          ? reviews.map((doc) => doc.data()['rating'] as double).reduce((a, b) => a + b) /
-                totalReviews
+          ? reviews
+                  .map((doc) => doc.data()['rating'] as double)
+                  .reduce((a, b) => a + b) /
+              totalReviews
           : 0.0;
 
       // Получаем мероприятия
@@ -431,7 +455,8 @@ class EventOrganizerService {
 
       final events = eventsSnapshot.docs;
       final totalEvents = events.length;
-      final completedEvents = events.where((doc) => doc.data()['status'] == 'completed').length;
+      final completedEvents =
+          events.where((doc) => doc.data()['status'] == 'completed').length;
 
       return {
         'organizer': organizer,

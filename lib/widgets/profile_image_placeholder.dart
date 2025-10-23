@@ -25,9 +25,12 @@ class ProfileImagePlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveBackgroundColor = backgroundColor ?? theme.colorScheme.primaryContainer;
-    final effectiveTextColor = textColor ?? theme.colorScheme.onPrimaryContainer;
-    final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(size / 2);
+    final effectiveBackgroundColor =
+        backgroundColor ?? theme.colorScheme.primaryContainer;
+    final effectiveTextColor =
+        textColor ?? theme.colorScheme.onPrimaryContainer;
+    final effectiveBorderRadius =
+        borderRadius ?? BorderRadius.circular(size / 2);
 
     // Получаем инициалы из имени
     final initials = _getInitials(name);
@@ -39,7 +42,9 @@ class ProfileImagePlaceholder extends StatelessWidget {
         color: effectiveBackgroundColor,
         borderRadius: effectiveBorderRadius,
         border: showBorder
-            ? (border ?? Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)))
+            ? (border ??
+                Border.all(
+                    color: theme.colorScheme.outline.withValues(alpha: 0.2)))
             : null,
       ),
       child: Center(
@@ -106,7 +111,8 @@ class ProfileAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(size / 2);
+    final effectiveBorderRadius =
+        borderRadius ?? BorderRadius.circular(size / 2);
 
     Widget avatarWidget;
 
@@ -123,7 +129,10 @@ class ProfileAvatar extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: effectiveBorderRadius,
             border: showBorder
-                ? (border ?? Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)))
+                ? (border ??
+                    Border.all(
+                        color:
+                            theme.colorScheme.outline.withValues(alpha: 0.2)))
                 : null,
             image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
           ),

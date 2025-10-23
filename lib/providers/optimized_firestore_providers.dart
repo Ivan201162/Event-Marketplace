@@ -73,33 +73,38 @@ final chatMessagesProvider = StreamProvider.family<QuerySnapshot, String>(
 
 /// Провайдер для получения профиля пользователя с оптимизацией
 final userProfileProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, userId) => Stream.fromFuture(OptimizedFirestoreService.getDocument('users', userId)),
+  (ref, userId) =>
+      Stream.fromFuture(OptimizedFirestoreService.getDocument('users', userId)),
 );
 
 /// Провайдер для получения профиля специалиста с оптимизацией
-final specialistProfileProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, specialistId) =>
-      Stream.fromFuture(OptimizedFirestoreService.getDocument('specialists', specialistId)),
+final specialistProfileProvider =
+    StreamProvider.family<DocumentSnapshot?, String>(
+  (ref, specialistId) => Stream.fromFuture(
+      OptimizedFirestoreService.getDocument('specialists', specialistId)),
 );
 
 /// Провайдер для получения деталей события с оптимизацией
 final eventDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, eventId) => Stream.fromFuture(OptimizedFirestoreService.getDocument('events', eventId)),
+  (ref, eventId) => Stream.fromFuture(
+      OptimizedFirestoreService.getDocument('events', eventId)),
 );
 
 /// Провайдер для получения деталей идеи с оптимизацией
 final ideaDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, ideaId) => Stream.fromFuture(OptimizedFirestoreService.getDocument('ideas', ideaId)),
+  (ref, ideaId) =>
+      Stream.fromFuture(OptimizedFirestoreService.getDocument('ideas', ideaId)),
 );
 
 /// Провайдер для получения деталей бронирования с оптимизацией
 final bookingDetailsProvider = StreamProvider.family<DocumentSnapshot?, String>(
-  (ref, bookingId) =>
-      Stream.fromFuture(OptimizedFirestoreService.getDocument('bookings', bookingId)),
+  (ref, bookingId) => Stream.fromFuture(
+      OptimizedFirestoreService.getDocument('bookings', bookingId)),
 );
 
 /// Провайдер для поиска специалистов с оптимизацией
-final searchSpecialistsProvider = StreamProvider.family<QuerySnapshot, String>((ref, query) {
+final searchSpecialistsProvider =
+    StreamProvider.family<QuerySnapshot, String>((ref, query) {
   if (query.isEmpty) {
     return const Stream.empty();
   }
@@ -112,7 +117,8 @@ final searchSpecialistsProvider = StreamProvider.family<QuerySnapshot, String>((
 });
 
 /// Провайдер для поиска событий с оптимизацией
-final searchEventsProvider = StreamProvider.family<QuerySnapshot, String>((ref, query) {
+final searchEventsProvider =
+    StreamProvider.family<QuerySnapshot, String>((ref, query) {
   if (query.isEmpty) {
     return const Stream.empty();
   }
@@ -125,7 +131,8 @@ final searchEventsProvider = StreamProvider.family<QuerySnapshot, String>((ref, 
 });
 
 /// Провайдер для поиска идей с оптимизацией
-final searchIdeasProvider = StreamProvider.family<QuerySnapshot, String>((ref, query) {
+final searchIdeasProvider =
+    StreamProvider.family<QuerySnapshot, String>((ref, query) {
   if (query.isEmpty) {
     return const Stream.empty();
   }
@@ -140,10 +147,14 @@ final searchIdeasProvider = StreamProvider.family<QuerySnapshot, String>((ref, q
 /// Провайдер для получения статистики с оптимизацией
 final statisticsProvider = StreamProvider<Map<String, dynamic>>(
   (ref) => Stream.periodic(const Duration(minutes: 5), (_) async {
-    final specialists = await OptimizedFirestoreService.getCollection('specialists', limit: 1);
-    final events = await OptimizedFirestoreService.getCollection('events', limit: 1);
-    final ideas = await OptimizedFirestoreService.getCollection('ideas', limit: 1);
-    final bookings = await OptimizedFirestoreService.getCollection('bookings', limit: 1);
+    final specialists =
+        await OptimizedFirestoreService.getCollection('specialists', limit: 1);
+    final events =
+        await OptimizedFirestoreService.getCollection('events', limit: 1);
+    final ideas =
+        await OptimizedFirestoreService.getCollection('ideas', limit: 1);
+    final bookings =
+        await OptimizedFirestoreService.getCollection('bookings', limit: 1);
 
     return {
       'specialistsCount': specialists.docs.length,
@@ -156,7 +167,8 @@ final statisticsProvider = StreamProvider<Map<String, dynamic>>(
 );
 
 /// Провайдер для управления кэшем Firestore
-final firestoreCacheProvider = Provider<FirestoreCacheManager>((ref) => FirestoreCacheManager());
+final firestoreCacheProvider =
+    Provider<FirestoreCacheManager>((ref) => FirestoreCacheManager());
 
 /// Менеджер кэша Firestore
 class FirestoreCacheManager {
@@ -166,7 +178,8 @@ class FirestoreCacheManager {
   }
 
   /// Получение статистики кэша
-  Map<String, dynamic> getCacheStats() => OptimizedFirestoreService.getCacheStats();
+  Map<String, dynamic> getCacheStats() =>
+      OptimizedFirestoreService.getCacheStats();
 
   /// Очистка кэша для конкретной коллекции
   void clearCollectionCache(String collection) {

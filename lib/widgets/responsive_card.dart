@@ -66,8 +66,8 @@ class ResponsiveCard extends StatelessWidget {
     var responsiveShape = shape;
     if (responsive) {
       final radius = isDesktop ? 20.0 : (isTablet ? 18.0 : 16.0);
-      responsiveShape =
-          shape ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));
+      responsiveShape = shape ??
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius));
     }
 
     return Card(
@@ -78,7 +78,9 @@ class ResponsiveCard extends StatelessWidget {
       shape: responsiveShape,
       borderOnForeground: borderOnForeground,
       clipBehavior: clipBehavior,
-      child: responsivePadding != null ? Padding(padding: responsivePadding, child: child) : child,
+      child: responsivePadding != null
+          ? Padding(padding: responsivePadding, child: child)
+          : child,
     );
   }
 }

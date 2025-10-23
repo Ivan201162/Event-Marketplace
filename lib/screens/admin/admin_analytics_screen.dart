@@ -42,7 +42,8 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки аналитики: $e')));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка загрузки аналитики: $e')));
       }
     }
   }
@@ -55,8 +56,10 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(icon: const Icon(Icons.download), onPressed: _exportAnalytics),
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadAnalytics),
+          IconButton(
+              icon: const Icon(Icons.download), onPressed: _exportAnalytics),
+          IconButton(
+              icon: const Icon(Icons.refresh), onPressed: _loadAnalytics),
         ],
       ),
       body: _isLoading
@@ -86,7 +89,8 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('🔍 Фильтры', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('🔍 Фильтры',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -99,8 +103,10 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                     ),
                     items: const [
                       DropdownMenuItem(value: 'daily', child: Text('Дневной')),
-                      DropdownMenuItem(value: 'weekly', child: Text('Недельный')),
-                      DropdownMenuItem(value: 'monthly', child: Text('Месячный')),
+                      DropdownMenuItem(
+                          value: 'weekly', child: Text('Недельный')),
+                      DropdownMenuItem(
+                          value: 'monthly', child: Text('Месячный')),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -114,7 +120,8 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                 Expanded(
                   child: ListTile(
                     title: const Text('Начальная дата'),
-                    subtitle: Text('${_startDate.day}.${_startDate.month}.${_startDate.year}'),
+                    subtitle: Text(
+                        '${_startDate.day}.${_startDate.month}.${_startDate.year}'),
                     trailing: const Icon(Icons.calendar_today),
                     onTap: () => _selectDate(true),
                   ),
@@ -127,13 +134,15 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                 Expanded(
                   child: ListTile(
                     title: const Text('Конечная дата'),
-                    subtitle: Text('${_endDate.day}.${_endDate.month}.${_endDate.year}'),
+                    subtitle: Text(
+                        '${_endDate.day}.${_endDate.month}.${_endDate.year}'),
                     trailing: const Icon(Icons.calendar_today),
                     onTap: () => _selectDate(false),
                   ),
                 ),
                 const SizedBox(width: 16),
-                ElevatedButton(onPressed: _loadAnalytics, child: const Text('Применить')),
+                ElevatedButton(
+                    onPressed: _loadAnalytics, child: const Text('Применить')),
               ],
             ),
           ],
@@ -145,17 +154,25 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   Widget _buildSummaryCard() {
     if (_analytics.isEmpty) {
       return const Card(
-        child: Padding(padding: EdgeInsets.all(16.0), child: Text('Нет данных для отображения')),
+        child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text('Нет данных для отображения')),
       );
     }
 
-    final totalRevenue = _analytics.fold(0.0, (sum, item) => sum + item.totalRevenue);
-    final totalSubscriptions = _analytics.fold(0.0, (sum, item) => sum + item.subscriptionRevenue);
-    final totalPromotions = _analytics.fold(0.0, (sum, item) => sum + item.promotionRevenue);
-    final totalAds = _analytics.fold(0.0, (sum, item) => sum + item.advertisementRevenue);
-    final totalTransactions = _analytics.fold(0, (sum, item) => sum + item.totalTransactions);
+    final totalRevenue =
+        _analytics.fold(0.0, (sum, item) => sum + item.totalRevenue);
+    final totalSubscriptions =
+        _analytics.fold(0.0, (sum, item) => sum + item.subscriptionRevenue);
+    final totalPromotions =
+        _analytics.fold(0.0, (sum, item) => sum + item.promotionRevenue);
+    final totalAds =
+        _analytics.fold(0.0, (sum, item) => sum + item.advertisementRevenue);
+    final totalTransactions =
+        _analytics.fold(0, (sum, item) => sum + item.totalTransactions);
     final avgArpu = _analytics.isNotEmpty
-        ? _analytics.fold(0.0, (sum, item) => sum + item.arpu) / _analytics.length
+        ? _analytics.fold(0.0, (sum, item) => sum + item.arpu) /
+            _analytics.length
         : 0.0;
 
     return Card(
@@ -164,7 +181,8 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('📊 Сводка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('📊 Сводка',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -234,7 +252,8 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -248,7 +267,8 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
           const SizedBox(height: 8),
           Text(
             value,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: color),
           ),
           Text(
             label,
@@ -263,7 +283,9 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   Widget _buildRevenueChart() {
     if (_analytics.isEmpty) {
       return const Card(
-        child: Padding(padding: EdgeInsets.all(16.0), child: Text('Нет данных для графика')),
+        child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text('Нет данных для графика')),
       );
     }
 
@@ -286,7 +308,8 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   }
 
   Widget _buildSimpleChart() {
-    final maxRevenue = _analytics.map((e) => e.totalRevenue).reduce((a, b) => a > b ? a : b);
+    final maxRevenue =
+        _analytics.map((e) => e.totalRevenue).reduce((a, b) => a > b ? a : b);
 
     return ListView.builder(
       scrollDirection: Axis.horizontal,
@@ -320,7 +343,8 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
   Widget _buildDetailedAnalytics() {
     if (_analytics.isEmpty) {
       return const Card(
-        child: Padding(padding: EdgeInsets.all(16.0), child: Text('Нет детальных данных')),
+        child: Padding(
+            padding: EdgeInsets.all(16.0), child: Text('Нет детальных данных')),
       );
     }
 
@@ -348,14 +372,17 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
                       backgroundColor: Colors.blue,
                       child: Text(
                         '${item.date.day}',
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    title: Text('${item.date.day}.${item.date.month}.${item.date.year}'),
+                    title: Text(
+                        '${item.date.day}.${item.date.month}.${item.date.year}'),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Выручка: ${item.totalRevenue.toStringAsFixed(0)}₽'),
+                        Text(
+                            'Выручка: ${item.totalRevenue.toStringAsFixed(0)}₽'),
                         Text('Транзакций: ${item.totalTransactions}'),
                         Text('ARPU: ${item.arpu.toStringAsFixed(0)}₽'),
                       ],
@@ -404,16 +431,19 @@ class _AdminAnalyticsScreenState extends State<AdminAnalyticsScreen> {
       // Mock export functionality
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Экспорт аналитики в CSV...')));
+      ).showSnackBar(
+          const SnackBar(content: Text('Экспорт аналитики в CSV...')));
 
       // Simulate export delay
       await Future.delayed(const Duration(seconds: 2));
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Аналитика экспортирована успешно')));
+      ).showSnackBar(
+          const SnackBar(content: Text('Аналитика экспортирована успешно')));
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e')));
     }
   }
 }

@@ -39,7 +39,8 @@ class IdeaCard extends StatelessWidget {
               // Title
               Text(
                 idea.title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -55,17 +56,26 @@ class IdeaCard extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Media content
-              if (idea.hasMedia) ...[_buildMediaContent(context), const SizedBox(height: 12)],
+              if (idea.hasMedia) ...[
+                _buildMediaContent(context),
+                const SizedBox(height: 12)
+              ],
 
               // Tags
-              if (idea.tags.isNotEmpty) ...[_buildTags(), const SizedBox(height: 12)],
+              if (idea.tags.isNotEmpty) ...[
+                _buildTags(),
+                const SizedBox(height: 12)
+              ],
 
               // Meta info
               _buildMetaInfo(),
               const SizedBox(height: 12),
 
               // Actions
-              if (showActions) ...[_buildActions(context), const SizedBox(height: 8)],
+              if (showActions) ...[
+                _buildActions(context),
+                const SizedBox(height: 8)
+              ],
 
               // Stats
               _buildStats(),
@@ -86,7 +96,10 @@ class IdeaCard extends StatelessWidget {
           Expanded(
             child: Text(
               idea.category!,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600], fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500),
             ),
           ),
         ],
@@ -96,10 +109,12 @@ class IdeaCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: _getDifficultyColor(idea.difficulty!).withValues(alpha: 0.1),
+              color:
+                  _getDifficultyColor(idea.difficulty!).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: _getDifficultyColor(idea.difficulty!).withValues(alpha: 0.3),
+                color: _getDifficultyColor(idea.difficulty!)
+                    .withValues(alpha: 0.3),
               ),
             ),
             child: Text(
@@ -151,7 +166,10 @@ class IdeaCard extends StatelessWidget {
           ),
           child: Text(
             '#$tag',
-            style: TextStyle(color: Colors.orange[700], fontSize: 12, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                color: Colors.orange[700],
+                fontSize: 12,
+                fontWeight: FontWeight.w500),
           ),
         );
       }).toList(),
@@ -165,20 +183,23 @@ class IdeaCard extends StatelessWidget {
         if (idea.estimatedDuration != null) ...[
           Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
           const SizedBox(width: 4),
-          Text(idea.formattedDuration, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+          Text(idea.formattedDuration,
+              style: TextStyle(color: Colors.grey[600], fontSize: 12)),
           const SizedBox(width: 16),
         ],
         // Author
         if (idea.authorName != null) ...[
           Icon(Icons.person, size: 16, color: Colors.grey[600]),
           const SizedBox(width: 4),
-          Text(idea.authorName!, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+          Text(idea.authorName!,
+              style: TextStyle(color: Colors.grey[600], fontSize: 12)),
           const SizedBox(width: 16),
         ],
         // Time ago
         Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
         const SizedBox(width: 4),
-        Text(idea.timeAgo, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+        Text(idea.timeAgo,
+            style: TextStyle(color: Colors.grey[600], fontSize: 12)),
       ],
     );
   }
@@ -227,7 +248,8 @@ class IdeaCard extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               label,
-              style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  color: color, fontSize: 12, fontWeight: FontWeight.w500),
             ),
           ],
         ),

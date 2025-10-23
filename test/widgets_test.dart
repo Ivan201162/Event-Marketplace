@@ -138,7 +138,8 @@ void main() {
       expect(find.text('English'), findsOneWidget);
     });
 
-    testWidgets('should change language when option is selected', (tester) async {
+    testWidgets('should change language when option is selected',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(home: Scaffold(body: LanguageSelector())),
@@ -211,7 +212,8 @@ void main() {
       expect(find.text('Desktop'), findsNothing);
     });
 
-    testWidgets('should display tablet widget on medium screen', (tester) async {
+    testWidgets('should display tablet widget on medium screen',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -234,7 +236,8 @@ void main() {
       expect(find.text('Desktop'), findsNothing);
     });
 
-    testWidgets('should display desktop widget on large screen', (tester) async {
+    testWidgets('should display desktop widget on large screen',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -257,11 +260,13 @@ void main() {
       expect(find.text('Desktop'), findsOneWidget);
     });
 
-    testWidgets('should fallback to mobile widget when tablet is not provided', (tester) async {
+    testWidgets('should fallback to mobile widget when tablet is not provided',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: ResponsiveWidget(mobile: Text('Mobile'), desktop: Text('Desktop')),
+            body: ResponsiveWidget(
+                mobile: Text('Mobile'), desktop: Text('Desktop')),
           ),
         ),
       );
@@ -275,11 +280,13 @@ void main() {
       expect(find.text('Desktop'), findsNothing);
     });
 
-    testWidgets('should fallback to tablet widget when desktop is not provided', (tester) async {
+    testWidgets('should fallback to tablet widget when desktop is not provided',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: ResponsiveWidget(mobile: Text('Mobile'), tablet: Text('Tablet')),
+            body: ResponsiveWidget(
+                mobile: Text('Mobile'), tablet: Text('Tablet')),
           ),
         ),
       );
@@ -293,11 +300,13 @@ void main() {
       expect(find.text('Tablet'), findsOneWidget);
     });
 
-    testWidgets('should display responsive container with different padding', (tester) async {
+    testWidgets('should display responsive container with different padding',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: ResponsiveContainer(padding: EdgeInsets.all(16), child: Text('Content')),
+            body: ResponsiveContainer(
+                padding: EdgeInsets.all(16), child: Text('Content')),
           ),
         ),
       );
@@ -310,7 +319,8 @@ void main() {
       expect(find.text('Content'), findsOneWidget);
     });
 
-    testWidgets('should display responsive grid with different columns', (tester) async {
+    testWidgets('should display responsive grid with different columns',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -332,11 +342,13 @@ void main() {
       expect(find.text('Item 3'), findsOneWidget);
     });
 
-    testWidgets('should display responsive list with different items per row', (tester) async {
+    testWidgets('should display responsive list with different items per row',
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: ResponsiveList(children: [Text('Item 1'), Text('Item 2'), Text('Item 3')]),
+            body: ResponsiveList(
+                children: [Text('Item 1'), Text('Item 2'), Text('Item 3')]),
           ),
         ),
       );

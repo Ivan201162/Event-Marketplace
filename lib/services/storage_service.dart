@@ -10,7 +10,7 @@ class StorageService {
   Future<String> uploadUserAvatar(String userId, File imageFile) async {
     try {
       final ref = _storage.ref().child('avatars/$userId.jpg');
-      
+
       final uploadTask = ref.putFile(
         imageFile,
         SettableMetadata(
@@ -24,7 +24,7 @@ class StorageService {
 
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
-      
+
       debugPrint('✅ Avatar uploaded successfully: $downloadUrl');
       return downloadUrl;
     } catch (e) {
@@ -37,7 +37,7 @@ class StorageService {
   Future<String> uploadStoryImage(String storyId, File imageFile) async {
     try {
       final ref = _storage.ref().child('stories/$storyId.jpg');
-      
+
       final uploadTask = ref.putFile(
         imageFile,
         SettableMetadata(
@@ -48,9 +48,9 @@ class StorageService {
           },
         ),
       );
-      
+
       final downloadUrl = await ref.getDownloadURL();
-      
+
       debugPrint('✅ Story image uploaded: $downloadUrl');
       return downloadUrl;
     } catch (e) {
@@ -89,7 +89,7 @@ class StorageService {
   Future<String> uploadPostImage(String postId, File imageFile) async {
     try {
       final ref = _storage.ref().child('posts/$postId.jpg');
-      
+
       final uploadTask = ref.putFile(
         imageFile,
         SettableMetadata(
@@ -103,7 +103,7 @@ class StorageService {
 
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
-      
+
       debugPrint('✅ Post image uploaded successfully: $downloadUrl');
       return downloadUrl;
     } catch (e) {
@@ -111,7 +111,6 @@ class StorageService {
       rethrow;
     }
   }
-
 
   /// Удаляет файл по URL
   Future<void> deleteFile(String url) async {
@@ -126,10 +125,11 @@ class StorageService {
   }
 
   /// Загружает изображение заявки
-  Future<String> uploadRequestImage(String userId, File imageFile, String fileName) async {
+  Future<String> uploadRequestImage(
+      String userId, File imageFile, String fileName) async {
     try {
       final ref = _storage.ref().child('requests/$userId/$fileName.jpg');
-      
+
       final uploadTask = ref.putFile(
         imageFile,
         SettableMetadata(
@@ -143,7 +143,7 @@ class StorageService {
 
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
-      
+
       debugPrint('✅ Request image uploaded successfully: $downloadUrl');
       return downloadUrl;
     } catch (e) {
@@ -153,10 +153,11 @@ class StorageService {
   }
 
   /// Загружает изображение идеи
-  Future<String> uploadIdeaImage(String userId, File imageFile, String fileName) async {
+  Future<String> uploadIdeaImage(
+      String userId, File imageFile, String fileName) async {
     try {
       final ref = _storage.ref().child('ideas/$userId/$fileName.jpg');
-      
+
       final uploadTask = ref.putFile(
         imageFile,
         SettableMetadata(
@@ -170,7 +171,7 @@ class StorageService {
 
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
-      
+
       debugPrint('✅ Idea image uploaded successfully: $downloadUrl');
       return downloadUrl;
     } catch (e) {
@@ -180,10 +181,11 @@ class StorageService {
   }
 
   /// Загружает видео идеи
-  Future<String> uploadIdeaVideo(String userId, File videoFile, String fileName) async {
+  Future<String> uploadIdeaVideo(
+      String userId, File videoFile, String fileName) async {
     try {
       final ref = _storage.ref().child('ideas/$userId/$fileName.mp4');
-      
+
       final uploadTask = ref.putFile(
         videoFile,
         SettableMetadata(
@@ -197,7 +199,7 @@ class StorageService {
 
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
-      
+
       debugPrint('✅ Idea video uploaded successfully: $downloadUrl');
       return downloadUrl;
     } catch (e) {

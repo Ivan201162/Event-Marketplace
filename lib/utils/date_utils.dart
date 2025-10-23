@@ -12,12 +12,16 @@ class DateUtils {
 
   static bool isToday(DateTime date) {
     final now = DateTime.now();
-    return date.year == now.year && date.month == now.month && date.day == now.day;
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
   }
 
   static bool isTomorrow(DateTime date) {
     final tomorrow = DateTime.now().add(const Duration(days: 1));
-    return date.year == tomorrow.year && date.month == tomorrow.month && date.day == tomorrow.day;
+    return date.year == tomorrow.year &&
+        date.month == tomorrow.month &&
+        date.day == tomorrow.day;
   }
 
   static String getRelativeDate(DateTime date) {

@@ -25,7 +25,8 @@ class NoteFilters extends Equatable {
     return NoteFilters(
       searchQuery: data['searchQuery'],
       tags: data['tags'] != null ? List<String>.from(data['tags']) : null,
-      dateFrom: data['dateFrom'] != null ? DateTime.parse(data['dateFrom']) : null,
+      dateFrom:
+          data['dateFrom'] != null ? DateTime.parse(data['dateFrom']) : null,
       dateTo: data['dateTo'] != null ? DateTime.parse(data['dateTo']) : null,
       isPinned: data['isPinned'],
       category: data['category'],
@@ -82,7 +83,8 @@ class NoteFilters extends Equatable {
   bool get isNotEmpty => !isEmpty;
 
   @override
-  List<Object?> get props => [searchQuery, tags, dateFrom, dateTo, isPinned, category, authorId];
+  List<Object?> get props =>
+      [searchQuery, tags, dateFrom, dateTo, isPinned, category, authorId];
 
   @override
   String toString() {

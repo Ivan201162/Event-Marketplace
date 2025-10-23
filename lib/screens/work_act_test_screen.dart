@@ -11,7 +11,8 @@ class WorkActTestScreen extends StatefulWidget {
   State<WorkActTestScreen> createState() => _WorkActTestScreenState();
 }
 
-class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProviderStateMixin {
+class _WorkActTestScreenState extends State<WorkActTestScreen>
+    with TickerProviderStateMixin {
   final WorkActService _workActService = WorkActService();
 
   final String _testBookingId = 'test_booking_123';
@@ -31,45 +32,49 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Тест актов выполненных работ'),
-      backgroundColor: Colors.blue,
-      foregroundColor: Colors.white,
-      bottom: TabBar(
-        controller: TabController(length: 3, vsync: this, initialIndex: _selectedTabIndex),
-        onTap: (index) => setState(() => _selectedTabIndex = index),
-        tabs: const [
-          Tab(icon: Icon(Icons.add), text: 'Создать'),
-          Tab(icon: Icon(Icons.list), text: 'Список'),
-          Tab(icon: Icon(Icons.edit), text: 'Подписать'),
-        ],
-      ),
-    ),
-    body: TabBarView(
-      controller: TabController(length: 3, vsync: this, initialIndex: _selectedTabIndex),
-      children: [_buildCreateTab(), _buildListTab(), _buildSignTab()],
-    ),
-  );
+        appBar: AppBar(
+          title: const Text('Тест актов выполненных работ'),
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          bottom: TabBar(
+            controller: TabController(
+                length: 3, vsync: this, initialIndex: _selectedTabIndex),
+            onTap: (index) => setState(() => _selectedTabIndex = index),
+            tabs: const [
+              Tab(icon: Icon(Icons.add), text: 'Создать'),
+              Tab(icon: Icon(Icons.list), text: 'Список'),
+              Tab(icon: Icon(Icons.edit), text: 'Подписать'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          controller: TabController(
+              length: 3, vsync: this, initialIndex: _selectedTabIndex),
+          children: [_buildCreateTab(), _buildListTab(), _buildSignTab()],
+        ),
+      );
 
   Widget _buildCreateTab() => SingleChildScrollView(
-    child: Column(
-      children: [
-        _buildTestInfo(),
-        const SizedBox(height: 16),
-        WorkActWidget(
-          bookingId: _testBookingId,
-          specialistId: _testSpecialistId,
-          customerId: _testCustomerId,
-          onActCreated: () {
-            _loadWorkActs();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Акт создан!'), backgroundColor: Colors.green),
-            );
-          },
+        child: Column(
+          children: [
+            _buildTestInfo(),
+            const SizedBox(height: 16),
+            WorkActWidget(
+              bookingId: _testBookingId,
+              specialistId: _testSpecialistId,
+              customerId: _testCustomerId,
+              onActCreated: () {
+                _loadWorkActs();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                      content: Text('Акт создан!'),
+                      backgroundColor: Colors.green),
+                );
+              },
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildListTab() {
     if (_isLoading) {
@@ -83,9 +88,12 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
           children: [
             Icon(Icons.error, size: 64, color: Colors.red.shade300),
             const SizedBox(height: 16),
-            Text(_error!, style: const TextStyle(fontSize: 16), textAlign: TextAlign.center),
+            Text(_error!,
+                style: const TextStyle(fontSize: 16),
+                textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadWorkActs, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadWorkActs, child: const Text('Повторить')),
           ],
         ),
       );
@@ -98,7 +106,8 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
           children: [
             Icon(Icons.description, size: 64, color: Colors.grey.shade300),
             const SizedBox(height: 16),
-            const Text('Акты выполненных работ не найдены', style: TextStyle(fontSize: 16)),
+            const Text('Акты выполненных работ не найдены',
+                style: TextStyle(fontSize: 16)),
             const SizedBox(height: 8),
             const Text(
               'Создайте первый акт на вкладке "Создать"',
@@ -124,7 +133,8 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
       return const Center(child: CircularProgressIndicator());
     }
 
-    final draftActs = _workActs.where((act) => act.status == WorkActStatus.draft).toList();
+    final draftActs =
+        _workActs.where((act) => act.status == WorkActStatus.draft).toList();
 
     if (draftActs.isEmpty) {
       return Center(
@@ -133,7 +143,8 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
           children: [
             Icon(Icons.edit, size: 64, color: Colors.grey.shade300),
             const SizedBox(height: 16),
-            const Text('Нет актов для подписания', style: TextStyle(fontSize: 16)),
+            const Text('Нет актов для подписания',
+                style: TextStyle(fontSize: 16)),
             const SizedBox(height: 8),
             const Text(
               'Все акты уже подписаны или отклонены',
@@ -163,7 +174,8 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
                     Expanded(
                       child: Text(
                         workAct.eventName,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     _buildStatusChip(workAct.status),
@@ -180,7 +192,9 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
                   onActSigned: () {
                     _loadWorkActs();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Акт подписан!'), backgroundColor: Colors.green),
+                      const SnackBar(
+                          content: Text('Акт подписан!'),
+                          backgroundColor: Colors.green),
                     );
                   },
                   onActRejected: () {
@@ -202,112 +216,117 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
   }
 
   Widget _buildTestInfo() => Container(
-    margin: const EdgeInsets.all(16),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.blue.shade50,
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: Colors.blue.shade200),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+        margin: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.blue.shade50,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.blue.shade200),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.info, color: Colors.blue.shade700),
-            const SizedBox(width: 8),
-            Text(
-              'Информация о тесте',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue.shade700,
-              ),
+            Row(
+              children: [
+                Icon(Icons.info, color: Colors.blue.shade700),
+                const SizedBox(width: 8),
+                Text(
+                  'Информация о тесте',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text('Booking ID: $_testBookingId'),
+            Text('Specialist ID: $_testSpecialistId'),
+            Text('Customer ID: $_testCustomerId'),
+            const SizedBox(height: 8),
+            const Text(
+              'Этот экран позволяет протестировать функциональность создания, просмотра и подписания актов выполненных работ.',
+              style: TextStyle(fontSize: 12),
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        Text('Booking ID: $_testBookingId'),
-        Text('Specialist ID: $_testSpecialistId'),
-        Text('Customer ID: $_testCustomerId'),
-        const SizedBox(height: 8),
-        const Text(
-          'Этот экран позволяет протестировать функциональность создания, просмотра и подписания актов выполненных работ.',
-          style: TextStyle(fontSize: 12),
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildWorkActCard(WorkAct workAct) => Card(
-    margin: const EdgeInsets.only(bottom: 16),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.description, color: Colors.blue),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  workAct.eventName,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
+              Row(
+                children: [
+                  const Icon(Icons.description, color: Colors.blue),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      workAct.eventName,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  _buildStatusChip(workAct.status),
+                ],
               ),
-              _buildStatusChip(workAct.status),
+              const SizedBox(height: 8),
+              _buildInfoRow('Дата:', workAct.eventDate),
+              _buildInfoRow('Место:', workAct.eventLocation),
+              _buildInfoRow(
+                  'Сумма:', '${workAct.totalAmount.toStringAsFixed(2)} ₽'),
+              _buildInfoRow('Создан:', _formatDate(workAct.createdAt)),
+              if (workAct.signedAt != null)
+                _buildInfoRow('Подписан:', _formatDate(workAct.signedAt!)),
+              if (workAct.notes != null) ...[
+                const SizedBox(height: 8),
+                const Text('Примечания:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(workAct.notes!),
+              ],
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _showWorkActDetails(workAct),
+                      icon: const Icon(Icons.visibility),
+                      label: const Text('Подробнее'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _generatePDF(workAct),
+                      icon: const Icon(Icons.picture_as_pdf),
+                      label: const Text('PDF'),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: 8),
-          _buildInfoRow('Дата:', workAct.eventDate),
-          _buildInfoRow('Место:', workAct.eventLocation),
-          _buildInfoRow('Сумма:', '${workAct.totalAmount.toStringAsFixed(2)} ₽'),
-          _buildInfoRow('Создан:', _formatDate(workAct.createdAt)),
-          if (workAct.signedAt != null) _buildInfoRow('Подписан:', _formatDate(workAct.signedAt!)),
-          if (workAct.notes != null) ...[
-            const SizedBox(height: 8),
-            const Text('Примечания:', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(workAct.notes!),
-          ],
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () => _showWorkActDetails(workAct),
-                  icon: const Icon(Icons.visibility),
-                  label: const Text('Подробнее'),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () => _generatePDF(workAct),
-                  icon: const Icon(Icons.picture_as_pdf),
-                  label: const Text('PDF'),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildInfoRow(String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 2),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 80,
-          child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 80,
+              child: Text(label,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            Expanded(child: Text(value)),
+          ],
         ),
-        Expanded(child: Text(value)),
-      ],
-    ),
-  );
+      );
 
   Widget _buildStatusChip(WorkActStatus status) {
     Color color;
@@ -329,7 +348,8 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
     }
 
     return Chip(
-      label: Text(text, style: const TextStyle(color: Colors.white, fontSize: 12)),
+      label:
+          Text(text, style: const TextStyle(color: Colors.white, fontSize: 12)),
       backgroundColor: color,
     );
   }
@@ -368,18 +388,21 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
             children: [
               _buildInfoRow('Дата:', workAct.eventDate),
               _buildInfoRow('Место:', workAct.eventLocation),
-              _buildInfoRow('Сумма:', '${workAct.totalAmount.toStringAsFixed(2)} ₽'),
+              _buildInfoRow(
+                  'Сумма:', '${workAct.totalAmount.toStringAsFixed(2)} ₽'),
               _buildInfoRow('Статус:', _getStatusText(workAct.status)),
               _buildInfoRow('Создан:', _formatDate(workAct.createdAt)),
               if (workAct.signedAt != null)
                 _buildInfoRow('Подписан:', _formatDate(workAct.signedAt!)),
               if (workAct.notes != null) ...[
                 const SizedBox(height: 8),
-                const Text('Примечания:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Примечания:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(workAct.notes!),
               ],
               const SizedBox(height: 16),
-              const Text('Выполненные работы:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Выполненные работы:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               ...workAct.services.map(
                 (service) => Padding(
@@ -393,7 +416,9 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -405,13 +430,17 @@ class _WorkActTestScreenState extends State<WorkActTestScreen> with TickerProvid
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('PDF создан успешно'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('PDF создан успешно'),
+              backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка создания PDF: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка создания PDF: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }

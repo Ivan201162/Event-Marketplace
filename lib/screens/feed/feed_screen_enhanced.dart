@@ -24,12 +24,12 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
     with TickerProviderStateMixin {
   final _postController = TextEditingController();
   final _scrollController = ScrollController();
-  
+
   bool _isLoading = false;
   bool _isCreatingPost = false;
   File? _selectedImage;
   String _selectedFilter = 'Все';
-  
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -99,13 +99,14 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
 
       final firestore = FirebaseFirestore.instance;
       final storageService = ref.read(storageServiceProvider);
-      
+
       String? imageUrl;
-      
+
       // Загружаем изображение, если выбрано
       if (_selectedImage != null) {
         final postId = firestore.collection('posts').doc().id;
-        imageUrl = await storageService.uploadPostImage(postId, _selectedImage!);
+        imageUrl =
+            await storageService.uploadPostImage(postId, _selectedImage!);
       }
 
       // Создаем пост
@@ -129,7 +130,13 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
 
       _showSuccess('Пост опубликован!');
     } catch (e) {
-      _showError('Ошибка: $e');
+      String errorMessage = 'Ошибка при создании поста';
+      if (e.toString().contains('permission-denied')) {
+        errorMessage = 'Нет прав для создания поста. Проверьте авторизацию.';
+      } else if (e.toString().contains('network')) {
+        errorMessage = 'Ошибка сети. Проверьте подключение к интернету.';
+      }
+      _showError(errorMessage);
     } finally {
       setState(() => _isCreatingPost = false);
     }
@@ -142,7 +149,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
 
       final firestore = FirebaseFirestore.instance;
       final postRef = firestore.collection('posts').doc(postId);
-      
+
       if (isLiked) {
         // Убираем лайк
         await postRef.update({
@@ -203,7 +210,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
             children: [
               // Заголовок
               _buildHeader(),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -271,10 +278,10 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
       children: [
         // Создание поста
         _buildCreatePostSection(),
-        
+
         // Фильтры
         _buildFiltersSection(),
-        
+
         // Лента постов
         Expanded(
           child: _buildPostsList(),
@@ -320,7 +327,6 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
               ),
             ],
           ),
-          
           if (_selectedImage != null) ...[
             const SizedBox(height: 12),
             Container(
@@ -362,9 +368,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
               ),
             ),
           ],
-          
           const SizedBox(height: 12),
-          
           Row(
             children: [
               IconButton(
@@ -387,7 +391,8 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
                         height: 16,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : const Text('Опубликовать'),
@@ -410,7 +415,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
         itemBuilder: (context, index) {
           final filter = _filters[index];
           final isSelected = filter == _selectedFilter;
-          
+
           return Padding(
             padding: const EdgeInsets.only(right: 12),
             child: GestureDetector(
@@ -421,15 +426,14 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isSelected 
-                      ? const Color(0xFF1E3A8A)
-                      : Colors.grey[100],
+                  color:
+                      isSelected ? const Color(0xFF1E3A8A) : Colors.grey[100],
                   borderRadius: BorderRadius.circular(20),
-                  border: isSelected
-                      ? null
-                      : Border.all(color: Colors.grey[300]!),
+                  border:
+                      isSelected ? null : Border.all(color: Colors.grey[300]!),
                 ),
                 child: Text(
                   filter,
@@ -449,6 +453,12 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
 
   /// Список постов
   Widget _buildPostsList() {
+    // Проверяем авторизацию
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return _buildAuthRequiredState();
+    }
+
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('posts')
@@ -474,7 +484,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
             final data = doc.data() as Map<String, dynamic>;
-            
+
             return _buildPostCard(doc.id, data);
           },
         );
@@ -545,7 +555,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
               ],
             ),
           ),
-          
+
           // Текст поста
           if (data['text'] != null && data['text'].isNotEmpty)
             Padding(
@@ -555,7 +565,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
                 style: const TextStyle(fontSize: 16),
               ),
             ),
-          
+
           // Изображение поста
           if (data['imageUrl'] != null && data['imageUrl'].isNotEmpty)
             Padding(
@@ -583,7 +593,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
                 ),
               ),
             ),
-          
+
           // Действия
           Padding(
             padding: const EdgeInsets.all(16),
@@ -789,14 +799,14 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
   /// Форматирование даты
   String _formatDate(dynamic timestamp) {
     if (timestamp == null) return '';
-    
-    final date = timestamp is Timestamp 
-        ? timestamp.toDate() 
+
+    final date = timestamp is Timestamp
+        ? timestamp.toDate()
         : DateTime.parse(timestamp.toString());
-    
+
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {
@@ -806,5 +816,53 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
     } else {
       return 'Только что';
     }
+  }
+
+  /// Состояние когда требуется авторизация
+  Widget _buildAuthRequiredState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.lock_outline,
+            size: 64,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Для просмотра ленты',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'необходимо войти в аккаунт',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[500],
+            ),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: () {
+              context.go('/auth');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Войти'),
+          ),
+        ],
+      ),
+    );
   }
 }

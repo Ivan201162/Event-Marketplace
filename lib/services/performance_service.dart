@@ -70,7 +70,8 @@ class PerformanceService {
   }
 
   /// Кэширование результата функции
-  Future<T> cache<T>(String key, Future<T> Function() computation, {Duration? expiration}) async {
+  Future<T> cache<T>(String key, Future<T> Function() computation,
+      {Duration? expiration}) async {
     final now = DateTime.now();
     final exp = expiration ?? _cacheExpiration;
 
@@ -111,13 +112,14 @@ class PerformanceService {
 
   /// Получение статистики кэша
   Map<String, dynamic> getCacheStats() => {
-    'size': _cache.length,
-    'keys': _cache.keys.toList(),
-    'hitRate': _calculateCacheHitRate(),
-  };
+        'size': _cache.length,
+        'keys': _cache.keys.toList(),
+        'hitRate': _calculateCacheHitRate(),
+      };
 
   /// Выполнение операции с ограничением количества одновременных операций
-  Future<T> executeWithLimit<T>(Future<T> Function() operation, {String? operationName}) async {
+  Future<T> executeWithLimit<T>(Future<T> Function() operation,
+      {String? operationName}) async {
     if (_currentOperations >= _maxConcurrentOperations) {
       // Добавляем в очередь
       final completer = Completer<T>();
@@ -133,7 +135,8 @@ class PerformanceService {
     }
 
     _currentOperations++;
-    final name = operationName ?? 'operation_${DateTime.now().millisecondsSinceEpoch}';
+    final name =
+        operationName ?? 'operation_${DateTime.now().millisecondsSinceEpoch}';
 
     try {
       _monitoring.startOperation(name);
@@ -174,11 +177,12 @@ class PerformanceService {
     int? maxWidth,
     int? maxHeight,
     int quality = 85,
-  }) async => executeInIsolate(() {
-    // Здесь должна быть логика оптимизации изображений
-    // Для примера возвращаем исходные данные
-    return imageData;
-  });
+  }) async =>
+      executeInIsolate(() {
+        // Здесь должна быть логика оптимизации изображений
+        // Для примера возвращаем исходные данные
+        return imageData;
+      });
 
   /// Ленивая загрузка данных
   Future<List<T>> lazyLoad<T>({
@@ -201,7 +205,8 @@ class PerformanceService {
   /// Оптимизация списков
   List<T> optimizeList<T>(List<T> list, {int? maxItems}) {
     if (maxItems != null && list.length > maxItems) {
-      _logger.debug('Optimized list from ${list.length} to $maxItems items', tag: 'PERFORMANCE');
+      _logger.debug('Optimized list from ${list.length} to $maxItems items',
+          tag: 'PERFORMANCE');
       return list.take(maxItems).toList();
     }
     return list;
@@ -235,21 +240,28 @@ class PerformanceService {
 
   /// Получение статистики производительности
   Map<String, dynamic> getPerformanceStats() => {
-    'cache': getCacheStats(),
-    'operations': {
-      'current': _currentOperations,
-      'max': _maxConcurrentOperations,
-      'queued': _operationQueue.length,
-    },
-    'heavyOperations': {'queued': _heavyOperationsQueue.length, 'processing': _isProcessingQueue},
-    'timers': {'debounce': _debounceTimers.length, 'throttle': _throttleTimers.length},
-  };
+        'cache': getCacheStats(),
+        'operations': {
+          'current': _currentOperations,
+          'max': _maxConcurrentOperations,
+          'queued': _operationQueue.length,
+        },
+        'heavyOperations': {
+          'queued': _heavyOperationsQueue.length,
+          'processing': _isProcessingQueue
+        },
+        'timers': {
+          'debounce': _debounceTimers.length,
+          'throttle': _throttleTimers.length
+        },
+      };
 
   /// Настройка параметров производительности
   void configure({int? maxConcurrentOperations, Duration? cacheExpiration}) {
     if (maxConcurrentOperations != null) {
       _maxConcurrentOperations = maxConcurrentOperations;
-      _logger.info('Set max concurrent operations to $maxConcurrentOperations', tag: 'PERFORMANCE');
+      _logger.info('Set max concurrent operations to $maxConcurrentOperations',
+          tag: 'PERFORMANCE');
     }
 
     if (cacheExpiration != null) {
@@ -312,7 +324,8 @@ class PerformanceService {
     }
 
     if (expiredKeys.isNotEmpty) {
-      _logger.debug('Cleaned up ${expiredKeys.length} expired cache entries', tag: 'PERFORMANCE');
+      _logger.debug('Cleaned up ${expiredKeys.length} expired cache entries',
+          tag: 'PERFORMANCE');
     }
   }
 
@@ -322,34 +335,31 @@ class PerformanceService {
     _isProcessingQueue = true;
     final operation = _heavyOperationsQueue.removeFirst();
 
-    operation()
-        .then((_) {
-          _isProcessingQueue = false;
-        })
-        .catchError((e) {
-          _logger.error('Heavy operation failed', tag: 'PERFORMANCE', error: e);
-          _isProcessingQueue = false;
-        });
+    operation().then((_) {
+      _isProcessingQueue = false;
+    }).catchError((e) {
+      _logger.error('Heavy operation failed', tag: 'PERFORMANCE', error: e);
+      _isProcessingQueue = false;
+    });
   }
 
   void _processOperationQueue() {
-    if (_operationQueue.isEmpty || _currentOperations >= _maxConcurrentOperations) {
+    if (_operationQueue.isEmpty ||
+        _currentOperations >= _maxConcurrentOperations) {
       return;
     }
 
     final operation = _operationQueue.removeFirst();
     _currentOperations++;
 
-    operation()
-        .then((_) {
-          _currentOperations--;
-          _processOperationQueue();
-        })
-        .catchError((e) {
-          _logger.error('Queued operation failed', tag: 'PERFORMANCE', error: e);
-          _currentOperations--;
-          _processOperationQueue();
-        });
+    operation().then((_) {
+      _currentOperations--;
+      _processOperationQueue();
+    }).catchError((e) {
+      _logger.error('Queued operation failed', tag: 'PERFORMANCE', error: e);
+      _currentOperations--;
+      _processOperationQueue();
+    });
   }
 
   double _calculateCacheHitRate() {
@@ -363,7 +373,8 @@ class PerformanceService {
 extension PerformanceFutureExtension<T> on Future<T> {
   /// Выполнить с ограничением количества одновременных операций
   Future<T> withConcurrencyLimit({String? operationName}) =>
-      PerformanceService().executeWithLimit(() => this, operationName: operationName);
+      PerformanceService()
+          .executeWithLimit(() => this, operationName: operationName);
 
   /// Выполнить в изоляте
   Future<T> inIsolate() async => this;
@@ -376,7 +387,8 @@ extension PerformanceFutureExtension<T> on Future<T> {
 /// Расширение для List с оптимизацией
 extension PerformanceListExtension<T> on List<T> {
   /// Оптимизировать список
-  List<T> optimized({int? maxItems}) => PerformanceService().optimizeList(this, maxItems: maxItems);
+  List<T> optimized({int? maxItems}) =>
+      PerformanceService().optimizeList(this, maxItems: maxItems);
 }
 
 /// Расширение для String с оптимизацией

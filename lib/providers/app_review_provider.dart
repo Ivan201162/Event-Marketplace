@@ -42,13 +42,14 @@ class AppReviewState {
     String? error,
     ReviewTiming? recommendedTiming,
     bool? shouldShowRequest,
-  }) => AppReviewState(
-    isRequesting: isRequesting ?? this.isRequesting,
-    isAvailable: isAvailable ?? this.isAvailable,
-    error: error ?? this.error,
-    recommendedTiming: recommendedTiming ?? this.recommendedTiming,
-    shouldShowRequest: shouldShowRequest ?? this.shouldShowRequest,
-  );
+  }) =>
+      AppReviewState(
+        isRequesting: isRequesting ?? this.isRequesting,
+        isAvailable: isAvailable ?? this.isAvailable,
+        error: error ?? this.error,
+        recommendedTiming: recommendedTiming ?? this.recommendedTiming,
+        shouldShowRequest: shouldShowRequest ?? this.shouldShowRequest,
+      );
 
   /// Получить статус отзыва
   String get reviewStatus {

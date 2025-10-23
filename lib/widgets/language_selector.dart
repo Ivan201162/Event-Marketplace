@@ -47,7 +47,8 @@ class LanguageSelector extends ConsumerWidget {
           const SizedBox(height: 8),
         ],
         Container(
-          padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: padding ??
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: backgroundColor ?? Theme.of(context).cardColor,
             borderRadius: borderRadius ?? BorderRadius.circular(12),
@@ -78,10 +79,15 @@ class LanguageSelector extends ConsumerWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (showFlag) ...[_buildFlag(currentLocale), const SizedBox(width: 8)],
+                      if (showFlag) ...[
+                        _buildFlag(currentLocale),
+                        const SizedBox(width: 8)
+                      ],
                       Text(
-                        _getLanguageName(currentLocale, showNativeName, showEnglishName, showCode),
-                        style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
+                        _getLanguageName(currentLocale, showNativeName,
+                            showEnglishName, showCode),
+                        style:
+                            textStyle ?? Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(width: 4),
                       Icon(
@@ -134,7 +140,8 @@ class LanguageSelector extends ConsumerWidget {
     return Text(flagEmoji, style: const TextStyle(fontSize: 20));
   }
 
-  String _getLanguageName(Locale locale, bool showNative, bool showEnglish, bool showCode) {
+  String _getLanguageName(
+      Locale locale, bool showNative, bool showEnglish, bool showCode) {
     if (showCode) {
       return locale.languageCode.toUpperCase();
     }
@@ -239,7 +246,10 @@ class CompactLanguageSelector extends ConsumerWidget {
       icon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (showFlag) ...[_buildFlag(currentLocale), if (showText) const SizedBox(width: 4)],
+          if (showFlag) ...[
+            _buildFlag(currentLocale),
+            if (showText) const SizedBox(width: 4)
+          ],
           if (showText) ...[
             Text(
               _getLanguageCode(currentLocale),
@@ -278,9 +288,11 @@ class CompactLanguageSelector extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildLanguageOption(context, ref, const Locale('ru', 'RU'), '🇷🇺', 'Русский'),
+            _buildLanguageOption(
+                context, ref, const Locale('ru', 'RU'), '🇷🇺', 'Русский'),
             const SizedBox(height: 8),
-            _buildLanguageOption(context, ref, const Locale('en', 'US'), '🇺🇸', 'English'),
+            _buildLanguageOption(
+                context, ref, const Locale('en', 'US'), '🇺🇸', 'English'),
           ],
         ),
         actions: [

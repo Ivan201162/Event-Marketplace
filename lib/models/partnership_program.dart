@@ -38,41 +38,43 @@ class Partner {
   });
 
   factory Partner.fromMap(Map<String, dynamic> map) => Partner(
-    id: map['id'] ?? '',
-    name: map['name'] ?? '',
-    email: map['email'] ?? '',
-    phone: map['phone'] ?? '',
-    type: PartnershipType.values.firstWhere(
-      (e) => e.toString() == 'PartnershipType.${map['type']}',
-      orElse: () => PartnershipType.affiliate,
-    ),
-    status: PartnershipStatus.values.firstWhere(
-      (e) => e.toString() == 'PartnershipStatus.${map['status']}',
-      orElse: () => PartnershipStatus.pending,
-    ),
-    commissionRate: (map['commissionRate'] ?? 0.0).toDouble(),
-    commissionType: CommissionType.values.firstWhere(
-      (e) => e.toString() == 'CommissionType.${map['commissionType']}',
-      orElse: () => CommissionType.percentage,
-    ),
-    partnerCode: map['partnerCode'] ?? '',
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    description: map['description'],
-    website: map['website'],
-    socialMedia: Map<String, dynamic>.from(map['socialMedia'] ?? {}),
-    contactPerson: map['contactPerson'],
-    companyName: map['companyName'],
-    inn: map['inn'],
-    bankDetails: Map<String, dynamic>.from(map['bankDetails'] ?? {}),
-    paymentMethod: map['paymentMethod'],
-    minimumPayout: (map['minimumPayout'] ?? 1000.0).toDouble(),
-    paymentSchedule: map['paymentSchedule'],
-    contractNumber: map['contractNumber'],
-    contractDate: map['contractDate'] != null ? (map['contractDate'] as Timestamp).toDate() : null,
-    notes: map['notes'],
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        email: map['email'] ?? '',
+        phone: map['phone'] ?? '',
+        type: PartnershipType.values.firstWhere(
+          (e) => e.toString() == 'PartnershipType.${map['type']}',
+          orElse: () => PartnershipType.affiliate,
+        ),
+        status: PartnershipStatus.values.firstWhere(
+          (e) => e.toString() == 'PartnershipStatus.${map['status']}',
+          orElse: () => PartnershipStatus.pending,
+        ),
+        commissionRate: (map['commissionRate'] ?? 0.0).toDouble(),
+        commissionType: CommissionType.values.firstWhere(
+          (e) => e.toString() == 'CommissionType.${map['commissionType']}',
+          orElse: () => CommissionType.percentage,
+        ),
+        partnerCode: map['partnerCode'] ?? '',
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        description: map['description'],
+        website: map['website'],
+        socialMedia: Map<String, dynamic>.from(map['socialMedia'] ?? {}),
+        contactPerson: map['contactPerson'],
+        companyName: map['companyName'],
+        inn: map['inn'],
+        bankDetails: Map<String, dynamic>.from(map['bankDetails'] ?? {}),
+        paymentMethod: map['paymentMethod'],
+        minimumPayout: (map['minimumPayout'] ?? 1000.0).toDouble(),
+        paymentSchedule: map['paymentSchedule'],
+        contractNumber: map['contractNumber'],
+        contractDate: map['contractDate'] != null
+            ? (map['contractDate'] as Timestamp).toDate()
+            : null,
+        notes: map['notes'],
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String name;
@@ -105,32 +107,33 @@ class Partner {
   bool get isSuspended => status == PartnershipStatus.suspended;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'email': email,
-    'phone': phone,
-    'type': type.toString().split('.').last,
-    'status': status.toString().split('.').last,
-    'commissionRate': commissionRate,
-    'commissionType': commissionType.toString().split('.').last,
-    'partnerCode': partnerCode,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'description': description,
-    'website': website,
-    'socialMedia': socialMedia,
-    'contactPerson': contactPerson,
-    'companyName': companyName,
-    'inn': inn,
-    'bankDetails': bankDetails,
-    'paymentMethod': paymentMethod,
-    'minimumPayout': minimumPayout,
-    'paymentSchedule': paymentSchedule,
-    'contractNumber': contractNumber,
-    'contractDate': contractDate != null ? Timestamp.fromDate(contractDate!) : null,
-    'notes': notes,
-    'metadata': metadata,
-  };
+        'id': id,
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'type': type.toString().split('.').last,
+        'status': status.toString().split('.').last,
+        'commissionRate': commissionRate,
+        'commissionType': commissionType.toString().split('.').last,
+        'partnerCode': partnerCode,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'description': description,
+        'website': website,
+        'socialMedia': socialMedia,
+        'contactPerson': contactPerson,
+        'companyName': companyName,
+        'inn': inn,
+        'bankDetails': bankDetails,
+        'paymentMethod': paymentMethod,
+        'minimumPayout': minimumPayout,
+        'paymentSchedule': paymentSchedule,
+        'contractNumber': contractNumber,
+        'contractDate':
+            contractDate != null ? Timestamp.fromDate(contractDate!) : null,
+        'notes': notes,
+        'metadata': metadata,
+      };
 
   Partner copyWith({
     String? id,
@@ -158,33 +161,34 @@ class Partner {
     DateTime? contractDate,
     String? notes,
     Map<String, dynamic>? metadata,
-  }) => Partner(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    email: email ?? this.email,
-    phone: phone ?? this.phone,
-    type: type ?? this.type,
-    status: status ?? this.status,
-    commissionRate: commissionRate ?? this.commissionRate,
-    commissionType: commissionType ?? this.commissionType,
-    partnerCode: partnerCode ?? this.partnerCode,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    description: description ?? this.description,
-    website: website ?? this.website,
-    socialMedia: socialMedia ?? this.socialMedia,
-    contactPerson: contactPerson ?? this.contactPerson,
-    companyName: companyName ?? this.companyName,
-    inn: inn ?? this.inn,
-    bankDetails: bankDetails ?? this.bankDetails,
-    paymentMethod: paymentMethod ?? this.paymentMethod,
-    minimumPayout: minimumPayout ?? this.minimumPayout,
-    paymentSchedule: paymentSchedule ?? this.paymentSchedule,
-    contractNumber: contractNumber ?? this.contractNumber,
-    contractDate: contractDate ?? this.contractDate,
-    notes: notes ?? this.notes,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      Partner(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        email: email ?? this.email,
+        phone: phone ?? this.phone,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        commissionRate: commissionRate ?? this.commissionRate,
+        commissionType: commissionType ?? this.commissionType,
+        partnerCode: partnerCode ?? this.partnerCode,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        description: description ?? this.description,
+        website: website ?? this.website,
+        socialMedia: socialMedia ?? this.socialMedia,
+        contactPerson: contactPerson ?? this.contactPerson,
+        companyName: companyName ?? this.companyName,
+        inn: inn ?? this.inn,
+        bankDetails: bankDetails ?? this.bankDetails,
+        paymentMethod: paymentMethod ?? this.paymentMethod,
+        minimumPayout: minimumPayout ?? this.minimumPayout,
+        paymentSchedule: paymentSchedule ?? this.paymentSchedule,
+        contractNumber: contractNumber ?? this.contractNumber,
+        contractDate: contractDate ?? this.contractDate,
+        notes: notes ?? this.notes,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 class PartnerTransaction {
@@ -206,29 +210,32 @@ class PartnerTransaction {
     this.metadata,
   });
 
-  factory PartnerTransaction.fromMap(Map<String, dynamic> map) => PartnerTransaction(
-    id: map['id'] ?? '',
-    partnerId: map['partnerId'] ?? '',
-    transactionId: map['transactionId'] ?? '',
-    userId: map['userId'] ?? '',
-    amount: (map['amount'] ?? 0.0).toDouble(),
-    currency: map['currency'] ?? 'RUB',
-    commissionAmount: (map['commissionAmount'] ?? 0.0).toDouble(),
-    commissionRate: (map['commissionRate'] ?? 0.0).toDouble(),
-    commissionType: CommissionType.values.firstWhere(
-      (e) => e.toString() == 'CommissionType.${map['commissionType']}',
-      orElse: () => CommissionType.percentage,
-    ),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    status: PaymentStatus.values.firstWhere(
-      (e) => e.toString() == 'PaymentStatus.${map['status']}',
-      orElse: () => PaymentStatus.pending,
-    ),
-    paymentId: map['paymentId'],
-    paidAt: map['paidAt'] != null ? (map['paidAt'] as Timestamp).toDate() : null,
-    description: map['description'],
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+  factory PartnerTransaction.fromMap(Map<String, dynamic> map) =>
+      PartnerTransaction(
+        id: map['id'] ?? '',
+        partnerId: map['partnerId'] ?? '',
+        transactionId: map['transactionId'] ?? '',
+        userId: map['userId'] ?? '',
+        amount: (map['amount'] ?? 0.0).toDouble(),
+        currency: map['currency'] ?? 'RUB',
+        commissionAmount: (map['commissionAmount'] ?? 0.0).toDouble(),
+        commissionRate: (map['commissionRate'] ?? 0.0).toDouble(),
+        commissionType: CommissionType.values.firstWhere(
+          (e) => e.toString() == 'CommissionType.${map['commissionType']}',
+          orElse: () => CommissionType.percentage,
+        ),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        status: PaymentStatus.values.firstWhere(
+          (e) => e.toString() == 'PaymentStatus.${map['status']}',
+          orElse: () => PaymentStatus.pending,
+        ),
+        paymentId: map['paymentId'],
+        paidAt: map['paidAt'] != null
+            ? (map['paidAt'] as Timestamp).toDate()
+            : null,
+        description: map['description'],
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String partnerId;
@@ -251,22 +258,22 @@ class PartnerTransaction {
   bool get isProcessed => status == PaymentStatus.processed;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'partnerId': partnerId,
-    'transactionId': transactionId,
-    'userId': userId,
-    'amount': amount,
-    'currency': currency,
-    'commissionAmount': commissionAmount,
-    'commissionRate': commissionRate,
-    'commissionType': commissionType.toString().split('.').last,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'status': status.toString().split('.').last,
-    'paymentId': paymentId,
-    'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
-    'description': description,
-    'metadata': metadata,
-  };
+        'id': id,
+        'partnerId': partnerId,
+        'transactionId': transactionId,
+        'userId': userId,
+        'amount': amount,
+        'currency': currency,
+        'commissionAmount': commissionAmount,
+        'commissionRate': commissionRate,
+        'commissionType': commissionType.toString().split('.').last,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'status': status.toString().split('.').last,
+        'paymentId': paymentId,
+        'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
+        'description': description,
+        'metadata': metadata,
+      };
 }
 
 class PartnerStats {
@@ -286,19 +293,19 @@ class PartnerStats {
   });
 
   factory PartnerStats.fromMap(Map<String, dynamic> map) => PartnerStats(
-    partnerId: map['partnerId'] ?? '',
-    period: map['period'] ?? '',
-    totalReferrals: map['totalReferrals'] ?? 0,
-    totalTransactions: map['totalTransactions'] ?? 0,
-    totalRevenue: (map['totalRevenue'] ?? 0.0).toDouble(),
-    totalCommissions: (map['totalCommissions'] ?? 0.0).toDouble(),
-    paidCommissions: (map['paidCommissions'] ?? 0.0).toDouble(),
-    pendingCommissions: (map['pendingCommissions'] ?? 0.0).toDouble(),
-    conversionRate: (map['conversionRate'] ?? 0.0).toDouble(),
-    averageOrderValue: (map['averageOrderValue'] ?? 0.0).toDouble(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        partnerId: map['partnerId'] ?? '',
+        period: map['period'] ?? '',
+        totalReferrals: map['totalReferrals'] ?? 0,
+        totalTransactions: map['totalTransactions'] ?? 0,
+        totalRevenue: (map['totalRevenue'] ?? 0.0).toDouble(),
+        totalCommissions: (map['totalCommissions'] ?? 0.0).toDouble(),
+        paidCommissions: (map['paidCommissions'] ?? 0.0).toDouble(),
+        pendingCommissions: (map['pendingCommissions'] ?? 0.0).toDouble(),
+        conversionRate: (map['conversionRate'] ?? 0.0).toDouble(),
+        averageOrderValue: (map['averageOrderValue'] ?? 0.0).toDouble(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String partnerId;
   final String period;
@@ -314,22 +321,23 @@ class PartnerStats {
   final Map<String, dynamic>? metadata;
 
   double get unpaidCommissions => totalCommissions - paidCommissions;
-  double get commissionRate => totalRevenue > 0 ? (totalCommissions / totalRevenue) * 100 : 0.0;
+  double get commissionRate =>
+      totalRevenue > 0 ? (totalCommissions / totalRevenue) * 100 : 0.0;
 
   Map<String, dynamic> toMap() => {
-    'partnerId': partnerId,
-    'period': period,
-    'totalReferrals': totalReferrals,
-    'totalTransactions': totalTransactions,
-    'totalRevenue': totalRevenue,
-    'totalCommissions': totalCommissions,
-    'paidCommissions': paidCommissions,
-    'pendingCommissions': pendingCommissions,
-    'conversionRate': conversionRate,
-    'averageOrderValue': averageOrderValue,
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'metadata': metadata,
-  };
+        'partnerId': partnerId,
+        'period': period,
+        'totalReferrals': totalReferrals,
+        'totalTransactions': totalTransactions,
+        'totalRevenue': totalRevenue,
+        'totalCommissions': totalCommissions,
+        'paidCommissions': paidCommissions,
+        'pendingCommissions': pendingCommissions,
+        'conversionRate': conversionRate,
+        'averageOrderValue': averageOrderValue,
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'metadata': metadata,
+      };
 }
 
 class PartnerPayment {
@@ -352,25 +360,29 @@ class PartnerPayment {
   });
 
   factory PartnerPayment.fromMap(Map<String, dynamic> map) => PartnerPayment(
-    id: map['id'] ?? '',
-    partnerId: map['partnerId'] ?? '',
-    amount: (map['amount'] ?? 0.0).toDouble(),
-    currency: map['currency'] ?? 'RUB',
-    status: PaymentStatus.values.firstWhere(
-      (e) => e.toString() == 'PaymentStatus.${map['status']}',
-      orElse: () => PaymentStatus.pending,
-    ),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    paymentMethod: map['paymentMethod'],
-    paymentDetails: Map<String, dynamic>.from(map['paymentDetails'] ?? {}),
-    transactionIds: List<String>.from(map['transactionIds'] ?? []),
-    processedAt: map['processedAt'] != null ? (map['processedAt'] as Timestamp).toDate() : null,
-    paidAt: map['paidAt'] != null ? (map['paidAt'] as Timestamp).toDate() : null,
-    failedReason: map['failedReason'],
-    receiptUrl: map['receiptUrl'],
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        partnerId: map['partnerId'] ?? '',
+        amount: (map['amount'] ?? 0.0).toDouble(),
+        currency: map['currency'] ?? 'RUB',
+        status: PaymentStatus.values.firstWhere(
+          (e) => e.toString() == 'PaymentStatus.${map['status']}',
+          orElse: () => PaymentStatus.pending,
+        ),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        paymentMethod: map['paymentMethod'],
+        paymentDetails: Map<String, dynamic>.from(map['paymentDetails'] ?? {}),
+        transactionIds: List<String>.from(map['transactionIds'] ?? []),
+        processedAt: map['processedAt'] != null
+            ? (map['processedAt'] as Timestamp).toDate()
+            : null,
+        paidAt: map['paidAt'] != null
+            ? (map['paidAt'] as Timestamp).toDate()
+            : null,
+        failedReason: map['failedReason'],
+        receiptUrl: map['receiptUrl'],
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String partnerId;
@@ -394,20 +406,21 @@ class PartnerPayment {
   bool get isFailed => status == PaymentStatus.failed;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'partnerId': partnerId,
-    'amount': amount,
-    'currency': currency,
-    'status': status.toString().split('.').last,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'paymentMethod': paymentMethod,
-    'paymentDetails': paymentDetails,
-    'transactionIds': transactionIds,
-    'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
-    'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
-    'failedReason': failedReason,
-    'receiptUrl': receiptUrl,
-    'metadata': metadata,
-  };
+        'id': id,
+        'partnerId': partnerId,
+        'amount': amount,
+        'currency': currency,
+        'status': status.toString().split('.').last,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'paymentMethod': paymentMethod,
+        'paymentDetails': paymentDetails,
+        'transactionIds': transactionIds,
+        'processedAt':
+            processedAt != null ? Timestamp.fromDate(processedAt!) : null,
+        'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
+        'failedReason': failedReason,
+        'receiptUrl': receiptUrl,
+        'metadata': metadata,
+      };
 }

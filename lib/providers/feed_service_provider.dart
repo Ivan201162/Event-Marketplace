@@ -16,7 +16,8 @@ final postsStreamProvider = StreamProvider<List<Post>>((ref) {
 });
 
 /// Post comments provider
-final postCommentsProvider = StreamProvider.family<List<FeedComment>, String>((ref, postId) {
+final postCommentsProvider =
+    StreamProvider.family<List<FeedComment>, String>((ref, postId) {
   final feedService = ref.watch(feedServiceProvider);
   return feedService.getPostComments(postId);
 });

@@ -40,12 +40,14 @@ class _EnhancedPageTransitionState extends State<EnhancedPageTransition>
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
+    ).animate(CurvedAnimation(
+        parent: _animationController, curve: Curves.easeOutCubic));
 
     _animationController.forward();
   }
@@ -103,7 +105,8 @@ class AnimatedContent extends StatefulWidget {
   State<AnimatedContent> createState() => _AnimatedContentState();
 }
 
-class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProviderStateMixin {
+class _AnimatedContentState extends State<AnimatedContent>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -179,7 +182,15 @@ class _AnimatedContentState extends State<AnimatedContent> with SingleTickerProv
 }
 
 /// Типы анимаций
-enum AnimationType { fadeIn, slideUp, slideDown, slideLeft, slideRight, scale, rotation }
+enum AnimationType {
+  fadeIn,
+  slideUp,
+  slideDown,
+  slideLeft,
+  slideRight,
+  scale,
+  rotation
+}
 
 /// Виджет для анимированного списка
 class AnimatedList extends StatefulWidget {
@@ -209,7 +220,8 @@ class _AnimatedListState extends State<AnimatedList> {
           final child = entry.value;
 
           return AnimatedContent(
-            delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
+            delay:
+                Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
             duration: widget.itemDuration,
             curve: widget.curve,
             type: widget.itemType,
@@ -257,7 +269,8 @@ class _AnimatedGridState extends State<AnimatedGrid> {
         ),
         itemCount: widget.children.length,
         itemBuilder: (context, index) => AnimatedContent(
-          delay: Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
+          delay:
+              Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
           duration: widget.itemDuration,
           curve: widget.curve,
           type: widget.itemType,
@@ -286,7 +299,8 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 

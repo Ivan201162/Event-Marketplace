@@ -89,8 +89,9 @@ class UserRegistrationData {
       bankAccount: data['bankAccount'] as String?,
       correspondentAccount: data['correspondentAccount'] as String?,
       bik: data['bik'] as String?,
-      documents:
-          (data['documents'] as List<dynamic>?)?.map((doc) => DocumentData.fromMap(doc)).toList() ??
+      documents: (data['documents'] as List<dynamic>?)
+              ?.map((doc) => DocumentData.fromMap(doc))
+              .toList() ??
           [],
       specializations: List<String>.from(data['specializations'] ?? []),
       bio: data['bio'] as String?,
@@ -143,39 +144,39 @@ class UserRegistrationData {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'email': email,
-    'firstName': firstName,
-    'lastName': lastName,
-    'middleName': middleName,
-    'phoneNumber': phoneNumber,
-    'birthDate': Timestamp.fromDate(birthDate),
-    'userType': userType.name,
-    'profileImageUrl': profileImageUrl,
-    'agreeToTerms': agreeToTerms,
-    'agreeToPrivacy': agreeToPrivacy,
-    'agreeToMarketing': agreeToMarketing,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'businessName': businessName,
-    'inn': inn,
-    'ogrn': ogrn,
-    'kpp': kpp,
-    'legalAddress': legalAddress,
-    'actualAddress': actualAddress,
-    'bankName': bankName,
-    'bankAccount': bankAccount,
-    'correspondentAccount': correspondentAccount,
-    'bik': bik,
-    'documents': documents.map((doc) => doc.toMap()).toList(),
-    'specializations': specializations,
-    'bio': bio,
-    'portfolioImages': portfolioImages,
-    'portfolioVideos': portfolioVideos,
-    'rating': rating,
-    'completedBookings': completedBookings,
-    'isVerified': isVerified,
-    'isActive': isActive,
-  };
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'middleName': middleName,
+        'phoneNumber': phoneNumber,
+        'birthDate': Timestamp.fromDate(birthDate),
+        'userType': userType.name,
+        'profileImageUrl': profileImageUrl,
+        'agreeToTerms': agreeToTerms,
+        'agreeToPrivacy': agreeToPrivacy,
+        'agreeToMarketing': agreeToMarketing,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'businessName': businessName,
+        'inn': inn,
+        'ogrn': ogrn,
+        'kpp': kpp,
+        'legalAddress': legalAddress,
+        'actualAddress': actualAddress,
+        'bankName': bankName,
+        'bankAccount': bankAccount,
+        'correspondentAccount': correspondentAccount,
+        'bik': bik,
+        'documents': documents.map((doc) => doc.toMap()).toList(),
+        'specializations': specializations,
+        'bio': bio,
+        'portfolioImages': portfolioImages,
+        'portfolioVideos': portfolioVideos,
+        'rating': rating,
+        'completedBookings': completedBookings,
+        'isVerified': isVerified,
+        'isActive': isActive,
+      };
 
   /// Создать копию с обновлёнными полями
   UserRegistrationData copyWith({
@@ -213,42 +214,43 @@ class UserRegistrationData {
     int? completedBookings,
     bool? isVerified,
     bool? isActive,
-  }) => UserRegistrationData(
-    id: id ?? this.id,
-    email: email ?? this.email,
-    password: password ?? this.password,
-    firstName: firstName ?? this.firstName,
-    lastName: lastName ?? this.lastName,
-    middleName: middleName ?? this.middleName,
-    phoneNumber: phoneNumber ?? this.phoneNumber,
-    birthDate: birthDate ?? this.birthDate,
-    userType: userType ?? this.userType,
-    profileImageUrl: profileImageUrl ?? this.profileImageUrl,
-    agreeToTerms: agreeToTerms ?? this.agreeToTerms,
-    agreeToPrivacy: agreeToPrivacy ?? this.agreeToPrivacy,
-    agreeToMarketing: agreeToMarketing ?? this.agreeToMarketing,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    businessName: businessName ?? this.businessName,
-    inn: inn ?? this.inn,
-    ogrn: ogrn ?? this.ogrn,
-    kpp: kpp ?? this.kpp,
-    legalAddress: legalAddress ?? this.legalAddress,
-    actualAddress: actualAddress ?? this.actualAddress,
-    bankName: bankName ?? this.bankName,
-    bankAccount: bankAccount ?? this.bankAccount,
-    correspondentAccount: correspondentAccount ?? this.correspondentAccount,
-    bik: bik ?? this.bik,
-    documents: documents ?? this.documents,
-    specializations: specializations ?? this.specializations,
-    bio: bio ?? this.bio,
-    portfolioImages: portfolioImages ?? this.portfolioImages,
-    portfolioVideos: portfolioVideos ?? this.portfolioVideos,
-    rating: rating ?? this.rating,
-    completedBookings: completedBookings ?? this.completedBookings,
-    isVerified: isVerified ?? this.isVerified,
-    isActive: isActive ?? this.isActive,
-  );
+  }) =>
+      UserRegistrationData(
+        id: id ?? this.id,
+        email: email ?? this.email,
+        password: password ?? this.password,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        middleName: middleName ?? this.middleName,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        birthDate: birthDate ?? this.birthDate,
+        userType: userType ?? this.userType,
+        profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+        agreeToTerms: agreeToTerms ?? this.agreeToTerms,
+        agreeToPrivacy: agreeToPrivacy ?? this.agreeToPrivacy,
+        agreeToMarketing: agreeToMarketing ?? this.agreeToMarketing,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        businessName: businessName ?? this.businessName,
+        inn: inn ?? this.inn,
+        ogrn: ogrn ?? this.ogrn,
+        kpp: kpp ?? this.kpp,
+        legalAddress: legalAddress ?? this.legalAddress,
+        actualAddress: actualAddress ?? this.actualAddress,
+        bankName: bankName ?? this.bankName,
+        bankAccount: bankAccount ?? this.bankAccount,
+        correspondentAccount: correspondentAccount ?? this.correspondentAccount,
+        bik: bik ?? this.bik,
+        documents: documents ?? this.documents,
+        specializations: specializations ?? this.specializations,
+        bio: bio ?? this.bio,
+        portfolioImages: portfolioImages ?? this.portfolioImages,
+        portfolioVideos: portfolioVideos ?? this.portfolioVideos,
+        rating: rating ?? this.rating,
+        completedBookings: completedBookings ?? this.completedBookings,
+        isVerified: isVerified ?? this.isVerified,
+        isActive: isActive ?? this.isActive,
+      );
 
   /// Получить полное имя
   String get fullName {
@@ -322,21 +324,21 @@ class DocumentData {
 
   /// Создать из Map
   factory DocumentData.fromMap(Map<String, dynamic> map) => DocumentData(
-    id: map['id'] ?? '',
-    type: DocumentType.values.firstWhere(
-      (e) => e.name == map['type'],
-      orElse: () => DocumentType.passport,
-    ),
-    series: map['series'] ?? '',
-    number: map['number'] ?? '',
-    issuedBy: map['issuedBy'] ?? '',
-    issuedDate: (map['issuedDate'] as Timestamp).toDate(),
-    departmentCode: map['departmentCode'] as String?,
-    imageUrl: map['imageUrl'] as String?,
-    isVerified: map['isVerified'] ?? false,
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-  );
+        id: map['id'] ?? '',
+        type: DocumentType.values.firstWhere(
+          (e) => e.name == map['type'],
+          orElse: () => DocumentType.passport,
+        ),
+        series: map['series'] ?? '',
+        number: map['number'] ?? '',
+        issuedBy: map['issuedBy'] ?? '',
+        issuedDate: (map['issuedDate'] as Timestamp).toDate(),
+        departmentCode: map['departmentCode'] as String?,
+        imageUrl: map['imageUrl'] as String?,
+        isVerified: map['isVerified'] ?? false,
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      );
   final String id;
   final DocumentType type;
   final String series;
@@ -351,18 +353,18 @@ class DocumentData {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'type': type.name,
-    'series': series,
-    'number': number,
-    'issuedBy': issuedBy,
-    'issuedDate': Timestamp.fromDate(issuedDate),
-    'departmentCode': departmentCode,
-    'imageUrl': imageUrl,
-    'isVerified': isVerified,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'id': id,
+        'type': type.name,
+        'series': series,
+        'number': number,
+        'issuedBy': issuedBy,
+        'issuedDate': Timestamp.fromDate(issuedDate),
+        'departmentCode': departmentCode,
+        'imageUrl': imageUrl,
+        'isVerified': isVerified,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Получить описание типа документа
   String get typeDescription {
@@ -398,5 +400,6 @@ class DocumentData {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'DocumentData(id: $id, type: $type, fullNumber: $fullNumber)';
+  String toString() =>
+      'DocumentData(id: $id, type: $type, fullNumber: $fullNumber)';
 }

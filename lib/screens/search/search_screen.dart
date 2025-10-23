@@ -28,7 +28,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   void _performSearch() {
     final currentFilters = ref.read(searchFiltersProvider);
     final newFilters = currentFilters.copyWith(
-      query: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
+      query: _searchController.text.trim().isEmpty
+          ? null
+          : _searchController.text.trim(),
     );
 
     ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
@@ -66,7 +68,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Поиск специалистов'),
-        actions: [IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilters)],
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.filter_list), onPressed: _showFilters)
+        ],
       ),
       body: Column(
         children: [
@@ -87,7 +92,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                ElevatedButton(onPressed: _performSearch, child: const Text('Найти')),
+                ElevatedButton(
+                    onPressed: _performSearch, child: const Text('Найти')),
               ],
             ),
           ),
@@ -106,7 +112,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       const Spacer(),
-                      TextButton(onPressed: _clearSearch, child: const Text('Очистить')),
+                      TextButton(
+                          onPressed: _clearSearch,
+                          child: const Text('Очистить')),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -114,32 +122,47 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     spacing: 8,
                     runSpacing: 4,
                     children: [
-                      if (searchFilters.query != null && searchFilters.query!.isNotEmpty)
+                      if (searchFilters.query != null &&
+                          searchFilters.query!.isNotEmpty)
                         _buildFilterChip('Поиск: ${searchFilters.query}', () {
                           final newFilters = searchFilters.copyWith();
-                          ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
+                          ref
+                              .read(searchFiltersProvider.notifier)
+                              .updateFilters(newFilters);
                         }),
                       if (searchFilters.city != null)
                         _buildFilterChip('Город: ${searchFilters.city}', () {
                           final newFilters = searchFilters.copyWith();
-                          ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
+                          ref
+                              .read(searchFiltersProvider.notifier)
+                              .updateFilters(newFilters);
                         }),
                       if (searchFilters.specialization != null)
-                        _buildFilterChip('Специализация: ${searchFilters.specialization}', () {
+                        _buildFilterChip(
+                            'Специализация: ${searchFilters.specialization}',
+                            () {
                           final newFilters = searchFilters.copyWith();
-                          ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
+                          ref
+                              .read(searchFiltersProvider.notifier)
+                              .updateFilters(newFilters);
                         }),
                       if (searchFilters.minRating != null)
-                        _buildFilterChip('Рейтинг: ${searchFilters.minRating}+', () {
+                        _buildFilterChip('Рейтинг: ${searchFilters.minRating}+',
+                            () {
                           final newFilters = searchFilters.copyWith();
-                          ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
+                          ref
+                              .read(searchFiltersProvider.notifier)
+                              .updateFilters(newFilters);
                         }),
-                      if (searchFilters.minPrice != null || searchFilters.maxPrice != null)
+                      if (searchFilters.minPrice != null ||
+                          searchFilters.maxPrice != null)
                         _buildFilterChip(
                           'Цена: ${searchFilters.minPrice ?? 0}-${searchFilters.maxPrice ?? '∞'} ₽',
                           () {
                             final newFilters = searchFilters.copyWith();
-                            ref.read(searchFiltersProvider.notifier).updateFilters(newFilters);
+                            ref
+                                .read(searchFiltersProvider.notifier)
+                                .updateFilters(newFilters);
                           },
                         ),
                     ],
@@ -180,9 +203,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(Icons.error_outline,
+                        size: 64, color: Colors.red),
                     const SizedBox(height: 16),
-                    Text('Ошибка поиска', style: Theme.of(context).textTheme.titleLarge),
+                    Text('Ошибка поиска',
+                        style: Theme.of(context).textTheme.titleLarge),
                     const SizedBox(height: 8),
                     Text(
                       error.toString(),
@@ -219,14 +244,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         children: [
           const Icon(Icons.search_off, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text('Специалисты не найдены', style: Theme.of(context).textTheme.titleLarge),
+          Text('Специалисты не найдены',
+              style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
           Text(
             'Попробуйте изменить параметры поиска',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
-          ElevatedButton(onPressed: _clearSearch, child: const Text('Очистить фильтры')),
+          ElevatedButton(
+              onPressed: _clearSearch, child: const Text('Очистить фильтры')),
         ],
       ),
     );

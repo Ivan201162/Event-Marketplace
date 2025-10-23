@@ -24,7 +24,8 @@ class FeedPostCard extends StatefulWidget {
   State<FeedPostCard> createState() => _FeedPostCardState();
 }
 
-class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderStateMixin {
+class _FeedPostCardState extends State<FeedPostCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   bool _isLiked = false;
@@ -40,7 +41,8 @@ class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderSt
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.2,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -97,7 +99,8 @@ class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderSt
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('Специалист',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                   Text(
                     _formatTime(widget.post.createdAt),
                     style: TextStyle(color: Colors.grey[600], fontSize: 12),
@@ -105,7 +108,8 @@ class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderSt
                 ],
               ),
             ),
-            IconButton(icon: const Icon(Icons.more_vert), onPressed: _showPostOptions),
+            IconButton(
+                icon: const Icon(Icons.more_vert), onPressed: _showPostOptions),
           ],
         ),
       );
@@ -117,7 +121,8 @@ class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderSt
           if (widget.post.text != null && widget.post.text!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(widget.post.text!, style: const TextStyle(fontSize: 14)),
+              child:
+                  Text(widget.post.text!, style: const TextStyle(fontSize: 14)),
             ),
           const SizedBox(height: 8),
           _buildMediaContent(),
@@ -151,8 +156,8 @@ class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderSt
             color: Colors.grey[300],
             child: const Center(child: CircularProgressIndicator()),
           ),
-          errorWidget: (context, url, error) =>
-              Container(color: Colors.grey[300], child: const Icon(Icons.error)),
+          errorWidget: (context, url, error) => Container(
+              color: Colors.grey[300], child: const Icon(Icons.error)),
         ),
       );
 
@@ -171,8 +176,8 @@ class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderSt
                 color: Colors.grey[300],
                 child: const Center(child: CircularProgressIndicator()),
               ),
-              errorWidget: (context, url, error) =>
-                  Container(color: Colors.grey[300], child: const Icon(Icons.error)),
+              errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[300], child: const Icon(Icons.error)),
             ),
           ),
         ),
@@ -188,7 +193,8 @@ class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderSt
               onTap: _toggleLike,
             ),
             const SizedBox(width: 16),
-            _buildActionButton(icon: Icons.chat_bubble_outline, onTap: widget.onComment),
+            _buildActionButton(
+                icon: Icons.chat_bubble_outline, onTap: widget.onComment),
             const SizedBox(width: 16),
             _buildActionButton(icon: Icons.share, onTap: widget.onShare),
             const Spacer(),
@@ -201,7 +207,10 @@ class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderSt
         ),
       );
 
-  Widget _buildActionButton({required IconData icon, Color? color, required VoidCallback onTap}) =>
+  Widget _buildActionButton(
+          {required IconData icon,
+          Color? color,
+          required VoidCallback onTap}) =>
       GestureDetector(
         onTap: onTap,
         child: Icon(icon, color: color ?? Colors.grey[600], size: 24),
@@ -215,7 +224,8 @@ class _FeedPostCardState extends State<FeedPostCard> with SingleTickerProviderSt
             if (widget.post.likesCount > 0)
               Text(
                 '${widget.post.likesCount} лайков',
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
               ),
             if (widget.post.commentsCount > 0) ...[
               const SizedBox(height: 4),

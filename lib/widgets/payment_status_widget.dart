@@ -51,7 +51,10 @@ class PaymentStatusWidget extends ConsumerWidget {
             const SizedBox(width: 4),
             Text(
               'Платеж не создан',
-              style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -77,7 +80,10 @@ class PaymentStatusWidget extends ConsumerWidget {
             const SizedBox(width: 6),
             Text(
               'Загрузка...',
-              style: TextStyle(fontSize: 12, color: Colors.blue[600], fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.blue[600],
+                  fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -97,7 +103,10 @@ class PaymentStatusWidget extends ConsumerWidget {
             const SizedBox(width: 4),
             Text(
               'Ошибка загрузки',
-              style: TextStyle(fontSize: 12, color: Colors.red[600], fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.red[600],
+                  fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -125,8 +134,10 @@ class PaymentStatusWidget extends ConsumerWidget {
               const SizedBox(width: 8),
               Text(
                 'Статус оплаты',
-                style:
-                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -207,14 +218,16 @@ class PaymentStatusWidget extends ConsumerWidget {
           const SizedBox(width: 4),
           Text(
             '${amount.toStringAsFixed(0)} ₽',
-            style: TextStyle(fontSize: 12, color: textColor, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: 12, color: textColor, fontWeight: FontWeight.w500),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildPaymentCard(BuildContext context, BookingPayment payment) => Card(
+  Widget _buildPaymentCard(BuildContext context, BookingPayment payment) =>
+      Card(
         margin: EdgeInsets.zero,
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -232,11 +245,13 @@ class PaymentStatusWidget extends ConsumerWidget {
                       children: [
                         Text(
                           'Платеж',
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 14),
                         ),
                         Text(
                           '${payment.amount.toStringAsFixed(0)} ₽',
-                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 12),
                         ),
                       ],
                     ),
@@ -265,9 +280,11 @@ class PaymentStatusWidget extends ConsumerWidget {
                     'Создан: ${_formatDate(payment.updatedAt)}',
                     style: TextStyle(color: Colors.grey[500], fontSize: 11),
                   ),
-                  if (payment.status == 'paid' || payment.status == 'completed') ...[
+                  if (payment.status == 'paid' ||
+                      payment.status == 'completed') ...[
                     const SizedBox(width: 12),
-                    Icon(Icons.check_circle, size: 14, color: Colors.green[500]),
+                    Icon(Icons.check_circle,
+                        size: 14, color: Colors.green[500]),
                     const SizedBox(width: 4),
                     Text(
                       'Оплачен: ${_formatDate(payment.updatedAt)}',
@@ -330,7 +347,8 @@ class PaymentStatusWidget extends ConsumerWidget {
       ),
       child: Text(
         _getStatusDisplayName(status),
-        style: TextStyle(fontSize: 10, color: textColor, fontWeight: FontWeight.w500),
+        style: TextStyle(
+            fontSize: 10, color: textColor, fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -359,7 +377,8 @@ class PaymentStatusWidget extends ConsumerWidget {
 
   Widget _buildPaymentSummary(BuildContext context, BookingPayment payment) {
     final totalAmount = payment.amount;
-    final isCompleted = payment.status == 'paid' || payment.status == 'completed';
+    final isCompleted =
+        payment.status == 'paid' || payment.status == 'completed';
     final completedAmount = isCompleted ? payment.amount : 0.0;
     final pendingAmount = isCompleted ? 0.0 : payment.amount;
 
@@ -375,11 +394,16 @@ class PaymentStatusWidget extends ConsumerWidget {
         children: [
           Text(
             'Сводка по платежам',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          _buildSummaryRow('Общая сумма', '${totalAmount.toStringAsFixed(0)} ₽'),
-          _buildSummaryRow('Оплачено', '${completedAmount.toStringAsFixed(0)} ₽', Colors.green),
+          _buildSummaryRow(
+              'Общая сумма', '${totalAmount.toStringAsFixed(0)} ₽'),
+          _buildSummaryRow('Оплачено',
+              '${completedAmount.toStringAsFixed(0)} ₽', Colors.green),
           if (pendingAmount > 0)
             _buildSummaryRow(
               'Ожидает оплаты',
@@ -391,12 +415,14 @@ class PaymentStatusWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, [Color? valueColor]) => Padding(
+  Widget _buildSummaryRow(String label, String value, [Color? valueColor]) =>
+      Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+            Text(label,
+                style: TextStyle(fontSize: 12, color: Colors.grey[600])),
             Text(
               value,
               style: TextStyle(
@@ -420,12 +446,14 @@ class CompactPaymentStatusWidget extends StatelessWidget {
   final String bookingId;
 
   @override
-  Widget build(BuildContext context) => PaymentStatusWidget(bookingId: bookingId, compact: true);
+  Widget build(BuildContext context) =>
+      PaymentStatusWidget(bookingId: bookingId, compact: true);
 }
 
 /// Виджет для отображения кнопки оплаты
 class PaymentButtonWidget extends ConsumerWidget {
-  const PaymentButtonWidget({super.key, required this.bookingId, this.onPaymentPressed});
+  const PaymentButtonWidget(
+      {super.key, required this.bookingId, this.onPaymentPressed});
 
   final String bookingId;
   final VoidCallback? onPaymentPressed;
@@ -443,7 +471,8 @@ class PaymentButtonWidget extends ConsumerWidget {
         }
 
         return ElevatedButton.icon(
-          onPressed: onPaymentPressed ?? () => _handlePayment(context, pendingPayment),
+          onPressed:
+              onPaymentPressed ?? () => _handlePayment(context, pendingPayment),
           icon: const Icon(Icons.payment, size: 18),
           label: Text('Оплатить ${pendingPayment.amount.toStringAsFixed(0)} ₽'),
           style: ElevatedButton.styleFrom(
@@ -464,9 +493,12 @@ class PaymentButtonWidget extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Оплата'),
-        content: Text('Переход к оплате ${payment.amount.toStringAsFixed(0)} ₽'),
+        content:
+            Text('Переход к оплате ${payment.amount.toStringAsFixed(0)} ₽'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);

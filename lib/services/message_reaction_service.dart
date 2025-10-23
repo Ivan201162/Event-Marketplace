@@ -5,7 +5,8 @@ import '../models/chat_message_extended.dart';
 class MessageReactionService {
   factory MessageReactionService() => _instance;
   MessageReactionService._internal();
-  static final MessageReactionService _instance = MessageReactionService._internal();
+  static final MessageReactionService _instance =
+      MessageReactionService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -24,14 +25,14 @@ class MessageReactionService {
       if (!messageDoc.exists) return false;
 
       final messageData = messageDoc.data();
-      final reactions =
-          (messageData['reactions'] as List<dynamic>?)
+      final reactions = (messageData['reactions'] as List<dynamic>?)
               ?.map((e) => MessageReaction.fromMap(e))
               .toList() ??
           [];
 
       // Удаляем существующую реакцию от этого пользователя с этим эмодзи
-      reactions.removeWhere((reaction) => reaction.userId == userId && reaction.emoji == emoji);
+      reactions.removeWhere(
+          (reaction) => reaction.userId == userId && reaction.emoji == emoji);
 
       // Добавляем новую реакцию
       final newReaction = MessageReaction(
@@ -45,7 +46,8 @@ class MessageReactionService {
       reactions.add(newReaction);
 
       // Обновляем сообщение
-      await messageRef.update({'reactions': reactions.map((e) => e.toMap()).toList()});
+      await messageRef
+          .update({'reactions': reactions.map((e) => e.toMap()).toList()});
 
       return true;
     } catch (e) {
@@ -67,17 +69,18 @@ class MessageReactionService {
       if (!messageDoc.exists) return false;
 
       final messageData = messageDoc.data();
-      final reactions =
-          (messageData['reactions'] as List<dynamic>?)
+      final reactions = (messageData['reactions'] as List<dynamic>?)
               ?.map((e) => MessageReaction.fromMap(e))
               .toList() ??
           [];
 
       // Удаляем реакцию
-      reactions.removeWhere((reaction) => reaction.userId == userId && reaction.emoji == emoji);
+      reactions.removeWhere(
+          (reaction) => reaction.userId == userId && reaction.emoji == emoji);
 
       // Обновляем сообщение
-      await messageRef.update({'reactions': reactions.map((e) => e.toMap()).toList()});
+      await messageRef
+          .update({'reactions': reactions.map((e) => e.toMap()).toList()});
 
       return true;
     } catch (e) {
@@ -100,8 +103,7 @@ class MessageReactionService {
       if (!messageDoc.exists) return false;
 
       final messageData = messageDoc.data();
-      final reactions =
-          (messageData['reactions'] as List<dynamic>?)
+      final reactions = (messageData['reactions'] as List<dynamic>?)
               ?.map((e) => MessageReaction.fromMap(e))
               .toList() ??
           [];
@@ -127,7 +129,8 @@ class MessageReactionService {
       }
 
       // Обновляем сообщение
-      await messageRef.update({'reactions': reactions.map((e) => e.toMap()).toList()});
+      await messageRef
+          .update({'reactions': reactions.map((e) => e.toMap()).toList()});
 
       return true;
     } catch (e) {
@@ -139,12 +142,12 @@ class MessageReactionService {
   /// Получить все реакции сообщения
   Future<List<MessageReaction>> getMessageReactions(String messageId) async {
     try {
-      final messageDoc = await _firestore.collection('chat_messages').doc(messageId).get();
+      final messageDoc =
+          await _firestore.collection('chat_messages').doc(messageId).get();
       if (!messageDoc.exists) return [];
 
       final messageData = messageDoc.data();
-      final reactions =
-          (messageData['reactions'] as List<dynamic>?)
+      final reactions = (messageData['reactions'] as List<dynamic>?)
               ?.map((e) => MessageReaction.fromMap(e))
               .toList() ??
           [];
@@ -168,14 +171,14 @@ class MessageReactionService {
 
       for (final doc in messagesQuery.docs) {
         final messageData = doc.data();
-        final reactions =
-            (messageData['reactions'] as List<dynamic>?)
+        final reactions = (messageData['reactions'] as List<dynamic>?)
                 ?.map((e) => MessageReaction.fromMap(e))
                 .toList() ??
             [];
 
         for (final reaction in reactions) {
-          reactionStats[reaction.emoji] = (reactionStats[reaction.emoji] ?? 0) + 1;
+          reactionStats[reaction.emoji] =
+              (reactionStats[reaction.emoji] ?? 0) + 1;
         }
       }
 
@@ -195,15 +198,15 @@ class MessageReactionService {
 
       for (final doc in messagesQuery.docs) {
         final messageData = doc.data();
-        final reactions =
-            (messageData['reactions'] as List<dynamic>?)
+        final reactions = (messageData['reactions'] as List<dynamic>?)
                 ?.map((e) => MessageReaction.fromMap(e))
                 .toList() ??
             [];
 
         for (final reaction in reactions) {
           if (reaction.userId == userId) {
-            userReactionStats[reaction.emoji] = (userReactionStats[reaction.emoji] ?? 0) + 1;
+            userReactionStats[reaction.emoji] =
+                (userReactionStats[reaction.emoji] ?? 0) + 1;
           }
         }
       }
@@ -217,72 +220,72 @@ class MessageReactionService {
 
   /// Получить популярные эмодзи
   List<String> getPopularEmojis() => [
-    '👍',
-    '👎',
-    '❤️',
-    '😂',
-    '😮',
-    '😢',
-    '😡',
-    '🎉',
-    '👏',
-    '🔥',
-    '💯',
-    '✨',
-    '🎯',
-    '🚀',
-    '💪',
-    '🙌',
-    '😍',
-    '🤔',
-    '😴',
-    '🤯',
-    '🥳',
-    '😎',
-    '🤝',
-    '💡',
-  ];
+        '👍',
+        '👎',
+        '❤️',
+        '😂',
+        '😮',
+        '😢',
+        '😡',
+        '🎉',
+        '👏',
+        '🔥',
+        '💯',
+        '✨',
+        '🎯',
+        '🚀',
+        '💪',
+        '🙌',
+        '😍',
+        '🤔',
+        '😴',
+        '🤯',
+        '🥳',
+        '😎',
+        '🤝',
+        '💡',
+      ];
 
   /// Получить эмодзи по категориям
   Map<String, List<String>> getEmojisByCategory() => {
-    'Позитивные': [
-      '👍',
-      '❤️',
-      '😂',
-      '🎉',
-      '👏',
-      '🔥',
-      '💯',
-      '✨',
-      '🎯',
-      '🚀',
-      '💪',
-      '🙌',
-      '😍',
-      '🥳',
-      '😎',
-      '🤝',
-      '💡',
-    ],
-    'Негативные': ['👎', '😢', '😡', '😴'],
-    'Удивление': ['😮', '🤔', '🤯'],
-    'Другие': [
-      '🎊',
-      '🎈',
-      '🎁',
-      '🏆',
-      '⭐',
-      '🌟',
-      '💫',
-      '🌈',
-      '🦄',
-      '🐱',
-      '🐶',
-      '🦋',
-      '🌸',
-      '🌺',
-      '🌻',
-      '🌹',
-    ],
-  };
+        'Позитивные': [
+          '👍',
+          '❤️',
+          '😂',
+          '🎉',
+          '👏',
+          '🔥',
+          '💯',
+          '✨',
+          '🎯',
+          '🚀',
+          '💪',
+          '🙌',
+          '😍',
+          '🥳',
+          '😎',
+          '🤝',
+          '💡',
+        ],
+        'Негативные': ['👎', '😢', '😡', '😴'],
+        'Удивление': ['😮', '🤔', '🤯'],
+        'Другие': [
+          '🎊',
+          '🎈',
+          '🎁',
+          '🏆',
+          '⭐',
+          '🌟',
+          '💫',
+          '🌈',
+          '🦄',
+          '🐱',
+          '🐶',
+          '🦋',
+          '🌸',
+          '🌺',
+          '🌻',
+          '🌹',
+        ],
+      };
 }

@@ -38,38 +38,42 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-    appBar: AppBar(title: const Text('Аудит и логирование')),
-    body: Column(
-      children: [
-        // Вкладки
-        _buildTabs(),
+        appBar: AppBar(title: const Text('Аудит и логирование')),
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-        // Фильтры
-        _buildFilters(),
+            // Фильтры
+            _buildFilters(),
 
-        // Статистика
-        _buildStatistics(),
+            // Статистика
+            _buildStatistics(),
 
-        // Контент
-        Expanded(
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _selectedTab == 'audit'
-              ? _buildAuditLogsTab()
-              : _buildSystemLogsTab(),
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'audit'
+                      ? _buildAuditLogsTab()
+                      : _buildSystemLogsTab(),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildTabs() => ResponsiveCard(
-    child: Row(
-      children: [
-        Expanded(child: _buildTabButton('audit', 'Аудит действий', Icons.security)),
-        Expanded(child: _buildTabButton('system', 'Системные логи', Icons.bug_report)),
-      ],
-    ),
-  );
+        child: Row(
+          children: [
+            Expanded(
+                child:
+                    _buildTabButton('audit', 'Аудит действий', Icons.security)),
+            Expanded(
+                child: _buildTabButton(
+                    'system', 'Системные логи', Icons.bug_report)),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -83,9 +87,14 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? Colors.blue.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
+          border: Border.all(
+              color: isSelected
+                  ? Colors.blue
+                  : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -105,130 +114,141 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
   }
 
   Widget _buildFilters() => ResponsiveCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Фильтры', style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Фильтр по пользователю
-            DropdownButton<String?>(
-              value: _selectedUserId,
-              hint: const Text('Все пользователи'),
-              items: const [
-                DropdownMenuItem<String?>(child: Text('Все пользователи')),
-                // TODO(developer): Загрузить список пользователей
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedUserId = value;
-                });
-                _loadData();
-              },
-            ),
+            Text('Фильтры', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                // Фильтр по пользователю
+                DropdownButton<String?>(
+                  value: _selectedUserId,
+                  hint: const Text('Все пользователи'),
+                  items: const [
+                    DropdownMenuItem<String?>(child: Text('Все пользователи')),
+                    // TODO(developer): Загрузить список пользователей
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedUserId = value;
+                    });
+                    _loadData();
+                  },
+                ),
 
-            // Фильтр по действию
-            DropdownButton<String?>(
-              value: _selectedAction,
-              hint: const Text('Все действия'),
-              items: const [
-                DropdownMenuItem<String?>(child: Text('Все действия')),
-                DropdownMenuItem<String?>(value: 'create', child: Text('Создание')),
-                DropdownMenuItem<String?>(value: 'update', child: Text('Обновление')),
-                DropdownMenuItem<String?>(value: 'delete', child: Text('Удаление')),
-                DropdownMenuItem<String?>(value: 'login', child: Text('Вход')),
-                DropdownMenuItem<String?>(value: 'logout', child: Text('Выход')),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedAction = value;
-                });
-                _loadData();
-              },
-            ),
+                // Фильтр по действию
+                DropdownButton<String?>(
+                  value: _selectedAction,
+                  hint: const Text('Все действия'),
+                  items: const [
+                    DropdownMenuItem<String?>(child: Text('Все действия')),
+                    DropdownMenuItem<String?>(
+                        value: 'create', child: Text('Создание')),
+                    DropdownMenuItem<String?>(
+                        value: 'update', child: Text('Обновление')),
+                    DropdownMenuItem<String?>(
+                        value: 'delete', child: Text('Удаление')),
+                    DropdownMenuItem<String?>(
+                        value: 'login', child: Text('Вход')),
+                    DropdownMenuItem<String?>(
+                        value: 'logout', child: Text('Выход')),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedAction = value;
+                    });
+                    _loadData();
+                  },
+                ),
 
-            // Фильтр по ресурсу
-            DropdownButton<String?>(
-              value: _selectedResource,
-              hint: const Text('Все ресурсы'),
-              items: const [
-                DropdownMenuItem<String?>(child: Text('Все ресурсы')),
-                DropdownMenuItem<String?>(value: 'user', child: Text('Пользователь')),
-                DropdownMenuItem<String?>(value: 'booking', child: Text('Бронирование')),
-                DropdownMenuItem<String?>(value: 'specialist', child: Text('Специалист')),
-                DropdownMenuItem<String?>(value: 'payment', child: Text('Платеж')),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedResource = value;
-                });
-                _loadData();
-              },
-            ),
+                // Фильтр по ресурсу
+                DropdownButton<String?>(
+                  value: _selectedResource,
+                  hint: const Text('Все ресурсы'),
+                  items: const [
+                    DropdownMenuItem<String?>(child: Text('Все ресурсы')),
+                    DropdownMenuItem<String?>(
+                        value: 'user', child: Text('Пользователь')),
+                    DropdownMenuItem<String?>(
+                        value: 'booking', child: Text('Бронирование')),
+                    DropdownMenuItem<String?>(
+                        value: 'specialist', child: Text('Специалист')),
+                    DropdownMenuItem<String?>(
+                        value: 'payment', child: Text('Платеж')),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedResource = value;
+                    });
+                    _loadData();
+                  },
+                ),
 
-            // Фильтр по уровню
-            DropdownButton<AuditLogLevel?>(
-              value: _selectedLevel,
-              hint: const Text('Все уровни'),
-              items: [
-                const DropdownMenuItem<AuditLogLevel?>(child: Text('Все уровни')),
-                ...AuditLogLevel.values.map(
-                  (level) => DropdownMenuItem<AuditLogLevel?>(
-                    value: level,
-                    child: Text('${level.icon} ${level.displayName}'),
-                  ),
+                // Фильтр по уровню
+                DropdownButton<AuditLogLevel?>(
+                  value: _selectedLevel,
+                  hint: const Text('Все уровни'),
+                  items: [
+                    const DropdownMenuItem<AuditLogLevel?>(
+                        child: Text('Все уровни')),
+                    ...AuditLogLevel.values.map(
+                      (level) => DropdownMenuItem<AuditLogLevel?>(
+                        value: level,
+                        child: Text('${level.icon} ${level.displayName}'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedLevel = value;
+                    });
+                    _loadData();
+                  },
+                ),
+
+                // Фильтр по категории
+                DropdownButton<AuditLogCategory?>(
+                  value: _selectedCategory,
+                  hint: const Text('Все категории'),
+                  items: [
+                    const DropdownMenuItem<AuditLogCategory?>(
+                        child: Text('Все категории')),
+                    ...AuditLogCategory.values.map(
+                      (category) => DropdownMenuItem<AuditLogCategory?>(
+                        value: category,
+                        child: Text('${category.icon} ${category.displayName}'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                    _loadData();
+                  },
+                ),
+
+                // Кнопка сброса фильтров
+                ElevatedButton.icon(
+                  onPressed: _resetFilters,
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Сбросить'),
+                ),
+
+                // Кнопка экспорта
+                ElevatedButton.icon(
+                  onPressed: _exportLogs,
+                  icon: const Icon(Icons.download),
+                  label: const Text('Экспорт'),
                 ),
               ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedLevel = value;
-                });
-                _loadData();
-              },
-            ),
-
-            // Фильтр по категории
-            DropdownButton<AuditLogCategory?>(
-              value: _selectedCategory,
-              hint: const Text('Все категории'),
-              items: [
-                const DropdownMenuItem<AuditLogCategory?>(child: Text('Все категории')),
-                ...AuditLogCategory.values.map(
-                  (category) => DropdownMenuItem<AuditLogCategory?>(
-                    value: category,
-                    child: Text('${category.icon} ${category.displayName}'),
-                  ),
-                ),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedCategory = value;
-                });
-                _loadData();
-              },
-            ),
-
-            // Кнопка сброса фильтров
-            ElevatedButton.icon(
-              onPressed: _resetFilters,
-              icon: const Icon(Icons.clear),
-              label: const Text('Сбросить'),
-            ),
-
-            // Кнопка экспорта
-            ElevatedButton.icon(
-              onPressed: _exportLogs,
-              icon: const Icon(Icons.download),
-              label: const Text('Экспорт'),
             ),
           ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildStatistics() {
     if (_statistics.isEmpty) return const SizedBox.shrink();
@@ -274,58 +294,64 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: color),
-    ),
-    child: Column(
-      children: [
-        Icon(icon, color: color, size: 32),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
+  Widget _buildStatCard(
+          String title, String value, IconData icon, Color color) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
         ),
-        const SizedBox(height: 4),
-        Text(title, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
-      ],
-    ),
-  );
-
-  Widget _buildAuditLogsTab() => Column(
-    children: [
-      // Заголовок
-      ResponsiveCard(
-        child: Row(
+        child: Column(
           children: [
-            Text('Аудит действий пользователей', style: Theme.of(context).textTheme.titleMedium),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: _loadData,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Обновить'),
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
             ),
+            const SizedBox(height: 4),
+            Text(title,
+                style: const TextStyle(fontSize: 12),
+                textAlign: TextAlign.center),
           ],
         ),
-      ),
+      );
 
-      // Список аудита логов
-      Expanded(
-        child: _auditLogs.isEmpty
-            ? const Center(child: Text('Аудит логи не найдены'))
-            : ListView.builder(
-                itemCount: _auditLogs.length,
-                itemBuilder: (context, index) {
-                  final log = _auditLogs[index];
-                  return _buildAuditLogCard(log);
-                },
-              ),
-      ),
-    ],
-  );
+  Widget _buildAuditLogsTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                Text('Аудит действий пользователей',
+                    style: Theme.of(context).textTheme.titleMedium),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список аудита логов
+          Expanded(
+            child: _auditLogs.isEmpty
+                ? const Center(child: Text('Аудит логи не найдены'))
+                : ListView.builder(
+                    itemCount: _auditLogs.length,
+                    itemBuilder: (context, index) {
+                      final log = _auditLogs[index];
+                      return _buildAuditLogCard(log);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildAuditLogCard(AuditLog log) {
     final levelColor = _getLevelColor(log.level);
@@ -346,7 +372,8 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   children: [
                     Text(
                       log.action,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Text(
                       '${log.resource}: ${log.resourceId}',
@@ -364,7 +391,10 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                 ),
                 child: Text(
                   log.level.displayName,
-                  style: TextStyle(fontSize: 12, color: levelColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: levelColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 8),
@@ -377,7 +407,10 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                 ),
                 child: Text(
                   log.category.displayName,
-                  style: TextStyle(fontSize: 12, color: categoryColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: categoryColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -385,11 +418,14 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
+                    child: ListTile(
+                        leading: Icon(Icons.visibility),
+                        title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'export',
-                    child: ListTile(leading: Icon(Icons.download), title: Text('Экспорт')),
+                    child: ListTile(
+                        leading: Icon(Icons.download), title: Text('Экспорт')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -412,9 +448,11 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Пользователь: ${log.userEmail}'),
-                if (log.description != null) Text('Описание: ${log.description}'),
+                if (log.description != null)
+                  Text('Описание: ${log.description}'),
                 if (log.errorMessage != null)
-                  Text('Ошибка: ${log.errorMessage}', style: const TextStyle(color: Colors.red)),
+                  Text('Ошибка: ${log.errorMessage}',
+                      style: const TextStyle(color: Colors.red)),
                 Text('Статус: ${log.isSuccess ? "Успешно" : "Ошибка"}'),
               ],
             ),
@@ -450,36 +488,37 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
   }
 
   Widget _buildSystemLogsTab() => Column(
-    children: [
-      // Заголовок
-      ResponsiveCard(
-        child: Row(
-          children: [
-            Text('Системные логи', style: Theme.of(context).textTheme.titleMedium),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: _loadData,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Обновить'),
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                Text('Системные логи',
+                    style: Theme.of(context).textTheme.titleMedium),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
 
-      // Список системных логов
-      Expanded(
-        child: _systemLogs.isEmpty
-            ? const Center(child: Text('Системные логи не найдены'))
-            : ListView.builder(
-                itemCount: _systemLogs.length,
-                itemBuilder: (context, index) {
-                  final log = _systemLogs[index];
-                  return _buildSystemLogCard(log);
-                },
-              ),
-      ),
-    ],
-  );
+          // Список системных логов
+          Expanded(
+            child: _systemLogs.isEmpty
+                ? const Center(child: Text('Системные логи не найдены'))
+                : ListView.builder(
+                    itemCount: _systemLogs.length,
+                    itemBuilder: (context, index) {
+                      final log = _systemLogs[index];
+                      return _buildSystemLogCard(log);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildSystemLogCard(SystemLog log) {
     final levelColor = _getSystemLevelColor(log.level);
@@ -500,7 +539,8 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                   children: [
                     Text(
                       log.component,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     Text(log.message, style: const TextStyle(fontSize: 14)),
                   ],
@@ -515,7 +555,10 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                 ),
                 child: Text(
                   log.level.displayName,
-                  style: TextStyle(fontSize: 12, color: levelColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: levelColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 8),
@@ -528,7 +571,10 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                 ),
                 child: Text(
                   log.category.displayName,
-                  style: TextStyle(fontSize: 12, color: categoryColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: categoryColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -536,11 +582,14 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
+                    child: ListTile(
+                        leading: Icon(Icons.visibility),
+                        title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'export',
-                    child: ListTile(leading: Icon(Icons.download), title: Text('Экспорт')),
+                    child: ListTile(
+                        leading: Icon(Icons.download), title: Text('Экспорт')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -564,7 +613,8 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
               children: [
                 if (log.context != null) Text('Контекст: ${log.context}'),
                 if (log.stackTrace != null)
-                  Text('Stack Trace: ${log.stackTrace}', style: const TextStyle(color: Colors.red)),
+                  Text('Stack Trace: ${log.stackTrace}',
+                      style: const TextStyle(color: Colors.red)),
                 if (log.sessionId != null) Text('Сессия: ${log.sessionId}'),
                 if (log.requestId != null) Text('Запрос: ${log.requestId}'),
               ],
@@ -590,17 +640,18 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
   }
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: color),
-    ),
-    child: Text(
-      '$label: $value',
-      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
+        ),
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+        ),
+      );
 
   Color _getLevelColor(AuditLogLevel level) {
     switch (level) {
@@ -715,16 +766,21 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
         );
       } else {
         _systemLogs = await _auditService.getSystemLogs(
-          level: _selectedLevel != null ? SystemLogLevel.fromString(_selectedLevel!.value) : null,
+          level: _selectedLevel != null
+              ? SystemLogLevel.fromString(_selectedLevel!.value)
+              : null,
           startDate: _startDate,
           endDate: _endDate,
         );
       }
 
-      _statistics = await _auditService.getLogStatistics(startDate: _startDate, endDate: _endDate);
+      _statistics = await _auditService.getLogStatistics(
+          startDate: _startDate, endDate: _endDate);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка загрузки данных: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка загрузки данных: $e'),
+            backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -768,7 +824,8 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
 
   Future<void> _exportLogs() async {
     try {
-      final startDate = _startDate ?? DateTime.now().subtract(const Duration(days: 30));
+      final startDate =
+          _startDate ?? DateTime.now().subtract(const Duration(days: 30));
       final endDate = _endDate ?? DateTime.now();
 
       final exportData = await _auditService.exportLogs(
@@ -780,12 +837,15 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
 
       // TODO(developer): Реализовать сохранение файла
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Экспорт завершен. Размер: ${exportData.length} символов')),
+        SnackBar(
+            content: Text(
+                'Экспорт завершен. Размер: ${exportData.length} символов')),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(SnackBar(
+          content: Text('Ошибка экспорта: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -836,19 +896,23 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
               if (log.sessionId != null) Text('Сессия: ${log.sessionId}'),
               if (log.oldData != null) ...[
                 const SizedBox(height: 8),
-                const Text('Старые данные:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Старые данные:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(log.oldData.toString()),
               ],
               if (log.newData != null) ...[
                 const SizedBox(height: 8),
-                const Text('Новые данные:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Новые данные:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(log.newData.toString()),
               ],
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -872,7 +936,8 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
               if (log.context != null) Text('Контекст: ${log.context}'),
               if (log.stackTrace != null) ...[
                 const SizedBox(height: 8),
-                const Text('Stack Trace:', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('Stack Trace:',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(log.stackTrace!),
               ],
               if (log.sessionId != null) Text('Сессия: ${log.sessionId}'),
@@ -881,7 +946,9 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -891,13 +958,16 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
     // TODO(developer): Реализовать экспорт отдельного лога
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Экспорт лога "${log.action}" будет реализован')));
+    ).showSnackBar(SnackBar(
+        content: Text('Экспорт лога "${log.action}" будет реализован')));
   }
 
   void _exportSingleSystemLog(SystemLog log) {
     // TODO(developer): Реализовать экспорт отдельного системного лога
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Экспорт системного лога "${log.component}" будет реализован')),
+      SnackBar(
+          content: Text(
+              'Экспорт системного лога "${log.component}" будет реализован')),
     );
   }
 }

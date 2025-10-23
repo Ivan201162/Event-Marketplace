@@ -28,7 +28,8 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
       final userId = authProvider.currentUser?['id'];
 
       if (userId != null) {
-        final subscriptions = await _subscriptionService.getUserSubscriptions(userId);
+        final subscriptions =
+            await _subscriptionService.getUserSubscriptions(userId);
         setState(() {
           _subscriptions = subscriptions;
           _isLoading = false;
@@ -61,15 +62,15 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _subscriptions.isEmpty
-          ? _buildEmptyState()
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _subscriptions.length,
-              itemBuilder: (context, index) {
-                final subscription = _subscriptions[index];
-                return _buildSubscriptionCard(subscription);
-              },
-            ),
+              ? _buildEmptyState()
+              : ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _subscriptions.length,
+                  itemBuilder: (context, index) {
+                    final subscription = _subscriptions[index];
+                    return _buildSubscriptionCard(subscription);
+                  },
+                ),
     );
   }
 
@@ -82,12 +83,18 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
           const SizedBox(height: 16),
           Text(
             'У вас нет подписок',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(color: Colors.grey[600]),
           ),
           const SizedBox(height: 8),
           Text(
             'Оформите подписку для расширения возможностей',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[500]),
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(color: Colors.grey[500]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -120,7 +127,8 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(subscription.status).withValues(alpha: 0.1),
+                    color: _getStatusColor(subscription.status)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -138,14 +146,17 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
                         'Подписка #${subscription.id.substring(0, 8)}',
                         style: Theme.of(
                           context,
-                        ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                        )
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         _getStatusText(subscription.status),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: _getStatusColor(subscription.status),
-                          fontWeight: FontWeight.w500,
-                        ),
+                              color: _getStatusColor(subscription.status),
+                              fontWeight: FontWeight.w500,
+                            ),
                       ),
                     ],
                   ),
@@ -158,7 +169,8 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
             // Детали подписки
             _buildDetailRow('Начало:', _formatDate(subscription.startDate)),
             _buildDetailRow('Окончание:', _formatDate(subscription.endDate)),
-            _buildDetailRow('Автопродление:', subscription.autoRenew ? 'Включено' : 'Выключено'),
+            _buildDetailRow('Автопродление:',
+                subscription.autoRenew ? 'Включено' : 'Выключено'),
 
             if (subscription.isActive) ...[
               const SizedBox(height: 12),
@@ -221,11 +233,17 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.grey[600]),
           ),
           Text(
             value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -241,11 +259,17 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
           children: [
             Text(
               'Осталось дней: ${subscription.daysRemaining}',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w500),
             ),
             Text(
               '${(subscription.progressPercentage * 100).toInt()}%',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[600]),
             ),
           ],
         ),
@@ -271,7 +295,10 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
       ),
       child: Text(
         _getStatusText(status),
-        style: TextStyle(color: _getStatusColor(status), fontWeight: FontWeight.w500, fontSize: 12),
+        style: TextStyle(
+            color: _getStatusColor(status),
+            fontWeight: FontWeight.w500,
+            fontSize: 12),
       ),
     );
   }
@@ -323,10 +350,13 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
     try {
       // TODO: Реализовать переключение автопродления
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Функция автопродления будет реализована в следующей версии')),
+        const SnackBar(
+            content: Text(
+                'Функция автопродления будет реализована в следующей версии')),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -339,7 +369,9 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
           'Вы уверены, что хотите отменить подписку? Это действие нельзя отменить.',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Нет')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Нет')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -354,7 +386,8 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
 
     if (confirmed == true) {
       try {
-        final success = await _subscriptionService.cancelSubscription(subscription.id);
+        final success =
+            await _subscriptionService.cancelSubscription(subscription.id);
         if (success) {
           await _loadSubscriptions();
           ScaffoldMessenger.of(context).showSnackBar(
@@ -367,24 +400,29 @@ class _MySubscriptionsScreenState extends State<MySubscriptionsScreen> {
           throw Exception('Не удалось отменить подписку');
         }
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
       }
     }
   }
 
   Future<void> _renewSubscription(UserSubscription subscription) async {
     try {
-      final success = await _subscriptionService.renewSubscription(subscription.id);
+      final success =
+          await _subscriptionService.renewSubscription(subscription.id);
       if (success) {
         await _loadSubscriptions();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Подписка успешно продлена'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Подписка успешно продлена'),
+              backgroundColor: Colors.green),
         );
       } else {
         throw Exception('Не удалось продлить подписку');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 }

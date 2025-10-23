@@ -85,7 +85,8 @@ class ChatAttachmentWidget extends ConsumerWidget {
                       color: Colors.black.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.zoom_in, color: Colors.white, size: 16),
+                    child: const Icon(Icons.zoom_in,
+                        color: Colors.white, size: 16),
                   ),
                 ),
                 if (attachment.originalFileName.isNotEmpty)
@@ -99,12 +100,16 @@ class ChatAttachmentWidget extends ConsumerWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withValues(alpha: 0.7)
+                          ],
                         ),
                       ),
                       child: Text(
                         attachment.originalFileName,
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 12),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -141,7 +146,9 @@ class ChatAttachmentWidget extends ConsumerWidget {
                   Image.network(attachment.thumbnailUrl!,
                       fit: BoxFit.cover, width: 200, height: 120),
                 // Иконка воспроизведения
-                const Center(child: Icon(Icons.play_circle_filled, color: Colors.white, size: 48)),
+                const Center(
+                    child: Icon(Icons.play_circle_filled,
+                        color: Colors.white, size: 48)),
                 // Информация о файле
                 Positioned(
                   bottom: 0,
@@ -153,7 +160,10 @@ class ChatAttachmentWidget extends ConsumerWidget {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black.withValues(alpha: 0.8)],
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 0.8)
+                        ],
                       ),
                     ),
                     child: Column(
@@ -172,7 +182,8 @@ class ChatAttachmentWidget extends ConsumerWidget {
                         ),
                         Text(
                           attachment.getFormattedFileSize(),
-                          style: const TextStyle(color: Colors.white70, fontSize: 10),
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 10),
                         ),
                       ],
                     ),
@@ -210,7 +221,8 @@ class ChatAttachmentWidget extends ConsumerWidget {
                 children: [
                   Text(
                     attachment.originalFileName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -247,7 +259,8 @@ class ChatAttachmentWidget extends ConsumerWidget {
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(_getDocumentIcon(), color: Colors.grey[700], size: 24),
+              child:
+                  Icon(_getDocumentIcon(), color: Colors.grey[700], size: 24),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -257,7 +270,8 @@ class ChatAttachmentWidget extends ConsumerWidget {
                 children: [
                   Text(
                     attachment.originalFileName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -294,7 +308,8 @@ class ChatAttachmentWidget extends ConsumerWidget {
                 color: Colors.orange[100],
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.attach_file, color: Colors.orange, size: 24),
+              child:
+                  const Icon(Icons.attach_file, color: Colors.orange, size: 24),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -304,7 +319,8 @@ class ChatAttachmentWidget extends ConsumerWidget {
                 children: [
                   Text(
                     attachment.originalFileName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -346,14 +362,16 @@ class ChatAttachmentWidget extends ConsumerWidget {
     // TODO(developer): Открыть изображение в полноэкранном режиме
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Открытие изображения: ${attachment.originalFileName}')));
+    ).showSnackBar(SnackBar(
+        content: Text('Открытие изображения: ${attachment.originalFileName}')));
   }
 
   void _openVideo(BuildContext context) {
     // TODO(developer): Открыть видео в плеере
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Открытие видео: ${attachment.originalFileName}')));
+    ).showSnackBar(SnackBar(
+        content: Text('Открытие видео: ${attachment.originalFileName}')));
   }
 
   Future<void> _openFile(BuildContext context) async {
@@ -364,7 +382,8 @@ class ChatAttachmentWidget extends ConsumerWidget {
       } else {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Не удалось открыть файл')));
+        ).showSnackBar(
+            const SnackBar(content: Text('Не удалось открыть файл')));
       }
     } catch (e) {
       ScaffoldMessenger.of(

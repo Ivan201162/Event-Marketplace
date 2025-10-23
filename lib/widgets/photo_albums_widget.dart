@@ -6,7 +6,8 @@ import '../ui/responsive/responsive_widgets.dart' hide ResponsiveText;
 
 /// Виджет для отображения фотоальбомов
 class PhotoAlbumsWidget extends ConsumerWidget {
-  const PhotoAlbumsWidget({super.key, required this.specialistId, this.showCreateAlbum = false});
+  const PhotoAlbumsWidget(
+      {super.key, required this.specialistId, this.showCreateAlbum = false});
   final String specialistId;
   final bool showCreateAlbum;
 
@@ -46,7 +47,8 @@ class PhotoAlbumsWidget extends ConsumerWidget {
           child: Container(
             height: 200,
             decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).colorScheme.primary, width: 2),
+              border: Border.all(
+                  color: Theme.of(context).colorScheme.primary, width: 2),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -56,14 +58,16 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                     size: 48, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(height: 12),
                 Text('Создать альбом',
-                    style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary)),
               ],
             ),
           ),
         ),
       );
 
-  Widget _buildAlbumCard(BuildContext context, PhotoAlbum album) => ResponsiveCard(
+  Widget _buildAlbumCard(BuildContext context, PhotoAlbum album) =>
+      ResponsiveCard(
         child: InkWell(
           onTap: () => _openAlbum(context, album),
           borderRadius: BorderRadius.circular(12),
@@ -76,9 +80,11 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(12)),
                     image: DecorationImage(
-                        image: NetworkImage(album.coverImageUrl), fit: BoxFit.cover),
+                        image: NetworkImage(album.coverImageUrl),
+                        fit: BoxFit.cover),
                   ),
                   child: Stack(
                     children: [
@@ -87,7 +93,8 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                         top: 8,
                         right: 8,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.black.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(12),
@@ -95,7 +102,8 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.photo, color: Colors.white, size: 16),
+                              const Icon(Icons.photo,
+                                  color: Colors.white, size: 16),
                               const SizedBox(width: 4),
                               Text(
                                 '${album.photoCount}',
@@ -120,7 +128,8 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                               color: Colors.black.withValues(alpha: 0.7),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Icon(Icons.videocam, color: Colors.white, size: 16),
+                            child: const Icon(Icons.videocam,
+                                color: Colors.white, size: 16),
                           ),
                         ),
                     ],
@@ -134,23 +143,29 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(album.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      Text(album.title,
+                          maxLines: 1, overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 4),
-                      Text(album.description, maxLines: 2, overflow: TextOverflow.ellipsis),
+                      Text(album.description,
+                          maxLines: 2, overflow: TextOverflow.ellipsis),
                       const Spacer(),
                       Row(
                         children: [
-                          Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                          Icon(Icons.access_time,
+                              size: 14, color: Colors.grey[600]),
                           const SizedBox(width: 4),
                           Text(
                             _formatDate(album.createdAt),
-                            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            style: TextStyle(
+                                fontSize: 12, color: Colors.grey[600]),
                           ),
                           const Spacer(),
                           if (album.isPublic)
-                            Icon(Icons.public, size: 14, color: Colors.green[600])
+                            Icon(Icons.public,
+                                size: 14, color: Colors.green[600])
                           else
-                            Icon(Icons.lock, size: 14, color: Colors.orange[600]),
+                            Icon(Icons.lock,
+                                size: 14, color: Colors.orange[600]),
                         ],
                       ),
                     ],
@@ -243,13 +258,15 @@ class PhotoAlbumsWidget extends ConsumerWidget {
   void _createNewAlbum(BuildContext context) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (context) => const CreateAlbumScreen()));
+    ).push(MaterialPageRoute<void>(
+        builder: (context) => const CreateAlbumScreen()));
   }
 
   void _openAlbum(BuildContext context, PhotoAlbum album) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (context) => AlbumDetailScreen(album: album)));
+    ).push(MaterialPageRoute<void>(
+        builder: (context) => AlbumDetailScreen(album: album)));
   }
 }
 
@@ -302,7 +319,9 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
         appBar: AppBar(
           title: const Text('Создать альбом'),
           actions: [
-            TextButton(onPressed: _canCreate() ? _createAlbum : null, child: const Text('Создать')),
+            TextButton(
+                onPressed: _canCreate() ? _createAlbum : null,
+                child: const Text('Создать')),
           ],
         ),
         body: Form(
@@ -402,14 +421,15 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
             padding: const EdgeInsets.only(right: 8),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child:
-                  Image.network(_selectedImages[index], width: 150, height: 200, fit: BoxFit.cover),
+              child: Image.network(_selectedImages[index],
+                  width: 150, height: 200, fit: BoxFit.cover),
             ),
           ),
         ),
       );
 
-  bool _canCreate() => _titleController.text.isNotEmpty && _selectedImages.isNotEmpty;
+  bool _canCreate() =>
+      _titleController.text.isNotEmpty && _selectedImages.isNotEmpty;
 
   void _selectImages() {
     // TODO(developer): Реализовать выбор изображений
@@ -425,7 +445,8 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
   void _createAlbum() {
     if (_formKey.currentState!.validate()) {
       // TODO(developer): Реализовать создание альбома
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Альбом создан')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Альбом создан')));
       Navigator.pop(context);
     }
   }
@@ -447,7 +468,9 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
           title: Text(widget.album.title),
           actions: [
             IconButton(icon: const Icon(Icons.share), onPressed: _shareAlbum),
-            IconButton(icon: const Icon(Icons.more_vert), onPressed: _showAlbumOptions),
+            IconButton(
+                icon: const Icon(Icons.more_vert),
+                onPressed: _showAlbumOptions),
           ],
         ),
         body: Column(
@@ -471,7 +494,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
                         style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                       const SizedBox(width: 16),
-                      Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
+                      Icon(Icons.access_time,
+                          size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 4),
                       Text(
                         _formatDate(widget.album.createdAt),
@@ -531,7 +555,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   void _shareAlbum() {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Альбом скопирован в буфер обмена')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Альбом скопирован в буфер обмена')));
   }
 
   void _showAlbumOptions() {
@@ -571,7 +596,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   void _openPhotoViewer(List<String> photos, int initialIndex) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => PhotoViewerScreen(photos: photos, initialIndex: initialIndex),
+        builder: (context) =>
+            PhotoViewerScreen(photos: photos, initialIndex: initialIndex),
       ),
     );
   }
@@ -579,7 +605,8 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
 
 /// Экран просмотра фотографий
 class PhotoViewerScreen extends StatefulWidget {
-  const PhotoViewerScreen({super.key, required this.photos, this.initialIndex = 0});
+  const PhotoViewerScreen(
+      {super.key, required this.photos, this.initialIndex = 0});
   final List<String> photos;
   final int initialIndex;
 
@@ -629,18 +656,20 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
             });
           },
           itemCount: widget.photos.length,
-          itemBuilder: (context, index) =>
-              Center(child: Image.network(widget.photos[index], fit: BoxFit.contain)),
+          itemBuilder: (context, index) => Center(
+              child: Image.network(widget.photos[index], fit: BoxFit.contain)),
         ),
       );
 
   void _sharePhoto() {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Фото скопировано в буфер обмена')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Фото скопировано в буфер обмена')));
   }
 
   void _downloadPhoto() {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Фото скачано')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Фото скачано')));
   }
 }

@@ -35,7 +35,9 @@ class DiscountNotification {
       message: data['message']?.toString() ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       isRead: data['isRead'] == true,
-      readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
+      readAt: data['readAt'] != null
+          ? (data['readAt'] as Timestamp).toDate()
+          : null,
       specialistName: data['specialistName']?.toString(),
       specialistAvatar: data['specialistAvatar']?.toString(),
       customerName: data['customerName']?.toString(),
@@ -45,26 +47,29 @@ class DiscountNotification {
   }
 
   /// Создать из Map
-  factory DiscountNotification.fromMap(Map<String, dynamic> data) => DiscountNotification(
-    id: data['id']?.toString() ?? '',
-    customerId: data['customerId']?.toString() ?? '',
-    specialistId: data['specialistId']?.toString() ?? '',
-    bookingId: data['bookingId']?.toString() ?? '',
-    originalPrice: (data['originalPrice'] as num).toDouble(),
-    newPrice: (data['newPrice'] as num).toDouble(),
-    discountPercent: (data['discountPercent'] as num).toDouble(),
-    message: data['message']?.toString() ?? '',
-    createdAt: data['createdAt'] != null
-        ? (data['createdAt'] as Timestamp).toDate()
-        : DateTime.now(),
-    isRead: data['isRead'] == true,
-    readAt: data['readAt'] != null ? (data['readAt'] as Timestamp).toDate() : null,
-    specialistName: data['specialistName']?.toString(),
-    specialistAvatar: data['specialistAvatar']?.toString(),
-    customerName: data['customerName']?.toString(),
-    customerAvatar: data['customerAvatar']?.toString(),
-    metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
-  );
+  factory DiscountNotification.fromMap(Map<String, dynamic> data) =>
+      DiscountNotification(
+        id: data['id']?.toString() ?? '',
+        customerId: data['customerId']?.toString() ?? '',
+        specialistId: data['specialistId']?.toString() ?? '',
+        bookingId: data['bookingId']?.toString() ?? '',
+        originalPrice: (data['originalPrice'] as num).toDouble(),
+        newPrice: (data['newPrice'] as num).toDouble(),
+        discountPercent: (data['discountPercent'] as num).toDouble(),
+        message: data['message']?.toString() ?? '',
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        isRead: data['isRead'] == true,
+        readAt: data['readAt'] != null
+            ? (data['readAt'] as Timestamp).toDate()
+            : null,
+        specialistName: data['specialistName']?.toString(),
+        specialistAvatar: data['specialistAvatar']?.toString(),
+        customerName: data['customerName']?.toString(),
+        customerAvatar: data['customerAvatar']?.toString(),
+        metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+      );
 
   final String id;
   final String customerId;
@@ -85,22 +90,22 @@ class DiscountNotification {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'customerId': customerId,
-    'specialistId': specialistId,
-    'bookingId': bookingId,
-    'originalPrice': originalPrice,
-    'newPrice': newPrice,
-    'discountPercent': discountPercent,
-    'message': message,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'isRead': isRead,
-    'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-    'specialistName': specialistName,
-    'specialistAvatar': specialistAvatar,
-    'customerName': customerName,
-    'customerAvatar': customerAvatar,
-    'metadata': metadata,
-  };
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'bookingId': bookingId,
+        'originalPrice': originalPrice,
+        'newPrice': newPrice,
+        'discountPercent': discountPercent,
+        'message': message,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'isRead': isRead,
+        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+        'specialistName': specialistName,
+        'specialistAvatar': specialistAvatar,
+        'customerName': customerName,
+        'customerAvatar': customerAvatar,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   DiscountNotification copyWith({
@@ -120,24 +125,25 @@ class DiscountNotification {
     String? customerName,
     String? customerAvatar,
     Map<String, dynamic>? metadata,
-  }) => DiscountNotification(
-    id: id ?? this.id,
-    customerId: customerId ?? this.customerId,
-    specialistId: specialistId ?? this.specialistId,
-    bookingId: bookingId ?? this.bookingId,
-    originalPrice: originalPrice ?? this.originalPrice,
-    newPrice: newPrice ?? this.newPrice,
-    discountPercent: discountPercent ?? this.discountPercent,
-    message: message ?? this.message,
-    createdAt: createdAt ?? this.createdAt,
-    isRead: isRead ?? this.isRead,
-    readAt: readAt ?? this.readAt,
-    specialistName: specialistName ?? this.specialistName,
-    specialistAvatar: specialistAvatar ?? this.specialistAvatar,
-    customerName: customerName ?? this.customerName,
-    customerAvatar: customerAvatar ?? this.customerAvatar,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      DiscountNotification(
+        id: id ?? this.id,
+        customerId: customerId ?? this.customerId,
+        specialistId: specialistId ?? this.specialistId,
+        bookingId: bookingId ?? this.bookingId,
+        originalPrice: originalPrice ?? this.originalPrice,
+        newPrice: newPrice ?? this.newPrice,
+        discountPercent: discountPercent ?? this.discountPercent,
+        message: message ?? this.message,
+        createdAt: createdAt ?? this.createdAt,
+        isRead: isRead ?? this.isRead,
+        readAt: readAt ?? this.readAt,
+        specialistName: specialistName ?? this.specialistName,
+        specialistAvatar: specialistAvatar ?? this.specialistAvatar,
+        customerName: customerName ?? this.customerName,
+        customerAvatar: customerAvatar ?? this.customerAvatar,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Получить сумму скидки
   double get discountAmount => originalPrice - newPrice;
@@ -166,7 +172,8 @@ class DiscountNotification {
   /// Получить отформатированную цену
   String get formattedOriginalPrice => '${originalPrice.toStringAsFixed(0)} ₽';
   String get formattedNewPrice => '${newPrice.toStringAsFixed(0)} ₽';
-  String get formattedDiscountAmount => '${discountAmount.toStringAsFixed(0)} ₽';
+  String get formattedDiscountAmount =>
+      '${discountAmount.toStringAsFixed(0)} ₽';
 
   @override
   bool operator ==(Object other) {

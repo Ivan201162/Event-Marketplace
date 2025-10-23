@@ -31,7 +31,9 @@ class HostFilters extends Equatable {
     return HostFilters(
       searchQuery: data['searchQuery'],
       city: data['city'],
-      categories: data['categories'] != null ? List<String>.from(data['categories']) : null,
+      categories: data['categories'] != null
+          ? List<String>.from(data['categories'])
+          : null,
       minRating: data['minRating']?.toDouble(),
       maxRating: data['maxRating']?.toDouble(),
       minPrice: data['minPrice'],
@@ -104,17 +106,17 @@ class HostFilters extends Equatable {
 
   @override
   List<Object?> get props => [
-    searchQuery,
-    city,
-    categories,
-    minRating,
-    maxRating,
-    minPrice,
-    maxPrice,
-    isAvailable,
-    isVerified,
-    experienceLevel,
-  ];
+        searchQuery,
+        city,
+        categories,
+        minRating,
+        maxRating,
+        minPrice,
+        maxPrice,
+        isAvailable,
+        isVerified,
+        experienceLevel,
+      ];
 
   @override
   String toString() {

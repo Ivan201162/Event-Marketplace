@@ -6,12 +6,14 @@ import '../models/specialist_sorting.dart';
 import '../services/mock_data_service.dart';
 
 /// Провайдер для состояния сортировки специалистов (мигрирован с StateNotifierProvider)
-final specialistSortingProvider = NotifierProvider<SpecialistSortingNotifier, SpecialistSorting>(
+final specialistSortingProvider =
+    NotifierProvider<SpecialistSortingNotifier, SpecialistSorting>(
   () => SpecialistSortingNotifier(),
 );
 
 /// Провайдер для отсортированных специалистов
-final sortedSpecialistsProvider = FutureProvider.family<List<Specialist>, SortParams>(
+final sortedSpecialistsProvider =
+    FutureProvider.family<List<Specialist>, SortParams>(
   (ref, params) async => MockDataService.getSortedSpecialists(
     categoryId: params.categoryId,
     filters: params.filters,
@@ -107,11 +109,12 @@ final sortStatsProvider = Provider.family<SortStats, SortParams>((ref, params) {
   final specialists = ref.watch(sortedSpecialistsProvider(params));
 
   return specialists.when(
-    data: (specialists) => SpecialistSortingUtils.getSortStats(specialists, params.sorting),
-    loading: () =>
-        const SortStats(totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0),
-    error: (_, __) =>
-        const SortStats(totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0),
+    data: (specialists) =>
+        SpecialistSortingUtils.getSortStats(specialists, params.sorting),
+    loading: () => const SortStats(
+        totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0),
+    error: (_, __) => const SortStats(
+        totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0),
   );
 });
 
@@ -131,11 +134,13 @@ final extendedSortOptionsProvider = Provider<List<SpecialistSortOption>>(
 );
 
 /// Провайдер для комбинированных параметров (фильтры + сортировка)
-final combinedParamsProvider = Provider.family<SortParams, CombinedParams>((ref, params) {
+final combinedParamsProvider =
+    Provider.family<SortParams, CombinedParams>((ref, params) {
   final filters = ref.watch(params.filtersProvider);
   final sorting = ref.watch(params.sortingProvider);
 
-  return SortParams(categoryId: params.categoryId, filters: filters, sorting: sorting);
+  return SortParams(
+      categoryId: params.categoryId, filters: filters, sorting: sorting);
 });
 
 /// Параметры для комбинированного провайдера
@@ -165,9 +170,9 @@ class CombinedParams {
 /// Провайдер для отсортированных и отфильтрованных специалистов
 final filteredAndSortedSpecialistsProvider =
     FutureProvider.family<List<Specialist>, CombinedParams>((ref, params) {
-      final combinedParams = ref.watch(combinedParamsProvider(params));
-      return ref.watch(sortedSpecialistsProvider(combinedParams));
-    });
+  final combinedParams = ref.watch(combinedParamsProvider(params));
+  return ref.watch(sortedSpecialistsProvider(combinedParams));
+});
 
 /// Провайдер для получения информации о текущей сортировке
 final currentSortingInfoProvider = Provider<SortingInfo>((ref) {

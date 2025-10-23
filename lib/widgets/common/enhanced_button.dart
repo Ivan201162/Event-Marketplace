@@ -59,7 +59,7 @@ class _EnhancedButtonState extends State<EnhancedButton>
   @override
   Widget build(BuildContext context) {
     final isEnabled = widget.onPressed != null && !widget.isLoading;
-    
+
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -113,7 +113,7 @@ class _EnhancedButtonState extends State<EnhancedButton>
         style: OutlinedButton.styleFrom(
           foregroundColor: widget.foregroundColor ?? _getPrimaryColor(),
           side: BorderSide(
-            color: isEnabled 
+            color: isEnabled
                 ? (widget.backgroundColor ?? _getPrimaryColor())
                 : Colors.grey,
           ),
@@ -151,7 +151,8 @@ class _EnhancedButtonState extends State<EnhancedButton>
       onPressed: isEnabled ? _handlePress : null,
       icon: _buildButtonContent(),
       style: IconButton.styleFrom(
-        backgroundColor: widget.backgroundColor ?? _getPrimaryColor().withOpacity(0.1),
+        backgroundColor:
+            widget.backgroundColor ?? _getPrimaryColor().withOpacity(0.1),
         foregroundColor: widget.foregroundColor ?? _getPrimaryColor(),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(_getBorderRadius()),

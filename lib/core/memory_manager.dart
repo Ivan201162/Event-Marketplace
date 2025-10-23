@@ -105,13 +105,15 @@ class MemoryManager {
     Function? onError,
     void Function()? onDone,
   }) {
-    final subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    final subscription =
+        stream.listen(onData, onError: onError, onDone: onDone);
     trackSubscription(subscription);
     return subscription;
   }
 
   /// Создание безопасного таймера с автоматическим отслеживанием
-  Timer createTrackedTimer(Duration duration, void Function() callback, {bool periodic = false}) {
+  Timer createTrackedTimer(Duration duration, void Function() callback,
+      {bool periodic = false}) {
     final timer = periodic
         ? Timer.periodic(duration, (_) => callback())
         : Timer(duration, callback);
@@ -138,13 +140,15 @@ mixin MemoryManagerMixin<T extends StatefulWidget> on State<T> {
     Function? onError,
     void Function()? onDone,
   }) {
-    final subscription = stream.listen(onData, onError: onError, onDone: onDone);
+    final subscription =
+        stream.listen(onData, onError: onError, onDone: onDone);
     _memoryManager.trackSubscription(subscription);
     return subscription;
   }
 
   /// Создание отслеживаемого таймера
-  Timer createTimer(Duration duration, void Function() callback, {bool periodic = false}) {
+  Timer createTimer(Duration duration, void Function() callback,
+      {bool periodic = false}) {
     final timer = periodic
         ? Timer.periodic(duration, (_) => callback())
         : Timer(duration, callback);

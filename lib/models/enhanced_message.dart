@@ -20,45 +20,47 @@ class EnhancedMessage {
 
   /// Создать из Map
   factory EnhancedMessage.fromMap(Map<String, dynamic> map) => EnhancedMessage(
-    id: map['id'] as String,
-    chatId: map['chatId'] as String,
-    senderId: map['senderId'] as String,
-    text: map['text'] as String,
-    type: MessageType.fromString(map['type'] as String),
-    createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-    attachments:
-        (map['attachments'] as List?)
-            ?.map((attachment) => MessageAttachment.fromMap(attachment as Map<String, dynamic>))
-            .toList() ??
-        [],
-    replyTo: map['replyTo'] != null
-        ? MessageReply.fromMap(map['replyTo'] as Map<String, dynamic>)
-        : null,
-    forwardedFrom: map['forwardedFrom'] != null
-        ? MessageForward.fromMap(map['forwardedFrom'] as Map<String, dynamic>)
-        : null,
-    status: MessageStatus.fromString(map['status'] as String? ?? 'sent'),
-    editedAt: map['editedAt'] != null
-        ? DateTime.fromMillisecondsSinceEpoch(map['editedAt'] as int)
-        : null,
-    deletedAt: map['deletedAt'] != null
-        ? DateTime.fromMillisecondsSinceEpoch(map['deletedAt'] as int)
-        : null,
-    reactions: Map<String, List<String>>.from(
-      (map['reactions'] as Map?)?.map(
-            (key, value) => MapEntry(key as String, List<String>.from(value as List)),
-          ) ??
-          {},
-    ),
-    readBy: Map<String, DateTime>.from(
-      (map['readBy'] as Map?)?.map(
-            (key, value) =>
-                MapEntry(key as String, DateTime.fromMillisecondsSinceEpoch(value as int)),
-          ) ??
-          {},
-    ),
-    metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-  );
+        id: map['id'] as String,
+        chatId: map['chatId'] as String,
+        senderId: map['senderId'] as String,
+        text: map['text'] as String,
+        type: MessageType.fromString(map['type'] as String),
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        attachments: (map['attachments'] as List?)
+                ?.map((attachment) => MessageAttachment.fromMap(
+                    attachment as Map<String, dynamic>))
+                .toList() ??
+            [],
+        replyTo: map['replyTo'] != null
+            ? MessageReply.fromMap(map['replyTo'] as Map<String, dynamic>)
+            : null,
+        forwardedFrom: map['forwardedFrom'] != null
+            ? MessageForward.fromMap(
+                map['forwardedFrom'] as Map<String, dynamic>)
+            : null,
+        status: MessageStatus.fromString(map['status'] as String? ?? 'sent'),
+        editedAt: map['editedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['editedAt'] as int)
+            : null,
+        deletedAt: map['deletedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['deletedAt'] as int)
+            : null,
+        reactions: Map<String, List<String>>.from(
+          (map['reactions'] as Map?)?.map(
+                (key, value) =>
+                    MapEntry(key as String, List<String>.from(value as List)),
+              ) ??
+              {},
+        ),
+        readBy: Map<String, DateTime>.from(
+          (map['readBy'] as Map?)?.map(
+                (key, value) => MapEntry(key as String,
+                    DateTime.fromMillisecondsSinceEpoch(value as int)),
+              ) ??
+              {},
+        ),
+        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+      );
 
   /// Уникальный идентификатор
   final String id;
@@ -107,22 +109,24 @@ class EnhancedMessage {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'chatId': chatId,
-    'senderId': senderId,
-    'text': text,
-    'type': type.value,
-    'createdAt': createdAt.millisecondsSinceEpoch,
-    'attachments': attachments.map((attachment) => attachment.toMap()).toList(),
-    'replyTo': replyTo?.toMap(),
-    'forwardedFrom': forwardedFrom?.toMap(),
-    'status': status.value,
-    'editedAt': editedAt?.millisecondsSinceEpoch,
-    'deletedAt': deletedAt?.millisecondsSinceEpoch,
-    'reactions': reactions.map(MapEntry.new),
-    'readBy': readBy.map((key, value) => MapEntry(key, value.millisecondsSinceEpoch)),
-    'metadata': metadata,
-  };
+        'id': id,
+        'chatId': chatId,
+        'senderId': senderId,
+        'text': text,
+        'type': type.value,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'attachments':
+            attachments.map((attachment) => attachment.toMap()).toList(),
+        'replyTo': replyTo?.toMap(),
+        'forwardedFrom': forwardedFrom?.toMap(),
+        'status': status.value,
+        'editedAt': editedAt?.millisecondsSinceEpoch,
+        'deletedAt': deletedAt?.millisecondsSinceEpoch,
+        'reactions': reactions.map(MapEntry.new),
+        'readBy': readBy
+            .map((key, value) => MapEntry(key, value.millisecondsSinceEpoch)),
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   EnhancedMessage copyWith({
@@ -141,23 +145,24 @@ class EnhancedMessage {
     Map<String, List<String>>? reactions,
     Map<String, DateTime>? readBy,
     Map<String, dynamic>? metadata,
-  }) => EnhancedMessage(
-    id: id ?? this.id,
-    chatId: chatId ?? this.chatId,
-    senderId: senderId ?? this.senderId,
-    text: text ?? this.text,
-    type: type ?? this.type,
-    createdAt: createdAt ?? this.createdAt,
-    attachments: attachments ?? this.attachments,
-    replyTo: replyTo ?? this.replyTo,
-    forwardedFrom: forwardedFrom ?? this.forwardedFrom,
-    status: status ?? this.status,
-    editedAt: editedAt ?? this.editedAt,
-    deletedAt: deletedAt ?? this.deletedAt,
-    reactions: reactions ?? this.reactions,
-    readBy: readBy ?? this.readBy,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      EnhancedMessage(
+        id: id ?? this.id,
+        chatId: chatId ?? this.chatId,
+        senderId: senderId ?? this.senderId,
+        text: text ?? this.text,
+        type: type ?? this.type,
+        createdAt: createdAt ?? this.createdAt,
+        attachments: attachments ?? this.attachments,
+        replyTo: replyTo ?? this.replyTo,
+        forwardedFrom: forwardedFrom ?? this.forwardedFrom,
+        status: status ?? this.status,
+        editedAt: editedAt ?? this.editedAt,
+        deletedAt: deletedAt ?? this.deletedAt,
+        reactions: reactions ?? this.reactions,
+        readBy: readBy ?? this.readBy,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Тип сообщения
@@ -299,19 +304,23 @@ class MessageAttachment {
     this.metadata = const {},
   });
 
-  factory MessageAttachment.fromMap(Map<String, dynamic> map) => MessageAttachment(
-    id: map['id'] as String,
-    name: map['name'] as String,
-    url: map['url'] as String,
-    type: MessageAttachmentType.fromString(map['type'] as String),
-    size: map['size'] as int,
-    uploadedAt: DateTime.fromMillisecondsSinceEpoch(map['uploadedAt'] as int),
-    thumbnailUrl: map['thumbnailUrl'] as String?,
-    duration: map['duration'] != null ? Duration(milliseconds: map['duration'] as int) : null,
-    width: map['width'] as int?,
-    height: map['height'] as int?,
-    metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-  );
+  factory MessageAttachment.fromMap(Map<String, dynamic> map) =>
+      MessageAttachment(
+        id: map['id'] as String,
+        name: map['name'] as String,
+        url: map['url'] as String,
+        type: MessageAttachmentType.fromString(map['type'] as String),
+        size: map['size'] as int,
+        uploadedAt:
+            DateTime.fromMillisecondsSinceEpoch(map['uploadedAt'] as int),
+        thumbnailUrl: map['thumbnailUrl'] as String?,
+        duration: map['duration'] != null
+            ? Duration(milliseconds: map['duration'] as int)
+            : null,
+        width: map['width'] as int?,
+        height: map['height'] as int?,
+        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+      );
 
   final String id;
   final String name;
@@ -326,18 +335,18 @@ class MessageAttachment {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'url': url,
-    'type': type.value,
-    'size': size,
-    'uploadedAt': uploadedAt.millisecondsSinceEpoch,
-    'thumbnailUrl': thumbnailUrl,
-    'duration': duration?.inMilliseconds,
-    'width': width,
-    'height': height,
-    'metadata': metadata,
-  };
+        'id': id,
+        'name': name,
+        'url': url,
+        'type': type.value,
+        'size': size,
+        'uploadedAt': uploadedAt.millisecondsSinceEpoch,
+        'thumbnailUrl': thumbnailUrl,
+        'duration': duration?.inMilliseconds,
+        'width': width,
+        'height': height,
+        'metadata': metadata,
+      };
 }
 
 /// Тип вложения сообщения
@@ -399,11 +408,11 @@ class MessageReply {
   });
 
   factory MessageReply.fromMap(Map<String, dynamic> map) => MessageReply(
-    messageId: map['messageId'] as String,
-    senderId: map['senderId'] as String,
-    text: map['text'] as String,
-    type: MessageType.fromString(map['type'] as String),
-  );
+        messageId: map['messageId'] as String,
+        senderId: map['senderId'] as String,
+        text: map['text'] as String,
+        type: MessageType.fromString(map['type'] as String),
+      );
 
   final String messageId;
   final String senderId;
@@ -411,11 +420,11 @@ class MessageReply {
   final MessageType type;
 
   Map<String, dynamic> toMap() => {
-    'messageId': messageId,
-    'senderId': senderId,
-    'text': text,
-    'type': type.value,
-  };
+        'messageId': messageId,
+        'senderId': senderId,
+        'text': text,
+        'type': type.value,
+      };
 }
 
 /// Пересланное сообщение
@@ -428,11 +437,12 @@ class MessageForward {
   });
 
   factory MessageForward.fromMap(Map<String, dynamic> map) => MessageForward(
-    originalMessageId: map['originalMessageId'] as String,
-    originalChatId: map['originalChatId'] as String,
-    originalSenderId: map['originalSenderId'] as String,
-    forwardedAt: DateTime.fromMillisecondsSinceEpoch(map['forwardedAt'] as int),
-  );
+        originalMessageId: map['originalMessageId'] as String,
+        originalChatId: map['originalChatId'] as String,
+        originalSenderId: map['originalSenderId'] as String,
+        forwardedAt:
+            DateTime.fromMillisecondsSinceEpoch(map['forwardedAt'] as int),
+      );
 
   final String originalMessageId;
   final String originalChatId;
@@ -440,9 +450,9 @@ class MessageForward {
   final DateTime forwardedAt;
 
   Map<String, dynamic> toMap() => {
-    'originalMessageId': originalMessageId,
-    'originalChatId': originalChatId,
-    'originalSenderId': originalSenderId,
-    'forwardedAt': forwardedAt.millisecondsSinceEpoch,
-  };
+        'originalMessageId': originalMessageId,
+        'originalChatId': originalChatId,
+        'originalSenderId': originalSenderId,
+        'forwardedAt': forwardedAt.millisecondsSinceEpoch,
+      };
 }

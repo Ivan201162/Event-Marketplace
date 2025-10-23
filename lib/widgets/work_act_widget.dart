@@ -30,7 +30,8 @@ class _WorkActWidgetState extends State<WorkActWidget> {
 
   final TextEditingController _eventNameController = TextEditingController();
   final TextEditingController _eventDateController = TextEditingController();
-  final TextEditingController _eventLocationController = TextEditingController();
+  final TextEditingController _eventLocationController =
+      TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
   List<ServiceItem> _services = [];
@@ -107,7 +108,8 @@ class _WorkActWidgetState extends State<WorkActWidget> {
     }
 
     return Chip(
-      label: Text(text, style: const TextStyle(color: Colors.white, fontSize: 12)),
+      label:
+          Text(text, style: const TextStyle(color: Colors.white, fontSize: 12)),
       backgroundColor: color,
     );
   }
@@ -124,10 +126,12 @@ class _WorkActWidgetState extends State<WorkActWidget> {
             Icon(Icons.error, color: Colors.red.shade700),
             const SizedBox(width: 8),
             Expanded(
-              child: Text(_error!, style: TextStyle(color: Colors.red.shade700)),
+              child:
+                  Text(_error!, style: TextStyle(color: Colors.red.shade700)),
             ),
             IconButton(
-                onPressed: () => setState(() => _error = null), icon: const Icon(Icons.close)),
+                onPressed: () => setState(() => _error = null),
+                icon: const Icon(Icons.close)),
           ],
         ),
       );
@@ -221,7 +225,8 @@ class _WorkActWidgetState extends State<WorkActWidget> {
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: const Center(
-                child: Text('Добавьте выполненные работы', style: TextStyle(color: Colors.grey)),
+                child: Text('Добавьте выполненные работы',
+                    style: TextStyle(color: Colors.grey)),
               ),
             )
           else
@@ -247,10 +252,13 @@ class _WorkActWidgetState extends State<WorkActWidget> {
             children: [
               Text(
                 '${service.totalPrice.toStringAsFixed(2)} ₽',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const SizedBox(width: 8),
-              IconButton(onPressed: () => _editService(index), icon: const Icon(Icons.edit)),
+              IconButton(
+                  onPressed: () => _editService(index),
+                  icon: const Icon(Icons.edit)),
               IconButton(
                 onPressed: () => _removeService(index),
                 icon: const Icon(Icons.delete, color: Colors.red),
@@ -261,7 +269,8 @@ class _WorkActWidgetState extends State<WorkActWidget> {
       );
 
   Widget _buildTotalAmount() {
-    final totalAmount = _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
+    final totalAmount =
+        _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -273,7 +282,8 @@ class _WorkActWidgetState extends State<WorkActWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Итого:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text('Итого:',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           Text(
             '${totalAmount.toStringAsFixed(2)} ₽',
             style: TextStyle(
@@ -388,7 +398,8 @@ class _WorkActWidgetState extends State<WorkActWidget> {
     });
 
     try {
-      final totalAmount = _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
+      final totalAmount =
+          _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
 
       await _workActService.createWorkAct(
         bookingId: widget.bookingId,
@@ -399,7 +410,9 @@ class _WorkActWidgetState extends State<WorkActWidget> {
         eventLocation: _eventLocationController.text.trim(),
         services: _services,
         totalAmount: totalAmount,
-        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
       );
 
       if (widget.onActCreated != null) {
@@ -434,7 +447,8 @@ class _WorkActWidgetState extends State<WorkActWidget> {
     });
 
     try {
-      final totalAmount = _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
+      final totalAmount =
+          _services.fold<double>(0, (sum, service) => sum + service.totalPrice);
 
       await _workActService.updateWorkAct(
         workActId: widget.workAct!.id,
@@ -443,7 +457,9 @@ class _WorkActWidgetState extends State<WorkActWidget> {
         eventLocation: _eventLocationController.text.trim(),
         services: _services,
         totalAmount: totalAmount,
-        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
       );
 
       if (mounted) {
@@ -471,7 +487,9 @@ class _WorkActWidgetState extends State<WorkActWidget> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('PDF создан успешно'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('PDF создан успешно'),
+              backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
@@ -525,7 +543,9 @@ class _ServiceDialogState extends State<_ServiceDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text(widget.service == null ? 'Добавить работу' : 'Редактировать работу'),
+        title: Text(widget.service == null
+            ? 'Добавить работу'
+            : 'Редактировать работу'),
         content: Form(
           key: _formKey,
           child: Column(
@@ -593,16 +613,19 @@ class _ServiceDialogState extends State<_ServiceDialog> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
-                decoration:
-                    const InputDecoration(labelText: 'Описание', border: OutlineInputBorder()),
+                decoration: const InputDecoration(
+                    labelText: 'Описание', border: OutlineInputBorder()),
                 maxLines: 2,
               ),
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
-          ElevatedButton(onPressed: _saveService, child: const Text('Сохранить')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
+          ElevatedButton(
+              onPressed: _saveService, child: const Text('Сохранить')),
         ],
       );
 
@@ -613,8 +636,9 @@ class _ServiceDialogState extends State<_ServiceDialog> {
       name: _nameController.text.trim(),
       quantity: int.parse(_quantityController.text),
       price: double.parse(_priceController.text),
-      description:
-          _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
+      description: _descriptionController.text.trim().isEmpty
+          ? null
+          : _descriptionController.text.trim(),
     );
 
     widget.onSave(service);

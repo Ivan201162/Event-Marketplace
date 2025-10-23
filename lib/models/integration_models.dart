@@ -4,7 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum IntegrationStatus { active, inactive, pending, error, disconnected }
 
 /// Тип интеграции
-enum IntegrationType { calendar, payment, notification, analytics, social, other }
+enum IntegrationType {
+  calendar,
+  payment,
+  notification,
+  analytics,
+  social,
+  other
+}
 
 /// Модель внешней интеграции
 class ExternalIntegration {
@@ -51,20 +58,20 @@ class ExternalIntegration {
       credentials: Map<String, dynamic>.from(data['credentials'] ?? {}),
       lastSyncAt: data['lastSyncAt'] != null
           ? (data['lastSyncAt'] is Timestamp
-                ? (data['lastSyncAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['lastSyncAt'].toString()))
+              ? (data['lastSyncAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['lastSyncAt'].toString()))
           : null,
       errorMessage: data['errorMessage'] as String?,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-                ? (data['updatedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['updatedAt'].toString()))
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -81,19 +88,20 @@ class ExternalIntegration {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'name': name,
-    'type': type.name,
-    'status': status.name,
-    'description': description,
-    'config': config,
-    'credentials': credentials,
-    'lastSyncAt': lastSyncAt != null ? Timestamp.fromDate(lastSyncAt!) : null,
-    'errorMessage': errorMessage,
-    'metadata': metadata,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-  };
+        'userId': userId,
+        'name': name,
+        'type': type.name,
+        'status': status.name,
+        'description': description,
+        'config': config,
+        'credentials': credentials,
+        'lastSyncAt':
+            lastSyncAt != null ? Timestamp.fromDate(lastSyncAt!) : null,
+        'errorMessage': errorMessage,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      };
 
   /// Копировать с изменениями
   ExternalIntegration copyWith({
@@ -110,21 +118,22 @@ class ExternalIntegration {
     Map<String, dynamic>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => ExternalIntegration(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    name: name ?? this.name,
-    type: type ?? this.type,
-    status: status ?? this.status,
-    description: description ?? this.description,
-    config: config ?? this.config,
-    credentials: credentials ?? this.credentials,
-    lastSyncAt: lastSyncAt ?? this.lastSyncAt,
-    errorMessage: errorMessage ?? this.errorMessage,
-    metadata: metadata ?? this.metadata,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      ExternalIntegration(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        name: name ?? this.name,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        description: description ?? this.description,
+        config: config ?? this.config,
+        credentials: credentials ?? this.credentials,
+        lastSyncAt: lastSyncAt ?? this.lastSyncAt,
+        errorMessage: errorMessage ?? this.errorMessage,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Парсинг типа из строки
   static IntegrationType _parseType(String? type) {
@@ -249,29 +258,29 @@ class IntegrationSettings {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-                ? (data['updatedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['updatedAt'].toString()))
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'enabledIntegrations': enabledIntegrations,
-    'syncFrequency': syncFrequency,
-    'autoSync': autoSync,
-    'notifications': notifications,
-    'errorReporting': errorReporting,
-    'metadata': metadata,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-  };
+        'userId': userId,
+        'enabledIntegrations': enabledIntegrations,
+        'syncFrequency': syncFrequency,
+        'autoSync': autoSync,
+        'notifications': notifications,
+        'errorReporting': errorReporting,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      };
 
   /// Копировать с изменениями
   IntegrationSettings copyWith({
@@ -284,17 +293,18 @@ class IntegrationSettings {
     Map<String, dynamic>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => IntegrationSettings(
-    userId: userId ?? this.userId,
-    enabledIntegrations: enabledIntegrations ?? this.enabledIntegrations,
-    syncFrequency: syncFrequency ?? this.syncFrequency,
-    autoSync: autoSync ?? this.autoSync,
-    notifications: notifications ?? this.notifications,
-    errorReporting: errorReporting ?? this.errorReporting,
-    metadata: metadata ?? this.metadata,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      IntegrationSettings(
+        userId: userId ?? this.userId,
+        enabledIntegrations: enabledIntegrations ?? this.enabledIntegrations,
+        syncFrequency: syncFrequency ?? this.syncFrequency,
+        autoSync: autoSync ?? this.autoSync,
+        notifications: notifications ?? this.notifications,
+        errorReporting: errorReporting ?? this.errorReporting,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Проверить, включена ли интеграция
   bool isIntegrationEnabled(String integrationId) {
@@ -356,13 +366,13 @@ class IntegrationEvent {
       errorMessage: data['errorMessage'] as String?,
       processedAt: data['processedAt'] != null
           ? (data['processedAt'] is Timestamp
-                ? (data['processedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['processedAt'].toString()))
+              ? (data['processedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['processedAt'].toString()))
           : null,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
     );
   }
@@ -379,15 +389,16 @@ class IntegrationEvent {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'integrationId': integrationId,
-    'userId': userId,
-    'eventType': eventType,
-    'eventData': eventData,
-    'status': status,
-    'errorMessage': errorMessage,
-    'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
-    'createdAt': Timestamp.fromDate(createdAt),
-  };
+        'integrationId': integrationId,
+        'userId': userId,
+        'eventType': eventType,
+        'eventData': eventData,
+        'status': status,
+        'errorMessage': errorMessage,
+        'processedAt':
+            processedAt != null ? Timestamp.fromDate(processedAt!) : null,
+        'createdAt': Timestamp.fromDate(createdAt),
+      };
 
   /// Копировать с изменениями
   IntegrationEvent copyWith({
@@ -400,17 +411,18 @@ class IntegrationEvent {
     String? errorMessage,
     DateTime? processedAt,
     DateTime? createdAt,
-  }) => IntegrationEvent(
-    id: id ?? this.id,
-    integrationId: integrationId ?? this.integrationId,
-    userId: userId ?? this.userId,
-    eventType: eventType ?? this.eventType,
-    eventData: eventData ?? this.eventData,
-    status: status ?? this.status,
-    errorMessage: errorMessage ?? this.errorMessage,
-    processedAt: processedAt ?? this.processedAt,
-    createdAt: createdAt ?? this.createdAt,
-  );
+  }) =>
+      IntegrationEvent(
+        id: id ?? this.id,
+        integrationId: integrationId ?? this.integrationId,
+        userId: userId ?? this.userId,
+        eventType: eventType ?? this.eventType,
+        eventData: eventData ?? this.eventData,
+        status: status ?? this.status,
+        errorMessage: errorMessage ?? this.errorMessage,
+        processedAt: processedAt ?? this.processedAt,
+        createdAt: createdAt ?? this.createdAt,
+      );
 
   /// Проверить, обработано ли событие
   bool get isProcessed => status == 'processed';

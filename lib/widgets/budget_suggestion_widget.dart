@@ -7,7 +7,8 @@ import 'responsive_text.dart';
 
 /// Виджет для отображения предложения по увеличению бюджета
 class BudgetSuggestionWidget extends ConsumerWidget {
-  const BudgetSuggestionWidget({super.key, required this.suggestion, this.onSuggestionChanged});
+  const BudgetSuggestionWidget(
+      {super.key, required this.suggestion, this.onSuggestionChanged});
   final BudgetSuggestion suggestion;
   final VoidCallback? onSuggestionChanged;
 
@@ -19,14 +20,18 @@ class BudgetSuggestionWidget extends ConsumerWidget {
             // Заголовок с статусом
             Row(
               children: [
-                Icon(_getSuggestionIcon(), color: suggestion.status.color, size: 24),
+                Icon(_getSuggestionIcon(),
+                    color: suggestion.status.color, size: 24),
                 const SizedBox(width: 8),
                 Expanded(
                   child: ResponsiveText(
                     'Рекомендуем увеличить бюджет',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 _buildStatusChip(),
@@ -53,12 +58,16 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                         'Дополнительных услуг:',
                         style: Theme.of(
                           context,
-                        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                        )
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       ResponsiveText(
                         '${suggestion.suggestionCount}',
-                        style:
-                            TextStyle(color: suggestion.status.color, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: suggestion.status.color,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -70,12 +79,16 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                         'Общая стоимость:',
                         style: Theme.of(
                           context,
-                        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                        )
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       ResponsiveText(
                         '${suggestion.totalCost.toStringAsFixed(0)} ₽',
-                        style:
-                            TextStyle(color: suggestion.status.color, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: suggestion.status.color,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -88,12 +101,16 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                           'Диапазон цен:',
                           style: Theme.of(
                             context,
-                          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                          )
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
                         ResponsiveText(
                           '${suggestion.minCost.toStringAsFixed(0)} - ${suggestion.maxCost.toStringAsFixed(0)} ₽',
                           style: TextStyle(
-                              color: suggestion.status.color, fontWeight: FontWeight.bold),
+                              color: suggestion.status.color,
+                              fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -121,7 +138,10 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                         suggestion.message!,
                         style: Theme.of(
                           context,
-                        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                        )
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
@@ -133,7 +153,10 @@ class BudgetSuggestionWidget extends ConsumerWidget {
             const SizedBox(height: 12),
             ResponsiveText(
               'Рекомендуемые услуги:',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
@@ -162,7 +185,8 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                       onPressed: () => _rejectSuggestion(context, ref),
                       icon: const Icon(Icons.close),
                       label: const Text('Отклонить'),
-                      style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                      style:
+                          OutlinedButton.styleFrom(foregroundColor: Colors.red),
                     ),
                   ),
                 ],
@@ -177,8 +201,10 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                 const SizedBox(width: 4),
                 ResponsiveText(
                   'Создано: ${_formatDate(suggestion.createdAt)}',
-                  style:
-                      Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -195,8 +221,10 @@ class BudgetSuggestionWidget extends ConsumerWidget {
         ),
         child: Text(
           suggestion.status.displayName,
-          style:
-              TextStyle(color: suggestion.status.color, fontSize: 12, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: suggestion.status.color,
+              fontSize: 12,
+              fontWeight: FontWeight.bold),
         ),
       );
 
@@ -227,7 +255,10 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                           item.specialistName!,
                           style: Theme.of(
                             context,
-                          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                          )
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
                       ],
                     ],
@@ -235,7 +266,8 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                 ),
                 if (item.estimatedPrice != null) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -255,7 +287,10 @@ class BudgetSuggestionWidget extends ConsumerWidget {
             const SizedBox(height: 8),
             ResponsiveText(
               item.description,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w500),
             ),
             if (item.reason != null) ...[
               const SizedBox(height: 4),
@@ -267,12 +302,14 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.info_outline, size: 16, color: Colors.blue),
+                    const Icon(Icons.info_outline,
+                        size: 16, color: Colors.blue),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         item.reason!,
-                        style: const TextStyle(fontSize: 12, color: Colors.blue),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.blue),
                       ),
                     ),
                   ],
@@ -331,7 +368,8 @@ class BudgetSuggestionWidget extends ConsumerWidget {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -363,10 +401,12 @@ class CreateBudgetSuggestionWidget extends ConsumerStatefulWidget {
   final VoidCallback? onSuggestionCreated;
 
   @override
-  ConsumerState<CreateBudgetSuggestionWidget> createState() => _CreateBudgetSuggestionWidgetState();
+  ConsumerState<CreateBudgetSuggestionWidget> createState() =>
+      _CreateBudgetSuggestionWidgetState();
 }
 
-class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSuggestionWidget> {
+class _CreateBudgetSuggestionWidgetState
+    extends ConsumerState<CreateBudgetSuggestionWidget> {
   final _messageController = TextEditingController();
   final List<BudgetSuggestionItem> _selectedItems = [];
   bool _isLoading = false;
@@ -428,8 +468,10 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
               const SizedBox(height: 16),
               ResponsiveText(
                 'Рекомендуемые услуги:',
-                style:
-                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               ..._selectedItems.map(_buildSelectedServiceCard),
@@ -453,7 +495,8 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: _canCreateSuggestion() ? _createSuggestion : null,
+                    onPressed:
+                        _canCreateSuggestion() ? _createSuggestion : null,
                     icon: _isLoading
                         ? const SizedBox(
                             width: 16,
@@ -461,7 +504,8 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.send),
-                    label: Text(_isLoading ? 'Создание...' : 'Создать предложение'),
+                    label: Text(
+                        _isLoading ? 'Создание...' : 'Создать предложение'),
                   ),
                 ),
               ],
@@ -494,7 +538,10 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
                       item.specialistName!,
                       style: Theme.of(
                         context,
-                      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                      )
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w500),
                     ),
                   ],
                   if (item.estimatedPrice != null) ...[
@@ -541,7 +588,9 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка анализа бюджета: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка анализа бюджета: $e'),
+            backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -585,7 +634,8 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     } finally {
       setState(() {
         _isLoading = false;
@@ -596,12 +646,14 @@ class _CreateBudgetSuggestionWidgetState extends ConsumerState<CreateBudgetSugge
 
 /// Диалог для отклонения предложения
 class _RejectSuggestionDialog extends StatefulWidget {
-  const _RejectSuggestionDialog({required this.suggestion, required this.onRejected});
+  const _RejectSuggestionDialog(
+      {required this.suggestion, required this.onRejected});
   final BudgetSuggestion suggestion;
   final VoidCallback onRejected;
 
   @override
-  State<_RejectSuggestionDialog> createState() => _RejectSuggestionDialogState();
+  State<_RejectSuggestionDialog> createState() =>
+      _RejectSuggestionDialogState();
 }
 
 class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
@@ -670,14 +722,17 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Предложение отклонено'), backgroundColor: Colors.orange),
+        const SnackBar(
+            content: Text('Предложение отклонено'),
+            backgroundColor: Colors.orange),
       );
 
       widget.onRejected();
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     } finally {
       setState(() {
         _isLoading = false;

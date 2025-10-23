@@ -9,7 +9,7 @@ import '../data/subscription_service.dart';
 /// Нотификатор для фильтра ленты
 class FeedFilterNotifier extends StateNotifier<FeedFilter> {
   FeedFilterNotifier() : super(FeedFilter.all);
-  
+
   void setFilter(FeedFilter filter) {
     state = filter;
   }
@@ -18,7 +18,7 @@ class FeedFilterNotifier extends StateNotifier<FeedFilter> {
 /// Нотификатор для выбранной категории
 class SelectedCategoryNotifier extends StateNotifier<String?> {
   SelectedCategoryNotifier() : super(null);
-  
+
   void setCategory(String? category) {
     state = category;
   }
@@ -28,13 +28,18 @@ class SelectedCategoryNotifier extends StateNotifier<String?> {
 final feedServiceProvider = Provider<FeedService>((ref) => FeedService());
 
 /// Провайдер сервиса подписок
-final subscriptionServiceProvider = Provider<SubscriptionService>((ref) => SubscriptionService());
+final subscriptionServiceProvider =
+    Provider<SubscriptionService>((ref) => SubscriptionService());
 
 /// Провайдер текущего фильтра ленты
-final feedFilterProvider = StateNotifierProvider<FeedFilterNotifier, FeedFilter>((ref) => FeedFilterNotifier());
+final feedFilterProvider =
+    StateNotifierProvider<FeedFilterNotifier, FeedFilter>(
+        (ref) => FeedFilterNotifier());
 
 /// Провайдер выбранной категории для фильтрации
-final selectedCategoryProvider = StateNotifierProvider<SelectedCategoryNotifier, String?>((ref) => SelectedCategoryNotifier());
+final selectedCategoryProvider =
+    StateNotifierProvider<SelectedCategoryNotifier, String?>(
+        (ref) => SelectedCategoryNotifier());
 
 /// Провайдер постов ленты с фильтрацией
 final feedPostsProvider = StreamProvider<List<FeedPost>>((ref) {
@@ -72,7 +77,8 @@ final feedPostsProvider = StreamProvider<List<FeedPost>>((ref) {
 });
 
 /// Провайдер постов пользователя
-final userPostsProvider = StreamProvider.family<List<FeedPost>, String>((ref, userId) {
+final userPostsProvider =
+    StreamProvider.family<List<FeedPost>, String>((ref, userId) {
   final feedService = ref.watch(feedServiceProvider);
   return feedService.getUserPosts(userId);
 });
@@ -84,7 +90,8 @@ final feedLoadingProvider = StateProvider<bool>((ref) => false);
 final feedErrorProvider = StateProvider<String?>((ref) => null);
 
 /// Провайдер для управления лайками
-final likePostProvider = FutureProvider.family<void, String>((ref, postId) async {
+final likePostProvider =
+    FutureProvider.family<void, String>((ref, postId) async {
   final feedService = ref.watch(feedServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -102,7 +109,8 @@ final likePostProvider = FutureProvider.family<void, String>((ref, postId) async
 });
 
 /// Провайдер для добавления комментариев
-final addCommentProvider = FutureProvider.family<void, Map<String, dynamic>>((ref, params) async {
+final addCommentProvider =
+    FutureProvider.family<void, Map<String, dynamic>>((ref, params) async {
   final feedService = ref.watch(feedServiceProvider);
   final postId = params['postId'] as String;
   final comment = params['comment'] as FeedComment;
@@ -116,7 +124,8 @@ final addCommentProvider = FutureProvider.family<void, Map<String, dynamic>>((re
 });
 
 /// Провайдер для создания постов
-final createPostProvider = FutureProvider.family<void, Map<String, dynamic>>((ref, params) async {
+final createPostProvider =
+    FutureProvider.family<void, Map<String, dynamic>>((ref, params) async {
   final feedService = ref.watch(feedServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -143,7 +152,8 @@ final createPostProvider = FutureProvider.family<void, Map<String, dynamic>>((re
 });
 
 /// Провайдер для удаления постов
-final deletePostProvider = FutureProvider.family<void, String>((ref, postId) async {
+final deletePostProvider =
+    FutureProvider.family<void, String>((ref, postId) async {
   final feedService = ref.watch(feedServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -183,7 +193,8 @@ final pickVideoProvider = FutureProvider<File?>((ref) async {
 });
 
 /// Провайдер для загрузки медиа
-final uploadMediaProvider = FutureProvider.family<String, Map<String, dynamic>>((
+final uploadMediaProvider =
+    FutureProvider.family<String, Map<String, dynamic>>((
   ref,
   params,
 ) async {
@@ -223,7 +234,8 @@ final subscriptionProvider = StreamProvider<List<String>>((ref) {
 });
 
 /// Провайдер для подписки/отписки
-final followUserProvider = FutureProvider.family<void, String>((ref, targetUserId) async {
+final followUserProvider =
+    FutureProvider.family<void, String>((ref, targetUserId) async {
   final subscriptionService = ref.watch(subscriptionServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -241,7 +253,8 @@ final followUserProvider = FutureProvider.family<void, String>((ref, targetUserI
 });
 
 /// Провайдер для отписки
-final unfollowUserProvider = FutureProvider.family<void, String>((ref, targetUserId) async {
+final unfollowUserProvider =
+    FutureProvider.family<void, String>((ref, targetUserId) async {
   final subscriptionService = ref.watch(subscriptionServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -259,7 +272,8 @@ final unfollowUserProvider = FutureProvider.family<void, String>((ref, targetUse
 });
 
 /// Провайдер для проверки подписки
-final isFollowingProvider = FutureProvider.family<bool, String>((ref, targetUserId) async {
+final isFollowingProvider =
+    FutureProvider.family<bool, String>((ref, targetUserId) async {
   final subscriptionService = ref.watch(subscriptionServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -276,7 +290,8 @@ final isFollowingProvider = FutureProvider.family<bool, String>((ref, targetUser
 });
 
 /// Провайдер статистики подписок
-final subscriptionStatsProvider = FutureProvider.family<SubscriptionStats, String>((
+final subscriptionStatsProvider =
+    FutureProvider.family<SubscriptionStats, String>((
   ref,
   userId,
 ) async {
@@ -285,7 +300,8 @@ final subscriptionStatsProvider = FutureProvider.family<SubscriptionStats, Strin
 });
 
 /// Провайдер для управления состоянием создания поста
-final createPostStateProvider = NotifierProvider<CreatePostNotifier, CreatePostState>(
+final createPostStateProvider =
+    NotifierProvider<CreatePostNotifier, CreatePostState>(
   () => CreatePostNotifier(),
 );
 
@@ -313,14 +329,15 @@ class CreatePostState {
     File? selectedFile,
     bool? isUploading,
     String? error,
-  }) => CreatePostState(
-    description: description ?? this.description,
-    taggedCategories: taggedCategories ?? this.taggedCategories,
-    selectedType: selectedType ?? this.selectedType,
-    selectedFile: selectedFile ?? this.selectedFile,
-    isUploading: isUploading ?? this.isUploading,
-    error: error ?? this.error,
-  );
+  }) =>
+      CreatePostState(
+        description: description ?? this.description,
+        taggedCategories: taggedCategories ?? this.taggedCategories,
+        selectedType: selectedType ?? this.selectedType,
+        selectedFile: selectedFile ?? this.selectedFile,
+        isUploading: isUploading ?? this.isUploading,
+        error: error ?? this.error,
+      );
 }
 
 /// Notifier для управления состоянием создания поста

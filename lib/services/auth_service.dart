@@ -19,7 +19,8 @@ class AuthService {
       if (firebaseUser == null) return null;
 
       try {
-        final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+        final userDoc =
+            await _firestore.collection('users').doc(firebaseUser.uid).get();
 
         if (userDoc.exists) {
           return AppUser.fromFirestore(userDoc);
@@ -40,7 +41,8 @@ class AuthService {
     if (firebaseUser == null) return null;
 
     try {
-      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+      final userDoc =
+          await _firestore.collection('users').doc(firebaseUser.uid).get();
 
       if (userDoc.exists) {
         return AppUser.fromFirestore(userDoc);
@@ -59,7 +61,8 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final credential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      final credential = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
 
       if (credential.user != null) {
         // Обновляем FCM токен после успешного входа
@@ -91,11 +94,11 @@ class AuthService {
       if (credential.user != null) {
         // Update display name
         await credential.user!.updateDisplayName(name);
-        
+
         // Create user document
         await _createUserDocument(credential.user!);
       }
-      
+
       debugPrint('✅ User created with email successfully');
     } catch (e) {
       debugPrint('❌ Error creating user with email: $e');
@@ -108,7 +111,8 @@ class AuthService {
     try {
       // Try to sign in with a dummy password to check if email exists
       try {
-        await _auth.signInWithEmailAndPassword(email: email, password: 'dummy_password');
+        await _auth.signInWithEmailAndPassword(
+            email: email, password: 'dummy_password');
         return true;
       } catch (e) {
         if (e is FirebaseAuthException) {
@@ -153,7 +157,8 @@ class AuthService {
         if (signInMethods.contains('google.com')) {
           throw FirebaseAuthException(
             code: 'email-already-in-use-google',
-            message: 'Этот email уже используется с Google. Войти через Google?',
+            message:
+                'Этот email уже используется с Google. Войти через Google?',
           );
         } else if (signInMethods.contains('phone')) {
           throw FirebaseAuthException(
@@ -164,14 +169,16 @@ class AuthService {
         } else {
           throw FirebaseAuthException(
             code: 'email-already-in-use',
-            message: 'Этот email уже используется. Попробуйте войти или восстановить пароль.',
+            message:
+                'Этот email уже используется. Попробуйте войти или восстановить пароль.',
           );
         }
       }
 
       // Дополнительная проверка валидности email
       if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-        throw FirebaseAuthException(code: 'invalid-email', message: 'Неверный формат email');
+        throw FirebaseAuthException(
+            code: 'invalid-email', message: 'Неверный формат email');
       }
 
       // Проверка силы пароля
@@ -210,7 +217,7 @@ class AuthService {
       debugPrint('📱 Отправка SMS кода на номер: $phoneNumber');
 
       final completer = Completer<String>();
-      
+
       await _auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
@@ -222,7 +229,8 @@ class AuthService {
           debugPrint('❌ Ошибка верификации: ${e.code} - ${e.message}');
 
           // Обработка специфических ошибок Phone Auth
-          if (e.code == 'unknown' && e.message?.contains('BILLING_NOT_ENABLED') == true) {
+          if (e.code == 'unknown' &&
+              e.message?.contains('BILLING_NOT_ENABLED') == true) {
             throw FirebaseAuthException(
               code: 'billing-not-enabled',
               message:
@@ -239,7 +247,7 @@ class AuthService {
           // Сохраняем verificationId для последующей проверки
           _currentVerificationId = verificationId;
           _resendToken = resendToken;
-          
+
           if (!completer.isCompleted) {
             completer.complete(verificationId);
           }
@@ -247,14 +255,14 @@ class AuthService {
         codeAutoRetrievalTimeout: (String verificationId) {
           debugPrint('⏰ Таймаут автоматического получения кода');
           _currentVerificationId = verificationId;
-          
+
           if (!completer.isCompleted) {
             completer.complete(verificationId);
           }
         },
         timeout: const Duration(seconds: 60),
       );
-      
+
       return await completer.future;
     } catch (e) {
       debugPrint('❌ Ошибка отправки SMS: $e');
@@ -306,7 +314,8 @@ class AuthService {
         debugPrint('👤 Создан новый профиль пользователя');
       } else {
         // Update existing profile with phone number
-        await docRef.update({'phone': user.phoneNumber ?? '', 'updatedAt': Timestamp.now()});
+        await docRef.update(
+            {'phone': user.phoneNumber ?? '', 'updatedAt': Timestamp.now()});
         debugPrint('👤 Обновлен профиль пользователя с номером телефона');
       }
 
@@ -394,7 +403,7 @@ class AuthService {
       // Ensure profile exists and update with Google data
       final docRef = _firestore.collection('users').doc(user.uid);
       final snapshot = await docRef.get();
-      
+
       // Parse display name into first and last name
       String firstName = '';
       String lastName = '';
@@ -405,7 +414,7 @@ class AuthService {
           lastName = nameParts.sublist(1).join(' ');
         }
       }
-      
+
       if (!snapshot.exists) {
         // Create new user profile with Google data
         await docRef.set({
@@ -435,27 +444,33 @@ class AuthService {
         final updateData = <String, dynamic>{
           'updatedAt': Timestamp.now(),
         };
-        
+
         // Update name if empty or if Google has better data
-        if (existingData['name'] == null || existingData['name'] == 'Пользователь') {
+        if (existingData['name'] == null ||
+            existingData['name'] == 'Пользователь') {
           updateData['name'] = user.displayName ?? 'Пользователь';
         }
-        if (existingData['firstName'] == null || existingData['firstName'] == '') {
+        if (existingData['firstName'] == null ||
+            existingData['firstName'] == '') {
           updateData['firstName'] = firstName;
         }
-        if (existingData['lastName'] == null || existingData['lastName'] == '') {
+        if (existingData['lastName'] == null ||
+            existingData['lastName'] == '') {
           updateData['lastName'] = lastName;
         }
-        if (existingData['avatarUrl'] == null || existingData['avatarUrl'] == '') {
+        if (existingData['avatarUrl'] == null ||
+            existingData['avatarUrl'] == '') {
           updateData['avatarUrl'] = user.photoURL;
         }
-        if (existingData['displayName'] == null || existingData['displayName'] == '') {
+        if (existingData['displayName'] == null ||
+            existingData['displayName'] == '') {
           updateData['displayName'] = user.displayName;
         }
-        if (existingData['photoURL'] == null || existingData['photoURL'] == '') {
+        if (existingData['photoURL'] == null ||
+            existingData['photoURL'] == '') {
           updateData['photoURL'] = user.photoURL;
         }
-        
+
         await docRef.update(updateData);
       }
 
@@ -564,7 +579,8 @@ class AuthService {
     try {
       // Проверяем валидность email
       if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email)) {
-        throw FirebaseAuthException(code: 'invalid-email', message: 'Неверный формат email');
+        throw FirebaseAuthException(
+            code: 'invalid-email', message: 'Неверный формат email');
       }
 
       // Проверяем, существует ли email
@@ -644,7 +660,10 @@ class AuthService {
     );
 
     try {
-      await _firestore.collection('users').doc(firebaseUser.uid).set(user.toFirestore());
+      await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .set(user.toFirestore());
 
       // Обновляем FCM токен после создания профиля
       await updateFCMToken();

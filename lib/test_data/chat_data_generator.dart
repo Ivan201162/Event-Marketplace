@@ -75,7 +75,8 @@ class ChatDataGenerator {
     // Создаем чаты для существующих бронирований
     for (final booking in bookings) {
       final customer = customers.firstWhere((c) => c.id == booking.customerId);
-      final specialist = specialists.firstWhere((s) => s.id == booking.specialistId);
+      final specialist =
+          specialists.firstWhere((s) => s.id == booking.specialistId);
 
       await _createChatConversation(customer, specialist, booking);
       chatCount++;
@@ -140,7 +141,9 @@ class ChatDataGenerator {
         'id': 'msg_${chatId}_$i',
         'chatId': chatId,
         'senderId': isCustomerTurn ? customer.id : specialist.id,
-        'senderName': isCustomerTurn ? (customer.displayName ?? 'Заказчик') : specialist.name,
+        'senderName': isCustomerTurn
+            ? (customer.displayName ?? 'Заказчик')
+            : specialist.name,
         'text': message,
         'timestamp': Timestamp.fromDate(messageTime),
         'isRead': true,
@@ -186,7 +189,8 @@ class ChatDataGenerator {
   }
 
   /// Генерация сообщения в зависимости от номера и контекста
-  String _generateMessage(int messageIndex, bool isFromCustomer, bool hasBooking) {
+  String _generateMessage(
+      int messageIndex, bool isFromCustomer, bool hasBooking) {
     if (messageIndex == 0) {
       // Первое сообщение - приветствие от заказчика
       return greetingMessages[_random.nextInt(greetingMessages.length)];
@@ -272,7 +276,8 @@ class ChatDataGenerator {
       );
 
       // Уведомления для специалиста
-      final specialist = specialists.firstWhere((s) => s.id == booking.specialistId);
+      final specialist =
+          specialists.firstWhere((s) => s.id == booking.specialistId);
       await _createNotification(
         userId: specialist.userId,
         title: 'Новое бронирование',

@@ -81,23 +81,27 @@ class EventMediaService {
       .orderBy('createdAt', descending: true)
       .snapshots()
       .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()})).toList(),
+        (snapshot) => snapshot.docs
+            .map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()}))
+            .toList(),
       );
 
   /// Получить медиафайлы по типу
-  Stream<List<EventMedia>> getEventMediaByType(String eventId, MediaType type) => _firestore
-      .collection('events')
-      .doc(eventId)
-      .collection('media')
-      .where('type', isEqualTo: type.name)
-      .where('status', isEqualTo: MediaStatus.ready.name)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()})).toList(),
-      );
+  Stream<List<EventMedia>> getEventMediaByType(
+          String eventId, MediaType type) =>
+      _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('media')
+          .where('type', isEqualTo: type.name)
+          .where('status', isEqualTo: MediaStatus.ready.name)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()}))
+                .toList(),
+          );
 
   /// Получить публичные медиафайлы
   Stream<List<EventMedia>> getPublicEventMedia(String eventId) => _firestore
@@ -109,8 +113,9 @@ class EventMediaService {
       .orderBy('createdAt', descending: true)
       .snapshots()
       .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()})).toList(),
+        (snapshot) => snapshot.docs
+            .map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()}))
+            .toList(),
       );
 
   /// Получить рекомендуемые медиафайлы
@@ -123,23 +128,26 @@ class EventMediaService {
       .orderBy('createdAt', descending: true)
       .snapshots()
       .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()})).toList(),
+        (snapshot) => snapshot.docs
+            .map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()}))
+            .toList(),
       );
 
   /// Получить медиафайлы пользователя в мероприятии
-  Stream<List<EventMedia>> getUserEventMedia(String eventId, String userId) => _firestore
-      .collection('events')
-      .doc(eventId)
-      .collection('media')
-      .where('uploadedBy', isEqualTo: userId)
-      .where('status', isEqualTo: MediaStatus.ready.name)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()})).toList(),
-      );
+  Stream<List<EventMedia>> getUserEventMedia(String eventId, String userId) =>
+      _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('media')
+          .where('uploadedBy', isEqualTo: userId)
+          .where('status', isEqualTo: MediaStatus.ready.name)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()}))
+                .toList(),
+          );
 
   /// Лайкнуть медиафайл
   Future<void> likeMedia(String eventId, String mediaId, String userId) async {
@@ -156,7 +164,8 @@ class EventMediaService {
           throw Exception('Медиафайл не найден');
         }
 
-        final media = EventMedia.fromMap({'id': mediaDoc.id, ...mediaDoc.data()!});
+        final media =
+            EventMedia.fromMap({'id': mediaDoc.id, ...mediaDoc.data()!});
 
         if (media.likedBy.contains(userId)) {
           // Убираем лайк
@@ -183,9 +192,15 @@ class EventMediaService {
   }
 
   /// Добавить теги к медиафайлу
-  Future<void> addTagsToMedia(String eventId, String mediaId, List<String> tags) async {
+  Future<void> addTagsToMedia(
+      String eventId, String mediaId, List<String> tags) async {
     try {
-      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
+      await _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('media')
+          .doc(mediaId)
+          .update({
         'tags': FieldValue.arrayUnion(tags),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -198,9 +213,15 @@ class EventMediaService {
   }
 
   /// Удалить теги из медиафайла
-  Future<void> removeTagsFromMedia(String eventId, String mediaId, List<String> tags) async {
+  Future<void> removeTagsFromMedia(
+      String eventId, String mediaId, List<String> tags) async {
     try {
-      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
+      await _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('media')
+          .doc(mediaId)
+          .update({
         'tags': FieldValue.arrayRemove(tags),
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -213,9 +234,15 @@ class EventMediaService {
   }
 
   /// Сделать медиафайл рекомендуемым
-  Future<void> setMediaFeatured(String eventId, String mediaId, bool isFeatured) async {
+  Future<void> setMediaFeatured(
+      String eventId, String mediaId, bool isFeatured) async {
     try {
-      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
+      await _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('media')
+          .doc(mediaId)
+          .update({
         'isFeatured': isFeatured,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -228,9 +255,15 @@ class EventMediaService {
   }
 
   /// Изменить публичность медиафайла
-  Future<void> setMediaPublic(String eventId, String mediaId, bool isPublic) async {
+  Future<void> setMediaPublic(
+      String eventId, String mediaId, bool isPublic) async {
     try {
-      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
+      await _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('media')
+          .doc(mediaId)
+          .update({
         'isPublic': isPublic,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -245,7 +278,12 @@ class EventMediaService {
   /// Удалить медиафайл
   Future<void> deleteMedia(String eventId, String mediaId) async {
     try {
-      await _firestore.collection('events').doc(eventId).collection('media').doc(mediaId).update({
+      await _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('media')
+          .doc(mediaId)
+          .update({
         'status': MediaStatus.deleted.name,
         'updatedAt': FieldValue.serverTimestamp(),
       });
@@ -291,7 +329,9 @@ class EventMediaService {
         'totalSize': totalSize,
         'totalLikes': totalLikes,
         'lastUpdated': media.isNotEmpty
-            ? media.map((m) => m.updatedAt).reduce((a, b) => a.isAfter(b) ? a : b)
+            ? media
+                .map((m) => m.updatedAt)
+                .reduce((a, b) => a.isAfter(b) ? a : b)
             : null,
       };
     } catch (e) {
@@ -301,18 +341,21 @@ class EventMediaService {
   }
 
   /// Поиск медиафайлов по тегам
-  Stream<List<EventMedia>> searchMediaByTags(String eventId, List<String> tags) => _firestore
-      .collection('events')
-      .doc(eventId)
-      .collection('media')
-      .where('tags', arrayContainsAny: tags)
-      .where('status', isEqualTo: MediaStatus.ready.name)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()})).toList(),
-      );
+  Stream<List<EventMedia>> searchMediaByTags(
+          String eventId, List<String> tags) =>
+      _firestore
+          .collection('events')
+          .doc(eventId)
+          .collection('media')
+          .where('tags', arrayContainsAny: tags)
+          .where('status', isEqualTo: MediaStatus.ready.name)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map((doc) => EventMedia.fromMap({'id': doc.id, ...doc.data()}))
+                .toList(),
+          );
 
   /// Получить популярные теги мероприятия
   Future<List<String>> getPopularTags(String eventId) async {
@@ -333,7 +376,8 @@ class EventMediaService {
         }
       }
 
-      final sortedTags = tagCounts.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+      final sortedTags = tagCounts.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
 
       return sortedTags.take(10).map((e) => e.key).toList();
     } catch (e) {

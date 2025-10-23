@@ -10,38 +10,43 @@ final badgeServiceProvider = Provider<badge_service.BadgeService>(
 );
 
 /// Провайдер для бейджей пользователя
-final userBadgesProvider = StreamProvider.family<List<badge_model.Badge>, String>((ref, userId) {
+final userBadgesProvider =
+    StreamProvider.family<List<badge_model.Badge>, String>((ref, userId) {
   final service = ref.read(badgeServiceProvider);
   return Stream.fromFuture(service.getUserBadges(userId));
 });
 
 /// Провайдер для статистики бейджей пользователя
-final userBadgeStatsProvider = FutureProvider.family<badge_model.BadgeStats, String>((ref, userId) {
+final userBadgeStatsProvider =
+    FutureProvider.family<badge_model.BadgeStats, String>((ref, userId) {
   final service = ref.read(badgeServiceProvider);
   return service.getBadgeStats(userId);
 });
 
 /// Провайдер для таблицы лидеров по бейджам
 final badgeLeaderboardProvider =
-    FutureProvider.family<List<badge_model.BadgeLeaderboardEntry>, int>((ref, limit) {
-      final service = ref.read(badgeServiceProvider);
-      return service.getBadgeLeaderboard(limit: limit);
-    });
+    FutureProvider.family<List<badge_model.BadgeLeaderboardEntry>, int>(
+        (ref, limit) {
+  final service = ref.read(badgeServiceProvider);
+  return service.getBadgeLeaderboard(limit: limit);
+});
 
 /// Провайдер для бейджей по категориям
-final userBadgesByCategoryProvider =
-    Provider.family<Map<badge_model.BadgeCategory, List<badge_model.Badge>>, String>((ref, userId) {
-      final badgesAsync = ref.watch(userBadgesProvider(userId));
+final userBadgesByCategoryProvider = Provider.family<
+    Map<badge_model.BadgeCategory, List<badge_model.Badge>>,
+    String>((ref, userId) {
+  final badgesAsync = ref.watch(userBadgesProvider(userId));
 
-      return badgesAsync.when(
-        data: (badges) => badges.groupedByCategory,
-        loading: () => {},
-        error: (_, __) => {},
-      );
-    });
+  return badgesAsync.when(
+    data: (badges) => badges.groupedByCategory,
+    loading: () => {},
+    error: (_, __) => {},
+  );
+});
 
 /// Провайдер для видимых бейджей пользователя
-final visibleUserBadgesProvider = Provider.family<List<badge_model.Badge>, String>((ref, userId) {
+final visibleUserBadgesProvider =
+    Provider.family<List<badge_model.Badge>, String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
 
   return badgesAsync.when(
@@ -52,7 +57,8 @@ final visibleUserBadgesProvider = Provider.family<List<badge_model.Badge>, Strin
 });
 
 /// Провайдер для последних бейджей пользователя
-final recentUserBadgesProvider = Provider.family<List<badge_model.Badge>, String>((ref, userId) {
+final recentUserBadgesProvider =
+    Provider.family<List<badge_model.Badge>, String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
 
   return badgesAsync.when(
@@ -73,12 +79,14 @@ class BadgeManager {
   final badge_service.BadgeService _service;
 
   /// Проверить бейджи после бронирования
-  Future<void> checkBookingBadges(String customerId, String specialistId) async {
+  Future<void> checkBookingBadges(
+      String customerId, String specialistId) async {
     await _service.checkBookingBadges(customerId, specialistId);
   }
 
   /// Проверить бейджи после отзыва
-  Future<void> checkReviewBadges(String customerId, String specialistId, int rating) async {
+  Future<void> checkReviewBadges(
+      String customerId, String specialistId, int rating) async {
     await _service.checkReviewBadges(customerId, specialistId, rating);
   }
 
@@ -92,12 +100,14 @@ class BadgeManager {
       _service.getBadgeStats(userId);
 
   /// Получить таблицу лидеров
-  Future<List<badge_model.BadgeLeaderboardEntry>> getLeaderboard({int limit = 10}) async =>
+  Future<List<badge_model.BadgeLeaderboardEntry>> getLeaderboard(
+          {int limit = 10}) async =>
       _service.getBadgeLeaderboard(limit: limit);
 }
 
 /// Провайдер для проверки новых бейджей
-final newBadgeCheckerProvider = NotifierProvider<NewBadgeChecker, NewBadgeState>(
+final newBadgeCheckerProvider =
+    NotifierProvider<NewBadgeChecker, NewBadgeState>(
   NewBadgeChecker.new,
 );
 
@@ -107,10 +117,12 @@ class NewBadgeState {
   final List<badge_model.Badge> newBadges;
   final bool hasNewBadges;
 
-  NewBadgeState copyWith({List<badge_model.Badge>? newBadges, bool? hasNewBadges}) => NewBadgeState(
-    newBadges: newBadges ?? this.newBadges,
-    hasNewBadges: hasNewBadges ?? this.hasNewBadges,
-  );
+  NewBadgeState copyWith(
+          {List<badge_model.Badge>? newBadges, bool? hasNewBadges}) =>
+      NewBadgeState(
+        newBadges: newBadges ?? this.newBadges,
+        hasNewBadges: hasNewBadges ?? this.hasNewBadges,
+      );
 }
 
 /// Нотификатор для проверки новых бейджей
@@ -133,7 +145,8 @@ class NewBadgeChecker extends Notifier<NewBadgeState> {
       if (_lastUserId == userId && _lastBadges.isNotEmpty) {
         // Проверяем новые бейджи
         final newBadges = currentBadges
-            .where((badge) => !_lastBadges.any((lastBadge) => lastBadge.id == badge.id))
+            .where((badge) =>
+                !_lastBadges.any((lastBadge) => lastBadge.id == badge.id))
             .toList();
 
         if (newBadges.isNotEmpty) {
@@ -162,14 +175,14 @@ class NewBadgeChecker extends Notifier<NewBadgeState> {
 }
 
 /// Провайдер для достижений пользователя
-final userAchievementsProvider = Provider.family<UserAchievements, String>((ref, userId) {
+final userAchievementsProvider =
+    Provider.family<UserAchievements, String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
   final statsAsync = ref.watch(userBadgeStatsProvider(userId));
 
   return UserAchievements(
     badges: badgesAsync.value ?? [],
-    stats:
-        statsAsync.value ??
+    stats: statsAsync.value ??
         const badge_model.BadgeStats(
           totalBadges: 0,
           earnedBadges: 0,
@@ -183,7 +196,8 @@ final userAchievementsProvider = Provider.family<UserAchievements, String>((ref,
 
 /// Достижения пользователя
 class UserAchievements {
-  const UserAchievements({required this.badges, required this.stats, required this.isLoading});
+  const UserAchievements(
+      {required this.badges, required this.stats, required this.isLoading});
   final List<badge_model.Badge> badges;
   final badge_model.BadgeStats stats;
   final bool isLoading;
@@ -201,7 +215,8 @@ class UserAchievements {
 
   /// Получить уровень пользователя
   int get userLevel {
-    return (stats.totalBadges / 5).floor() + 1; // Каждые 5 бейджей = новый уровень
+    return (stats.totalBadges / 5).floor() +
+        1; // Каждые 5 бейджей = новый уровень
   }
 
   /// Получить прогресс до следующего уровня

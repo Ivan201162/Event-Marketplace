@@ -8,7 +8,8 @@ import 'encryption_service.dart';
 class SecureStorageService {
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
-    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock_this_device),
+    iOptions: IOSOptions(
+        accessibility: KeychainAccessibility.first_unlock_this_device),
   );
 
   static const String _encryptionKeyKey = 'encryption_key';
@@ -31,11 +32,13 @@ class SecureStorageService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_isEncryptionEnabledKey, true);
-      await prefs.setInt(_lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
+      await prefs.setInt(
+          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
 
       // Генерируем новый ключ шифрования
       final key = EncryptionService.generateKey();
-      await _secureStorage.write(key: _encryptionKeyKey, value: base64Encode(key));
+      await _secureStorage.write(
+          key: _encryptionKeyKey, value: base64Encode(key));
 
       debugPrint('Шифрование включено');
     } catch (e) {
@@ -49,7 +52,8 @@ class SecureStorageService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_isEncryptionEnabledKey, false);
-      await prefs.setInt(_lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
+      await prefs.setInt(
+          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
 
       // Удаляем ключ шифрования
       await _secureStorage.delete(key: _encryptionKeyKey);
@@ -78,7 +82,8 @@ class SecureStorageService {
   /// Сохранить данные безопасно
   static Future<void> storeSecure(String key, String value) async {
     try {
-      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
+      final isEncryptionEnabled =
+          await SecureStorageService.isEncryptionEnabled();
 
       if (isEncryptionEnabled) {
         final encryptionKey = await getEncryptionKey();
@@ -107,7 +112,8 @@ class SecureStorageService {
       final value = await _secureStorage.read(key: key);
       if (value == null) return null;
 
-      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
+      final isEncryptionEnabled =
+          await SecureStorageService.isEncryptionEnabled();
 
       if (isEncryptionEnabled) {
         final encryptionKey = await getEncryptionKey();
@@ -164,9 +170,11 @@ class SecureStorageService {
   }
 
   /// Сохранить данные с паролем
-  static Future<void> storeWithPassword(String key, String value, String password) async {
+  static Future<void> storeWithPassword(
+      String key, String value, String password) async {
     try {
-      final encryptedData = EncryptionService.encryptWithPassword(value, password);
+      final encryptedData =
+          EncryptionService.encryptWithPassword(value, password);
       final encryptedJson = jsonEncode(encryptedData.toJson());
       await _secureStorage.write(key: key, value: encryptedJson);
 
@@ -207,9 +215,12 @@ class SecureStorageService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final timestamp = prefs.getInt(_lastEncryptionUpdateKey);
-      return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
+      return timestamp != null
+          ? DateTime.fromMillisecondsSinceEpoch(timestamp)
+          : null;
     } catch (e) {
-      debugPrint('Ошибка получения времени последнего обновления шифрования: $e');
+      debugPrint(
+          'Ошибка получения времени последнего обновления шифрования: $e');
       return null;
     }
   }
@@ -217,7 +228,8 @@ class SecureStorageService {
   /// Обновить ключ шифрования
   static Future<void> updateEncryptionKey() async {
     try {
-      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
+      final isEncryptionEnabled =
+          await SecureStorageService.isEncryptionEnabled();
       if (!isEncryptionEnabled) {
         throw Exception('Шифрование не включено');
       }
@@ -240,10 +252,12 @@ class SecureStorageService {
           // Расшифровываем старым ключом
           final encryptedJson = jsonDecode(entry.value);
           final encryptedData = EncryptedData.fromJson(encryptedJson);
-          final decryptedValue = EncryptionService.decrypt(encryptedData, oldKey);
+          final decryptedValue =
+              EncryptionService.decrypt(encryptedData, oldKey);
 
           // Шифруем новым ключом
-          final newEncryptedData = EncryptionService.encrypt(decryptedValue, newKey);
+          final newEncryptedData =
+              EncryptionService.encrypt(decryptedValue, newKey);
           final newEncryptedJson = jsonEncode(newEncryptedData.toJson());
 
           await _secureStorage.write(key: entry.key, value: newEncryptedJson);
@@ -253,11 +267,13 @@ class SecureStorageService {
       }
 
       // Сохраняем новый ключ
-      await _secureStorage.write(key: _encryptionKeyKey, value: base64Encode(newKey));
+      await _secureStorage.write(
+          key: _encryptionKeyKey, value: base64Encode(newKey));
 
       // Обновляем время последнего обновления
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(_lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
+      await prefs.setInt(
+          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
 
       debugPrint('Ключ шифрования обновлен');
     } catch (e) {
@@ -269,7 +285,8 @@ class SecureStorageService {
   /// Получить статистику безопасности
   static Future<SecurityStats> getSecurityStats() async {
     try {
-      final isEncryptionEnabled = await SecureStorageService.isEncryptionEnabled();
+      final isEncryptionEnabled =
+          await SecureStorageService.isEncryptionEnabled();
       final lastUpdate = await getLastEncryptionUpdate();
       final allData = await getAllSecure();
       final encryptedCount = allData.length;

@@ -57,7 +57,8 @@ class SearchFiltersNotifier extends Notifier<filters.SpecialistFilters> {
 /// Notifier для сортировки (мигрирован с StateProvider)
 class SearchSortingNotifier extends Notifier<sorting_utils.SpecialistSorting> {
   @override
-  sorting_utils.SpecialistSorting build() => const sorting_utils.SpecialistSorting();
+  sorting_utils.SpecialistSorting build() =>
+      const sorting_utils.SpecialistSorting();
 
   void updateSorting(sorting_utils.SpecialistSorting newSorting) {
     state = newSorting;
@@ -73,21 +74,24 @@ class SearchSortingNotifier extends Notifier<sorting_utils.SpecialistSorting> {
 }
 
 /// Провайдер для поискового запроса (мигрирован)
-final searchQueryProvider = NotifierProvider<SearchQueryNotifier, String>(SearchQueryNotifier.new);
+final searchQueryProvider =
+    NotifierProvider<SearchQueryNotifier, String>(SearchQueryNotifier.new);
 
 /// Провайдер для фильтров поиска (мигрирован)
-final searchFiltersProvider = NotifierProvider<SearchFiltersNotifier, filters.SpecialistFilters>(
+final searchFiltersProvider =
+    NotifierProvider<SearchFiltersNotifier, filters.SpecialistFilters>(
   SearchFiltersNotifier.new,
 );
 
 /// Провайдер для сортировки (мигрирован)
 final searchSortingProvider =
     NotifierProvider<SearchSortingNotifier, sorting_utils.SpecialistSorting>(
-      SearchSortingNotifier.new,
-    );
+  SearchSortingNotifier.new,
+);
 
 /// Провайдер для сервиса специалистов
-final specialistServiceProvider = Provider<SpecialistService>((ref) => SpecialistService());
+final specialistServiceProvider =
+    Provider<SpecialistService>((ref) => SpecialistService());
 
 /// Провайдер для всех специалистов из Firestore
 final allSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
@@ -96,7 +100,8 @@ final allSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
 });
 
 /// Провайдер для отфильтрованных и отсортированных специалистов
-final filteredSpecialistsProvider = Provider<AsyncValue<List<Specialist>>>((ref) {
+final filteredSpecialistsProvider =
+    Provider<AsyncValue<List<Specialist>>>((ref) {
   final specialistsAsync = ref.watch(allSpecialistsProvider);
   final filters = ref.watch(searchFiltersProvider);
   final sorting = ref.watch(searchSortingProvider);
@@ -105,10 +110,12 @@ final filteredSpecialistsProvider = Provider<AsyncValue<List<Specialist>>>((ref)
   return specialistsAsync.when(
     data: (specialists) {
       // Применяем фильтры
-      var filteredSpecialists = _applyFilters(specialists, filters, searchQuery);
+      var filteredSpecialists =
+          _applyFilters(specialists, filters, searchQuery);
 
       // Применяем сортировку
-      filteredSpecialists = sorting_utils.SpecialistSortingUtils.sortSpecialists(
+      filteredSpecialists =
+          sorting_utils.SpecialistSortingUtils.sortSpecialists(
         filteredSpecialists,
         sorting,
       );
@@ -131,8 +138,10 @@ List<Specialist> _applyFilters(
     if (searchQuery.isNotEmpty) {
       final query = searchQuery.toLowerCase();
       final matchesName = specialist.name.toLowerCase().contains(query);
-      final matchesCategory = specialist.category.name.toLowerCase().contains(query);
-      final matchesDescription = (specialist.description ?? '').toLowerCase().contains(query);
+      final matchesCategory =
+          specialist.category.name.toLowerCase().contains(query);
+      final matchesDescription =
+          (specialist.description ?? '').toLowerCase().contains(query);
 
       if (!matchesName && !matchesCategory && !matchesDescription) {
         return false;
@@ -169,7 +178,8 @@ List<Specialist> _applyFilters(
     }
 
     // Фильтр по доступности
-    if (filters.isAvailable != null && specialist.isAvailable != filters.isAvailable) {
+    if (filters.isAvailable != null &&
+        specialist.isAvailable != filters.isAvailable) {
       return false;
     }
 
@@ -196,8 +206,10 @@ final searchStatsProvider = Provider<Map<String, int>>((ref) {
         'categories': specialists.map((s) => s.category).toSet().length,
       };
     },
-    loading: () => const {'total': 0, 'filtered': 0, 'available': 0, 'categories': 0},
-    error: (_, __) => const {'total': 0, 'filtered': 0, 'available': 0, 'categories': 0},
+    loading: () =>
+        const {'total': 0, 'filtered': 0, 'available': 0, 'categories': 0},
+    error: (_, __) =>
+        const {'total': 0, 'filtered': 0, 'available': 0, 'categories': 0},
   );
 });
 
@@ -234,7 +246,8 @@ final priceRangeProvider = Provider<PriceRange>((ref) {
         return const PriceRange(min: 0, max: 1000);
       }
 
-      final prices = specialists.map((s) => s.pricePerHour ?? s.hourlyRate).toList();
+      final prices =
+          specialists.map((s) => s.pricePerHour ?? s.hourlyRate).toList();
       prices.sort();
 
       return PriceRange(min: prices.first, max: prices.last);
@@ -259,7 +272,10 @@ final searchSettingsProvider = Provider<Map<String, dynamic>>((ref) {
       'minRating': filters.minRating,
       'isAvailable': filters.isAvailable,
     },
-    'sorting': {'sortOption': sorting.sortOption.toString(), 'isAscending': sorting.isAscending},
+    'sorting': {
+      'sortOption': sorting.sortOption.toString(),
+      'isAscending': sorting.isAscending
+    },
     'searchQuery': searchQuery,
   };
 });

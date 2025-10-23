@@ -25,9 +25,9 @@ class BudgetSuggestion {
       bookingId: data['bookingId'] as String? ?? '',
       customerId: data['customerId'] as String? ?? '',
       specialistId: data['specialistId'] as String? ?? '',
-      suggestions:
-          (data['suggestions'] as List<dynamic>?)
-              ?.map((item) => BudgetSuggestionItem.fromMap(item as Map<String, dynamic>))
+      suggestions: (data['suggestions'] as List<dynamic>?)
+              ?.map((item) =>
+                  BudgetSuggestionItem.fromMap(item as Map<String, dynamic>))
               .toList() ??
           [],
       status: BudgetSuggestionStatus.values.firstWhere(
@@ -36,8 +36,12 @@ class BudgetSuggestion {
       ),
       message: data['message'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      viewedAt: data['viewedAt'] != null ? (data['viewedAt'] as Timestamp).toDate() : null,
-      respondedAt: data['respondedAt'] != null ? (data['respondedAt'] as Timestamp).toDate() : null,
+      viewedAt: data['viewedAt'] != null
+          ? (data['viewedAt'] as Timestamp).toDate()
+          : null,
+      respondedAt: data['respondedAt'] != null
+          ? (data['respondedAt'] as Timestamp).toDate()
+          : null,
       metadata: data['metadata'] != null
           ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
           : null,
@@ -45,28 +49,34 @@ class BudgetSuggestion {
   }
 
   /// Создать из Map
-  factory BudgetSuggestion.fromMap(Map<String, dynamic> data) => BudgetSuggestion(
-    id: data['id'] as String? ?? '',
-    bookingId: data['bookingId'] as String? ?? '',
-    customerId: data['customerId'] as String? ?? '',
-    specialistId: data['specialistId'] as String? ?? '',
-    suggestions:
-        (data['suggestions'] as List<dynamic>?)
-            ?.map((item) => BudgetSuggestionItem.fromMap(item as Map<String, dynamic>))
-            .toList() ??
-        [],
-    status: BudgetSuggestionStatus.values.firstWhere(
-      (e) => e.name == data['status'],
-      orElse: () => BudgetSuggestionStatus.pending,
-    ),
-    message: data['message'] as String?,
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-    viewedAt: data['viewedAt'] != null ? (data['viewedAt'] as Timestamp).toDate() : null,
-    respondedAt: data['respondedAt'] != null ? (data['respondedAt'] as Timestamp).toDate() : null,
-    metadata: data['metadata'] != null
-        ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
-        : null,
-  );
+  factory BudgetSuggestion.fromMap(Map<String, dynamic> data) =>
+      BudgetSuggestion(
+        id: data['id'] as String? ?? '',
+        bookingId: data['bookingId'] as String? ?? '',
+        customerId: data['customerId'] as String? ?? '',
+        specialistId: data['specialistId'] as String? ?? '',
+        suggestions: (data['suggestions'] as List<dynamic>?)
+                ?.map((item) =>
+                    BudgetSuggestionItem.fromMap(item as Map<String, dynamic>))
+                .toList() ??
+            [],
+        status: BudgetSuggestionStatus.values.firstWhere(
+          (e) => e.name == data['status'],
+          orElse: () => BudgetSuggestionStatus.pending,
+        ),
+        message: data['message'] as String?,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        viewedAt: data['viewedAt'] != null
+            ? (data['viewedAt'] as Timestamp).toDate()
+            : null,
+        respondedAt: data['respondedAt'] != null
+            ? (data['respondedAt'] as Timestamp).toDate()
+            : null,
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(
+                data['metadata'] as Map<dynamic, dynamic>)
+            : null,
+      );
   final String id;
   final String bookingId;
   final String customerId;
@@ -81,17 +91,18 @@ class BudgetSuggestion {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'bookingId': bookingId,
-    'customerId': customerId,
-    'specialistId': specialistId,
-    'suggestions': suggestions.map((item) => item.toMap()).toList(),
-    'status': status.name,
-    'message': message,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'viewedAt': viewedAt != null ? Timestamp.fromDate(viewedAt!) : null,
-    'respondedAt': respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
-    'metadata': metadata,
-  };
+        'bookingId': bookingId,
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'suggestions': suggestions.map((item) => item.toMap()).toList(),
+        'status': status.name,
+        'message': message,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'viewedAt': viewedAt != null ? Timestamp.fromDate(viewedAt!) : null,
+        'respondedAt':
+            respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   BudgetSuggestion copyWith({
@@ -106,19 +117,20 @@ class BudgetSuggestion {
     DateTime? viewedAt,
     DateTime? respondedAt,
     Map<String, dynamic>? metadata,
-  }) => BudgetSuggestion(
-    id: id ?? this.id,
-    bookingId: bookingId ?? this.bookingId,
-    customerId: customerId ?? this.customerId,
-    specialistId: specialistId ?? this.specialistId,
-    suggestions: suggestions ?? this.suggestions,
-    status: status ?? this.status,
-    message: message ?? this.message,
-    createdAt: createdAt ?? this.createdAt,
-    viewedAt: viewedAt ?? this.viewedAt,
-    respondedAt: respondedAt ?? this.respondedAt,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      BudgetSuggestion(
+        id: id ?? this.id,
+        bookingId: bookingId ?? this.bookingId,
+        customerId: customerId ?? this.customerId,
+        specialistId: specialistId ?? this.specialistId,
+        suggestions: suggestions ?? this.suggestions,
+        status: status ?? this.status,
+        message: message ?? this.message,
+        createdAt: createdAt ?? this.createdAt,
+        viewedAt: viewedAt ?? this.viewedAt,
+        respondedAt: respondedAt ?? this.respondedAt,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, можно ли ответить на предложение
   bool get canRespond => status == BudgetSuggestionStatus.pending;
@@ -130,7 +142,8 @@ class BudgetSuggestion {
   bool get isRejected => status == BudgetSuggestionStatus.rejected;
 
   /// Получить общую стоимость предложения
-  double get totalCost => suggestions.fold(0, (sum, item) => sum + (item.estimatedPrice ?? 0));
+  double get totalCost =>
+      suggestions.fold(0, (sum, item) => sum + (item.estimatedPrice ?? 0));
 
   /// Получить количество предложений
   int get suggestionCount => suggestions.length;
@@ -138,13 +151,17 @@ class BudgetSuggestion {
   /// Получить минимальную стоимость
   double get minCost {
     if (suggestions.isEmpty) return 0;
-    return suggestions.map((s) => s.estimatedPrice ?? 0).reduce((a, b) => a < b ? a : b);
+    return suggestions
+        .map((s) => s.estimatedPrice ?? 0)
+        .reduce((a, b) => a < b ? a : b);
   }
 
   /// Получить максимальную стоимость
   double get maxCost {
     if (suggestions.isEmpty) return 0;
-    return suggestions.map((s) => s.estimatedPrice ?? 0).reduce((a, b) => a > b ? a : b);
+    return suggestions
+        .map((s) => s.estimatedPrice ?? 0)
+        .reduce((a, b) => a > b ? a : b);
   }
 
   @override
@@ -165,17 +182,17 @@ class BudgetSuggestion {
 
   @override
   int get hashCode => Object.hash(
-    id,
-    bookingId,
-    customerId,
-    specialistId,
-    suggestions,
-    status,
-    message,
-    createdAt,
-    viewedAt,
-    respondedAt,
-  );
+        id,
+        bookingId,
+        customerId,
+        specialistId,
+        suggestions,
+        status,
+        message,
+        createdAt,
+        viewedAt,
+        respondedAt,
+      );
 
   @override
   String toString() =>
@@ -197,19 +214,21 @@ class BudgetSuggestionItem {
   });
 
   /// Создать из Map
-  factory BudgetSuggestionItem.fromMap(Map<String, dynamic> data) => BudgetSuggestionItem(
-    id: data['id'] as String? ?? '',
-    categoryId: data['categoryId'] as String? ?? '',
-    categoryName: data['categoryName'] as String? ?? '',
-    specialistId: data['specialistId'] as String?,
-    specialistName: data['specialistName'] as String?,
-    description: data['description'] as String? ?? '',
-    estimatedPrice: (data['estimatedPrice'] as num?)?.toDouble(),
-    reason: data['reason'] as String?,
-    metadata: data['metadata'] != null
-        ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
-        : null,
-  );
+  factory BudgetSuggestionItem.fromMap(Map<String, dynamic> data) =>
+      BudgetSuggestionItem(
+        id: data['id'] as String? ?? '',
+        categoryId: data['categoryId'] as String? ?? '',
+        categoryName: data['categoryName'] as String? ?? '',
+        specialistId: data['specialistId'] as String?,
+        specialistName: data['specialistName'] as String?,
+        description: data['description'] as String? ?? '',
+        estimatedPrice: (data['estimatedPrice'] as num?)?.toDouble(),
+        reason: data['reason'] as String?,
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(
+                data['metadata'] as Map<dynamic, dynamic>)
+            : null,
+      );
   final String id;
   final String categoryId;
   final String categoryName;
@@ -222,16 +241,16 @@ class BudgetSuggestionItem {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'categoryId': categoryId,
-    'categoryName': categoryName,
-    'specialistId': specialistId,
-    'specialistName': specialistName,
-    'description': description,
-    'estimatedPrice': estimatedPrice,
-    'reason': reason,
-    'metadata': metadata,
-  };
+        'id': id,
+        'categoryId': categoryId,
+        'categoryName': categoryName,
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'description': description,
+        'estimatedPrice': estimatedPrice,
+        'reason': reason,
+        'metadata': metadata,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -249,15 +268,15 @@ class BudgetSuggestionItem {
 
   @override
   int get hashCode => Object.hash(
-    id,
-    categoryId,
-    categoryName,
-    specialistId,
-    specialistName,
-    description,
-    estimatedPrice,
-    reason,
-  );
+        id,
+        categoryId,
+        categoryName,
+        specialistId,
+        specialistName,
+        description,
+        estimatedPrice,
+        reason,
+      );
 
   @override
   String toString() =>

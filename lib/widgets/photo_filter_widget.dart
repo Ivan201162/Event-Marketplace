@@ -26,7 +26,8 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController(text: widget.currentFilters.searchQuery ?? '');
+    _searchController =
+        TextEditingController(text: widget.currentFilters.searchQuery ?? '');
     _selectedTags = List.from(widget.currentFilters.selectedTags);
     _showPublicOnly = widget.currentFilters.showPublicOnly;
     _showByDate = widget.currentFilters.showByDate;
@@ -49,8 +50,10 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
               AppBar(
                 title: const Text('Фильтры фото'),
                 actions: [
-                  TextButton(onPressed: _clearFilters, child: const Text('Сбросить')),
-                  TextButton(onPressed: _applyFilters, child: const Text('Применить')),
+                  TextButton(
+                      onPressed: _clearFilters, child: const Text('Сбросить')),
+                  TextButton(
+                      onPressed: _applyFilters, child: const Text('Применить')),
                 ],
               ),
               Expanded(
@@ -74,8 +77,8 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
                       // Публичность
                       SwitchListTile(
                         title: const Text('Только публичные фото'),
-                        subtitle:
-                            const Text('Показать только фото, доступные другим пользователям'),
+                        subtitle: const Text(
+                            'Показать только фото, доступные другим пользователям'),
                         value: _showPublicOnly,
                         onChanged: (value) {
                           setState(() {
@@ -89,7 +92,8 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
                       // Фильтр по дате
                       SwitchListTile(
                         title: const Text('Фильтр по дате'),
-                        subtitle: const Text('Показать фото за определённый период'),
+                        subtitle:
+                            const Text('Показать фото за определённый период'),
                         value: _showByDate,
                         onChanged: (value) {
                           setState(() {
@@ -134,7 +138,8 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
 
                       // Теги
                       const Text('Теги',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
                       _buildTagFilters(),
                     ],
@@ -281,7 +286,9 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
 
   void _applyFilters() {
     final filters = PhotoFilters(
-      searchQuery: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
+      searchQuery: _searchController.text.trim().isEmpty
+          ? null
+          : _searchController.text.trim(),
       selectedTags: _selectedTags,
       showPublicOnly: _showPublicOnly,
       showByDate: _showByDate,

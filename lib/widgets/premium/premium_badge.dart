@@ -35,7 +35,8 @@ class PremiumBadge extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             _getBadgeText(),
-            style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
           ),
         ],
       ),

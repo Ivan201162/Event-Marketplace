@@ -61,7 +61,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   hintText: widget.hintText,
                   hintStyle: TextStyle(color: Colors.grey[500]),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 ),
               ),
             ),

@@ -14,14 +14,15 @@ class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
+  ConsumerState<NotificationsScreen> createState() =>
+      _NotificationsScreenState();
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   @override
   void initState() {
     super.initState();
@@ -47,7 +48,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
 
   Future<void> _markAsRead(String notificationId) async {
     try {
-      final notificationService = ref.read(NotificationProviders.notificationServiceProvider);
+      final notificationService =
+          ref.read(NotificationProviders.notificationServiceProvider);
       await notificationService.markNotificationAsRead(notificationId);
     } catch (e) {
       debugPrint('Error marking notification as read: $e');
@@ -56,7 +58,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
 
   Future<void> _deleteNotification(String notificationId) async {
     try {
-      final notificationService = ref.read(NotificationProviders.notificationServiceProvider);
+      final notificationService =
+          ref.read(NotificationProviders.notificationServiceProvider);
       await notificationService.deleteNotification(notificationId);
     } catch (e) {
       debugPrint('Error deleting notification: $e');
@@ -65,7 +68,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
 
   Future<void> _markAllAsRead() async {
     try {
-      final notificationService = ref.read(NotificationProviders.notificationServiceProvider);
+      final notificationService =
+          ref.read(NotificationProviders.notificationServiceProvider);
       await notificationService.markAllNotificationsAsRead();
     } catch (e) {
       debugPrint('Error marking all notifications as read: $e');
@@ -74,8 +78,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
 
   @override
   Widget build(BuildContext context) {
-    final notificationsAsync = ref.watch(NotificationProviders.userNotificationsProvider('current'));
-    
+    final notificationsAsync =
+        ref.watch(NotificationProviders.userNotificationsProvider('current'));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Уведомления'),
@@ -189,7 +194,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              ref.invalidate(NotificationProviders.userNotificationsProvider('current'));
+              ref.invalidate(
+                  NotificationProviders.userNotificationsProvider('current'));
             },
             child: const Text('Повторить'),
           ),
@@ -227,22 +233,23 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
       ),
       confirmDismiss: (direction) async {
         return await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Удалить уведомление?'),
-            content: const Text('Это действие нельзя отменить'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Отмена'),
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Удалить уведомление?'),
+                content: const Text('Это действие нельзя отменить'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Отмена'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('Удалить'),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Удалить'),
-              ),
-            ],
-          ),
-        ) ?? false;
+            ) ??
+            false;
       },
       onDismissed: (direction) {
         _deleteNotification(notification.id);
@@ -252,8 +259,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
         child: Material(
           elevation: notification.isRead ? 1 : 3,
           borderRadius: BorderRadius.circular(12),
-          color: notification.isRead 
-              ? Theme.of(context).cardColor 
+          color: notification.isRead
+              ? Theme.of(context).cardColor
               : Theme.of(context).primaryColor.withOpacity(0.1),
           child: InkWell(
             onTap: () {
@@ -272,7 +279,8 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: _getNotificationColor(notification.type).withOpacity(0.2),
+                      color: _getNotificationColor(notification.type)
+                          .withOpacity(0.2),
                       borderRadius: BorderRadius.circular(24),
                     ),
                     child: Icon(
@@ -282,7 +290,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                     ),
                   ),
                   const SizedBox(width: 12),
-                  
+
                   // Содержимое уведомления
                   Expanded(
                     child: Column(
@@ -292,8 +300,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                           notification.title,
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
-                            color: notification.isRead ? Colors.grey[600] : Colors.black,
+                            fontWeight: notification.isRead
+                                ? FontWeight.normal
+                                : FontWeight.bold,
+                            color: notification.isRead
+                                ? Colors.grey[600]
+                                : Colors.black,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -301,7 +313,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                           notification.message,
                           style: TextStyle(
                             fontSize: 14,
-                            color: notification.isRead ? Colors.grey[500] : Colors.grey[700],
+                            color: notification.isRead
+                                ? Colors.grey[500]
+                                : Colors.grey[700],
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -317,7 +331,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                       ],
                     ),
                   ),
-                  
+
                   // Индикатор непрочитанного
                   if (!notification.isRead)
                     Container(
@@ -397,7 +411,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays} дн. назад';
     } else if (difference.inHours > 0) {

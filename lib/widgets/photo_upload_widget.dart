@@ -8,7 +8,8 @@ import '../providers/customer_profile_extended_providers.dart';
 
 /// Виджет загрузки фото
 class PhotoUploadWidget extends ConsumerStatefulWidget {
-  const PhotoUploadWidget({super.key, required this.userId, required this.onPhotoAdded});
+  const PhotoUploadWidget(
+      {super.key, required this.userId, required this.onPhotoAdded});
   final String userId;
   final VoidCallback onPhotoAdded;
 
@@ -88,7 +89,8 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
                       // Публичность
                       SwitchListTile(
                         title: const Text('Публичное фото'),
-                        subtitle: const Text('Другие пользователи смогут видеть это фото'),
+                        subtitle: const Text(
+                            'Другие пользователи смогут видеть это фото'),
                         value: _isPublic,
                         onChanged: (value) {
                           setState(() {
@@ -118,9 +120,11 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
                 ? const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add_photo_alternate, size: 48, color: Colors.grey),
+                      Icon(Icons.add_photo_alternate,
+                          size: 48, color: Colors.grey),
                       SizedBox(height: 8),
-                      Text('Нажмите для выбора фото', style: TextStyle(color: Colors.grey)),
+                      Text('Нажмите для выбора фото',
+                          style: TextStyle(color: Colors.grey)),
                     ],
                   )
                 : const Column(
@@ -128,7 +132,8 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
                     children: [
                       Icon(Icons.check_circle, size: 48, color: Colors.green),
                       SizedBox(height: 8),
-                      Text('Фото выбрано', style: TextStyle(color: Colors.green)),
+                      Text('Фото выбрано',
+                          style: TextStyle(color: Colors.green)),
                     ],
                   ),
           ),
@@ -151,7 +156,8 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
   Widget _buildTagsSection() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Теги', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Теги',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
 
           // Поле ввода тегов
@@ -169,7 +175,8 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
               ),
               const SizedBox(width: 8),
               IconButton(
-                  onPressed: () => _addTag(_tagsController.text), icon: const Icon(Icons.add)),
+                  onPressed: () => _addTag(_tagsController.text),
+                  icon: const Icon(Icons.add)),
             ],
           ),
           const SizedBox(height: 8),
@@ -210,7 +217,8 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка выбора изображения: $e')));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка выбора изображения: $e')));
       }
     }
   }
@@ -246,7 +254,9 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
       final photo = await service.addInspirationPhoto(
         userId: widget.userId,
         imageFile: _selectedImage!,
-        caption: _captionController.text.trim().isEmpty ? null : _captionController.text.trim(),
+        caption: _captionController.text.trim().isEmpty
+            ? null
+            : _captionController.text.trim(),
         tags: _tags,
         isPublic: _isPublic,
       );
@@ -257,14 +267,16 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
           widget.onPhotoAdded();
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('Фото успешно загружено')));
+          ).showSnackBar(
+              const SnackBar(content: Text('Фото успешно загружено')));
         }
       } else {
         throw Exception('Не удалось загрузить фото');
       }
     } on Exception catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e')));
       }
     } finally {
       setState(() {

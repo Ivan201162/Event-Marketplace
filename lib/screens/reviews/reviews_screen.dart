@@ -11,13 +11,15 @@ class ReviewsScreen extends ConsumerStatefulWidget {
   final String specialistId;
   final String specialistName;
 
-  const ReviewsScreen({super.key, required this.specialistId, required this.specialistName});
+  const ReviewsScreen(
+      {super.key, required this.specialistId, required this.specialistName});
 
   @override
   ConsumerState<ReviewsScreen> createState() => _ReviewsScreenState();
 }
 
-class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTickerProviderStateMixin {
+class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String _sortBy = 'newest';
   int _filterRating = 0; // 0 = all, 1-5 = specific rating
@@ -48,13 +50,19 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           ],
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
+          IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog),
           IconButton(icon: const Icon(Icons.sort), onPressed: _showSortDialog),
         ],
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [_buildAllReviewsTab(), _buildReviewsWithPhotosTab(), _buildStatisticsTab()],
+        children: [
+          _buildAllReviewsTab(),
+          _buildReviewsWithPhotosTab(),
+          _buildStatisticsTab()
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _writeReview,
@@ -64,7 +72,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
   }
 
   Widget _buildAllReviewsTab() {
-    final reviewsAsync = ref.watch(specialistReviewsStreamProvider(widget.specialistId));
+    final reviewsAsync =
+        ref.watch(specialistReviewsStreamProvider(widget.specialistId));
 
     return reviewsAsync.when(
       data: (reviews) {
@@ -76,7 +85,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(specialistReviewsStreamProvider(widget.specialistId));
+            ref.invalidate(
+                specialistReviewsStreamProvider(widget.specialistId));
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -100,7 +110,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           children: [
             const Icon(Icons.error_outline, size: 80, color: Colors.red),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки отзывов', style: TextStyle(fontSize: 18, color: Colors.red[700])),
+            Text('Ошибка загрузки отзывов',
+                style: TextStyle(fontSize: 18, color: Colors.red[700])),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -110,7 +121,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(specialistReviewsStreamProvider(widget.specialistId));
+                ref.invalidate(
+                    specialistReviewsStreamProvider(widget.specialistId));
               },
               child: const Text('Повторить'),
             ),
@@ -121,7 +133,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
   }
 
   Widget _buildReviewsWithPhotosTab() {
-    final reviewsAsync = ref.watch(reviewsWithImagesStreamProvider(widget.specialistId));
+    final reviewsAsync =
+        ref.watch(reviewsWithImagesStreamProvider(widget.specialistId));
 
     return reviewsAsync.when(
       data: (reviews) {
@@ -130,11 +143,15 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.photo_library_outlined, size: 80, color: Colors.grey),
+                Icon(Icons.photo_library_outlined,
+                    size: 80, color: Colors.grey),
                 SizedBox(height: 16),
                 Text(
                   'Нет отзывов с фото',
-                  style: TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500),
                 ),
                 SizedBox(height: 8),
                 Text(
@@ -148,7 +165,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(reviewsWithImagesStreamProvider(widget.specialistId));
+            ref.invalidate(
+                reviewsWithImagesStreamProvider(widget.specialistId));
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -172,7 +190,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           children: [
             const Icon(Icons.error_outline, size: 80, color: Colors.red),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки отзывов', style: TextStyle(fontSize: 18, color: Colors.red[700])),
+            Text('Ошибка загрузки отзывов',
+                style: TextStyle(fontSize: 18, color: Colors.red[700])),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -182,7 +201,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(reviewsWithImagesStreamProvider(widget.specialistId));
+                ref.invalidate(
+                    reviewsWithImagesStreamProvider(widget.specialistId));
               },
               child: const Text('Повторить'),
             ),
@@ -193,7 +213,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
   }
 
   Widget _buildStatisticsTab() {
-    final statsAsync = ref.watch(specialistReviewStatsProvider(widget.specialistId));
+    final statsAsync =
+        ref.watch(specialistReviewStatsProvider(widget.specialistId));
 
     return statsAsync.when(
       data: (stats) {
@@ -224,7 +245,9 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(5, (index) {
                           return Icon(
-                            index < averageRating.floor() ? Icons.star : Icons.star_border,
+                            index < averageRating.floor()
+                                ? Icons.star
+                                : Icons.star_border,
                             color: Colors.orange,
                             size: 24,
                           );
@@ -251,13 +274,16 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
                     children: [
                       const Text(
                         'Распределение оценок',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       ...List.generate(5, (index) {
                         final rating = 5 - index;
                         final count = ratingDistribution[rating] ?? 0;
-                        final percentage = totalReviews > 0 ? (count / totalReviews * 100) : 0.0;
+                        final percentage = totalReviews > 0
+                            ? (count / totalReviews * 100)
+                            : 0.0;
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4),
@@ -265,12 +291,14 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
                             children: [
                               Text(
                                 '$rating',
-                                style: const TextStyle(fontWeight: FontWeight.w500),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
                                 textAlign: TextAlign.center,
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(width: 8),
-                              const Icon(Icons.star, color: Colors.orange, size: 16),
+                              const Icon(Icons.star,
+                                  color: Colors.orange, size: 16),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: LinearProgressIndicator(
@@ -322,7 +350,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(specialistReviewStatsProvider(widget.specialistId));
+                ref.invalidate(
+                    specialistReviewStatsProvider(widget.specialistId));
               },
               child: const Text('Повторить'),
             ),
@@ -341,10 +370,12 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
           SizedBox(height: 16),
           Text(
             'Пока нет отзывов',
-            style: TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 8),
-          Text('Будьте первым, кто оставит отзыв!', style: TextStyle(color: Colors.grey)),
+          Text('Будьте первым, кто оставит отзыв!',
+              style: TextStyle(color: Colors.grey)),
         ],
       ),
     );
@@ -355,7 +386,9 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
 
     // Filter by rating
     if (_filterRating > 0) {
-      filteredReviews = filteredReviews.where((review) => review.rating == _filterRating).toList();
+      filteredReviews = filteredReviews
+          .where((review) => review.rating == _filterRating)
+          .toList();
     }
 
     // Sort reviews
@@ -504,12 +537,14 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
     // TODO: Navigate to write review screen
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Написание отзыва пока не реализовано')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Написание отзыва пока не реализовано')));
   }
 
   void _showReviewDetails(Review review) {
     // TODO: Show review details
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Отзыв: ${review.text}')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Отзыв: ${review.text}')));
   }
 
   void _toggleLike(Review review) {
@@ -517,7 +552,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
     if (currentUser == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Войдите в аккаунт для лайков')));
+      ).showSnackBar(
+          const SnackBar(content: Text('Войдите в аккаунт для лайков')));
       return;
     }
 
@@ -529,7 +565,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
     // TODO: Reply to review
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Ответ на отзыв пока не реализован')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Ответ на отзыв пока не реализован')));
   }
 
   Color _getRatingColor(int rating) {

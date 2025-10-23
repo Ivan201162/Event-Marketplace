@@ -25,26 +25,26 @@ class PricingRule {
   });
 
   factory PricingRule.fromMap(Map<String, dynamic> map) => PricingRule(
-    id: map['id'] ?? '',
-    serviceType: ServiceType.values.firstWhere(
-      (e) => e.toString() == 'ServiceType.${map['serviceType']}',
-      orElse: () => ServiceType.subscription,
-    ),
-    basePrice: (map['basePrice'] ?? 0.0).toDouble(),
-    isActive: map['isActive'] ?? true,
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    demandFactor: (map['demandFactor'] ?? 1.0).toDouble(),
-    timeFactor: (map['timeFactor'] ?? 1.0).toDouble(),
-    regionFactor: (map['regionFactor'] ?? 1.0).toDouble(),
-    seasonFactor: (map['seasonFactor'] ?? 1.0).toDouble(),
-    userTierFactor: (map['userTierFactor'] ?? 1.0).toDouble(),
-    competitionFactor: (map['competitionFactor'] ?? 1.0).toDouble(),
-    minPrice: map['minPrice']?.toDouble(),
-    maxPrice: map['maxPrice']?.toDouble(),
-    description: map['description'],
-    conditions: Map<String, dynamic>.from(map['conditions'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        serviceType: ServiceType.values.firstWhere(
+          (e) => e.toString() == 'ServiceType.${map['serviceType']}',
+          orElse: () => ServiceType.subscription,
+        ),
+        basePrice: (map['basePrice'] ?? 0.0).toDouble(),
+        isActive: map['isActive'] ?? true,
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        demandFactor: (map['demandFactor'] ?? 1.0).toDouble(),
+        timeFactor: (map['timeFactor'] ?? 1.0).toDouble(),
+        regionFactor: (map['regionFactor'] ?? 1.0).toDouble(),
+        seasonFactor: (map['seasonFactor'] ?? 1.0).toDouble(),
+        userTierFactor: (map['userTierFactor'] ?? 1.0).toDouble(),
+        competitionFactor: (map['competitionFactor'] ?? 1.0).toDouble(),
+        minPrice: map['minPrice']?.toDouble(),
+        maxPrice: map['maxPrice']?.toDouble(),
+        description: map['description'],
+        conditions: Map<String, dynamic>.from(map['conditions'] ?? {}),
+      );
 
   final String id;
   final ServiceType serviceType;
@@ -100,23 +100,23 @@ class PricingRule {
   }
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'serviceType': serviceType.toString().split('.').last,
-    'basePrice': basePrice,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'demandFactor': demandFactor,
-    'timeFactor': timeFactor,
-    'regionFactor': regionFactor,
-    'seasonFactor': seasonFactor,
-    'userTierFactor': userTierFactor,
-    'competitionFactor': competitionFactor,
-    'minPrice': minPrice,
-    'maxPrice': maxPrice,
-    'description': description,
-    'conditions': conditions,
-  };
+        'id': id,
+        'serviceType': serviceType.toString().split('.').last,
+        'basePrice': basePrice,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'demandFactor': demandFactor,
+        'timeFactor': timeFactor,
+        'regionFactor': regionFactor,
+        'seasonFactor': seasonFactor,
+        'userTierFactor': userTierFactor,
+        'competitionFactor': competitionFactor,
+        'minPrice': minPrice,
+        'maxPrice': maxPrice,
+        'description': description,
+        'conditions': conditions,
+      };
 
   PricingRule copyWith({
     String? id,
@@ -135,24 +135,25 @@ class PricingRule {
     double? maxPrice,
     String? description,
     Map<String, dynamic>? conditions,
-  }) => PricingRule(
-    id: id ?? this.id,
-    serviceType: serviceType ?? this.serviceType,
-    basePrice: basePrice ?? this.basePrice,
-    isActive: isActive ?? this.isActive,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    demandFactor: demandFactor ?? this.demandFactor,
-    timeFactor: timeFactor ?? this.timeFactor,
-    regionFactor: regionFactor ?? this.regionFactor,
-    seasonFactor: seasonFactor ?? this.seasonFactor,
-    userTierFactor: userTierFactor ?? this.userTierFactor,
-    competitionFactor: competitionFactor ?? this.competitionFactor,
-    minPrice: minPrice ?? this.minPrice,
-    maxPrice: maxPrice ?? this.maxPrice,
-    description: description ?? this.description,
-    conditions: conditions ?? this.conditions,
-  );
+  }) =>
+      PricingRule(
+        id: id ?? this.id,
+        serviceType: serviceType ?? this.serviceType,
+        basePrice: basePrice ?? this.basePrice,
+        isActive: isActive ?? this.isActive,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        demandFactor: demandFactor ?? this.demandFactor,
+        timeFactor: timeFactor ?? this.timeFactor,
+        regionFactor: regionFactor ?? this.regionFactor,
+        seasonFactor: seasonFactor ?? this.seasonFactor,
+        userTierFactor: userTierFactor ?? this.userTierFactor,
+        competitionFactor: competitionFactor ?? this.competitionFactor,
+        minPrice: minPrice ?? this.minPrice,
+        maxPrice: maxPrice ?? this.maxPrice,
+        description: description ?? this.description,
+        conditions: conditions ?? this.conditions,
+      );
 }
 
 class DemandMetrics {
@@ -169,19 +170,19 @@ class DemandMetrics {
   });
 
   factory DemandMetrics.fromMap(Map<String, dynamic> map) => DemandMetrics(
-    id: map['id'] ?? '',
-    region: map['region'] ?? '',
-    serviceType: ServiceType.values.firstWhere(
-      (e) => e.toString() == 'ServiceType.${map['serviceType']}',
-      orElse: () => ServiceType.subscription,
-    ),
-    activeUsers: map['activeUsers'] ?? 0,
-    requestsCount: map['requestsCount'] ?? 0,
-    availableSlots: map['availableSlots'] ?? 0,
-    timestamp: (map['timestamp'] as Timestamp).toDate(),
-    demandLevel: (map['demandLevel'] ?? 1.0).toDouble(),
-    competitionLevel: (map['competitionLevel'] ?? 1.0).toDouble(),
-  );
+        id: map['id'] ?? '',
+        region: map['region'] ?? '',
+        serviceType: ServiceType.values.firstWhere(
+          (e) => e.toString() == 'ServiceType.${map['serviceType']}',
+          orElse: () => ServiceType.subscription,
+        ),
+        activeUsers: map['activeUsers'] ?? 0,
+        requestsCount: map['requestsCount'] ?? 0,
+        availableSlots: map['availableSlots'] ?? 0,
+        timestamp: (map['timestamp'] as Timestamp).toDate(),
+        demandLevel: (map['demandLevel'] ?? 1.0).toDouble(),
+        competitionLevel: (map['competitionLevel'] ?? 1.0).toDouble(),
+      );
 
   final String id;
   final String region;
@@ -205,16 +206,16 @@ class DemandMetrics {
   }
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'region': region,
-    'serviceType': serviceType.toString().split('.').last,
-    'activeUsers': activeUsers,
-    'requestsCount': requestsCount,
-    'availableSlots': availableSlots,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'demandLevel': demandLevel,
-    'competitionLevel': competitionLevel,
-  };
+        'id': id,
+        'region': region,
+        'serviceType': serviceType.toString().split('.').last,
+        'activeUsers': activeUsers,
+        'requestsCount': requestsCount,
+        'availableSlots': availableSlots,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'demandLevel': demandLevel,
+        'competitionLevel': competitionLevel,
+      };
 }
 
 class PricingHistory {
@@ -231,19 +232,19 @@ class PricingHistory {
   });
 
   factory PricingHistory.fromMap(Map<String, dynamic> map) => PricingHistory(
-    id: map['id'] ?? '',
-    serviceType: ServiceType.values.firstWhere(
-      (e) => e.toString() == 'ServiceType.${map['serviceType']}',
-      orElse: () => ServiceType.subscription,
-    ),
-    region: map['region'] ?? '',
-    basePrice: (map['basePrice'] ?? 0.0).toDouble(),
-    finalPrice: (map['finalPrice'] ?? 0.0).toDouble(),
-    factors: Map<String, dynamic>.from(map['factors'] ?? {}),
-    timestamp: (map['timestamp'] as Timestamp).toDate(),
-    userId: map['userId'],
-    transactionId: map['transactionId'],
-  );
+        id: map['id'] ?? '',
+        serviceType: ServiceType.values.firstWhere(
+          (e) => e.toString() == 'ServiceType.${map['serviceType']}',
+          orElse: () => ServiceType.subscription,
+        ),
+        region: map['region'] ?? '',
+        basePrice: (map['basePrice'] ?? 0.0).toDouble(),
+        finalPrice: (map['finalPrice'] ?? 0.0).toDouble(),
+        factors: Map<String, dynamic>.from(map['factors'] ?? {}),
+        timestamp: (map['timestamp'] as Timestamp).toDate(),
+        userId: map['userId'],
+        transactionId: map['transactionId'],
+      );
 
   final String id;
   final ServiceType serviceType;
@@ -262,16 +263,16 @@ class PricingHistory {
   }
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'serviceType': serviceType.toString().split('.').last,
-    'region': region,
-    'basePrice': basePrice,
-    'finalPrice': finalPrice,
-    'factors': factors,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'userId': userId,
-    'transactionId': transactionId,
-  };
+        'id': id,
+        'serviceType': serviceType.toString().split('.').last,
+        'region': region,
+        'basePrice': basePrice,
+        'finalPrice': finalPrice,
+        'factors': factors,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'userId': userId,
+        'transactionId': transactionId,
+      };
 }
 
 class RegionalPricing {
@@ -287,15 +288,15 @@ class RegionalPricing {
   });
 
   factory RegionalPricing.fromMap(Map<String, dynamic> map) => RegionalPricing(
-    id: map['id'] ?? '',
-    region: map['region'] ?? '',
-    country: map['country'] ?? '',
-    currency: map['currency'] ?? 'RUB',
-    exchangeRate: (map['exchangeRate'] ?? 1.0).toDouble(),
-    economicFactor: (map['economicFactor'] ?? 1.0).toDouble(),
-    isActive: map['isActive'] ?? true,
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-  );
+        id: map['id'] ?? '',
+        region: map['region'] ?? '',
+        country: map['country'] ?? '',
+        currency: map['currency'] ?? 'RUB',
+        exchangeRate: (map['exchangeRate'] ?? 1.0).toDouble(),
+        economicFactor: (map['economicFactor'] ?? 1.0).toDouble(),
+        isActive: map['isActive'] ?? true,
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      );
 
   final String id;
   final String region;
@@ -307,13 +308,13 @@ class RegionalPricing {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'region': region,
-    'country': country,
-    'currency': currency,
-    'exchangeRate': exchangeRate,
-    'economicFactor': economicFactor,
-    'isActive': isActive,
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'id': id,
+        'region': region,
+        'country': country,
+        'currency': currency,
+        'exchangeRate': exchangeRate,
+        'economicFactor': economicFactor,
+        'isActive': isActive,
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 }

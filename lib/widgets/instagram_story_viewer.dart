@@ -19,7 +19,8 @@ class InstagramStoryViewer extends StatefulWidget {
   State<InstagramStoryViewer> createState() => _InstagramStoryViewerState();
 }
 
-class _InstagramStoryViewerState extends State<InstagramStoryViewer> with TickerProviderStateMixin {
+class _InstagramStoryViewerState extends State<InstagramStoryViewer>
+    with TickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
@@ -34,12 +35,14 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer> with Ticker
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: _currentIndex);
 
-    _progressController = AnimationController(duration: const Duration(seconds: 5), vsync: this);
+    _progressController =
+        AnimationController(duration: const Duration(seconds: 5), vsync: this);
 
     _progressAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(parent: _progressController, curve: Curves.linear));
+    ).animate(
+        CurvedAnimation(parent: _progressController, curve: Curves.linear));
 
     _startProgress();
   }
@@ -128,7 +131,8 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer> with Ticker
             (index) => Expanded(
               child: Container(
                 height: 3,
-                margin: EdgeInsets.only(right: index < widget.stories.length - 1 ? 4 : 0),
+                margin: EdgeInsets.only(
+                    right: index < widget.stories.length - 1 ? 4 : 0),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
@@ -172,8 +176,8 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer> with Ticker
               child: Image.network(
                 story.mediaUrl,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) =>
-                    const Center(child: Icon(Icons.image, color: Colors.white, size: 100)),
+                errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.image, color: Colors.white, size: 100)),
               ),
             ),
 
@@ -189,8 +193,9 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer> with Ticker
                     color: Colors.black.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child:
-                      Text(story.text, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                  child: Text(story.text,
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 16)),
                 ),
               ),
           ],
@@ -211,7 +216,8 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer> with Ticker
           ),
         ),
         body: const Center(
-          child: Text('Сторис не найдены', style: TextStyle(color: Colors.white)),
+          child:
+              Text('Сторис не найдены', style: TextStyle(color: Colors.white)),
         ),
       );
     }
@@ -249,7 +255,8 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer> with Ticker
                   children: [
                     _buildProgressIndicator(),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       child: Row(
                         children: [
                           // Аватар специалиста
@@ -276,8 +283,10 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer> with Ticker
                           ),
                           // Время
                           Text(
-                            _formatTime(widget.stories[_currentIndex].createdAt),
-                            style: const TextStyle(color: Colors.white70, fontSize: 12),
+                            _formatTime(
+                                widget.stories[_currentIndex].createdAt),
+                            style: const TextStyle(
+                                color: Colors.white70, fontSize: 12),
                           ),
                           const SizedBox(width: 8),
                           // Кнопка закрытия
@@ -295,7 +304,9 @@ class _InstagramStoryViewerState extends State<InstagramStoryViewer> with Ticker
 
             // Индикатор паузы
             if (_isPaused)
-              const Center(child: Icon(Icons.pause_circle_filled, color: Colors.white, size: 60)),
+              const Center(
+                  child: Icon(Icons.pause_circle_filled,
+                      color: Colors.white, size: 60)),
           ],
         ),
       ),

@@ -38,18 +38,19 @@ class SubscriptionNotification {
     DateTime? createdAt,
     bool? isRead,
     String? specialistPhotoUrl,
-  }) => SubscriptionNotification(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    specialistId: specialistId ?? this.specialistId,
-    type: type ?? this.type,
-    title: title ?? this.title,
-    body: body ?? this.body,
-    data: data ?? this.data,
-    createdAt: createdAt ?? this.createdAt,
-    isRead: isRead ?? this.isRead,
-    specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
-  );
+  }) =>
+      SubscriptionNotification(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        specialistId: specialistId ?? this.specialistId,
+        type: type ?? this.type,
+        title: title ?? this.title,
+        body: body ?? this.body,
+        data: data ?? this.data,
+        createdAt: createdAt ?? this.createdAt,
+        isRead: isRead ?? this.isRead,
+        specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
+      );
 
   @override
   bool operator ==(Object other) {

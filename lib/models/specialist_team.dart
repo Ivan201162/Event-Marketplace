@@ -41,7 +41,8 @@ class SpecialistTeam {
       id: doc.id,
       organizerId: data['organizerId'] as String? ?? '',
       eventId: data['eventId'] as String? ?? '',
-      specialists: List<String>.from(data['specialists'] as List<dynamic>? ?? []),
+      specialists:
+          List<String>.from(data['specialists'] as List<dynamic>? ?? []),
       status: TeamStatus.values.firstWhere(
         (e) => e.name == data['status'],
         orElse: () => TeamStatus.draft,
@@ -49,19 +50,26 @@ class SpecialistTeam {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       eventTitle: data['eventTitle'] as String?,
-      eventDate: data['eventDate'] != null ? (data['eventDate'] as Timestamp).toDate() : null,
+      eventDate: data['eventDate'] != null
+          ? (data['eventDate'] as Timestamp).toDate()
+          : null,
       eventLocation: data['eventLocation'] as String?,
       totalPrice: (data['totalPrice'] as num?)?.toDouble(),
       notes: data['notes'] as String?,
-      confirmedAt: data['confirmedAt'] != null ? (data['confirmedAt'] as Timestamp).toDate() : null,
-      rejectedAt: data['rejectedAt'] != null ? (data['rejectedAt'] as Timestamp).toDate() : null,
+      confirmedAt: data['confirmedAt'] != null
+          ? (data['confirmedAt'] as Timestamp).toDate()
+          : null,
+      rejectedAt: data['rejectedAt'] != null
+          ? (data['rejectedAt'] as Timestamp).toDate()
+          : null,
       rejectionReason: data['rejectionReason'] as String?,
       teamName: data['teamName'] as String?,
       description: data['description'] as String?,
       specialistRoles: Map<String, String>.from(
         data['specialistRoles'] as Map<dynamic, dynamic>? ?? {},
       ),
-      paymentSplit: Map<String, double>.from(data['paymentSplit'] as Map<dynamic, dynamic>? ?? {}),
+      paymentSplit: Map<String, double>.from(
+          data['paymentSplit'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
@@ -87,25 +95,27 @@ class SpecialistTeam {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'organizerId': organizerId,
-    'eventId': eventId,
-    'specialists': specialists,
-    'status': status.name,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'eventTitle': eventTitle,
-    'eventDate': eventDate != null ? Timestamp.fromDate(eventDate!) : null,
-    'eventLocation': eventLocation,
-    'totalPrice': totalPrice,
-    'notes': notes,
-    'confirmedAt': confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
-    'rejectedAt': rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
-    'rejectionReason': rejectionReason,
-    'teamName': teamName,
-    'description': description,
-    'specialistRoles': specialistRoles,
-    'paymentSplit': paymentSplit,
-  };
+        'organizerId': organizerId,
+        'eventId': eventId,
+        'specialists': specialists,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'eventTitle': eventTitle,
+        'eventDate': eventDate != null ? Timestamp.fromDate(eventDate!) : null,
+        'eventLocation': eventLocation,
+        'totalPrice': totalPrice,
+        'notes': notes,
+        'confirmedAt':
+            confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
+        'rejectedAt':
+            rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
+        'rejectionReason': rejectionReason,
+        'teamName': teamName,
+        'description': description,
+        'specialistRoles': specialistRoles,
+        'paymentSplit': paymentSplit,
+      };
 
   /// Создать копию с изменениями
   SpecialistTeam copyWith({
@@ -128,27 +138,28 @@ class SpecialistTeam {
     String? description,
     Map<String, String>? specialistRoles,
     Map<String, double>? paymentSplit,
-  }) => SpecialistTeam(
-    id: id ?? this.id,
-    organizerId: organizerId ?? this.organizerId,
-    eventId: eventId ?? this.eventId,
-    specialists: specialists ?? this.specialists,
-    status: status ?? this.status,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    eventTitle: eventTitle ?? this.eventTitle,
-    eventDate: eventDate ?? this.eventDate,
-    eventLocation: eventLocation ?? this.eventLocation,
-    totalPrice: totalPrice ?? this.totalPrice,
-    notes: notes ?? this.notes,
-    confirmedAt: confirmedAt ?? this.confirmedAt,
-    rejectedAt: rejectedAt ?? this.rejectedAt,
-    rejectionReason: rejectionReason ?? this.rejectionReason,
-    teamName: teamName ?? this.teamName,
-    description: description ?? this.description,
-    specialistRoles: specialistRoles ?? this.specialistRoles,
-    paymentSplit: paymentSplit ?? this.paymentSplit,
-  );
+  }) =>
+      SpecialistTeam(
+        id: id ?? this.id,
+        organizerId: organizerId ?? this.organizerId,
+        eventId: eventId ?? this.eventId,
+        specialists: specialists ?? this.specialists,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        eventTitle: eventTitle ?? this.eventTitle,
+        eventDate: eventDate ?? this.eventDate,
+        eventLocation: eventLocation ?? this.eventLocation,
+        totalPrice: totalPrice ?? this.totalPrice,
+        notes: notes ?? this.notes,
+        confirmedAt: confirmedAt ?? this.confirmedAt,
+        rejectedAt: rejectedAt ?? this.rejectedAt,
+        rejectionReason: rejectionReason ?? this.rejectionReason,
+        teamName: teamName ?? this.teamName,
+        description: description ?? this.description,
+        specialistRoles: specialistRoles ?? this.specialistRoles,
+        paymentSplit: paymentSplit ?? this.paymentSplit,
+      );
 
   /// Проверить, является ли команда активной
   bool get isActive => status == TeamStatus.active;
@@ -166,16 +177,20 @@ class SpecialistTeam {
   int get specialistCount => specialists.length;
 
   /// Проверить, содержит ли команда специалиста
-  bool containsSpecialist(String specialistId) => specialists.contains(specialistId);
+  bool containsSpecialist(String specialistId) =>
+      specialists.contains(specialistId);
 
   /// Получить роль специалиста в команде
-  String? getSpecialistRole(String specialistId) => specialistRoles[specialistId];
+  String? getSpecialistRole(String specialistId) =>
+      specialistRoles[specialistId];
 
   /// Получить долю оплаты специалиста
-  double getSpecialistPayment(String specialistId) => paymentSplit[specialistId] ?? 0.0;
+  double getSpecialistPayment(String specialistId) =>
+      paymentSplit[specialistId] ?? 0.0;
 
   /// Получить общую сумму оплаты
-  double get totalPaymentAmount => paymentSplit.values.fold(0, (sum, amount) => sum + amount);
+  double get totalPaymentAmount =>
+      paymentSplit.values.fold(0, (sum, amount) => sum + amount);
 
   @override
   bool operator ==(Object other) {

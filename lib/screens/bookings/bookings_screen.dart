@@ -48,7 +48,9 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
           ],
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
+          IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
@@ -60,7 +62,8 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
       body: currentUserAsync.when(
         data: (user) {
           if (user == null) {
-            return const Center(child: Text('Войдите в аккаунт для просмотра бронирований'));
+            return const Center(
+                child: Text('Войдите в аккаунт для просмотра бронирований'));
           }
 
           return TabBarView(
@@ -105,7 +108,8 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
         onPressed: () {
           // TODO: Navigate to create booking
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Создание бронирования пока не реализовано')),
+            const SnackBar(
+                content: Text('Создание бронирования пока не реализовано')),
           );
         },
         child: const Icon(Icons.add),
@@ -118,7 +122,8 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
 
     return bookingsAsync.when(
       data: (allBookings) {
-        final bookings = allBookings.where((booking) => booking.status == status).toList();
+        final bookings =
+            allBookings.where((booking) => booking.status == status).toList();
 
         if (bookings.isEmpty) {
           return _buildEmptyState(status);
@@ -136,7 +141,8 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
               return BookingCard(
                 booking: booking,
                 onTap: () => _showBookingDetails(booking),
-                onStatusChange: (newStatus) => _updateBookingStatus(booking, newStatus),
+                onStatusChange: (newStatus) =>
+                    _updateBookingStatus(booking, newStatus),
                 onEdit: () => _editBooking(booking),
                 onDelete: () => _deleteBooking(booking),
               );
@@ -214,7 +220,8 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
           const SizedBox(height: 16),
           Text(
             title,
-            style: const TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+                fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
           Text(
@@ -312,18 +319,22 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                               children: [
                                 Text(
                                   booking.service,
-                                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   'Клиент: ${booking.clientName}',
-                                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.grey[600], fontSize: 16),
                                 ),
                               ],
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                               color: _getStatusColor(booking.status),
                               borderRadius: BorderRadius.circular(20),
@@ -344,14 +355,16 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                       // Details
                       _buildDetailRow('Дата', booking.formattedDate),
                       _buildDetailRow('Время', booking.formattedTime),
-                      _buildDetailRow('Длительность', booking.formattedDuration),
+                      _buildDetailRow(
+                          'Длительность', booking.formattedDuration),
                       _buildDetailRow('Стоимость', booking.formattedPrice),
 
                       if (booking.notes.isNotEmpty) ...[
                         const SizedBox(height: 16),
                         const Text(
                           'Примечания',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Text(booking.notes),
@@ -378,7 +391,8 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                     if (booking.canBeConfirmed)
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () => _updateBookingStatus(booking, BookingStatus.confirmed),
+                          onPressed: () => _updateBookingStatus(
+                              booking, BookingStatus.confirmed),
                           child: const Text('Подтвердить'),
                         ),
                       ),
@@ -386,14 +400,16 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                     if (booking.canBeCompleted)
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () => _updateBookingStatus(booking, BookingStatus.completed),
+                          onPressed: () => _updateBookingStatus(
+                              booking, BookingStatus.completed),
                           child: const Text('Завершить'),
                         ),
                       ),
                     if (booking.canBeCancelled)
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () => _updateBookingStatus(booking, BookingStatus.cancelled),
+                          onPressed: () => _updateBookingStatus(
+                              booking, BookingStatus.cancelled),
                           child: const Text('Отменить'),
                         ),
                       ),
@@ -415,10 +431,13 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
         children: [
           SizedBox(
             width: 120,
-            child: Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+            child: Text(label,
+                style: TextStyle(color: Colors.grey[600], fontSize: 14)),
           ),
           Expanded(
-            child: Text(value, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+            child: Text(value,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
           ),
         ],
       ),
@@ -449,12 +468,14 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
       if (success) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Статус изменен на: ${newStatus.displayName}')));
+        ).showSnackBar(SnackBar(
+            content: Text('Статус изменен на: ${newStatus.displayName}')));
         Navigator.of(context).pop();
       } else {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Ошибка при изменении статуса')));
+        ).showSnackBar(
+            const SnackBar(content: Text('Ошибка при изменении статуса')));
       }
     });
   }
@@ -462,7 +483,8 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
   void _editBooking(Booking booking) {
     // TODO: Navigate to edit booking screen
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Редактирование бронирования пока не реализовано')),
+      const SnackBar(
+          content: Text('Редактирование бронирования пока не реализовано')),
     );
   }
 
@@ -473,7 +495,9 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
         title: const Text('Удалить бронирование'),
         content: const Text('Вы уверены, что хотите удалить это бронирование?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               final bookingService = ref.read(bookingServiceProvider);
@@ -481,12 +505,14 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen>
                 if (success) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Бронирование удалено')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Бронирование удалено')));
                   Navigator.of(context).pop();
                 } else {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Ошибка при удалении бронирования')));
+                  ).showSnackBar(const SnackBar(
+                      content: Text('Ошибка при удалении бронирования')));
                 }
               });
             },

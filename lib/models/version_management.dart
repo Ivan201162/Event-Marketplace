@@ -37,7 +37,8 @@ class AppVersion {
       description: data['description'] as String?,
       features: List<String>.from(data['features'] as List<dynamic>? ?? []),
       bugFixes: List<String>.from(data['bugFixes'] as List<dynamic>? ?? []),
-      breakingChanges: List<String>.from(data['breakingChanges'] as List<dynamic>? ?? []),
+      breakingChanges:
+          List<String>.from(data['breakingChanges'] as List<dynamic>? ?? []),
       isForced: data['isForced'] as bool? ?? false,
       isAvailable: data['isAvailable'] as bool? ?? true,
       downloadUrl: data['downloadUrl'] as String?,
@@ -53,29 +54,29 @@ class AppVersion {
 
   /// Создать из Map
   factory AppVersion.fromMap(Map<String, dynamic> data) => AppVersion(
-    id: data['id'] ?? '',
-    version: data['version'] ?? '',
-    buildNumber: data['buildNumber'] ?? '',
-    platform: data['platform'] ?? '',
-    type: VersionType.values.firstWhere(
-      (e) => e.toString().split('.').last == data['type'],
-      orElse: () => VersionType.release,
-    ),
-    description: data['description'],
-    features: List<String>.from(data['features'] ?? []),
-    bugFixes: List<String>.from(data['bugFixes'] ?? []),
-    breakingChanges: List<String>.from(data['breakingChanges'] ?? []),
-    isForced: data['isForced'] as bool? ?? false,
-    isAvailable: data['isAvailable'] as bool? ?? true,
-    downloadUrl: data['downloadUrl'],
-    releaseNotes: data['releaseNotes'],
-    releaseDate: (data['releaseDate'] as Timestamp).toDate(),
-    expirationDate: data['expirationDate'] != null
-        ? (data['expirationDate'] as Timestamp).toDate()
-        : null,
-    metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-    createdBy: data['createdBy'],
-  );
+        id: data['id'] ?? '',
+        version: data['version'] ?? '',
+        buildNumber: data['buildNumber'] ?? '',
+        platform: data['platform'] ?? '',
+        type: VersionType.values.firstWhere(
+          (e) => e.toString().split('.').last == data['type'],
+          orElse: () => VersionType.release,
+        ),
+        description: data['description'],
+        features: List<String>.from(data['features'] ?? []),
+        bugFixes: List<String>.from(data['bugFixes'] ?? []),
+        breakingChanges: List<String>.from(data['breakingChanges'] ?? []),
+        isForced: data['isForced'] as bool? ?? false,
+        isAvailable: data['isAvailable'] as bool? ?? true,
+        downloadUrl: data['downloadUrl'],
+        releaseNotes: data['releaseNotes'],
+        releaseDate: (data['releaseDate'] as Timestamp).toDate(),
+        expirationDate: data['expirationDate'] != null
+            ? (data['expirationDate'] as Timestamp).toDate()
+            : null,
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        createdBy: data['createdBy'],
+      );
   final String id;
   final String version;
   final String buildNumber;
@@ -96,23 +97,24 @@ class AppVersion {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'version': version,
-    'buildNumber': buildNumber,
-    'platform': platform,
-    'type': type.toString().split('.').last,
-    'description': description,
-    'features': features,
-    'bugFixes': bugFixes,
-    'breakingChanges': breakingChanges,
-    'isForced': isForced,
-    'isAvailable': isAvailable,
-    'downloadUrl': downloadUrl,
-    'releaseNotes': releaseNotes,
-    'releaseDate': Timestamp.fromDate(releaseDate),
-    'expirationDate': expirationDate != null ? Timestamp.fromDate(expirationDate!) : null,
-    'metadata': metadata,
-    'createdBy': createdBy,
-  };
+        'version': version,
+        'buildNumber': buildNumber,
+        'platform': platform,
+        'type': type.toString().split('.').last,
+        'description': description,
+        'features': features,
+        'bugFixes': bugFixes,
+        'breakingChanges': breakingChanges,
+        'isForced': isForced,
+        'isAvailable': isAvailable,
+        'downloadUrl': downloadUrl,
+        'releaseNotes': releaseNotes,
+        'releaseDate': Timestamp.fromDate(releaseDate),
+        'expirationDate':
+            expirationDate != null ? Timestamp.fromDate(expirationDate!) : null,
+        'metadata': metadata,
+        'createdBy': createdBy,
+      };
 
   /// Создать копию с изменениями
   AppVersion copyWith({
@@ -133,32 +135,34 @@ class AppVersion {
     DateTime? expirationDate,
     Map<String, dynamic>? metadata,
     String? createdBy,
-  }) => AppVersion(
-    id: id ?? this.id,
-    version: version ?? this.version,
-    buildNumber: buildNumber ?? this.buildNumber,
-    platform: platform ?? this.platform,
-    type: type ?? this.type,
-    description: description ?? this.description,
-    features: features ?? this.features,
-    bugFixes: bugFixes ?? this.bugFixes,
-    breakingChanges: breakingChanges ?? this.breakingChanges,
-    isForced: isForced ?? this.isForced,
-    isAvailable: isAvailable ?? this.isAvailable,
-    downloadUrl: downloadUrl ?? this.downloadUrl,
-    releaseNotes: releaseNotes ?? this.releaseNotes,
-    releaseDate: releaseDate ?? this.releaseDate,
-    expirationDate: expirationDate ?? this.expirationDate,
-    metadata: metadata ?? this.metadata,
-    createdBy: createdBy ?? this.createdBy,
-  );
+  }) =>
+      AppVersion(
+        id: id ?? this.id,
+        version: version ?? this.version,
+        buildNumber: buildNumber ?? this.buildNumber,
+        platform: platform ?? this.platform,
+        type: type ?? this.type,
+        description: description ?? this.description,
+        features: features ?? this.features,
+        bugFixes: bugFixes ?? this.bugFixes,
+        breakingChanges: breakingChanges ?? this.breakingChanges,
+        isForced: isForced ?? this.isForced,
+        isAvailable: isAvailable ?? this.isAvailable,
+        downloadUrl: downloadUrl ?? this.downloadUrl,
+        releaseNotes: releaseNotes ?? this.releaseNotes,
+        releaseDate: releaseDate ?? this.releaseDate,
+        expirationDate: expirationDate ?? this.expirationDate,
+        metadata: metadata ?? this.metadata,
+        createdBy: createdBy ?? this.createdBy,
+      );
 
   /// Проверить, является ли версия принудительной
   bool get isForcedUpdate => isForced;
 
   /// Проверить, доступна ли версия
   bool get isCurrentlyAvailable =>
-      isAvailable && (expirationDate == null || DateTime.now().isBefore(expirationDate!));
+      isAvailable &&
+      (expirationDate == null || DateTime.now().isBefore(expirationDate!));
 
   /// Проверить, является ли версия критической
   bool get isCritical => type == VersionType.critical || isForced;
@@ -202,27 +206,28 @@ class AppVersion {
 
   @override
   int get hashCode => Object.hash(
-    id,
-    version,
-    buildNumber,
-    platform,
-    type,
-    description,
-    features,
-    bugFixes,
-    breakingChanges,
-    isForced,
-    isAvailable,
-    downloadUrl,
-    releaseNotes,
-    releaseDate,
-    expirationDate,
-    metadata,
-    createdBy,
-  );
+        id,
+        version,
+        buildNumber,
+        platform,
+        type,
+        description,
+        features,
+        bugFixes,
+        breakingChanges,
+        isForced,
+        isAvailable,
+        downloadUrl,
+        releaseNotes,
+        releaseDate,
+        expirationDate,
+        metadata,
+        createdBy,
+      );
 
   @override
-  String toString() => 'AppVersion(id: $id, version: $version, platform: $platform, type: $type)';
+  String toString() =>
+      'AppVersion(id: $id, version: $version, platform: $platform, type: $type)';
 }
 
 /// Модель обновления приложения
@@ -257,7 +262,9 @@ class AppUpdate {
       errorMessage: data['errorMessage'],
       progress: (data['progress'] as num?)?.toDouble() ?? 0.0,
       startedAt: (data['startedAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+      completedAt: data['completedAt'] != null
+          ? (data['completedAt'] as Timestamp).toDate()
+          : null,
       userId: data['userId'],
       deviceId: data['deviceId'],
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
@@ -266,22 +273,24 @@ class AppUpdate {
 
   /// Создать из Map
   factory AppUpdate.fromMap(Map<String, dynamic> data) => AppUpdate(
-    id: data['id'] ?? '',
-    currentVersion: data['currentVersion'] ?? '',
-    targetVersion: data['targetVersion'] ?? '',
-    platform: data['platform'] ?? '',
-    status: UpdateStatus.values.firstWhere(
-      (e) => e.toString().split('.').last == data['status'],
-      orElse: () => UpdateStatus.pending,
-    ),
-    errorMessage: data['errorMessage'],
-    progress: (data['progress'] as num?)?.toDouble() ?? 0.0,
-    startedAt: (data['startedAt'] as Timestamp).toDate(),
-    completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
-    userId: data['userId'],
-    deviceId: data['deviceId'],
-    metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-  );
+        id: data['id'] ?? '',
+        currentVersion: data['currentVersion'] ?? '',
+        targetVersion: data['targetVersion'] ?? '',
+        platform: data['platform'] ?? '',
+        status: UpdateStatus.values.firstWhere(
+          (e) => e.toString().split('.').last == data['status'],
+          orElse: () => UpdateStatus.pending,
+        ),
+        errorMessage: data['errorMessage'],
+        progress: (data['progress'] as num?)?.toDouble() ?? 0.0,
+        startedAt: (data['startedAt'] as Timestamp).toDate(),
+        completedAt: data['completedAt'] != null
+            ? (data['completedAt'] as Timestamp).toDate()
+            : null,
+        userId: data['userId'],
+        deviceId: data['deviceId'],
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      );
   final String id;
   final String currentVersion;
   final String targetVersion;
@@ -297,18 +306,19 @@ class AppUpdate {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'currentVersion': currentVersion,
-    'targetVersion': targetVersion,
-    'platform': platform,
-    'status': status.toString().split('.').last,
-    'errorMessage': errorMessage,
-    'progress': progress,
-    'startedAt': Timestamp.fromDate(startedAt),
-    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-    'userId': userId,
-    'deviceId': deviceId,
-    'metadata': metadata,
-  };
+        'currentVersion': currentVersion,
+        'targetVersion': targetVersion,
+        'platform': platform,
+        'status': status.toString().split('.').last,
+        'errorMessage': errorMessage,
+        'progress': progress,
+        'startedAt': Timestamp.fromDate(startedAt),
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'userId': userId,
+        'deviceId': deviceId,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   AppUpdate copyWith({
@@ -324,20 +334,21 @@ class AppUpdate {
     String? userId,
     String? deviceId,
     Map<String, dynamic>? metadata,
-  }) => AppUpdate(
-    id: id ?? this.id,
-    currentVersion: currentVersion ?? this.currentVersion,
-    targetVersion: targetVersion ?? this.targetVersion,
-    platform: platform ?? this.platform,
-    status: status ?? this.status,
-    errorMessage: errorMessage ?? this.errorMessage,
-    progress: progress ?? this.progress,
-    startedAt: startedAt ?? this.startedAt,
-    completedAt: completedAt ?? this.completedAt,
-    userId: userId ?? this.userId,
-    deviceId: deviceId ?? this.deviceId,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      AppUpdate(
+        id: id ?? this.id,
+        currentVersion: currentVersion ?? this.currentVersion,
+        targetVersion: targetVersion ?? this.targetVersion,
+        platform: platform ?? this.platform,
+        status: status ?? this.status,
+        errorMessage: errorMessage ?? this.errorMessage,
+        progress: progress ?? this.progress,
+        startedAt: startedAt ?? this.startedAt,
+        completedAt: completedAt ?? this.completedAt,
+        userId: userId ?? this.userId,
+        deviceId: deviceId ?? this.deviceId,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, завершено ли обновление
   bool get isCompleted => status == UpdateStatus.completed;
@@ -374,19 +385,19 @@ class AppUpdate {
 
   @override
   int get hashCode => Object.hash(
-    id,
-    currentVersion,
-    targetVersion,
-    platform,
-    status,
-    errorMessage,
-    progress,
-    startedAt,
-    completedAt,
-    userId,
-    deviceId,
-    metadata,
-  );
+        id,
+        currentVersion,
+        targetVersion,
+        platform,
+        status,
+        errorMessage,
+        progress,
+        startedAt,
+        completedAt,
+        userId,
+        deviceId,
+        metadata,
+      );
 
   @override
   String toString() =>
@@ -417,24 +428,27 @@ class VersionStatistics {
       activeUsers: data['activeUsers'] as int? ?? 0,
       crashCount: data['crashCount'] as int? ?? 0,
       crashRate: (data['crashRate'] as num?)?.toDouble() ?? 0.0,
-      averageSessionDuration: (data['averageSessionDuration'] as num?)?.toDouble() ?? 0.0,
+      averageSessionDuration:
+          (data['averageSessionDuration'] as num?)?.toDouble() ?? 0.0,
       totalSessions: data['totalSessions'] as int? ?? 0,
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
   }
 
   /// Создать из Map
-  factory VersionStatistics.fromMap(Map<String, dynamic> data) => VersionStatistics(
-    version: data['version'] ?? '',
-    platform: data['platform'] ?? '',
-    totalUsers: data['totalUsers'] as int? ?? 0,
-    activeUsers: data['activeUsers'] as int? ?? 0,
-    crashCount: data['crashCount'] as int? ?? 0,
-    crashRate: (data['crashRate'] as num?)?.toDouble() ?? 0.0,
-    averageSessionDuration: (data['averageSessionDuration'] as num?)?.toDouble() ?? 0.0,
-    totalSessions: data['totalSessions'] as int? ?? 0,
-    lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
-  );
+  factory VersionStatistics.fromMap(Map<String, dynamic> data) =>
+      VersionStatistics(
+        version: data['version'] ?? '',
+        platform: data['platform'] ?? '',
+        totalUsers: data['totalUsers'] as int? ?? 0,
+        activeUsers: data['activeUsers'] as int? ?? 0,
+        crashCount: data['crashCount'] as int? ?? 0,
+        crashRate: (data['crashRate'] as num?)?.toDouble() ?? 0.0,
+        averageSessionDuration:
+            (data['averageSessionDuration'] as num?)?.toDouble() ?? 0.0,
+        totalSessions: data['totalSessions'] as int? ?? 0,
+        lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
+      );
   final String version;
   final String platform;
   final int totalUsers;
@@ -447,16 +461,16 @@ class VersionStatistics {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'version': version,
-    'platform': platform,
-    'totalUsers': totalUsers,
-    'activeUsers': activeUsers,
-    'crashCount': crashCount,
-    'crashRate': crashRate,
-    'averageSessionDuration': averageSessionDuration,
-    'totalSessions': totalSessions,
-    'lastUpdated': Timestamp.fromDate(lastUpdated),
-  };
+        'version': version,
+        'platform': platform,
+        'totalUsers': totalUsers,
+        'activeUsers': activeUsers,
+        'crashCount': crashCount,
+        'crashRate': crashRate,
+        'averageSessionDuration': averageSessionDuration,
+        'totalSessions': totalSessions,
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+      };
 
   /// Получить процент активных пользователей
   double get activeUserPercentage {
@@ -491,16 +505,16 @@ class VersionStatistics {
 
   @override
   int get hashCode => Object.hash(
-    version,
-    platform,
-    totalUsers,
-    activeUsers,
-    crashCount,
-    crashRate,
-    averageSessionDuration,
-    totalSessions,
-    lastUpdated,
-  );
+        version,
+        platform,
+        totalUsers,
+        activeUsers,
+        crashCount,
+        crashRate,
+        averageSessionDuration,
+        totalSessions,
+        lastUpdated,
+      );
 
   @override
   String toString() =>

@@ -12,7 +12,8 @@ class RequestsScreenEnhanced extends ConsumerStatefulWidget {
   const RequestsScreenEnhanced({super.key});
 
   @override
-  ConsumerState<RequestsScreenEnhanced> createState() => _RequestsScreenEnhancedState();
+  ConsumerState<RequestsScreenEnhanced> createState() =>
+      _RequestsScreenEnhancedState();
 }
 
 class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
@@ -20,7 +21,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
   String _selectedFilter = 'all';
   String _selectedSort = 'date';
   bool _isLoading = false;
-  
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
@@ -88,7 +89,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
             children: [
               // Заголовок
               _buildHeader(),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -155,7 +156,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
       children: [
         // Фильтры и сортировка
         _buildFiltersSection(),
-        
+
         // Список заявок
         Expanded(
           child: _buildRequestsList(),
@@ -186,7 +187,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
               itemBuilder: (context, index) {
                 final filter = _filters[index];
                 final isSelected = filter['value'] == _selectedFilter;
-                
+
                 return Padding(
                   padding: const EdgeInsets.only(right: 12),
                   child: GestureDetector(
@@ -197,11 +198,11 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: isSelected 
-                            ? const Color(0xFF1E3A8A)
-                            : Colors.white,
+                        color:
+                            isSelected ? const Color(0xFF1E3A8A) : Colors.white,
                         borderRadius: BorderRadius.circular(20),
                         border: isSelected
                             ? null
@@ -209,7 +210,8 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: const Color(0xFF1E3A8A).withOpacity(0.3),
+                                  color:
+                                      const Color(0xFF1E3A8A).withOpacity(0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -228,8 +230,11 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
                           Text(
                             filter['label'],
                             style: TextStyle(
-                              color: isSelected ? Colors.white : Colors.grey[600],
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                              color:
+                                  isSelected ? Colors.white : Colors.grey[600],
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
                               fontSize: 14,
                             ),
                           ),
@@ -241,9 +246,9 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
               },
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Сортировка
           Row(
             children: [
@@ -315,7 +320,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
             final data = doc.data() as Map<String, dynamic>;
-            
+
             return _buildRequestCard(doc.id, data);
           },
         );
@@ -407,7 +412,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
               ],
             ),
           ),
-          
+
           // Описание
           if (data['description'] != null && data['description'].isNotEmpty)
             Padding(
@@ -422,7 +427,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-          
+
           // Детали
           Padding(
             padding: const EdgeInsets.all(16),
@@ -448,7 +453,7 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
               ],
             ),
           ),
-          
+
           // Действия
           Container(
             padding: const EdgeInsets.all(16),
@@ -736,7 +741,8 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
               _buildDetailRow('Бюджет', '${data['budget'] ?? 0} ₽'),
               _buildDetailRow('Локация', data['location'] ?? 'Не указано'),
               _buildDetailRow('Дата события', _formatDate(data['eventDate'])),
-              _buildDetailRow('Статус', _getStatusLabel(data['status'] ?? 'pending')),
+              _buildDetailRow(
+                  'Статус', _getStatusLabel(data['status'] ?? 'pending')),
             ],
           ),
         ),
@@ -807,11 +813,11 @@ class _RequestsScreenEnhancedState extends ConsumerState<RequestsScreenEnhanced>
   /// Форматирование даты
   String _formatDate(dynamic timestamp) {
     if (timestamp == null) return 'Не указано';
-    
-    final date = timestamp is Timestamp 
-        ? timestamp.toDate() 
+
+    final date = timestamp is Timestamp
+        ? timestamp.toDate()
         : DateTime.parse(timestamp.toString());
-    
+
     return '${date.day}.${date.month}.${date.year}';
   }
 }

@@ -144,23 +144,29 @@ class AppStyles {
     foregroundColor: Colors.white,
     elevation: 2,
     shadowColor: Colors.black26,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusMedium)),
-    padding: const EdgeInsets.symmetric(horizontal: paddingLarge, vertical: paddingMedium),
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusMedium)),
+    padding: const EdgeInsets.symmetric(
+        horizontal: paddingLarge, vertical: paddingMedium),
     minimumSize: const Size(0, buttonHeightMedium),
   );
 
   static ButtonStyle secondaryButtonStyle = OutlinedButton.styleFrom(
     foregroundColor: primaryColor,
     side: const BorderSide(color: primaryColor),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusMedium)),
-    padding: const EdgeInsets.symmetric(horizontal: paddingLarge, vertical: paddingMedium),
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusMedium)),
+    padding: const EdgeInsets.symmetric(
+        horizontal: paddingLarge, vertical: paddingMedium),
     minimumSize: const Size(0, buttonHeightMedium),
   );
 
   static ButtonStyle textButtonStyle = TextButton.styleFrom(
     foregroundColor: primaryColor,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusMedium)),
-    padding: const EdgeInsets.symmetric(horizontal: paddingMedium, vertical: paddingSmall),
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusMedium)),
+    padding: const EdgeInsets.symmetric(
+        horizontal: paddingMedium, vertical: paddingSmall),
     minimumSize: const Size(0, buttonHeightSmall),
   );
 
@@ -199,7 +205,8 @@ class AppStyles {
       borderRadius: BorderRadius.circular(radiusMedium),
       borderSide: const BorderSide(color: errorColor, width: 2),
     ),
-    contentPadding: const EdgeInsets.symmetric(horizontal: paddingMedium, vertical: paddingMedium),
+    contentPadding: const EdgeInsets.symmetric(
+        horizontal: paddingMedium, vertical: paddingMedium),
   );
 
   // Стили AppBar
@@ -212,7 +219,8 @@ class AppStyles {
   );
 
   // Стили BottomNavigationBar
-  static BottomNavigationBarThemeData bottomNavigationBarTheme = const BottomNavigationBarThemeData(
+  static BottomNavigationBarThemeData bottomNavigationBarTheme =
+      const BottomNavigationBarThemeData(
     elevation: 8,
     backgroundColor: Colors.white,
     selectedItemColor: primaryColor,
@@ -223,29 +231,32 @@ class AppStyles {
   // Стили FloatingActionButton
   static FloatingActionButtonThemeData floatingActionButtonTheme =
       const FloatingActionButtonThemeData(
-        backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
-        elevation: 6,
-      );
+    backgroundColor: primaryColor,
+    foregroundColor: Colors.white,
+    elevation: 6,
+  );
 
   // Стили Chip
   static ChipThemeData chipTheme = ChipThemeData(
     backgroundColor: Colors.grey[100],
     selectedColor: primaryColor.withValues(alpha: 0.2),
     labelStyle: bodyText2,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusSmall)),
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusSmall)),
   );
 
   // Стили Card
   static CardTheme cardTheme = CardTheme(
     elevation: 2,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusMedium)),
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusMedium)),
     margin: const EdgeInsets.all(paddingSmall),
   );
 
   // Стили Dialog
   static DialogTheme dialogTheme = DialogTheme(
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusLarge)),
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusLarge)),
     elevation: 8,
   );
 
@@ -253,7 +264,8 @@ class AppStyles {
   static SnackBarThemeData snackBarTheme = SnackBarThemeData(
     backgroundColor: Colors.grey[800],
     contentTextStyle: bodyText2.copyWith(color: Colors.white),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radiusSmall)),
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusSmall)),
     behavior: SnackBarBehavior.floating,
   );
 
@@ -291,7 +303,8 @@ class AppStyles {
       borderRadius: BorderRadius.circular(radiusMedium),
       borderSide: const BorderSide(color: errorColor, width: 2),
     ),
-    contentPadding: const EdgeInsets.symmetric(horizontal: paddingMedium, vertical: paddingMedium),
+    contentPadding: const EdgeInsets.symmetric(
+        horizontal: paddingMedium, vertical: paddingMedium),
     fillColor: Colors.grey[800],
     filled: true,
   );

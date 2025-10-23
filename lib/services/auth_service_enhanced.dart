@@ -19,7 +19,8 @@ class AuthServiceEnhanced {
       if (firebaseUser == null) return null;
 
       try {
-        final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+        final userDoc =
+            await _firestore.collection('users').doc(firebaseUser.uid).get();
 
         if (userDoc.exists) {
           return AppUser.fromFirestore(userDoc);
@@ -40,7 +41,8 @@ class AuthServiceEnhanced {
     if (firebaseUser == null) return null;
 
     try {
-      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+      final userDoc =
+          await _firestore.collection('users').doc(firebaseUser.uid).get();
 
       if (userDoc.exists) {
         return AppUser.fromFirestore(userDoc);
@@ -93,7 +95,8 @@ class AuthServiceEnhanced {
           await credential.user!.updateDisplayName(name);
         }
 
-        return await _createUserDocument(credential.user!, name: name, city: city);
+        return await _createUserDocument(credential.user!,
+            name: name, city: city);
       }
       return null;
     } catch (e) {
@@ -108,7 +111,8 @@ class AuthServiceEnhanced {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -116,7 +120,7 @@ class AuthServiceEnhanced {
       );
 
       final userCredential = await _auth.signInWithCredential(credential);
-      
+
       if (userCredential.user != null) {
         return await _getOrCreateUser(userCredential.user!);
       }
@@ -173,7 +177,7 @@ class AuthServiceEnhanced {
       );
 
       final userCredential = await _auth.signInWithCredential(credential);
-      
+
       if (userCredential.user != null) {
         return await _getOrCreateUser(userCredential.user!);
       }
@@ -243,7 +247,8 @@ class AuthServiceEnhanced {
   /// Получить или создать пользователя
   Future<AppUser?> _getOrCreateUser(User firebaseUser) async {
     try {
-      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+      final userDoc =
+          await _firestore.collection('users').doc(firebaseUser.uid).get();
 
       if (userDoc.exists) {
         return AppUser.fromFirestore(userDoc);

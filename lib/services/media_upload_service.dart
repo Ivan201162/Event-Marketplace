@@ -9,9 +9,28 @@ import 'package:path/path.dart' as path;
 class MediaUploadService {
   static final FirebaseStorage _storage = FirebaseStorage.instance;
   static const int _maxFileSize = 200 * 1024 * 1024; // 200 МБ
-  static const List<String> _allowedImageTypes = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-  static const List<String> _allowedVideoTypes = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm'];
-  static const List<String> _allowedAudioTypes = ['mp3', 'wav', 'aac', 'ogg', 'm4a'];
+  static const List<String> _allowedImageTypes = [
+    'jpg',
+    'jpeg',
+    'png',
+    'gif',
+    'webp'
+  ];
+  static const List<String> _allowedVideoTypes = [
+    'mp4',
+    'avi',
+    'mov',
+    'wmv',
+    'flv',
+    'webm'
+  ];
+  static const List<String> _allowedAudioTypes = [
+    'mp3',
+    'wav',
+    'aac',
+    'ogg',
+    'm4a'
+  ];
   static const List<String> _allowedDocumentTypes = [
     'pdf',
     'doc',
@@ -171,7 +190,8 @@ class MediaUploadService {
       final extension = path.extension(file.path).toLowerCase().substring(1);
       final mediaType = _getMediaTypeFromExtension(extension);
 
-      return await _uploadFile(file: file, chatId: chatId, userId: userId, mediaType: mediaType);
+      return await _uploadFile(
+          file: file, chatId: chatId, userId: userId, mediaType: mediaType);
     } catch (e) {
       throw Exception('Ошибка загрузки файла: $e');
     }

@@ -18,7 +18,8 @@ class MyEventsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(userRole == UserRole.customer ? 'Мои мероприятия' : 'Мои проекты'),
+        title: Text(
+            userRole == UserRole.customer ? 'Мои мероприятия' : 'Мои проекты'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           IconButton(
@@ -26,7 +27,8 @@ class MyEventsScreen extends ConsumerWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute<void>(builder: (context) => const CreateEventScreen()),
+                MaterialPageRoute<void>(
+                    builder: (context) => const CreateEventScreen()),
               );
             },
           ),
@@ -48,7 +50,8 @@ class MyEventsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildCustomerEvents(BuildContext context, WidgetRef ref, AppUser user) {
+  Widget _buildCustomerEvents(
+      BuildContext context, WidgetRef ref, AppUser user) {
     final userEvents = ref.watch(userEventsProvider(user.id));
     final userStats = ref.watch(userEventStatsProvider(user.id));
 
@@ -64,7 +67,8 @@ class MyEventsScreen extends ConsumerWidget {
                 data: (stats) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatItem(context, 'Всего', "${stats['total'] ?? 0}", Icons.event),
+                    _buildStatItem(context, 'Всего', "${stats['total'] ?? 0}",
+                        Icons.event),
                     _buildStatItem(
                       context,
                       'Активных',
@@ -77,11 +81,13 @@ class MyEventsScreen extends ConsumerWidget {
                       "${stats['completed'] ?? 0}",
                       Icons.history,
                     ),
-                    _buildStatItem(context, 'Отменено', "${stats['cancelled'] ?? 0}", Icons.cancel),
+                    _buildStatItem(context, 'Отменено',
+                        "${stats['cancelled'] ?? 0}", Icons.cancel),
                   ],
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Text('Ошибка загрузки статистики: $error'),
+                error: (error, stack) =>
+                    Text('Ошибка загрузки статистики: $error'),
               ),
             ),
           ),
@@ -104,7 +110,8 @@ class MyEventsScreen extends ConsumerWidget {
                           style: TextStyle(fontSize: 18, color: Colors.grey),
                         ),
                         SizedBox(height: 8),
-                        Text('Создайте первое мероприятие', style: TextStyle(color: Colors.grey)),
+                        Text('Создайте первое мероприятие',
+                            style: TextStyle(color: Colors.grey)),
                       ],
                     ),
                   );
@@ -118,14 +125,16 @@ class MyEventsScreen extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                           child: Icon(event.categoryIcon, color: Colors.white),
                         ),
                         title: Text(event.title),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${event.formattedDate} • ${event.formattedTime}'),
+                            Text(
+                                '${event.formattedDate} • ${event.formattedTime}'),
                             const SizedBox(height: 4),
                             Text('${event.categoryName} • ${event.location}'),
                             const SizedBox(height: 4),
@@ -134,20 +143,24 @@ class MyEventsScreen extends ConsumerWidget {
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: event.statusColor.withValues(alpha: 0.1),
+                                    color: event.statusColor
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     event.statusText,
-                                    style: TextStyle(color: event.statusColor, fontSize: 12),
+                                    style: TextStyle(
+                                        color: event.statusColor, fontSize: 12),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   '${event.currentParticipants}/${event.maxParticipants} участников',
-                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.grey),
                                 ),
                               ],
                             ),
@@ -163,7 +176,8 @@ class MyEventsScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (context) => EventDetailScreen(event: event),
+                              builder: (context) =>
+                                  EventDetailScreen(event: event),
                             ),
                           );
                         },
@@ -173,7 +187,8 @@ class MyEventsScreen extends ConsumerWidget {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(child: Text('Ошибка загрузки мероприятий: $error')),
+              error: (error, stack) =>
+                  Center(child: Text('Ошибка загрузки мероприятий: $error')),
             ),
           ),
         ],
@@ -181,7 +196,8 @@ class MyEventsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSpecialistProjects(BuildContext context, WidgetRef ref, AppUser user) {
+  Widget _buildSpecialistProjects(
+      BuildContext context, WidgetRef ref, AppUser user) {
     final userEvents = ref.watch(userEventsProvider(user.id));
     final userStats = ref.watch(userEventStatsProvider(user.id));
 
@@ -197,19 +213,23 @@ class MyEventsScreen extends ConsumerWidget {
                 data: (stats) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatItem(context, 'Активных', "${stats['active'] ?? 0}", Icons.work),
+                    _buildStatItem(context, 'Активных',
+                        "${stats['active'] ?? 0}", Icons.work),
                     _buildStatItem(
                       context,
                       'Завершено',
                       "${stats['completed'] ?? 0}",
                       Icons.check_circle,
                     ),
-                    _buildStatItem(context, 'Всего', "${stats['total'] ?? 0}", Icons.event),
-                    _buildStatItem(context, 'Отменено', "${stats['cancelled'] ?? 0}", Icons.cancel),
+                    _buildStatItem(context, 'Всего', "${stats['total'] ?? 0}",
+                        Icons.event),
+                    _buildStatItem(context, 'Отменено',
+                        "${stats['cancelled'] ?? 0}", Icons.cancel),
                   ],
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Text('Ошибка загрузки статистики: $error'),
+                error: (error, stack) =>
+                    Text('Ошибка загрузки статистики: $error'),
               ),
             ),
           ),
@@ -232,7 +252,8 @@ class MyEventsScreen extends ConsumerWidget {
                           style: TextStyle(fontSize: 18, color: Colors.grey),
                         ),
                         SizedBox(height: 8),
-                        Text('Создайте первый проект', style: TextStyle(color: Colors.grey)),
+                        Text('Создайте первый проект',
+                            style: TextStyle(color: Colors.grey)),
                       ],
                     ),
                   );
@@ -246,14 +267,16 @@ class MyEventsScreen extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 12),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                           child: Icon(event.categoryIcon, color: Colors.white),
                         ),
                         title: Text(event.title),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${event.formattedDate} • ${event.formattedTime}'),
+                            Text(
+                                '${event.formattedDate} • ${event.formattedTime}'),
                             const SizedBox(height: 4),
                             Text('${event.categoryName} • ${event.location}'),
                             const SizedBox(height: 4),
@@ -262,20 +285,24 @@ class MyEventsScreen extends ConsumerWidget {
                             Row(
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: event.statusColor.withValues(alpha: 0.1),
+                                    color: event.statusColor
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     event.statusText,
-                                    style: TextStyle(color: event.statusColor, fontSize: 12),
+                                    style: TextStyle(
+                                        color: event.statusColor, fontSize: 12),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   '${event.currentParticipants}/${event.maxParticipants} участников',
-                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.grey),
                                 ),
                               ],
                             ),
@@ -291,7 +318,8 @@ class MyEventsScreen extends ConsumerWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute<void>(
-                              builder: (context) => EventDetailScreen(event: event),
+                              builder: (context) =>
+                                  EventDetailScreen(event: event),
                             ),
                           );
                         },
@@ -301,7 +329,8 @@ class MyEventsScreen extends ConsumerWidget {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(child: Text('Ошибка загрузки проектов: $error')),
+              error: (error, stack) =>
+                  Center(child: Text('Ошибка загрузки проектов: $error')),
             ),
           ),
         ],
@@ -309,14 +338,18 @@ class MyEventsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatItem(BuildContext context, String label, String value, IconData icon) => Column(
-    children: [
-      Icon(icon, color: Theme.of(context).colorScheme.primary, size: 24),
-      const SizedBox(height: 4),
-      Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-    ],
-  );
+  Widget _buildStatItem(
+          BuildContext context, String label, String value, IconData icon) =>
+      Column(
+        children: [
+          Icon(icon, color: Theme.of(context).colorScheme.primary, size: 24),
+          const SizedBox(height: 4),
+          Text(value,
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+        ],
+      );
 
   void _showEventMenu(BuildContext context, WidgetRef ref, Event event) {
     showModalBottomSheet<void>(
@@ -331,7 +364,8 @@ class MyEventsScreen extends ConsumerWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute<void>(builder: (context) => EventDetailScreen(event: event)),
+                MaterialPageRoute<void>(
+                    builder: (context) => EventDetailScreen(event: event)),
               );
             },
           ),
@@ -342,14 +376,16 @@ class MyEventsScreen extends ConsumerWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute<void>(builder: (context) => CreateEventScreen(event: event)),
+                MaterialPageRoute<void>(
+                    builder: (context) => CreateEventScreen(event: event)),
               );
             },
           ),
           if (event.status == EventStatus.active)
             ListTile(
               leading: const Icon(Icons.check_circle, color: Colors.green),
-              title: const Text('Завершить', style: TextStyle(color: Colors.green)),
+              title: const Text('Завершить',
+                  style: TextStyle(color: Colors.green)),
               onTap: () {
                 Navigator.pop(context);
                 _completeEvent(context, ref, event);
@@ -358,7 +394,8 @@ class MyEventsScreen extends ConsumerWidget {
           if (event.status == EventStatus.active)
             ListTile(
               leading: const Icon(Icons.cancel, color: Colors.red),
-              title: const Text('Отменить', style: TextStyle(color: Colors.red)),
+              title:
+                  const Text('Отменить', style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 _cancelEvent(context, ref, event);
@@ -383,23 +420,29 @@ class MyEventsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Завершить мероприятие'),
-        content: const Text('Вы уверены, что хотите завершить это мероприятие?'),
+        content:
+            const Text('Вы уверены, что хотите завершить это мероприятие?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
               try {
                 final eventService = ref.read(eventServiceProvider);
-                await eventService.updateEventStatus(event.id, EventStatus.completed);
+                await eventService.updateEventStatus(
+                    event.id, EventStatus.completed);
                 if (context.mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Мероприятие завершено')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Мероприятие завершено')));
                 }
               } on Exception catch (e) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -418,21 +461,26 @@ class MyEventsScreen extends ConsumerWidget {
         title: const Text('Отменить мероприятие'),
         content: const Text('Вы уверены, что хотите отменить это мероприятие?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
               try {
                 final eventService = ref.read(eventServiceProvider);
-                await eventService.updateEventStatus(event.id, EventStatus.cancelled);
+                await eventService.updateEventStatus(
+                    event.id, EventStatus.cancelled);
                 if (context.mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Мероприятие отменено')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Мероприятие отменено')));
                 }
               } on Exception catch (e) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -454,7 +502,9 @@ class MyEventsScreen extends ConsumerWidget {
           'Вы уверены, что хотите удалить это мероприятие? Это действие нельзя будет отменить.',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -464,11 +514,13 @@ class MyEventsScreen extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Мероприятие удалено')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Мероприятие удалено')));
                 }
               } on Exception catch (e) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },

@@ -3,12 +3,14 @@ import '../services/image_optimization_service.dart';
 import '../services/video_optimization_service.dart';
 
 /// Провайдер для управления кэшем изображений
-final imageCacheProvider = NotifierProvider<ImageCacheNotifier, ImageCacheState>(
+final imageCacheProvider =
+    NotifierProvider<ImageCacheNotifier, ImageCacheState>(
   ImageCacheNotifier.new,
 );
 
 /// Провайдер для управления кэшем видео
-final videoCacheProvider = NotifierProvider<VideoCacheNotifier, VideoCacheState>(
+final videoCacheProvider =
+    NotifierProvider<VideoCacheNotifier, VideoCacheState>(
   VideoCacheNotifier.new,
 );
 
@@ -47,12 +49,13 @@ class ImageCacheState {
     int? cacheSize,
     String? error,
     List<String>? cachedImages,
-  }) => ImageCacheState(
-    isLoading: isLoading ?? this.isLoading,
-    cacheSize: cacheSize ?? this.cacheSize,
-    error: error ?? this.error,
-    cachedImages: cachedImages ?? this.cachedImages,
-  );
+  }) =>
+      ImageCacheState(
+        isLoading: isLoading ?? this.isLoading,
+        cacheSize: cacheSize ?? this.cacheSize,
+        error: error ?? this.error,
+        cachedImages: cachedImages ?? this.cachedImages,
+      );
 }
 
 /// Состояние кэша видео
@@ -73,12 +76,13 @@ class VideoCacheState {
     int? cacheSize,
     String? error,
     List<String>? cachedVideos,
-  }) => VideoCacheState(
-    isLoading: isLoading ?? this.isLoading,
-    cacheSize: cacheSize ?? this.cacheSize,
-    error: error ?? this.error,
-    cachedVideos: cachedVideos ?? this.cachedVideos,
-  );
+  }) =>
+      VideoCacheState(
+        isLoading: isLoading ?? this.isLoading,
+        cacheSize: cacheSize ?? this.cacheSize,
+        error: error ?? this.error,
+        cachedVideos: cachedVideos ?? this.cachedVideos,
+      );
 }
 
 /// Нотификатор для кэша изображений
@@ -119,7 +123,8 @@ class ImageCacheNotifier extends Notifier<ImageCacheState> {
   }
 
   /// Получить отформатированный размер кэша
-  String getFormattedCacheSize() => ImageOptimizationService.formatBytes(state.cacheSize);
+  String getFormattedCacheSize() =>
+      ImageOptimizationService.formatBytes(state.cacheSize);
 }
 
 /// Нотификатор для кэша видео
@@ -160,14 +165,15 @@ class VideoCacheNotifier extends Notifier<VideoCacheState> {
   }
 
   /// Получить отформатированный размер кэша
-  String getFormattedCacheSize() => ImageOptimizationService.formatBytes(state.cacheSize);
+  String getFormattedCacheSize() =>
+      ImageOptimizationService.formatBytes(state.cacheSize);
 }
 
 /// Провайдер для настроек оптимизации медиа
-final mediaOptimizationSettingsProvider =
-    NotifierProvider<MediaOptimizationSettingsNotifier, MediaOptimizationSettings>(
-      (ref) => MediaOptimizationSettingsNotifier(),
-    );
+final mediaOptimizationSettingsProvider = NotifierProvider<
+    MediaOptimizationSettingsNotifier, MediaOptimizationSettings>(
+  (ref) => MediaOptimizationSettingsNotifier(),
+);
 
 /// Настройки оптимизации медиа
 class MediaOptimizationSettings {
@@ -202,21 +208,25 @@ class MediaOptimizationSettings {
     int? maxVideoSize,
     bool? autoClearCache,
     int? cacheMaxSize,
-  }) => MediaOptimizationSettings(
-    enableImageCompression: enableImageCompression ?? this.enableImageCompression,
-    enableVideoCompression: enableVideoCompression ?? this.enableVideoCompression,
-    enableCaching: enableCaching ?? this.enableCaching,
-    imageQuality: imageQuality ?? this.imageQuality,
-    maxImageWidth: maxImageWidth ?? this.maxImageWidth,
-    maxImageHeight: maxImageHeight ?? this.maxImageHeight,
-    maxVideoSize: maxVideoSize ?? this.maxVideoSize,
-    autoClearCache: autoClearCache ?? this.autoClearCache,
-    cacheMaxSize: cacheMaxSize ?? this.cacheMaxSize,
-  );
+  }) =>
+      MediaOptimizationSettings(
+        enableImageCompression:
+            enableImageCompression ?? this.enableImageCompression,
+        enableVideoCompression:
+            enableVideoCompression ?? this.enableVideoCompression,
+        enableCaching: enableCaching ?? this.enableCaching,
+        imageQuality: imageQuality ?? this.imageQuality,
+        maxImageWidth: maxImageWidth ?? this.maxImageWidth,
+        maxImageHeight: maxImageHeight ?? this.maxImageHeight,
+        maxVideoSize: maxVideoSize ?? this.maxVideoSize,
+        autoClearCache: autoClearCache ?? this.autoClearCache,
+        cacheMaxSize: cacheMaxSize ?? this.cacheMaxSize,
+      );
 }
 
 /// Нотификатор для настроек оптимизации медиа
-class MediaOptimizationSettingsNotifier extends Notifier<MediaOptimizationSettings> {
+class MediaOptimizationSettingsNotifier
+    extends Notifier<MediaOptimizationSettings> {
   MediaOptimizationSettingsNotifier() : super();
 
   /// Обновить настройки сжатия изображений
@@ -236,11 +246,13 @@ class MediaOptimizationSettingsNotifier extends Notifier<MediaOptimizationSettin
 
   /// Обновить настройки сжатия видео
   void updateVideoCompressionSettings({bool? enableCompression, int? maxSize}) {
-    state = state.copyWith(enableVideoCompression: enableCompression, maxVideoSize: maxSize);
+    state = state.copyWith(
+        enableVideoCompression: enableCompression, maxVideoSize: maxSize);
   }
 
   /// Обновить настройки кэширования
-  void updateCachingSettings({bool? enableCaching, bool? autoClearCache, int? cacheMaxSize}) {
+  void updateCachingSettings(
+      {bool? enableCaching, bool? autoClearCache, int? cacheMaxSize}) {
     state = state.copyWith(
       enableCaching: enableCaching,
       autoClearCache: autoClearCache,
@@ -261,7 +273,8 @@ class MediaOptimizationSettingsNotifier extends Notifier<MediaOptimizationSettin
 }
 
 /// Провайдер для статистики использования медиа
-final mediaUsageStatsProvider = NotifierProvider<MediaUsageStatsNotifier, MediaUsageStats>(
+final mediaUsageStatsProvider =
+    NotifierProvider<MediaUsageStatsNotifier, MediaUsageStats>(
   (ref) => MediaUsageStatsNotifier(),
 );
 
@@ -292,15 +305,18 @@ class MediaUsageStats {
     int? totalCacheHits,
     int? totalCacheMisses,
     int? totalBytesSaved,
-  }) => MediaUsageStats(
-    totalImagesLoaded: totalImagesLoaded ?? this.totalImagesLoaded,
-    totalVideosLoaded: totalVideosLoaded ?? this.totalVideosLoaded,
-    totalImagesCompressed: totalImagesCompressed ?? this.totalImagesCompressed,
-    totalVideosCompressed: totalVideosCompressed ?? this.totalVideosCompressed,
-    totalCacheHits: totalCacheHits ?? this.totalCacheHits,
-    totalCacheMisses: totalCacheMisses ?? this.totalCacheMisses,
-    totalBytesSaved: totalBytesSaved ?? this.totalBytesSaved,
-  );
+  }) =>
+      MediaUsageStats(
+        totalImagesLoaded: totalImagesLoaded ?? this.totalImagesLoaded,
+        totalVideosLoaded: totalVideosLoaded ?? this.totalVideosLoaded,
+        totalImagesCompressed:
+            totalImagesCompressed ?? this.totalImagesCompressed,
+        totalVideosCompressed:
+            totalVideosCompressed ?? this.totalVideosCompressed,
+        totalCacheHits: totalCacheHits ?? this.totalCacheHits,
+        totalCacheMisses: totalCacheMisses ?? this.totalCacheMisses,
+        totalBytesSaved: totalBytesSaved ?? this.totalBytesSaved,
+      );
 
   /// Получить процент попаданий в кэш
   double get cacheHitRate {
@@ -310,7 +326,8 @@ class MediaUsageStats {
   }
 
   /// Получить отформатированный размер сэкономленных данных
-  String get formattedBytesSaved => ImageOptimizationService.formatBytes(totalBytesSaved);
+  String get formattedBytesSaved =>
+      ImageOptimizationService.formatBytes(totalBytesSaved);
 }
 
 /// Нотификатор для статистики использования медиа

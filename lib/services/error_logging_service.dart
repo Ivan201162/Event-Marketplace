@@ -18,7 +18,7 @@ class ErrorLoggingService {
       if (reason != null) {
         await _crashlytics.setCustomKey('error_reason', reason);
       }
-      
+
       await _crashlytics.recordError(
         error,
         stackTrace,
@@ -28,7 +28,7 @@ class ErrorLoggingService {
           'Platform: ${defaultTargetPlatform.name}',
         ],
       );
-      
+
       debugPrint('📊 Error logged to Crashlytics: $error');
     } catch (e) {
       debugPrint('❌ Failed to log error to Crashlytics: $e');
@@ -36,13 +36,14 @@ class ErrorLoggingService {
   }
 
   /// Логирует пользовательское событие
-  static Future<void> logUserAction(String action, {Map<String, dynamic>? parameters}) async {
+  static Future<void> logUserAction(String action,
+      {Map<String, dynamic>? parameters}) async {
     try {
       await _analytics.logEvent(
         name: action,
         parameters: parameters,
       );
-      
+
       debugPrint('📈 User action logged: $action');
     } catch (e) {
       debugPrint('❌ Failed to log user action: $e');
@@ -56,7 +57,7 @@ class ErrorLoggingService {
       StackTrace.current,
       reason: 'Authentication failed in $method',
     );
-    
+
     await logUserAction('auth_error', parameters: {
       'error_message': error,
       'method': method,
@@ -70,7 +71,7 @@ class ErrorLoggingService {
       StackTrace.current,
       reason: 'Firestore operation failed: $operation',
     );
-    
+
     await logUserAction('firestore_error', parameters: {
       'error_message': error,
       'operation': operation,
@@ -84,7 +85,7 @@ class ErrorLoggingService {
       StackTrace.current,
       reason: 'Storage operation failed: $operation',
     );
-    
+
     await logUserAction('storage_error', parameters: {
       'error_message': error,
       'operation': operation,
@@ -98,7 +99,7 @@ class ErrorLoggingService {
       StackTrace.current,
       reason: 'UI error in screen: $screen',
     );
-    
+
     await logUserAction('ui_error', parameters: {
       'error_message': error,
       'screen': screen,
@@ -112,7 +113,7 @@ class ErrorLoggingService {
       StackTrace.current,
       reason: 'Navigation failed to route: $route',
     );
-    
+
     await logUserAction('routing_error', parameters: {
       'error_message': error,
       'route': route,
@@ -120,7 +121,8 @@ class ErrorLoggingService {
   }
 
   /// Логирует успешное действие пользователя
-  static Future<void> logSuccess(String action, {Map<String, dynamic>? parameters}) async {
+  static Future<void> logSuccess(String action,
+      {Map<String, dynamic>? parameters}) async {
     await logUserAction('success_$action', parameters: parameters);
   }
 
@@ -152,7 +154,7 @@ class ErrorLoggingService {
       if (name != null) {
         await _crashlytics.setCustomKey('user_name', name);
       }
-      
+
       debugPrint('👤 User data set for Crashlytics: $userId');
     } catch (e) {
       debugPrint('❌ Failed to set user data: $e');
@@ -165,7 +167,7 @@ class ErrorLoggingService {
       await _crashlytics.setUserIdentifier('');
       await _crashlytics.setCustomKey('user_email', '');
       await _crashlytics.setCustomKey('user_name', '');
-      
+
       debugPrint('🧹 User data cleared from Crashlytics');
     } catch (e) {
       debugPrint('❌ Failed to clear user data: $e');

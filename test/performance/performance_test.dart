@@ -12,126 +12,134 @@ import 'package:event_marketplace_app/screens/profile/profile_screen_enhanced.da
 /// Тесты производительности
 void main() {
   group('Performance Tests', () {
-    testWidgets('MainNavigationScreenEnhanced loads quickly', (WidgetTester tester) async {
+    testWidgets('MainNavigationScreenEnhanced loads quickly',
+        (WidgetTester tester) async {
       final stopwatch = Stopwatch()..start();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
         ),
       );
-      
+
       await tester.pumpAndSettle();
-      
+
       stopwatch.stop();
-      
+
       // Проверка времени загрузки (должно быть менее 1 секунды)
       expect(stopwatch.elapsedMilliseconds, lessThan(1000));
     });
 
-    testWidgets('HomeScreenEnhanced loads quickly', (WidgetTester tester) async {
+    testWidgets('HomeScreenEnhanced loads quickly',
+        (WidgetTester tester) async {
       final stopwatch = Stopwatch()..start();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreenEnhanced(),
         ),
       );
-      
+
       await tester.pumpAndSettle();
-      
+
       stopwatch.stop();
-      
+
       // Проверка времени загрузки (должно быть менее 1 секунды)
       expect(stopwatch.elapsedMilliseconds, lessThan(1000));
     });
 
-    testWidgets('FeedScreenEnhanced loads quickly', (WidgetTester tester) async {
+    testWidgets('FeedScreenEnhanced loads quickly',
+        (WidgetTester tester) async {
       final stopwatch = Stopwatch()..start();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: FeedScreenEnhanced(),
         ),
       );
-      
+
       await tester.pumpAndSettle();
-      
+
       stopwatch.stop();
-      
+
       // Проверка времени загрузки (должно быть менее 1 секунды)
       expect(stopwatch.elapsedMilliseconds, lessThan(1000));
     });
 
-    testWidgets('RequestsScreenEnhanced loads quickly', (WidgetTester tester) async {
+    testWidgets('RequestsScreenEnhanced loads quickly',
+        (WidgetTester tester) async {
       final stopwatch = Stopwatch()..start();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: RequestsScreenEnhanced(),
         ),
       );
-      
+
       await tester.pumpAndSettle();
-      
+
       stopwatch.stop();
-      
+
       // Проверка времени загрузки (должно быть менее 1 секунды)
       expect(stopwatch.elapsedMilliseconds, lessThan(1000));
     });
 
-    testWidgets('ChatListScreenEnhanced loads quickly', (WidgetTester tester) async {
+    testWidgets('ChatListScreenEnhanced loads quickly',
+        (WidgetTester tester) async {
       final stopwatch = Stopwatch()..start();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: ChatListScreenEnhanced(),
         ),
       );
-      
+
       await tester.pumpAndSettle();
-      
+
       stopwatch.stop();
-      
+
       // Проверка времени загрузки (должно быть менее 1 секунды)
       expect(stopwatch.elapsedMilliseconds, lessThan(1000));
     });
 
-    testWidgets('IdeasScreenEnhanced loads quickly', (WidgetTester tester) async {
+    testWidgets('IdeasScreenEnhanced loads quickly',
+        (WidgetTester tester) async {
       final stopwatch = Stopwatch()..start();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: IdeasScreenEnhanced(),
         ),
       );
-      
+
       await tester.pumpAndSettle();
-      
+
       stopwatch.stop();
-      
+
       // Проверка времени загрузки (должно быть менее 1 секунды)
       expect(stopwatch.elapsedMilliseconds, lessThan(1000));
     });
 
-    testWidgets('ProfileScreenEnhanced loads quickly', (WidgetTester tester) async {
+    testWidgets('ProfileScreenEnhanced loads quickly',
+        (WidgetTester tester) async {
       final stopwatch = Stopwatch()..start();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: ProfileScreenEnhanced(),
         ),
       );
-      
+
       await tester.pumpAndSettle();
-      
+
       stopwatch.stop();
-      
+
       // Проверка времени загрузки (должно быть менее 1 секунды)
       expect(stopwatch.elapsedMilliseconds, lessThan(1000));
     });
 
-    testWidgets('Navigation transitions are smooth', (WidgetTester tester) async {
+    testWidgets('Navigation transitions are smooth',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -140,29 +148,30 @@ void main() {
 
       // Тестирование переходов между экранами
       final stopwatch = Stopwatch()..start();
-      
+
       await tester.tap(find.text('Лента'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Заявки'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Чаты'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Идеи'));
       await tester.pumpAndSettle();
-      
+
       await tester.tap(find.text('Главная'));
       await tester.pumpAndSettle();
-      
+
       stopwatch.stop();
-      
+
       // Проверка времени переходов (должно быть менее 2 секунд)
       expect(stopwatch.elapsedMilliseconds, lessThan(2000));
     });
 
-    testWidgets('App handles rapid navigation gracefully', (WidgetTester tester) async {
+    testWidgets('App handles rapid navigation gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),
@@ -173,22 +182,22 @@ void main() {
       for (int i = 0; i < 10; i++) {
         await tester.tap(find.text('Лента'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Заявки'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Чаты'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Идеи'));
         await tester.pump();
-        
+
         await tester.tap(find.text('Главная'));
         await tester.pump();
       }
-      
+
       await tester.pumpAndSettle();
-      
+
       // Проверка отсутствия ошибок
       expect(find.text('Ошибка'), findsNothing);
       expect(find.text('Error'), findsNothing);
@@ -208,7 +217,8 @@ void main() {
       expect(find.byType(BottomNavigationBar), findsOneWidget);
     });
 
-    testWidgets('App handles large datasets efficiently', (WidgetTester tester) async {
+    testWidgets('App handles large datasets efficiently',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: FeedScreenEnhanced(),
@@ -221,7 +231,8 @@ void main() {
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles network errors gracefully', (WidgetTester tester) async {
+    testWidgets('App handles network errors gracefully',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreenEnhanced(),
@@ -234,7 +245,8 @@ void main() {
       expect(find.text('Exception'), findsNothing);
     });
 
-    testWidgets('App handles concurrent operations efficiently', (WidgetTester tester) async {
+    testWidgets('App handles concurrent operations efficiently',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: MainNavigationScreenEnhanced(),

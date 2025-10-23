@@ -10,7 +10,8 @@ class CustomerPortfolioScreen extends StatefulWidget {
   const CustomerPortfolioScreen({super.key});
 
   @override
-  State<CustomerPortfolioScreen> createState() => _CustomerPortfolioScreenState();
+  State<CustomerPortfolioScreen> createState() =>
+      _CustomerPortfolioScreenState();
 }
 
 class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
@@ -49,14 +50,17 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
 
       final currentUser = _authService.currentUser;
 
-      final portfolio = await _portfolioService.getCustomerPortfolio(currentUser.uid);
+      final portfolio =
+          await _portfolioService.getCustomerPortfolio(currentUser.uid);
       if (portfolio == null) {
         throw Exception('Портфолио не найдено');
       }
 
-      final orderHistory = await _portfolioService.getOrderHistory(currentUser.uid);
+      final orderHistory =
+          await _portfolioService.getOrderHistory(currentUser.uid);
       final stats = await _portfolioService.getPortfolioStats(currentUser.uid);
-      final recommendations = await _portfolioService.getRecommendations(currentUser.uid);
+      final recommendations =
+          await _portfolioService.getRecommendations(currentUser.uid);
 
       setState(() {
         _portfolio = portfolio;
@@ -75,52 +79,56 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Мой профиль'),
-      backgroundColor: Colors.purple,
-      foregroundColor: Colors.white,
-      bottom: TabBar(
-        controller: _tabController,
-        indicatorColor: Colors.white,
-        labelColor: Colors.white,
-        unselectedLabelColor: Colors.white70,
-        tabs: const [
-          Tab(icon: Icon(Icons.person), text: 'Профиль'),
-          Tab(icon: Icon(Icons.history), text: 'История'),
-          Tab(icon: Icon(Icons.favorite), text: 'Избранное'),
-          Tab(icon: Icon(Icons.calendar_today), text: 'Годовщины'),
-        ],
-      ),
-    ),
-    body: _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : _error != null
-        ? _buildErrorWidget()
-        : TabBarView(
+        appBar: AppBar(
+          title: const Text('Мой профиль'),
+          backgroundColor: Colors.purple,
+          foregroundColor: Colors.white,
+          bottom: TabBar(
             controller: _tabController,
-            children: [
-              _buildProfileTab(),
-              _buildOrderHistoryTab(),
-              _buildFavoritesTab(),
-              _buildAnniversariesTab(),
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
+            tabs: const [
+              Tab(icon: Icon(Icons.person), text: 'Профиль'),
+              Tab(icon: Icon(Icons.history), text: 'История'),
+              Tab(icon: Icon(Icons.favorite), text: 'Избранное'),
+              Tab(icon: Icon(Icons.calendar_today), text: 'Годовщины'),
             ],
           ),
-  );
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _error != null
+                ? _buildErrorWidget()
+                : TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildProfileTab(),
+                      _buildOrderHistoryTab(),
+                      _buildFavoritesTab(),
+                      _buildAnniversariesTab(),
+                    ],
+                  ),
+      );
 
   Widget _buildErrorWidget() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.error_outline, size: 64, color: Colors.red),
-        const SizedBox(height: 16),
-        Text('Ошибка загрузки', style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 8),
-        Text(_error!, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyMedium),
-        const SizedBox(height: 16),
-        ElevatedButton(onPressed: _loadPortfolio, child: const Text('Повторить')),
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Ошибка загрузки',
+                style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: 8),
+            Text(_error!,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium),
+            const SizedBox(height: 16),
+            ElevatedButton(
+                onPressed: _loadPortfolio, child: const Text('Повторить')),
+          ],
+        ),
+      );
 
   Widget _buildProfileTab() {
     if (_portfolio == null) return const SizedBox();
@@ -143,109 +151,126 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
   }
 
   Widget _buildProfileHeader() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: _portfolio!.avatarUrl != null
-                ? NetworkImage(_portfolio!.avatarUrl!)
-                : null,
-            child: _portfolio!.avatarUrl == null
-                ? Text(
-                    _portfolio!.name.isNotEmpty ? _portfolio!.name[0].toUpperCase() : '?',
-                    style: const TextStyle(fontSize: 24),
-                  )
-                : null,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(_portfolio!.name, style: Theme.of(context).textTheme.headlineSmall),
-                const SizedBox(height: 4),
-                Text(
-                  _portfolio!.email,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-                ),
-                if (_portfolio!.phoneNumber != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    _portfolio!.phoneNumber!,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-                  ),
-                ],
-                if (_portfolio!.yearsMarried != null) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    'В браке ${_portfolio!.yearsMarried} лет',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.purple,
-                      fontWeight: FontWeight.w500,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 40,
+                backgroundImage: _portfolio!.avatarUrl != null
+                    ? NetworkImage(_portfolio!.avatarUrl!)
+                    : null,
+                child: _portfolio!.avatarUrl == null
+                    ? Text(
+                        _portfolio!.name.isNotEmpty
+                            ? _portfolio!.name[0].toUpperCase()
+                            : '?',
+                        style: const TextStyle(fontSize: 24),
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(_portfolio!.name,
+                        style: Theme.of(context).textTheme.headlineSmall),
+                    const SizedBox(height: 4),
+                    Text(
+                      _portfolio!.email,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.grey[600]),
                     ),
-                  ),
-                ],
-              ],
-            ),
+                    if (_portfolio!.phoneNumber != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        _portfolio!.phoneNumber!,
+                        style: Theme.of(
+                          context,
+                        )
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Colors.grey[600]),
+                      ),
+                    ],
+                    if (_portfolio!.yearsMarried != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        'В браке ${_portfolio!.yearsMarried} лет',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.purple,
+                              fontWeight: FontWeight.w500,
+                            ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildStatsCards() => GridView.count(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    crossAxisCount: 2,
-    crossAxisSpacing: 16,
-    mainAxisSpacing: 16,
-    childAspectRatio: 1.5,
-    children: [
-      _buildStatCard('Заказов', '${_stats['totalOrders'] ?? 0}', Icons.shopping_bag, Colors.blue),
-      _buildStatCard(
-        'Потрачено',
-        '${(_stats['totalSpent'] ?? 0).toStringAsFixed(0)} ₽',
-        Icons.monetization_on,
-        Colors.green,
-      ),
-      _buildStatCard(
-        'Избранных',
-        '${_stats['favoriteSpecialistsCount'] ?? 0}',
-        Icons.favorite,
-        Colors.red,
-      ),
-      _buildStatCard(
-        'Годовщин',
-        '${_stats['anniversariesCount'] ?? 0}',
-        Icons.calendar_today,
-        Colors.orange,
-      ),
-    ],
-  );
-
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 1.5,
         children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(color: color, fontWeight: FontWeight.bold),
+          _buildStatCard('Заказов', '${_stats['totalOrders'] ?? 0}',
+              Icons.shopping_bag, Colors.blue),
+          _buildStatCard(
+            'Потрачено',
+            '${(_stats['totalSpent'] ?? 0).toStringAsFixed(0)} ₽',
+            Icons.monetization_on,
+            Colors.green,
           ),
-          Text(title, style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center),
+          _buildStatCard(
+            'Избранных',
+            '${_stats['favoriteSpecialistsCount'] ?? 0}',
+            Icons.favorite,
+            Colors.red,
+          ),
+          _buildStatCard(
+            'Годовщин',
+            '${_stats['anniversariesCount'] ?? 0}',
+            Icons.calendar_today,
+            Colors.orange,
+          ),
         ],
-      ),
-    ),
-  );
+      );
+
+  Widget _buildStatCard(
+          String title, String value, IconData icon, Color color) =>
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color, size: 32),
+              const SizedBox(height: 8),
+              Text(
+                value,
+                style: Theme.of(
+                  context,
+                )
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(color: color, fontWeight: FontWeight.bold),
+              ),
+              Text(title,
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: TextAlign.center),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildRecommendations() {
     if (_recommendations.isEmpty) return const SizedBox();
@@ -260,7 +285,8 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
               children: [
                 const Icon(Icons.lightbulb, color: Colors.amber),
                 const SizedBox(width: 8),
-                Text('Рекомендации', style: Theme.of(context).textTheme.titleMedium),
+                Text('Рекомендации',
+                    style: Theme.of(context).textTheme.titleMedium),
               ],
             ),
             const SizedBox(height: 12),
@@ -270,10 +296,12 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                    const Icon(Icons.arrow_forward_ios,
+                        size: 16, color: Colors.grey),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(recommendation, style: Theme.of(context).textTheme.bodyMedium),
+                      child: Text(recommendation,
+                          style: Theme.of(context).textTheme.bodyMedium),
                     ),
                   ],
                 ),
@@ -286,32 +314,36 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
   }
 
   Widget _buildNotesSection() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.note, color: Colors.purple),
-              const SizedBox(width: 8),
-              Text('Заметки', style: Theme.of(context).textTheme.titleMedium),
-              const Spacer(),
-              IconButton(onPressed: _editNotes, icon: const Icon(Icons.edit)),
+              Row(
+                children: [
+                  const Icon(Icons.note, color: Colors.purple),
+                  const SizedBox(width: 8),
+                  Text('Заметки',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const Spacer(),
+                  IconButton(
+                      onPressed: _editNotes, icon: const Icon(Icons.edit)),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                _portfolio?.notes ?? 'Заметок пока нет',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontStyle: _portfolio?.notes == null
+                          ? FontStyle.italic
+                          : FontStyle.normal,
+                      color: _portfolio?.notes == null ? Colors.grey : null,
+                    ),
+              ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            _portfolio?.notes ?? 'Заметок пока нет',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontStyle: _portfolio?.notes == null ? FontStyle.italic : FontStyle.normal,
-              color: _portfolio?.notes == null ? Colors.grey : null,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildOrderHistoryTab() {
     if (_orderHistory.isEmpty) {
@@ -321,9 +353,11 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
           children: [
             Icon(Icons.history, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text('История заказов пуста', style: TextStyle(fontSize: 18, color: Colors.grey)),
+            Text('История заказов пуста',
+                style: TextStyle(fontSize: 18, color: Colors.grey)),
             SizedBox(height: 8),
-            Text('Ваши заказы будут отображаться здесь', style: TextStyle(color: Colors.grey)),
+            Text('Ваши заказы будут отображаться здесь',
+                style: TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -340,76 +374,88 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
   }
 
   Widget _buildOrderCard(OrderHistory order) => Card(
-    margin: const EdgeInsets.only(bottom: 12),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(order.serviceName, style: Theme.of(context).textTheme.titleMedium),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: _getStatusColor(order.status),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  order.statusText,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(order.serviceName,
+                        style: Theme.of(context).textTheme.titleMedium),
                   ),
-                ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _getStatusColor(order.status),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      order.statusText,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            order.specialistName,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
-              const SizedBox(width: 4),
-              Text(order.formattedDate, style: Theme.of(context).textTheme.bodySmall),
-              const SizedBox(width: 16),
-              Icon(Icons.monetization_on, size: 16, color: Colors.grey[600]),
-              const SizedBox(width: 4),
+              const SizedBox(height: 8),
               Text(
-                order.formattedPrice,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500, color: Colors.green),
+                order.specialistName,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.grey[600]),
               ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
+                  const SizedBox(width: 4),
+                  Text(order.formattedDate,
+                      style: Theme.of(context).textTheme.bodySmall),
+                  const SizedBox(width: 16),
+                  Icon(Icons.monetization_on,
+                      size: 16, color: Colors.grey[600]),
+                  const SizedBox(width: 4),
+                  Text(
+                    order.formattedPrice,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500, color: Colors.green),
+                  ),
+                ],
+              ),
+              if (order.hadDiscount) ...[
+                const SizedBox(height: 4),
+                Text(
+                  'Скидка: ${order.discountAmount.toStringAsFixed(0)} ₽',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(
+                      color: Colors.orange, fontWeight: FontWeight.w500),
+                ),
+              ],
+              if (order.notes != null && order.notes!.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text(
+                  order.notes!,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(fontStyle: FontStyle.italic),
+                ),
+              ],
             ],
           ),
-          if (order.hadDiscount) ...[
-            const SizedBox(height: 4),
-            Text(
-              'Скидка: ${order.discountAmount.toStringAsFixed(0)} ₽',
-              style: Theme.of(
-                context,
-              ).textTheme.bodySmall?.copyWith(color: Colors.orange, fontWeight: FontWeight.w500),
-            ),
-          ],
-          if (order.notes != null && order.notes!.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text(
-              order.notes!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
-            ),
-          ],
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildFavoritesTab() {
     final favorites = _portfolio?.favoriteSpecialists ?? [];
@@ -421,9 +467,11 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
           children: [
             Icon(Icons.favorite_border, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text('Избранных специалистов нет', style: TextStyle(fontSize: 18, color: Colors.grey)),
+            Text('Избранных специалистов нет',
+                style: TextStyle(fontSize: 18, color: Colors.grey)),
             SizedBox(height: 8),
-            Text('Добавляйте специалистов в избранное', style: TextStyle(color: Colors.grey)),
+            Text('Добавляйте специалистов в избранное',
+                style: TextStyle(color: Colors.grey)),
           ],
         ),
       );
@@ -440,23 +488,23 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
   }
 
   Widget _buildFavoriteCard(String specialistId) => Card(
-    margin: const EdgeInsets.only(bottom: 12),
-    child: ListTile(
-      leading: const CircleAvatar(
-        backgroundColor: Colors.purple,
-        child: Icon(Icons.person, color: Colors.white),
-      ),
-      title: Text('Специалист $specialistId'),
-      subtitle: const Text('Нажмите для просмотра профиля'),
-      trailing: IconButton(
-        onPressed: () => _removeFromFavorites(specialistId),
-        icon: const Icon(Icons.favorite, color: Colors.red),
-      ),
-      onTap: () {
-        // TODO(developer): Переход к профилю специалиста
-      },
-    ),
-  );
+        margin: const EdgeInsets.only(bottom: 12),
+        child: ListTile(
+          leading: const CircleAvatar(
+            backgroundColor: Colors.purple,
+            child: Icon(Icons.person, color: Colors.white),
+          ),
+          title: Text('Специалист $specialistId'),
+          subtitle: const Text('Нажмите для просмотра профиля'),
+          trailing: IconButton(
+            onPressed: () => _removeFromFavorites(specialistId),
+            icon: const Icon(Icons.favorite, color: Colors.red),
+          ),
+          onTap: () {
+            // TODO(developer): Переход к профилю специалиста
+          },
+        ),
+      );
 
   Widget _buildAnniversariesTab() {
     final anniversaries = _portfolio?.anniversaries ?? [];
@@ -468,9 +516,11 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (upcomingAnniversaries.isNotEmpty) ...[
-            Text('Ближайшие годовщины', style: Theme.of(context).textTheme.titleMedium),
+            Text('Ближайшие годовщины',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
-            ...upcomingAnniversaries.map((anniversary) => _buildAnniversaryCard(anniversary, true)),
+            ...upcomingAnniversaries
+                .map((anniversary) => _buildAnniversaryCard(anniversary, true)),
             const SizedBox(height: 24),
           ],
           Text('Все годовщины', style: Theme.of(context).textTheme.titleMedium),
@@ -481,12 +531,14 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
                 children: [
                   Icon(Icons.calendar_today, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text('Годовщин не добавлено', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                  Text('Годовщин не добавлено',
+                      style: TextStyle(fontSize: 18, color: Colors.grey)),
                 ],
               ),
             )
           else
-            ...anniversaries.map((anniversary) => _buildAnniversaryCard(anniversary, false)),
+            ...anniversaries.map(
+                (anniversary) => _buildAnniversaryCard(anniversary, false)),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: _addAnniversary,
@@ -513,9 +565,12 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         ),
         title: Text(
           '${anniversary.day.toString().padLeft(2, '0')}.${anniversary.month.toString().padLeft(2, '0')}',
-          style: TextStyle(fontWeight: isUpcoming ? FontWeight.bold : FontWeight.normal),
+          style: TextStyle(
+              fontWeight: isUpcoming ? FontWeight.bold : FontWeight.normal),
         ),
-        subtitle: isUpcoming ? Text('Через $daysUntil дней') : Text('${anniversary.year}'),
+        subtitle: isUpcoming
+            ? Text('Через $daysUntil дней')
+            : Text('${anniversary.year}'),
         trailing: IconButton(
           onPressed: () => _removeAnniversary(anniversary),
           icon: const Icon(Icons.delete, color: Colors.red),
@@ -557,7 +612,9 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(controller.text),
             child: const Text('Сохранить'),
@@ -577,7 +634,8 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         }
       } on Exception catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
         }
       }
     }
@@ -587,7 +645,8 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
     final currentUser = _authService.currentUser;
 
     try {
-      await _portfolioService.removeFromFavorites(currentUser.uid, specialistId);
+      await _portfolioService.removeFromFavorites(
+          currentUser.uid, specialistId);
       await _loadPortfolio();
       if (mounted) {
         ScaffoldMessenger.of(
@@ -596,7 +655,8 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
       }
     } on Exception catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
       }
     }
   }
@@ -622,7 +682,8 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         }
       } on Exception catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
         }
       }
     }
@@ -661,7 +722,8 @@ class _CustomerPortfolioScreenState extends State<CustomerPortfolioScreen>
         }
       } on Exception catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
         }
       }
     }

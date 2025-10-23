@@ -40,18 +40,21 @@ class BookingCard extends StatelessWidget {
                       children: [
                         Text(
                           booking.service,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Клиент: ${booking.clientName}',
-                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 14),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: _getStatusColor(booking.status),
                       borderRadius: BorderRadius.circular(12),
@@ -75,11 +78,13 @@ class BookingCard extends StatelessWidget {
                 children: [
                   Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
-                  Text(booking.formattedDate, style: const TextStyle(fontSize: 14)),
+                  Text(booking.formattedDate,
+                      style: const TextStyle(fontSize: 14)),
                   const SizedBox(width: 16),
                   Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
-                  Text(booking.formattedTime, style: const TextStyle(fontSize: 14)),
+                  Text(booking.formattedTime,
+                      style: const TextStyle(fontSize: 14)),
                 ],
               ),
 
@@ -90,7 +95,8 @@ class BookingCard extends StatelessWidget {
                 children: [
                   Icon(Icons.schedule, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
-                  Text(booking.formattedDuration, style: const TextStyle(fontSize: 14)),
+                  Text(booking.formattedDuration,
+                      style: const TextStyle(fontSize: 14)),
                   const Spacer(),
                   Text(
                     booking.formattedPrice,
@@ -128,7 +134,8 @@ class BookingCard extends StatelessWidget {
                   if (booking.canBeConfirmed)
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () => onStatusChange?.call(BookingStatus.confirmed),
+                        onPressed: () =>
+                            onStatusChange?.call(BookingStatus.confirmed),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
@@ -139,7 +146,8 @@ class BookingCard extends StatelessWidget {
                   if (booking.canBeCompleted)
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () => onStatusChange?.call(BookingStatus.completed),
+                        onPressed: () =>
+                            onStatusChange?.call(BookingStatus.completed),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),
@@ -149,7 +157,8 @@ class BookingCard extends StatelessWidget {
                   if (booking.canBeCancelled)
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () => onStatusChange?.call(BookingStatus.cancelled),
+                        onPressed: () =>
+                            onStatusChange?.call(BookingStatus.cancelled),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                         ),

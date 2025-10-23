@@ -4,13 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Современная навигационная панель с Material Design 3
 class ModernNavigationBar extends ConsumerStatefulWidget {
-  const ModernNavigationBar({super.key, required this.currentIndex, required this.onTap});
+  const ModernNavigationBar(
+      {super.key, required this.currentIndex, required this.onTap});
 
   final int currentIndex;
   final ValueChanged<int>? onTap;
 
   @override
-  ConsumerState<ModernNavigationBar> createState() => _ModernNavigationBarState();
+  ConsumerState<ModernNavigationBar> createState() =>
+      _ModernNavigationBarState();
 }
 
 class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
@@ -28,7 +30,8 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 0.95,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -78,7 +81,8 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
         _buildNavItem(4, Icons.lightbulb_outline, Icons.lightbulb, 'Идеи'),
       ];
 
-  Widget _buildNavItem(int index, IconData icon, IconData activeIcon, String label) {
+  Widget _buildNavItem(
+      int index, IconData icon, IconData activeIcon, String label) {
     final isSelected = widget.currentIndex == index;
 
     return Expanded(
@@ -117,7 +121,8 @@ class _ModernNavigationBarState extends ConsumerState<ModernNavigationBar>
                           color: isSelected
                               ? Theme.of(context).primaryColor
                               : Theme.of(context).textTheme.bodyMedium?.color,
-                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w500,
                         ),
                     child: Text(label),
                   ),
@@ -148,7 +153,8 @@ class ModernFAB extends StatefulWidget {
   State<ModernFAB> createState() => _ModernFABState();
 }
 
-class _ModernFABState extends State<ModernFAB> with SingleTickerProviderStateMixin {
+class _ModernFABState extends State<ModernFAB>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _rotationAnimation;
@@ -163,11 +169,13 @@ class _ModernFABState extends State<ModernFAB> with SingleTickerProviderStateMix
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 0.9,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
     _rotationAnimation = Tween<double>(
       begin: 0,
       end: 0.1,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -197,7 +205,8 @@ class _ModernFABState extends State<ModernFAB> with SingleTickerProviderStateMix
               backgroundColor: Theme.of(context).primaryColor,
               foregroundColor: Colors.white,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
               child: Icon(widget.icon, size: 28),
             ),
           ),
@@ -228,8 +237,8 @@ class ModernScaffold extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         appBar: appBar,
         body: body,
-        bottomNavigationBar:
-            ModernNavigationBar(currentIndex: currentIndex, onTap: onNavigationTap),
+        bottomNavigationBar: ModernNavigationBar(
+            currentIndex: currentIndex, onTap: onNavigationTap),
         floatingActionButton: fab,
         floatingActionButtonLocation: floatingActionButtonLocation,
       );

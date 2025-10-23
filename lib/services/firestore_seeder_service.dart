@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirestoreSeederService {
   factory FirestoreSeederService() => _instance;
   FirestoreSeederService._internal();
-  static final FirestoreSeederService _instance = FirestoreSeederService._internal();
+  static final FirestoreSeederService _instance =
+      FirestoreSeederService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -17,10 +18,30 @@ class FirestoreSeederService {
       // Users (2 клиента, 2 специалиста)
       debugPrint('👥 Создание пользователей...');
       final users = [
-        {'id': 'u_customer_1', 'name': 'Иван Петров', 'city': 'Москва', 'role': 'customer'},
-        {'id': 'u_customer_2', 'name': 'Елена Смирнова', 'city': 'СПб', 'role': 'customer'},
-        {'id': 'u_spec_1', 'name': 'Ведущий Артём', 'city': 'Москва', 'role': 'specialist'},
-        {'id': 'u_spec_2', 'name': 'Фотограф Анна', 'city': 'СПб', 'role': 'specialist'},
+        {
+          'id': 'u_customer_1',
+          'name': 'Иван Петров',
+          'city': 'Москва',
+          'role': 'customer'
+        },
+        {
+          'id': 'u_customer_2',
+          'name': 'Елена Смирнова',
+          'city': 'СПб',
+          'role': 'customer'
+        },
+        {
+          'id': 'u_spec_1',
+          'name': 'Ведущий Артём',
+          'city': 'Москва',
+          'role': 'specialist'
+        },
+        {
+          'id': 'u_spec_2',
+          'name': 'Фотограф Анна',
+          'city': 'СПб',
+          'role': 'specialist'
+        },
       ];
 
       for (final u in users) {
@@ -44,7 +65,8 @@ class FirestoreSeederService {
         6,
         (i) => {
           'title': 'Идея #${i + 1}',
-          'description': 'Описание идеи #${i + 1}. Это отличная идея для вашего мероприятия!',
+          'description':
+              'Описание идеи #${i + 1}. Это отличная идея для вашего мероприятия!',
           'category': i.isEven ? 'Фото' : 'Видео',
           'isVideo': i.isOdd,
           'mediaUrl': i.isOdd
@@ -185,7 +207,11 @@ class FirestoreSeederService {
         'pricePerHour': 3000.0,
         'description':
             'Профессиональный фотограф. Специализируюсь на свадебной и семейной фотографии.',
-        'skills': ['Свадебная фотосъемка', 'Семейная фотосъемка', 'Детская фотосъемка'],
+        'skills': [
+          'Свадебная фотосъемка',
+          'Семейная фотосъемка',
+          'Детская фотосъемка'
+        ],
         'portfolio': [
           'https://picsum.photos/seed/photo1/300/200',
           'https://picsum.photos/seed/photo2/300/200',
@@ -217,7 +243,8 @@ class FirestoreSeederService {
     try {
       final ideasSnapshot = await _firestore.collection('ideas').limit(1).get();
       final chatsSnapshot = await _firestore.collection('chats').limit(1).get();
-      final bookingsSnapshot = await _firestore.collection('bookings').limit(1).get();
+      final bookingsSnapshot =
+          await _firestore.collection('bookings').limit(1).get();
 
       return ideasSnapshot.docs.isNotEmpty ||
           chatsSnapshot.docs.isNotEmpty ||

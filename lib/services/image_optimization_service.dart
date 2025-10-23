@@ -65,7 +65,9 @@ class ImageOptimizationService {
     Uint8List imageBytes, {
     int width = _thumbnailWidth,
     int height = _thumbnailHeight,
-  }) async => compressImage(imageBytes, maxWidth: width, maxHeight: height, quality: 80);
+  }) async =>
+      compressImage(imageBytes,
+          maxWidth: width, maxHeight: height, quality: 80);
 
   /// Получить размер изображения
   static Future<Size> getImageSize(Uint8List imageBytes) async {
@@ -82,7 +84,8 @@ class ImageOptimizationService {
   }
 
   /// Сохранить изображение локально
-  static Future<String> saveImageLocally(Uint8List imageBytes, String fileName) async {
+  static Future<String> saveImageLocally(
+      Uint8List imageBytes, String fileName) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final imagesDir = Directory(path.join(directory.path, 'images'));
@@ -387,30 +390,28 @@ class ThumbnailImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => OptimizedImage(
-    imageUrl: imageUrl,
-    width: size,
-    height: size,
-    fit: fit,
-    maxWidth: 300,
-    maxHeight: 300,
-    quality: 80,
-    placeholder:
-        placeholder ??
-        Container(
-          width: size,
-          height: size,
-          color: Colors.grey[300],
-          child: const Center(child: CircularProgressIndicator()),
-        ),
-    errorWidget:
-        errorWidget ??
-        Container(
-          width: size,
-          height: size,
-          color: Colors.grey[300],
-          child: const Center(child: Icon(Icons.error)),
-        ),
-  );
+        imageUrl: imageUrl,
+        width: size,
+        height: size,
+        fit: fit,
+        maxWidth: 300,
+        maxHeight: 300,
+        quality: 80,
+        placeholder: placeholder ??
+            Container(
+              width: size,
+              height: size,
+              color: Colors.grey[300],
+              child: const Center(child: CircularProgressIndicator()),
+            ),
+        errorWidget: errorWidget ??
+            Container(
+              width: size,
+              height: size,
+              color: Colors.grey[300],
+              child: const Center(child: Icon(Icons.error)),
+            ),
+      );
 }
 
 /// Виджет для отображения изображений в сетке с lazy loading
@@ -473,7 +474,8 @@ class _LazyImageGridState extends State<LazyImageGrid> {
     final visibleIndices = <int>{};
     for (var i = 0; i < widget.imageUrls.length; i++) {
       // Упрощенная логика определения видимости
-      if (i >= (offset / 100).floor() && i <= ((offset + viewportHeight) / 100).ceil()) {
+      if (i >= (offset / 100).floor() &&
+          i <= ((offset + viewportHeight) / 100).ceil()) {
         visibleIndices.add(i);
       }
     }
@@ -488,30 +490,30 @@ class _LazyImageGridState extends State<LazyImageGrid> {
 
   @override
   Widget build(BuildContext context) => GridView.builder(
-    controller: _scrollController,
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: widget.crossAxisCount,
-      crossAxisSpacing: widget.crossAxisSpacing,
-      mainAxisSpacing: widget.mainAxisSpacing,
-      childAspectRatio: widget.childAspectRatio,
-    ),
-    itemCount: widget.imageUrls.length,
-    itemBuilder: (context, index) {
-      final isVisible = _visibleIndices.contains(index);
+        controller: _scrollController,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: widget.crossAxisCount,
+          crossAxisSpacing: widget.crossAxisSpacing,
+          mainAxisSpacing: widget.mainAxisSpacing,
+          childAspectRatio: widget.childAspectRatio,
+        ),
+        itemCount: widget.imageUrls.length,
+        itemBuilder: (context, index) {
+          final isVisible = _visibleIndices.contains(index);
 
-      return GestureDetector(
-        onTap: widget.onImageTap,
-        child: isVisible
-            ? OptimizedImage(
-                imageUrl: widget.imageUrls[index],
-                fit: widget.fit,
-                enableCaching: widget.enableCaching,
-                enableCompression: widget.enableCompression,
-                placeholder: widget.placeholder,
-                errorWidget: widget.errorWidget,
-              )
-            : Container(color: Colors.grey[300], child: widget.placeholder),
+          return GestureDetector(
+            onTap: widget.onImageTap,
+            child: isVisible
+                ? OptimizedImage(
+                    imageUrl: widget.imageUrls[index],
+                    fit: widget.fit,
+                    enableCaching: widget.enableCaching,
+                    enableCompression: widget.enableCompression,
+                    placeholder: widget.placeholder,
+                    errorWidget: widget.errorWidget,
+                  )
+                : Container(color: Colors.grey[300], child: widget.placeholder),
+          );
+        },
       );
-    },
-  );
 }

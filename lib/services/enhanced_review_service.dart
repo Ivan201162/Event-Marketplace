@@ -32,7 +32,8 @@ class EnhancedReviewService {
 
       // Проверяем, что заказ завершен (если указан bookingId)
       if (bookingId != null) {
-        final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
+        final bookingDoc =
+            await _firestore.collection('bookings').doc(bookingId).get();
 
         if (!bookingDoc.exists) {
           throw Exception('Заказ не найден');
@@ -40,7 +41,8 @@ class EnhancedReviewService {
 
         final bookingData = bookingDoc.data()!;
         if (bookingData['status'] != 'completed') {
-          throw Exception('Отзыв можно оставить только для завершенных заказов');
+          throw Exception(
+              'Отзыв можно оставить только для завершенных заказов');
         }
       }
 
@@ -85,7 +87,8 @@ class EnhancedReviewService {
         'metadata': {},
       };
 
-      final docRef = await _firestore.collection(_reviewsCollection).add(reviewData);
+      final docRef =
+          await _firestore.collection(_reviewsCollection).add(reviewData);
 
       // Обновляем статистику специалиста
       await _updateSpecialistStats(specialistId);
@@ -125,13 +128,14 @@ class EnhancedReviewService {
   }
 
   /// Получить поток отзывов специалиста
-  Stream<List<Review>> getSpecialistReviewsStream(String specialistId) => _firestore
-      .collection(_reviewsCollection)
-      .where('specialistId', isEqualTo: specialistId)
-      .where('isDeleted', isEqualTo: false)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList());
+  Stream<List<Review>> getSpecialistReviewsStream(String specialistId) =>
+      _firestore
+          .collection(_reviewsCollection)
+          .where('specialistId', isEqualTo: specialistId)
+          .where('isDeleted', isEqualTo: false)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList());
 
   /// Получить статистику отзывов специалиста
   Future<ReviewStats> getSpecialistReviewStats(String specialistId) async {
@@ -143,7 +147,8 @@ class EnhancedReviewService {
           .get();
 
       if (reviewsSnapshot.docs.isEmpty) {
-        return const ReviewStats(totalReviews: 0, averageRating: 0, ratingDistribution: {});
+        return const ReviewStats(
+            totalReviews: 0, averageRating: 0, ratingDistribution: {});
       }
 
       final reviews = reviewsSnapshot.docs.map(Review.fromDocument).toList();
@@ -167,19 +172,22 @@ class EnhancedReviewService {
       );
     } catch (e) {
       debugPrint('Ошибка получения статистики отзывов: $e');
-      return const ReviewStats(totalReviews: 0, averageRating: 0, ratingDistribution: {});
+      return const ReviewStats(
+          totalReviews: 0, averageRating: 0, ratingDistribution: {});
     }
   }
 
   /// Получить поток статистики отзывов
-  Stream<ReviewStats> getSpecialistReviewStatsStream(String specialistId) => _firestore
-      .collection(_reviewsCollection)
-      .where('specialistId', isEqualTo: specialistId)
-      .where('isDeleted', isEqualTo: false)
-      .snapshots()
-      .map((snapshot) {
+  Stream<ReviewStats> getSpecialistReviewStatsStream(String specialistId) =>
+      _firestore
+          .collection(_reviewsCollection)
+          .where('specialistId', isEqualTo: specialistId)
+          .where('isDeleted', isEqualTo: false)
+          .snapshots()
+          .map((snapshot) {
         if (snapshot.docs.isEmpty) {
-          return const ReviewStats(totalReviews: 0, averageRating: 0, ratingDistribution: {});
+          return const ReviewStats(
+              totalReviews: 0, averageRating: 0, ratingDistribution: {});
         }
 
         final reviews = snapshot.docs.map(Review.fromDocument).toList();
@@ -218,7 +226,8 @@ class EnhancedReviewService {
         throw Exception('Комментарий должен содержать минимум 10 символов');
       }
 
-      final reviewDoc = await _firestore.collection(_reviewsCollection).doc(reviewId).get();
+      final reviewDoc =
+          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
 
       if (!reviewDoc.exists) {
         throw Exception('Отзыв не найден');
@@ -255,7 +264,8 @@ class EnhancedReviewService {
   /// Удалить отзыв
   Future<void> deleteReview(String reviewId) async {
     try {
-      final reviewDoc = await _firestore.collection(_reviewsCollection).doc(reviewId).get();
+      final reviewDoc =
+          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
 
       if (!reviewDoc.exists) {
         throw Exception('Отзыв не найден');
@@ -349,7 +359,10 @@ class EnhancedReviewService {
     try {
       final stats = await getSpecialistReviewStats(specialistId);
 
-      await _firestore.collection(_specialistsCollection).doc(specialistId).update({
+      await _firestore
+          .collection(_specialistsCollection)
+          .doc(specialistId)
+          .update({
         'rating': stats.averageRating,
         'reviewCount': stats.totalReviews,
         'lastReviewUpdate': FieldValue.serverTimestamp(),

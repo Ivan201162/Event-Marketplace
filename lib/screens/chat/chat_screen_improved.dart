@@ -27,7 +27,7 @@ class ChatScreenImproved extends ConsumerStatefulWidget {
 class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
   final _messageController = TextEditingController();
   final _scrollController = ScrollController();
-  
+
   bool _isLoading = false;
   bool _isSending = false;
   File? _selectedImage;
@@ -64,16 +64,18 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
     try {
       final chatService = ref.read(chatServiceProvider);
       final storageService = ref.read(storageServiceProvider);
-      
+
       String content = _messageController.text.trim();
       MessageType type = MessageType.text;
       Map<String, dynamic>? metadata;
 
       // Если выбрано изображение, загружаем его
       if (_selectedImage != null) {
-        final messageId = FirebaseFirestore.instance.collection('temp').doc().id;
-        final imageUrl = await storageService.uploadPostImage(messageId, _selectedImage!);
-        
+        final messageId =
+            FirebaseFirestore.instance.collection('temp').doc().id;
+        final imageUrl =
+            await storageService.uploadPostImage(messageId, _selectedImage!);
+
         content = imageUrl;
         type = MessageType.image;
         metadata = {
@@ -167,7 +169,8 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                   children: [
                     IconButton(
                       onPressed: () => context.pop(),
-                      icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                      icon: const Icon(Icons.arrow_back,
+                          color: Colors.white, size: 24),
                     ),
                     const SizedBox(width: 8),
                     // Аватар собеседника
@@ -182,10 +185,13 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                       ),
                       child: chatWithUser.when(
                         data: (userData) => userData?['avatarUrl'] == null
-                            ? const Icon(Icons.person, size: 20, color: Colors.white)
+                            ? const Icon(Icons.person,
+                                size: 20, color: Colors.white)
                             : null,
-                        loading: () => const CircularProgressIndicator(strokeWidth: 2),
-                        error: (_, __) => const Icon(Icons.person, size: 20, color: Colors.white),
+                        loading: () =>
+                            const CircularProgressIndicator(strokeWidth: 2),
+                        error: (_, __) => const Icon(Icons.person,
+                            size: 20, color: Colors.white),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -196,7 +202,8 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                         children: [
                           Text(
                             chatWithUser.when(
-                              data: (userData) => userData?['name'] ?? 'Пользователь',
+                              data: (userData) =>
+                                  userData?['name'] ?? 'Пользователь',
                               loading: () => 'Загрузка...',
                               error: (_, __) => 'Пользователь',
                             ),
@@ -208,7 +215,9 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                           ),
                           Text(
                             chatWithUser.when(
-                              data: (userData) => userData?['isOnline'] == true ? 'В сети' : 'Был(а) недавно',
+                              data: (userData) => userData?['isOnline'] == true
+                                  ? 'В сети'
+                                  : 'Был(а) недавно',
                               loading: () => '',
                               error: (_, __) => '',
                             ),
@@ -229,7 +238,7 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                   ],
                 ),
               ),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -258,7 +267,7 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                                 ),
                               );
                             }
-                            
+
                             return ListView.builder(
                               controller: _scrollController,
                               reverse: true,
@@ -285,7 +294,8 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                                 const SizedBox(height: 16),
                                 Text(
                                   'Ошибка загрузки сообщений',
-                                  style: Theme.of(context).textTheme.titleMedium,
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
@@ -298,7 +308,7 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                           ),
                         ),
                       ),
-                      
+
                       // Выбранное изображение
                       if (_selectedImage != null) ...[
                         Container(
@@ -347,7 +357,7 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                         ),
                         const SizedBox(height: 8),
                       ],
-                      
+
                       // Поле ввода сообщения
                       Container(
                         padding: const EdgeInsets.all(16),
@@ -362,13 +372,15 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                           children: [
                             IconButton(
                               onPressed: _pickImage,
-                              icon: const Icon(Icons.image, color: Color(0xFF1E3A8A)),
+                              icon: const Icon(Icons.image,
+                                  color: Color(0xFF1E3A8A)),
                             ),
                             Expanded(
                               child: TextField(
                                 controller: _messageController,
                                 maxLines: null,
-                                textCapitalization: TextCapitalization.sentences,
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 decoration: InputDecoration(
                                   hintText: 'Введите сообщение...',
                                   border: OutlineInputBorder(
@@ -391,8 +403,8 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                               child: Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: _isSending 
-                                      ? Colors.grey[300] 
+                                  color: _isSending
+                                      ? Colors.grey[300]
                                       : const Color(0xFF1E3A8A),
                                   shape: BoxShape.circle,
                                 ),
@@ -402,7 +414,9 @@ class _ChatScreenImprovedState extends ConsumerState<ChatScreenImproved> {
                                         height: 20,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.white),
                                         ),
                                       )
                                     : const Icon(
@@ -448,9 +462,8 @@ class _MessageBubble extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Row(
-        mainAxisAlignment: isFromCurrentUser 
-            ? MainAxisAlignment.end 
-            : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isFromCurrentUser) ...[
             CircleAvatar(
@@ -464,14 +477,14 @@ class _MessageBubble extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isFromCurrentUser 
+                color: isFromCurrentUser
                     ? const Color(0xFF1E3A8A)
                     : Colors.grey[200],
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isFromCurrentUser 
+                  bottomLeft: isFromCurrentUser
                       ? const Radius.circular(20)
                       : const Radius.circular(4),
-                  bottomRight: isFromCurrentUser 
+                  bottomRight: isFromCurrentUser
                       ? const Radius.circular(4)
                       : const Radius.circular(20),
                 ),
@@ -485,7 +498,8 @@ class _MessageBubble extends ConsumerWidget {
                     Text(
                       message.content,
                       style: TextStyle(
-                        color: isFromCurrentUser ? Colors.white : Colors.black87,
+                        color:
+                            isFromCurrentUser ? Colors.white : Colors.black87,
                         fontSize: 16,
                       ),
                     ),
@@ -496,8 +510,8 @@ class _MessageBubble extends ConsumerWidget {
                       Text(
                         message.formattedTime,
                         style: TextStyle(
-                          color: isFromCurrentUser 
-                              ? Colors.white70 
+                          color: isFromCurrentUser
+                              ? Colors.white70
                               : Colors.grey[600],
                           fontSize: 12,
                         ),

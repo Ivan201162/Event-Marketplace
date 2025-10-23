@@ -77,20 +77,20 @@ class MediaItem {
 
   /// Создать из Map
   factory MediaItem.fromMap(Map<String, dynamic> data) => MediaItem(
-    id: data['id'] as String,
-    userId: data['userId'] as String,
-    type: MediaTypeExtension.fromString(data['type'] as String),
-    url: data['url'] as String,
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-    thumbnailUrl: data['thumbnailUrl'] as String?,
-    title: data['title'] as String?,
-    description: data['description'] as String?,
-    fileSize: data['fileSize'] as int?,
-    duration: data['duration'] as int?,
-    width: data['width'] as int?,
-    height: data['height'] as int?,
-    metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
-  );
+        id: data['id'] as String,
+        userId: data['userId'] as String,
+        type: MediaTypeExtension.fromString(data['type'] as String),
+        url: data['url'] as String,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        thumbnailUrl: data['thumbnailUrl'] as String?,
+        title: data['title'] as String?,
+        description: data['description'] as String?,
+        fileSize: data['fileSize'] as int?,
+        duration: data['duration'] as int?,
+        width: data['width'] as int?,
+        height: data['height'] as int?,
+        metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+      );
 
   final String id;
   final String userId;
@@ -108,19 +108,19 @@ class MediaItem {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'type': type.value,
-    'url': url,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'thumbnailUrl': thumbnailUrl,
-    'title': title,
-    'description': description,
-    'fileSize': fileSize,
-    'duration': duration,
-    'width': width,
-    'height': height,
-    'metadata': metadata,
-  };
+        'userId': userId,
+        'type': type.value,
+        'url': url,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'thumbnailUrl': thumbnailUrl,
+        'title': title,
+        'description': description,
+        'fileSize': fileSize,
+        'duration': duration,
+        'width': width,
+        'height': height,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   MediaItem copyWith({
@@ -137,21 +137,22 @@ class MediaItem {
     int? width,
     int? height,
     Map<String, dynamic>? metadata,
-  }) => MediaItem(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    type: type ?? this.type,
-    url: url ?? this.url,
-    createdAt: createdAt ?? this.createdAt,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    fileSize: fileSize ?? this.fileSize,
-    duration: duration ?? this.duration,
-    width: width ?? this.width,
-    height: height ?? this.height,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      MediaItem(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        url: url ?? this.url,
+        createdAt: createdAt ?? this.createdAt,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        fileSize: fileSize ?? this.fileSize,
+        duration: duration ?? this.duration,
+        width: width ?? this.width,
+        height: height ?? this.height,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Получить размер файла в читаемом формате
   String get formattedFileSize {

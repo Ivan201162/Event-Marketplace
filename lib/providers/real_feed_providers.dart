@@ -6,7 +6,8 @@ import '../core/feature_flags.dart';
 /// Провайдеры для реальных данных ленты
 class RealFeedProviders {
   /// Провайдер для получения всех постов ленты
-  static final feedPostsProvider = StreamProvider<List<EnhancedFeedPost>>((ref) {
+  static final feedPostsProvider =
+      StreamProvider<List<EnhancedFeedPost>>((ref) {
     if (!FeatureFlags.useRealFeedData) {
       return Stream.value([]);
     }
@@ -42,7 +43,8 @@ class RealFeedProviders {
   });
 
   /// Провайдер для получения постов по категории
-  static final feedPostsByCategoryProvider = StreamProvider.family<List<EnhancedFeedPost>, String>((ref, category) {
+  static final feedPostsByCategoryProvider =
+      StreamProvider.family<List<EnhancedFeedPost>, String>((ref, category) {
     if (!FeatureFlags.useRealFeedData) {
       return Stream.value([]);
     }
@@ -79,7 +81,8 @@ class RealFeedProviders {
   });
 
   /// Провайдер для поиска постов
-  static final searchPostsProvider = FutureProvider.family<List<EnhancedFeedPost>, String>((ref, query) async {
+  static final searchPostsProvider =
+      FutureProvider.family<List<EnhancedFeedPost>, String>((ref, query) async {
     if (!FeatureFlags.useRealFeedData) {
       return [];
     }
@@ -119,7 +122,8 @@ class RealFeedProviders {
   });
 
   /// Провайдер для получения постов пользователя
-  static final userPostsProvider = StreamProvider.family<List<EnhancedFeedPost>, String>((ref, userId) {
+  static final userPostsProvider =
+      StreamProvider.family<List<EnhancedFeedPost>, String>((ref, userId) {
     if (!FeatureFlags.useRealFeedData) {
       return Stream.value([]);
     }
@@ -156,7 +160,8 @@ class RealFeedProviders {
   });
 
   /// Провайдер для получения популярных постов
-  static final popularPostsProvider = StreamProvider<List<EnhancedFeedPost>>((ref) {
+  static final popularPostsProvider =
+      StreamProvider<List<EnhancedFeedPost>>((ref) {
     if (!FeatureFlags.useRealFeedData) {
       return Stream.value([]);
     }
@@ -193,7 +198,8 @@ class RealFeedProviders {
   });
 
   /// Провайдер для получения закрепленных постов
-  static final pinnedPostsProvider = StreamProvider<List<EnhancedFeedPost>>((ref) {
+  static final pinnedPostsProvider =
+      StreamProvider<List<EnhancedFeedPost>>((ref) {
     if (!FeatureFlags.useRealFeedData) {
       return Stream.value([]);
     }

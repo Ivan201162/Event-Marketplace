@@ -1,6 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum AdType { banner, inline, profileBoost, sponsoredPost, categoryAd, searchAd }
+enum AdType {
+  banner,
+  inline,
+  profileBoost,
+  sponsoredPost,
+  categoryAd,
+  searchAd
+}
 
 // Алиасы для совместимости с админ-панелью
 typedef AdvertisementType = AdType;
@@ -51,44 +58,48 @@ class Advertisement {
   });
 
   factory Advertisement.fromMap(Map<String, dynamic> map) => Advertisement(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    type: AdType.values.firstWhere(
-      (e) => e.toString() == 'AdType.${map['type']}',
-      orElse: () => AdType.banner,
-    ),
-    placement: AdPlacement.values.firstWhere(
-      (e) => e.toString() == 'AdPlacement.${map['placement']}',
-      orElse: () => AdPlacement.topBanner,
-    ),
-    startDate: (map['startDate'] as Timestamp).toDate(),
-    endDate: (map['endDate'] as Timestamp).toDate(),
-    status: AdStatus.values.firstWhere(
-      (e) => e.toString() == 'AdStatus.${map['status']}',
-      orElse: () => AdStatus.pending,
-    ),
-    price: (map['price'] ?? 0.0).toDouble(),
-    title: map['title'],
-    description: map['description'],
-    contentUrl: map['contentUrl'],
-    imageUrl: map['imageUrl'],
-    videoUrl: map['videoUrl'],
-    targetUrl: map['targetUrl'],
-    region: map['region'],
-    city: map['city'],
-    category: map['category'],
-    targetAudience: map['targetAudience'],
-    budget: map['budget']?.toDouble(),
-    spentAmount: (map['spentAmount'] ?? 0.0).toDouble(),
-    impressions: map['impressions'] ?? 0,
-    clicks: map['clicks'] ?? 0,
-    ctr: (map['ctr'] ?? 0.0).toDouble(),
-    cpc: (map['cpc'] ?? 0.0).toDouble(),
-    cpm: (map['cpm'] ?? 0.0).toDouble(),
-    createdAt: map['createdAt'] != null ? (map['createdAt'] as Timestamp).toDate() : DateTime.now(),
-    updatedAt: map['updatedAt'] != null ? (map['updatedAt'] as Timestamp).toDate() : DateTime.now(),
-    metadata: map['metadata'],
-  );
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        type: AdType.values.firstWhere(
+          (e) => e.toString() == 'AdType.${map['type']}',
+          orElse: () => AdType.banner,
+        ),
+        placement: AdPlacement.values.firstWhere(
+          (e) => e.toString() == 'AdPlacement.${map['placement']}',
+          orElse: () => AdPlacement.topBanner,
+        ),
+        startDate: (map['startDate'] as Timestamp).toDate(),
+        endDate: (map['endDate'] as Timestamp).toDate(),
+        status: AdStatus.values.firstWhere(
+          (e) => e.toString() == 'AdStatus.${map['status']}',
+          orElse: () => AdStatus.pending,
+        ),
+        price: (map['price'] ?? 0.0).toDouble(),
+        title: map['title'],
+        description: map['description'],
+        contentUrl: map['contentUrl'],
+        imageUrl: map['imageUrl'],
+        videoUrl: map['videoUrl'],
+        targetUrl: map['targetUrl'],
+        region: map['region'],
+        city: map['city'],
+        category: map['category'],
+        targetAudience: map['targetAudience'],
+        budget: map['budget']?.toDouble(),
+        spentAmount: (map['spentAmount'] ?? 0.0).toDouble(),
+        impressions: map['impressions'] ?? 0,
+        clicks: map['clicks'] ?? 0,
+        ctr: (map['ctr'] ?? 0.0).toDouble(),
+        cpc: (map['cpc'] ?? 0.0).toDouble(),
+        cpm: (map['cpm'] ?? 0.0).toDouble(),
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        metadata: map['metadata'],
+      );
 
   final String id;
   final String userId;
@@ -120,39 +131,40 @@ class Advertisement {
   final Map<String, dynamic>? metadata;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'type': type.toString().split('.').last,
-    'placement': placement.toString().split('.').last,
-    'startDate': Timestamp.fromDate(startDate),
-    'endDate': Timestamp.fromDate(endDate),
-    'status': status.toString().split('.').last,
-    'price': price,
-    'title': title,
-    'description': description,
-    'contentUrl': contentUrl,
-    'imageUrl': imageUrl,
-    'videoUrl': videoUrl,
-    'targetUrl': targetUrl,
-    'region': region,
-    'city': city,
-    'category': category,
-    'targetAudience': targetAudience,
-    'budget': budget,
-    'spentAmount': spentAmount,
-    'impressions': impressions,
-    'clicks': clicks,
-    'ctr': ctr,
-    'cpc': cpc,
-    'cpm': cpm,
-    'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-    'metadata': metadata,
-  };
+        'id': id,
+        'userId': userId,
+        'type': type.toString().split('.').last,
+        'placement': placement.toString().split('.').last,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'status': status.toString().split('.').last,
+        'price': price,
+        'title': title,
+        'description': description,
+        'contentUrl': contentUrl,
+        'imageUrl': imageUrl,
+        'videoUrl': videoUrl,
+        'targetUrl': targetUrl,
+        'region': region,
+        'city': city,
+        'category': category,
+        'targetAudience': targetAudience,
+        'budget': budget,
+        'spentAmount': spentAmount,
+        'impressions': impressions,
+        'clicks': clicks,
+        'ctr': ctr,
+        'cpc': cpc,
+        'cpm': cpm,
+        'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+        'metadata': metadata,
+      };
 
   bool get isActive => status == AdStatus.active && !isExpired;
   bool get isExpired => DateTime.now().isAfter(endDate);
-  bool get isExpiringSoon => DateTime.now().add(const Duration(days: 1)).isAfter(endDate);
+  bool get isExpiringSoon =>
+      DateTime.now().add(const Duration(days: 1)).isAfter(endDate);
 
   int get daysRemaining => endDate.difference(DateTime.now()).inDays;
 
@@ -209,36 +221,37 @@ class Advertisement {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
-  }) => Advertisement(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    type: type ?? this.type,
-    placement: placement ?? this.placement,
-    startDate: startDate ?? this.startDate,
-    endDate: endDate ?? this.endDate,
-    status: status ?? this.status,
-    price: price ?? this.price,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    contentUrl: contentUrl ?? this.contentUrl,
-    imageUrl: imageUrl ?? this.imageUrl,
-    videoUrl: videoUrl ?? this.videoUrl,
-    targetUrl: targetUrl ?? this.targetUrl,
-    region: region ?? this.region,
-    city: city ?? this.city,
-    category: category ?? this.category,
-    targetAudience: targetAudience ?? this.targetAudience,
-    budget: budget ?? this.budget,
-    spentAmount: spentAmount ?? this.spentAmount,
-    impressions: impressions ?? this.impressions,
-    clicks: clicks ?? this.clicks,
-    ctr: ctr ?? this.ctr,
-    cpc: cpc ?? this.cpc,
-    cpm: cpm ?? this.cpm,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      Advertisement(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        placement: placement ?? this.placement,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        status: status ?? this.status,
+        price: price ?? this.price,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        contentUrl: contentUrl ?? this.contentUrl,
+        imageUrl: imageUrl ?? this.imageUrl,
+        videoUrl: videoUrl ?? this.videoUrl,
+        targetUrl: targetUrl ?? this.targetUrl,
+        region: region ?? this.region,
+        city: city ?? this.city,
+        category: category ?? this.category,
+        targetAudience: targetAudience ?? this.targetAudience,
+        budget: budget ?? this.budget,
+        spentAmount: spentAmount ?? this.spentAmount,
+        impressions: impressions ?? this.impressions,
+        clicks: clicks ?? this.clicks,
+        ctr: ctr ?? this.ctr,
+        cpc: cpc ?? this.cpc,
+        cpm: cpm ?? this.cpm,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 class AdCampaign {
@@ -265,26 +278,33 @@ class AdCampaign {
   });
 
   factory AdCampaign.fromMap(Map<String, dynamic> map) => AdCampaign(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    name: map['name'] ?? '',
-    startDate: (map['startDate'] as Timestamp).toDate(),
-    endDate: (map['endDate'] as Timestamp).toDate(),
-    budget: (map['budget'] ?? 0.0).toDouble(),
-    isActive: map['isActive'] ?? true,
-    description: map['description'],
-    targetAudience: map['targetAudience'],
-    region: map['region'],
-    city: map['city'],
-    category: map['category'],
-    spentAmount: (map['spentAmount'] ?? 0.0).toDouble(),
-    impressions: map['impressions'] ?? 0,
-    clicks: map['clicks'] ?? 0,
-    ctr: (map['ctr'] ?? 0.0).toDouble(),
-    createdAt: map['createdAt'] != null ? (map['createdAt'] as Timestamp).toDate() : DateTime.now(),
-    updatedAt: map['updatedAt'] != null ? (map['updatedAt'] as Timestamp).toDate() : DateTime.now(),
-    ads: (map['ads'] as List<dynamic>?)?.map((ad) => Advertisement.fromMap(ad)).toList() ?? [],
-  );
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        name: map['name'] ?? '',
+        startDate: (map['startDate'] as Timestamp).toDate(),
+        endDate: (map['endDate'] as Timestamp).toDate(),
+        budget: (map['budget'] ?? 0.0).toDouble(),
+        isActive: map['isActive'] ?? true,
+        description: map['description'],
+        targetAudience: map['targetAudience'],
+        region: map['region'],
+        city: map['city'],
+        category: map['category'],
+        spentAmount: (map['spentAmount'] ?? 0.0).toDouble(),
+        impressions: map['impressions'] ?? 0,
+        clicks: map['clicks'] ?? 0,
+        ctr: (map['ctr'] ?? 0.0).toDouble(),
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        ads: (map['ads'] as List<dynamic>?)
+                ?.map((ad) => Advertisement.fromMap(ad))
+                .toList() ??
+            [],
+      );
 
   final String id;
   final String userId;
@@ -307,29 +327,30 @@ class AdCampaign {
   final List<Advertisement> ads;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'name': name,
-    'startDate': Timestamp.fromDate(startDate),
-    'endDate': Timestamp.fromDate(endDate),
-    'budget': budget,
-    'isActive': isActive,
-    'description': description,
-    'targetAudience': targetAudience,
-    'region': region,
-    'city': city,
-    'category': category,
-    'spentAmount': spentAmount,
-    'impressions': impressions,
-    'clicks': clicks,
-    'ctr': ctr,
-    'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-    'ads': ads.map((ad) => ad.toMap()).toList(),
-  };
+        'id': id,
+        'userId': userId,
+        'name': name,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'budget': budget,
+        'isActive': isActive,
+        'description': description,
+        'targetAudience': targetAudience,
+        'region': region,
+        'city': city,
+        'category': category,
+        'spentAmount': spentAmount,
+        'impressions': impressions,
+        'clicks': clicks,
+        'ctr': ctr,
+        'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+        'ads': ads.map((ad) => ad.toMap()).toList(),
+      };
 
   bool get isExpired => DateTime.now().isAfter(endDate);
-  bool get isExpiringSoon => DateTime.now().add(const Duration(days: 3)).isAfter(endDate);
+  bool get isExpiringSoon =>
+      DateTime.now().add(const Duration(days: 3)).isAfter(endDate);
 
   int get daysRemaining => endDate.difference(DateTime.now()).inDays;
 
@@ -357,25 +378,26 @@ class AdCampaign {
     DateTime? createdAt,
     DateTime? updatedAt,
     List<Advertisement>? ads,
-  }) => AdCampaign(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    name: name ?? this.name,
-    startDate: startDate ?? this.startDate,
-    endDate: endDate ?? this.endDate,
-    budget: budget ?? this.budget,
-    isActive: isActive ?? this.isActive,
-    description: description ?? this.description,
-    targetAudience: targetAudience ?? this.targetAudience,
-    region: region ?? this.region,
-    city: city ?? this.city,
-    category: category ?? this.category,
-    spentAmount: spentAmount ?? this.spentAmount,
-    impressions: impressions ?? this.impressions,
-    clicks: clicks ?? this.clicks,
-    ctr: ctr ?? this.ctr,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    ads: ads ?? this.ads,
-  );
+  }) =>
+      AdCampaign(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        name: name ?? this.name,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        budget: budget ?? this.budget,
+        isActive: isActive ?? this.isActive,
+        description: description ?? this.description,
+        targetAudience: targetAudience ?? this.targetAudience,
+        region: region ?? this.region,
+        city: city ?? this.city,
+        category: category ?? this.category,
+        spentAmount: spentAmount ?? this.spentAmount,
+        impressions: impressions ?? this.impressions,
+        clicks: clicks ?? this.clicks,
+        ctr: ctr ?? this.ctr,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        ads: ads ?? this.ads,
+      );
 }

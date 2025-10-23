@@ -27,7 +27,8 @@ class TransactionCard extends StatelessWidget {
                   color: _getTypeColor(transaction.type).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(transaction.typeIcon, style: const TextStyle(fontSize: 20)),
+                child: Text(transaction.typeIcon,
+                    style: const TextStyle(fontSize: 20)),
               ),
               const SizedBox(width: 12),
               // Content
@@ -39,7 +40,10 @@ class TransactionCard extends StatelessWidget {
                       transaction.description,
                       style: Theme.of(
                         context,
-                      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                      )
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w600),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -47,9 +51,11 @@ class TransactionCard extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: _getTypeColor(transaction.type).withValues(alpha: 0.1),
+                            color: _getTypeColor(transaction.type)
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -64,7 +70,8 @@ class TransactionCard extends StatelessWidget {
                         if (transaction.category != null) ...[
                           const SizedBox(width: 8),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: Colors.grey.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
@@ -84,20 +91,27 @@ class TransactionCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                        Icon(Icons.access_time,
+                            size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Text(
                           transaction.formattedDate,
                           style: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                          )
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                         const Spacer(),
                         Text(
                           transaction.formattedTime,
                           style: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                          )
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -119,7 +133,10 @@ class TransactionCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     transaction.formattedAbsoluteAmount,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.grey[600]),
                   ),
                 ],
               ),

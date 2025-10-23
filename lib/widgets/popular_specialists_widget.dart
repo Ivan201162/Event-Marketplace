@@ -7,10 +7,12 @@ class PopularSpecialistsWidget extends ConsumerStatefulWidget {
   const PopularSpecialistsWidget({super.key});
 
   @override
-  ConsumerState<PopularSpecialistsWidget> createState() => _PopularSpecialistsWidgetState();
+  ConsumerState<PopularSpecialistsWidget> createState() =>
+      _PopularSpecialistsWidgetState();
 }
 
-class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWidget> {
+class _PopularSpecialistsWidgetState
+    extends ConsumerState<PopularSpecialistsWidget> {
   final SmartSearchService _searchService = SmartSearchService();
   List<Map<String, dynamic>> _specialists = [];
   bool _isLoading = true;
@@ -81,14 +83,16 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
 
   Widget _buildEmptyState() => Container(
         height: 200,
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
         child: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.people_outline, size: 48, color: Colors.grey),
               SizedBox(height: 8),
-              Text('Популярные специалисты появятся здесь', style: TextStyle(color: Colors.grey)),
+              Text('Популярные специалисты появятся здесь',
+                  style: TextStyle(color: Colors.grey)),
             ],
           ),
         ),
@@ -126,26 +130,31 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
               Container(
                 height: 100,
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
                   image: avatarUrl != null
-                      ? DecorationImage(image: NetworkImage(avatarUrl), fit: BoxFit.cover)
+                      ? DecorationImage(
+                          image: NetworkImage(avatarUrl), fit: BoxFit.cover)
                       : null,
                   color: avatarUrl == null ? Colors.grey[300] : null,
                 ),
                 child: avatarUrl == null
-                    ? const Center(child: Icon(Icons.person, size: 40, color: Colors.grey))
+                    ? const Center(
+                        child: Icon(Icons.person, size: 40, color: Colors.grey))
                     : null,
               ),
 
               // Бейджи
-              Positioned(top: 8, left: 8, child: _buildBadges(isVerified, isOnline)),
+              Positioned(
+                  top: 8, left: 8, child: _buildBadges(isVerified, isOnline)),
 
               // Рейтинг
               Positioned(
                 bottom: 8,
                 right: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(12),
@@ -178,7 +187,8 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
               children: [
                 Text(
                   name,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 14),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -227,7 +237,8 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
       badges.add(
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(
+              color: Colors.blue, borderRadius: BorderRadius.circular(8)),
           child: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -235,7 +246,10 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
               SizedBox(width: 2),
               Text(
                 'ТОП',
-                style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 8,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -244,7 +258,8 @@ class _PopularSpecialistsWidgetState extends ConsumerState<PopularSpecialistsWid
     }
 
     if (badges.isNotEmpty) {
-      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: badges);
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.start, children: badges);
     }
 
     return const SizedBox.shrink();

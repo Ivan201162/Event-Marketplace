@@ -4,7 +4,8 @@ import '../services/ai_assistant_service.dart';
 
 /// Диалог AI-помощника
 class AIAssistantDialog extends StatefulWidget {
-  const AIAssistantDialog({super.key, required this.conversation, required this.onClose});
+  const AIAssistantDialog(
+      {super.key, required this.conversation, required this.onClose});
 
   final AIConversation conversation;
   final VoidCallback onClose;
@@ -74,7 +75,8 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   @override
@@ -83,7 +85,8 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
         child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height * 0.8,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16), color: Colors.white),
           child: Column(
             children: [
               // Заголовок
@@ -128,7 +131,8 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                     if (index == _messages.length) {
                       return const Center(
                         child: Padding(
-                            padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
+                            padding: EdgeInsets.all(16),
+                            child: CircularProgressIndicator()),
                       );
                     }
 
@@ -155,8 +159,10 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                         controller: _messageController,
                         decoration: InputDecoration(
                           hintText: 'Введите сообщение...',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(24)),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
                         ),
                         maxLines: null,
                         onSubmitted: (_) => _sendMessage(),
@@ -177,23 +183,29 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
   Widget _buildMessageBubble(AIMessage message) => Padding(
         padding: const EdgeInsets.only(bottom: 16),
         child: Row(
-          mainAxisAlignment: message.isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: message.isFromUser
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (!message.isFromUser) ...[
               CircleAvatar(
                 radius: 16,
                 backgroundColor: Theme.of(context).primaryColor,
-                child: const Icon(Icons.smart_toy, color: Colors.white, size: 16),
+                child:
+                    const Icon(Icons.smart_toy, color: Colors.white, size: 16),
               ),
               const SizedBox(width: 8),
             ],
             Flexible(
               child: Container(
-                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.7),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: message.isFromUser ? Theme.of(context).primaryColor : Colors.grey[200],
+                  color: message.isFromUser
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey[200],
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -206,7 +218,8 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                       Text(
                         message.text,
                         style: TextStyle(
-                          color: message.isFromUser ? Colors.white : Colors.black,
+                          color:
+                              message.isFromUser ? Colors.white : Colors.black,
                           fontSize: 16,
                         ),
                       ),
@@ -214,7 +227,9 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                     Text(
                       _formatTime(message.timestamp),
                       style: TextStyle(
-                        color: message.isFromUser ? Colors.white70 : Colors.grey[600],
+                        color: message.isFromUser
+                            ? Colors.white70
+                            : Colors.grey[600],
                         fontSize: 12,
                       ),
                     ),
@@ -240,7 +255,10 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
         children: [
           Text(
             'Найденные специалисты:',
-            style: TextStyle(color: Colors.grey[700], fontSize: 14, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+                fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
           ...specialists.map(
@@ -270,15 +288,18 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                       children: [
                         Text(
                           specialist.name,
-                          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 14),
                         ),
                         Text(
                           specialist.category?.displayName ?? 'Категория',
-                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 12),
                         ),
                         Row(
                           children: [
-                            const Icon(Icons.star, color: Colors.amber, size: 14),
+                            const Icon(Icons.star,
+                                color: Colors.amber, size: 14),
                             const SizedBox(width: 4),
                             Text(
                               specialist.rating.toStringAsFixed(1),
@@ -287,7 +308,8 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                             const SizedBox(width: 8),
                             Text(
                               specialist.priceRangeString,
-                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 12),
                             ),
                           ],
                         ),
@@ -298,7 +320,8 @@ class _AIAssistantDialogState extends State<AIAssistantDialog> {
                     icon: const Icon(Icons.visibility, size: 20),
                     onPressed: () {
                       // Переходим к профилю специалиста
-                      Navigator.pushNamed(context, '/specialist_profile', arguments: specialist.id);
+                      Navigator.pushNamed(context, '/specialist_profile',
+                          arguments: specialist.id);
                     },
                   ),
                 ],

@@ -4,7 +4,8 @@ import '../../models/user.dart';
 
 /// Виджет статистики профиля
 class ProfileStatsWidget extends StatelessWidget {
-  const ProfileStatsWidget({super.key, required this.user, required this.isCurrentUser});
+  const ProfileStatsWidget(
+      {super.key, required this.user, required this.isCurrentUser});
 
   final AppUser user;
   final bool isCurrentUser;
@@ -91,7 +92,9 @@ class ProfileStatsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(ThemeData theme, String label, String value, IconData icon) => Column(
+  Widget _buildStatItem(
+          ThemeData theme, String label, String value, IconData icon) =>
+      Column(
         children: [
           Icon(icon, color: theme.primaryColor, size: 24),
           const SizedBox(height: 8),

@@ -47,14 +47,16 @@ class RecommendationsSection extends ConsumerWidget {
     // TODO(developer): Navigate to specialist profile
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Переход к профилю: ${recommendation.specialist.name}')));
+    ).showSnackBar(SnackBar(
+        content: Text('Переход к профилю: ${recommendation.specialist.name}')));
   }
 
   void _onRecommendationBook(BuildContext context, dynamic recommendation) {
     // TODO(developer): Navigate to booking form
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Бронирование: ${recommendation.specialist.name}')));
+    ).showSnackBar(SnackBar(
+        content: Text('Бронирование: ${recommendation.specialist.name}')));
   }
 
   Widget _buildLoadingState() => const Padding(
@@ -89,7 +91,8 @@ class RecommendationsSection extends ConsumerWidget {
         child: Center(
           child: Column(
             children: [
-              const Icon(Icons.recommend_outlined, size: 48, color: Colors.grey),
+              const Icon(Icons.recommend_outlined,
+                  size: 48, color: Colors.grey),
               const SizedBox(height: 16),
               const Text(
                 'Пока нет рекомендаций',

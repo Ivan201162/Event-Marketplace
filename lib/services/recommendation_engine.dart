@@ -76,9 +76,11 @@ class RecommendationEngine {
         .collection('viewed_events')
         .get();
 
-    final viewedEventIds = viewedEventsSnapshot.docs.map((doc) => doc.id).toList();
+    final viewedEventIds =
+        viewedEventsSnapshot.docs.map((doc) => doc.id).toList();
 
-    return UserHistory(bookings: bookings, reviews: reviews, viewedEventIds: viewedEventIds);
+    return UserHistory(
+        bookings: bookings, reviews: reviews, viewedEventIds: viewedEventIds);
   }
 
   /// Анализ предпочтений пользователя
@@ -108,7 +110,8 @@ class RecommendationEngine {
     final preferredCategories = categoryCount.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    final topCategories = preferredCategories.take(3).map((e) => e.key).toList();
+    final topCategories =
+        preferredCategories.take(3).map((e) => e.key).toList();
 
     // Определяем предпочтительные услуги
     final preferredServices = serviceCount.entries.toList()
@@ -151,12 +154,14 @@ class RecommendationEngine {
 
     // Фильтр по категориям
     if (preferences.preferredCategories.isNotEmpty) {
-      query = query.where('categories', arrayContainsAny: preferences.preferredCategories);
+      query = query.where('categories',
+          arrayContainsAny: preferences.preferredCategories);
     }
 
     // Фильтр по услугам
     if (preferences.preferredServices.isNotEmpty) {
-      query = query.where('services', arrayContainsAny: preferences.preferredServices);
+      query = query.where('services',
+          arrayContainsAny: preferences.preferredServices);
     }
 
     // Фильтр по локациям
@@ -165,7 +170,8 @@ class RecommendationEngine {
     }
 
     // Фильтр по рейтингу
-    query = query.where('rating', isGreaterThanOrEqualTo: preferences.preferredRating);
+    query = query.where('rating',
+        isGreaterThanOrEqualTo: preferences.preferredRating);
 
     // Фильтр по цене (в пределах бюджета)
     final maxPrice = (preferences.averageBudget * 1.5).round();
@@ -173,7 +179,8 @@ class RecommendationEngine {
 
     // Сортировка по рейтингу
     query = query.orderBy('rating', descending: true);
-    query = query.limit(limit * 2); // Берем больше, чтобы исключить уже забронированных
+    query = query
+        .limit(limit * 2); // Берем больше, чтобы исключить уже забронированных
 
     final snapshot = await query.get();
     final specialists = <Specialist>[];
@@ -201,7 +208,9 @@ class RecommendationEngine {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => Specialist.fromMap(doc.data())).toList();
+      return snapshot.docs
+          .map((doc) => Specialist.fromMap(doc.data()))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения популярных специалистов: $e');
     }
@@ -217,9 +226,12 @@ class RecommendationEngine {
     try {
       // TODO(developer): Реализовать геопространственный поиск
       // Пока возвращаем всех специалистов
-      final snapshot = await _firestore.collection('specialists').limit(limit).get();
+      final snapshot =
+          await _firestore.collection('specialists').limit(limit).get();
 
-      return snapshot.docs.map((doc) => Specialist.fromMap(doc.data())).toList();
+      return snapshot.docs
+          .map((doc) => Specialist.fromMap(doc.data()))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения ближайших специалистов: $e');
     }
@@ -228,7 +240,10 @@ class RecommendationEngine {
 
 /// История пользователя
 class UserHistory {
-  const UserHistory({required this.bookings, required this.reviews, required this.viewedEventIds});
+  const UserHistory(
+      {required this.bookings,
+      required this.reviews,
+      required this.viewedEventIds});
   final List<Booking> bookings;
   final List<Review> reviews;
   final List<String> viewedEventIds;

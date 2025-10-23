@@ -32,7 +32,8 @@ class AvatarWidget extends StatelessWidget {
         shape: BoxShape.circle,
         color: backgroundColor,
         border: showBorder
-            ? Border.all(color: borderColor ?? Theme.of(context).primaryColor, width: 2)
+            ? Border.all(
+                color: borderColor ?? Theme.of(context).primaryColor, width: 2)
             : null,
       ),
       child: imageUrl != null && imageUrl!.isNotEmpty
@@ -43,7 +44,8 @@ class AvatarWidget extends StatelessWidget {
                 height: size,
                 fit: BoxFit.cover,
                 placeholder: (context, url) => _buildPlaceholder(initials),
-                errorWidget: (context, url, error) => _buildPlaceholder(initials),
+                errorWidget: (context, url, error) =>
+                    _buildPlaceholder(initials),
               ),
             )
           : _buildPlaceholder(initials),
@@ -60,7 +62,10 @@ class AvatarWidget extends StatelessWidget {
     return Center(
       child: Text(
         initials,
-        style: TextStyle(color: Colors.white, fontSize: size * 0.4, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: Colors.white,
+            fontSize: size * 0.4,
+            fontWeight: FontWeight.bold),
       ),
     );
   }

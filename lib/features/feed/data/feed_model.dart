@@ -22,25 +22,26 @@ class FeedPost extends Equatable {
 
   /// Создание из Map (из Firestore)
   factory FeedPost.fromMap(Map<String, dynamic> map) => FeedPost(
-    id: (map['id'] as String?) ?? '',
-    authorId: (map['authorId'] as String?) ?? '',
-    authorName: (map['authorName'] as String?) ?? '',
-    authorCity: (map['authorCity'] as String?) ?? '',
-    authorAvatar: (map['authorAvatar'] as String?) ?? '',
-    mediaUrl: (map['mediaUrl'] as String?) ?? '',
-    description: (map['description'] as String?) ?? '',
-    createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    likes: (map['likes'] as int?) ?? 0,
-    commentsCount: (map['commentsCount'] as int?) ?? 0,
-    type: PostType.fromString((map['type'] as String?) ?? 'photo'),
-    taggedCategories: List<String>.from((map['taggedCategories'] as List<dynamic>?) ?? []),
-    likedBy: List<String>.from((map['likedBy'] as List<dynamic>?) ?? []),
-    comments:
-        (map['comments'] as List<dynamic>?)
-            ?.map((comment) => FeedComment.fromMap(comment as Map<String, dynamic>))
-            .toList() ??
-        [],
-  );
+        id: (map['id'] as String?) ?? '',
+        authorId: (map['authorId'] as String?) ?? '',
+        authorName: (map['authorName'] as String?) ?? '',
+        authorCity: (map['authorCity'] as String?) ?? '',
+        authorAvatar: (map['authorAvatar'] as String?) ?? '',
+        mediaUrl: (map['mediaUrl'] as String?) ?? '',
+        description: (map['description'] as String?) ?? '',
+        createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        likes: (map['likes'] as int?) ?? 0,
+        commentsCount: (map['commentsCount'] as int?) ?? 0,
+        type: PostType.fromString((map['type'] as String?) ?? 'photo'),
+        taggedCategories: List<String>.from(
+            (map['taggedCategories'] as List<dynamic>?) ?? []),
+        likedBy: List<String>.from((map['likedBy'] as List<dynamic>?) ?? []),
+        comments: (map['comments'] as List<dynamic>?)
+                ?.map((comment) =>
+                    FeedComment.fromMap(comment as Map<String, dynamic>))
+                .toList() ??
+            [],
+      );
 
   final String id;
   final String authorId;
@@ -59,21 +60,21 @@ class FeedPost extends Equatable {
 
   /// Преобразование в Map (для Firestore)
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'authorId': authorId,
-    'authorName': authorName,
-    'authorCity': authorCity,
-    'authorAvatar': authorAvatar,
-    'mediaUrl': mediaUrl,
-    'description': description,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'likes': likes,
-    'commentsCount': commentsCount,
-    'type': type.value,
-    'taggedCategories': taggedCategories,
-    'likedBy': likedBy,
-    'comments': comments.map((comment) => comment.toMap()).toList(),
-  };
+        'id': id,
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorCity': authorCity,
+        'authorAvatar': authorAvatar,
+        'mediaUrl': mediaUrl,
+        'description': description,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'likes': likes,
+        'commentsCount': commentsCount,
+        'type': type.value,
+        'taggedCategories': taggedCategories,
+        'likedBy': likedBy,
+        'comments': comments.map((comment) => comment.toMap()).toList(),
+      };
 
   /// Создание копии с изменениями
   FeedPost copyWith({
@@ -91,40 +92,41 @@ class FeedPost extends Equatable {
     List<String>? taggedCategories,
     List<String>? likedBy,
     List<FeedComment>? comments,
-  }) => FeedPost(
-    id: id ?? this.id,
-    authorId: authorId ?? this.authorId,
-    authorName: authorName ?? this.authorName,
-    authorCity: authorCity ?? this.authorCity,
-    authorAvatar: authorAvatar ?? this.authorAvatar,
-    mediaUrl: mediaUrl ?? this.mediaUrl,
-    description: description ?? this.description,
-    createdAt: createdAt ?? this.createdAt,
-    likes: likes ?? this.likes,
-    commentsCount: commentsCount ?? this.commentsCount,
-    type: type ?? this.type,
-    taggedCategories: taggedCategories ?? this.taggedCategories,
-    likedBy: likedBy ?? this.likedBy,
-    comments: comments ?? this.comments,
-  );
+  }) =>
+      FeedPost(
+        id: id ?? this.id,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
+        authorCity: authorCity ?? this.authorCity,
+        authorAvatar: authorAvatar ?? this.authorAvatar,
+        mediaUrl: mediaUrl ?? this.mediaUrl,
+        description: description ?? this.description,
+        createdAt: createdAt ?? this.createdAt,
+        likes: likes ?? this.likes,
+        commentsCount: commentsCount ?? this.commentsCount,
+        type: type ?? this.type,
+        taggedCategories: taggedCategories ?? this.taggedCategories,
+        likedBy: likedBy ?? this.likedBy,
+        comments: comments ?? this.comments,
+      );
 
   @override
   List<Object?> get props => [
-    id,
-    authorId,
-    authorName,
-    authorCity,
-    authorAvatar,
-    mediaUrl,
-    description,
-    createdAt,
-    likes,
-    commentsCount,
-    type,
-    taggedCategories,
-    likedBy,
-    comments,
-  ];
+        id,
+        authorId,
+        authorName,
+        authorCity,
+        authorAvatar,
+        mediaUrl,
+        description,
+        createdAt,
+        likes,
+        commentsCount,
+        type,
+        taggedCategories,
+        likedBy,
+        comments,
+      ];
 }
 
 /// Тип поста
@@ -159,13 +161,13 @@ class FeedComment extends Equatable {
 
   /// Создание из Map (из Firestore)
   factory FeedComment.fromMap(Map<String, dynamic> map) => FeedComment(
-    id: (map['id'] as String?) ?? '',
-    authorId: (map['authorId'] as String?) ?? '',
-    authorName: (map['authorName'] as String?) ?? '',
-    authorAvatar: (map['authorAvatar'] as String?) ?? '',
-    text: (map['text'] as String?) ?? '',
-    createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-  );
+        id: (map['id'] as String?) ?? '',
+        authorId: (map['authorId'] as String?) ?? '',
+        authorName: (map['authorName'] as String?) ?? '',
+        authorAvatar: (map['authorAvatar'] as String?) ?? '',
+        text: (map['text'] as String?) ?? '',
+        createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      );
 
   final String id;
   final String authorId;
@@ -176,13 +178,13 @@ class FeedComment extends Equatable {
 
   /// Преобразование в Map (для Firestore)
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'authorId': authorId,
-    'authorName': authorName,
-    'authorAvatar': authorAvatar,
-    'text': text,
-    'createdAt': Timestamp.fromDate(createdAt),
-  };
+        'id': id,
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'text': text,
+        'createdAt': Timestamp.fromDate(createdAt),
+      };
 
   /// Создание копии с изменениями
   FeedComment copyWith({
@@ -192,17 +194,19 @@ class FeedComment extends Equatable {
     String? authorAvatar,
     String? text,
     DateTime? createdAt,
-  }) => FeedComment(
-    id: id ?? this.id,
-    authorId: authorId ?? this.authorId,
-    authorName: authorName ?? this.authorName,
-    authorAvatar: authorAvatar ?? this.authorAvatar,
-    text: text ?? this.text,
-    createdAt: createdAt ?? this.createdAt,
-  );
+  }) =>
+      FeedComment(
+        id: id ?? this.id,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
+        authorAvatar: authorAvatar ?? this.authorAvatar,
+        text: text ?? this.text,
+        createdAt: createdAt ?? this.createdAt,
+      );
 
   @override
-  List<Object?> get props => [id, authorId, authorName, authorAvatar, text, createdAt];
+  List<Object?> get props =>
+      [id, authorId, authorName, authorAvatar, text, createdAt];
 }
 
 /// Фильтр для ленты

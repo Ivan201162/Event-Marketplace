@@ -26,22 +26,26 @@ class PriceHistory {
       reason: data['reason'] ?? '',
       changedBy: data['changedBy'] ?? '',
       changedAt: (data['changedAt'] as Timestamp).toDate(),
-      metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
+      metadata: data['metadata'] != null
+          ? Map<String, dynamic>.from(data['metadata'])
+          : null,
     );
   }
 
   /// Создать из Map
   factory PriceHistory.fromMap(Map<String, dynamic> data) => PriceHistory(
-    id: data['id'] ?? '',
-    bookingId: data['bookingId'] ?? '',
-    oldPrice: (data['oldPrice'] as num).toDouble(),
-    newPrice: (data['newPrice'] as num).toDouble(),
-    discountPercent: data['discountPercent']?.toDouble(),
-    reason: data['reason'] ?? '',
-    changedBy: data['changedBy'] ?? '',
-    changedAt: (data['changedAt'] as Timestamp).toDate(),
-    metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
-  );
+        id: data['id'] ?? '',
+        bookingId: data['bookingId'] ?? '',
+        oldPrice: (data['oldPrice'] as num).toDouble(),
+        newPrice: (data['newPrice'] as num).toDouble(),
+        discountPercent: data['discountPercent']?.toDouble(),
+        reason: data['reason'] ?? '',
+        changedBy: data['changedBy'] ?? '',
+        changedAt: (data['changedAt'] as Timestamp).toDate(),
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(data['metadata'])
+            : null,
+      );
   final String id;
   final String bookingId;
   final double oldPrice;
@@ -54,15 +58,15 @@ class PriceHistory {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'bookingId': bookingId,
-    'oldPrice': oldPrice,
-    'newPrice': newPrice,
-    'discountPercent': discountPercent,
-    'reason': reason,
-    'changedBy': changedBy,
-    'changedAt': Timestamp.fromDate(changedAt),
-    'metadata': metadata,
-  };
+        'bookingId': bookingId,
+        'oldPrice': oldPrice,
+        'newPrice': newPrice,
+        'discountPercent': discountPercent,
+        'reason': reason,
+        'changedBy': changedBy,
+        'changedAt': Timestamp.fromDate(changedAt),
+        'metadata': metadata,
+      };
 
   /// Получить изменение цены
   double get priceChange => newPrice - oldPrice;
@@ -91,8 +95,8 @@ class PriceHistory {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, bookingId, oldPrice, newPrice, discountPercent, reason, changedBy, changedAt);
+  int get hashCode => Object.hash(id, bookingId, oldPrice, newPrice,
+      discountPercent, reason, changedBy, changedAt);
 
   @override
   String toString() =>

@@ -75,7 +75,8 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserProvider).value;
-    final isLiked = currentUser != null && widget.idea.isLikedBy(currentUser.uid);
+    final isLiked =
+        currentUser != null && widget.idea.isLikedBy(currentUser.uid);
 
     return AnimatedBuilder(
       animation: _animationController,
@@ -106,7 +107,8 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
-                              color: widget.idea.categoryColor.withValues(alpha: 0.1),
+                              color: widget.idea.categoryColor
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Center(
@@ -140,8 +142,10 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
                                           vertical: 2,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: widget.idea.categoryColor.withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(12),
+                                          color: widget.idea.categoryColor
+                                              .withValues(alpha: 0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                         ),
                                         child: Text(
                                           widget.idea.category!,
@@ -276,7 +280,8 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
                               ),
                               backgroundColor: Colors.orange[50],
                               labelStyle: TextStyle(color: Colors.orange[700]),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                             );
                           }).toList(),
                         ),
@@ -293,14 +298,16 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: _getDifficultyColor(widget.idea.difficulty!)
-                                    .withValues(alpha: 0.1),
+                                color:
+                                    _getDifficultyColor(widget.idea.difficulty!)
+                                        .withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
                                 widget.idea.difficultyText,
                                 style: TextStyle(
-                                  color: _getDifficultyColor(widget.idea.difficulty!),
+                                  color: _getDifficultyColor(
+                                      widget.idea.difficulty!),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -370,15 +377,20 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(
-                                    isLiked ? Icons.favorite : Icons.favorite_border,
-                                    color: isLiked ? Colors.red : Colors.grey[600],
+                                    isLiked
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color:
+                                        isLiked ? Colors.red : Colors.grey[600],
                                     size: 20,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
                                     widget.idea.likesCount.toString(),
                                     style: TextStyle(
-                                      color: isLiked ? Colors.red : Colors.grey[600],
+                                      color: isLiked
+                                          ? Colors.red
+                                          : Colors.grey[600],
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -509,7 +521,8 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Жалоба отправлена. Спасибо за обратную связь!'),
+                  content:
+                      Text('Жалоба отправлена. Спасибо за обратную связь!'),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -521,8 +534,3 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
     );
   }
 }
-
-
-
-
-

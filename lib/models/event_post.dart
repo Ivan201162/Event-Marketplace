@@ -55,13 +55,13 @@ class EventPost {
       ),
       createdAt: safeData['createdAt'] != null
           ? (safeData['createdAt'] is Timestamp
-                ? (safeData['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(safeData['createdAt'].toString()))
+              ? (safeData['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(safeData['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: safeData['updatedAt'] != null
           ? (safeData['updatedAt'] is Timestamp
-                ? (safeData['updatedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(safeData['updatedAt'].toString()))
+              ? (safeData['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(safeData['updatedAt'].toString()))
           : null,
       imageUrl: safeData['imageUrl'],
       videoUrl: safeData['videoUrl'],
@@ -74,8 +74,8 @@ class EventPost {
       location: safeData['location'],
       eventDate: safeData['eventDate'] != null
           ? (safeData['eventDate'] is Timestamp
-                ? (safeData['eventDate'] as Timestamp).toDate()
-                : DateTime.tryParse(safeData['eventDate'].toString()))
+              ? (safeData['eventDate'] as Timestamp).toDate()
+              : DateTime.tryParse(safeData['eventDate'].toString()))
           : null,
     );
   }
@@ -101,24 +101,24 @@ class EventPost {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-    'authorId': authorId,
-    'authorName': authorName,
-    'authorAvatar': authorAvatar,
-    'content': content,
-    'type': type.name,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-    'imageUrl': imageUrl,
-    'videoUrl': videoUrl,
-    'thumbnailUrl': thumbnailUrl,
-    'likes': likes,
-    'comments': comments,
-    'shares': shares,
-    'isLiked': isLiked,
-    'tags': tags,
-    'location': location,
-    'eventDate': eventDate != null ? Timestamp.fromDate(eventDate!) : null,
-  };
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'content': content,
+        'type': type.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+        'imageUrl': imageUrl,
+        'videoUrl': videoUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'likes': likes,
+        'comments': comments,
+        'shares': shares,
+        'isLiked': isLiked,
+        'tags': tags,
+        'location': location,
+        'eventDate': eventDate != null ? Timestamp.fromDate(eventDate!) : null,
+      };
 
   /// Создать копию с изменениями
   EventPost copyWith({
@@ -140,26 +140,27 @@ class EventPost {
     List<String>? tags,
     String? location,
     DateTime? eventDate,
-  }) => EventPost(
-    id: id ?? this.id,
-    authorId: authorId ?? this.authorId,
-    authorName: authorName ?? this.authorName,
-    authorAvatar: authorAvatar ?? this.authorAvatar,
-    content: content ?? this.content,
-    type: type ?? this.type,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    imageUrl: imageUrl ?? this.imageUrl,
-    videoUrl: videoUrl ?? this.videoUrl,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-    likes: likes ?? this.likes,
-    comments: comments ?? this.comments,
-    shares: shares ?? this.shares,
-    isLiked: isLiked ?? this.isLiked,
-    tags: tags ?? this.tags,
-    location: location ?? this.location,
-    eventDate: eventDate ?? this.eventDate,
-  );
+  }) =>
+      EventPost(
+        id: id ?? this.id,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
+        authorAvatar: authorAvatar ?? this.authorAvatar,
+        content: content ?? this.content,
+        type: type ?? this.type,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        imageUrl: imageUrl ?? this.imageUrl,
+        videoUrl: videoUrl ?? this.videoUrl,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        likes: likes ?? this.likes,
+        comments: comments ?? this.comments,
+        shares: shares ?? this.shares,
+        isLiked: isLiked ?? this.isLiked,
+        tags: tags ?? this.tags,
+        location: location ?? this.location,
+        eventDate: eventDate ?? this.eventDate,
+      );
 
   @override
   String toString() =>

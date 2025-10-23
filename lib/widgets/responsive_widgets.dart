@@ -69,13 +69,16 @@ class ResponsiveUtils {
   }
 
   /// Проверить, является ли экран мобильным
-  static bool isMobile(BuildContext context) => getScreenType(context) == ScreenType.mobile;
+  static bool isMobile(BuildContext context) =>
+      getScreenType(context) == ScreenType.mobile;
 
   /// Проверить, является ли экран планшетом
-  static bool isTablet(BuildContext context) => getScreenType(context) == ScreenType.tablet;
+  static bool isTablet(BuildContext context) =>
+      getScreenType(context) == ScreenType.tablet;
 
   /// Проверить, является ли экран десктопом
-  static bool isDesktop(BuildContext context) => getScreenType(context) == ScreenType.desktop;
+  static bool isDesktop(BuildContext context) =>
+      getScreenType(context) == ScreenType.desktop;
 }
 
 /// Типы экранов
@@ -83,7 +86,8 @@ enum ScreenType { mobile, tablet, desktop }
 
 /// Адаптивный виджет, который изменяет свой контент в зависимости от размера экрана
 class ResponsiveWidget extends StatelessWidget {
-  const ResponsiveWidget({super.key, required this.mobile, this.tablet, this.desktop});
+  const ResponsiveWidget(
+      {super.key, required this.mobile, this.tablet, this.desktop});
 
   final Widget mobile;
   final Widget? tablet;
@@ -263,7 +267,11 @@ class ResponsiveText extends StatelessWidget {
         break;
     }
 
-    return Text(text, style: style, textAlign: textAlign, maxLines: maxLines, overflow: overflow);
+    return Text(text,
+        style: style,
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow);
   }
 }
 
@@ -440,7 +448,9 @@ class ResponsiveCard extends StatelessWidget {
     return Card(
       elevation: elevation,
       margin: margin,
-      shape: borderRadius != null ? RoundedRectangleBorder(borderRadius: borderRadius) : null,
+      shape: borderRadius != null
+          ? RoundedRectangleBorder(borderRadius: borderRadius)
+          : null,
       child: Padding(padding: padding ?? EdgeInsets.zero, child: child),
     );
   }
@@ -450,8 +460,8 @@ class ResponsiveCard extends StatelessWidget {
 class ResponsiveLayoutBuilder extends StatelessWidget {
   const ResponsiveLayoutBuilder({super.key, required this.builder});
 
-  final Widget Function(BuildContext context, ScreenType screenType, BoxConstraints constraints)
-      builder;
+  final Widget Function(BuildContext context, ScreenType screenType,
+      BoxConstraints constraints) builder;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(

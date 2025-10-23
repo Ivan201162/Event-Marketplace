@@ -63,7 +63,8 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.notifications_active, color: Colors.orange[700]),
+                      Icon(Icons.notifications_active,
+                          color: Colors.orange[700]),
                       const SizedBox(width: 8),
                       Text(
                         'Напоминания о налогах',
@@ -125,7 +126,8 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
                 children: [
                   Text(
                     '${taxInfo.taxTypeDisplayName} - ${taxInfo.period}',
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w500),
                   ),
                   Text(
                     'К доплате: ${taxInfo.formattedTaxAmount}',
@@ -164,7 +166,8 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
               return Card(
                 margin: const EdgeInsets.only(bottom: 8),
                 child: ListTile(
-                  leading: Text(reminder.taxTypeIcon, style: const TextStyle(fontSize: 20)),
+                  leading: Text(reminder.taxTypeIcon,
+                      style: const TextStyle(fontSize: 20)),
                   title: Text(reminder.taxTypeDisplayName),
                   subtitle: Text('Период: ${reminder.period}'),
                   trailing: Column(
@@ -172,9 +175,12 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
                     children: [
                       Text(
                         reminder.formattedTaxAmount,
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.red),
                       ),
-                      Text('К доплате', style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+                      Text('К доплате',
+                          style:
+                              TextStyle(fontSize: 10, color: Colors.grey[600])),
                     ],
                   ),
                   onTap: () => _sendReminder(reminder),
@@ -184,7 +190,9 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -195,7 +203,9 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
       await _reminderService.sendTaxReminder(taxInfo);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Напоминание отправлено'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Напоминание отправлено'),
+              backgroundColor: Colors.green),
         );
         // Обновляем виджет
         setState(() {});
@@ -203,7 +213,9 @@ class _TaxReminderWidgetState extends ConsumerState<TaxReminderWidget> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка отправки напоминания: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка отправки напоминания: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -215,7 +227,8 @@ class TaxReminderStatsWidget extends ConsumerWidget {
   const TaxReminderStatsWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => FutureBuilder<Map<String, dynamic>>(
+  Widget build(BuildContext context, WidgetRef ref) =>
+      FutureBuilder<Map<String, dynamic>>(
         future: TaxReminderService().getReminderStatistics(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -281,13 +294,16 @@ class TaxReminderStatsWidget extends ConsumerWidget {
         },
       );
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) => Column(
+  Widget _buildStatItem(
+          String label, String value, IconData icon, Color color) =>
+      Column(
         children: [
           Icon(icon, color: color, size: 24),
           const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: color),
           ),
           Text(
             label,

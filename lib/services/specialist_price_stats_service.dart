@@ -40,7 +40,8 @@ class SpecialistPriceStatsService {
   }
 
   /// Получить статистику цен специалиста
-  Future<SpecialistPriceAggregate?> getSpecialistPriceStats(String specialistId) async {
+  Future<SpecialistPriceAggregate?> getSpecialistPriceStats(
+      String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('specialistPriceStats')
@@ -65,7 +66,8 @@ class SpecialistPriceStatsService {
         }
       }
 
-      final overallAveragePrice = totalBookings > 0 ? totalRevenue / totalBookings : 0;
+      final overallAveragePrice =
+          totalBookings > 0 ? totalRevenue / totalBookings : 0;
 
       return SpecialistPriceAggregate(
         specialistId: specialistId,
@@ -81,7 +83,8 @@ class SpecialistPriceStatsService {
   }
 
   /// Получить статистику по категории
-  Future<SpecialistPriceStats?> getCategoryStats(String specialistId, String categoryId) async {
+  Future<SpecialistPriceStats?> getCategoryStats(
+      String specialistId, String categoryId) async {
     try {
       final snapshot = await _firestore
           .collection('specialistPriceStats')
@@ -120,7 +123,8 @@ class SpecialistPriceStatsService {
   /// Получить статистику по всем категориям
   Future<Map<String, Map<String, dynamic>>> getCategoryPriceStats() async {
     try {
-      final snapshot = await _firestore.collection('specialistPriceStats').get();
+      final snapshot =
+          await _firestore.collection('specialistPriceStats').get();
 
       final categoryStats = <String, Map<String, dynamic>>{};
 
@@ -146,8 +150,10 @@ class SpecialistPriceStatsService {
         current['maxPrice'] = (current['maxPrice'] as double) > stats.maxPrice
             ? current['maxPrice']
             : stats.maxPrice;
-        current['totalRevenue'] = (current['totalRevenue'] as double) + stats.totalRevenue;
-        current['totalBookings'] = (current['totalBookings'] as int) + stats.completedBookings;
+        current['totalRevenue'] =
+            (current['totalRevenue'] as double) + stats.totalRevenue;
+        current['totalBookings'] =
+            (current['totalBookings'] as int) + stats.completedBookings;
         current['specialistCount'] = (current['specialistCount'] as int) + 1;
       }
 
@@ -191,8 +197,10 @@ class SpecialistPriceStatsService {
       if (bookings.isEmpty) return;
 
       // Получаем название категории
-      final categoryDoc = await _firestore.collection('categories').doc(categoryId).get();
-      final categoryName = categoryDoc.data()?['name'] ?? 'Неизвестная категория';
+      final categoryDoc =
+          await _firestore.collection('categories').doc(categoryId).get();
+      final categoryName =
+          categoryDoc.data()?['name'] ?? 'Неизвестная категория';
 
       // Вычисляем статистику
       final prices = bookings
@@ -220,7 +228,8 @@ class SpecialistPriceStatsService {
         lastUpdated: DateTime.now(),
         additionalStats: {
           'priceDistribution': _calculatePriceDistribution(prices),
-          'monthlyTrend': await _calculateMonthlyTrend(specialistId, categoryId),
+          'monthlyTrend':
+              await _calculateMonthlyTrend(specialistId, categoryId),
         },
       );
 
@@ -308,7 +317,8 @@ class SpecialistPriceStatsService {
   }
 
   /// Вычислить месячный тренд
-  Future<Map<String, double>> _calculateMonthlyTrend(String specialistId, String categoryId) async {
+  Future<Map<String, double>> _calculateMonthlyTrend(
+      String specialistId, String categoryId) async {
     try {
       final now = DateTime.now();
       final sixMonthsAgo = DateTime(now.year, now.month - 6, now.day);
@@ -326,7 +336,8 @@ class SpecialistPriceStatsService {
       for (final doc in snapshot.docs) {
         final data = doc.data();
         final completedAt = (data['completedAt'] as Timestamp).toDate();
-        final monthKey = '${completedAt.year}-${completedAt.month.toString().padLeft(2, '0')}';
+        final monthKey =
+            '${completedAt.year}-${completedAt.month.toString().padLeft(2, '0')}';
         final price = (data['totalPrice'] as num?)?.toDouble() ?? 0;
 
         monthlyRevenue[monthKey] = (monthlyRevenue[monthKey] ?? 0) + price;

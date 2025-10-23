@@ -21,7 +21,7 @@ class FeedScreenImproved extends ConsumerStatefulWidget {
 class _FeedScreenImprovedState extends ConsumerState<FeedScreenImproved> {
   final _postController = TextEditingController();
   final _scrollController = ScrollController();
-  
+
   bool _isLoading = false;
   bool _isCreatingPost = false;
   File? _selectedImage;
@@ -66,13 +66,14 @@ class _FeedScreenImprovedState extends ConsumerState<FeedScreenImproved> {
 
       final firestore = FirebaseFirestore.instance;
       final storageService = ref.read(storageServiceProvider);
-      
+
       String? imageUrl;
-      
+
       // Загружаем изображение, если выбрано
       if (_selectedImage != null) {
         final postId = firestore.collection('posts').doc().id;
-        imageUrl = await storageService.uploadPostImage(postId, _selectedImage!);
+        imageUrl =
+            await storageService.uploadPostImage(postId, _selectedImage!);
       }
 
       // Создаем пост
@@ -166,7 +167,7 @@ class _FeedScreenImprovedState extends ConsumerState<FeedScreenImproved> {
                   ],
                 ),
               ),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -207,9 +208,9 @@ class _FeedScreenImprovedState extends ConsumerState<FeedScreenImproved> {
                                 contentPadding: const EdgeInsets.all(16),
                               ),
                             ),
-                            
+
                             const SizedBox(height: 12),
-                            
+
                             // Выбранное изображение
                             if (_selectedImage != null) ...[
                               Container(
@@ -229,17 +230,19 @@ class _FeedScreenImprovedState extends ConsumerState<FeedScreenImproved> {
                               ),
                               const SizedBox(height: 12),
                             ],
-                            
+
                             // Кнопки действий
                             Row(
                               children: [
                                 IconButton(
                                   onPressed: _pickImage,
-                                  icon: const Icon(Icons.image, color: Color(0xFF1E3A8A)),
+                                  icon: const Icon(Icons.image,
+                                      color: Color(0xFF1E3A8A)),
                                 ),
                                 const Spacer(),
                                 ElevatedButton(
-                                  onPressed: _isCreatingPost ? null : _createPost,
+                                  onPressed:
+                                      _isCreatingPost ? null : _createPost,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF1E3A8A),
                                     foregroundColor: Colors.white,
@@ -248,22 +251,24 @@ class _FeedScreenImprovedState extends ConsumerState<FeedScreenImproved> {
                                     ),
                                   ),
                                   child: _isCreatingPost
-                                    ? const SizedBox(
-                                        width: 16,
-                                        height: 16,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                        ),
-                                      )
-                                    : const Text('Опубликовать'),
+                                      ? const SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.white),
+                                          ),
+                                        )
+                                      : const Text('Опубликовать'),
                                 ),
                               ],
                             ),
                           ],
                         ),
                       ),
-                      
+
                       // Список постов
                       Expanded(
                         child: StreamBuilder<QuerySnapshot>(
@@ -272,7 +277,8 @@ class _FeedScreenImprovedState extends ConsumerState<FeedScreenImproved> {
                               .orderBy('createdAt', descending: true)
                               .snapshots(),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const Center(
                                 child: CircularProgressIndicator(),
                               );
@@ -291,12 +297,16 @@ class _FeedScreenImprovedState extends ConsumerState<FeedScreenImproved> {
                                     const SizedBox(height: 16),
                                     Text(
                                       'Ошибка загрузки постов',
-                                      style: Theme.of(context).textTheme.titleLarge,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       snapshot.error.toString(),
-                                      style: Theme.of(context).textTheme.bodyMedium,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
                                       textAlign: TextAlign.center,
                                     ),
                                   ],
@@ -319,7 +329,9 @@ class _FeedScreenImprovedState extends ConsumerState<FeedScreenImproved> {
                                     const SizedBox(height: 16),
                                     Text(
                                       'Пока нет постов',
-                                      style: Theme.of(context).textTheme.titleLarge,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
                                     ),
                                     const SizedBox(height: 8),
                                     const Text(
@@ -401,10 +413,12 @@ class _PostCard extends ConsumerWidget {
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      final userData = snapshot.data!.data() as Map<String, dynamic>?;
+                      final userData =
+                          snapshot.data!.data() as Map<String, dynamic>?;
                       final avatarUrl = userData?['avatarUrl'] as String?;
-                      final userName = userData?['name'] as String? ?? 'Пользователь';
-                      
+                      final userName =
+                          userData?['name'] as String? ?? 'Пользователь';
+
                       return Row(
                         children: [
                           CircleAvatar(
@@ -449,7 +463,7 @@ class _PostCard extends ConsumerWidget {
               ],
             ),
           ),
-          
+
           // Текст поста
           if (text.isNotEmpty) ...[
             Padding(
@@ -461,7 +475,7 @@ class _PostCard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
           ],
-          
+
           // Изображение поста
           if (imageUrl != null) ...[
             Container(
@@ -492,7 +506,7 @@ class _PostCard extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
           ],
-          
+
           // Действия
           Padding(
             padding: const EdgeInsets.all(16),

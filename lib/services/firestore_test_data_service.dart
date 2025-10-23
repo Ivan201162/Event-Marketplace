@@ -10,7 +10,8 @@ class FirestoreTestDataService {
   /// Инициализация всех тестовых данных
   static Future<void> initializeTestData() async {
     try {
-      debugPrint('INFO: [firestore_test_data] Начинаем инициализацию тестовых данных');
+      debugPrint(
+          'INFO: [firestore_test_data] Начинаем инициализацию тестовых данных');
 
       await Future.wait([
         _createSubscriptionPlans(),
@@ -22,7 +23,8 @@ class FirestoreTestDataService {
 
       debugPrint('INFO: [firestore_test_data] Тестовые данные успешно созданы');
     } catch (e) {
-      debugPrint('ERROR: [firestore_test_data] Ошибка создания тестовых данных: $e');
+      debugPrint(
+          'ERROR: [firestore_test_data] Ошибка создания тестовых данных: $e');
       rethrow;
     }
   }
@@ -74,7 +76,8 @@ class FirestoreTestDataService {
         type: _getPromotionTypeFromString(packageData['type']),
         durationDays: packageData['durationDays'],
         price: packageData['price'].toDouble(),
-        priorityLevel: _getPromotionPriorityFromString(packageData['priorityLevel']),
+        priorityLevel:
+            _getPromotionPriorityFromString(packageData['priorityLevel']),
         isActive: true,
         description: 'Пакет продвижения ${packageData['name']}',
         features: List<String>.from(packageData['features']),
@@ -103,7 +106,8 @@ class FirestoreTestDataService {
         'city': 'Москва',
         'region': 'Москва',
         'category': 'Фотографы',
-        'avatarUrl': 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
+        'avatarUrl':
+            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150',
         'rating': 4.8,
         'reviewsCount': 127,
         'isVerified': true,
@@ -117,7 +121,8 @@ class FirestoreTestDataService {
         'city': 'Санкт-Петербург',
         'region': 'Санкт-Петербург',
         'category': 'Видеографы',
-        'avatarUrl': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+        'avatarUrl':
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
         'rating': 4.9,
         'reviewsCount': 89,
         'isVerified': true,
@@ -131,7 +136,8 @@ class FirestoreTestDataService {
         'city': 'Новосибирск',
         'region': 'Новосибирская область',
         'category': 'Организаторы',
-        'avatarUrl': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
+        'avatarUrl':
+            'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150',
         'rating': 4.7,
         'reviewsCount': 203,
         'isVerified': false,
@@ -143,7 +149,10 @@ class FirestoreTestDataService {
 
     for (final user in testUsers) {
       final docRef = _firestore.collection('users').doc(user['id']);
-      batch.set(docRef, {...user, 'createdAt': Timestamp.fromDate(user['createdAt'] as DateTime)});
+      batch.set(docRef, {
+        ...user,
+        'createdAt': Timestamp.fromDate(user['createdAt'] as DateTime)
+      });
     }
 
     await batch.commit();
@@ -152,7 +161,8 @@ class FirestoreTestDataService {
 
   /// Создание тестовых рекламных объявлений
   static Future<void> _createTestAdvertisements() async {
-    debugPrint('INFO: [firestore_test_data] Создание тестовых рекламных объявлений');
+    debugPrint(
+        'INFO: [firestore_test_data] Создание тестовых рекламных объявлений');
 
     final testAds = [
       {
@@ -162,7 +172,8 @@ class FirestoreTestDataService {
         'placement': 'topBanner',
         'title': 'Профессиональная фотосъемка',
         'description': 'Запечатлите важные моменты с нашими фотографами',
-        'imageUrl': 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400',
+        'imageUrl':
+            'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400',
         'targetUrl': 'https://example.com/photography',
         'price': 500.0,
         'startDate': DateTime.now(),
@@ -184,7 +195,8 @@ class FirestoreTestDataService {
         'placement': 'homeFeed',
         'title': 'Видеосъемка мероприятий',
         'description': 'Качественная видеосъемка ваших событий',
-        'imageUrl': 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400',
+        'imageUrl':
+            'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400',
         'targetUrl': 'https://example.com/videography',
         'price': 1000.0,
         'startDate': DateTime.now(),
@@ -215,7 +227,8 @@ class FirestoreTestDataService {
     }
 
     await batch.commit();
-    debugPrint('INFO: [firestore_test_data] Тестовые рекламные объявления созданы');
+    debugPrint(
+        'INFO: [firestore_test_data] Тестовые рекламные объявления созданы');
   }
 
   /// Создание тестовых транзакций
@@ -257,7 +270,10 @@ class FirestoreTestDataService {
 
     for (final txn in testTransactions) {
       final docRef = _firestore.collection('transactions').doc(txn['id']);
-      batch.set(docRef, {...txn, 'timestamp': Timestamp.fromDate(txn['timestamp'] as DateTime)});
+      batch.set(docRef, {
+        ...txn,
+        'timestamp': Timestamp.fromDate(txn['timestamp'] as DateTime)
+      });
     }
 
     await batch.commit();
@@ -370,7 +386,8 @@ class FirestoreTestDataService {
 
       debugPrint('INFO: [firestore_test_data] Тестовые данные очищены');
     } catch (e) {
-      debugPrint('ERROR: [firestore_test_data] Ошибка очистки тестовых данных: $e');
+      debugPrint(
+          'ERROR: [firestore_test_data] Ошибка очистки тестовых данных: $e');
       rethrow;
     }
   }

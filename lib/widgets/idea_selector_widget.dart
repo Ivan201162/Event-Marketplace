@@ -64,10 +64,14 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
       _filteredIdeas = _allIdeas.where((idea) {
         final matchesSearch = _searchQuery.isEmpty ||
             idea.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            idea.description.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-            idea.tags.any((tag) => tag.toLowerCase().contains(_searchQuery.toLowerCase()));
+            idea.description
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase()) ||
+            idea.tags.any((tag) =>
+                tag.toLowerCase().contains(_searchQuery.toLowerCase()));
 
-        final matchesCategory = _selectedCategory == null || idea.category == _selectedCategory!.id;
+        final matchesCategory =
+            _selectedCategory == null || idea.category == _selectedCategory!.id;
 
         return matchesSearch && matchesCategory;
       }).toList();
@@ -96,18 +100,18 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
             children: [
               Text(
                 'Выберите идеи для заявки',
-                style:
-                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
               const Spacer(),
               Text(
                 '${_selectedIdeas.length}/${widget.maxSelections}',
                 style: Theme.of(
                   context,
-                )
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                ).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             ],
           ),
@@ -120,7 +124,10 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
           const SizedBox(height: 16),
 
           // Выбранные идеи
-          if (_selectedIdeas.isNotEmpty) ...[_buildSelectedIdeas(), const SizedBox(height: 16)],
+          if (_selectedIdeas.isNotEmpty) ...[
+            _buildSelectedIdeas(),
+            const SizedBox(height: 16)
+          ],
 
           // Список идей
           Expanded(
@@ -140,8 +147,10 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
             decoration: InputDecoration(
               hintText: 'Поиск идей...',
               prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             ),
             onChanged: (value) {
               setState(() {
@@ -176,7 +185,8 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                   );
                 }
 
-                final EventIdeaCategory category = EventIdeaCategory.values[index - 1];
+                final EventIdeaCategory category =
+                    EventIdeaCategory.values[index - 1];
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: FilterChip(
@@ -208,7 +218,10 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
         children: [
           Text(
             'Выбранные идеи:',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
           SizedBox(
@@ -232,11 +245,16 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                                 idea.imageUrl ?? '',
                                 fit: BoxFit.cover,
                                 width: double.infinity,
-                                errorBuilder: (context, error, stackTrace) => Container(
-                                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .surfaceContainerHighest,
                                   child: Icon(
                                     Icons.image_not_supported,
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
                                   ),
                                 ),
                               ),
@@ -293,7 +311,8 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
         itemBuilder: (BuildContext context, int index) {
           final EventIdea idea = _filteredIdeas[index];
           final bool isSelected = _selectedIdeas.contains(idea);
-          final bool canSelect = _selectedIdeas.length < widget.maxSelections || isSelected;
+          final bool canSelect =
+              _selectedIdeas.length < widget.maxSelections || isSelected;
 
           return Stack(
             children: [
@@ -308,8 +327,9 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                       color: Theme.of(context).colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
-                    child:
-                        Icon(Icons.check, size: 16, color: Theme.of(context).colorScheme.onPrimary),
+                    child: Icon(Icons.check,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onPrimary),
                   ),
                 ),
               if (!canSelect)
@@ -319,7 +339,9 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                       color: Colors.black.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Center(child: Icon(Icons.block, color: Colors.white, size: 32)),
+                    child: const Center(
+                        child:
+                            Icon(Icons.block, color: Colors.white, size: 32)),
                   ),
                 ),
             ],
@@ -341,20 +363,16 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
               'Идеи не найдены',
               style: Theme.of(
                 context,
-              )
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
             const SizedBox(height: 8),
             Text(
               'Попробуйте изменить фильтры или поисковый запрос',
               style: Theme.of(
                 context,
-              )
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
           ],
@@ -390,8 +408,8 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                     color: Colors.grey[200],
                     child: const Center(child: CircularProgressIndicator()),
                   ),
-                  errorWidget: (context, url, error) =>
-                      Container(color: Colors.grey[200], child: const Icon(Icons.error)),
+                  errorWidget: (context, url, error) => Container(
+                      color: Colors.grey[200], child: const Icon(Icons.error)),
                 ),
               ),
             // Контент
@@ -402,7 +420,8 @@ class _IdeaSelectorWidgetState extends ConsumerState<IdeaSelectorWidget> {
                 children: [
                   Text(
                     idea.title,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -451,7 +470,10 @@ class IdeaSelectorDialog extends StatelessWidget {
                     'Выберите идеи',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+                    )
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w600),
                   ),
                   const Spacer(),
                   IconButton(

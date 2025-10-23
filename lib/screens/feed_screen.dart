@@ -8,5 +8,6 @@ class FeedScreen extends ConsumerWidget {
   const FeedScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => const EnhancedFeedScreen();
+  Widget build(BuildContext context, WidgetRef ref) =>
+      const EnhancedFeedScreen();
 }

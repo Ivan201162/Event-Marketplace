@@ -30,11 +30,13 @@ class IcsExportService {
       final fileName = '${_sanitizeFileName(event.title)}.ics';
       final file = await _saveIcsFile(fileName, icsContent);
 
-      SafeLog.info('IcsExportService: Event exported successfully to: ${file.path}');
+      SafeLog.info(
+          'IcsExportService: Event exported successfully to: ${file.path}');
 
       return file.path;
     } on Exception catch (e, stackTrace) {
-      SafeLog.error('IcsExportService: Error exporting event to ICS', e, stackTrace);
+      SafeLog.error(
+          'IcsExportService: Error exporting event to ICS', e, stackTrace);
       return null;
     }
   }
@@ -47,20 +49,24 @@ class IcsExportService {
     }
 
     try {
-      SafeLog.info('IcsExportService: Exporting booking to ICS: ${booking.eventTitle}');
+      SafeLog.info(
+          'IcsExportService: Exporting booking to ICS: ${booking.eventTitle}');
 
       // Создаем содержимое .ics файла
       final icsContent = _generateBookingIcsContent(booking);
 
       // Сохраняем файл
-      final fileName = '${_sanitizeFileName(booking.eventTitle ?? 'booking')}_booking.ics';
+      final fileName =
+          '${_sanitizeFileName(booking.eventTitle ?? 'booking')}_booking.ics';
       final file = await _saveIcsFile(fileName, icsContent);
 
-      SafeLog.info('IcsExportService: Booking exported successfully to: ${file.path}');
+      SafeLog.info(
+          'IcsExportService: Booking exported successfully to: ${file.path}');
 
       return file.path;
     } on Exception catch (e, stackTrace) {
-      SafeLog.error('IcsExportService: Error exporting booking to ICS', e, stackTrace);
+      SafeLog.error(
+          'IcsExportService: Error exporting booking to ICS', e, stackTrace);
       return null;
     }
   }
@@ -78,20 +84,24 @@ class IcsExportService {
     }
 
     try {
-      SafeLog.info('IcsExportService: Exporting ${events.length} events to ICS');
+      SafeLog.info(
+          'IcsExportService: Exporting ${events.length} events to ICS');
 
       // Создаем содержимое .ics файла
       final icsContent = _generateMultipleEventsIcsContent(events);
 
       // Сохраняем файл
-      final fileName = 'events_export_${DateTime.now().millisecondsSinceEpoch}.ics';
+      final fileName =
+          'events_export_${DateTime.now().millisecondsSinceEpoch}.ics';
       final file = await _saveIcsFile(fileName, icsContent);
 
-      SafeLog.info('IcsExportService: Events exported successfully to: ${file.path}');
+      SafeLog.info(
+          'IcsExportService: Events exported successfully to: ${file.path}');
 
       return file.path;
     } on Exception catch (e, stackTrace) {
-      SafeLog.error('IcsExportService: Error exporting events to ICS', e, stackTrace);
+      SafeLog.error(
+          'IcsExportService: Error exporting events to ICS', e, stackTrace);
       return null;
     }
   }
@@ -109,20 +119,24 @@ class IcsExportService {
     }
 
     try {
-      SafeLog.info('IcsExportService: Exporting ${bookings.length} bookings to ICS');
+      SafeLog.info(
+          'IcsExportService: Exporting ${bookings.length} bookings to ICS');
 
       // Создаем содержимое .ics файла
       final icsContent = _generateMultipleBookingsIcsContent(bookings);
 
       // Сохраняем файл
-      final fileName = 'bookings_export_${DateTime.now().millisecondsSinceEpoch}.ics';
+      final fileName =
+          'bookings_export_${DateTime.now().millisecondsSinceEpoch}.ics';
       final file = await _saveIcsFile(fileName, icsContent);
 
-      SafeLog.info('IcsExportService: Bookings exported successfully to: ${file.path}');
+      SafeLog.info(
+          'IcsExportService: Bookings exported successfully to: ${file.path}');
 
       return file.path;
     } on Exception catch (e, stackTrace) {
-      SafeLog.error('IcsExportService: Error exporting bookings to ICS', e, stackTrace);
+      SafeLog.error(
+          'IcsExportService: Error exporting bookings to ICS', e, stackTrace);
       return null;
     }
   }
@@ -170,7 +184,8 @@ class IcsExportService {
   static Future<bool> exportAndShareBooking(Booking booking) async {
     final filePath = await exportBookingToIcs(booking);
     if (filePath != null) {
-      return shareIcsFile(filePath, subject: 'Бронирование: ${booking.eventTitle}');
+      return shareIcsFile(filePath,
+          subject: 'Бронирование: ${booking.eventTitle}');
     }
     return false;
   }
@@ -179,7 +194,8 @@ class IcsExportService {
   static Future<bool> exportAndShareEvents(List<Event> events) async {
     final filePath = await exportEventsToIcs(events);
     if (filePath != null) {
-      return shareIcsFile(filePath, subject: 'Экспорт событий (${events.length})');
+      return shareIcsFile(filePath,
+          subject: 'Экспорт событий (${events.length})');
     }
     return false;
   }
@@ -188,7 +204,8 @@ class IcsExportService {
   static Future<bool> exportAndShareBookings(List<Booking> bookings) async {
     final filePath = await exportBookingsToIcs(bookings);
     if (filePath != null) {
-      return shareIcsFile(filePath, subject: 'Экспорт бронирований (${bookings.length})');
+      return shareIcsFile(filePath,
+          subject: 'Экспорт бронирований (${bookings.length})');
     }
     return false;
   }
@@ -265,7 +282,8 @@ class IcsExportService {
   static int get maxEventsPerExport => 100;
 
   /// Проверить, можно ли экспортировать указанное количество событий
-  static bool canExportEvents(int count) => isEnabled && count > 0 && count <= maxEventsPerExport;
+  static bool canExportEvents(int count) =>
+      isEnabled && count > 0 && count <= maxEventsPerExport;
 
   /// Генерировать содержимое .ics файла для события
   static String _generateIcsContent(Event event) {
@@ -278,7 +296,8 @@ class IcsExportService {
       ..writeln('BEGIN:VEVENT')
       ..writeln('UID:${event.id}@eventmarketplace.com')
       ..writeln('DTSTART:${_formatDateTime(event.date)}')
-      ..writeln('DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}')
+      ..writeln(
+          'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}')
       ..writeln('SUMMARY:${event.title}');
     buffer.writeln('DESCRIPTION:${event.description}');
     if (event.location.isNotEmpty) {
@@ -303,7 +322,8 @@ class IcsExportService {
     buffer.writeln('PRODID:-//Event Marketplace//Booking Calendar//EN');
     buffer.writeln('BEGIN:VEVENT');
     buffer.writeln('UID:${booking.id}@eventmarketplace.com');
-    buffer.writeln('DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}');
+    buffer.writeln(
+        'DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}');
     buffer.writeln(
       'DTEND:${_formatDateTime(booking.endDate ?? (booking.eventDate ?? booking.date).add(const Duration(hours: 2)))}',
     );
@@ -333,7 +353,8 @@ class IcsExportService {
       buffer.writeln('BEGIN:VEVENT');
       buffer.writeln('UID:${event.id}@eventmarketplace.com');
       buffer.writeln('DTSTART:${_formatDateTime(event.date)}');
-      buffer.writeln('DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}');
+      buffer.writeln(
+          'DTEND:${_formatDateTime(event.date.add(const Duration(hours: 2)))}');
       buffer.writeln('SUMMARY:${event.title}');
       buffer.writeln('DESCRIPTION:${event.description}');
       if (event.location.isNotEmpty) {
@@ -361,7 +382,8 @@ class IcsExportService {
     for (final booking in bookings) {
       buffer.writeln('BEGIN:VEVENT');
       buffer.writeln('UID:${booking.id}@eventmarketplace.com');
-      buffer.writeln('DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}');
+      buffer.writeln(
+          'DTSTART:${_formatDateTime(booking.eventDate ?? booking.date)}');
       buffer.writeln(
         'DTEND:${_formatDateTime(booking.endDate ?? (booking.eventDate ?? booking.date).add(const Duration(hours: 2)))}',
       );
@@ -372,7 +394,8 @@ class IcsExportService {
       }
       buffer.writeln('STATUS:${_getBookingStatusText(booking.status)}');
       buffer.writeln('CREATED:${_formatDateTime(booking.createdAt)}');
-      buffer.writeln('LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}');
+      buffer.writeln(
+          'LAST-MODIFIED:${_formatDateTime(booking.updatedAt ?? booking.createdAt)}');
       buffer.writeln('END:VEVENT');
     }
 
@@ -416,5 +439,6 @@ extension BookingsIcsExport on List<Booking> {
   Future<String?> exportToIcs() => IcsExportService.exportBookingsToIcs(this);
 
   /// Экспортировать и поделиться бронированиями
-  Future<bool> exportAndShare() => IcsExportService.exportAndShareBookings(this);
+  Future<bool> exportAndShare() =>
+      IcsExportService.exportAndShareBookings(this);
 }

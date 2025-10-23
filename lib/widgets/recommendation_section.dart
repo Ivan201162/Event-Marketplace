@@ -71,14 +71,18 @@ class RecommendationSection extends StatelessWidget {
                     title,
                     style: Theme.of(
                       context,
-                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   if (subtitle != null) ...[
                     const SizedBox(height: 4),
                     Text(
                       subtitle!,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                     ),
                   ],
@@ -89,7 +93,8 @@ class RecommendationSection extends StatelessWidget {
         ),
       );
 
-  Widget _buildFullList(BuildContext context, List<Recommendation> recommendations) =>
+  Widget _buildFullList(
+          BuildContext context, List<Recommendation> recommendations) =>
       ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -104,7 +109,9 @@ class RecommendationSection extends StatelessWidget {
         },
       );
 
-  Widget _buildCompactList(BuildContext context, List<Recommendation> recommendations) => SizedBox(
+  Widget _buildCompactList(
+          BuildContext context, List<Recommendation> recommendations) =>
+      SizedBox(
         height: 120,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -171,7 +178,8 @@ class HorizontalRecommendationList extends StatelessWidget {
             child: Card(
               margin: const EdgeInsets.only(right: 12),
               elevation: 2,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               child: InkWell(
                 onTap: () => onRecommendationTap?.call(recommendation),
                 borderRadius: BorderRadius.circular(12),
@@ -202,14 +210,16 @@ class HorizontalRecommendationList extends StatelessWidget {
 
   Widget _buildAvatar(dynamic specialist) => CircleAvatar(
         radius: 20,
-        backgroundImage:
-            specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl as String) : null,
+        backgroundImage: specialist.avatarUrl != null
+            ? NetworkImage(specialist.avatarUrl as String)
+            : null,
         child: specialist.avatarUrl == null
             ? Text(
                 (specialist.name as String).isNotEmpty
                     ? (specialist.name as String)[0].toUpperCase()
                     : '?',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               )
             : null,
       );
@@ -234,16 +244,22 @@ class HorizontalRecommendationList extends StatelessWidget {
 
   Widget _buildPrice(dynamic specialist) => Text(
         specialist.priceRangeString as String,
-        style: TextStyle(fontSize: 12, color: Colors.green[700], fontWeight: FontWeight.w500),
+        style: TextStyle(
+            fontSize: 12,
+            color: Colors.green[700],
+            fontWeight: FontWeight.w500),
       );
 
-  Widget _buildTypeBadge(BuildContext context, Recommendation recommendation) => Container(
+  Widget _buildTypeBadge(BuildContext context, Recommendation recommendation) =>
+      Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         decoration: BoxDecoration(
-          color: _getTypeColor(context, recommendation.type).withValues(alpha: 0.1),
+          color: _getTypeColor(context, recommendation.type)
+              .withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(recommendation.type.icon, style: const TextStyle(fontSize: 10)),
+        child: Text(recommendation.type.icon,
+            style: const TextStyle(fontSize: 10)),
       );
 
   Color _getTypeColor(BuildContext context, RecommendationType type) {

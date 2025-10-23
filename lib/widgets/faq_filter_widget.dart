@@ -3,7 +3,10 @@ import '../providers/specialist_profile_extended_providers.dart';
 
 /// Виджет фильтрации FAQ
 class FAQFilterWidget extends StatefulWidget {
-  const FAQFilterWidget({super.key, required this.currentFilters, required this.onFiltersChanged});
+  const FAQFilterWidget(
+      {super.key,
+      required this.currentFilters,
+      required this.onFiltersChanged});
   final FAQFilters currentFilters;
   final Function(FAQFilters) onFiltersChanged;
 
@@ -22,7 +25,8 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController(text: widget.currentFilters.searchQuery ?? '');
+    _searchController =
+        TextEditingController(text: widget.currentFilters.searchQuery ?? '');
     _selectedCategories = List.from(widget.currentFilters.selectedCategories);
     _showPublishedOnly = widget.currentFilters.showPublishedOnly;
     _showByDate = widget.currentFilters.showByDate;
@@ -45,8 +49,10 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
               AppBar(
                 title: const Text('Фильтры FAQ'),
                 actions: [
-                  TextButton(onPressed: _clearFilters, child: const Text('Сбросить')),
-                  TextButton(onPressed: _applyFilters, child: const Text('Применить')),
+                  TextButton(
+                      onPressed: _clearFilters, child: const Text('Сбросить')),
+                  TextButton(
+                      onPressed: _applyFilters, child: const Text('Применить')),
                 ],
               ),
               Expanded(
@@ -70,7 +76,8 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                       // Опубликованные вопросы
                       SwitchListTile(
                         title: const Text('Только опубликованные вопросы'),
-                        subtitle: const Text('Показать только вопросы, доступные клиентам'),
+                        subtitle: const Text(
+                            'Показать только вопросы, доступные клиентам'),
                         value: _showPublishedOnly,
                         onChanged: (value) {
                           setState(() {
@@ -84,7 +91,8 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                       // Фильтр по дате
                       SwitchListTile(
                         title: const Text('Фильтр по дате'),
-                        subtitle: const Text('Показать вопросы за определённый период'),
+                        subtitle: const Text(
+                            'Показать вопросы за определённый период'),
                         value: _showByDate,
                         onChanged: (value) {
                           setState(() {
@@ -130,7 +138,8 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                       // Категории
                       const Text(
                         'Категории',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       _buildCategoryFilters(),
@@ -194,7 +203,8 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
             runSpacing: 4,
             children: _selectedCategories.map((category) {
               final displayName = categories
-                  .firstWhere((c) => c.$1 == category, orElse: () => (category, category))
+                  .firstWhere((c) => c.$1 == category,
+                      orElse: () => (category, category))
                   .$2;
               return Chip(
                 label: Text(displayName),
@@ -259,7 +269,9 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
 
   void _applyFilters() {
     final filters = FAQFilters(
-      searchQuery: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
+      searchQuery: _searchController.text.trim().isEmpty
+          ? null
+          : _searchController.text.trim(),
       selectedCategories: _selectedCategories,
       showPublishedOnly: _showPublishedOnly,
       showByDate: _showByDate,

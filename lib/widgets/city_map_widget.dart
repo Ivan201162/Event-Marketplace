@@ -50,7 +50,8 @@ class _CityMapWidgetState extends State<CityMapWidget> {
       );
       _currentZoom = 10.0;
     } else if (widget.currentLocation != null) {
-      _currentCenter = LatLng(widget.currentLocation!.latitude, widget.currentLocation!.longitude);
+      _currentCenter = LatLng(
+          widget.currentLocation!.latitude, widget.currentLocation!.longitude);
       _currentZoom = 8.0;
     } else {
       // Центр России
@@ -77,7 +78,8 @@ class _CityMapWidgetState extends State<CityMapWidget> {
       );
       _mapController.move(newCenter, 10);
     } else if (widget.currentLocation != null) {
-      final newCenter = LatLng(widget.currentLocation!.latitude, widget.currentLocation!.longitude);
+      final newCenter = LatLng(
+          widget.currentLocation!.latitude, widget.currentLocation!.longitude);
       _mapController.move(newCenter, 8);
     }
   }
@@ -135,7 +137,8 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                           ),
                         ],
                       ),
-                      child: const Icon(Icons.my_location, color: Colors.white, size: 20),
+                      child: const Icon(Icons.my_location,
+                          color: Colors.white, size: 20),
                     ),
                   ),
                 ],
@@ -169,7 +172,8 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                 color: _getCityMarkerColor(city),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: city == widget.selectedCity ? Colors.amber : Colors.white,
+                  color:
+                      city == widget.selectedCity ? Colors.amber : Colors.white,
                   width: city == widget.selectedCity ? 3 : 2,
                 ),
                 boxShadow: [
@@ -180,7 +184,9 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                   ),
                 ],
               ),
-              child: Center(child: Text(city.citySize.icon, style: const TextStyle(fontSize: 16))),
+              child: Center(
+                  child: Text(city.citySize.icon,
+                      style: const TextStyle(fontSize: 16))),
             ),
           ),
         ),
@@ -189,7 +195,8 @@ class _CityMapWidgetState extends State<CityMapWidget> {
 
     // Добавляем маркер для выбранного города, если он не в списке ближайших
     if (widget.selectedCity != null &&
-        !widget.nearbyCities.any((city) => city.id == widget.selectedCity!.id)) {
+        !widget.nearbyCities
+            .any((city) => city.id == widget.selectedCity!.id)) {
       markers.add(
         Marker(
           point: LatLng(
@@ -211,7 +218,9 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                 ),
               ],
             ),
-            child: const Center(child: Icon(Icons.location_city, color: Colors.white, size: 24)),
+            child: const Center(
+                child:
+                    Icon(Icons.location_city, color: Colors.white, size: 24)),
           ),
         ),
       );

@@ -23,7 +23,8 @@ class ProposeSpecialistsButton extends StatelessWidget {
             backgroundColor: Colors.blue,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
           ),
         ),
       );
@@ -32,8 +33,8 @@ class ProposeSpecialistsButton extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) =>
-            SpecialistSelectionScreen(customerId: customerId, eventId: eventId, message: message),
+        builder: (context) => SpecialistSelectionScreen(
+            customerId: customerId, eventId: eventId, message: message),
       ),
     );
   }

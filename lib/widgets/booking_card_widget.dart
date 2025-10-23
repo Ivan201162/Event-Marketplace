@@ -34,11 +34,13 @@ class BookingCardWidget extends StatelessWidget {
                         booking.eventTitle.isNotEmpty
                             ? booking.eventTitle
                             : booking.title ?? 'Заявка',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: _getStatusColor(booking.status),
                         borderRadius: BorderRadius.circular(12),
@@ -65,7 +67,8 @@ class BookingCardWidget extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         booking.specialistName,
-                        style: const TextStyle(fontSize: 14, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -75,7 +78,8 @@ class BookingCardWidget extends StatelessWidget {
                 // Дата и время
                 Row(
                   children: [
-                    const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                    const Icon(Icons.calendar_today,
+                        size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
                     Text(
                       _formatDate(booking.eventDate),
@@ -84,31 +88,37 @@ class BookingCardWidget extends StatelessWidget {
                   ],
                 ),
 
-                if (booking.startTime != null && booking.startTime!.isNotEmpty) ...[
+                if (booking.startTime != null &&
+                    booking.startTime!.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                      const Icon(Icons.access_time,
+                          size: 16, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
                         booking.startTime!,
-                        style: const TextStyle(fontSize: 14, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                     ],
                   ),
                 ],
 
                 // Местоположение
-                if (booking.location != null && booking.location!.isNotEmpty) ...[
+                if (booking.location != null &&
+                    booking.location!.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                      const Icon(Icons.location_on,
+                          size: 16, color: Colors.grey),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           booking.location!,
-                          style: const TextStyle(fontSize: 14, color: Colors.grey),
+                          style:
+                              const TextStyle(fontSize: 14, color: Colors.grey),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -121,7 +131,8 @@ class BookingCardWidget extends StatelessWidget {
                 // Цена
                 Row(
                   children: [
-                    const Icon(Icons.attach_money, size: 16, color: Colors.green),
+                    const Icon(Icons.attach_money,
+                        size: 16, color: Colors.green),
                     const SizedBox(width: 4),
                     Text(
                       '${booking.effectivePrice.toInt()}₽',
@@ -161,9 +172,11 @@ class BookingCardWidget extends StatelessWidget {
                           child: const Text('Отменить'),
                         ),
                       ),
-                    if (booking.canBeCancelled && booking.status == BookingStatus.completed)
+                    if (booking.canBeCancelled &&
+                        booking.status == BookingStatus.completed)
                       const SizedBox(width: 8),
-                    if (booking.status == BookingStatus.completed && onReview != null)
+                    if (booking.status == BookingStatus.completed &&
+                        onReview != null)
                       Expanded(
                         child: ElevatedButton(
                           onPressed: onReview,

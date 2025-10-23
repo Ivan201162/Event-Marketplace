@@ -39,7 +39,8 @@ class ABTestService {
         throw Exception('A/B тест должен содержать минимум 2 варианта');
       }
 
-      final totalTraffic = variants.fold(0, (sum, variant) => sum + variant.trafficPercentage);
+      final totalTraffic =
+          variants.fold(0, (sum, variant) => sum + variant.trafficPercentage);
       if (totalTraffic > 100.0) {
         throw Exception('Общий трафик вариантов не может превышать 100%');
       }
@@ -138,18 +139,21 @@ class ABTestService {
   }
 
   /// Получить список A/B тестов
-  Future<List<ABTest>> getABTests({ABTestStatus? status, String? createdBy, int limit = 50}) async {
+  Future<List<ABTest>> getABTests(
+      {ABTestStatus? status, String? createdBy, int limit = 50}) async {
     try {
       Query<Map<String, dynamic>> query = _firestore.collection('abTests');
 
       if (status != null) {
-        query = query.where('status', isEqualTo: status.toString().split('.').last);
+        query =
+            query.where('status', isEqualTo: status.toString().split('.').last);
       }
       if (createdBy != null) {
         query = query.where('createdBy', isEqualTo: createdBy);
       }
 
-      final snapshot = await query.orderBy('createdAt', descending: true).limit(limit).get();
+      final snapshot =
+          await query.orderBy('createdAt', descending: true).limit(limit).get();
 
       return snapshot.docs.map(ABTest.fromDocument).toList();
     } catch (e) {
@@ -268,7 +272,8 @@ class ABTestService {
   }
 
   /// Записать участие пользователя
-  Future<void> _recordParticipation(String testId, String userId, String variantId) async {
+  Future<void> _recordParticipation(
+      String testId, String userId, String variantId) async {
     try {
       final participation = ABTestParticipation(
         id: _uuid.v4(),
@@ -278,7 +283,9 @@ class ABTestService {
         assignedAt: DateTime.now(),
       );
 
-      await _firestore.collection('abTestParticipations').add(participation.toMap());
+      await _firestore
+          .collection('abTestParticipations')
+          .add(participation.toMap());
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Ошибка записи участия в A/B тесте: $e');
@@ -287,7 +294,8 @@ class ABTestService {
   }
 
   /// Получить участие пользователя
-  Future<ABTestParticipation?> _getUserParticipation(String testId, String userId) async {
+  Future<ABTestParticipation?> _getUserParticipation(
+      String testId, String userId) async {
     try {
       final snapshot = await _firestore
           .collection('abTestParticipations')
@@ -320,11 +328,18 @@ class ABTestService {
       if (participation == null) return;
 
       final events = Map<String, dynamic>.from(participation.events);
-      events[eventName] = {'timestamp': DateTime.now().toIso8601String(), 'data': eventData ?? {}};
+      events[eventName] = {
+        'timestamp': DateTime.now().toIso8601String(),
+        'data': eventData ?? {}
+      };
 
-      await _firestore.collection('abTestParticipations').doc(participation.id).update({
+      await _firestore
+          .collection('abTestParticipations')
+          .doc(participation.id)
+          .update({
         'events': events,
-        if (eventName == 'conversion') 'convertedAt': Timestamp.fromDate(DateTime.now()),
+        if (eventName == 'conversion')
+          'convertedAt': Timestamp.fromDate(DateTime.now()),
       });
 
       if (kDebugMode) {
@@ -349,10 +364,10 @@ class ABTestService {
       final statistics = <String, ABTestVariantStatistics>{};
 
       for (final variant in test.variants) {
-        final variantParticipations = participations
-            .where((p) => p.variantId == variant.id)
-            .toList();
-        final conversions = variantParticipations.where((p) => p.isConverted).length;
+        final variantParticipations =
+            participations.where((p) => p.variantId == variant.id).toList();
+        final conversions =
+            variantParticipations.where((p) => p.isConverted).length;
         final conversionRate = variantParticipations.isEmpty
             ? 0.0
             : conversions / variantParticipations.length;
@@ -363,7 +378,8 @@ class ABTestService {
           participants: variantParticipations.length,
           conversions: conversions,
           conversionRate: conversionRate,
-          averageTimeToConversion: _calculateAverageTimeToConversion(variantParticipations),
+          averageTimeToConversion:
+              _calculateAverageTimeToConversion(variantParticipations),
         );
       }
 
@@ -373,7 +389,8 @@ class ABTestService {
         totalParticipants: participations.length,
         totalConversions: participations.where((p) => p.isConverted).length,
         variantStatistics: statistics,
-        isStatisticallySignificant: _isStatisticallySignificant(statistics, test.metrics),
+        isStatisticallySignificant:
+            _isStatisticallySignificant(statistics, test.metrics),
         confidenceLevel: _calculateConfidenceLevel(statistics),
       );
     } catch (e) {
@@ -385,7 +402,8 @@ class ABTestService {
   }
 
   /// Получить участия в тесте
-  Future<List<ABTestParticipation>> _getTestParticipations(String testId) async {
+  Future<List<ABTestParticipation>> _getTestParticipations(
+      String testId) async {
     try {
       final snapshot = await _firestore
           .collection('abTestParticipations')
@@ -402,8 +420,10 @@ class ABTestService {
   }
 
   /// Вычислить среднее время до конверсии
-  Duration? _calculateAverageTimeToConversion(List<ABTestParticipation> participations) {
-    final convertedParticipations = participations.where((p) => p.isConverted).toList();
+  Duration? _calculateAverageTimeToConversion(
+      List<ABTestParticipation> participations) {
+    final convertedParticipations =
+        participations.where((p) => p.isConverted).toList();
     if (convertedParticipations.isEmpty) return null;
 
     final totalTime = convertedParticipations.fold<Duration>(
@@ -411,7 +431,9 @@ class ABTestService {
       (sum, p) => sum + (p.timeToConversion ?? Duration.zero),
     );
 
-    return Duration(milliseconds: totalTime.inMilliseconds ~/ convertedParticipations.length);
+    return Duration(
+        milliseconds:
+            totalTime.inMilliseconds ~/ convertedParticipations.length);
   }
 
   /// Проверить статистическую значимость
@@ -439,13 +461,14 @@ class ABTestService {
     }
 
     // Простая проверка на разницу в конверсии
-    final conversionDifference = (treatmentVariant.conversionRate - controlVariant.conversionRate)
-        .abs();
+    final conversionDifference =
+        (treatmentVariant.conversionRate - controlVariant.conversionRate).abs();
     return conversionDifference >= metrics.minimumDetectableEffect;
   }
 
   /// Вычислить уровень доверия
-  double _calculateConfidenceLevel(Map<String, ABTestVariantStatistics> statistics) {
+  double _calculateConfidenceLevel(
+      Map<String, ABTestVariantStatistics> statistics) {
     // Упрощенный расчет уровня доверия
     if (statistics.length < 2) return 0;
 
@@ -460,8 +483,8 @@ class ABTestService {
       orElse: () => variants.last,
     );
 
-    final conversionDifference = (treatmentVariant.conversionRate - controlVariant.conversionRate)
-        .abs();
+    final conversionDifference =
+        (treatmentVariant.conversionRate - controlVariant.conversionRate).abs();
     final minSampleSize = [
       controlVariant.participants,
       treatmentVariant.participants,
@@ -505,7 +528,9 @@ class ABTestService {
       final participations = await _getTestParticipations(testId);
       final batch = _firestore.batch();
       for (final participation in participations) {
-        batch.delete(_firestore.collection('abTestParticipations').doc(participation.id));
+        batch.delete(_firestore
+            .collection('abTestParticipations')
+            .doc(participation.id));
       }
       await batch.commit();
 
@@ -555,7 +580,8 @@ class ABTestStatistics {
   ABTestVariantStatistics? get winningVariant {
     if (variantStatistics.isEmpty) return null;
 
-    return variantStatistics.values.reduce((a, b) => a.conversionRate > b.conversionRate ? a : b);
+    return variantStatistics.values
+        .reduce((a, b) => a.conversionRate > b.conversionRate ? a : b);
   }
 
   @override
@@ -583,7 +609,9 @@ class ABTestVariantStatistics {
   /// Улучшение конверсии в процентах
   double getConversionImprovement(ABTestVariantStatistics baseline) {
     if (baseline.conversionRate == 0) return 0;
-    return ((conversionRate - baseline.conversionRate) / baseline.conversionRate) * 100;
+    return ((conversionRate - baseline.conversionRate) /
+            baseline.conversionRate) *
+        100;
   }
 
   @override

@@ -15,7 +15,7 @@ class PhoneAuthImproved extends ConsumerStatefulWidget {
 class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
   final _phoneController = TextEditingController();
   final _codeController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _isCodeSent = false;
   String? _verificationId;
@@ -40,12 +40,12 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
       final verificationId = await authService.sendPhoneVerificationCode(
         _phoneController.text.trim(),
       );
-      
+
       setState(() {
         _isCodeSent = true;
         _verificationId = verificationId;
       });
-      
+
       _showSuccess('Код отправлен на номер ${_phoneController.text}');
     } catch (e) {
       _showError(e.toString());
@@ -136,18 +136,19 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 40),
-                
+
                 // Кнопка назад
                 Align(
                   alignment: Alignment.centerLeft,
                   child: IconButton(
                     onPressed: () => context.go('/auth'),
-                    icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                    icon: const Icon(Icons.arrow_back,
+                        color: Colors.white, size: 28),
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Логотип
                 Container(
                   width: 80,
@@ -169,9 +170,9 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
                     color: Color(0xFF1E3A8A),
                   ),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Заголовок
                 Text(
                   _isCodeSent ? 'Подтверждение номера' : 'Вход по телефону',
@@ -182,22 +183,22 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 Text(
-                  _isCodeSent 
-                    ? 'Введите код из SMS'
-                    : 'Введите номер телефона для получения кода',
+                  _isCodeSent
+                      ? 'Введите код из SMS'
+                      : 'Введите номер телефона для получения кода',
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white70,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Карточка с формой
                 Container(
                   padding: const EdgeInsets.all(24),
@@ -222,19 +223,21 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
                           decoration: InputDecoration(
                             labelText: 'Номер телефона',
                             hintText: '+7 (999) 123-45-67',
-                            prefixIcon: const Icon(Icons.phone, color: Color(0xFF1E3A8A)),
+                            prefixIcon: const Icon(Icons.phone,
+                                color: Color(0xFF1E3A8A)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFF1E3A8A), width: 2),
+                              borderSide: const BorderSide(
+                                  color: Color(0xFF1E3A8A), width: 2),
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Кнопка отправки кода
                         SizedBox(
                           width: double.infinity,
@@ -250,18 +253,21 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
                               elevation: 2,
                             ),
                             child: _isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  )
+                                : const Text(
+                                    'Отправить код',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
                                   ),
-                                )
-                              : const Text(
-                                  'Отправить код',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                ),
                           ),
                         ),
                       ] else ...[
@@ -279,20 +285,22 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
                           decoration: InputDecoration(
                             labelText: 'Код подтверждения',
                             hintText: '123456',
-                            prefixIcon: const Icon(Icons.sms, color: Color(0xFF1E3A8A)),
+                            prefixIcon:
+                                const Icon(Icons.sms, color: Color(0xFF1E3A8A)),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(color: Color(0xFF1E3A8A), width: 2),
+                              borderSide: const BorderSide(
+                                  color: Color(0xFF1E3A8A), width: 2),
                             ),
                             counterText: '',
                           ),
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Кнопка подтверждения
                         SizedBox(
                           width: double.infinity,
@@ -308,23 +316,26 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
                               elevation: 2,
                             ),
                             child: _isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  )
+                                : const Text(
+                                    'Подтвердить',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
                                   ),
-                                )
-                              : const Text(
-                                  'Подтвердить',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Кнопка повторной отправки
                         TextButton(
                           onPressed: () {
@@ -342,9 +353,9 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Информация
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -354,7 +365,8 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.info_outline, color: Colors.white70, size: 20),
+                      const Icon(Icons.info_outline,
+                          color: Colors.white70, size: 20),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
@@ -368,7 +380,7 @@ class _PhoneAuthImprovedState extends ConsumerState<PhoneAuthImproved> {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
               ],
             ),

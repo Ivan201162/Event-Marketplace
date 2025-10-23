@@ -14,7 +14,8 @@ class MainNavigationScreen extends ConsumerStatefulWidget {
   const MainNavigationScreen({super.key});
 
   @override
-  ConsumerState<MainNavigationScreen> createState() => _MainNavigationScreenState();
+  ConsumerState<MainNavigationScreen> createState() =>
+      _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
@@ -113,7 +114,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                 final index = entry.key;
                 final item = entry.value;
                 final isActive = index == _currentIndex;
-                
+
                 return Expanded(
                   child: GestureDetector(
                     onTap: () {
@@ -129,20 +130,27 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       curve: Curves.easeInOut,
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
                       decoration: BoxDecoration(
                         gradient: isActive
                             ? LinearGradient(
                                 colors: [
-                                  Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                                  Theme.of(context).primaryColor.withValues(alpha: 0.05),
+                                  Theme.of(context)
+                                      .primaryColor
+                                      .withValues(alpha: 0.1),
+                                  Theme.of(context)
+                                      .primaryColor
+                                      .withValues(alpha: 0.05),
                                 ],
                               )
                             : null,
                         borderRadius: BorderRadius.circular(16),
                         border: isActive
                             ? Border.all(
-                                color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withValues(alpha: 0.3),
                                 width: 1,
                               )
                             : null,
@@ -157,7 +165,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                                 scale: isActive ? _scaleAnimation.value : 1.0,
                                 child: Icon(
                                   isActive ? item.activeIcon : item.icon,
-                                  color: isActive 
+                                  color: isActive
                                       ? Theme.of(context).primaryColor
                                       : Colors.grey[600],
                                   size: isActive ? 26 : 24,
@@ -170,8 +178,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
                             item.label,
                             style: TextStyle(
                               fontSize: 11,
-                              fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-                              color: isActive 
+                              fontWeight:
+                                  isActive ? FontWeight.bold : FontWeight.w500,
+                              color: isActive
                                   ? Theme.of(context).primaryColor
                                   : Colors.grey[600],
                             ),

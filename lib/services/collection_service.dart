@@ -29,10 +29,11 @@ class CollectionService {
     query = query.limit(limit);
 
     return query.snapshots().map(
-      (snapshot) => snapshot.docs
-          .map((doc) => IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
-          .toList(),
-    );
+          (snapshot) => snapshot.docs
+              .map((doc) =>
+                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
+              .toList(),
+        );
   }
 
   /// Получить коллекции пользователя
@@ -48,7 +49,8 @@ class CollectionService {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map((doc) => IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
+              .map((doc) =>
+                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
               .toList(),
         );
   }
@@ -66,7 +68,8 @@ class CollectionService {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map((doc) => IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
+              .map((doc) =>
+                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
               .toList(),
         );
   }
@@ -78,7 +81,9 @@ class CollectionService {
     }
 
     try {
-      final docRef = await _firestore.collection('idea_collections').add(collection.toMap());
+      final docRef = await _firestore
+          .collection('idea_collections')
+          .add(collection.toMap());
       return docRef.id;
     } catch (e) {
       debugPrint('Error creating collection: $e');
@@ -87,7 +92,8 @@ class CollectionService {
   }
 
   /// Обновить коллекцию
-  Future<void> updateCollection(String collectionId, Map<String, dynamic> updates) async {
+  Future<void> updateCollection(
+      String collectionId, Map<String, dynamic> updates) async {
     if (!FeatureFlags.ideasEnabled) {
       throw Exception('Функция идей отключена');
     }
@@ -110,7 +116,10 @@ class CollectionService {
     }
 
     try {
-      await _firestore.collection('idea_collections').doc(collectionId).delete();
+      await _firestore
+          .collection('idea_collections')
+          .doc(collectionId)
+          .delete();
     } catch (e) {
       debugPrint('Error deleting collection: $e');
       throw Exception('Ошибка удаления коллекции: $e');
@@ -124,7 +133,8 @@ class CollectionService {
     }
 
     try {
-      final collectionRef = _firestore.collection('idea_collections').doc(collectionId);
+      final collectionRef =
+          _firestore.collection('idea_collections').doc(collectionId);
 
       await _firestore.runTransaction((transaction) async {
         final collectionDoc = await transaction.get(collectionRef);
@@ -165,7 +175,8 @@ class CollectionService {
     }
 
     try {
-      final collectionRef = _firestore.collection('idea_collections').doc(collectionId);
+      final collectionRef =
+          _firestore.collection('idea_collections').doc(collectionId);
 
       await _firestore.runTransaction((transaction) async {
         final collectionDoc = await transaction.get(collectionRef);
@@ -185,12 +196,14 @@ class CollectionService {
         final newIdeaIds = List<String>.from(collection.ideaIds)..add(ideaId);
 
         // Получаем изображения идеи для превью
-        final ideaDoc = await transaction.get(_firestore.collection('ideas').doc(ideaId));
+        final ideaDoc =
+            await transaction.get(_firestore.collection('ideas').doc(ideaId));
         if (ideaDoc.exists) {
           final idea = Idea.fromMap({'id': ideaDoc.id, ...ideaDoc.data()!});
 
           final newImages = List<String>.from(collection.images);
-          if (idea.images.isNotEmpty && !newImages.contains(idea.images.first)) {
+          if (idea.images.isNotEmpty &&
+              !newImages.contains(idea.images.first)) {
             newImages.add(idea.images.first);
             // Ограничиваем количество превью
             if (newImages.length > 4) {
@@ -217,13 +230,15 @@ class CollectionService {
   }
 
   /// Удалить идею из коллекции
-  Future<void> removeIdeaFromCollection(String collectionId, String ideaId) async {
+  Future<void> removeIdeaFromCollection(
+      String collectionId, String ideaId) async {
     if (!FeatureFlags.ideasEnabled) {
       throw Exception('Функция идей отключена');
     }
 
     try {
-      final collectionRef = _firestore.collection('idea_collections').doc(collectionId);
+      final collectionRef =
+          _firestore.collection('idea_collections').doc(collectionId);
 
       await _firestore.runTransaction((transaction) async {
         final collectionDoc = await transaction.get(collectionRef);
@@ -236,10 +251,12 @@ class CollectionService {
           ...collectionDoc.data()!,
         });
 
-        final newIdeaIds = List<String>.from(collection.ideaIds)..remove(ideaId);
+        final newIdeaIds = List<String>.from(collection.ideaIds)
+          ..remove(ideaId);
 
         // Удаляем изображение идеи из превью, если оно есть
-        final ideaDoc = await transaction.get(_firestore.collection('ideas').doc(ideaId));
+        final ideaDoc =
+            await transaction.get(_firestore.collection('ideas').doc(ideaId));
         if (ideaDoc.exists) {
           final idea = Idea.fromMap({'id': ideaDoc.id, ...ideaDoc.data()!});
 
@@ -273,7 +290,10 @@ class CollectionService {
     }
 
     try {
-      final doc = await _firestore.collection('idea_collections').doc(collectionId).get();
+      final doc = await _firestore
+          .collection('idea_collections')
+          .doc(collectionId)
+          .get();
       if (!doc.exists) {
         return null;
       }
@@ -291,14 +311,19 @@ class CollectionService {
       return Stream.value([]);
     }
 
-    return _firestore.collection('idea_collections').doc(collectionId).snapshots().asyncMap((
+    return _firestore
+        .collection('idea_collections')
+        .doc(collectionId)
+        .snapshots()
+        .asyncMap((
       collectionDoc,
     ) async {
       if (!collectionDoc.exists) {
         return <Idea>[];
       }
 
-      final collection = IdeaCollection.fromMap({'id': collectionDoc.id, ...collectionDoc.data()!});
+      final collection = IdeaCollection.fromMap(
+          {'id': collectionDoc.id, ...collectionDoc.data()!});
 
       if (collection.ideaIds.isEmpty) {
         return <Idea>[];
@@ -318,7 +343,8 @@ class CollectionService {
   }
 
   /// Поиск коллекций
-  Stream<List<IdeaCollection>> searchCollections({required String query, int limit = 20}) {
+  Stream<List<IdeaCollection>> searchCollections(
+      {required String query, int limit = 20}) {
     if (!FeatureFlags.ideasEnabled) {
       return Stream.value([]);
     }
@@ -330,22 +356,22 @@ class CollectionService {
         .limit(limit)
         .snapshots()
         .map((snapshot) {
-          final collections = snapshot.docs
-              .map((doc) => IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
-              .toList();
+      final collections = snapshot.docs
+          .map((doc) => IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
+          .toList();
 
-          // Фильтруем по тексту поиска
-          if (query.isNotEmpty) {
-            final lowercaseQuery = query.toLowerCase();
-            collections.removeWhere(
-              (collection) =>
-                  !collection.name.toLowerCase().contains(lowercaseQuery) &&
-                  !collection.description.toLowerCase().contains(lowercaseQuery),
-            );
-          }
+      // Фильтруем по тексту поиска
+      if (query.isNotEmpty) {
+        final lowercaseQuery = query.toLowerCase();
+        collections.removeWhere(
+          (collection) =>
+              !collection.name.toLowerCase().contains(lowercaseQuery) &&
+              !collection.description.toLowerCase().contains(lowercaseQuery),
+        );
+      }
 
-          return collections;
-        });
+      return collections;
+    });
   }
 
   /// Получить популярные коллекции
@@ -363,7 +389,8 @@ class CollectionService {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map((doc) => IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
+              .map((doc) =>
+                  IdeaCollection.fromMap({'id': doc.id, ...doc.data()}))
               .toList(),
         );
   }

@@ -12,7 +12,8 @@ class SpecialistsListScreen extends ConsumerStatefulWidget {
   final SpecialistCategoryInfo category;
 
   @override
-  ConsumerState<SpecialistsListScreen> createState() => _SpecialistsListScreenState();
+  ConsumerState<SpecialistsListScreen> createState() =>
+      _SpecialistsListScreenState();
 }
 
 class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
@@ -29,7 +30,8 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
   @override
   Widget build(BuildContext context) {
     // Получаем специалистов по категории
-    final specialistsAsync = ref.watch(specialistsByCategoryProvider(widget.category.name));
+    final specialistsAsync =
+        ref.watch(specialistsByCategoryProvider(widget.category.name));
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +50,8 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           IconButton(
-            icon: Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
+            icon:
+                Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
             onPressed: () {
               setState(() {
                 _showFilters = !_showFilters;
@@ -77,7 +80,8 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
 
                 return RefreshIndicator(
                   onRefresh: () async {
-                    ref.invalidate(specialistsByCategoryProvider(widget.category.name));
+                    ref.invalidate(
+                        specialistsByCategoryProvider(widget.category.name));
                   },
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
@@ -109,13 +113,15 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const Icon(Icons.error_outline,
+                        size: 64, color: Colors.red),
                     const SizedBox(height: 16),
                     Text('Ошибка загрузки: $error'),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
-                        ref.invalidate(specialistsByCategoryProvider(widget.category.name));
+                        ref.invalidate(specialistsByCategoryProvider(
+                            widget.category.name));
                       },
                       child: const Text('Повторить'),
                     ),
@@ -131,145 +137,150 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
 
   /// Построить поисковую строку
   Widget _buildSearchBar() => Container(
-    padding: const EdgeInsets.all(16),
-    child: TextField(
-      controller: _searchController,
-      decoration: InputDecoration(
-        hintText: 'Поиск в категории "${widget.category.name}"...',
-        prefixIcon: const Icon(Icons.search),
-        suffixIcon: _searchController.text.isNotEmpty
-            ? IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  _searchController.clear();
-                  setState(() {
-                    _searchQuery = '';
-                  });
-                },
-              )
-            : null,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        filled: true,
-        fillColor: Colors.grey[100],
-      ),
-      onChanged: (value) {
-        setState(() {
-          _searchQuery = value;
-        });
-      },
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Поиск в категории "${widget.category.name}"...',
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: _searchController.text.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {
+                        _searchQuery = '';
+                      });
+                    },
+                  )
+                : null,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            filled: true,
+            fillColor: Colors.grey[100],
+          ),
+          onChanged: (value) {
+            setState(() {
+              _searchQuery = value;
+            });
+          },
+        ),
+      );
 
   /// Построить секцию фильтров
   Widget _buildFiltersSection() => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.grey[50],
-      border: Border(
-        top: BorderSide(color: Colors.grey[300]!),
-        bottom: BorderSide(color: Colors.grey[300]!),
-      ),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Фильтры',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          border: Border(
+            top: BorderSide(color: Colors.grey[300]!),
+            bottom: BorderSide(color: Colors.grey[300]!),
+          ),
         ),
-        const SizedBox(height: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Фильтры',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
 
-        // Фильтр по цене
-        _buildPriceFilter(),
+            // Фильтр по цене
+            _buildPriceFilter(),
 
-        const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-        // Фильтр по рейтингу
-        _buildRatingFilter(),
+            // Фильтр по рейтингу
+            _buildRatingFilter(),
 
-        const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-        // Фильтр по опыту
-        _buildExperienceFilter(),
-      ],
-    ),
-  );
+            // Фильтр по опыту
+            _buildExperienceFilter(),
+          ],
+        ),
+      );
 
   /// Построить фильтр по цене
   Widget _buildPriceFilter() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text('Цена за час', style: Theme.of(context).textTheme.titleSmall),
-      const SizedBox(height: 8),
-      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'От',
-                border: OutlineInputBorder(),
-                isDense: true,
+          Text('Цена за час', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'От',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
               ),
-              keyboardType: TextInputType.number,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'До',
-                border: OutlineInputBorder(),
-                isDense: true,
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'До',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
               ),
-              keyboardType: TextInputType.number,
-            ),
+            ],
           ),
         ],
-      ),
-    ],
-  );
+      );
 
   /// Построить фильтр по рейтингу
   Widget _buildRatingFilter() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text('Минимальный рейтинг', style: Theme.of(context).textTheme.titleSmall),
-      const SizedBox(height: 8),
-      Row(
-        children: List.generate(
-          5,
-          (index) => IconButton(
-            icon: Icon(Icons.star, color: index < 4 ? Colors.amber : Colors.grey[300]),
-            onPressed: () {
-              // TODO(developer): Реализовать фильтр по рейтингу
-            },
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Минимальный рейтинг',
+              style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Row(
+            children: List.generate(
+              5,
+              (index) => IconButton(
+                icon: Icon(Icons.star,
+                    color: index < 4 ? Colors.amber : Colors.grey[300]),
+                onPressed: () {
+                  // TODO(developer): Реализовать фильтр по рейтингу
+                },
+              ),
+            ),
           ),
-        ),
-      ),
-    ],
-  );
+        ],
+      );
 
   /// Построить фильтр по опыту
   Widget _buildExperienceFilter() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text('Уровень опыта', style: Theme.of(context).textTheme.titleSmall),
-      const SizedBox(height: 8),
-      Wrap(
-        spacing: 8,
-        children: ExperienceLevel.values
-            .map(
-              (level) => FilterChip(
-                label: Text(level.displayName),
-                onSelected: (selected) {
-                  // TODO(developer): Реализовать фильтр по опыту
-                },
-              ),
-            )
-            .toList(),
-      ),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Уровень опыта', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            children: ExperienceLevel.values
+                .map(
+                  (level) => FilterChip(
+                    label: Text(level.displayName),
+                    onSelected: (selected) {
+                      // TODO(developer): Реализовать фильтр по опыту
+                    },
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      );
 
   /// Построить пустое состояние
   Widget _buildEmptyState() {
@@ -282,10 +293,14 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
             const SizedBox(height: 16),
             Text(
               'Нет специалистов по запросу',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
-            Text('Попробуйте изменить поисковый запрос', style: TextStyle(color: Colors.grey[500])),
+            Text('Попробуйте изменить поисковый запрос',
+                style: TextStyle(color: Colors.grey[500])),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
@@ -307,12 +322,17 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
         children: [
           Text(
             widget.category.emoji,
-            style: TextStyle(fontSize: 64, color: widget.category.color.withValues(alpha: 0.5)),
+            style: TextStyle(
+                fontSize: 64,
+                color: widget.category.color.withValues(alpha: 0.5)),
           ),
           const SizedBox(height: 16),
           Text(
             'В категории "${widget.category.name}" пока нет специалистов',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+            style: Theme.of(context)
+                .textTheme
+                .headlineSmall
+                ?.copyWith(color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
@@ -351,8 +371,11 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
               specialist.name.toLowerCase().contains(searchLower) ||
                   specialist.description?.toLowerCase().contains(searchLower) ??
               false ||
-                  specialist.category.displayName.toLowerCase().contains(searchLower) ||
-                  specialist.subcategories.any((sub) => sub.toLowerCase().contains(searchLower)),
+                  specialist.category.displayName
+                      .toLowerCase()
+                      .contains(searchLower) ||
+                  specialist.subcategories
+                      .any((sub) => sub.toLowerCase().contains(searchLower)),
         )
         .toList();
   }
@@ -361,14 +384,16 @@ class _SpecialistsListScreenState extends ConsumerState<SpecialistsListScreen> {
   void _navigateToSpecialistProfile(Specialist specialist) {
     Navigator.of(context).push(
       MaterialPageRoute<SpecialistProfileScreen>(
-        builder: (context) => SpecialistProfileScreen(specialistId: specialist.id),
+        builder: (context) =>
+            SpecialistProfileScreen(specialistId: specialist.id),
       ),
     );
   }
 }
 
 /// Provider для получения специалистов по категории
-final specialistsByCategoryProvider = FutureProvider.family<List<Specialist>, String>((
+final specialistsByCategoryProvider =
+    FutureProvider.family<List<Specialist>, String>((
   ref,
   categoryName,
 ) async {

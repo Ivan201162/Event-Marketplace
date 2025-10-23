@@ -8,9 +8,11 @@ class SpecialistReportService {
   /// Получить общую статистику по специалистам
   Future<SpecialistReport> generateSpecialistReport() async {
     try {
-      final querySnapshot = await _firestore.collection('specialist_profiles').get();
+      final querySnapshot =
+          await _firestore.collection('specialist_profiles').get();
 
-      final specialists = querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
+      final specialists =
+          querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return SpecialistReport.fromSpecialists(specialists);
     } on Exception catch (e) {
@@ -22,9 +24,11 @@ class SpecialistReportService {
   /// Получить отчет по категориям специалистов
   Future<CategoryReport> generateCategoryReport() async {
     try {
-      final querySnapshot = await _firestore.collection('specialist_profiles').get();
+      final querySnapshot =
+          await _firestore.collection('specialist_profiles').get();
 
-      final specialists = querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
+      final specialists =
+          querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return CategoryReport.fromSpecialists(specialists);
     } on Exception catch (e) {
@@ -41,7 +45,8 @@ class SpecialistReportService {
           .orderBy('rating', descending: true)
           .get();
 
-      final specialists = querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
+      final specialists =
+          querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return RatingReport.fromSpecialists(specialists);
     } on Exception catch (e) {
@@ -53,9 +58,11 @@ class SpecialistReportService {
   /// Получить отчет по доходам специалистов
   Future<EarningsReport> generateEarningsReport() async {
     try {
-      final querySnapshot = await _firestore.collection('specialist_profiles').get();
+      final querySnapshot =
+          await _firestore.collection('specialist_profiles').get();
 
-      final specialists = querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
+      final specialists =
+          querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return EarningsReport.fromSpecialists(specialists);
     } on Exception catch (e) {
@@ -67,9 +74,11 @@ class SpecialistReportService {
   /// Получить отчет по активности специалистов
   Future<ActivityReport> generateActivityReport() async {
     try {
-      final querySnapshot = await _firestore.collection('specialist_profiles').get();
+      final querySnapshot =
+          await _firestore.collection('specialist_profiles').get();
 
-      final specialists = querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
+      final specialists =
+          querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       return ActivityReport.fromSpecialists(specialists);
     } on Exception catch (e) {
@@ -79,7 +88,8 @@ class SpecialistReportService {
   }
 
   /// Получить детальный отчет по конкретному специалисту
-  Future<SpecialistDetailReport> generateSpecialistDetailReport(String specialistId) async {
+  Future<SpecialistDetailReport> generateSpecialistDetailReport(
+      String specialistId) async {
     try {
       final specialistDoc = await _firestore
           .collection('specialist_profiles')
@@ -133,24 +143,28 @@ class SpecialistReport {
     required this.generatedAt,
   });
 
-  factory SpecialistReport.fromSpecialists(List<SpecialistProfile> specialists) {
+  factory SpecialistReport.fromSpecialists(
+      List<SpecialistProfile> specialists) {
     final totalSpecialists = specialists.length;
     final verifiedSpecialists = specialists.where((s) => s.isVerified).length;
     final availableSpecialists = specialists.where((s) => s.isAvailable).length;
 
     final averageRating = specialists.isNotEmpty
-        ? specialists.map((s) => s.rating).reduce((a, b) => a + b) / specialists.length
+        ? specialists.map((s) => s.rating).reduce((a, b) => a + b) /
+            specialists.length
         : 0.0;
 
     final averageHourlyRate = specialists.isNotEmpty
-        ? specialists.map((s) => s.hourlyRate).reduce((a, b) => a + b) / specialists.length
+        ? specialists.map((s) => s.hourlyRate).reduce((a, b) => a + b) /
+            specialists.length
         : 0.0;
 
     // Подсчитываем категории
     final categoryCounts = <String, int>{};
     for (final specialist in specialists) {
       for (final category in specialist.categories) {
-        categoryCounts[category.name] = (categoryCounts[category.name] ?? 0) + 1;
+        categoryCounts[category.name] =
+            (categoryCounts[category.name] ?? 0) + 1;
       }
     }
 
@@ -182,7 +196,8 @@ class SpecialistReport {
 
 /// Отчет по категориям
 class CategoryReport {
-  const CategoryReport({required this.categoryStats, required this.generatedAt});
+  const CategoryReport(
+      {required this.categoryStats, required this.generatedAt});
 
   factory CategoryReport.fromSpecialists(List<SpecialistProfile> specialists) {
     final categoryStats = <String, CategoryStats>{};
@@ -222,7 +237,8 @@ class CategoryReport {
       );
     }
 
-    return CategoryReport(categoryStats: categoryStats, generatedAt: DateTime.now());
+    return CategoryReport(
+        categoryStats: categoryStats, generatedAt: DateTime.now());
   }
 
   final Map<String, CategoryStats> categoryStats;
@@ -258,14 +274,16 @@ class RatingReport {
   factory RatingReport.fromSpecialists(List<SpecialistProfile> specialists) {
     final ratingDistribution = <int, int>{};
     for (var i = 1; i <= 5; i++) {
-      ratingDistribution[i] = specialists.where((s) => s.rating.floor() == i).length;
+      ratingDistribution[i] =
+          specialists.where((s) => s.rating.floor() == i).length;
     }
 
     final topRatedSpecialists = specialists.where((s) => s.rating > 0).toList()
       ..sort((a, b) => b.rating.compareTo(a.rating));
 
     final averageRating = specialists.isNotEmpty
-        ? specialists.map((s) => s.rating).reduce((a, b) => a + b) / specialists.length
+        ? specialists.map((s) => s.rating).reduce((a, b) => a + b) /
+            specialists.length
         : 0.0;
 
     return RatingReport(
@@ -301,7 +319,8 @@ class EarningsReport {
       specialistEarnings[specialist] = earnings;
     }
 
-    final averageEarnings = specialists.isNotEmpty ? totalEarnings / specialists.length : 0.0;
+    final averageEarnings =
+        specialists.isNotEmpty ? totalEarnings / specialists.length : 0.0;
 
     final topEarners = specialistEarnings.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
@@ -335,7 +354,8 @@ class ActivityReport {
 
     final activeSpecialists = specialists.where((s) => s.isAvailable).length;
     final inactiveSpecialists = specialists.where((s) => !s.isAvailable).length;
-    final recentlyJoined = specialists.where((s) => s.createdAt.isAfter(thirtyDaysAgo)).length;
+    final recentlyJoined =
+        specialists.where((s) => s.createdAt.isAfter(thirtyDaysAgo)).length;
 
     return ActivityReport(
       activeSpecialists: activeSpecialists,

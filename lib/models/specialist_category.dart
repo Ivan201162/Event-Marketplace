@@ -84,16 +84,16 @@ class SpecialistCategory extends Equatable {
 
   @override
   List<Object?> get props => [
-    id,
-    name,
-    displayName,
-    description,
-    icon,
-    color,
-    subcategories,
-    isActive,
-    sortOrder,
-  ];
+        id,
+        name,
+        displayName,
+        description,
+        icon,
+        color,
+        subcategories,
+        isActive,
+        sortOrder,
+      ];
 
   @override
   String toString() {
@@ -135,6 +135,8 @@ enum SpecialistCategoryEnum {
 
   /// Get all active categories
   static List<SpecialistCategoryEnum> get activeCategories {
-    return SpecialistCategoryEnum.values.where((e) => e != SpecialistCategoryEnum.other).toList();
+    return SpecialistCategoryEnum.values
+        .where((e) => e != SpecialistCategoryEnum.other)
+        .toList();
   }
 }

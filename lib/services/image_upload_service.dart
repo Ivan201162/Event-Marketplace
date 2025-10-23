@@ -12,7 +12,7 @@ class ImageUploadService {
     try {
       final fileName = 'avatar_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = _storage.ref().child('users/$userId/avatars/$fileName');
-      
+
       final uploadTask = await ref.putFile(
         imageFile,
         SettableMetadata(
@@ -27,7 +27,7 @@ class ImageUploadService {
 
       final downloadUrl = await uploadTask.ref.getDownloadURL();
       debugPrint('✅ Avatar uploaded successfully: $downloadUrl');
-      
+
       return downloadUrl;
     } catch (e) {
       debugPrint('❌ Error uploading avatar: $e');
@@ -40,7 +40,7 @@ class ImageUploadService {
     try {
       final fileName = 'idea_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = _storage.ref().child('ideas/$ideaId/images/$fileName');
-      
+
       final uploadTask = await ref.putFile(
         imageFile,
         SettableMetadata(
@@ -55,7 +55,7 @@ class ImageUploadService {
 
       final downloadUrl = await uploadTask.ref.getDownloadURL();
       debugPrint('✅ Idea image uploaded successfully: $downloadUrl');
-      
+
       return downloadUrl;
     } catch (e) {
       debugPrint('❌ Error uploading idea image: $e');
@@ -68,7 +68,7 @@ class ImageUploadService {
     try {
       final fileName = 'post_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = _storage.ref().child('posts/$postId/images/$fileName');
-      
+
       final uploadTask = await ref.putFile(
         imageFile,
         SettableMetadata(
@@ -83,7 +83,7 @@ class ImageUploadService {
 
       final downloadUrl = await uploadTask.ref.getDownloadURL();
       debugPrint('✅ Post image uploaded successfully: $downloadUrl');
-      
+
       return downloadUrl;
     } catch (e) {
       debugPrint('❌ Error uploading post image: $e');
@@ -121,11 +121,12 @@ class ImageUploadService {
   ) async {
     try {
       final List<String> downloadUrls = [];
-      
+
       for (int i = 0; i < imageFiles.length; i++) {
-        final fileName = 'image_${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
+        final fileName =
+            'image_${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
         final ref = _storage.ref().child('$folderPath/$fileName');
-        
+
         final uploadTask = await ref.putFile(
           imageFiles[i],
           SettableMetadata(
@@ -140,7 +141,7 @@ class ImageUploadService {
         final downloadUrl = await uploadTask.ref.getDownloadURL();
         downloadUrls.add(downloadUrl);
       }
-      
+
       debugPrint('✅ ${downloadUrls.length} images uploaded successfully');
       return downloadUrls;
     } catch (e) {

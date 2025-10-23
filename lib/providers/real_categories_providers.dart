@@ -78,7 +78,8 @@ class RealCategoriesProviders {
   });
 
   /// Провайдер для получения категории по ID
-  static final categoryByIdProvider = StreamProvider.family<Category?, String>((ref, categoryId) {
+  static final categoryByIdProvider =
+      StreamProvider.family<Category?, String>((ref, categoryId) {
     if (!FeatureFlags.useRealCategories) {
       return Stream.value(null);
     }

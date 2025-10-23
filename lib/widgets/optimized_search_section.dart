@@ -15,8 +15,8 @@ class OptimizedSearchSection extends StatelessWidget {
           Text(
             'Найти специалиста',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 12),
           _buildSearchBar(context),
@@ -46,7 +46,8 @@ class OptimizedSearchSection extends StatelessWidget {
             onPressed: () => context.push('/search/advanced'),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         ),
       ),
     );
@@ -54,8 +55,16 @@ class OptimizedSearchSection extends StatelessWidget {
 
   Widget _buildQuickFilters(BuildContext context) {
     final filters = [
-      {'label': 'Фотографы', 'icon': Icons.camera_alt, 'category': 'photographer'},
-      {'label': 'Видеографы', 'icon': Icons.videocam, 'category': 'videographer'},
+      {
+        'label': 'Фотографы',
+        'icon': Icons.camera_alt,
+        'category': 'photographer'
+      },
+      {
+        'label': 'Видеографы',
+        'icon': Icons.videocam,
+        'category': 'videographer'
+      },
       {'label': 'Ведущие', 'icon': Icons.mic, 'category': 'host'},
       {'label': 'DJ', 'icon': Icons.music_note, 'category': 'dj'},
       {'label': 'Декораторы', 'icon': Icons.palette, 'category': 'decorator'},

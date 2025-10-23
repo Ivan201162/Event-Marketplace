@@ -63,7 +63,8 @@ class ResponsiveScaffold extends StatelessWidget {
     final screenType = context.screenType;
 
     // Для десктопа используем другой layout
-    if (screenType == ScreenType.desktop || screenType == ScreenType.largeDesktop) {
+    if (screenType == ScreenType.desktop ||
+        screenType == ScreenType.largeDesktop) {
       return _buildDesktopLayout(context);
     }
 
@@ -122,7 +123,8 @@ class ResponsiveNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenType = context.screenType;
 
-    if (screenType == ScreenType.desktop || screenType == ScreenType.largeDesktop) {
+    if (screenType == ScreenType.desktop ||
+        screenType == ScreenType.largeDesktop) {
       return _buildNavigationRail(context);
     } else {
       return _buildBottomNavigationBar(context);
@@ -137,7 +139,8 @@ class ResponsiveNavigationBar extends StatelessWidget {
         selectedItemColor: selectedItemColor,
         unselectedItemColor: unselectedItemColor,
         items: items
-            .map((item) => BottomNavigationBarItem(icon: item.icon, label: item.label))
+            .map((item) =>
+                BottomNavigationBarItem(icon: item.icon, label: item.label))
             .toList(),
       );
 
@@ -150,7 +153,8 @@ class ResponsiveNavigationBar extends StatelessWidget {
         selectedLabelTextStyle: TextStyle(color: selectedItemColor),
         unselectedLabelTextStyle: TextStyle(color: unselectedItemColor),
         destinations: items
-            .map((item) => NavigationRailDestination(icon: item.icon, label: Text(item.label)))
+            .map((item) => NavigationRailDestination(
+                icon: item.icon, label: Text(item.label)))
             .toList(),
       );
 }
@@ -241,7 +245,8 @@ class ResponsiveCard extends StatelessWidget {
 
 /// Адаптивный список
 class ResponsiveList extends StatelessWidget {
-  const ResponsiveList({super.key, required this.children, this.padding, this.spacing});
+  const ResponsiveList(
+      {super.key, required this.children, this.padding, this.spacing});
   final List<Widget> children;
   final EdgeInsets? padding;
   final double? spacing;
@@ -249,15 +254,20 @@ class ResponsiveList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final screenType = context.screenType;
-    final effectiveSpacing = spacing ?? ResponsiveUtils.getItemSpacing(context.screenWidth);
-    final effectivePadding = padding ?? ResponsiveUtils.getScreenPadding(context.screenWidth);
+    final effectiveSpacing =
+        spacing ?? ResponsiveUtils.getItemSpacing(context.screenWidth);
+    final effectivePadding =
+        padding ?? ResponsiveUtils.getScreenPadding(context.screenWidth);
 
     return Padding(
       padding: effectivePadding,
       child: Column(
         children: children
             .expand(
-              (child) => [child, if (child != children.last) SizedBox(height: effectiveSpacing)],
+              (child) => [
+                child,
+                if (child != children.last) SizedBox(height: effectiveSpacing)
+              ],
             )
             .toList(),
       ),
@@ -288,19 +298,23 @@ class ResponsiveButton extends StatelessWidget {
 
     switch (screenType) {
       case ScreenType.mobile:
-        effectivePadding = padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
+        effectivePadding =
+            padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
         fontSize = 14;
         break;
       case ScreenType.tablet:
-        effectivePadding = padding ?? const EdgeInsets.symmetric(horizontal: 20, vertical: 14);
+        effectivePadding =
+            padding ?? const EdgeInsets.symmetric(horizontal: 20, vertical: 14);
         fontSize = 16;
         break;
       case ScreenType.desktop:
-        effectivePadding = padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 16);
+        effectivePadding =
+            padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 16);
         fontSize = 16;
         break;
       case ScreenType.largeDesktop:
-        effectivePadding = padding ?? const EdgeInsets.symmetric(horizontal: 28, vertical: 18);
+        effectivePadding =
+            padding ?? const EdgeInsets.symmetric(horizontal: 28, vertical: 18);
         fontSize = 18;
         break;
     }
@@ -369,7 +383,8 @@ class ResponsiveDialog extends StatelessWidget {
             if (title != null)
               Padding(
                 padding: effectiveContentPadding,
-                child: Text(title!, style: Theme.of(context).textTheme.headlineSmall),
+                child: Text(title!,
+                    style: Theme.of(context).textTheme.headlineSmall),
               ),
             Flexible(
               child: Padding(padding: effectiveContentPadding, child: child),
@@ -377,7 +392,9 @@ class ResponsiveDialog extends StatelessWidget {
             if (actions != null)
               Padding(
                 padding: effectiveContentPadding,
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: actions!),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: actions!),
               ),
           ],
         ),

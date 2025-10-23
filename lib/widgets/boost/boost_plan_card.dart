@@ -25,7 +25,9 @@ class BoostPlanCard extends StatelessWidget {
               width: isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
-            color: isSelected ? Colors.orange.withValues(alpha: 0.05) : Colors.white,
+            color: isSelected
+                ? Colors.orange.withValues(alpha: 0.05)
+                : Colors.white,
           ),
           child: Row(
             children: [
@@ -35,11 +37,14 @@ class BoostPlanCard extends StatelessWidget {
                 height: 24,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border:
-                      Border.all(color: isSelected ? Colors.orange : Colors.grey[400]!, width: 2),
+                  border: Border.all(
+                      color: isSelected ? Colors.orange : Colors.grey[400]!,
+                      width: 2),
                   color: isSelected ? Colors.orange : Colors.transparent,
                 ),
-                child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 16) : null,
+                child: isSelected
+                    ? const Icon(Icons.check, color: Colors.white, size: 16)
+                    : null,
               ),
               const SizedBox(width: 16),
 

@@ -31,10 +31,12 @@ class LoggingService {
 
       // Инициализируем Firebase Crashlytics
       if (_enableCrashlytics) {
-        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+        await FirebaseCrashlytics.instance
+            .setCrashlyticsCollectionEnabled(true);
 
         // Устанавливаем обработчик ошибок Flutter
-        FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+        FlutterError.onError =
+            FirebaseCrashlytics.instance.recordFlutterFatalError;
 
         // Устанавливаем обработчик ошибок платформы
         PlatformDispatcher.instance.onError = (error, stack) {
@@ -45,7 +47,8 @@ class LoggingService {
 
       // Инициализируем Firebase Performance
       if (_enablePerformance) {
-        await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
+        await FirebasePerformance.instance
+            .setPerformanceCollectionEnabled(true);
       }
 
       debugPrint('LoggingService initialized successfully');
@@ -83,7 +86,8 @@ class LoggingService {
     );
 
     // Логируем в Firebase Crashlytics для ошибок
-    if (_enableCrashlytics && (level == LogLevel.error || level == LogLevel.fatal)) {
+    if (_enableCrashlytics &&
+        (level == LogLevel.error || level == LogLevel.fatal)) {
       FirebaseCrashlytics.instance.log('[$levelName] $logTag: $message');
 
       if (error != null) {
@@ -91,7 +95,9 @@ class LoggingService {
           error,
           stackTrace,
           fatal: level == LogLevel.fatal,
-          information: extra?.entries.map((e) => DiagnosticsProperty(e.key, e.value)).toList(),
+          information: extra?.entries
+              .map((e) => DiagnosticsProperty(e.key, e.value))
+              .toList(),
         );
       }
     }
@@ -106,7 +112,8 @@ class LoggingService {
   }
 
   /// Логирование отладочной информации
-  static void debug(String message, {String? tag, Map<String, dynamic>? extra}) {
+  static void debug(String message,
+      {String? tag, Map<String, dynamic>? extra}) {
     log(message, level: LogLevel.debug, tag: tag, extra: extra);
   }
 
@@ -116,7 +123,8 @@ class LoggingService {
   }
 
   /// Логирование предупреждений
-  static void warning(String message, {String? tag, Map<String, dynamic>? extra}) {
+  static void warning(String message,
+      {String? tag, Map<String, dynamic>? extra}) {
     log(message, level: LogLevel.warning, tag: tag, extra: extra);
   }
 
@@ -157,7 +165,8 @@ class LoggingService {
   }
 
   /// Логирование пользовательских действий
-  static void userAction(String action, {String? userId, Map<String, dynamic>? parameters}) {
+  static void userAction(String action,
+      {String? userId, Map<String, dynamic>? parameters}) {
     final extra = <String, dynamic>{
       'action': action,
       'timestamp': DateTime.now().toIso8601String(),
@@ -175,7 +184,8 @@ class LoggingService {
   }
 
   /// Логирование производительности
-  static void performance(String operation, {Duration? duration, Map<String, dynamic>? metrics}) {
+  static void performance(String operation,
+      {Duration? duration, Map<String, dynamic>? metrics}) {
     final extra = <String, dynamic>{
       'operation': operation,
       'timestamp': DateTime.now().toIso8601String(),
@@ -309,7 +319,9 @@ class LoggingService {
         stackTrace,
         reason: reason,
         fatal: fatal,
-        information: information?.entries.map((e) => DiagnosticsProperty(e.key, e.value)).toList(),
+        information: information?.entries
+            .map((e) => DiagnosticsProperty(e.key, e.value))
+            .toList(),
       );
     }
   }
@@ -323,7 +335,8 @@ class LoggingService {
   }
 
   /// Создать HTTP метрику
-  static Future<HttpMetric> startHttpMetric(String url, HttpMethod method) async {
+  static Future<HttpMetric> startHttpMetric(
+      String url, HttpMethod method) async {
     if (_enablePerformance) {
       return FirebasePerformance.instance.newHttpMetric(url, method);
     }

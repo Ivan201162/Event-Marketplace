@@ -25,7 +25,10 @@ class EventCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
@@ -43,14 +46,20 @@ class EventCard extends StatelessWidget {
                             event.title,
                             style: Theme.of(
                               context,
-                            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                            )
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 4),
                           Text(
                             event.categoryName,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                           ),
@@ -58,11 +67,13 @@ class EventCard extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: event.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: event.statusColor.withValues(alpha: 0.3)),
+                        border: Border.all(
+                            color: event.statusColor.withValues(alpha: 0.3)),
                       ),
                       child: Text(
                         event.statusText,
@@ -91,15 +102,18 @@ class EventCard extends StatelessWidget {
                 // Дата и время
                 Row(
                   children: [
-                    Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
+                    Icon(Icons.calendar_today,
+                        size: 16, color: Colors.grey[600]),
                     const SizedBox(width: 8),
                     Text(event.formattedDate,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                        style:
+                            TextStyle(color: Colors.grey[600], fontSize: 14)),
                     const SizedBox(width: 4),
                     Text('•', style: TextStyle(color: Colors.grey[600])),
                     const SizedBox(width: 4),
                     Text(event.formattedTime,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                        style:
+                            TextStyle(color: Colors.grey[600], fontSize: 14)),
                   ],
                 ),
 
@@ -128,7 +142,8 @@ class EventCard extends StatelessWidget {
                   children: [
                     // Цена
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -136,7 +151,8 @@ class EventCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.attach_money, size: 16, color: Colors.green[700]),
+                          Icon(Icons.attach_money,
+                              size: 16, color: Colors.green[700]),
                           const SizedBox(width: 4),
                           Text(
                             event.formattedPrice,
@@ -154,7 +170,8 @@ class EventCard extends StatelessWidget {
 
                     // Участники
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.blue.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -183,7 +200,8 @@ class EventCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Icon(Icons.check_circle, size: 16, color: Colors.green[600]),
+                      Icon(Icons.check_circle,
+                          size: 16, color: Colors.green[600]),
                       const SizedBox(width: 4),
                       Text(
                         'Свободных мест: ${event.availableSpots}',

@@ -23,7 +23,8 @@ void main() async {
     print('\n✅ Генерация завершена успешно!');
     print('\n📈 Статистика:');
     print('   Всего специалистов: ${stats['totalCount']}');
-    print('   Средний рейтинг: ${(stats['averageRating'] as double).toStringAsFixed(1)}');
+    print(
+        '   Средний рейтинг: ${(stats['averageRating'] as double).toStringAsFixed(1)}');
     print('   Средняя цена: ${(stats['averagePrice'] as double).toInt()}₽');
     print('   Верифицированных: ${stats['verifiedCount']}');
     print('   Онлайн: ${stats['onlineCount']}');

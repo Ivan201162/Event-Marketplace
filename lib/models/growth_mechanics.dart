@@ -1,6 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum AchievementType { referral, purchase, subscription, engagement, milestone, special }
+enum AchievementType {
+  referral,
+  purchase,
+  subscription,
+  engagement,
+  milestone,
+  special
+}
 
 enum ChallengeType { daily, weekly, monthly, seasonal, event, custom }
 
@@ -8,7 +15,14 @@ enum ChallengeStatus { active, completed, expired, cancelled }
 
 enum BadgeType { bronze, silver, gold, platinum, diamond, special }
 
-enum NotificationType { achievement, challenge, reward, reminder, promotion, milestone }
+enum NotificationType {
+  achievement,
+  challenge,
+  reward,
+  reminder,
+  promotion,
+  milestone
+}
 
 class Achievement {
   Achievement({
@@ -29,24 +43,24 @@ class Achievement {
   });
 
   factory Achievement.fromMap(Map<String, dynamic> map) => Achievement(
-    id: map['id'] ?? '',
-    name: map['name'] ?? '',
-    description: map['description'] ?? '',
-    type: AchievementType.values.firstWhere(
-      (e) => e.toString() == 'AchievementType.${map['type']}',
-      orElse: () => AchievementType.engagement,
-    ),
-    condition: Map<String, dynamic>.from(map['condition'] ?? {}),
-    reward: Map<String, dynamic>.from(map['reward'] ?? {}),
-    isActive: map['isActive'] ?? true,
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    icon: map['icon'],
-    category: map['category'],
-    points: map['points'],
-    badge: map['badge'],
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        description: map['description'] ?? '',
+        type: AchievementType.values.firstWhere(
+          (e) => e.toString() == 'AchievementType.${map['type']}',
+          orElse: () => AchievementType.engagement,
+        ),
+        condition: Map<String, dynamic>.from(map['condition'] ?? {}),
+        reward: Map<String, dynamic>.from(map['reward'] ?? {}),
+        isActive: map['isActive'] ?? true,
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        icon: map['icon'],
+        category: map['category'],
+        points: map['points'],
+        badge: map['badge'],
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String name;
@@ -64,21 +78,21 @@ class Achievement {
   final Map<String, dynamic>? metadata;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'description': description,
-    'type': type.toString().split('.').last,
-    'condition': condition,
-    'reward': reward,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'icon': icon,
-    'category': category,
-    'points': points,
-    'badge': badge,
-    'metadata': metadata,
-  };
+        'id': id,
+        'name': name,
+        'description': description,
+        'type': type.toString().split('.').last,
+        'condition': condition,
+        'reward': reward,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'icon': icon,
+        'category': category,
+        'points': points,
+        'badge': badge,
+        'metadata': metadata,
+      };
 }
 
 class UserAchievement {
@@ -96,22 +110,22 @@ class UserAchievement {
   });
 
   factory UserAchievement.fromMap(Map<String, dynamic> map) => UserAchievement(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    achievementId: map['achievementId'] ?? '',
-    achievementName: map['achievementName'] ?? '',
-    achievementType: AchievementType.values.firstWhere(
-      (e) => e.toString() == 'AchievementType.${map['achievementType']}',
-      orElse: () => AchievementType.engagement,
-    ),
-    earnedAt: (map['earnedAt'] as Timestamp).toDate(),
-    isClaimed: map['isClaimed'] ?? false,
-    rewardClaimedAt: map['rewardClaimedAt'] != null
-        ? (map['rewardClaimedAt'] as Timestamp).toDate()
-        : null,
-    progress: Map<String, dynamic>.from(map['progress'] ?? {}),
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        achievementId: map['achievementId'] ?? '',
+        achievementName: map['achievementName'] ?? '',
+        achievementType: AchievementType.values.firstWhere(
+          (e) => e.toString() == 'AchievementType.${map['achievementType']}',
+          orElse: () => AchievementType.engagement,
+        ),
+        earnedAt: (map['earnedAt'] as Timestamp).toDate(),
+        isClaimed: map['isClaimed'] ?? false,
+        rewardClaimedAt: map['rewardClaimedAt'] != null
+            ? (map['rewardClaimedAt'] as Timestamp).toDate()
+            : null,
+        progress: Map<String, dynamic>.from(map['progress'] ?? {}),
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String userId;
@@ -125,17 +139,19 @@ class UserAchievement {
   final Map<String, dynamic>? metadata;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'achievementId': achievementId,
-    'achievementName': achievementName,
-    'achievementType': achievementType.toString().split('.').last,
-    'earnedAt': Timestamp.fromDate(earnedAt),
-    'isClaimed': isClaimed,
-    'rewardClaimedAt': rewardClaimedAt != null ? Timestamp.fromDate(rewardClaimedAt!) : null,
-    'progress': progress,
-    'metadata': metadata,
-  };
+        'id': id,
+        'userId': userId,
+        'achievementId': achievementId,
+        'achievementName': achievementName,
+        'achievementType': achievementType.toString().split('.').last,
+        'earnedAt': Timestamp.fromDate(earnedAt),
+        'isClaimed': isClaimed,
+        'rewardClaimedAt': rewardClaimedAt != null
+            ? Timestamp.fromDate(rewardClaimedAt!)
+            : null,
+        'progress': progress,
+        'metadata': metadata,
+      };
 }
 
 class Challenge {
@@ -159,29 +175,29 @@ class Challenge {
   });
 
   factory Challenge.fromMap(Map<String, dynamic> map) => Challenge(
-    id: map['id'] ?? '',
-    name: map['name'] ?? '',
-    description: map['description'] ?? '',
-    type: ChallengeType.values.firstWhere(
-      (e) => e.toString() == 'ChallengeType.${map['type']}',
-      orElse: () => ChallengeType.daily,
-    ),
-    status: ChallengeStatus.values.firstWhere(
-      (e) => e.toString() == 'ChallengeStatus.${map['status']}',
-      orElse: () => ChallengeStatus.active,
-    ),
-    startDate: (map['startDate'] as Timestamp).toDate(),
-    endDate: (map['endDate'] as Timestamp).toDate(),
-    conditions: Map<String, dynamic>.from(map['conditions'] ?? {}),
-    rewards: Map<String, dynamic>.from(map['rewards'] ?? {}),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    icon: map['icon'],
-    category: map['category'],
-    participants: map['participants'] ?? 0,
-    completedCount: map['completedCount'] ?? 0,
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        description: map['description'] ?? '',
+        type: ChallengeType.values.firstWhere(
+          (e) => e.toString() == 'ChallengeType.${map['type']}',
+          orElse: () => ChallengeType.daily,
+        ),
+        status: ChallengeStatus.values.firstWhere(
+          (e) => e.toString() == 'ChallengeStatus.${map['status']}',
+          orElse: () => ChallengeStatus.active,
+        ),
+        startDate: (map['startDate'] as Timestamp).toDate(),
+        endDate: (map['endDate'] as Timestamp).toDate(),
+        conditions: Map<String, dynamic>.from(map['conditions'] ?? {}),
+        rewards: Map<String, dynamic>.from(map['rewards'] ?? {}),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        icon: map['icon'],
+        category: map['category'],
+        participants: map['participants'] ?? 0,
+        completedCount: map['completedCount'] ?? 0,
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String name;
@@ -205,27 +221,28 @@ class Challenge {
       DateTime.now().isAfter(startDate) &&
       DateTime.now().isBefore(endDate);
 
-  double get completionRate => participants > 0 ? completedCount / participants : 0.0;
+  double get completionRate =>
+      participants > 0 ? completedCount / participants : 0.0;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'description': description,
-    'type': type.toString().split('.').last,
-    'status': status.toString().split('.').last,
-    'startDate': Timestamp.fromDate(startDate),
-    'endDate': Timestamp.fromDate(endDate),
-    'conditions': conditions,
-    'rewards': rewards,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'icon': icon,
-    'category': category,
-    'participants': participants,
-    'completedCount': completedCount,
-    'metadata': metadata,
-  };
+        'id': id,
+        'name': name,
+        'description': description,
+        'type': type.toString().split('.').last,
+        'status': status.toString().split('.').last,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'conditions': conditions,
+        'rewards': rewards,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'icon': icon,
+        'category': category,
+        'participants': participants,
+        'completedCount': completedCount,
+        'metadata': metadata,
+      };
 }
 
 class UserChallenge {
@@ -244,26 +261,28 @@ class UserChallenge {
   });
 
   factory UserChallenge.fromMap(Map<String, dynamic> map) => UserChallenge(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    challengeId: map['challengeId'] ?? '',
-    challengeName: map['challengeName'] ?? '',
-    challengeType: ChallengeType.values.firstWhere(
-      (e) => e.toString() == 'ChallengeType.${map['challengeType']}',
-      orElse: () => ChallengeType.daily,
-    ),
-    joinedAt: (map['joinedAt'] as Timestamp).toDate(),
-    status: ChallengeStatus.values.firstWhere(
-      (e) => e.toString() == 'ChallengeStatus.${map['status']}',
-      orElse: () => ChallengeStatus.active,
-    ),
-    completedAt: map['completedAt'] != null ? (map['completedAt'] as Timestamp).toDate() : null,
-    progress: Map<String, dynamic>.from(map['progress'] ?? {}),
-    rewardClaimedAt: map['rewardClaimedAt'] != null
-        ? (map['rewardClaimedAt'] as Timestamp).toDate()
-        : null,
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        challengeId: map['challengeId'] ?? '',
+        challengeName: map['challengeName'] ?? '',
+        challengeType: ChallengeType.values.firstWhere(
+          (e) => e.toString() == 'ChallengeType.${map['challengeType']}',
+          orElse: () => ChallengeType.daily,
+        ),
+        joinedAt: (map['joinedAt'] as Timestamp).toDate(),
+        status: ChallengeStatus.values.firstWhere(
+          (e) => e.toString() == 'ChallengeStatus.${map['status']}',
+          orElse: () => ChallengeStatus.active,
+        ),
+        completedAt: map['completedAt'] != null
+            ? (map['completedAt'] as Timestamp).toDate()
+            : null,
+        progress: Map<String, dynamic>.from(map['progress'] ?? {}),
+        rewardClaimedAt: map['rewardClaimedAt'] != null
+            ? (map['rewardClaimedAt'] as Timestamp).toDate()
+            : null,
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String userId;
@@ -281,18 +300,21 @@ class UserChallenge {
   bool get isActive => status == ChallengeStatus.active;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'challengeId': challengeId,
-    'challengeName': challengeName,
-    'challengeType': challengeType.toString().split('.').last,
-    'joinedAt': Timestamp.fromDate(joinedAt),
-    'status': status.toString().split('.').last,
-    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-    'progress': progress,
-    'rewardClaimedAt': rewardClaimedAt != null ? Timestamp.fromDate(rewardClaimedAt!) : null,
-    'metadata': metadata,
-  };
+        'id': id,
+        'userId': userId,
+        'challengeId': challengeId,
+        'challengeName': challengeName,
+        'challengeType': challengeType.toString().split('.').last,
+        'joinedAt': Timestamp.fromDate(joinedAt),
+        'status': status.toString().split('.').last,
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'progress': progress,
+        'rewardClaimedAt': rewardClaimedAt != null
+            ? Timestamp.fromDate(rewardClaimedAt!)
+            : null,
+        'metadata': metadata,
+      };
 }
 
 class Badge {
@@ -312,22 +334,22 @@ class Badge {
   });
 
   factory Badge.fromMap(Map<String, dynamic> map) => Badge(
-    id: map['id'] ?? '',
-    name: map['name'] ?? '',
-    description: map['description'] ?? '',
-    type: BadgeType.values.firstWhere(
-      (e) => e.toString() == 'BadgeType.${map['type']}',
-      orElse: () => BadgeType.bronze,
-    ),
-    icon: map['icon'] ?? '',
-    color: map['color'] ?? '#FFD700',
-    isActive: map['isActive'] ?? true,
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    category: map['category'],
-    rarity: map['rarity'],
-    requirements: Map<String, dynamic>.from(map['requirements'] ?? {}),
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        description: map['description'] ?? '',
+        type: BadgeType.values.firstWhere(
+          (e) => e.toString() == 'BadgeType.${map['type']}',
+          orElse: () => BadgeType.bronze,
+        ),
+        icon: map['icon'] ?? '',
+        color: map['color'] ?? '#FFD700',
+        isActive: map['isActive'] ?? true,
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        category: map['category'],
+        rarity: map['rarity'],
+        requirements: Map<String, dynamic>.from(map['requirements'] ?? {}),
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String name;
@@ -343,19 +365,19 @@ class Badge {
   final Map<String, dynamic>? metadata;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'description': description,
-    'type': type.toString().split('.').last,
-    'icon': icon,
-    'color': color,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'category': category,
-    'rarity': rarity,
-    'requirements': requirements,
-    'metadata': metadata,
-  };
+        'id': id,
+        'name': name,
+        'description': description,
+        'type': type.toString().split('.').last,
+        'icon': icon,
+        'color': color,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'category': category,
+        'rarity': rarity,
+        'requirements': requirements,
+        'metadata': metadata,
+      };
 }
 
 class UserBadge {
@@ -372,19 +394,19 @@ class UserBadge {
   });
 
   factory UserBadge.fromMap(Map<String, dynamic> map) => UserBadge(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    badgeId: map['badgeId'] ?? '',
-    badgeName: map['badgeName'] ?? '',
-    badgeType: BadgeType.values.firstWhere(
-      (e) => e.toString() == 'BadgeType.${map['badgeType']}',
-      orElse: () => BadgeType.bronze,
-    ),
-    earnedAt: (map['earnedAt'] as Timestamp).toDate(),
-    isDisplayed: map['isDisplayed'] ?? true,
-    category: map['category'],
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        badgeId: map['badgeId'] ?? '',
+        badgeName: map['badgeName'] ?? '',
+        badgeType: BadgeType.values.firstWhere(
+          (e) => e.toString() == 'BadgeType.${map['badgeType']}',
+          orElse: () => BadgeType.bronze,
+        ),
+        earnedAt: (map['earnedAt'] as Timestamp).toDate(),
+        isDisplayed: map['isDisplayed'] ?? true,
+        category: map['category'],
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String userId;
@@ -397,16 +419,16 @@ class UserBadge {
   final Map<String, dynamic>? metadata;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'badgeId': badgeId,
-    'badgeName': badgeName,
-    'badgeType': badgeType.toString().split('.').last,
-    'earnedAt': Timestamp.fromDate(earnedAt),
-    'isDisplayed': isDisplayed,
-    'category': category,
-    'metadata': metadata,
-  };
+        'id': id,
+        'userId': userId,
+        'badgeId': badgeId,
+        'badgeName': badgeName,
+        'badgeType': badgeType.toString().split('.').last,
+        'earnedAt': Timestamp.fromDate(earnedAt),
+        'isDisplayed': isDisplayed,
+        'category': category,
+        'metadata': metadata,
+      };
 }
 
 class UserLevel {
@@ -423,16 +445,16 @@ class UserLevel {
   });
 
   factory UserLevel.fromMap(Map<String, dynamic> map) => UserLevel(
-    userId: map['userId'] ?? '',
-    level: map['level'] ?? 1,
-    experience: map['experience'] ?? 0,
-    totalExperience: map['totalExperience'] ?? 0,
-    nextLevelExperience: map['nextLevelExperience'] ?? 1000,
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    title: map['title'],
-    benefits: Map<String, dynamic>.from(map['benefits'] ?? {}),
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+        userId: map['userId'] ?? '',
+        level: map['level'] ?? 1,
+        experience: map['experience'] ?? 0,
+        totalExperience: map['totalExperience'] ?? 0,
+        nextLevelExperience: map['nextLevelExperience'] ?? 1000,
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        title: map['title'],
+        benefits: Map<String, dynamic>.from(map['benefits'] ?? {}),
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String userId;
   final int level;
@@ -450,16 +472,16 @@ class UserLevel {
   int get experienceToNextLevel => nextLevelExperience - experience;
 
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'level': level,
-    'experience': experience,
-    'totalExperience': totalExperience,
-    'nextLevelExperience': nextLevelExperience,
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'title': title,
-    'benefits': benefits,
-    'metadata': metadata,
-  };
+        'userId': userId,
+        'level': level,
+        'experience': experience,
+        'totalExperience': totalExperience,
+        'nextLevelExperience': nextLevelExperience,
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'title': title,
+        'benefits': benefits,
+        'metadata': metadata,
+      };
 }
 
 class GrowthNotification {
@@ -477,22 +499,25 @@ class GrowthNotification {
     this.readAt,
   });
 
-  factory GrowthNotification.fromMap(Map<String, dynamic> map) => GrowthNotification(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    type: NotificationType.values.firstWhere(
-      (e) => e.toString() == 'NotificationType.${map['type']}',
-      orElse: () => NotificationType.reminder,
-    ),
-    title: map['title'] ?? '',
-    message: map['message'] ?? '',
-    isRead: map['isRead'] ?? false,
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    actionUrl: map['actionUrl'],
-    actionText: map['actionText'],
-    data: Map<String, dynamic>.from(map['data'] ?? {}),
-    readAt: map['readAt'] != null ? (map['readAt'] as Timestamp).toDate() : null,
-  );
+  factory GrowthNotification.fromMap(Map<String, dynamic> map) =>
+      GrowthNotification(
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        type: NotificationType.values.firstWhere(
+          (e) => e.toString() == 'NotificationType.${map['type']}',
+          orElse: () => NotificationType.reminder,
+        ),
+        title: map['title'] ?? '',
+        message: map['message'] ?? '',
+        isRead: map['isRead'] ?? false,
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        actionUrl: map['actionUrl'],
+        actionText: map['actionText'],
+        data: Map<String, dynamic>.from(map['data'] ?? {}),
+        readAt: map['readAt'] != null
+            ? (map['readAt'] as Timestamp).toDate()
+            : null,
+      );
 
   final String id;
   final String userId;
@@ -507,16 +532,16 @@ class GrowthNotification {
   final DateTime? readAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'type': type.toString().split('.').last,
-    'title': title,
-    'message': message,
-    'isRead': isRead,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'actionUrl': actionUrl,
-    'actionText': actionText,
-    'data': data,
-    'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-  };
+        'id': id,
+        'userId': userId,
+        'type': type.toString().split('.').last,
+        'title': title,
+        'message': message,
+        'isRead': isRead,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'actionUrl': actionUrl,
+        'actionText': actionText,
+        'data': data,
+        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+      };
 }

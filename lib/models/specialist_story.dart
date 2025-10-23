@@ -79,21 +79,21 @@ class SpecialistStory {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'specialistName': specialistName,
-    'specialistAvatar': specialistAvatar,
-    'contentType': contentType.name,
-    'contentUrl': contentUrl,
-    'thumbnailUrl': thumbnailUrl,
-    'text': text,
-    'caption': caption,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'expiresAt': Timestamp.fromDate(expiresAt),
-    'status': status.name,
-    'viewCount': viewCount,
-    'viewers': viewers,
-    'metadata': metadata,
-  };
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'specialistAvatar': specialistAvatar,
+        'contentType': contentType.name,
+        'contentUrl': contentUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'text': text,
+        'caption': caption,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'status': status.name,
+        'viewCount': viewCount,
+        'viewers': viewers,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   SpecialistStory copyWith({
@@ -112,23 +112,24 @@ class SpecialistStory {
     int? viewCount,
     List<String>? viewers,
     Map<String, dynamic>? metadata,
-  }) => SpecialistStory(
-    id: id ?? this.id,
-    specialistId: specialistId ?? this.specialistId,
-    specialistName: specialistName ?? this.specialistName,
-    specialistAvatar: specialistAvatar ?? this.specialistAvatar,
-    contentType: contentType ?? this.contentType,
-    contentUrl: contentUrl ?? this.contentUrl,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-    text: text ?? this.text,
-    caption: caption ?? this.caption,
-    createdAt: createdAt ?? this.createdAt,
-    expiresAt: expiresAt ?? this.expiresAt,
-    status: status ?? this.status,
-    viewCount: viewCount ?? this.viewCount,
-    viewers: viewers ?? this.viewers,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      SpecialistStory(
+        id: id ?? this.id,
+        specialistId: specialistId ?? this.specialistId,
+        specialistName: specialistName ?? this.specialistName,
+        specialistAvatar: specialistAvatar ?? this.specialistAvatar,
+        contentType: contentType ?? this.contentType,
+        contentUrl: contentUrl ?? this.contentUrl,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        text: text ?? this.text,
+        caption: caption ?? this.caption,
+        createdAt: createdAt ?? this.createdAt,
+        expiresAt: expiresAt ?? this.expiresAt,
+        status: status ?? this.status,
+        viewCount: viewCount ?? this.viewCount,
+        viewers: viewers ?? this.viewers,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, истекла ли сторис
   bool get isExpired => DateTime.now().isAfter(expiresAt);
@@ -186,14 +187,16 @@ class SpecialistStoryGroup {
   });
 
   /// Создать из списка сторис
-  factory SpecialistStoryGroup.fromStories(List<SpecialistStory> stories, String userId) {
+  factory SpecialistStoryGroup.fromStories(
+      List<SpecialistStory> stories, String userId) {
     if (stories.isEmpty) {
       throw ArgumentError('Список сторис не может быть пустым');
     }
 
     final firstStory = stories.first;
     final hasUnviewed = stories.any((story) => !story.hasViewed(userId));
-    final lastStory = stories.reduce((a, b) => a.createdAt.isAfter(b.createdAt) ? a : b);
+    final lastStory =
+        stories.reduce((a, b) => a.createdAt.isAfter(b.createdAt) ? a : b);
 
     return SpecialistStoryGroup(
       specialistId: firstStory.specialistId,
@@ -218,10 +221,12 @@ class SpecialistStoryGroup {
   bool get hasActiveStories => stories.isNotEmpty;
 
   /// Получить первую активную сторис
-  SpecialistStory? get firstActiveStory => stories.isNotEmpty ? stories.first : null;
+  SpecialistStory? get firstActiveStory =>
+      stories.isNotEmpty ? stories.first : null;
 
   /// Получить последнюю активную сторис
-  SpecialistStory? get lastActiveStory => stories.isNotEmpty ? stories.last : null;
+  SpecialistStory? get lastActiveStory =>
+      stories.isNotEmpty ? stories.last : null;
 }
 
 /// Статистика сторис
@@ -245,7 +250,8 @@ class StoryStats {
 
     final contentTypeStats = <StoryContentType, int>{};
     for (final story in stories) {
-      contentTypeStats[story.contentType] = (contentTypeStats[story.contentType] ?? 0) + 1;
+      contentTypeStats[story.contentType] =
+          (contentTypeStats[story.contentType] ?? 0) + 1;
     }
 
     final lastStory = stories.isNotEmpty

@@ -9,7 +9,8 @@ final proSubscriptionServiceProvider = Provider<ProSubscriptionService>(
 );
 
 /// Провайдер подписки пользователя
-final userSubscriptionProvider = FutureProvider.family<ProSubscription?, String>((
+final userSubscriptionProvider =
+    FutureProvider.family<ProSubscription?, String>((
   ref,
   userId,
 ) async {
@@ -33,13 +34,15 @@ final paymentHistoryProvider = FutureProvider.family<List<Payment>, String>((
 });
 
 /// Провайдер статистики подписок
-final subscriptionStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final subscriptionStatsProvider =
+    FutureProvider<Map<String, dynamic>>((ref) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.getSubscriptionStats();
 });
 
 /// Провайдер проверки доступности функции
-final featureAccessProvider = FutureProvider.family<bool, FeatureAccessParams>((ref, params) async {
+final featureAccessProvider =
+    FutureProvider.family<bool, FeatureAccessParams>((ref, params) async {
   final service = ref.read(proSubscriptionServiceProvider);
   return service.hasFeature(userId: params.userId, feature: params.feature);
 });
@@ -54,7 +57,9 @@ class FeatureAccessParams {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is FeatureAccessParams && other.userId == userId && other.feature == feature;
+    return other is FeatureAccessParams &&
+        other.userId == userId &&
+        other.feature == feature;
   }
 
   @override
@@ -83,13 +88,14 @@ class SubscriptionState {
     bool? isPaymentInProgress,
     String? error,
     List<dynamic>? paymentHistory,
-  }) => SubscriptionState(
-    subscription: subscription ?? this.subscription,
-    isLoading: isLoading ?? this.isLoading,
-    isPaymentInProgress: isPaymentInProgress ?? this.isPaymentInProgress,
-    error: error ?? this.error,
-    paymentHistory: paymentHistory ?? this.paymentHistory,
-  );
+  }) =>
+      SubscriptionState(
+        subscription: subscription ?? this.subscription,
+        isLoading: isLoading ?? this.isLoading,
+        isPaymentInProgress: isPaymentInProgress ?? this.isPaymentInProgress,
+        error: error ?? this.error,
+        paymentHistory: paymentHistory ?? this.paymentHistory,
+      );
 }
 
 /// Notifier для состояния подписки (мигрирован с StateNotifier)
@@ -131,7 +137,8 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
         isTrial: isTrial,
       );
 
-      state = state.copyWith(subscription: subscription, isPaymentInProgress: false);
+      state = state.copyWith(
+          subscription: subscription, isPaymentInProgress: false);
     } catch (e) {
       state = state.copyWith(isPaymentInProgress: false, error: e.toString());
     }
@@ -145,7 +152,8 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _service.updateSubscription(subscriptionId: subscriptionId, plan: plan);
+      await _service.updateSubscription(
+          subscriptionId: subscriptionId, plan: plan);
 
       // Перезагружаем подписку после обновления
       if (state.subscription != null) {
@@ -191,7 +199,8 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
           await loadUserSubscription(state.subscription!.userId);
         }
 
-        state = state.copyWith(subscription: subscription, isPaymentInProgress: false);
+        state = state.copyWith(
+            subscription: subscription, isPaymentInProgress: false);
       }
     } catch (e) {
       state = state.copyWith(isPaymentInProgress: false, error: e.toString());
@@ -220,6 +229,7 @@ class SubscriptionNotifier extends Notifier<SubscriptionState> {
 }
 
 /// Провайдер состояния подписки (мигрирован с StateNotifierProvider)
-final subscriptionStateProvider = NotifierProvider<SubscriptionNotifier, SubscriptionState>(
+final subscriptionStateProvider =
+    NotifierProvider<SubscriptionNotifier, SubscriptionState>(
   SubscriptionNotifier.new,
 );

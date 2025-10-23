@@ -41,15 +41,15 @@ class UserActivity {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-    'userId': userId,
-    'category': category,
-    'specialistId': specialistId,
-    'city': city,
-    'price': price,
-    'activityType': activityType,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'metadata': metadata,
-  };
+        'userId': userId,
+        'category': category,
+        'specialistId': specialistId,
+        'city': city,
+        'price': price,
+        'activityType': activityType,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'metadata': metadata,
+      };
 
   /// Копирование с изменениями
   UserActivity copyWith({
@@ -62,17 +62,18 @@ class UserActivity {
     String? activityType,
     DateTime? timestamp,
     Map<String, dynamic>? metadata,
-  }) => UserActivity(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    category: category ?? this.category,
-    specialistId: specialistId ?? this.specialistId,
-    city: city ?? this.city,
-    price: price ?? this.price,
-    activityType: activityType ?? this.activityType,
-    timestamp: timestamp ?? this.timestamp,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      UserActivity(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        category: category ?? this.category,
+        specialistId: specialistId ?? this.specialistId,
+        city: city ?? this.city,
+        price: price ?? this.price,
+        activityType: activityType ?? this.activityType,
+        timestamp: timestamp ?? this.timestamp,
+        metadata: metadata ?? this.metadata,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -152,18 +153,18 @@ class Recommendation {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-    'userId': userId,
-    'specialistId': specialistId,
-    'specialistName': specialistName,
-    'category': category,
-    'city': city,
-    'price': price,
-    'rating': rating,
-    'photoUrl': photoUrl,
-    'reason': reason,
-    'confidence': confidence,
-    'createdAt': Timestamp.fromDate(createdAt),
-  };
+        'userId': userId,
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'category': category,
+        'city': city,
+        'price': price,
+        'rating': rating,
+        'photoUrl': photoUrl,
+        'reason': reason,
+        'confidence': confidence,
+        'createdAt': Timestamp.fromDate(createdAt),
+      };
 
   @override
   bool operator ==(Object other) {
@@ -175,5 +176,6 @@ class Recommendation {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'Recommendation(id: $id, specialist: $specialistName, reason: $reason)';
+  String toString() =>
+      'Recommendation(id: $id, specialist: $specialistName, reason: $reason)';
 }

@@ -85,7 +85,8 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                 const Text('Сумма к оплате:', style: TextStyle(fontSize: 16)),
                 Text(
                   '${widget.amount.toStringAsFixed(2)} ${widget.currency}',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -108,7 +109,8 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                   ),
                   Text(
                     '${_bankFee!.totalFee.toStringAsFixed(2)} ${_bankFee!.currency}',
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
@@ -118,7 +120,8 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
           const SizedBox(height: 24),
 
           // Выбор банка
-          const Text('Выберите банк:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Выберите банк:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 12),
 
           ..._bankService.getSupportedBanks().map(_buildBankOption),
@@ -126,12 +129,15 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
           const SizedBox(height: 24),
 
           // Выбор способа оплаты
-          const Text('Способ оплаты:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Способ оплаты:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 12),
 
-          _buildPaymentMethodOption('card', 'Банковская карта', Icons.credit_card),
+          _buildPaymentMethodOption(
+              'card', 'Банковская карта', Icons.credit_card),
           _buildPaymentMethodOption('qr', 'QR-код', Icons.qr_code),
-          _buildPaymentMethodOption('sbp', 'Система быстрых платежей', Icons.payment),
+          _buildPaymentMethodOption(
+              'sbp', 'Система быстрых платежей', Icons.payment),
 
           const SizedBox(height: 24),
 
@@ -139,12 +145,15 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _isLoading || _selectedBankId == null ? null : _initiatePayment,
+              onPressed: _isLoading || _selectedBankId == null
+                  ? null
+                  : _initiatePayment,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue[600],
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
               ),
               child: _isLoading
                   ? const Row(
@@ -155,7 +164,8 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
                         SizedBox(width: 12),
@@ -185,7 +195,8 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                       const SizedBox(width: 8),
                       const Text(
                         'Платеж инициализирован',
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 16),
                       ),
                     ],
                   ),
@@ -248,7 +259,8 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
                   children: [
                     Text(
                       bank.name,
-                      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                     Text(
                       'Поддерживаемые методы: ${bank.supportedMethods.join(', ')}',
@@ -290,7 +302,9 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
           ),
           child: Row(
             children: [
-              Icon(icon, size: 24, color: isSelected ? Colors.blue[600] : Colors.grey[600]),
+              Icon(icon,
+                  size: 24,
+                  color: isSelected ? Colors.blue[600] : Colors.grey[600]),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -369,12 +383,14 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
   void _showError(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showInfo(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.blue));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.blue));
   }
 }

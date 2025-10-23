@@ -3,7 +3,8 @@ import '../services/typing_service.dart';
 
 /// Виджет для отображения индикатора "печатает"
 class TypingIndicatorWidget extends StatelessWidget {
-  const TypingIndicatorWidget({super.key, required this.typingUsers, this.currentUserId});
+  const TypingIndicatorWidget(
+      {super.key, required this.typingUsers, this.currentUserId});
 
   final List<TypingUser> typingUsers;
   final String? currentUserId;
@@ -45,7 +46,8 @@ class TypingIndicatorWidget extends StatelessWidget {
         duration: const Duration(milliseconds: 600),
         width: 4,
         height: 4,
-        decoration: const BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
+        decoration:
+            const BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
         child: TweenAnimationBuilder<double>(
           tween: Tween(begin: 0, end: 1),
           duration: const Duration(milliseconds: 600),
@@ -61,17 +63,20 @@ class TypingIndicatorWidget extends StatelessWidget {
     if (users.length == 1) {
       return Text(
         '${users.first.userName} печатает...',
-        style: const TextStyle(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
+        style: const TextStyle(
+            color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
       );
     } else if (users.length == 2) {
       return Text(
         '${users.first.userName} и ${users.last.userName} печатают...',
-        style: const TextStyle(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
+        style: const TextStyle(
+            color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
       );
     } else {
       return Text(
         '${users.length} пользователя печатают...',
-        style: const TextStyle(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
+        style: const TextStyle(
+            color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
       );
     }
   }
@@ -79,13 +84,15 @@ class TypingIndicatorWidget extends StatelessWidget {
 
 /// Виджет для отображения индикатора печатания с анимацией
 class AnimatedTypingIndicator extends StatefulWidget {
-  const AnimatedTypingIndicator({super.key, required this.typingUsers, this.currentUserId});
+  const AnimatedTypingIndicator(
+      {super.key, required this.typingUsers, this.currentUserId});
 
   final List<TypingUser> typingUsers;
   final String? currentUserId;
 
   @override
-  State<AnimatedTypingIndicator> createState() => _AnimatedTypingIndicatorState();
+  State<AnimatedTypingIndicator> createState() =>
+      _AnimatedTypingIndicatorState();
 }
 
 class _AnimatedTypingIndicatorState extends State<AnimatedTypingIndicator>
@@ -103,7 +110,8 @@ class _AnimatedTypingIndicatorState extends State<AnimatedTypingIndicator>
     _animation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
     _animationController.repeat();
   }
 
@@ -144,14 +152,20 @@ class _AnimatedTypingIndicatorState extends State<AnimatedTypingIndicator>
         height: 20,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [_buildAnimatedDot(0), _buildAnimatedDot(1), _buildAnimatedDot(2)],
+          children: [
+            _buildAnimatedDot(0),
+            _buildAnimatedDot(1),
+            _buildAnimatedDot(2)
+          ],
         ),
       );
 
   Widget _buildAnimatedDot(int index) {
     final delay = index * 0.2;
     final animationValue = (_animation.value + delay) % 1.0;
-    final opacity = (animationValue < 0.5) ? animationValue * 2 : (1.0 - animationValue) * 2;
+    final opacity = (animationValue < 0.5)
+        ? animationValue * 2
+        : (1.0 - animationValue) * 2;
 
     return Container(
       width: 4,
@@ -167,17 +181,20 @@ class _AnimatedTypingIndicatorState extends State<AnimatedTypingIndicator>
     if (users.length == 1) {
       return Text(
         '${users.first.userName} печатает...',
-        style: const TextStyle(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
+        style: const TextStyle(
+            color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
       );
     } else if (users.length == 2) {
       return Text(
         '${users.first.userName} и ${users.last.userName} печатают...',
-        style: const TextStyle(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
+        style: const TextStyle(
+            color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
       );
     } else {
       return Text(
         '${users.length} пользователя печатают...',
-        style: const TextStyle(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
+        style: const TextStyle(
+            color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
       );
     }
   }

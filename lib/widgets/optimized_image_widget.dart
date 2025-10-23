@@ -55,8 +55,10 @@ class OptimizedImage extends StatelessWidget {
       memCacheHeight: memCacheHeight,
       maxWidthDiskCache: maxWidthDiskCache,
       maxHeightDiskCache: maxHeightDiskCache,
-      placeholder: (context, url) => placeholder ?? _buildDefaultPlaceholder(theme),
-      errorWidget: (context, url, error) => errorWidget ?? _buildDefaultErrorWidget(theme),
+      placeholder: (context, url) =>
+          placeholder ?? _buildDefaultPlaceholder(theme),
+      errorWidget: (context, url, error) =>
+          errorWidget ?? _buildDefaultErrorWidget(theme),
       imageBuilder: (context, imageProvider) => Container(
         width: width,
         height: height,
@@ -90,7 +92,8 @@ class OptimizedImage extends StatelessWidget {
             height: (height ?? 100) * 0.3,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
             ),
           ),
         ),
@@ -144,7 +147,8 @@ class OptimizedAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveBorderRadius = borderRadius ?? BorderRadius.circular(size / 2);
+    final effectiveBorderRadius =
+        borderRadius ?? BorderRadius.circular(size / 2);
 
     Widget avatarWidget = CachedNetworkImage(
       imageUrl: imageUrl,
@@ -157,7 +161,9 @@ class OptimizedAvatar extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: effectiveBorderRadius,
           border: showBorder
-              ? (border ?? Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)))
+              ? (border ??
+                  Border.all(
+                      color: theme.colorScheme.outline.withValues(alpha: 0.2)))
               : null,
           image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
         ),
@@ -242,7 +248,8 @@ class OptimizedImageGallery extends StatelessWidget {
         mainAxisSpacing: mainAxisSpacing,
         childAspectRatio: aspectRatio,
       ),
-      itemCount: displayImages.length + (showMoreIndicator && remainingCount > 0 ? 1 : 0),
+      itemCount: displayImages.length +
+          (showMoreIndicator && remainingCount > 0 ? 1 : 0),
       itemBuilder: (context, index) {
         if (index < displayImages.length) {
           return _buildImageItem(context, displayImages[index], index);
@@ -253,7 +260,8 @@ class OptimizedImageGallery extends StatelessWidget {
     );
   }
 
-  Widget _buildImageItem(BuildContext context, String imageUrl, int index) => GestureDetector(
+  Widget _buildImageItem(BuildContext context, String imageUrl, int index) =>
+      GestureDetector(
         onTap: () => onImageTap?.call(imageUrl, index),
         child: OptimizedImage(
           imageUrl: imageUrl,
@@ -274,7 +282,8 @@ class OptimizedImageGallery extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.more_horiz, color: theme.colorScheme.onSurfaceVariant, size: 24),
+            Icon(Icons.more_horiz,
+                color: theme.colorScheme.onSurfaceVariant, size: 24),
             Text(
               '+$remainingCount',
               style: theme.textTheme.bodySmall?.copyWith(
@@ -396,14 +405,16 @@ class IntersectionObserver {
 }
 
 class IntersectionObserverEntry {
-  IntersectionObserverEntry({required this.isIntersecting, required this.intersectionRatio});
+  IntersectionObserverEntry(
+      {required this.isIntersecting, required this.intersectionRatio});
   final bool isIntersecting;
   final double intersectionRatio;
 }
 
 /// Простой VisibilityDetector для Flutter
 class VisibilityDetector extends StatefulWidget {
-  const VisibilityDetector({super.key, required this.onVisibilityChanged, required this.child});
+  const VisibilityDetector(
+      {super.key, required this.onVisibilityChanged, required this.child});
   final Function(VisibilityInfo) onVisibilityChanged;
   final Widget child;
 

@@ -20,8 +20,9 @@ class GuestService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Guest.fromMap({'id': doc.id, ...doc.data()})).toList(),
+          (snapshot) => snapshot.docs
+              .map((doc) => Guest.fromMap({'id': doc.id, ...doc.data()}))
+              .toList(),
         );
   }
 
@@ -121,7 +122,8 @@ class GuestService {
     try {
       final accessCode = _generateAccessCode();
       final qrCode = _generateQRCode(eventId, accessCode);
-      final expiresAt = DateTime.now().add(expiresIn ?? const Duration(days: 7));
+      final expiresAt =
+          DateTime.now().add(expiresIn ?? const Duration(days: 7));
 
       final guestAccess = GuestEventAccess(
         id: '', // Будет установлен Firestore
@@ -136,7 +138,8 @@ class GuestService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef = await _firestore.collection('guest_access').add(guestAccess.toMap());
+      final docRef =
+          await _firestore.collection('guest_access').add(guestAccess.toMap());
 
       return guestAccess.copyWith(id: docRef.id);
     } catch (e) {
@@ -179,7 +182,8 @@ class GuestService {
       }
 
       // Получаем событие
-      final eventDoc = await _firestore.collection('events').doc(access.eventId).get();
+      final eventDoc =
+          await _firestore.collection('events').doc(access.eventId).get();
 
       if (!eventDoc.exists) {
         return null;
@@ -211,7 +215,8 @@ class GuestService {
       }
 
       final accessDoc = accessQuery.docs.first;
-      final access = GuestEventAccess.fromMap({'id': accessDoc.id, ...accessDoc.data()});
+      final access =
+          GuestEventAccess.fromMap({'id': accessDoc.id, ...accessDoc.data()});
 
       // Проверяем срок действия
       if (access.expiresAt.isBefore(DateTime.now())) {
@@ -250,7 +255,8 @@ class GuestService {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map((doc) => GuestGreeting.fromMap({'id': doc.id, ...doc.data()}))
+              .map(
+                  (doc) => GuestGreeting.fromMap({'id': doc.id, ...doc.data()}))
               .toList(),
         );
   }
@@ -289,7 +295,8 @@ class GuestService {
         isPublic: true,
       );
 
-      final docRef = await _firestore.collection('guest_greetings').add(greeting.toMap());
+      final docRef =
+          await _firestore.collection('guest_greetings').add(greeting.toMap());
 
       return docRef.id;
     } catch (e) {
@@ -305,7 +312,8 @@ class GuestService {
     }
 
     try {
-      final greetingRef = _firestore.collection('guest_greetings').doc(greetingId);
+      final greetingRef =
+          _firestore.collection('guest_greetings').doc(greetingId);
 
       await _firestore.runTransaction((transaction) async {
         final greetingDoc = await transaction.get(greetingRef);
@@ -313,7 +321,8 @@ class GuestService {
           throw Exception('Приветствие не найдено');
         }
 
-        final greeting = GuestGreeting.fromMap({'id': greetingDoc.id, ...greetingDoc.data()!});
+        final greeting = GuestGreeting.fromMap(
+            {'id': greetingDoc.id, ...greetingDoc.data()!});
 
         final isLiked = greeting.likedBy.contains(userId);
         final newLikedBy = List<String>.from(greeting.likedBy);
@@ -324,7 +333,8 @@ class GuestService {
           newLikedBy.add(userId);
         }
 
-        transaction.update(greetingRef, {'likedBy': newLikedBy, 'likesCount': newLikedBy.length});
+        transaction.update(greetingRef,
+            {'likedBy': newLikedBy, 'likesCount': newLikedBy.length});
       });
     } catch (e) {
       debugPrint('Error toggling greeting like: $e');
@@ -420,7 +430,8 @@ class GuestService {
   }
 
   /// Получить события организатора
-  Future<List<Map<String, dynamic>>> getOrganizerEvents(String organizerId) async {
+  Future<List<Map<String, dynamic>>> getOrganizerEvents(
+      String organizerId) async {
     try {
       final snapshot = await _firestore
           .collection('events')

@@ -26,7 +26,8 @@ class RealSpecialistsProviders {
   });
 
   /// Провайдер для получения специалистов по категории
-  static final specialistsByCategoryProvider = StreamProvider.family<List<Specialist>, String>((ref, categoryId) {
+  static final specialistsByCategoryProvider =
+      StreamProvider.family<List<Specialist>, String>((ref, categoryId) {
     if (!FeatureFlags.useRealSpecialists) {
       return Stream.value([]);
     }
@@ -65,7 +66,8 @@ class RealSpecialistsProviders {
   });
 
   /// Провайдер для поиска специалистов
-  static final searchSpecialistsProvider = StreamProvider.family<List<Specialist>, String>((ref, query) {
+  static final searchSpecialistsProvider =
+      StreamProvider.family<List<Specialist>, String>((ref, query) {
     if (!FeatureFlags.useRealSpecialists || query.isEmpty) {
       return Stream.value([]);
     }
@@ -84,7 +86,8 @@ class RealSpecialistsProviders {
   });
 
   /// Провайдер для получения специалиста по ID
-  static final specialistByIdProvider = StreamProvider.family<Specialist?, String>((ref, specialistId) {
+  static final specialistByIdProvider =
+      StreamProvider.family<Specialist?, String>((ref, specialistId) {
     if (!FeatureFlags.useRealSpecialists) {
       return Stream.value(null);
     }

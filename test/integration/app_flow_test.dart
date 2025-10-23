@@ -11,7 +11,8 @@ void main() {
   group('App Flow Integration Tests', () {
     testWidgets('Complete user journey from auth to booking', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       // Ждем загрузки
       await tester.pumpAndSettle();
@@ -56,7 +57,8 @@ void main() {
 
     testWidgets('Navigation between all main screens', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -102,7 +104,8 @@ void main() {
 
     testWidgets('Search screen functionality', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -128,7 +131,8 @@ void main() {
 
     testWidgets('Profile screen functionality', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 

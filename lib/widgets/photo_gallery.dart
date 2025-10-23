@@ -24,7 +24,8 @@ class PhotoGallery extends ConsumerWidget {
 
   Widget _buildPhotoGrid(BuildContext context, List<UserPost> posts) {
     // Фильтруем только фото
-    final photos = posts.where((post) => !post.isVideo && post.imageUrl != null).toList();
+    final photos =
+        posts.where((post) => !post.isVideo && post.imageUrl != null).toList();
 
     if (photos.isEmpty) {
       return _buildEmptyState(context);
@@ -50,20 +51,21 @@ class PhotoGallery extends ConsumerWidget {
     );
   }
 
-  Widget _buildPhotoItem(BuildContext context, UserPost photo) => GestureDetector(
+  Widget _buildPhotoItem(BuildContext context, UserPost photo) =>
+      GestureDetector(
         onTap: () => _openPhotoViewer(context, photo),
         child: Container(
-          decoration:
-              BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(4)),
+          decoration: BoxDecoration(
+              color: Colors.grey[200], borderRadius: BorderRadius.circular(4)),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: CachedNetworkImage(
               imageUrl: photo.imageUrl!,
               fit: BoxFit.cover,
-              placeholder: (context, url) =>
-                  Container(color: Colors.grey[300], child: const Icon(Icons.image)),
-              errorWidget: (context, url, error) =>
-                  Container(color: Colors.grey[300], child: const Icon(Icons.image)),
+              placeholder: (context, url) => Container(
+                  color: Colors.grey[300], child: const Icon(Icons.image)),
+              errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[300], child: const Icon(Icons.image)),
             ),
           ),
         ),
@@ -81,8 +83,9 @@ class PhotoGallery extends ConsumerWidget {
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
           child: Container(
-            decoration:
-                BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(4)),
+            decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(4)),
           ),
         ),
       );
@@ -95,12 +98,18 @@ class PhotoGallery extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'Пока нет фотографий',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Когда пользователь опубликует фото,\nоно появится здесь',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -115,12 +124,18 @@ class PhotoGallery extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'Ошибка загрузки фотографий',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               error,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -130,7 +145,8 @@ class PhotoGallery extends ConsumerWidget {
   void _openPhotoViewer(BuildContext context, UserPost photo) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (context) => PhotoViewerScreen(photo: photo)));
+    ).push(MaterialPageRoute<void>(
+        builder: (context) => PhotoViewerScreen(photo: photo)));
   }
 }
 
@@ -167,11 +183,13 @@ class PhotoViewerScreen extends StatelessWidget {
               fit: BoxFit.contain,
               placeholder: (context, url) => Container(
                 color: Colors.grey[800],
-                child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+                child: const Center(
+                    child: CircularProgressIndicator(color: Colors.white)),
               ),
               errorWidget: (context, url, error) => Container(
                 color: Colors.grey[800],
-                child: const Center(child: Icon(Icons.error, color: Colors.white, size: 64)),
+                child: const Center(
+                    child: Icon(Icons.error, color: Colors.white, size: 64)),
               ),
             ),
           ),

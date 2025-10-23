@@ -52,263 +52,297 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Row(
-        children: [
-          CircleAvatar(
-            radius: 16,
-            backgroundImage: widget.otherUserAvatar != null
-                ? NetworkImage(widget.otherUserAvatar!)
-                : null,
-            child: widget.otherUserAvatar == null
-                ? Text(
-                    widget.otherUserName.isNotEmpty ? widget.otherUserName[0].toUpperCase() : '?',
-                  )
-                : null,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.otherUserName,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          title: Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: widget.otherUserAvatar != null
+                    ? NetworkImage(widget.otherUserAvatar!)
+                    : null,
+                child: widget.otherUserAvatar == null
+                    ? Text(
+                        widget.otherUserName.isNotEmpty
+                            ? widget.otherUserName[0].toUpperCase()
+                            : '?',
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.otherUserName,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    if (_isTyping)
+                      const Text('печатает...',
+                          style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  ],
                 ),
-                if (_isTyping)
-                  const Text('печатает...', style: TextStyle(fontSize: 12, color: Colors.grey)),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-      actions: [
-        IconButton(icon: const Icon(Icons.videocam), onPressed: _startVideoCall),
-        IconButton(icon: const Icon(Icons.phone), onPressed: _startVoiceCall),
-        PopupMenuButton<String>(
-          onSelected: _handleMenuAction,
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: 'info',
-              child: Row(
-                children: [Icon(Icons.info_outline), SizedBox(width: 8), Text('Информация о чате')],
-              ),
-            ),
-            const PopupMenuItem(
-              value: 'media',
-              child: Row(
-                children: [Icon(Icons.photo_library), SizedBox(width: 8), Text('Медиафайлы')],
-              ),
-            ),
-            const PopupMenuItem(
-              value: 'search',
-              child: Row(children: [Icon(Icons.search), SizedBox(width: 8), Text('Поиск')]),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.videocam), onPressed: _startVideoCall),
+            IconButton(
+                icon: const Icon(Icons.phone), onPressed: _startVoiceCall),
+            PopupMenuButton<String>(
+              onSelected: _handleMenuAction,
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'info',
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline),
+                      SizedBox(width: 8),
+                      Text('Информация о чате')
+                    ],
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 'media',
+                  child: Row(
+                    children: [
+                      Icon(Icons.photo_library),
+                      SizedBox(width: 8),
+                      Text('Медиафайлы')
+                    ],
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 'search',
+                  child: Row(children: [
+                    Icon(Icons.search),
+                    SizedBox(width: 8),
+                    Text('Поиск')
+                  ]),
+                ),
+              ],
             ),
           ],
         ),
-      ],
-    ),
-    body: Column(
-      children: [
-        // Список сообщений
-        Expanded(
-          child: ListView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(16),
-            itemCount: _messages.length,
-            itemBuilder: (context, index) {
-              final message = _messages[index];
-              final isOwnMessage = message.senderId == widget.currentUserId;
+        body: Column(
+          children: [
+            // Список сообщений
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(16),
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  final message = _messages[index];
+                  final isOwnMessage = message.senderId == widget.currentUserId;
 
-              return _buildMessageBubble(message, isOwnMessage);
-            },
-          ),
-        ),
-
-        // Голосовой рекордер
-        if (_showVoiceRecorder)
-          VoiceRecorderWidget(
-            chatId: widget.chatId,
-            senderId: widget.currentUserId,
-            senderName: widget.currentUserName,
-            senderAvatar: widget.currentUserAvatar,
-            onVoiceMessageSent: _onVoiceMessageSent,
-          ),
-
-        // Поле ввода сообщения
-        _buildMessageInput(),
-      ],
-    ),
-  );
-
-  Widget _buildMessageBubble(ChatMessageExtended message, bool isOwnMessage) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      mainAxisAlignment: isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        if (!isOwnMessage) ...[
-          CircleAvatar(
-            radius: 16,
-            backgroundImage: widget.otherUserAvatar != null
-                ? NetworkImage(widget.otherUserAvatar!)
-                : null,
-            child: widget.otherUserAvatar == null
-                ? Text(
-                    widget.otherUserName.isNotEmpty ? widget.otherUserName[0].toUpperCase() : '?',
-                  )
-                : null,
-          ),
-          const SizedBox(width: 8),
-        ],
-        Flexible(
-          child: Container(
-            constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[200],
-              borderRadius: BorderRadius.circular(16).copyWith(
-                bottomLeft: isOwnMessage ? const Radius.circular(16) : const Radius.circular(4),
-                bottomRight: isOwnMessage ? const Radius.circular(4) : const Radius.circular(16),
+                  return _buildMessageBubble(message, isOwnMessage);
+                },
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Содержимое сообщения
-                if (message.type == MessageType.voice)
-                  VoicePlayerWidget(message: message, isOwnMessage: isOwnMessage)
-                else
-                  Text(
-                    message.content,
-                    style: TextStyle(
-                      color: isOwnMessage ? Colors.white : Colors.black87,
-                      fontSize: 16,
-                    ),
+
+            // Голосовой рекордер
+            if (_showVoiceRecorder)
+              VoiceRecorderWidget(
+                chatId: widget.chatId,
+                senderId: widget.currentUserId,
+                senderName: widget.currentUserName,
+                senderAvatar: widget.currentUserAvatar,
+                onVoiceMessageSent: _onVoiceMessageSent,
+              ),
+
+            // Поле ввода сообщения
+            _buildMessageInput(),
+          ],
+        ),
+      );
+
+  Widget _buildMessageBubble(ChatMessageExtended message, bool isOwnMessage) =>
+      Container(
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisAlignment:
+              isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (!isOwnMessage) ...[
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: widget.otherUserAvatar != null
+                    ? NetworkImage(widget.otherUserAvatar!)
+                    : null,
+                child: widget.otherUserAvatar == null
+                    ? Text(
+                        widget.otherUserName.isNotEmpty
+                            ? widget.otherUserName[0].toUpperCase()
+                            : '?',
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 8),
+            ],
+            Flexible(
+              child: Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.7),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: isOwnMessage
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey[200],
+                  borderRadius: BorderRadius.circular(16).copyWith(
+                    bottomLeft: isOwnMessage
+                        ? const Radius.circular(16)
+                        : const Radius.circular(4),
+                    bottomRight: isOwnMessage
+                        ? const Radius.circular(4)
+                        : const Radius.circular(16),
                   ),
-
-                const SizedBox(height: 8),
-
-                // Время и статус
-                Row(
-                  mainAxisSize: MainAxisSize.min,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      _formatTime(message.timestamp),
-                      style: TextStyle(
-                        color: isOwnMessage
-                            ? Colors.white.withValues(alpha: 0.7)
-                            : Colors.grey[600],
-                        fontSize: 12,
+                    // Содержимое сообщения
+                    if (message.type == MessageType.voice)
+                      VoicePlayerWidget(
+                          message: message, isOwnMessage: isOwnMessage)
+                    else
+                      Text(
+                        message.content,
+                        style: TextStyle(
+                          color: isOwnMessage ? Colors.white : Colors.black87,
+                          fontSize: 16,
+                        ),
                       ),
+
+                    const SizedBox(height: 8),
+
+                    // Время и статус
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _formatTime(message.timestamp),
+                          style: TextStyle(
+                            color: isOwnMessage
+                                ? Colors.white.withValues(alpha: 0.7)
+                                : Colors.grey[600],
+                            fontSize: 12,
+                          ),
+                        ),
+                        if (isOwnMessage) ...[
+                          const SizedBox(width: 4),
+                          Icon(
+                            message.isRead ? Icons.done_all : Icons.done,
+                            size: 16,
+                            color: message.isRead
+                                ? Colors.blue[300]
+                                : Colors.white.withValues(alpha: 0.7),
+                          ),
+                        ],
+                      ],
                     ),
-                    if (isOwnMessage) ...[
-                      const SizedBox(width: 4),
-                      Icon(
-                        message.isRead ? Icons.done_all : Icons.done,
-                        size: 16,
-                        color: message.isRead
-                            ? Colors.blue[300]
-                            : Colors.white.withValues(alpha: 0.7),
+
+                    // Реакции
+                    if (message.reactions.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      MessageReactionsWidget(
+                        message: message,
+                        currentUserId: widget.currentUserId,
+                        currentUserName: widget.currentUserName,
+                        isOwnMessage: isOwnMessage,
                       ),
                     ],
                   ],
                 ),
-
-                // Реакции
-                if (message.reactions.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  MessageReactionsWidget(
-                    message: message,
-                    currentUserId: widget.currentUserId,
-                    currentUserName: widget.currentUserName,
-                    isOwnMessage: isOwnMessage,
-                  ),
-                ],
-              ],
+              ),
             ),
-          ),
+            if (isOwnMessage) ...[
+              const SizedBox(width: 8),
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: widget.currentUserAvatar != null
+                    ? NetworkImage(widget.currentUserAvatar!)
+                    : null,
+                child: widget.currentUserAvatar == null
+                    ? Text(
+                        widget.currentUserName.isNotEmpty
+                            ? widget.currentUserName[0].toUpperCase()
+                            : '?',
+                      )
+                    : null,
+              ),
+            ],
+          ],
         ),
-        if (isOwnMessage) ...[
-          const SizedBox(width: 8),
-          CircleAvatar(
-            radius: 16,
-            backgroundImage: widget.currentUserAvatar != null
-                ? NetworkImage(widget.currentUserAvatar!)
-                : null,
-            child: widget.currentUserAvatar == null
-                ? Text(
-                    widget.currentUserName.isNotEmpty
-                        ? widget.currentUserName[0].toUpperCase()
-                        : '?',
-                  )
-                : null,
-          ),
-        ],
-      ],
-    ),
-  );
+      );
 
   Widget _buildMessageInput() => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor,
-      border: Border(top: BorderSide(color: Colors.grey.withValues(alpha: 0.3))),
-    ),
-    child: Row(
-      children: [
-        // Кнопка голосового сообщения
-        IconButton(
-          icon: Icon(
-            _showVoiceRecorder ? Icons.keyboard : Icons.mic,
-            color: _showVoiceRecorder ? Theme.of(context).primaryColor : Colors.grey[600],
-          ),
-          onPressed: () {
-            setState(() {
-              _showVoiceRecorder = !_showVoiceRecorder;
-            });
-          },
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          border: Border(
+              top: BorderSide(color: Colors.grey.withValues(alpha: 0.3))),
         ),
-
-        // Поле ввода текста
-        Expanded(
-          child: TextField(
-            controller: _messageController,
-            decoration: InputDecoration(
-              hintText: 'Напишите сообщение...',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24),
-                borderSide: BorderSide.none,
+        child: Row(
+          children: [
+            // Кнопка голосового сообщения
+            IconButton(
+              icon: Icon(
+                _showVoiceRecorder ? Icons.keyboard : Icons.mic,
+                color: _showVoiceRecorder
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[600],
               ),
-              filled: true,
-              fillColor: Colors.grey[100],
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              onPressed: () {
+                setState(() {
+                  _showVoiceRecorder = !_showVoiceRecorder;
+                });
+              },
             ),
-            maxLines: null,
-            textCapitalization: TextCapitalization.sentences,
-            onChanged: _onTextChanged,
-            onSubmitted: (value) => _sendTextMessage(),
-          ),
-        ),
 
-        const SizedBox(width: 8),
-
-        // Кнопка отправки
-        GestureDetector(
-          onTap: _sendTextMessage,
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              shape: BoxShape.circle,
+            // Поле ввода текста
+            Expanded(
+              child: TextField(
+                controller: _messageController,
+                decoration: InputDecoration(
+                  hintText: 'Напишите сообщение...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
+                onChanged: _onTextChanged,
+                onSubmitted: (value) => _sendTextMessage(),
+              ),
             ),
-            child: const Icon(Icons.send, color: Colors.white, size: 20),
-          ),
+
+            const SizedBox(width: 8),
+
+            // Кнопка отправки
+            GestureDetector(
+              onTap: _sendTextMessage,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.send, color: Colors.white, size: 20),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   void _loadMessages() {
     // TODO(developer): Загрузить сообщения из Firestore
@@ -397,7 +431,8 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
     // TODO(developer): Начать голосовой звонок
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Голосовой звонок (в разработке)')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Голосовой звонок (в разработке)')));
   }
 
   void _handleMenuAction(String action) {
@@ -459,7 +494,9 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -486,10 +523,15 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
             // TODO(developer): Выполнить поиск
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(SnackBar(content: Text('Поиск: $query (в разработке)')));
+            ).showSnackBar(
+                SnackBar(content: Text('Поиск: $query (в разработке)')));
           },
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена'))],
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена'))
+        ],
       ),
     );
   }

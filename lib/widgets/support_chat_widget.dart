@@ -4,7 +4,8 @@ import '../services/support_service.dart';
 
 /// Виджет чата поддержки
 class SupportChatWidget extends StatefulWidget {
-  const SupportChatWidget({super.key, required this.userId, this.onTransferToOperator});
+  const SupportChatWidget(
+      {super.key, required this.userId, this.onTransferToOperator});
 
   final String userId;
   final void Function(String reason)? onTransferToOperator;
@@ -70,7 +71,8 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
         _error = e.toString();
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $_error')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Ошибка: $_error')));
       }
     } finally {
       setState(() {
@@ -114,7 +116,9 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Отмена')),
           ],
         ),
       );
@@ -144,8 +148,8 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
           color: Colors.blue,
-          borderRadius:
-              BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16), topRight: Radius.circular(16)),
         ),
         child: Row(
           children: [
@@ -154,7 +158,10 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
             const Expanded(
               child: Text(
                 'Поддержка',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             if (_transferStatus == TransferStatus.notRequested)
@@ -179,7 +186,9 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
           }
 
           if (snapshot.hasError) {
-            return _ErrorWidget(error: snapshot.error.toString(), onRetry: () => setState(() {}));
+            return _ErrorWidget(
+                error: snapshot.error.toString(),
+                onRetry: () => setState(() {}));
           }
 
           final messages = snapshot.data ?? [];
@@ -217,7 +226,8 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
                 decoration: const InputDecoration(
                   hintText: 'Введите сообщение...',
                   border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
                 maxLines: null,
                 onSubmitted: (_) => _sendMessage(),
@@ -233,8 +243,8 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.send),
-              style:
-                  IconButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+              style: IconButton.styleFrom(
+                  backgroundColor: Colors.blue, foregroundColor: Colors.white),
             ),
           ],
         ),
@@ -243,13 +253,15 @@ class _SupportChatWidgetState extends State<SupportChatWidget> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 }
 
@@ -299,7 +311,10 @@ class _EmptyWidget extends StatelessWidget {
             SizedBox(height: 16),
             Text(
               'Начните диалог с поддержкой',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey),
             ),
             SizedBox(height: 8),
             Text(
@@ -322,14 +337,18 @@ class _MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         margin: const EdgeInsets.only(bottom: 8),
         child: Row(
-          mainAxisAlignment: message.isFromUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment: message.isFromUser
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
           children: [
             if (!message.isFromUser) ...[
               CircleAvatar(
                 radius: 16,
                 backgroundColor: Colors.blue,
                 child: Icon(
-                  message.type == MessageType.system ? Icons.settings : Icons.support_agent,
+                  message.type == MessageType.system
+                      ? Icons.settings
+                      : Icons.support_agent,
                   color: Colors.white,
                   size: 16,
                 ),
@@ -338,7 +357,8 @@ class _MessageBubble extends StatelessWidget {
             ],
             Flexible(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: message.isFromUser ? Colors.blue : Colors.grey[200],
                   borderRadius: BorderRadius.circular(16),
@@ -348,14 +368,19 @@ class _MessageBubble extends StatelessWidget {
                   children: [
                     Text(
                       message.message,
-                      style: TextStyle(color: message.isFromUser ? Colors.white : Colors.black87),
+                      style: TextStyle(
+                          color: message.isFromUser
+                              ? Colors.white
+                              : Colors.black87),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       _formatTime(message.createdAt),
                       style: TextStyle(
                         fontSize: 12,
-                        color: message.isFromUser ? Colors.white70 : Colors.grey[600],
+                        color: message.isFromUser
+                            ? Colors.white70
+                            : Colors.grey[600],
                       ),
                     ),
                   ],
@@ -378,7 +403,8 @@ class _MessageBubble extends StatelessWidget {
 /// Причины передачи оператору
 enum TransferReasons {
   payment('Проблемы с оплатой', 'Вопросы по оплате, возврату средств'),
-  technical('Технические проблемы', 'Ошибки в приложении, проблемы с функционалом'),
+  technical(
+      'Технические проблемы', 'Ошибки в приложении, проблемы с функционалом'),
   booking('Проблемы с заказами', 'Вопросы по бронированию, отмене заказов'),
   specialist('Проблемы со специалистами', 'Конфликты, некачественные услуги'),
   other('Другое', 'Прочие вопросы, требующие помощи оператора');

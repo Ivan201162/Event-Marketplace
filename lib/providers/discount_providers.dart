@@ -23,7 +23,8 @@ class DiscountService {
     return discountCode.isNotEmpty;
   }
 
-  Future<void> acceptDiscount(String discountId, {String? bookingId, String? customerId}) async {
+  Future<void> acceptDiscount(String discountId,
+      {String? bookingId, String? customerId}) async {
     // Mock implementation
     await Future.delayed(const Duration(seconds: 1));
   }

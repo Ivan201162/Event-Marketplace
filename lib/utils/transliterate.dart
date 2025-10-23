@@ -48,7 +48,9 @@ class TransliterateUtils {
     final suffix = random.toString().padLeft(4, '0');
 
     // Ограничиваем длину, чтобы не было слишком длинных юзернеймов
-    final base = transliterated.length > 15 ? transliterated.substring(0, 15) : transliterated;
+    final base = transliterated.length > 15
+        ? transliterated.substring(0, 15)
+        : transliterated;
 
     return '${base}_$suffix';
   }
@@ -61,10 +63,12 @@ class TransliterateUtils {
   }
 
   /// Проверяет, является ли строка кириллической
-  static bool isCyrillic(String text) => RegExp('[а-яё]', caseSensitive: false).hasMatch(text);
+  static bool isCyrillic(String text) =>
+      RegExp('[а-яё]', caseSensitive: false).hasMatch(text);
 
   /// Транслитерирует отдельную букву
-  static String transliterateChar(String char) => _transliterationMap[char] ?? char;
+  static String transliterateChar(String char) =>
+      _transliterationMap[char] ?? char;
 
   /// Транслитерирует текст (без генерации username)
   static String transliterateText(String text) =>

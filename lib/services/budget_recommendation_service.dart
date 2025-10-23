@@ -17,7 +17,8 @@ class BudgetRecommendationService {
       }
 
       // Получаем информацию о выбранных специалистах
-      final selectedSpecialists = await _getSpecialistsByIds(selectedSpecialistIds);
+      final selectedSpecialists =
+          await _getSpecialistsByIds(selectedSpecialistIds);
 
       // Рассчитываем минимальную сумму для добавления специалистов
       final recommendations = await _calculateBudgetRecommendations(
@@ -72,7 +73,8 @@ class BudgetRecommendationService {
 
       final specialists = snapshot.docs.map(Specialist.fromDocument).toList();
 
-      final totalPrice = specialists.fold<double>(0, (sum, specialist) => sum + specialist.price);
+      final totalPrice = specialists.fold<double>(
+          0, (sum, specialist) => sum + specialist.price);
       return totalPrice / specialists.length;
     } on Exception catch (e) {
       debugPrint('Ошибка получения средней цены для категории: $e');
@@ -83,7 +85,10 @@ class BudgetRecommendationService {
   /// Сохранить рекомендацию по бюджету как показанную
   Future<void> markBudgetRecommendationAsShown(String recommendationId) async {
     try {
-      await _firestore.collection('budget_recommendations').doc(recommendationId).update({
+      await _firestore
+          .collection('budget_recommendations')
+          .doc(recommendationId)
+          .update({
         'isShown': true,
         'shownAt': FieldValue.serverTimestamp(),
       });
@@ -95,7 +100,8 @@ class BudgetRecommendationService {
   // ========== ПРИВАТНЫЕ МЕТОДЫ ==========
 
   /// Получить специалистов по ID
-  Future<List<Specialist>> _getSpecialistsByIds(List<String> specialistIds) async {
+  Future<List<Specialist>> _getSpecialistsByIds(
+      List<String> specialistIds) async {
     final specialists = <Specialist>[];
 
     for (final id in specialistIds) {
@@ -121,11 +127,13 @@ class BudgetRecommendationService {
     final recommendations = <BudgetRecommendation>[];
 
     // Анализируем выбранные категории
-    final selectedCategories = selectedSpecialists.map((s) => s.category).toSet();
+    final selectedCategories =
+        selectedSpecialists.map((s) => s.category).toSet();
 
     // Получаем рекомендуемые категории для выбранных
     for (final selectedCategory in selectedCategories) {
-      final recommendedCategories = _getRecommendedCategoriesFor(selectedCategory);
+      final recommendedCategories =
+          _getRecommendedCategoriesFor(selectedCategory);
 
       for (final recommendedCategory in recommendedCategories) {
         // Проверяем, не выбран ли уже специалист этой категории
@@ -169,7 +177,8 @@ class BudgetRecommendationService {
   }
 
   /// Получить рекомендуемые категории для данной категории
-  List<SpecialistCategory> _getRecommendedCategoriesFor(SpecialistCategory category) {
+  List<SpecialistCategory> _getRecommendedCategoriesFor(
+      SpecialistCategory category) {
     switch (category) {
       case SpecialistCategory.host:
         return [
@@ -208,7 +217,10 @@ class BudgetRecommendationService {
           SpecialistCategory.sound,
         ];
       default:
-        return [SpecialistCategory.photographer, SpecialistCategory.videographer];
+        return [
+          SpecialistCategory.photographer,
+          SpecialistCategory.videographer
+        ];
     }
   }
 
@@ -241,16 +253,23 @@ class BudgetRecommendationService {
   }
 
   /// Рассчитать приоритет рекомендации
-  double _calculatePriority(SpecialistCategory selected, SpecialistCategory recommended) {
+  double _calculatePriority(
+      SpecialistCategory selected, SpecialistCategory recommended) {
     // Базовые приоритеты совместимости
     final compatibilityScores = {
-      '${SpecialistCategory.host.name}_${SpecialistCategory.photographer.name}': 0.9,
-      '${SpecialistCategory.host.name}_${SpecialistCategory.videographer.name}': 0.9,
-      '${SpecialistCategory.host.name}_${SpecialistCategory.decorator.name}': 0.8,
-      '${SpecialistCategory.dj.name}_${SpecialistCategory.photographer.name}': 0.8,
+      '${SpecialistCategory.host.name}_${SpecialistCategory.photographer.name}':
+          0.9,
+      '${SpecialistCategory.host.name}_${SpecialistCategory.videographer.name}':
+          0.9,
+      '${SpecialistCategory.host.name}_${SpecialistCategory.decorator.name}':
+          0.8,
+      '${SpecialistCategory.dj.name}_${SpecialistCategory.photographer.name}':
+          0.8,
       '${SpecialistCategory.dj.name}_${SpecialistCategory.lighting.name}': 0.9,
-      '${SpecialistCategory.photographer.name}_${SpecialistCategory.videographer.name}': 0.95,
-      '${SpecialistCategory.photographer.name}_${SpecialistCategory.makeup.name}': 0.7,
+      '${SpecialistCategory.photographer.name}_${SpecialistCategory.videographer.name}':
+          0.95,
+      '${SpecialistCategory.photographer.name}_${SpecialistCategory.makeup.name}':
+          0.7,
     };
 
     final key = '${selected.name}_${recommended.name}';
@@ -272,22 +291,23 @@ class BudgetRecommendation {
     this.isShown = false,
   });
 
-  factory BudgetRecommendation.fromMap(Map<String, dynamic> data) => BudgetRecommendation(
-    id: data['id'] as String? ?? '',
-    category: SpecialistCategory.values.firstWhere(
-      (e) => e.name == data['category'] as String,
-      orElse: () => SpecialistCategory.other,
-    ),
-    currentBudget: (data['currentBudget'] as num?)?.toDouble() ?? 0.0,
-    additionalBudget: (data['additionalBudget'] as num?)?.toDouble() ?? 0.0,
-    totalBudget: (data['totalBudget'] as num?)?.toDouble() ?? 0.0,
-    reason: data['reason'] as String? ?? '',
-    priority: (data['priority'] as num?)?.toDouble() ?? 0.0,
-    timestamp: data['timestamp'] != null
-        ? (data['timestamp'] as Timestamp).toDate()
-        : DateTime.now(),
-    isShown: data['isShown'] as bool? ?? false,
-  );
+  factory BudgetRecommendation.fromMap(Map<String, dynamic> data) =>
+      BudgetRecommendation(
+        id: data['id'] as String? ?? '',
+        category: SpecialistCategory.values.firstWhere(
+          (e) => e.name == data['category'] as String,
+          orElse: () => SpecialistCategory.other,
+        ),
+        currentBudget: (data['currentBudget'] as num?)?.toDouble() ?? 0.0,
+        additionalBudget: (data['additionalBudget'] as num?)?.toDouble() ?? 0.0,
+        totalBudget: (data['totalBudget'] as num?)?.toDouble() ?? 0.0,
+        reason: data['reason'] as String? ?? '',
+        priority: (data['priority'] as num?)?.toDouble() ?? 0.0,
+        timestamp: data['timestamp'] != null
+            ? (data['timestamp'] as Timestamp).toDate()
+            : DateTime.now(),
+        isShown: data['isShown'] as bool? ?? false,
+      );
 
   final String id;
   final SpecialistCategory category;
@@ -300,14 +320,14 @@ class BudgetRecommendation {
   final bool isShown;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'category': category.name,
-    'currentBudget': currentBudget,
-    'additionalBudget': additionalBudget,
-    'totalBudget': totalBudget,
-    'reason': reason,
-    'priority': priority,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'isShown': isShown,
-  };
+        'id': id,
+        'category': category.name,
+        'currentBudget': currentBudget,
+        'additionalBudget': additionalBudget,
+        'totalBudget': totalBudget,
+        'reason': reason,
+        'priority': priority,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'isShown': isShown,
+      };
 }

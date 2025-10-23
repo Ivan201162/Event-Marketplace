@@ -25,7 +25,8 @@ class BadgeService {
   }
 
   /// Проверить и выдать бейджи после создания бронирования
-  Future<void> checkBookingBadges(String customerId, String specialistId) async {
+  Future<void> checkBookingBadges(
+      String customerId, String specialistId) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerBookingBadges(customerId);
@@ -38,7 +39,8 @@ class BadgeService {
   }
 
   /// Проверить и выдать бейджи после создания отзыва
-  Future<void> checkReviewBadges(String customerId, String specialistId, int rating) async {
+  Future<void> checkReviewBadges(
+      String customerId, String specialistId, int rating) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerReviewBadges(customerId);
@@ -70,8 +72,10 @@ class BadgeService {
     }
 
     // Проверяем бейдж "Ранняя пташка" (бронирование за месяц)
-    final recentBookings = bookingsSnapshot.docs.map(Booking.fromDocument).where((booking) {
-      final daysUntilEvent = booking.eventDate.difference(DateTime.now()).inDays;
+    final recentBookings =
+        bookingsSnapshot.docs.map(Booking.fromDocument).where((booking) {
+      final daysUntilEvent =
+          booking.eventDate.difference(DateTime.now()).inDays;
       return daysUntilEvent >= 30;
     }).length;
 
@@ -130,7 +134,8 @@ class BadgeService {
   }
 
   /// Проверить бейджи специалиста после отзыва
-  Future<void> _checkSpecialistReviewBadges(String specialistId, int rating) async {
+  Future<void> _checkSpecialistReviewBadges(
+      String specialistId, int rating) async {
     // Получаем средний рейтинг специалиста
     final reviewsSnapshot = await _db
         .collection('reviews')
@@ -151,7 +156,8 @@ class BadgeService {
     }
 
     // Проверяем бейдж "Мастер качества"
-    final excellentReviews = reviewsSnapshot.docs.where((doc) => doc.data()['rating'] == 5).length;
+    final excellentReviews =
+        reviewsSnapshot.docs.where((doc) => doc.data()['rating'] == 5).length;
 
     if (excellentReviews >= reviewsSnapshot.docs.length * 0.9 &&
         reviewsSnapshot.docs.length >= 20) {
@@ -179,7 +185,9 @@ class BadgeService {
       customerBookings[customerId] = (customerBookings[customerId] ?? 0) + 1;
     }
 
-    return customerBookings.values.where((bookingCount) => bookingCount > 1).length;
+    return customerBookings.values
+        .where((bookingCount) => bookingCount > 1)
+        .length;
   }
 
   /// Выдать бейдж пользователю
@@ -226,11 +234,15 @@ class BadgeService {
       return BadgeStats(
         totalBadges: badges.length,
         earnedBadges: badges.length,
-        availableBadges: 0, // await getAvailableBadges().then((available) => available.length),
+        availableBadges:
+            0, // await getAvailableBadges().then((available) => available.length),
         badgesByCategory: {
-          BadgeCategory.specialist: badges.byCategory(BadgeCategory.specialist).length,
-          BadgeCategory.customer: badges.byCategory(BadgeCategory.customer).length,
-          BadgeCategory.general: badges.byCategory(BadgeCategory.general).length,
+          BadgeCategory.specialist:
+              badges.byCategory(BadgeCategory.specialist).length,
+          BadgeCategory.customer:
+              badges.byCategory(BadgeCategory.customer).length,
+          BadgeCategory.general:
+              badges.byCategory(BadgeCategory.general).length,
         },
         specialistBadges: badges.byCategory(BadgeCategory.specialist).length,
         customerBadges: badges.byCategory(BadgeCategory.customer).length,
@@ -244,7 +256,8 @@ class BadgeService {
   }
 
   /// Получить топ пользователей по бейджам
-  Future<List<BadgeLeaderboardEntry>> getBadgeLeaderboard({int limit = 10}) async {
+  Future<List<BadgeLeaderboardEntry>> getBadgeLeaderboard(
+      {int limit = 10}) async {
     try {
       // Получаем всех пользователей с бейджами
       final badgesSnapshot = await _db.collection('badges').get();
@@ -294,7 +307,10 @@ class BadgeService {
   /// Скрыть/показать бейдж
   Future<void> toggleBadgeVisibility(String badgeId, bool isVisible) async {
     try {
-      await _db.collection('badges').doc(badgeId).update({'isVisible': isVisible});
+      await _db
+          .collection('badges')
+          .doc(badgeId)
+          .update({'isVisible': isVisible});
     } catch (e) {
       debugPrint('Error toggling badge visibility: $e');
     }

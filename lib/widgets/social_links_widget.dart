@@ -4,7 +4,8 @@ import '../models/social_link.dart';
 
 /// Виджет социальных ссылок специалиста
 class SocialLinksWidget extends StatelessWidget {
-  const SocialLinksWidget({super.key, required this.socialLinks, this.onLinkTap});
+  const SocialLinksWidget(
+      {super.key, required this.socialLinks, this.onLinkTap});
 
   final List<SocialLink> socialLinks;
   final void Function(SocialLink)? onLinkTap;
@@ -36,7 +37,10 @@ class SocialLinksWidget extends StatelessWidget {
         const SizedBox(height: 16),
 
         // Список социальных ссылок
-        Wrap(spacing: 12, runSpacing: 12, children: socialLinks.map(_buildSocialLink).toList()),
+        Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: socialLinks.map(_buildSocialLink).toList()),
       ],
     );
   }
@@ -48,7 +52,8 @@ class SocialLinksWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: _getPlatformColor(link.platform).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: _getPlatformColor(link.platform).withValues(alpha: 0.3)),
+            border: Border.all(
+                color: _getPlatformColor(link.platform).withValues(alpha: 0.3)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -69,7 +74,8 @@ class SocialLinksWidget extends StatelessWidget {
                   if (link.username.isNotEmpty) ...[
                     const SizedBox(height: 2),
                     Text('@${link.username}',
-                        style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+                        style:
+                            TextStyle(fontSize: 10, color: Colors.grey[600])),
                   ],
                   if (link.followersCount != null) ...[
                     const SizedBox(height: 2),

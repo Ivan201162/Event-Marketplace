@@ -19,11 +19,13 @@ class AvailabilityService {
           .where('specialistId', isEqualTo: specialistId);
 
       if (startDate != null) {
-        query = query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('date',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('date',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final querySnapshot = await query.orderBy('date').get();
@@ -45,23 +47,25 @@ class AvailabilityService {
         .where('specialistId', isEqualTo: specialistId);
 
     if (startDate != null) {
-      query = query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      query = query.where('date',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
     }
 
     if (endDate != null) {
-      query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      query =
+          query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
     }
 
-    return query
-        .orderBy('date')
-        .snapshots()
-        .map((querySnapshot) => querySnapshot.docs.map(AvailabilityCalendar.fromDocument).toList());
+    return query.orderBy('date').snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map(AvailabilityCalendar.fromDocument).toList());
   }
 
   /// Добавить занятую дату
-  Future<bool> addBusyDate(String specialistId, DateTime date, {String? note}) async {
+  Future<bool> addBusyDate(String specialistId, DateTime date,
+      {String? note}) async {
     try {
-      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId =
+          '${specialistId}_${date.toIso8601String().split('T')[0]}';
 
       await _firestore.collection(_collectionName).doc(calendarId).set({
         'specialistId': specialistId,
@@ -81,9 +85,11 @@ class AvailabilityService {
   }
 
   /// Добавить временной слот
-  Future<bool> addTimeSlot(String specialistId, DateTime date, TimeSlot timeSlot) async {
+  Future<bool> addTimeSlot(
+      String specialistId, DateTime date, TimeSlot timeSlot) async {
     try {
-      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId =
+          '${specialistId}_${date.toIso8601String().split('T')[0]}';
 
       // Получить существующий календарь или создать новый
       final docRef = _firestore.collection(_collectionName).doc(calendarId);
@@ -125,7 +131,8 @@ class AvailabilityService {
     String bookingId,
   ) async {
     try {
-      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId =
+          '${specialistId}_${date.toIso8601String().split('T')[0]}';
       final docRef = _firestore.collection(_collectionName).doc(calendarId);
       final doc = await docRef.get();
 
@@ -152,9 +159,11 @@ class AvailabilityService {
   }
 
   /// Разблокировать временной слот (отмена бронирования)
-  Future<bool> unblockTimeSlot(String specialistId, DateTime date, String timeSlotId) async {
+  Future<bool> unblockTimeSlot(
+      String specialistId, DateTime date, String timeSlotId) async {
     try {
-      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId =
+          '${specialistId}_${date.toIso8601String().split('T')[0]}';
       final docRef = _firestore.collection(_collectionName).doc(calendarId);
       final doc = await docRef.get();
 
@@ -183,7 +192,8 @@ class AvailabilityService {
   /// Удалить занятую дату
   Future<bool> removeBusyDate(String specialistId, DateTime date) async {
     try {
-      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final calendarId =
+          '${specialistId}_${date.toIso8601String().split('T')[0]}';
       await _firestore.collection(_collectionName).doc(calendarId).delete();
       return true;
     } on Exception catch (e) {
@@ -193,11 +203,14 @@ class AvailabilityService {
   }
 
   /// Проверить доступность специалиста в указанное время
-  Future<bool> isSpecialistAvailable(String specialistId, DateTime dateTime) async {
+  Future<bool> isSpecialistAvailable(
+      String specialistId, DateTime dateTime) async {
     try {
       final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
-      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
-      final doc = await _firestore.collection(_collectionName).doc(calendarId).get();
+      final calendarId =
+          '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final doc =
+          await _firestore.collection(_collectionName).doc(calendarId).get();
 
       if (!doc.exists) return true; // Если записи нет, специалист доступен
 
@@ -210,10 +223,13 @@ class AvailabilityService {
   }
 
   /// Получить доступные временные слоты на дату
-  Future<List<TimeSlot>> getAvailableTimeSlots(String specialistId, DateTime date) async {
+  Future<List<TimeSlot>> getAvailableTimeSlots(
+      String specialistId, DateTime date) async {
     try {
-      final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
-      final doc = await _firestore.collection(_collectionName).doc(calendarId).get();
+      final calendarId =
+          '${specialistId}_${date.toIso8601String().split('T')[0]}';
+      final doc =
+          await _firestore.collection(_collectionName).doc(calendarId).get();
 
       if (!doc.exists) {
         // Если записи нет, возвращаем стандартные рабочие часы
@@ -259,7 +275,8 @@ class AvailabilityService {
       final batch = _firestore.batch();
 
       for (final date in dates) {
-        final calendarId = '${specialistId}_${date.toIso8601String().split('T')[0]}';
+        final calendarId =
+            '${specialistId}_${date.toIso8601String().split('T')[0]}';
         final docRef = _firestore.collection(_collectionName).doc(calendarId);
 
         batch.set(docRef, {

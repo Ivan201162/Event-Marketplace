@@ -1,6 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum AdTargetingType { interest, behavior, location, demographic, device, time, custom }
+enum AdTargetingType {
+  interest,
+  behavior,
+  location,
+  demographic,
+  device,
+  time,
+  custom
+}
 
 enum AdPlacement {
   homeFeed,
@@ -25,16 +33,16 @@ class AdTargeting {
   });
 
   factory AdTargeting.fromMap(Map<String, dynamic> map) => AdTargeting(
-    id: map['id'] ?? '',
-    adId: map['adId'] ?? '',
-    type: AdTargetingType.values.firstWhere(
-      (e) => e.toString() == 'AdTargetingType.${map['type']}',
-      orElse: () => AdTargetingType.interest,
-    ),
-    criteria: Map<String, dynamic>.from(map['criteria'] ?? {}),
-    weight: (map['weight'] ?? 1.0).toDouble(),
-    isActive: map['isActive'] ?? true,
-  );
+        id: map['id'] ?? '',
+        adId: map['adId'] ?? '',
+        type: AdTargetingType.values.firstWhere(
+          (e) => e.toString() == 'AdTargetingType.${map['type']}',
+          orElse: () => AdTargetingType.interest,
+        ),
+        criteria: Map<String, dynamic>.from(map['criteria'] ?? {}),
+        weight: (map['weight'] ?? 1.0).toDouble(),
+        isActive: map['isActive'] ?? true,
+      );
 
   final String id;
   final String adId;
@@ -44,13 +52,13 @@ class AdTargeting {
   final bool isActive;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'adId': adId,
-    'type': type.toString().split('.').last,
-    'criteria': criteria,
-    'weight': weight,
-    'isActive': isActive,
-  };
+        'id': id,
+        'adId': adId,
+        'type': type.toString().split('.').last,
+        'criteria': criteria,
+        'weight': weight,
+        'isActive': isActive,
+      };
 }
 
 class SmartAdvertisement {
@@ -92,50 +100,51 @@ class SmartAdvertisement {
     this.metadata,
   });
 
-  factory SmartAdvertisement.fromMap(Map<String, dynamic> map) => SmartAdvertisement(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    title: map['title'] ?? '',
-    content: map['content'] ?? '',
-    type: map['type'] ?? 'banner',
-    budget: (map['budget'] ?? 0.0).toDouble(),
-    startDate: (map['startDate'] as Timestamp).toDate(),
-    endDate: (map['endDate'] as Timestamp).toDate(),
-    status: map['status'] ?? 'pending',
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    description: map['description'],
-    imageUrl: map['imageUrl'],
-    videoUrl: map['videoUrl'],
-    targetUrl: map['targetUrl'],
-    region: map['region'],
-    category: map['category'],
-    targetAudience: Map<String, dynamic>.from(map['targetAudience'] ?? {}),
-    placements: List<String>.from(map['placements'] ?? []),
-    targeting:
-        (map['targeting'] as List<dynamic>?)
-            ?.map((t) => AdTargeting.fromMap(t as Map<String, dynamic>))
-            .toList() ??
-        [],
-    impressions: map['impressions'] ?? 0,
-    clicks: map['clicks'] ?? 0,
-    conversions: map['conversions'] ?? 0,
-    spentAmount: (map['spentAmount'] ?? 0.0).toDouble(),
-    ctr: (map['ctr'] ?? 0.0).toDouble(),
-    cpc: (map['cpc'] ?? 0.0).toDouble(),
-    cpm: (map['cpm'] ?? 0.0).toDouble(),
-    relevanceScore: AdRelevanceScore.values.firstWhere(
-      (e) => e.toString() == 'AdRelevanceScore.${map['relevanceScore']}',
-      orElse: () => AdRelevanceScore.medium,
-    ),
-    qualityScore: (map['qualityScore'] ?? 0.0).toDouble(),
-    bidAmount: (map['bidAmount'] ?? 0.0).toDouble(),
-    maxBid: (map['maxBid'] ?? 0.0).toDouble(),
-    dailyBudget: (map['dailyBudget'] ?? 0.0).toDouble(),
-    isAutoOptimized: map['isAutoOptimized'] ?? false,
-    optimizationSettings: Map<String, dynamic>.from(map['optimizationSettings'] ?? {}),
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-  );
+  factory SmartAdvertisement.fromMap(Map<String, dynamic> map) =>
+      SmartAdvertisement(
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        title: map['title'] ?? '',
+        content: map['content'] ?? '',
+        type: map['type'] ?? 'banner',
+        budget: (map['budget'] ?? 0.0).toDouble(),
+        startDate: (map['startDate'] as Timestamp).toDate(),
+        endDate: (map['endDate'] as Timestamp).toDate(),
+        status: map['status'] ?? 'pending',
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        description: map['description'],
+        imageUrl: map['imageUrl'],
+        videoUrl: map['videoUrl'],
+        targetUrl: map['targetUrl'],
+        region: map['region'],
+        category: map['category'],
+        targetAudience: Map<String, dynamic>.from(map['targetAudience'] ?? {}),
+        placements: List<String>.from(map['placements'] ?? []),
+        targeting: (map['targeting'] as List<dynamic>?)
+                ?.map((t) => AdTargeting.fromMap(t as Map<String, dynamic>))
+                .toList() ??
+            [],
+        impressions: map['impressions'] ?? 0,
+        clicks: map['clicks'] ?? 0,
+        conversions: map['conversions'] ?? 0,
+        spentAmount: (map['spentAmount'] ?? 0.0).toDouble(),
+        ctr: (map['ctr'] ?? 0.0).toDouble(),
+        cpc: (map['cpc'] ?? 0.0).toDouble(),
+        cpm: (map['cpm'] ?? 0.0).toDouble(),
+        relevanceScore: AdRelevanceScore.values.firstWhere(
+          (e) => e.toString() == 'AdRelevanceScore.${map['relevanceScore']}',
+          orElse: () => AdRelevanceScore.medium,
+        ),
+        qualityScore: (map['qualityScore'] ?? 0.0).toDouble(),
+        bidAmount: (map['bidAmount'] ?? 0.0).toDouble(),
+        maxBid: (map['maxBid'] ?? 0.0).toDouble(),
+        dailyBudget: (map['dailyBudget'] ?? 0.0).toDouble(),
+        isAutoOptimized: map['isAutoOptimized'] ?? false,
+        optimizationSettings:
+            Map<String, dynamic>.from(map['optimizationSettings'] ?? {}),
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      );
 
   final String id;
   final String userId;
@@ -173,7 +182,8 @@ class SmartAdvertisement {
   final Map<String, dynamic>? optimizationSettings;
   final Map<String, dynamic>? metadata;
 
-  bool get isActive => status == 'active' && DateTime.now().isBetween(startDate, endDate);
+  bool get isActive =>
+      status == 'active' && DateTime.now().isBetween(startDate, endDate);
   bool get isExpired => DateTime.now().isAfter(endDate);
   bool get isPending => status == 'pending';
   bool get isPaused => status == 'paused';
@@ -223,31 +233,43 @@ class SmartAdvertisement {
       case AdTargetingType.time:
         return _calculateTimeMatch(target.criteria);
       case AdTargetingType.custom:
-        return _calculateCustomMatch(target.criteria, userProfile, userBehavior);
+        return _calculateCustomMatch(
+            target.criteria, userProfile, userBehavior);
     }
   }
 
-  double _calculateInterestMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
-    final List<String> adInterests = List<String>.from(criteria['interests'] ?? []);
-    final List<String> userInterests = List<String>.from(userProfile['interests'] ?? []);
+  double _calculateInterestMatch(
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+    final List<String> adInterests =
+        List<String>.from(criteria['interests'] ?? []);
+    final List<String> userInterests =
+        List<String>.from(userProfile['interests'] ?? []);
 
     if (adInterests.isEmpty || userInterests.isEmpty) return 0.0;
 
-    final int matches = adInterests.where((interest) => userInterests.contains(interest)).length;
+    final int matches = adInterests
+        .where((interest) => userInterests.contains(interest))
+        .length;
     return matches / adInterests.length;
   }
 
-  double _calculateBehaviorMatch(Map<String, dynamic> criteria, Map<String, dynamic> userBehavior) {
-    final List<String> adBehaviors = List<String>.from(criteria['behaviors'] ?? []);
-    final List<String> userBehaviors = List<String>.from(userBehavior['recent_actions'] ?? []);
+  double _calculateBehaviorMatch(
+      Map<String, dynamic> criteria, Map<String, dynamic> userBehavior) {
+    final List<String> adBehaviors =
+        List<String>.from(criteria['behaviors'] ?? []);
+    final List<String> userBehaviors =
+        List<String>.from(userBehavior['recent_actions'] ?? []);
 
     if (adBehaviors.isEmpty || userBehaviors.isEmpty) return 0.0;
 
-    final int matches = adBehaviors.where((behavior) => userBehaviors.contains(behavior)).length;
+    final int matches = adBehaviors
+        .where((behavior) => userBehaviors.contains(behavior))
+        .length;
     return matches / adBehaviors.length;
   }
 
-  double _calculateLocationMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+  double _calculateLocationMatch(
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
     final String adRegion = criteria['region'] ?? '';
     final String userRegion = userProfile['region'] ?? '';
 
@@ -287,7 +309,8 @@ class SmartAdvertisement {
     return factors > 0 ? score / factors : 0.0;
   }
 
-  double _calculateDeviceMatch(Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
+  double _calculateDeviceMatch(
+      Map<String, dynamic> criteria, Map<String, dynamic> userProfile) {
     final String adDevice = criteria['device'] ?? '';
     final String userDevice = userProfile['device_type'] ?? '';
 
@@ -334,42 +357,42 @@ class SmartAdvertisement {
   }
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'title': title,
-    'content': content,
-    'type': type,
-    'budget': budget,
-    'startDate': Timestamp.fromDate(startDate),
-    'endDate': Timestamp.fromDate(endDate),
-    'status': status,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'description': description,
-    'imageUrl': imageUrl,
-    'videoUrl': videoUrl,
-    'targetUrl': targetUrl,
-    'region': region,
-    'category': category,
-    'targetAudience': targetAudience,
-    'placements': placements,
-    'targeting': targeting.map((t) => t.toMap()).toList(),
-    'impressions': impressions,
-    'clicks': clicks,
-    'conversions': conversions,
-    'spentAmount': spentAmount,
-    'ctr': ctr,
-    'cpc': cpc,
-    'cpm': cpm,
-    'relevanceScore': relevanceScore.toString().split('.').last,
-    'qualityScore': qualityScore,
-    'bidAmount': bidAmount,
-    'maxBid': maxBid,
-    'dailyBudget': dailyBudget,
-    'isAutoOptimized': isAutoOptimized,
-    'optimizationSettings': optimizationSettings,
-    'metadata': metadata,
-  };
+        'id': id,
+        'userId': userId,
+        'title': title,
+        'content': content,
+        'type': type,
+        'budget': budget,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'status': status,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'description': description,
+        'imageUrl': imageUrl,
+        'videoUrl': videoUrl,
+        'targetUrl': targetUrl,
+        'region': region,
+        'category': category,
+        'targetAudience': targetAudience,
+        'placements': placements,
+        'targeting': targeting.map((t) => t.toMap()).toList(),
+        'impressions': impressions,
+        'clicks': clicks,
+        'conversions': conversions,
+        'spentAmount': spentAmount,
+        'ctr': ctr,
+        'cpc': cpc,
+        'cpm': cpm,
+        'relevanceScore': relevanceScore.toString().split('.').last,
+        'qualityScore': qualityScore,
+        'bidAmount': bidAmount,
+        'maxBid': maxBid,
+        'dailyBudget': dailyBudget,
+        'isAutoOptimized': isAutoOptimized,
+        'optimizationSettings': optimizationSettings,
+        'metadata': metadata,
+      };
 }
 
 class AdImpression {
@@ -386,16 +409,16 @@ class AdImpression {
   });
 
   factory AdImpression.fromMap(Map<String, dynamic> map) => AdImpression(
-    id: map['id'] ?? '',
-    adId: map['adId'] ?? '',
-    userId: map['userId'] ?? '',
-    placement: map['placement'] ?? '',
-    timestamp: (map['timestamp'] as Timestamp).toDate(),
-    isClicked: map['isClicked'] ?? false,
-    isConverted: map['isConverted'] ?? false,
-    relevanceScore: (map['relevanceScore'] ?? 0.0).toDouble(),
-    userContext: Map<String, dynamic>.from(map['userContext'] ?? {}),
-  );
+        id: map['id'] ?? '',
+        adId: map['adId'] ?? '',
+        userId: map['userId'] ?? '',
+        placement: map['placement'] ?? '',
+        timestamp: (map['timestamp'] as Timestamp).toDate(),
+        isClicked: map['isClicked'] ?? false,
+        isConverted: map['isConverted'] ?? false,
+        relevanceScore: (map['relevanceScore'] ?? 0.0).toDouble(),
+        userContext: Map<String, dynamic>.from(map['userContext'] ?? {}),
+      );
 
   final String id;
   final String adId;
@@ -408,16 +431,16 @@ class AdImpression {
   final Map<String, dynamic>? userContext;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'adId': adId,
-    'userId': userId,
-    'placement': placement,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'isClicked': isClicked,
-    'isConverted': isConverted,
-    'relevanceScore': relevanceScore,
-    'userContext': userContext,
-  };
+        'id': id,
+        'adId': adId,
+        'userId': userId,
+        'placement': placement,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'isClicked': isClicked,
+        'isConverted': isConverted,
+        'relevanceScore': relevanceScore,
+        'userContext': userContext,
+      };
 }
 
 class AdOptimization {
@@ -432,14 +455,14 @@ class AdOptimization {
   });
 
   factory AdOptimization.fromMap(Map<String, dynamic> map) => AdOptimization(
-    id: map['id'] ?? '',
-    adId: map['adId'] ?? '',
-    optimizationType: map['optimizationType'] ?? '',
-    parameters: Map<String, dynamic>.from(map['parameters'] ?? {}),
-    results: Map<String, dynamic>.from(map['results'] ?? {}),
-    timestamp: (map['timestamp'] as Timestamp).toDate(),
-    isActive: map['isActive'] ?? true,
-  );
+        id: map['id'] ?? '',
+        adId: map['adId'] ?? '',
+        optimizationType: map['optimizationType'] ?? '',
+        parameters: Map<String, dynamic>.from(map['parameters'] ?? {}),
+        results: Map<String, dynamic>.from(map['results'] ?? {}),
+        timestamp: (map['timestamp'] as Timestamp).toDate(),
+        isActive: map['isActive'] ?? true,
+      );
 
   final String id;
   final String adId;
@@ -450,14 +473,14 @@ class AdOptimization {
   final bool isActive;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'adId': adId,
-    'optimizationType': optimizationType,
-    'parameters': parameters,
-    'results': results,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'isActive': isActive,
-  };
+        'id': id,
+        'adId': adId,
+        'optimizationType': optimizationType,
+        'parameters': parameters,
+        'results': results,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'isActive': isActive,
+      };
 }
 
 extension DateTimeExtension on DateTime {

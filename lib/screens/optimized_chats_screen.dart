@@ -13,7 +13,8 @@ class OptimizedChatsScreen extends ConsumerStatefulWidget {
   const OptimizedChatsScreen({super.key});
 
   @override
-  ConsumerState<OptimizedChatsScreen> createState() => _OptimizedChatsScreenState();
+  ConsumerState<OptimizedChatsScreen> createState() =>
+      _OptimizedChatsScreenState();
 }
 
 class _OptimizedChatsScreenState extends ConsumerState<OptimizedChatsScreen>
@@ -89,7 +90,7 @@ class _OptimizedChatsScreenState extends ConsumerState<OptimizedChatsScreen>
           // Поиск и фильтры
           if (_searchQuery.isNotEmpty || _showOnlineOnly || _showUnreadOnly)
             _buildSearchAndFilters(),
-          
+
           // Список чатов
           Expanded(
             child: TabBarView(
@@ -132,7 +133,8 @@ class _OptimizedChatsScreenState extends ConsumerState<OptimizedChatsScreen>
               hintText: 'Поиск в чатах...',
               prefixIcon: Icon(Icons.search),
               border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             ),
             onChanged: (value) {
               setState(() {
@@ -140,9 +142,9 @@ class _OptimizedChatsScreenState extends ConsumerState<OptimizedChatsScreen>
               });
             },
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Фильтры
           Row(
             children: [
@@ -403,7 +405,8 @@ class _OptimizedChatsScreenState extends ConsumerState<OptimizedChatsScreen>
   void _startNewChat() {
     // TODO: Открыть экран выбора пользователя для нового чата
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Функция создания нового чата в разработке')),
+      const SnackBar(
+          content: Text('Функция создания нового чата в разработке')),
     );
   }
 
@@ -480,7 +483,9 @@ class _ChatListItemWidget extends ConsumerWidget {
               child: Text(
                 chat.participantName,
                 style: TextStyle(
-                  fontWeight: chat.unreadCount > 0 ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: chat.unreadCount > 0
+                      ? FontWeight.bold
+                      : FontWeight.normal,
                   fontSize: 16,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -502,7 +507,8 @@ class _ChatListItemWidget extends ConsumerWidget {
               chat.lastMessage ?? 'Нет сообщений',
               style: TextStyle(
                 color: chat.unreadCount > 0 ? Colors.black87 : Colors.grey[600],
-                fontWeight: chat.unreadCount > 0 ? FontWeight.w500 : FontWeight.normal,
+                fontWeight:
+                    chat.unreadCount > 0 ? FontWeight.w500 : FontWeight.normal,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -520,7 +526,8 @@ class _ChatListItemWidget extends ConsumerWidget {
                 if (chat.unreadCount > 0) ...[
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(12),
@@ -552,7 +559,8 @@ class _ChatListItemWidget extends ConsumerWidget {
     );
   }
 
-  void _showChatOptions(BuildContext context, Chat chat, OptimizedChatService chatService) {
+  void _showChatOptions(
+      BuildContext context, Chat chat, OptimizedChatService chatService) {
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
@@ -581,7 +589,8 @@ class _ChatListItemWidget extends ConsumerWidget {
             ),
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('Удалить чат', style: TextStyle(color: Colors.red)),
+              title: const Text('Удалить чат',
+                  style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 _confirmDeleteChat(context, chat, chatService);
@@ -593,12 +602,14 @@ class _ChatListItemWidget extends ConsumerWidget {
     );
   }
 
-  void _confirmDeleteChat(BuildContext context, Chat chat, OptimizedChatService chatService) {
+  void _confirmDeleteChat(
+      BuildContext context, Chat chat, OptimizedChatService chatService) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить чат'),
-        content: Text('Вы уверены, что хотите удалить чат с ${chat.participantName}?'),
+        content: Text(
+            'Вы уверены, что хотите удалить чат с ${chat.participantName}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -621,10 +632,10 @@ class _ChatListItemWidget extends ConsumerWidget {
 
   String _formatLastMessageTime(DateTime? time) {
     if (time == null) return '';
-    
+
     final now = DateTime.now();
     final difference = now.difference(time);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {

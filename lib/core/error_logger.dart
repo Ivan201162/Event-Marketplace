@@ -161,7 +161,8 @@ class ErrorLogger {
   }
 
   /// Получение логов по типу ошибки
-  static Future<List<Map<String, dynamic>>> getLogsByType(String errorType) async {
+  static Future<List<Map<String, dynamic>>> getLogsByType(
+      String errorType) async {
     try {
       final allLogs = await getAllLogs();
       return allLogs.where((log) => log['errorType'] == errorType).toList();
@@ -229,7 +230,8 @@ class ErrorLogger {
           buffer.writeln(log['stackTrace']);
         }
 
-        if (log['additionalData'] != null && (log['additionalData'] as Map).isNotEmpty) {
+        if (log['additionalData'] != null &&
+            (log['additionalData'] as Map).isNotEmpty) {
           buffer.writeln('Additional Data:');
           buffer.writeln(json.encode(log['additionalData']));
         }
@@ -316,7 +318,10 @@ class ErrorLogger {
         'errorTypes': errorTypes,
         'contexts': contexts,
         'dateRange': earliestDate != null && latestDate != null
-            ? {'earliest': earliestDate.toIso8601String(), 'latest': latestDate.toIso8601String()}
+            ? {
+                'earliest': earliestDate.toIso8601String(),
+                'latest': latestDate.toIso8601String()
+              }
             : null,
       };
     } catch (e) {

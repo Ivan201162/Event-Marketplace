@@ -78,7 +78,8 @@ class Recommendation {
       id: doc.id,
       userId: data['userId'] as String? ?? '',
       specialistId: data['specialistId'] as String? ?? '',
-      specialist: Specialist.fromMap(data['specialist'] as Map<String, dynamic>),
+      specialist:
+          Specialist.fromMap(data['specialist'] as Map<String, dynamic>),
       type: RecommendationType.values.firstWhere(
         (e) => e.name == (data['type'] as String?),
         orElse: () => RecommendationType.popular,
@@ -97,38 +98,53 @@ class Recommendation {
       isViewed: data['isViewed'] as bool? ?? false,
       isClicked: data['isClicked'] as bool? ?? false,
       isBooked: data['isBooked'] as bool? ?? false,
-      viewedAt: data['viewedAt'] != null ? (data['viewedAt'] as Timestamp).toDate() : null,
-      clickedAt: data['clickedAt'] != null ? (data['clickedAt'] as Timestamp).toDate() : null,
-      bookedAt: data['bookedAt'] != null ? (data['bookedAt'] as Timestamp).toDate() : null,
+      viewedAt: data['viewedAt'] != null
+          ? (data['viewedAt'] as Timestamp).toDate()
+          : null,
+      clickedAt: data['clickedAt'] != null
+          ? (data['clickedAt'] as Timestamp).toDate()
+          : null,
+      bookedAt: data['bookedAt'] != null
+          ? (data['bookedAt'] as Timestamp).toDate()
+          : null,
     );
   }
 
   /// Создать из Map
   factory Recommendation.fromMap(Map<String, dynamic> map) => Recommendation(
-    id: map['id'] as String? ?? '',
-    userId: map['userId'] as String? ?? '',
-    specialistId: map['specialistId'] as String? ?? '',
-    specialist: Specialist.fromMap(map['specialist'] as Map<String, dynamic>),
-    type: RecommendationType.values.firstWhere(
-      (e) => e.name == map['type'],
-      orElse: () => RecommendationType.popular,
-    ),
-    score: (map['score'] as num?)?.toDouble() ?? 0.0,
-    reason: map['reason'] as String? ?? '',
-    createdAt: map['createdAt'] != null ? (map['createdAt'] as Timestamp).toDate() : DateTime.now(),
-    metadata: map['metadata'] as Map<String, dynamic>?,
-    category: map['category'] as String?,
-    location: map['location'] as String?,
-    priceRange: map['priceRange'] as String?,
-    rating: (map['rating'] as num?)?.toDouble(),
-    bookingCount: map['bookingCount'] as int?,
-    isViewed: map['isViewed'] as bool? ?? false,
-    isClicked: map['isClicked'] as bool? ?? false,
-    isBooked: map['isBooked'] as bool? ?? false,
-    viewedAt: map['viewedAt'] != null ? (map['viewedAt'] as Timestamp).toDate() : null,
-    clickedAt: map['clickedAt'] != null ? (map['clickedAt'] as Timestamp).toDate() : null,
-    bookedAt: map['bookedAt'] != null ? (map['bookedAt'] as Timestamp).toDate() : null,
-  );
+        id: map['id'] as String? ?? '',
+        userId: map['userId'] as String? ?? '',
+        specialistId: map['specialistId'] as String? ?? '',
+        specialist:
+            Specialist.fromMap(map['specialist'] as Map<String, dynamic>),
+        type: RecommendationType.values.firstWhere(
+          (e) => e.name == map['type'],
+          orElse: () => RecommendationType.popular,
+        ),
+        score: (map['score'] as num?)?.toDouble() ?? 0.0,
+        reason: map['reason'] as String? ?? '',
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        metadata: map['metadata'] as Map<String, dynamic>?,
+        category: map['category'] as String?,
+        location: map['location'] as String?,
+        priceRange: map['priceRange'] as String?,
+        rating: (map['rating'] as num?)?.toDouble(),
+        bookingCount: map['bookingCount'] as int?,
+        isViewed: map['isViewed'] as bool? ?? false,
+        isClicked: map['isClicked'] as bool? ?? false,
+        isBooked: map['isBooked'] as bool? ?? false,
+        viewedAt: map['viewedAt'] != null
+            ? (map['viewedAt'] as Timestamp).toDate()
+            : null,
+        clickedAt: map['clickedAt'] != null
+            ? (map['clickedAt'] as Timestamp).toDate()
+            : null,
+        bookedAt: map['bookedAt'] != null
+            ? (map['bookedAt'] as Timestamp).toDate()
+            : null,
+      );
 
   final String id;
   final String userId;
@@ -153,26 +169,26 @@ class Recommendation {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'specialistId': specialistId,
-    'specialist': specialist.toMap(),
-    'type': type.name,
-    'score': score,
-    'reason': reason,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'metadata': metadata,
-    'category': category,
-    'location': location,
-    'priceRange': priceRange,
-    'rating': rating,
-    'bookingCount': bookingCount,
-    'isViewed': isViewed,
-    'isClicked': isClicked,
-    'isBooked': isBooked,
-    'viewedAt': viewedAt != null ? Timestamp.fromDate(viewedAt!) : null,
-    'clickedAt': clickedAt != null ? Timestamp.fromDate(clickedAt!) : null,
-    'bookedAt': bookedAt != null ? Timestamp.fromDate(bookedAt!) : null,
-  };
+        'userId': userId,
+        'specialistId': specialistId,
+        'specialist': specialist.toMap(),
+        'type': type.name,
+        'score': score,
+        'reason': reason,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'metadata': metadata,
+        'category': category,
+        'location': location,
+        'priceRange': priceRange,
+        'rating': rating,
+        'bookingCount': bookingCount,
+        'isViewed': isViewed,
+        'isClicked': isClicked,
+        'isBooked': isBooked,
+        'viewedAt': viewedAt != null ? Timestamp.fromDate(viewedAt!) : null,
+        'clickedAt': clickedAt != null ? Timestamp.fromDate(clickedAt!) : null,
+        'bookedAt': bookedAt != null ? Timestamp.fromDate(bookedAt!) : null,
+      };
 
   /// Создать копию с изменениями
   Recommendation copyWith({
@@ -196,28 +212,29 @@ class Recommendation {
     DateTime? viewedAt,
     DateTime? clickedAt,
     DateTime? bookedAt,
-  }) => Recommendation(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    specialistId: specialistId ?? this.specialistId,
-    specialist: specialist ?? this.specialist,
-    type: type ?? this.type,
-    score: score ?? this.score,
-    reason: reason ?? this.reason,
-    createdAt: createdAt ?? this.createdAt,
-    metadata: metadata ?? this.metadata,
-    category: category ?? this.category,
-    location: location ?? this.location,
-    priceRange: priceRange ?? this.priceRange,
-    rating: rating ?? this.rating,
-    bookingCount: bookingCount ?? this.bookingCount,
-    isViewed: isViewed ?? this.isViewed,
-    isClicked: isClicked ?? this.isClicked,
-    isBooked: isBooked ?? this.isBooked,
-    viewedAt: viewedAt ?? this.viewedAt,
-    clickedAt: clickedAt ?? this.clickedAt,
-    bookedAt: bookedAt ?? this.bookedAt,
-  );
+  }) =>
+      Recommendation(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        specialistId: specialistId ?? this.specialistId,
+        specialist: specialist ?? this.specialist,
+        type: type ?? this.type,
+        score: score ?? this.score,
+        reason: reason ?? this.reason,
+        createdAt: createdAt ?? this.createdAt,
+        metadata: metadata ?? this.metadata,
+        category: category ?? this.category,
+        location: location ?? this.location,
+        priceRange: priceRange ?? this.priceRange,
+        rating: rating ?? this.rating,
+        bookingCount: bookingCount ?? this.bookingCount,
+        isViewed: isViewed ?? this.isViewed,
+        isClicked: isClicked ?? this.isClicked,
+        isBooked: isBooked ?? this.isBooked,
+        viewedAt: viewedAt ?? this.viewedAt,
+        clickedAt: clickedAt ?? this.clickedAt,
+        bookedAt: bookedAt ?? this.bookedAt,
+      );
 
   /// Получить текст типа рекомендации
   String get typeText {
@@ -413,13 +430,14 @@ class RecommendationGroup {
     List<Recommendation>? recommendations,
     String? description,
     String? icon,
-  }) => RecommendationGroup(
-    type: type ?? this.type,
-    title: title ?? this.title,
-    recommendations: recommendations ?? this.recommendations,
-    description: description ?? this.description,
-    icon: icon ?? this.icon,
-  );
+  }) =>
+      RecommendationGroup(
+        type: type ?? this.type,
+        title: title ?? this.title,
+        recommendations: recommendations ?? this.recommendations,
+        description: description ?? this.description,
+        icon: icon ?? this.icon,
+      );
 
   /// Проверить, пуста ли группа
   bool get isEmpty => recommendations.isEmpty;
@@ -446,18 +464,19 @@ class RecommendationStats {
 
   /// Создать пустую статистику
   factory RecommendationStats.empty() => const RecommendationStats(
-    totalRecommendations: 0,
-    viewedRecommendations: 0,
-    clickedRecommendations: 0,
-    bookedRecommendations: 0,
-    viewRate: 0,
-    clickRate: 0,
-    conversionRate: 0,
-    avgScore: 0,
-  );
+        totalRecommendations: 0,
+        viewedRecommendations: 0,
+        clickedRecommendations: 0,
+        bookedRecommendations: 0,
+        viewRate: 0,
+        clickRate: 0,
+        conversionRate: 0,
+        avgScore: 0,
+      );
 
   /// Создать из списка рекомендаций
-  factory RecommendationStats.fromRecommendations(List<Recommendation> recommendations) {
+  factory RecommendationStats.fromRecommendations(
+      List<Recommendation> recommendations) {
     if (recommendations.isEmpty) return RecommendationStats.empty();
 
     final total = recommendations.length;

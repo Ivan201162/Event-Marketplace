@@ -7,13 +7,15 @@ final priceReminderServiceProvider = Provider<PriceReminderService>(
 );
 
 /// Провайдер для статистики напоминаний
-final priceReminderStatsProvider = FutureProvider<Map<String, int>>((ref) async {
+final priceReminderStatsProvider =
+    FutureProvider<Map<String, int>>((ref) async {
   final service = ref.read(priceReminderServiceProvider);
   return service.getReminderStats();
 });
 
 /// Провайдер для списка специалистов с устаревшими ценами
-final specialistsWithOutdatedPricesProvider = FutureProvider<List<Map<String, dynamic>>>((
+final specialistsWithOutdatedPricesProvider =
+    FutureProvider<List<Map<String, dynamic>>>((
   ref,
 ) async {
   final service = ref.read(priceReminderServiceProvider);
@@ -21,7 +23,8 @@ final specialistsWithOutdatedPricesProvider = FutureProvider<List<Map<String, dy
 });
 
 /// Провайдер для специалистов, которым нужно напомнить об обновлении цен
-final specialistsNeedingPriceUpdateProvider = FutureProvider<List<Map<String, dynamic>>>((
+final specialistsNeedingPriceUpdateProvider =
+    FutureProvider<List<Map<String, dynamic>>>((
   ref,
 ) async {
   final service = ref.read(priceReminderServiceProvider);

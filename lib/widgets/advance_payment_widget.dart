@@ -21,7 +21,8 @@ class AdvancePaymentWidget extends ConsumerStatefulWidget {
   final Function()? onPaymentCompleted;
 
   @override
-  ConsumerState<AdvancePaymentWidget> createState() => _AdvancePaymentWidgetState();
+  ConsumerState<AdvancePaymentWidget> createState() =>
+      _AdvancePaymentWidgetState();
 }
 
 class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
@@ -51,7 +52,8 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
       final summary = await _paymentService.getPaymentSummary(widget.bookingId);
       setState(() {
         _paymentSummary = summary;
-        _advanceAmount = _paymentService.calculateRecommendedAdvance(widget.totalAmount);
+        _advanceAmount =
+            _paymentService.calculateRecommendedAdvance(widget.totalAmount);
       });
     } catch (e) {
       _showError('Ошибка загрузки информации о платежах: $e');
@@ -69,7 +71,8 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
     }
 
     if (_paymentSummary == null) {
-      return const Center(child: Text('Не удалось загрузить информацию о платежах'));
+      return const Center(
+          child: Text('Не удалось загрузить информацию о платежах'));
     }
 
     return SingleChildScrollView(
@@ -128,10 +131,14 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
             ],
           ),
           const SizedBox(height: 16),
-          _buildSummaryRow('Общая сумма:', '${summary.totalAmount.toStringAsFixed(2)} ₽'),
-          _buildSummaryRow('Аванс оплачен:', '${summary.advanceAmount.toStringAsFixed(2)} ₽'),
-          _buildSummaryRow('Финальный платеж:', '${summary.finalAmount.toStringAsFixed(2)} ₽'),
-          _buildSummaryRow('Всего оплачено:', '${summary.totalPaid.toStringAsFixed(2)} ₽'),
+          _buildSummaryRow(
+              'Общая сумма:', '${summary.totalAmount.toStringAsFixed(2)} ₽'),
+          _buildSummaryRow('Аванс оплачен:',
+              '${summary.advanceAmount.toStringAsFixed(2)} ₽'),
+          _buildSummaryRow('Финальный платеж:',
+              '${summary.finalAmount.toStringAsFixed(2)} ₽'),
+          _buildSummaryRow(
+              'Всего оплачено:', '${summary.totalPaid.toStringAsFixed(2)} ₽'),
           const Divider(),
           _buildSummaryRow(
             'Остаток к доплате:',
@@ -152,7 +159,8 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
                   const SizedBox(width: 8),
                   Text(
                     'Следующий платеж до: ${_formatDate(summary.nextPaymentDue!)}',
-                    style: TextStyle(color: Colors.orange[800], fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                        color: Colors.orange[800], fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
@@ -165,7 +173,9 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, {bool isHighlighted = false}) => Padding(
+  Widget _buildSummaryRow(String label, String value,
+          {bool isHighlighted = false}) =>
+      Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -220,7 +230,8 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
           const SizedBox(width: 8),
           Text(
             statusText,
-            style: TextStyle(color: statusColor, fontWeight: FontWeight.w500, fontSize: 12),
+            style: TextStyle(
+                color: statusColor, fontWeight: FontWeight.w500, fontSize: 12),
           ),
         ],
       ),
@@ -318,8 +329,10 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
               currency: 'RUB',
               orderId: 'advance_${widget.bookingId}',
               description: 'Авансовый платеж за бронирование',
-              customerEmail: 'customer@example.com', // TODO(developer): Получить из профиля
-              customerPhone: '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
+              customerEmail:
+                  'customer@example.com', // TODO(developer): Получить из профиля
+              customerPhone:
+                  '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
               onPaymentInitiated: (result) {
                 _showSuccess('Авансовый платеж инициализирован');
                 _loadPaymentSummary();
@@ -362,8 +375,10 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
             currency: 'RUB',
             orderId: 'final_${widget.bookingId}',
             description: 'Финальный платеж за услугу',
-            customerEmail: 'customer@example.com', // TODO(developer): Получить из профиля
-            customerPhone: '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
+            customerEmail:
+                'customer@example.com', // TODO(developer): Получить из профиля
+            customerPhone:
+                '+7XXXXXXXXXX', // TODO(developer): Получить из профиля
             onPaymentInitiated: (result) {
               _showSuccess('Финальный платеж инициализирован');
               _loadPaymentSummary();
@@ -379,12 +394,14 @@ class _AdvancePaymentWidgetState extends ConsumerState<AdvancePaymentWidget> {
   void _showError(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccess(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 }

@@ -93,7 +93,8 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
     }
 
     return Chip(
-      label: Text(text, style: const TextStyle(color: Colors.white, fontSize: 12)),
+      label:
+          Text(text, style: const TextStyle(color: Colors.white, fontSize: 12)),
       backgroundColor: color,
     );
   }
@@ -110,10 +111,12 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
             Icon(Icons.error, color: Colors.red.shade700),
             const SizedBox(width: 8),
             Expanded(
-              child: Text(_error!, style: TextStyle(color: Colors.red.shade700)),
+              child:
+                  Text(_error!, style: TextStyle(color: Colors.red.shade700)),
             ),
             IconButton(
-                onPressed: () => setState(() => _error = null), icon: const Icon(Icons.close)),
+                onPressed: () => setState(() => _error = null),
+                icon: const Icon(Icons.close)),
           ],
         ),
       );
@@ -136,11 +139,13 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
             _buildInfoRow('Мероприятие:', widget.workAct.eventName),
             _buildInfoRow('Дата:', widget.workAct.eventDate),
             _buildInfoRow('Место:', widget.workAct.eventLocation),
-            _buildInfoRow('Сумма:', '${widget.workAct.totalAmount.toStringAsFixed(2)} ₽'),
+            _buildInfoRow(
+                'Сумма:', '${widget.workAct.totalAmount.toStringAsFixed(2)} ₽'),
             _buildInfoRow('Создан:', _formatDate(widget.workAct.createdAt)),
             if (widget.workAct.notes != null) ...[
               const SizedBox(height: 8),
-              const Text('Примечания:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Примечания:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               Text(widget.workAct.notes!),
             ],
           ],
@@ -154,7 +159,8 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
           children: [
             SizedBox(
               width: 100,
-              child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(label,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
             Expanded(child: Text(value)),
           ],
@@ -164,7 +170,8 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
   Widget _buildSignatureSection() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Подпись:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Подпись:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Container(
             height: 200,
@@ -172,7 +179,9 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Signature(controller: _signatureController, backgroundColor: Colors.white),
+            child: Signature(
+                controller: _signatureController,
+                backgroundColor: Colors.white),
           ),
           const SizedBox(height: 8),
           Row(
@@ -198,8 +207,10 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
             child: OutlinedButton.icon(
               onPressed: _isLoading ? null : _rejectAct,
               icon: const Icon(Icons.close, color: Colors.red),
-              label: const Text('Отклонить', style: TextStyle(color: Colors.red)),
-              style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.red)),
+              label:
+                  const Text('Отклонить', style: TextStyle(color: Colors.red)),
+              style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.red)),
             ),
           ),
           const SizedBox(width: 16),
@@ -242,8 +253,9 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
 
     try {
       final signatureData = await _signatureController.toPngBytes();
-      final signature =
-          signatureData != null ? 'data:image/png;base64,${signatureData.toString()}' : '';
+      final signature = signatureData != null
+          ? 'data:image/png;base64,${signatureData.toString()}'
+          : '';
 
       await _workActService.signWorkAct(
         workActId: widget.workAct.id,
@@ -280,7 +292,8 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
     });
 
     try {
-      await _workActService.rejectWorkAct(workActId: widget.workAct.id, reason: reason);
+      await _workActService.rejectWorkAct(
+          workActId: widget.workAct.id, reason: reason);
 
       if (widget.onActRejected != null) {
         widget.onActRejected!();
@@ -324,7 +337,9 @@ class _WorkActSignatureWidgetState extends State<WorkActSignatureWidget> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               if (controller.text.trim().isNotEmpty) {

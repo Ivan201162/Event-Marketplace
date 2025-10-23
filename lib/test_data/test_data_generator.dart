@@ -315,7 +315,8 @@ class TestDataGenerator {
   }
 
   /// Генерация случайного города
-  String _generateRandomCity() => russianCities[_random.nextInt(russianCities.length)];
+  String _generateRandomCity() =>
+      russianCities[_random.nextInt(russianCities.length)];
 
   /// Генерация URL фото-заглушки
   String _generatePhotoUrl() {
@@ -428,7 +429,9 @@ class TestDataGenerator {
       final specialistCount = _random.nextInt(5) + 1;
       final selectedSpecialists = specialists..shuffle();
 
-      for (var i = 0; i < specialistCount && i < selectedSpecialists.length; i++) {
+      for (var i = 0;
+          i < specialistCount && i < selectedSpecialists.length;
+          i++) {
         final specialist = selectedSpecialists[i];
         final bookingCount = _random.nextInt(maxBookingsPerPair) + 1;
 
@@ -488,7 +491,8 @@ class TestDataGenerator {
       if (_random.nextDouble() > 0.7) continue;
 
       final customer = customers.firstWhere((c) => c.id == booking.customerId);
-      final specialist = specialists.firstWhere((s) => s.id == booking.specialistId);
+      final specialist =
+          specialists.firstWhere((s) => s.id == booking.specialistId);
 
       final rating = _generateReviewRating();
 
@@ -642,13 +646,25 @@ class TestDataGenerator {
   List<String> _generateSubcategories(SpecialistCategory category) {
     switch (category) {
       case SpecialistCategory.photographer:
-        return ['Свадебная фотография', 'Портретная съемка', 'Событийная фотография'];
+        return [
+          'Свадебная фотография',
+          'Портретная съемка',
+          'Событийная фотография'
+        ];
       case SpecialistCategory.videographer:
         return ['Свадебное видео', 'Корпоративные ролики', 'Музыкальные клипы'];
       case SpecialistCategory.dj:
-        return ['Свадебный диджей', 'Корпоративные мероприятия', 'Клубная музыка'];
+        return [
+          'Свадебный диджей',
+          'Корпоративные мероприятия',
+          'Клубная музыка'
+        ];
       case SpecialistCategory.host:
-        return ['Свадебный ведущий', 'Корпоративные мероприятия', 'Детские праздники'];
+        return [
+          'Свадебный ведущий',
+          'Корпоративные мероприятия',
+          'Детские праздники'
+        ];
       case SpecialistCategory.florist:
         return ['Свадебная флористика', 'Букеты', 'Декор мероприятий'];
       default:
@@ -693,7 +709,12 @@ class TestDataGenerator {
   List<String> _generateEquipment(SpecialistCategory category) {
     switch (category) {
       case SpecialistCategory.photographer:
-        return ['Профессиональный фотоаппарат', 'Штатив', 'Освещение', 'Объективы'];
+        return [
+          'Профессиональный фотоаппарат',
+          'Штатив',
+          'Освещение',
+          'Объективы'
+        ];
       case SpecialistCategory.videographer:
         return ['Видеокамера 4K', 'Стабилизатор', 'Микрофоны', 'Освещение'];
       case SpecialistCategory.dj:
@@ -712,7 +733,11 @@ class TestDataGenerator {
       case SpecialistCategory.videographer:
         return ['Съемка мероприятий', 'Монтаж видео', 'Цветокоррекция'];
       case SpecialistCategory.dj:
-        return ['Музыкальное сопровождение', 'Световое шоу', 'Ведение программы'];
+        return [
+          'Музыкальное сопровождение',
+          'Световое шоу',
+          'Ведение программы'
+        ];
       case SpecialistCategory.host:
         return ['Ведение мероприятий', 'Конкурсы', 'Интерактивы'];
       default:
@@ -720,17 +745,18 @@ class TestDataGenerator {
     }
   }
 
-  List<String> _generatePortfolioImages() => List.generate(5, (index) => _generatePhotoUrl());
+  List<String> _generatePortfolioImages() =>
+      List.generate(5, (index) => _generatePhotoUrl());
 
   Map<String, String> _generateWorkingHours() => {
-    'monday': '09:00-18:00',
-    'tuesday': '09:00-18:00',
-    'wednesday': '09:00-18:00',
-    'thursday': '09:00-18:00',
-    'friday': '09:00-18:00',
-    'saturday': '10:00-16:00',
-    'sunday': 'выходной',
-  };
+        'monday': '09:00-18:00',
+        'tuesday': '09:00-18:00',
+        'wednesday': '09:00-18:00',
+        'thursday': '09:00-18:00',
+        'friday': '09:00-18:00',
+        'saturday': '10:00-16:00',
+        'sunday': 'выходной',
+      };
 
   String _generatePhoneNumber() =>
       '+7${_random.nextInt(900) + 100}${_random.nextInt(900) + 100}${_random.nextInt(10000).toString().padLeft(4, '0')}';
@@ -766,7 +792,11 @@ class TestDataGenerator {
   }
 
   BookingStatus _generateBookingStatus() {
-    final statuses = [BookingStatus.pending, BookingStatus.confirmed, BookingStatus.completed];
+    final statuses = [
+      BookingStatus.pending,
+      BookingStatus.confirmed,
+      BookingStatus.completed
+    ];
     final weights = [0.2, 0.5, 0.3]; // Веса для статусов
 
     final random = _random.nextDouble();
@@ -926,7 +956,8 @@ class TestDataGenerator {
     }
   }
 
-  List<String> _generateIdeaImages() => List.generate(3, (index) => _generatePhotoUrl());
+  List<String> _generateIdeaImages() =>
+      List.generate(3, (index) => _generatePhotoUrl());
 
   List<String> _generateIdeaTags(String category) {
     switch (category) {
@@ -979,7 +1010,8 @@ class TestDataGenerator {
     for (var i = 0; i < totalBatches; i++) {
       final start = i * batchSize;
       final end = (i + 1) * batchSize;
-      final batch = items.sublist(start, end > items.length ? items.length : end);
+      final batch =
+          items.sublist(start, end > items.length ? items.length : end);
 
       final writeBatch = _firestore.batch();
 
@@ -1022,7 +1054,8 @@ class TestDataGenerator {
 
     try {
       // Пример специалиста
-      final specialistSnapshot = await _firestore.collection('specialists').limit(1).get();
+      final specialistSnapshot =
+          await _firestore.collection('specialists').limit(1).get();
 
       if (specialistSnapshot.docs.isNotEmpty) {
         final specialist = specialistSnapshot.docs.first.data();
@@ -1034,7 +1067,8 @@ class TestDataGenerator {
       }
 
       // Пример идеи
-      final ideaSnapshot = await _firestore.collection('event_ideas').limit(1).get();
+      final ideaSnapshot =
+          await _firestore.collection('event_ideas').limit(1).get();
 
       if (ideaSnapshot.docs.isNotEmpty) {
         final idea = ideaSnapshot.docs.first.data();

@@ -25,7 +25,8 @@ class VideoGallery extends ConsumerWidget {
 
   Widget _buildVideoGrid(BuildContext context, List<UserPost> posts) {
     // Фильтруем только видео
-    final videos = posts.where((post) => post.isVideo && post.videoUrl != null).toList();
+    final videos =
+        posts.where((post) => post.isVideo && post.videoUrl != null).toList();
 
     if (videos.isEmpty) {
       return _buildEmptyState(context);
@@ -52,11 +53,12 @@ class VideoGallery extends ConsumerWidget {
     );
   }
 
-  Widget _buildVideoItem(BuildContext context, UserPost video) => GestureDetector(
+  Widget _buildVideoItem(BuildContext context, UserPost video) =>
+      GestureDetector(
         onTap: () => _openVideoPlayer(context, video),
         child: Container(
-          decoration:
-              BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(
+              color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Stack(
@@ -67,39 +69,51 @@ class VideoGallery extends ConsumerWidget {
                   CachedNetworkImage(
                     imageUrl: video.thumbnailUrl!,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        Container(color: Colors.grey[300], child: const Icon(Icons.video_library)),
-                    errorWidget: (context, url, error) =>
-                        Container(color: Colors.grey[300], child: const Icon(Icons.video_library)),
+                    placeholder: (context, url) => Container(
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.video_library)),
+                    errorWidget: (context, url, error) => Container(
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.video_library)),
                   )
                 else
-                  Container(color: Colors.grey[300], child: const Icon(Icons.video_library)),
+                  Container(
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.video_library)),
                 // Градиент для лучшей видимости кнопки
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.transparent, Colors.black.withValues(alpha: 0.3)],
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.3)
+                      ],
                     ),
                   ),
                 ),
                 // Кнопка воспроизведения
-                const Center(child: Icon(Icons.play_circle_filled, color: Colors.white, size: 48)),
+                const Center(
+                    child: Icon(Icons.play_circle_filled,
+                        color: Colors.white, size: 48)),
                 // Длительность видео (если доступна)
                 Positioned(
                   bottom: 8,
                   right: 8,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
                       '0:00', // TODO(developer): Получить длительность видео
-                      style:
-                          TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -122,8 +136,9 @@ class VideoGallery extends ConsumerWidget {
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
           child: Container(
-            decoration:
-                BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(8)),
           ),
         ),
       );
@@ -136,12 +151,18 @@ class VideoGallery extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'Пока нет видео',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Когда пользователь опубликует видео,\nоно появится здесь',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -156,12 +177,18 @@ class VideoGallery extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'Ошибка загрузки видео',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               error,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -171,7 +198,8 @@ class VideoGallery extends ConsumerWidget {
   void _openVideoPlayer(BuildContext context, UserPost video) {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (context) => VideoPlayerScreen(video: video)));
+    ).push(MaterialPageRoute<void>(
+        builder: (context) => VideoPlayerScreen(video: video)));
   }
 }
 
@@ -202,7 +230,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 
   void _initializeVideo() {
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl!));
+    _controller =
+        VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl!));
     _controller.initialize().then((_) {
       setState(() {
         _isInitialized = true;
@@ -272,7 +301,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           children: [
                             IconButton(
                               icon: Icon(
-                                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                                _controller.value.isPlaying
+                                    ? Icons.pause
+                                    : Icons.play_arrow,
                                 color: Colors.white,
                                 size: 48,
                               ),
@@ -310,7 +341,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   void _shareVideo() {
     // TODO(developer): Реализовать шаринг видео
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Поделиться видео')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Поделиться видео')));
   }
 
   void _showVideoMenu() {

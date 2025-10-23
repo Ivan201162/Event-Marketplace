@@ -29,8 +29,10 @@ class SpecialistProposal {
       id: doc.id,
       organizerId: data['organizerId']?.toString() ?? '',
       customerId: data['customerId']?.toString() ?? '',
-      specialistIds:
-          (data['specialistIds'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      specialistIds: (data['specialistIds'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       title: data['title']?.toString() ?? '',
       description: data['description']?.toString() ?? '',
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -41,35 +43,46 @@ class SpecialistProposal {
       isAccepted: data['isAccepted'] == true,
       isRejected: data['isRejected'] == true,
       acceptedSpecialistId: data['acceptedSpecialistId']?.toString(),
-      rejectedAt: data['rejectedAt'] != null ? (data['rejectedAt'] as Timestamp).toDate() : null,
-      acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
+      rejectedAt: data['rejectedAt'] != null
+          ? (data['rejectedAt'] as Timestamp).toDate()
+          : null,
+      acceptedAt: data['acceptedAt'] != null
+          ? (data['acceptedAt'] as Timestamp).toDate()
+          : null,
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
 
   /// Создать из Map
-  factory SpecialistProposal.fromMap(Map<String, dynamic> data) => SpecialistProposal(
-    id: data['id']?.toString() ?? '',
-    organizerId: data['organizerId']?.toString() ?? '',
-    customerId: data['customerId']?.toString() ?? '',
-    specialistIds:
-        (data['specialistIds'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-    title: data['title']?.toString() ?? '',
-    description: data['description']?.toString() ?? '',
-    createdAt: data['createdAt'] != null
-        ? (data['createdAt'] as Timestamp).toDate()
-        : DateTime.now(),
-    organizerName: data['organizerName']?.toString(),
-    organizerAvatar: data['organizerAvatar']?.toString(),
-    customerName: data['customerName']?.toString(),
-    customerAvatar: data['customerAvatar']?.toString(),
-    isAccepted: data['isAccepted'] == true,
-    isRejected: data['isRejected'] == true,
-    acceptedSpecialistId: data['acceptedSpecialistId']?.toString(),
-    rejectedAt: data['rejectedAt'] != null ? (data['rejectedAt'] as Timestamp).toDate() : null,
-    acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
-    metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
-  );
+  factory SpecialistProposal.fromMap(Map<String, dynamic> data) =>
+      SpecialistProposal(
+        id: data['id']?.toString() ?? '',
+        organizerId: data['organizerId']?.toString() ?? '',
+        customerId: data['customerId']?.toString() ?? '',
+        specialistIds: (data['specialistIds'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        title: data['title']?.toString() ?? '',
+        description: data['description']?.toString() ?? '',
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        organizerName: data['organizerName']?.toString(),
+        organizerAvatar: data['organizerAvatar']?.toString(),
+        customerName: data['customerName']?.toString(),
+        customerAvatar: data['customerAvatar']?.toString(),
+        isAccepted: data['isAccepted'] == true,
+        isRejected: data['isRejected'] == true,
+        acceptedSpecialistId: data['acceptedSpecialistId']?.toString(),
+        rejectedAt: data['rejectedAt'] != null
+            ? (data['rejectedAt'] as Timestamp).toDate()
+            : null,
+        acceptedAt: data['acceptedAt'] != null
+            ? (data['acceptedAt'] as Timestamp).toDate()
+            : null,
+        metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+      );
 
   final String id;
   final String organizerId;
@@ -91,23 +104,25 @@ class SpecialistProposal {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'organizerId': organizerId,
-    'customerId': customerId,
-    'specialistIds': specialistIds,
-    'title': title,
-    'description': description,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'organizerName': organizerName,
-    'organizerAvatar': organizerAvatar,
-    'customerName': customerName,
-    'customerAvatar': customerAvatar,
-    'isAccepted': isAccepted,
-    'isRejected': isRejected,
-    'acceptedSpecialistId': acceptedSpecialistId,
-    'rejectedAt': rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
-    'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
-    'metadata': metadata,
-  };
+        'organizerId': organizerId,
+        'customerId': customerId,
+        'specialistIds': specialistIds,
+        'title': title,
+        'description': description,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'organizerName': organizerName,
+        'organizerAvatar': organizerAvatar,
+        'customerName': customerName,
+        'customerAvatar': customerAvatar,
+        'isAccepted': isAccepted,
+        'isRejected': isRejected,
+        'acceptedSpecialistId': acceptedSpecialistId,
+        'rejectedAt':
+            rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
+        'acceptedAt':
+            acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   SpecialistProposal copyWith({
@@ -128,25 +143,26 @@ class SpecialistProposal {
     DateTime? rejectedAt,
     DateTime? acceptedAt,
     Map<String, dynamic>? metadata,
-  }) => SpecialistProposal(
-    id: id ?? this.id,
-    organizerId: organizerId ?? this.organizerId,
-    customerId: customerId ?? this.customerId,
-    specialistIds: specialistIds ?? this.specialistIds,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    createdAt: createdAt ?? this.createdAt,
-    organizerName: organizerName ?? this.organizerName,
-    organizerAvatar: organizerAvatar ?? this.organizerAvatar,
-    customerName: customerName ?? this.customerName,
-    customerAvatar: customerAvatar ?? this.customerAvatar,
-    isAccepted: isAccepted ?? this.isAccepted,
-    isRejected: isRejected ?? this.isRejected,
-    acceptedSpecialistId: acceptedSpecialistId ?? this.acceptedSpecialistId,
-    rejectedAt: rejectedAt ?? this.rejectedAt,
-    acceptedAt: acceptedAt ?? this.acceptedAt,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      SpecialistProposal(
+        id: id ?? this.id,
+        organizerId: organizerId ?? this.organizerId,
+        customerId: customerId ?? this.customerId,
+        specialistIds: specialistIds ?? this.specialistIds,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        createdAt: createdAt ?? this.createdAt,
+        organizerName: organizerName ?? this.organizerName,
+        organizerAvatar: organizerAvatar ?? this.organizerAvatar,
+        customerName: customerName ?? this.customerName,
+        customerAvatar: customerAvatar ?? this.customerAvatar,
+        isAccepted: isAccepted ?? this.isAccepted,
+        isRejected: isRejected ?? this.isRejected,
+        acceptedSpecialistId: acceptedSpecialistId ?? this.acceptedSpecialistId,
+        rejectedAt: rejectedAt ?? this.rejectedAt,
+        acceptedAt: acceptedAt ?? this.acceptedAt,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, есть ли специалисты в предложении
   bool get hasSpecialists => specialistIds.isNotEmpty;

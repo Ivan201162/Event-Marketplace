@@ -37,7 +37,10 @@ class ProfileHeader extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           // Биография
-          if (profile.bio.isNotEmpty) ...[_buildBio(theme), const SizedBox(height: 16)],
+          if (profile.bio.isNotEmpty) ...[
+            _buildBio(theme),
+            const SizedBox(height: 16)
+          ],
           // Кнопки действий
           _buildActionButtons(theme),
         ],
@@ -99,7 +102,8 @@ class ProfileHeader extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
                 ),
-                child: const Icon(Icons.verified, color: Colors.white, size: 16),
+                child:
+                    const Icon(Icons.verified, color: Colors.white, size: 16),
               ),
             ),
         ],
@@ -114,12 +118,14 @@ class ProfileHeader extends StatelessWidget {
               Expanded(
                 child: Text(
                   profile.name,
-                  style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (profile.isVerified) const Icon(Icons.verified, color: Colors.blue, size: 20),
+              if (profile.isVerified)
+                const Icon(Icons.verified, color: Colors.blue, size: 20),
             ],
           ),
           const SizedBox(height: 4),
@@ -141,7 +147,8 @@ class ProfileHeader extends StatelessWidget {
                 Expanded(
                   child: Text(
                     profile.city,
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: Colors.grey[600]),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -180,7 +187,8 @@ class ProfileHeader extends StatelessWidget {
               label: const Text('Редактировать'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
               ),
             ),
           ),
@@ -194,7 +202,8 @@ class ProfileHeader extends StatelessWidget {
               label: const Text('Настройки'),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
               ),
             ),
           ),
@@ -210,7 +219,8 @@ class ProfileHeader extends StatelessWidget {
               label: const Text('Подписаться'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
               ),
             ),
           ),
@@ -222,7 +232,8 @@ class ProfileHeader extends StatelessWidget {
               label: const Text('Сообщение'),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
               ),
             ),
           ),

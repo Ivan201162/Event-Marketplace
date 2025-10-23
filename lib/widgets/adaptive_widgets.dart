@@ -33,7 +33,8 @@ class AdaptiveContainer extends StatelessWidget {
 
     // Определяем отступы
     final contentPadding = padding ??
-        EdgeInsets.symmetric(horizontal: isTablet ? 32 : 16, vertical: isTablet ? 24 : 16);
+        EdgeInsets.symmetric(
+            horizontal: isTablet ? 32 : 16, vertical: isTablet ? 24 : 16);
 
     Widget content = Container(
       padding: contentPadding,
@@ -152,7 +153,8 @@ class AdaptiveButton extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
 
-    Widget button = ElevatedButton(onPressed: onPressed, style: style, child: child);
+    Widget button =
+        ElevatedButton(onPressed: onPressed, style: style, child: child);
 
     if (isFullWidth) {
       button = SizedBox(width: double.infinity, child: button);
@@ -238,12 +240,16 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: AdaptiveText(
         title,
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        style: Theme.of(context)
+            .textTheme
+            .titleLarge
+            ?.copyWith(fontWeight: FontWeight.bold),
       ),
       actions: actions,
       leading: leading,
       centerTitle: centerTitle,
-      backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
+      backgroundColor:
+          backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
       foregroundColor: foregroundColor,
       elevation: elevation ?? (isTablet ? 2 : 1),
       systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -286,7 +292,8 @@ class AdaptiveCard extends StatelessWidget {
         borderRadius: borderRadius ?? BorderRadius.circular(isTablet ? 16 : 12),
       ),
       margin: margin ?? EdgeInsets.all(isTablet ? 16 : 8),
-      child: Padding(padding: padding ?? EdgeInsets.all(isTablet ? 24 : 16), child: child),
+      child: Padding(
+          padding: padding ?? EdgeInsets.all(isTablet ? 24 : 16), child: child),
     );
 
     if (onTap != null) {
@@ -328,11 +335,15 @@ class AdaptiveDialog extends StatelessWidget {
     return AlertDialog(
       title: AdaptiveText(
         title,
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        style: Theme.of(context)
+            .textTheme
+            .titleLarge
+            ?.copyWith(fontWeight: FontWeight.bold),
       ),
       content: dialogContent,
       actions: actions,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(isTablet ? 16 : 12)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(isTablet ? 16 : 12)),
       contentPadding: EdgeInsets.all(isTablet ? 24 : 16),
       actionsPadding: EdgeInsets.all(isTablet ? 24 : 16),
     );
@@ -382,7 +393,8 @@ class AdaptiveBottomSheet extends StatelessWidget {
             const Divider(),
             Padding(
               padding: EdgeInsets.all(isTablet ? 24 : 16),
-              child: Row(mainAxisAlignment: MainAxisAlignment.end, children: actions!),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end, children: actions!),
             ),
           ],
         ],
@@ -390,7 +402,8 @@ class AdaptiveBottomSheet extends StatelessWidget {
     }
 
     return Container(
-      constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.9),
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.9),
       child: content,
     );
   }
@@ -420,7 +433,10 @@ class AdaptiveLoadingIndicator extends StatelessWidget {
             const SizedBox(height: 16),
             AdaptiveText(
               message!,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -432,7 +448,8 @@ class AdaptiveLoadingIndicator extends StatelessWidget {
 
 /// Адаптивное сообщение об ошибке
 class AdaptiveErrorMessage extends StatelessWidget {
-  const AdaptiveErrorMessage({super.key, required this.message, this.onRetry, this.icon});
+  const AdaptiveErrorMessage(
+      {super.key, required this.message, this.onRetry, this.icon});
   final String message;
   final VoidCallback? onRetry;
   final IconData? icon;
@@ -446,11 +463,15 @@ class AdaptiveErrorMessage extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon ?? Icons.error_outline, size: isTablet ? 64 : 48, color: Colors.red[300]),
+          Icon(icon ?? Icons.error_outline,
+              size: isTablet ? 64 : 48, color: Colors.red[300]),
           const SizedBox(height: 16),
           AdaptiveText(
             message,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(color: Colors.grey[600]),
             textAlign: TextAlign.center,
           ),
           if (onRetry != null) ...[

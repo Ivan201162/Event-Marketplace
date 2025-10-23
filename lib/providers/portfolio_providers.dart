@@ -4,7 +4,8 @@ import '../models/specialist_profile.dart';
 import '../services/portfolio_service.dart';
 
 /// Провайдер сервиса портфолио
-final portfolioServiceProvider = Provider<PortfolioService>((ref) => PortfolioService());
+final portfolioServiceProvider =
+    Provider<PortfolioService>((ref) => PortfolioService());
 
 /// Состояние загрузки портфолио
 class PortfolioUploadState {
@@ -25,19 +26,20 @@ class PortfolioUploadState {
     double? uploadProgress,
     String? errorMessage,
     List<PortfolioItem>? uploadedItems,
-  }) => PortfolioUploadState(
-    isUploading: isUploading ?? this.isUploading,
-    uploadProgress: uploadProgress ?? this.uploadProgress,
-    errorMessage: errorMessage,
-    uploadedItems: uploadedItems ?? this.uploadedItems,
-  );
+  }) =>
+      PortfolioUploadState(
+        isUploading: isUploading ?? this.isUploading,
+        uploadProgress: uploadProgress ?? this.uploadProgress,
+        errorMessage: errorMessage,
+        uploadedItems: uploadedItems ?? this.uploadedItems,
+      );
 }
 
 /// Провайдер состояния загрузки портфолио (мигрирован с StateNotifierProvider)
 final portfolioUploadStateProvider =
     NotifierProvider<PortfolioUploadNotifier, PortfolioUploadState>(
-      () => PortfolioUploadNotifier(),
-    );
+  () => PortfolioUploadNotifier(),
+);
 
 /// Нотификатор для загрузки портфолио (мигрирован с StateNotifier)
 class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
@@ -76,7 +78,8 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
       );
 
       if (portfolioItem != null) {
-        final newItems = List<PortfolioItem>.from(state.uploadedItems)..add(portfolioItem);
+        final newItems = List<PortfolioItem>.from(state.uploadedItems)
+          ..add(portfolioItem);
         state = state.copyWith(isUploading: false, uploadedItems: newItems);
       } else {
         throw Exception('Не удалось загрузить изображение');
@@ -114,7 +117,8 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
       );
 
       if (portfolioItem != null) {
-        final newItems = List<PortfolioItem>.from(state.uploadedItems)..add(portfolioItem);
+        final newItems = List<PortfolioItem>.from(state.uploadedItems)
+          ..add(portfolioItem);
         state = state.copyWith(isUploading: false, uploadedItems: newItems);
       } else {
         throw Exception('Не удалось загрузить видео');
@@ -152,7 +156,8 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
       );
 
       if (portfolioItem != null) {
-        final newItems = List<PortfolioItem>.from(state.uploadedItems)..add(portfolioItem);
+        final newItems = List<PortfolioItem>.from(state.uploadedItems)
+          ..add(portfolioItem);
         state = state.copyWith(isUploading: false, uploadedItems: newItems);
       } else {
         throw Exception('Не удалось загрузить документ');
@@ -168,7 +173,8 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
       await _portfolioService.removePortfolioItem(userId, itemId);
 
       // Удаляем из локального списка
-      final newItems = state.uploadedItems.where((item) => item.id != itemId).toList();
+      final newItems =
+          state.uploadedItems.where((item) => item.id != itemId).toList();
       state = state.copyWith(uploadedItems: newItems);
     } on Exception catch (e) {
       state = state.copyWith(errorMessage: e.toString());
@@ -176,7 +182,8 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
   }
 
   /// Обновить элемент портфолио
-  Future<void> updatePortfolioItem(String userId, PortfolioItem updatedItem) async {
+  Future<void> updatePortfolioItem(
+      String userId, PortfolioItem updatedItem) async {
     try {
       await _portfolioService.updatePortfolioItem(userId, updatedItem);
 
@@ -202,7 +209,8 @@ class PortfolioUploadNotifier extends Notifier<PortfolioUploadState> {
 }
 
 /// Провайдер для получения портфолио специалиста
-final specialistPortfolioProvider = FutureProvider.family<List<PortfolioItem>, String>((
+final specialistPortfolioProvider =
+    FutureProvider.family<List<PortfolioItem>, String>((
   ref,
   userId,
 ) async {

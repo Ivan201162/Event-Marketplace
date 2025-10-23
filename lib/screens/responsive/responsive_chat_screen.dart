@@ -67,7 +67,8 @@ class ResponsiveChatScreen extends StatelessWidget {
           ResponsiveText(
             'Поиск чатов',
             style: TextStyle(
-              fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 18.0, tablet: 20.0, desktop: 22.0),
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -96,16 +97,20 @@ class ResponsiveChatScreen extends StatelessWidget {
           ResponsiveText(
             'Чаты',
             style: TextStyle(
-              fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 18.0, tablet: 20.0, desktop: 22.0),
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
               fontWeight: FontWeight.bold,
             ),
           ),
           ResponsiveSpacing(height: 16),
           ResponsiveList(
             children: [
-              _buildChatItem(context, 'Анна Петрова', 'Спасибо за отличную работу!', '2 часа назад', true, 2),
-              _buildChatItem(context, 'Иван Сидоров', 'Когда можем встретиться?', '4 часа назад', false, 0),
-              _buildChatItem(context, 'Мария Козлова', 'Договорились на завтра', '1 день назад', false, 0),
+              _buildChatItem(context, 'Анна Петрова',
+                  'Спасибо за отличную работу!', '2 часа назад', true, 2),
+              _buildChatItem(context, 'Иван Сидоров',
+                  'Когда можем встретиться?', '4 часа назад', false, 0),
+              _buildChatItem(context, 'Мария Козлова', 'Договорились на завтра',
+                  '1 день назад', false, 0),
             ],
           ),
         ],
@@ -113,18 +118,21 @@ class ResponsiveChatScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildChatItem(BuildContext context, String name, String lastMessage, String time, bool isUnread, int unreadCount) {
+  Widget _buildChatItem(BuildContext context, String name, String lastMessage,
+      String time, bool isUnread, int unreadCount) {
     return ResponsiveCard(
       child: Row(
         children: [
           CircleAvatar(
-            radius: ResponsiveUtils.getResponsiveIconSize(context, mobile: 20.0, tablet: 24.0, desktop: 28.0),
+            radius: ResponsiveUtils.getResponsiveIconSize(context,
+                mobile: 20.0, tablet: 24.0, desktop: 28.0),
             backgroundColor: isUnread ? Colors.blue : Colors.grey,
             child: ResponsiveText(
               name[0],
               style: TextStyle(
                 color: Colors.white,
-                fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 14.0, tablet: 16.0, desktop: 18.0),
+                fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                    mobile: 14.0, tablet: 16.0, desktop: 18.0),
               ),
             ),
           ),
@@ -139,15 +147,21 @@ class ResponsiveChatScreen extends StatelessWidget {
                       child: ResponsiveText(
                         name,
                         style: TextStyle(
-                          fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 14.0, tablet: 16.0, desktop: 18.0),
-                          fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
+                          fontSize: ResponsiveUtils.getResponsiveFontSize(
+                              context,
+                              mobile: 14.0,
+                              tablet: 16.0,
+                              desktop: 18.0),
+                          fontWeight:
+                              isUnread ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                     ),
                     ResponsiveText(
                       time,
                       style: TextStyle(
-                        fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                            mobile: 12.0, tablet: 14.0, desktop: 16.0),
                         color: Colors.grey[600],
                       ),
                     ),
@@ -160,9 +174,14 @@ class ResponsiveChatScreen extends StatelessWidget {
                       child: ResponsiveText(
                         lastMessage,
                         style: TextStyle(
-                          fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                          fontSize: ResponsiveUtils.getResponsiveFontSize(
+                              context,
+                              mobile: 12.0,
+                              tablet: 14.0,
+                              desktop: 16.0),
                           color: isUnread ? Colors.black : Colors.grey[600],
-                          fontWeight: isUnread ? FontWeight.bold : FontWeight.normal,
+                          fontWeight:
+                              isUnread ? FontWeight.bold : FontWeight.normal,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -173,7 +192,11 @@ class ResponsiveChatScreen extends StatelessWidget {
                         child: ResponsiveText(
                           '$unreadCount',
                           style: TextStyle(
-                            fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 10.0, tablet: 12.0, desktop: 14.0),
+                            fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                context,
+                                mobile: 10.0,
+                                tablet: 12.0,
+                                desktop: 14.0),
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),

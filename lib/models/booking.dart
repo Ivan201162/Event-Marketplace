@@ -95,8 +95,12 @@ class Booking extends Equatable {
       eventTitle: data['eventTitle'],
       participantsCount: data['participantsCount'],
       organizerName: data['organizerName'],
-      eventDate: data['eventDate'] != null ? (data['eventDate'] as Timestamp).toDate() : null,
-      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
+      eventDate: data['eventDate'] != null
+          ? (data['eventDate'] as Timestamp).toDate()
+          : null,
+      endDate: data['endDate'] != null
+          ? (data['endDate'] as Timestamp).toDate()
+          : null,
     );
   }
 
@@ -238,35 +242,36 @@ class Booking extends Equatable {
 
   /// Check if booking is active
   bool get isActive {
-    return status == BookingStatus.confirmed || status == BookingStatus.inProgress;
+    return status == BookingStatus.confirmed ||
+        status == BookingStatus.inProgress;
   }
 
   @override
   List<Object?> get props => [
-    id,
-    specialistId,
-    specialistName,
-    clientId,
-    clientName,
-    service,
-    date,
-    time,
-    duration,
-    totalPrice,
-    notes,
-    status,
-    createdAt,
-    updatedAt,
-    location,
-    clientPhone,
-    clientEmail,
-    metadata,
-    eventTitle,
-    participantsCount,
-    organizerName,
-    eventDate,
-    endDate,
-  ];
+        id,
+        specialistId,
+        specialistName,
+        clientId,
+        clientName,
+        service,
+        date,
+        time,
+        duration,
+        totalPrice,
+        notes,
+        status,
+        createdAt,
+        updatedAt,
+        location,
+        clientPhone,
+        clientEmail,
+        metadata,
+        eventTitle,
+        participantsCount,
+        organizerName,
+        eventDate,
+        endDate,
+      ];
 
   /// Create Booking from Firestore document
   factory Booking.fromDocument(DocumentSnapshot doc) {
@@ -301,8 +306,12 @@ class Booking extends Equatable {
       eventTitle: data['eventTitle'],
       participantsCount: data['participantsCount'],
       organizerName: data['organizerName'],
-      eventDate: data['eventDate'] != null ? (data['eventDate'] as Timestamp).toDate() : null,
-      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
+      eventDate: data['eventDate'] != null
+          ? (data['eventDate'] as Timestamp).toDate()
+          : null,
+      endDate: data['endDate'] != null
+          ? (data['endDate'] as Timestamp).toDate()
+          : null,
     );
   }
 }

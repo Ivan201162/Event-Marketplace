@@ -49,7 +49,7 @@ class AppUser extends Equatable {
   final String? description;
   final double? hourlyRate;
   final String? specialistType;
-  
+
   // Pro account fields
   final bool isProAccount;
   final String? proCategory; // Ведущий, Диджей, Фотограф и т.д.
@@ -250,36 +250,36 @@ class AppUser extends Equatable {
 
   @override
   List<Object?> get props => [
-    uid,
-    name,
-    firstName,
-    lastName,
-    email,
-    phone,
-    city,
-    status,
-    avatarUrl,
-    followersCount,
-    type,
-    createdAt,
-    updatedAt,
-    isOnline,
-    preferences,
-    favoriteSpecialists,
-    bio,
-    description,
-    hourlyRate,
-    specialistType,
-    isProAccount,
-    proCategory,
-    isVerified,
-    socialLinks,
-    website,
-    ctaButtons,
-    followersCount,
-    followingCount,
-    postsCount,
-  ];
+        uid,
+        name,
+        firstName,
+        lastName,
+        email,
+        phone,
+        city,
+        status,
+        avatarUrl,
+        followersCount,
+        type,
+        createdAt,
+        updatedAt,
+        isOnline,
+        preferences,
+        favoriteSpecialists,
+        bio,
+        description,
+        hourlyRate,
+        specialistType,
+        isProAccount,
+        proCategory,
+        isVerified,
+        socialLinks,
+        website,
+        ctaButtons,
+        followersCount,
+        followingCount,
+        postsCount,
+      ];
 
   @override
   String toString() {

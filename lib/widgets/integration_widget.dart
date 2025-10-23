@@ -29,7 +29,8 @@ class IntegrationWidget extends StatelessWidget {
                         color: integration.typeColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(integration.typeIcon, color: integration.typeColor, size: 24),
+                      child: Icon(integration.typeIcon,
+                          color: integration.typeColor, size: 24),
                     ),
 
                     const SizedBox(width: 12),
@@ -41,12 +42,14 @@ class IntegrationWidget extends StatelessWidget {
                         children: [
                           Text(
                             integration.name,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             integration.description,
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.grey[600]),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -56,11 +59,14 @@ class IntegrationWidget extends StatelessWidget {
 
                     // Статус
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: integration.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: integration.statusColor.withValues(alpha: 0.3)),
+                        border: Border.all(
+                            color:
+                                integration.statusColor.withValues(alpha: 0.3)),
                       ),
                       child: Text(
                         integration.statusText,
@@ -81,7 +87,8 @@ class IntegrationWidget extends StatelessWidget {
                   children: [
                     // Тип
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: integration.typeColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -89,7 +96,8 @@ class IntegrationWidget extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(integration.typeIcon, size: 14, color: integration.typeColor),
+                          Icon(integration.typeIcon,
+                              size: 14, color: integration.typeColor),
                           const SizedBox(width: 4),
                           Text(
                             _getTypeText(integration.type),
@@ -138,7 +146,9 @@ class IntegrationWidget extends StatelessWidget {
                     if (integration.websiteUrl != null) ...[
                       Icon(Icons.language, size: 14, color: Colors.grey[600]),
                       const SizedBox(width: 4),
-                      Text('Сайт', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                      Text('Сайт',
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.grey[600])),
                     ],
                   ],
                 ),
@@ -187,18 +197,22 @@ class IntegrationListTile extends StatelessWidget {
             color: integration.typeColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(integration.typeIcon, color: integration.typeColor, size: 24),
+          child: Icon(integration.typeIcon,
+              color: integration.typeColor, size: 24),
         ),
-        title: Text(integration.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(integration.name,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(integration.description, maxLines: 2, overflow: TextOverflow.ellipsis),
+            Text(integration.description,
+                maxLines: 2, overflow: TextOverflow.ellipsis),
             const SizedBox(height: 4),
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: integration.statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -214,7 +228,8 @@ class IntegrationListTile extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: integration.typeColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -290,14 +305,16 @@ class IntegrationGridTile extends StatelessWidget {
                         color: integration.typeColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(integration.typeIcon, color: integration.typeColor, size: 20),
+                      child: Icon(integration.typeIcon,
+                          color: integration.typeColor, size: 20),
                     ),
                     const Spacer(),
                     Container(
                       width: 8,
                       height: 8,
-                      decoration:
-                          BoxDecoration(color: integration.statusColor, shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                          color: integration.statusColor,
+                          shape: BoxShape.circle),
                     ),
                   ],
                 ),
@@ -307,7 +324,8 @@ class IntegrationGridTile extends StatelessWidget {
                 // Название
                 Text(
                   integration.name,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.bold),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),

@@ -6,7 +6,8 @@ import '../models/payment.dart';
 
 /// Виджет для отображения платежа
 class PaymentCard extends ConsumerWidget {
-  const PaymentCard({super.key, required this.payment, this.onTap, this.showActions = false});
+  const PaymentCard(
+      {super.key, required this.payment, this.onTap, this.showActions = false});
   final Payment payment;
   final VoidCallback? onTap;
   final bool showActions;
@@ -29,7 +30,8 @@ class PaymentCard extends ConsumerWidget {
                     Expanded(
                       child: Text(
                         payment.typeDisplayName ?? payment.displayName,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     _buildStatusChip(payment.status),
@@ -46,7 +48,8 @@ class PaymentCard extends ConsumerWidget {
                     const SizedBox(width: 8),
                     Text(
                       '${payment.amount.toStringAsFixed(0)} ${payment.currency}',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -59,7 +62,10 @@ class PaymentCard extends ConsumerWidget {
                     payment.description ?? 'Платеж',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -71,14 +77,20 @@ class PaymentCard extends ConsumerWidget {
                     Icon(
                       Icons.schedule,
                       size: 16,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'Создан: ${_formatDate(payment.createdAt)}',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -88,11 +100,13 @@ class PaymentCard extends ConsumerWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.check_circle, size: 16, color: Colors.green),
+                      const Icon(Icons.check_circle,
+                          size: 16, color: Colors.green),
                       const SizedBox(width: 8),
                       Text(
                         'Завершен: ${_formatDate(payment.completedAt!)}',
-                        style: const TextStyle(fontSize: 12, color: Colors.green),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.green),
                       ),
                     ],
                   ),
@@ -159,7 +173,8 @@ class PaymentCard extends ConsumerWidget {
           const SizedBox(width: 4),
           Text(
             _getStatusDisplayName(status),
-            style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                color: color, fontSize: 12, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -208,7 +223,9 @@ class PaymentCard extends ConsumerWidget {
         title: const Text('Отмена платежа'),
         content: const Text('Вы уверены, что хотите отменить этот платеж?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Нет')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Нет')),
           ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -218,11 +235,13 @@ class PaymentCard extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Платеж отменен')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Платеж отменен')));
                 }
               } catch (e) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -291,8 +310,11 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
-        ElevatedButton(onPressed: _processPayment, child: const Text('Оплатить')),
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Отмена')),
+        ElevatedButton(
+            onPressed: _processPayment, child: const Text('Оплатить')),
       ],
     );
   }
@@ -370,8 +392,10 @@ class PaymentStatisticsWidget extends ConsumerWidget {
             children: [
               Text(
                 'Статистика платежей',
-                style:
-                    Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               Row(
@@ -424,7 +448,9 @@ class PaymentStatisticsWidget extends ConsumerWidget {
                 value: (statistics['completionRate'] as num? ?? 0) / 100,
                 backgroundColor: Colors.grey.withValues(alpha: 0.3),
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  (statistics['completionRate'] as num? ?? 0) > 80 ? Colors.green : Colors.orange,
+                  (statistics['completionRate'] as num? ?? 0) > 80
+                      ? Colors.green
+                      : Colors.orange,
                 ),
               ),
               const SizedBox(height: 8),
@@ -432,7 +458,10 @@ class PaymentStatisticsWidget extends ConsumerWidget {
                 'Процент завершенных: ${(statistics['completionRate'] as num? ?? 0).toStringAsFixed(1)}%',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -459,20 +488,25 @@ class PaymentStatisticsWidget extends ConsumerWidget {
           children: [
             Text(
               count,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 4),
             Text(
               amount,
-              style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 10, color: color, fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -506,14 +540,21 @@ class PaymentCalculationWidget extends ConsumerWidget {
           children: [
             Text(
               'Расчет платежей',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Text(
-              calculation['paymentSchemeDescription'] as String? ?? 'Расчет платежей',
+              calculation['paymentSchemeDescription'] as String? ??
+                  'Расчет платежей',
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 16),
@@ -548,13 +589,16 @@ class PaymentCalculationWidget extends ConsumerWidget {
   }
 
   /// Построить строку платежа
-  Widget _buildPaymentRow(BuildContext context, String label, String amount, Color color) => Row(
+  Widget _buildPaymentRow(
+          BuildContext context, String label, String amount, Color color) =>
+      Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: const TextStyle(fontSize: 14)),
           Text(
             amount,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 14, fontWeight: FontWeight.bold, color: color),
           ),
         ],
       );

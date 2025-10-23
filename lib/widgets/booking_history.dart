@@ -93,7 +93,10 @@ class BookingHistory extends ConsumerWidget {
                     booking.serviceName ?? 'Услуга',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 _buildStatusChip(booking.status.name),
@@ -111,7 +114,9 @@ class BookingHistory extends ConsumerWidget {
                     (booking.specialistName.isNotEmpty ?? false)
                         ? booking.specialistName.substring(0, 1).toUpperCase()
                         : 'С',
-                    style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.blue.shade700,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -123,13 +128,19 @@ class BookingHistory extends ConsumerWidget {
                         booking.specialistName ?? 'Специалист',
                         style: Theme.of(
                           context,
-                        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                        )
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       Text(
                         'Категория', // TODO: Добавить поле category в модель Booking
                         style: Theme.of(
                           context,
-                        ).textTheme.bodySmall?.copyWith(color: Colors.grey.shade600),
+                        )
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(color: Colors.grey.shade600),
                       ),
                     ],
                   ),
@@ -139,10 +150,14 @@ class BookingHistory extends ConsumerWidget {
             const SizedBox(height: 12),
 
             // Детали заказа
-            _buildDetailRow(Icons.calendar_today, 'Дата', _formatDate(booking.eventDate)),
-            _buildDetailRow(Icons.access_time, 'Время', _formatTime(booking.eventDate)),
-            _buildDetailRow(Icons.location_on, 'Место', booking.location ?? 'Место не указано'),
-            _buildDetailRow(Icons.attach_money, 'Стоимость', '${booking.totalPrice.toInt()} ₽'),
+            _buildDetailRow(
+                Icons.calendar_today, 'Дата', _formatDate(booking.eventDate)),
+            _buildDetailRow(
+                Icons.access_time, 'Время', _formatTime(booking.eventDate)),
+            _buildDetailRow(Icons.location_on, 'Место',
+                booking.location ?? 'Место не указано'),
+            _buildDetailRow(Icons.attach_money, 'Стоимость',
+                '${booking.totalPrice.toInt()} ₽'),
 
             const SizedBox(height: 16),
 
@@ -203,7 +218,8 @@ class BookingHistory extends ConsumerWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+        style:
+            TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -216,12 +232,18 @@ class BookingHistory extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'История заказов пуста',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Когда вы сделаете заказ,\nон появится здесь',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -230,7 +252,8 @@ class BookingHistory extends ConsumerWidget {
 
   void _leaveReview(BuildContext context, Map<String, dynamic> booking) {
     // TODO(developer): Открыть экран создания отзыва
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Оставить отзыв')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Оставить отзыв')));
   }
 
   void _cancelBooking(BuildContext context, Map<String, dynamic> booking) {
@@ -240,7 +263,9 @@ class BookingHistory extends ConsumerWidget {
         title: const Text('Отменить заказ'),
         content: const Text('Вы уверены, что хотите отменить этот заказ?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Нет')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Нет')),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
@@ -304,9 +329,12 @@ class BookingHistory extends ConsumerWidget {
           children: [
             Icon(icon, size: 16, color: Colors.grey[600]),
             const SizedBox(width: 8),
-            Text('$label: ', style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+            Text('$label: ',
+                style: TextStyle(color: Colors.grey[600], fontSize: 14)),
             Expanded(
-              child: Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              child: Text(value,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w500)),
             ),
           ],
         ),

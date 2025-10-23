@@ -7,13 +7,15 @@ void main() {
   group('Поиск специалистов на главной странице', () {
     testWidgets('Проверка поиска специалистов', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(child: MaterialApp(home: app.EventMarketplaceApp())),
+        const ProviderScope(
+            child: MaterialApp(home: app.EventMarketplaceApp())),
       );
 
       await tester.pumpAndSettle();
 
       // Проверяем, что заголовок поиска отображается
-      expect(find.text('Найди специалиста для своего праздника 🎉'), findsOneWidget);
+      expect(find.text('Найди специалиста для своего праздника 🎉'),
+          findsOneWidget);
 
       // Ищем поле поиска
       final searchField = find.byType(TextField);
@@ -27,12 +29,16 @@ void main() {
       final searchResults = find.textContaining('Найдено специалистов:');
       final noResults = find.text('Никого не найдено 😅');
 
-      expect(searchResults.evaluate().isNotEmpty || noResults.evaluate().isNotEmpty, isTrue);
+      expect(
+          searchResults.evaluate().isNotEmpty ||
+              noResults.evaluate().isNotEmpty,
+          isTrue);
     });
 
     testWidgets('Проверка быстрых фильтров', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(child: MaterialApp(home: app.EventMarketplaceApp())),
+        const ProviderScope(
+            child: MaterialApp(home: app.EventMarketplaceApp())),
       );
 
       await tester.pumpAndSettle();
@@ -48,7 +54,8 @@ void main() {
 
     testWidgets('Проверка очистки поиска', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(child: MaterialApp(home: app.EventMarketplaceApp())),
+        const ProviderScope(
+            child: MaterialApp(home: app.EventMarketplaceApp())),
       );
 
       await tester.pumpAndSettle();

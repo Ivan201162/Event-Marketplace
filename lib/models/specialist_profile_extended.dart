@@ -62,7 +62,9 @@ class SpecialistProfileExtended {
         phone: specialist.contactInfo?['phone'],
         avatarUrl: specialist.businessInfo?['avatarUrl'],
         bio: specialist.description,
-        location: specialist.serviceAreas.isNotEmpty ? specialist.serviceAreas.first : null,
+        location: specialist.serviceAreas.isNotEmpty
+            ? specialist.serviceAreas.first
+            : null,
         categories: [specialist.category],
         experienceYears: specialist.yearsOfExperience,
         hourlyRate: specialist.hourlyRate,
@@ -72,7 +74,8 @@ class SpecialistProfileExtended {
         isVerified: specialist.isVerified,
         createdAt: specialist.createdAt,
         updatedAt: specialist.updatedAt,
-        portfolio: specialist.portfolio.isNotEmpty ? specialist.portfolio.first : null,
+        portfolio:
+            specialist.portfolio.isNotEmpty ? specialist.portfolio.first : null,
         socialLinks: specialist.businessInfo?['socialLinks'] ?? {},
         languages: specialist.languages,
         specializations: specialist.subcategories,
@@ -110,8 +113,7 @@ class SpecialistProfileExtended {
       avatarUrl: data['avatarUrl'] as String?,
       bio: data['bio'] as String?,
       location: data['location'] as String?,
-      categories:
-          (data['categories'] as List?)
+      categories: (data['categories'] as List?)
               ?.map(
                 (cat) => SpecialistCategory.values.firstWhere(
                   (category) => category.name == cat,
@@ -131,11 +133,13 @@ class SpecialistProfileExtended {
       portfolio: data['portfolio'] as String?,
       socialLinks: Map<String, String>.from(data['socialLinks'] as Map? ?? {}),
       languages: List<String>.from(data['languages'] as List? ?? []),
-      specializations: List<String>.from(data['specializations'] as List? ?? []),
+      specializations:
+          List<String>.from(data['specializations'] as List? ?? []),
       equipment: List<String>.from(data['equipment'] as List? ?? []),
       insurance: data['insurance'] as bool? ?? false,
       licenses: List<String>.from(data['licenses'] as List? ?? []),
-      availability: Map<String, dynamic>.from(data['availability'] as Map? ?? {}),
+      availability:
+          Map<String, dynamic>.from(data['availability'] as Map? ?? {}),
       pricing: Map<String, dynamic>.from(data['pricing'] as Map? ?? {}),
       policies: Map<String, dynamic>.from(data['policies'] as Map? ?? {}),
       gallery: List<String>.from(data['gallery'] as List? ?? []),
@@ -143,28 +147,30 @@ class SpecialistProfileExtended {
       bookings: data['bookings'] as List? ?? [],
       earnings: Map<String, dynamic>.from(data['earnings'] as Map? ?? {}),
       performance: Map<String, dynamic>.from(data['performance'] as Map? ?? {}),
-      verification: Map<String, dynamic>.from(data['verification'] as Map? ?? {}),
+      verification:
+          Map<String, dynamic>.from(data['verification'] as Map? ?? {}),
       badges: data['badges'] as List? ?? [],
       achievements: data['achievements'] as List? ?? [],
       analytics: Map<String, dynamic>.from(data['analytics'] as Map? ?? {}),
       settings: Map<String, dynamic>.from(data['settings'] as Map? ?? {}),
-      notifications: Map<String, dynamic>.from(data['notifications'] as Map? ?? {}),
+      notifications:
+          Map<String, dynamic>.from(data['notifications'] as Map? ?? {}),
       preferences: Map<String, dynamic>.from(data['preferences'] as Map? ?? {}),
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
-      faqItems:
-          (data['faqItems'] as List?)
+      faqItems: (data['faqItems'] as List?)
               ?.map((faq) => FAQItem.fromMap(faq as Map<String, dynamic>))
               .toList() ??
           [],
-      portfolioVideos:
-          (data['portfolioVideos'] as List?)
-              ?.map((video) => PortfolioVideo.fromMap(video as Map<String, dynamic>))
+      portfolioVideos: (data['portfolioVideos'] as List?)
+              ?.map((video) =>
+                  PortfolioVideo.fromMap(video as Map<String, dynamic>))
               .toList() ??
           [],
       certifications: List<String>.from(data['certifications'] as List? ?? []),
       awards: List<String>.from(data['awards'] as List? ?? []),
       testimonials: List<String>.from(data['testimonials'] as List? ?? []),
-      additionalInfo: Map<String, dynamic>.from(data['additionalInfo'] as Map? ?? {}),
+      additionalInfo:
+          Map<String, dynamic>.from(data['additionalInfo'] as Map? ?? {}),
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
   }
@@ -217,53 +223,53 @@ class SpecialistProfileExtended {
   final DateTime lastUpdated;
 
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'name': name,
-    'email': email,
-    'phone': phone,
-    'avatarUrl': avatarUrl,
-    'bio': bio,
-    'location': location,
-    'categories': categories.map((cat) => cat.name).toList(),
-    'experienceYears': experienceYears,
-    'hourlyRate': hourlyRate,
-    'rating': rating,
-    'reviewCount': reviewCount,
-    'isAvailable': isAvailable,
-    'isVerified': isVerified,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'languages': languages,
-    'specializations': specializations,
-    'equipment': equipment,
-    'insurance': insurance,
-    'licenses': licenses,
-    'availability': availability,
-    'pricing': pricing,
-    'policies': policies,
-    'gallery': gallery,
-    'reviews': reviews,
-    'bookings': bookings,
-    'earnings': earnings,
-    'performance': performance,
-    'verification': verification,
-    'badges': badges,
-    'achievements': achievements,
-    'analytics': analytics,
-    'settings': settings,
-    'notifications': notifications,
-    'preferences': preferences,
-    'metadata': metadata,
-    'portfolio': portfolio,
-    'socialLinks': socialLinks,
-    'faqItems': faqItems.map((e) => e.toMap()).toList(),
-    'portfolioVideos': portfolioVideos.map((e) => e.toMap()).toList(),
-    'certifications': certifications,
-    'awards': awards,
-    'testimonials': testimonials,
-    'additionalInfo': additionalInfo,
-    'lastUpdated': Timestamp.fromDate(lastUpdated),
-  };
+        'userId': userId,
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'avatarUrl': avatarUrl,
+        'bio': bio,
+        'location': location,
+        'categories': categories.map((cat) => cat.name).toList(),
+        'experienceYears': experienceYears,
+        'hourlyRate': hourlyRate,
+        'rating': rating,
+        'reviewCount': reviewCount,
+        'isAvailable': isAvailable,
+        'isVerified': isVerified,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'languages': languages,
+        'specializations': specializations,
+        'equipment': equipment,
+        'insurance': insurance,
+        'licenses': licenses,
+        'availability': availability,
+        'pricing': pricing,
+        'policies': policies,
+        'gallery': gallery,
+        'reviews': reviews,
+        'bookings': bookings,
+        'earnings': earnings,
+        'performance': performance,
+        'verification': verification,
+        'badges': badges,
+        'achievements': achievements,
+        'analytics': analytics,
+        'settings': settings,
+        'notifications': notifications,
+        'preferences': preferences,
+        'metadata': metadata,
+        'portfolio': portfolio,
+        'socialLinks': socialLinks,
+        'faqItems': faqItems.map((e) => e.toMap()).toList(),
+        'portfolioVideos': portfolioVideos.map((e) => e.toMap()).toList(),
+        'certifications': certifications,
+        'awards': awards,
+        'testimonials': testimonials,
+        'additionalInfo': additionalInfo,
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+      };
 
   SpecialistProfileExtended copyWith({
     String? id,
@@ -313,55 +319,56 @@ class SpecialistProfileExtended {
     List<String>? testimonials,
     Map<String, dynamic>? additionalInfo,
     DateTime? lastUpdated,
-  }) => SpecialistProfileExtended(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    name: name ?? this.name,
-    email: email ?? this.email,
-    phone: phone ?? this.phone,
-    avatarUrl: avatarUrl ?? this.avatarUrl,
-    bio: bio ?? this.bio,
-    location: location ?? this.location,
-    categories: categories ?? this.categories,
-    experienceYears: experienceYears ?? this.experienceYears,
-    hourlyRate: hourlyRate ?? this.hourlyRate,
-    rating: rating ?? this.rating,
-    reviewCount: reviewCount ?? this.reviewCount,
-    isAvailable: isAvailable ?? this.isAvailable,
-    isVerified: isVerified ?? this.isVerified,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    portfolio: portfolio ?? this.portfolio,
-    socialLinks: socialLinks ?? this.socialLinks,
-    languages: languages ?? this.languages,
-    specializations: specializations ?? this.specializations,
-    equipment: equipment ?? this.equipment,
-    insurance: insurance ?? this.insurance,
-    licenses: licenses ?? this.licenses,
-    availability: availability ?? this.availability,
-    pricing: pricing ?? this.pricing,
-    policies: policies ?? this.policies,
-    gallery: gallery ?? this.gallery,
-    reviews: reviews ?? this.reviews,
-    bookings: bookings ?? this.bookings,
-    earnings: earnings ?? this.earnings,
-    performance: performance ?? this.performance,
-    verification: verification ?? this.verification,
-    badges: badges ?? this.badges,
-    achievements: achievements ?? this.achievements,
-    analytics: analytics ?? this.analytics,
-    settings: settings ?? this.settings,
-    notifications: notifications ?? this.notifications,
-    preferences: preferences ?? this.preferences,
-    metadata: metadata ?? this.metadata,
-    faqItems: faqItems ?? this.faqItems,
-    portfolioVideos: portfolioVideos ?? this.portfolioVideos,
-    certifications: certifications ?? this.certifications,
-    awards: awards ?? this.awards,
-    testimonials: testimonials ?? this.testimonials,
-    additionalInfo: additionalInfo ?? this.additionalInfo,
-    lastUpdated: lastUpdated ?? this.lastUpdated,
-  );
+  }) =>
+      SpecialistProfileExtended(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        name: name ?? this.name,
+        email: email ?? this.email,
+        phone: phone ?? this.phone,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        bio: bio ?? this.bio,
+        location: location ?? this.location,
+        categories: categories ?? this.categories,
+        experienceYears: experienceYears ?? this.experienceYears,
+        hourlyRate: hourlyRate ?? this.hourlyRate,
+        rating: rating ?? this.rating,
+        reviewCount: reviewCount ?? this.reviewCount,
+        isAvailable: isAvailable ?? this.isAvailable,
+        isVerified: isVerified ?? this.isVerified,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        portfolio: portfolio ?? this.portfolio,
+        socialLinks: socialLinks ?? this.socialLinks,
+        languages: languages ?? this.languages,
+        specializations: specializations ?? this.specializations,
+        equipment: equipment ?? this.equipment,
+        insurance: insurance ?? this.insurance,
+        licenses: licenses ?? this.licenses,
+        availability: availability ?? this.availability,
+        pricing: pricing ?? this.pricing,
+        policies: policies ?? this.policies,
+        gallery: gallery ?? this.gallery,
+        reviews: reviews ?? this.reviews,
+        bookings: bookings ?? this.bookings,
+        earnings: earnings ?? this.earnings,
+        performance: performance ?? this.performance,
+        verification: verification ?? this.verification,
+        badges: badges ?? this.badges,
+        achievements: achievements ?? this.achievements,
+        analytics: analytics ?? this.analytics,
+        settings: settings ?? this.settings,
+        notifications: notifications ?? this.notifications,
+        preferences: preferences ?? this.preferences,
+        metadata: metadata ?? this.metadata,
+        faqItems: faqItems ?? this.faqItems,
+        portfolioVideos: portfolioVideos ?? this.portfolioVideos,
+        certifications: certifications ?? this.certifications,
+        awards: awards ?? this.awards,
+        testimonials: testimonials ?? this.testimonials,
+        additionalInfo: additionalInfo ?? this.additionalInfo,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+      );
 }
 
 /// Элемент FAQ
@@ -378,15 +385,15 @@ class FAQItem {
   });
 
   factory FAQItem.fromMap(Map<String, dynamic> map) => FAQItem(
-    id: map['id'] ?? '',
-    question: map['question'] ?? '',
-    answer: map['answer'] ?? '',
-    category: map['category'] ?? 'general',
-    order: map['order'] ?? 0,
-    isPublished: map['isPublished'] ?? true,
-    createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-  );
+        id: map['id'] ?? '',
+        question: map['question'] ?? '',
+        answer: map['answer'] ?? '',
+        category: map['category'] ?? 'general',
+        order: map['order'] ?? 0,
+        isPublished: map['isPublished'] ?? true,
+        createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      );
   final String id;
   final String question;
   final String answer;
@@ -397,15 +404,15 @@ class FAQItem {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'question': question,
-    'answer': answer,
-    'category': category,
-    'order': order,
-    'isPublished': isPublished,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'id': id,
+        'question': question,
+        'answer': answer,
+        'category': category,
+        'order': order,
+        'isPublished': isPublished,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   FAQItem copyWith({
     String? id,
@@ -416,16 +423,17 @@ class FAQItem {
     bool? isPublished,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => FAQItem(
-    id: id ?? this.id,
-    question: question ?? this.question,
-    answer: answer ?? this.answer,
-    category: category ?? this.category,
-    order: order ?? this.order,
-    isPublished: isPublished ?? this.isPublished,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      FAQItem(
+        id: id ?? this.id,
+        question: question ?? this.question,
+        answer: answer ?? this.answer,
+        category: category ?? this.category,
+        order: order ?? this.order,
+        isPublished: isPublished ?? this.isPublished,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }
 
 /// Портфолио видео
@@ -446,19 +454,20 @@ class PortfolioVideo {
   });
 
   factory PortfolioVideo.fromMap(Map<String, dynamic> map) => PortfolioVideo(
-    id: map['id'] ?? '',
-    title: map['title'] ?? '',
-    description: map['description'] ?? '',
-    url: map['url'] ?? '',
-    thumbnailUrl: map['thumbnailUrl'] ?? '',
-    platform: map['platform'] ?? 'youtube',
-    duration: map['duration'] ?? '0:00',
-    tags: List<String>.from(map['tags'] ?? []),
-    isPublic: map['isPublic'] ?? true,
-    viewCount: map['viewCount'] ?? 0,
-    uploadedAt: (map['uploadedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-  );
+        id: map['id'] ?? '',
+        title: map['title'] ?? '',
+        description: map['description'] ?? '',
+        url: map['url'] ?? '',
+        thumbnailUrl: map['thumbnailUrl'] ?? '',
+        platform: map['platform'] ?? 'youtube',
+        duration: map['duration'] ?? '0:00',
+        tags: List<String>.from(map['tags'] ?? []),
+        isPublic: map['isPublic'] ?? true,
+        viewCount: map['viewCount'] ?? 0,
+        uploadedAt:
+            (map['uploadedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      );
   final String id;
   final String title;
   final String description;
@@ -473,19 +482,19 @@ class PortfolioVideo {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'title': title,
-    'description': description,
-    'url': url,
-    'thumbnailUrl': thumbnailUrl,
-    'platform': platform,
-    'duration': duration,
-    'tags': tags,
-    'isPublic': isPublic,
-    'viewCount': viewCount,
-    'uploadedAt': Timestamp.fromDate(uploadedAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'id': id,
+        'title': title,
+        'description': description,
+        'url': url,
+        'thumbnailUrl': thumbnailUrl,
+        'platform': platform,
+        'duration': duration,
+        'tags': tags,
+        'isPublic': isPublic,
+        'viewCount': viewCount,
+        'uploadedAt': Timestamp.fromDate(uploadedAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   PortfolioVideo copyWith({
     String? id,
@@ -500,18 +509,19 @@ class PortfolioVideo {
     int? viewCount,
     DateTime? uploadedAt,
     DateTime? updatedAt,
-  }) => PortfolioVideo(
-    id: id ?? this.id,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    url: url ?? this.url,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-    platform: platform ?? this.platform,
-    duration: duration ?? this.duration,
-    tags: tags ?? this.tags,
-    isPublic: isPublic ?? this.isPublic,
-    viewCount: viewCount ?? this.viewCount,
-    uploadedAt: uploadedAt ?? this.uploadedAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      PortfolioVideo(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        url: url ?? this.url,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        platform: platform ?? this.platform,
+        duration: duration ?? this.duration,
+        tags: tags ?? this.tags,
+        isPublic: isPublic ?? this.isPublic,
+        viewCount: viewCount ?? this.viewCount,
+        uploadedAt: uploadedAt ?? this.uploadedAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }

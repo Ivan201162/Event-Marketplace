@@ -32,7 +32,8 @@ class UIImages {
             height: height,
             fit: fit,
             placeholder: (context, url) => placeholder ?? _buildPlaceholder(),
-            errorWidget: (context, url, error) => errorWidget ?? _buildErrorWidget(),
+            errorWidget: (context, url, error) =>
+                errorWidget ?? _buildErrorWidget(),
             fadeInDuration: const Duration(milliseconds: 300),
             fadeOutDuration: const Duration(milliseconds: 100),
           ),
@@ -70,7 +71,8 @@ class UIImages {
             height: height,
             fit: fit,
             placeholder: (context, url) => placeholder ?? _buildPlaceholder(),
-            errorWidget: (context, url, error) => errorWidget ?? _buildErrorWidget(),
+            errorWidget: (context, url, error) =>
+                errorWidget ?? _buildErrorWidget(),
             fadeInDuration: const Duration(milliseconds: 300),
             fadeOutDuration: const Duration(milliseconds: 100),
             memCacheWidth: width?.toInt(),
@@ -150,7 +152,8 @@ class UIImages {
             height: height,
             fit: fit,
             placeholder: (context, url) => placeholder ?? _buildPlaceholder(),
-            errorWidget: (context, url, error) => errorWidget ?? _buildErrorWidget(),
+            errorWidget: (context, url, error) =>
+                errorWidget ?? _buildErrorWidget(),
             fadeInDuration: animationDuration,
             fadeOutDuration: const Duration(milliseconds: 100),
           ),

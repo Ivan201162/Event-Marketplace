@@ -8,7 +8,8 @@ import '../../services/image_upload_service.dart';
 
 /// Виджет заголовка профиля
 class ProfileHeaderWidget extends StatefulWidget {
-  const ProfileHeaderWidget({super.key, required this.user, required this.isCurrentUser});
+  const ProfileHeaderWidget(
+      {super.key, required this.user, required this.isCurrentUser});
 
   final AppUser user;
   final bool isCurrentUser;
@@ -96,7 +97,8 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                           height: 100,
                           child: CircularProgressIndicator(
                             strokeWidth: 3,
-                            valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                theme.primaryColor),
                           ),
                         )
                       : widget.user.avatarUrl != null
@@ -109,18 +111,23 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                                 placeholder: (context, url) => Container(
                                   width: 100,
                                   height: 100,
-                                  color: theme.primaryColor.withValues(alpha: 0.1),
-                                  child: Icon(Icons.person, size: 50, color: theme.primaryColor),
+                                  color:
+                                      theme.primaryColor.withValues(alpha: 0.1),
+                                  child: Icon(Icons.person,
+                                      size: 50, color: theme.primaryColor),
                                 ),
                                 errorWidget: (context, url, error) => Container(
                                   width: 100,
                                   height: 100,
-                                  color: theme.primaryColor.withValues(alpha: 0.1),
-                                  child: Icon(Icons.person, size: 50, color: theme.primaryColor),
+                                  color:
+                                      theme.primaryColor.withValues(alpha: 0.1),
+                                  child: Icon(Icons.person,
+                                      size: 50, color: theme.primaryColor),
                                 ),
                               ),
                             )
-                          : Icon(Icons.person, size: 50, color: theme.primaryColor),
+                          : Icon(Icons.person,
+                              size: 50, color: theme.primaryColor),
                 ),
               ),
               if (widget.user.isVerified)
@@ -135,7 +142,8 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                       shape: BoxShape.circle,
                       border: Border.all(color: theme.cardColor, width: 2),
                     ),
-                    child: const Icon(Icons.verified, color: Colors.white, size: 14),
+                    child: const Icon(Icons.verified,
+                        color: Colors.white, size: 14),
                   ),
                 ),
               // Кнопка редактирования аватарки
@@ -176,7 +184,8 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
           // Имя пользователя
           Text(
             widget.user.displayName ?? widget.user.email.split('@').first,
-            style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.headlineSmall
+                ?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
 
@@ -217,13 +226,15 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                 Icon(
                   Icons.location_on,
                   size: 16,
-                  color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                  color:
+                      theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                 ),
                 const SizedBox(width: 4),
                 Text(
                   widget.user.city!,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                    color: theme.textTheme.bodyMedium?.color
+                        ?.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -232,11 +243,13 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
 
           if (widget.user.bio != null && widget.user.bio!.isNotEmpty) ...[
             const SizedBox(height: 12),
-            Text(widget.user.bio!, style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
+            Text(widget.user.bio!,
+                style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
           ],
 
           // Специализации (для специалистов)
-          if (widget.user.isSpecialist && widget.user.specialties.isNotEmpty) ...[
+          if (widget.user.isSpecialist &&
+              widget.user.specialties.isNotEmpty) ...[
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
@@ -245,7 +258,8 @@ class _ProfileHeaderWidgetState extends State<ProfileHeaderWidget> {
                   .take(3)
                   .map(
                     (specialty) => Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: theme.primaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),

@@ -6,7 +6,8 @@ import '../recommendation_service.dart';
 
 /// Виджет рекомендаций специалистов
 class RecommendationsWidget extends StatefulWidget {
-  const RecommendationsWidget({super.key, this.city, this.category, this.budget, this.limit = 10});
+  const RecommendationsWidget(
+      {super.key, this.city, this.category, this.budget, this.limit = 10});
   final String? city;
   final String? category;
   final double? budget;
@@ -99,96 +100,112 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
   }
 
   /// Состояние загрузки
-  Widget _buildLoadingState() =>
-      const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
+  Widget _buildLoadingState() => const SizedBox(
+      height: 200, child: Center(child: CircularProgressIndicator()));
 
   /// Состояние ошибки
   Widget _buildErrorState() => SizedBox(
-    height: 200,
-    child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, color: Colors.grey[400], size: 48),
-          const SizedBox(height: 16),
-          Text('Ошибка загрузки рекомендаций', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Text(
-            _error!,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-            textAlign: TextAlign.center,
+        height: 200,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, color: Colors.grey[400], size: 48),
+              const SizedBox(height: 16),
+              Text('Ошибка загрузки рекомендаций',
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              Text(
+                _error!,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                  onPressed: _loadRecommendations,
+                  child: const Text('Повторить')),
+            ],
           ),
-          const SizedBox(height: 16),
-          ElevatedButton(onPressed: _loadRecommendations, child: const Text('Повторить')),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   /// Пустое состояние
   Widget _buildEmptyState() => SizedBox(
-    height: 200,
-    child: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.search_off, color: Colors.grey[400], size: 48),
-          const SizedBox(height: 16),
-          Text('Рекомендации не найдены', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Text(
-            'Попробуйте изменить фильтры поиска',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-            textAlign: TextAlign.center,
+        height: 200,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.search_off, color: Colors.grey[400], size: 48),
+              const SizedBox(height: 16),
+              Text('Рекомендации не найдены',
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 8),
+              Text(
+                'Попробуйте изменить фильтры поиска',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   /// Список рекомендаций
   Widget _buildRecommendationsList() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      // Заголовок
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            Icon(Icons.recommend, color: Theme.of(context).primaryColor, size: 24),
-            const SizedBox(width: 8),
-            Text(
-              'Рекомендуем',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Заголовок
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Icon(Icons.recommend,
+                    color: Theme.of(context).primaryColor, size: 24),
+                const SizedBox(width: 8),
+                Text(
+                  'Рекомендуем',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                TextButton(
+                    onPressed: _showAllRecommendations,
+                    child: const Text('Все')),
+              ],
             ),
-            const Spacer(),
-            TextButton(onPressed: _showAllRecommendations, child: const Text('Все')),
-          ],
-        ),
-      ),
+          ),
 
-      // Горизонтальный список
-      SizedBox(
-        height: 280,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: _recommendations.length,
-          itemBuilder: (context, index) {
-            final specialist = _recommendations[index];
-            return Container(
-              width: 200,
-              margin: const EdgeInsets.only(right: 16),
-              child: SpecialistCard(
-                specialist: specialist,
-                onTap: () => _navigateToSpecialist(specialist),
-              ),
-            );
-          },
-        ),
-      ),
-    ],
-  );
+          // Горизонтальный список
+          SizedBox(
+            height: 280,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: _recommendations.length,
+              itemBuilder: (context, index) {
+                final specialist = _recommendations[index];
+                return Container(
+                  width: 200,
+                  margin: const EdgeInsets.only(right: 16),
+                  child: SpecialistCard(
+                    specialist: specialist,
+                    onTap: () => _navigateToSpecialist(specialist),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
 
   /// Показать все рекомендации
   void _showAllRecommendations() {
@@ -212,13 +229,17 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    Icon(Icons.recommend, color: Theme.of(context).primaryColor, size: 24),
+                    Icon(Icons.recommend,
+                        color: Theme.of(context).primaryColor, size: 24),
                     const SizedBox(width: 8),
                     Text(
                       'Рекомендуемые специалисты',
                       style: Theme.of(
                         context,
-                      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                      )
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
                     IconButton(
@@ -266,12 +287,14 @@ class _RecommendationsWidgetState extends State<RecommendationsWidget> {
 
 /// Виджет похожих специалистов
 class SimilarSpecialistsWidget extends StatefulWidget {
-  const SimilarSpecialistsWidget({super.key, required this.specialistId, this.limit = 5});
+  const SimilarSpecialistsWidget(
+      {super.key, required this.specialistId, this.limit = 5});
   final String specialistId;
   final int limit;
 
   @override
-  State<SimilarSpecialistsWidget> createState() => _SimilarSpecialistsWidgetState();
+  State<SimilarSpecialistsWidget> createState() =>
+      _SimilarSpecialistsWidgetState();
 }
 
 class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
@@ -295,7 +318,8 @@ class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
     });
 
     try {
-      final similarSpecialists = await _recommendationService.getSimilarSpecialists(
+      final similarSpecialists =
+          await _recommendationService.getSimilarSpecialists(
         specialistId: widget.specialistId,
         limit: widget.limit,
       );
@@ -334,7 +358,8 @@ class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: [
-              Icon(Icons.people, color: Theme.of(context).primaryColor, size: 24),
+              Icon(Icons.people,
+                  color: Theme.of(context).primaryColor, size: 24),
               const SizedBox(width: 8),
               Text(
                 'Похожие специалисты',
@@ -371,8 +396,8 @@ class _SimilarSpecialistsWidgetState extends State<SimilarSpecialistsWidget> {
   }
 
   /// Состояние загрузки
-  Widget _buildLoadingState() =>
-      const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
+  Widget _buildLoadingState() => const SizedBox(
+      height: 200, child: Center(child: CircularProgressIndicator()));
 
   /// Переход к профилю специалиста
   void _navigateToSpecialist(Specialist specialist) {

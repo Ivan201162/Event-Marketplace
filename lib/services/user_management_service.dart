@@ -14,7 +14,8 @@ class UserManagementService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  static final UserManagementService _instance = UserManagementService._internal();
+  static final UserManagementService _instance =
+      UserManagementService._internal();
 
   final Map<String, ManagedUser> _usersCache = {};
   final Map<String, UserRoleDefinition> _rolesCache = {};
@@ -32,7 +33,8 @@ class UserManagementService {
       }
     } catch (e) {
       if (kDebugMode) {
-        debugPrint('Ошибка инициализации сервиса управления пользователями: $e');
+        debugPrint(
+            'Ошибка инициализации сервиса управления пользователями: $e');
       }
     }
   }
@@ -125,7 +127,8 @@ class UserManagementService {
   }
 
   /// Изменить роль пользователя
-  Future<void> changeUserRole(String userId, UserRole newRole, String changedBy) async {
+  Future<void> changeUserRole(
+      String userId, UserRole newRole, String changedBy) async {
     try {
       final user = _usersCache[userId];
       if (user == null) {
@@ -152,7 +155,8 @@ class UserManagementService {
   }
 
   /// Изменить статус пользователя
-  Future<void> changeUserStatus(String userId, UserStatus newStatus, String changedBy) async {
+  Future<void> changeUserStatus(
+      String userId, UserStatus newStatus, String changedBy) async {
     try {
       final user = _usersCache[userId];
       if (user == null) {
@@ -247,7 +251,8 @@ class UserManagementService {
   }
 
   /// Добавить разрешение пользователю
-  Future<void> addUserPermission(String userId, String permission, String addedBy) async {
+  Future<void> addUserPermission(
+      String userId, String permission, String addedBy) async {
     try {
       final user = _usersCache[userId];
       if (user == null) {
@@ -279,7 +284,8 @@ class UserManagementService {
   }
 
   /// Удалить разрешение у пользователя
-  Future<void> removeUserPermission(String userId, String permission, String removedBy) async {
+  Future<void> removeUserPermission(
+      String userId, String permission, String removedBy) async {
     try {
       final user = _usersCache[userId];
       if (user == null) {
@@ -290,7 +296,8 @@ class UserManagementService {
         return; // Разрешения нет
       }
 
-      final updatedPermissions = user.permissions.where((p) => p != permission).toList();
+      final updatedPermissions =
+          user.permissions.where((p) => p != permission).toList();
       final updatedUser = user.copyWith(
         permissions: updatedPermissions,
         lastModifiedBy: removedBy,
@@ -408,7 +415,8 @@ class UserManagementService {
           .where((user) => user.role.toString() == role.name)
           .toList();
       if (usersWithRole.isNotEmpty) {
-        throw Exception('Роль используется ${usersWithRole.length} пользователями');
+        throw Exception(
+            'Роль используется ${usersWithRole.length} пользователями');
       }
 
       await _firestore.collection('userRoles').doc(roleId).delete();
@@ -455,7 +463,10 @@ class UserManagementService {
         createdAt: now,
       );
 
-      await _firestore.collection('permissions').doc(permissionId).set(permission.toMap());
+      await _firestore
+          .collection('permissions')
+          .doc(permissionId)
+          .set(permission.toMap());
       _permissionsCache[permissionId] = permission;
 
       // Логируем действие
@@ -501,7 +512,8 @@ class UserManagementService {
   List<UserRoleDefinition> getAllRoles() => _rolesCache.values.toList();
 
   /// Получить разрешение по ID
-  Permission? getPermission(String permissionId) => _permissionsCache[permissionId];
+  Permission? getPermission(String permissionId) =>
+      _permissionsCache[permissionId];
 
   /// Получить все разрешения
   List<Permission> getAllPermissions() => _permissionsCache.values.toList();
@@ -518,7 +530,8 @@ class UserManagementService {
   }
 
   /// Получить действия пользователя
-  Future<List<UserAction>> getUserActions(String userId, {int limit = 50}) async {
+  Future<List<UserAction>> getUserActions(String userId,
+      {int limit = 50}) async {
     try {
       final snapshot = await _firestore
           .collection('userActions')
@@ -549,7 +562,8 @@ class UserManagementService {
 
     // Статистика по ролям
     for (final role in UserRole.values) {
-      stats['role_${role.toString().split('.').last}'] = users.where((u) => u.role == role).length;
+      stats['role_${role.toString().split('.').last}'] =
+          users.where((u) => u.role == role).length;
     }
 
     return stats;
@@ -581,7 +595,10 @@ class UserManagementService {
         timestamp: DateTime.now(),
       );
 
-      await _firestore.collection('userActions').doc(actionId).set(userAction.toMap());
+      await _firestore
+          .collection('userActions')
+          .doc(actionId)
+          .set(userAction.toMap());
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Ошибка логирования действия пользователя: $e');
@@ -590,40 +607,60 @@ class UserManagementService {
   }
 
   /// Получить изменения пользователя
-  Map<String, dynamic> _getUserChanges(ManagedUser oldUser, ManagedUser newUser) {
+  Map<String, dynamic> _getUserChanges(
+      ManagedUser oldUser, ManagedUser newUser) {
     final changes = <String, dynamic>{};
 
     if (oldUser.email != newUser.email) {
       changes['email'] = {'old': oldUser.email, 'new': newUser.email};
     }
     if (oldUser.displayName != newUser.displayName) {
-      changes['displayName'] = {'old': oldUser.displayName, 'new': newUser.displayName};
+      changes['displayName'] = {
+        'old': oldUser.displayName,
+        'new': newUser.displayName
+      };
     }
     if (oldUser.role != newUser.role) {
-      changes['role'] = {'old': oldUser.role.toString(), 'new': newUser.role.toString()};
+      changes['role'] = {
+        'old': oldUser.role.toString(),
+        'new': newUser.role.toString()
+      };
     }
     if (oldUser.status != newUser.status) {
-      changes['status'] = {'old': oldUser.status.toString(), 'new': newUser.status.toString()};
+      changes['status'] = {
+        'old': oldUser.status.toString(),
+        'new': newUser.status.toString()
+      };
     }
     if (oldUser.permissions != newUser.permissions) {
-      changes['permissions'] = {'old': oldUser.permissions, 'new': newUser.permissions};
+      changes['permissions'] = {
+        'old': oldUser.permissions,
+        'new': newUser.permissions
+      };
     }
 
     return changes;
   }
 
   /// Получить изменения роли
-  Map<String, dynamic> _getRoleChanges(UserRoleDefinition oldRole, UserRoleDefinition newRole) {
+  Map<String, dynamic> _getRoleChanges(
+      UserRoleDefinition oldRole, UserRoleDefinition newRole) {
     final changes = <String, dynamic>{};
 
     if (oldRole.name != newRole.name) {
       changes['name'] = {'old': oldRole.name, 'new': newRole.name};
     }
     if (oldRole.description != newRole.description) {
-      changes['description'] = {'old': oldRole.description, 'new': newRole.description};
+      changes['description'] = {
+        'old': oldRole.description,
+        'new': newRole.description
+      };
     }
     if (oldRole.permissions != newRole.permissions) {
-      changes['permissions'] = {'old': oldRole.permissions, 'new': newRole.permissions};
+      changes['permissions'] = {
+        'old': oldRole.permissions,
+        'new': newRole.permissions
+      };
     }
 
     return changes;
@@ -632,7 +669,8 @@ class UserManagementService {
   /// Загрузить кэш пользователей
   Future<void> _loadUsersCache() async {
     try {
-      final snapshot = await _firestore.collection('managedUsers').limit(1000).get();
+      final snapshot =
+          await _firestore.collection('managedUsers').limit(1000).get();
 
       for (final doc in snapshot.docs) {
         final user = ManagedUser.fromDocument(doc);

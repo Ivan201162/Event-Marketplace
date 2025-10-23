@@ -145,7 +145,8 @@ class CachedAvatar extends StatelessWidget {
       child: name != null && name!.isNotEmpty
           ? Text(
               name![0].toUpperCase(),
-              style: TextStyle(fontSize: radius * 0.6, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: radius * 0.6, fontWeight: FontWeight.bold),
             )
           : Icon(fallbackIcon ?? Icons.person, size: radius),
     );
@@ -189,9 +190,12 @@ class CachedImageGrid extends StatelessWidget {
         mainAxisSpacing: spacing,
         childAspectRatio: childAspectRatio,
       ),
-      itemCount: displayImages.length + (hasMoreImages && showMoreIndicator ? 1 : 0),
+      itemCount:
+          displayImages.length + (hasMoreImages && showMoreIndicator ? 1 : 0),
       itemBuilder: (context, index) {
-        if (hasMoreImages && showMoreIndicator && index == displayImages.length) {
+        if (hasMoreImages &&
+            showMoreIndicator &&
+            index == displayImages.length) {
           return _buildMoreIndicator(context, imageUrls.length - maxImages!);
         }
 
@@ -200,23 +204,27 @@ class CachedImageGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildImageItem(BuildContext context, String imageUrl, int index) => GestureDetector(
+  Widget _buildImageItem(BuildContext context, String imageUrl, int index) =>
+      GestureDetector(
         onTap: onImageTap,
         child: CachedImageWidget(
           imageUrl: imageUrl,
           borderRadius: BorderRadius.circular(8),
           placeholder: Container(
             color: Colors.grey[200],
-            child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+            child:
+                const Center(child: CircularProgressIndicator(strokeWidth: 2)),
           ),
           errorWidget: Container(
             color: Colors.grey[300],
-            child: const Center(child: Icon(Icons.broken_image, color: Colors.grey)),
+            child: const Center(
+                child: Icon(Icons.broken_image, color: Colors.grey)),
           ),
         ),
       );
 
-  Widget _buildMoreIndicator(BuildContext context, int remainingCount) => Container(
+  Widget _buildMoreIndicator(BuildContext context, int remainingCount) =>
+      Container(
         decoration: BoxDecoration(
           color: Colors.black.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(8),
@@ -224,7 +232,8 @@ class CachedImageGrid extends StatelessWidget {
         child: Center(
           child: Text(
             '+$remainingCount',
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
       );
@@ -254,7 +263,8 @@ class CachedImageList extends StatelessWidget {
           itemCount: imageUrls.length,
           itemBuilder: (context, index) => Container(
             width: height,
-            margin: EdgeInsets.only(right: index < imageUrls.length - 1 ? spacing : 0),
+            margin: EdgeInsets.only(
+                right: index < imageUrls.length - 1 ? spacing : 0),
             child: GestureDetector(
               onTap: onImageTap,
               child: CachedImageWidget(
@@ -264,11 +274,13 @@ class CachedImageList extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 placeholder: Container(
                   color: Colors.grey[200],
-                  child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                  child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2)),
                 ),
                 errorWidget: Container(
                   color: Colors.grey[300],
-                  child: const Center(child: Icon(Icons.broken_image, color: Colors.grey)),
+                  child: const Center(
+                      child: Icon(Icons.broken_image, color: Colors.grey)),
                 ),
               ),
             ),
@@ -331,14 +343,16 @@ class _LazyCachedImageState extends State<LazyCachedImage> {
                 width: widget.width,
                 height: widget.height,
                 color: Colors.grey[200],
-                child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2)),
               ),
       );
 }
 
 /// Простой виджет для определения видимости (заглушка)
 class VisibilityDetector extends StatefulWidget {
-  const VisibilityDetector({super.key, required this.child, required this.onVisibilityChanged});
+  const VisibilityDetector(
+      {super.key, required this.child, required this.onVisibilityChanged});
   final Widget child;
   final Function(VisibilityInfo) onVisibilityChanged;
 

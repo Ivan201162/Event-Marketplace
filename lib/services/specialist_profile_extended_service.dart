@@ -8,7 +8,8 @@ class SpecialistProfileExtendedService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   /// Получить расширенный профиль специалиста
-  Future<SpecialistProfileExtended?> getExtendedProfile(String specialistId) async {
+  Future<SpecialistProfileExtended?> getExtendedProfile(
+      String specialistId) async {
     try {
       final doc = await _db
           .collection('specialist_profiles_extended')
@@ -29,7 +30,8 @@ class SpecialistProfileExtendedService {
   }
 
   /// Создать расширенный профиль
-  Future<SpecialistProfileExtended?> _createExtendedProfile(String specialistId) async {
+  Future<SpecialistProfileExtended?> _createExtendedProfile(
+      String specialistId) async {
     try {
       // Получаем базовый профиль
       final baseProfileDoc = await _db
@@ -45,7 +47,8 @@ class SpecialistProfileExtendedService {
       final baseProfile = Specialist.fromDocument(baseProfileDoc.docs.first);
 
       // Создаём расширенный профиль
-      final extendedProfile = SpecialistProfileExtended.fromSpecialist(baseProfile);
+      final extendedProfile =
+          SpecialistProfileExtended.fromSpecialist(baseProfile);
 
       final docRef = await _db
           .collection('specialist_profiles_extended')
@@ -107,7 +110,8 @@ class SpecialistProfileExtendedService {
   }
 
   /// Обновить FAQ элемент
-  Future<void> updateFAQItem(String specialistId, FAQItem updatedFAQItem) async {
+  Future<void> updateFAQItem(
+      String specialistId, FAQItem updatedFAQItem) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
@@ -133,7 +137,8 @@ class SpecialistProfileExtendedService {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
 
-      final updatedFAQItems = profile.faqItems.where((item) => item.id != faqItemId).toList();
+      final updatedFAQItems =
+          profile.faqItems.where((item) => item.id != faqItemId).toList();
 
       final updatedProfile = profile.copyWith(faqItems: updatedFAQItems);
       await updateExtendedProfile(updatedProfile);
@@ -185,7 +190,8 @@ class SpecialistProfileExtendedService {
   }
 
   /// Обновить портфолио видео
-  Future<void> updatePortfolioVideo(String specialistId, PortfolioVideo updatedVideo) async {
+  Future<void> updatePortfolioVideo(
+      String specialistId, PortfolioVideo updatedVideo) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
@@ -211,7 +217,9 @@ class SpecialistProfileExtendedService {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
 
-      final updatedVideos = profile.portfolioVideos.where((video) => video.id != videoId).toList();
+      final updatedVideos = profile.portfolioVideos
+          .where((video) => video.id != videoId)
+          .toList();
 
       final updatedProfile = profile.copyWith(portfolioVideos: updatedVideos);
       await updateExtendedProfile(updatedProfile);
@@ -221,7 +229,8 @@ class SpecialistProfileExtendedService {
   }
 
   /// Добавить сертификат
-  Future<void> addCertification(String specialistId, String certification) async {
+  Future<void> addCertification(
+      String specialistId, String certification) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
@@ -229,7 +238,8 @@ class SpecialistProfileExtendedService {
       if (profile.certifications.contains(certification)) return;
 
       final updatedCertifications = [...profile.certifications, certification];
-      final updatedProfile = profile.copyWith(certifications: updatedCertifications);
+      final updatedProfile =
+          profile.copyWith(certifications: updatedCertifications);
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
@@ -238,7 +248,8 @@ class SpecialistProfileExtendedService {
   }
 
   /// Удалить сертификат
-  Future<void> removeCertification(String specialistId, String certification) async {
+  Future<void> removeCertification(
+      String specialistId, String certification) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
@@ -247,7 +258,8 @@ class SpecialistProfileExtendedService {
           .where((cert) => cert != certification)
           .toList();
 
-      final updatedProfile = profile.copyWith(certifications: updatedCertifications);
+      final updatedProfile =
+          profile.copyWith(certifications: updatedCertifications);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
       debugPrint('Error removing certification: $e');
@@ -293,7 +305,8 @@ class SpecialistProfileExtendedService {
       if (profile == null) return;
 
       final updatedTestimonials = [...profile.testimonials, testimonial];
-      final updatedProfile = profile.copyWith(testimonials: updatedTestimonials);
+      final updatedProfile =
+          profile.copyWith(testimonials: updatedTestimonials);
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
@@ -302,14 +315,17 @@ class SpecialistProfileExtendedService {
   }
 
   /// Удалить отзыв
-  Future<void> removeTestimonial(String specialistId, String testimonial) async {
+  Future<void> removeTestimonial(
+      String specialistId, String testimonial) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return;
 
-      final updatedTestimonials = profile.testimonials.where((t) => t != testimonial).toList();
+      final updatedTestimonials =
+          profile.testimonials.where((t) => t != testimonial).toList();
 
-      final updatedProfile = profile.copyWith(testimonials: updatedTestimonials);
+      final updatedProfile =
+          profile.copyWith(testimonials: updatedTestimonials);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
       debugPrint('Error removing testimonial: $e');
@@ -317,7 +333,8 @@ class SpecialistProfileExtendedService {
   }
 
   /// Получить FAQ по категории
-  Future<List<FAQItem>> getFAQByCategory(String specialistId, String category) async {
+  Future<List<FAQItem>> getFAQByCategory(
+      String specialistId, String category) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return [];
@@ -368,7 +385,8 @@ class SpecialistProfileExtendedService {
   }
 
   /// Поиск по видео
-  Future<List<PortfolioVideo>> searchVideos(String specialistId, String query) async {
+  Future<List<PortfolioVideo>> searchVideos(
+      String specialistId, String query) async {
     try {
       final profile = await getExtendedProfile(specialistId);
       if (profile == null) return [];
@@ -379,7 +397,8 @@ class SpecialistProfileExtendedService {
             (video) =>
                 video.title.toLowerCase().contains(lowercaseQuery) ||
                 video.description.toLowerCase().contains(lowercaseQuery) ||
-                video.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
+                video.tags
+                    .any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
           )
           .toList();
     } catch (e) {
@@ -398,9 +417,11 @@ class SpecialistProfileExtendedService {
 
       return SpecialistProfileStats(
         totalFAQItems: profile.faqItems.length,
-        publishedFAQItems: profile.faqItems.where((item) => item.isPublished).length,
+        publishedFAQItems:
+            profile.faqItems.where((item) => item.isPublished).length,
         totalVideos: profile.portfolioVideos.length,
-        publicVideos: profile.portfolioVideos.where((video) => video.isPublic).length,
+        publicVideos:
+            profile.portfolioVideos.where((video) => video.isPublic).length,
         totalCertifications: profile.certifications.length,
         totalAwards: profile.awards.length,
         totalTestimonials: profile.testimonials.length,
@@ -427,15 +448,15 @@ class SpecialistProfileStats {
   });
 
   factory SpecialistProfileStats.empty() => SpecialistProfileStats(
-    totalFAQItems: 0,
-    publishedFAQItems: 0,
-    totalVideos: 0,
-    publicVideos: 0,
-    totalCertifications: 0,
-    totalAwards: 0,
-    totalTestimonials: 0,
-    lastActivity: DateTime.now(),
-  );
+        totalFAQItems: 0,
+        publishedFAQItems: 0,
+        totalVideos: 0,
+        publicVideos: 0,
+        totalCertifications: 0,
+        totalAwards: 0,
+        totalTestimonials: 0,
+        lastActivity: DateTime.now(),
+      );
   final int totalFAQItems;
   final int publishedFAQItems;
   final int totalVideos;

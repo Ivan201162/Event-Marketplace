@@ -49,7 +49,9 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
       title: Text(_getFieldTitle()),
       content: _buildContent(),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Отмена')),
         ElevatedButton(onPressed: _save, child: const Text('Сохранить')),
       ],
     );
@@ -77,7 +79,8 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
 
     return TextField(
       controller: _controller,
-      decoration: InputDecoration(hintText: _getFieldHint(), border: const OutlineInputBorder()),
+      decoration: InputDecoration(
+          hintText: _getFieldHint(), border: const OutlineInputBorder()),
       maxLines: widget.field == 'status' ? 3 : 1,
     );
   }

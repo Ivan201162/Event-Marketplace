@@ -21,12 +21,12 @@ class SessionService {
       // Проверяем, не истекла ли сессия (например, больше 30 дней)
       final prefs = await SharedPreferences.getInstance();
       final lastLogin = prefs.getInt(_lastLoginKey);
-      
+
       if (lastLogin != null) {
         final lastLoginDate = DateTime.fromMillisecondsSinceEpoch(lastLogin);
         final now = DateTime.now();
         final difference = now.difference(lastLoginDate);
-        
+
         // Сессия действительна 30 дней
         if (difference.inDays > 30) {
           await clearSession();
@@ -50,7 +50,7 @@ class SessionService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_sessionKey, user.uid);
       await prefs.setInt(_lastLoginKey, DateTime.now().millisecondsSinceEpoch);
-      
+
       // Сохраняем основные данные пользователя для быстрого доступа
       final userData = {
         'uid': user.uid,
@@ -58,9 +58,9 @@ class SessionService {
         'displayName': user.displayName,
         'photoURL': user.photoURL,
       };
-      
+
       await prefs.setString(_userDataKey, userData.toString());
-      
+
       debugPrint('✅ Session saved for user: ${user.uid}');
     } catch (e) {
       debugPrint('❌ Error saving session: $e');
@@ -74,7 +74,7 @@ class SessionService {
       await prefs.remove(_sessionKey);
       await prefs.remove(_lastLoginKey);
       await prefs.remove(_userDataKey);
-      
+
       debugPrint('🧹 Session cleared');
     } catch (e) {
       debugPrint('❌ Error clearing session: $e');
@@ -86,7 +86,7 @@ class SessionService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userDataString = prefs.getString(_userDataKey);
-      
+
       if (userDataString != null) {
         // Простой парсинг для демонстрации
         // В реальном приложении лучше использовать JSON
@@ -100,7 +100,7 @@ class SessionService {
         }
         return userData;
       }
-      
+
       return null;
     } catch (e) {
       debugPrint('❌ Error getting cached user data: $e');
@@ -164,12 +164,13 @@ class SessionService {
   static Future<void> saveAppSettings(Map<String, dynamic> settings) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       if (settings.containsKey('darkMode')) {
         await prefs.setBool('dark_mode', settings['darkMode'] as bool);
       }
       if (settings.containsKey('notificationsEnabled')) {
-        await prefs.setBool('notifications_enabled', settings['notificationsEnabled'] as bool);
+        await prefs.setBool(
+            'notifications_enabled', settings['notificationsEnabled'] as bool);
       }
       if (settings.containsKey('autoLogin')) {
         await prefs.setBool('auto_login', settings['autoLogin'] as bool);
@@ -177,7 +178,7 @@ class SessionService {
       if (settings.containsKey('language')) {
         await prefs.setString('language', settings['language'] as String);
       }
-      
+
       debugPrint('✅ App settings saved');
     } catch (e) {
       debugPrint('❌ Error saving app settings: $e');
@@ -190,7 +191,8 @@ class SessionService {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) return null;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -248,7 +250,8 @@ class SessionService {
   }
 
   /// Регистрация через email
-  static Future<User?> registerWithEmail(String email, String password, String displayName) async {
+  static Future<User?> registerWithEmail(
+      String email, String password, String displayName) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -275,13 +278,13 @@ class SessionService {
     try {
       // Выход из Firebase
       await _auth.signOut();
-      
+
       // Выход из Google
       await _googleSignIn.signOut();
-      
+
       // Очистка сессии
       await clearSession();
-      
+
       debugPrint('✅ Sign-out successful');
     } catch (e) {
       debugPrint('❌ Sign-out error: $e');
@@ -386,14 +389,14 @@ class SessionService {
     try {
       final user = _auth.currentUser;
       if (user == null) return false;
-      
+
       final tokenResult = await user.getIdTokenResult();
       final expirationTime = tokenResult.expirationTime;
       if (expirationTime == null) return false;
-      
+
       final now = DateTime.now();
       final timeUntilExpiry = expirationTime.difference(now);
-      
+
       // Обновляем токен, если до истечения осталось меньше 5 минут
       return timeUntilExpiry.inMinutes < 5;
     } catch (e) {

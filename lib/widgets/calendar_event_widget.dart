@@ -45,7 +45,8 @@ class CalendarEventWidget extends StatelessWidget {
                     color: event.eventColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Icon(event.eventIcon, color: event.eventColor, size: 20),
+                  child:
+                      Icon(event.eventIcon, color: event.eventColor, size: 20),
                 ),
 
                 const SizedBox(width: 12),
@@ -58,7 +59,8 @@ class CalendarEventWidget extends StatelessWidget {
                       // Заголовок
                       Text(
                         event.title,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -68,11 +70,13 @@ class CalendarEventWidget extends StatelessWidget {
                       // Время
                       Row(
                         children: [
-                          Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                          Icon(Icons.access_time,
+                              size: 14, color: Colors.grey[600]),
                           const SizedBox(width: 4),
                           Text(
                             _formatTime(event.startTime, event.endTime),
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -82,12 +86,14 @@ class CalendarEventWidget extends StatelessWidget {
                         const SizedBox(height: 2),
                         Row(
                           children: [
-                            Icon(Icons.location_on, size: 14, color: Colors.grey[600]),
+                            Icon(Icons.location_on,
+                                size: 14, color: Colors.grey[600]),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 event.location,
-                                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey[600]),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -101,12 +107,15 @@ class CalendarEventWidget extends StatelessWidget {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: _getStatusColor(event.status).withValues(alpha: 0.1),
+                              color: _getStatusColor(event.status)
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: _getStatusColor(event.status).withValues(alpha: 0.3),
+                                color: _getStatusColor(event.status)
+                                    .withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(
@@ -121,11 +130,13 @@ class CalendarEventWidget extends StatelessWidget {
                           const Spacer(),
                           if (event.isAllDay)
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Colors.blue.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
+                                border: Border.all(
+                                    color: Colors.blue.withValues(alpha: 0.3)),
                               ),
                               child: const Text(
                                 'Весь день',
@@ -161,7 +172,11 @@ class CalendarEventWidget extends StatelessWidget {
                         const PopupMenuItem(
                           value: 'edit',
                           child: Row(
-                            children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')],
+                            children: [
+                              Icon(Icons.edit),
+                              SizedBox(width: 8),
+                              Text('Редактировать')
+                            ],
                           ),
                         ),
                       if (onDelete != null)
@@ -250,7 +265,8 @@ class CalendarEventListTile extends StatelessWidget {
           ),
           child: Icon(event.eventIcon, color: event.eventColor, size: 20),
         ),
-        title: Text(event.title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(event.title,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -266,7 +282,9 @@ class CalendarEventListTile extends StatelessWidget {
               decoration: BoxDecoration(
                 color: _getStatusColor(event.status).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: _getStatusColor(event.status).withValues(alpha: 0.3)),
+                border: Border.all(
+                    color:
+                        _getStatusColor(event.status).withValues(alpha: 0.3)),
               ),
               child: Text(
                 _getStatusText(event.status),
@@ -295,7 +313,11 @@ class CalendarEventListTile extends StatelessWidget {
                     const PopupMenuItem(
                       value: 'edit',
                       child: Row(
-                        children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')],
+                        children: [
+                          Icon(Icons.edit),
+                          SizedBox(width: 8),
+                          Text('Редактировать')
+                        ],
                       ),
                     ),
                   if (onDelete != null)
@@ -368,11 +390,12 @@ class CalendarEventMarker extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          decoration:
-              BoxDecoration(color: event.eventColor, borderRadius: BorderRadius.circular(4)),
+          decoration: BoxDecoration(
+              color: event.eventColor, borderRadius: BorderRadius.circular(4)),
           child: Text(
             event.title,
-            style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

@@ -8,25 +8,29 @@ import '../services/media_service.dart';
 final mediaServiceProvider = Provider<MediaService>((ref) => MediaService());
 
 /// Провайдер медиафайлов пользователя
-final userMediaProvider = FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
+final userMediaProvider =
+    FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
   final mediaService = ref.read(mediaServiceProvider);
   return mediaService.getMediaForUser(userId);
 });
 
 /// Провайдер фото пользователя
-final userPhotosProvider = FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
+final userPhotosProvider =
+    FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
   final mediaService = ref.read(mediaServiceProvider);
   return mediaService.getMediaByType(userId, MediaType.photo);
 });
 
 /// Провайдер видео пользователя
-final userVideosProvider = FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
+final userVideosProvider =
+    FutureProvider.family<List<MediaItem>, String>((ref, userId) async {
   final mediaService = ref.read(mediaServiceProvider);
   return mediaService.getMediaByType(userId, MediaType.video);
 });
 
 /// Провайдер статистики медиафайлов пользователя
-final userMediaStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, userId) async {
+final userMediaStatsProvider =
+    FutureProvider.family<Map<String, int>, String>((ref, userId) async {
   final mediaService = ref.read(mediaServiceProvider);
   return mediaService.getMediaStats(userId);
 });
@@ -49,16 +53,18 @@ class MediaUploadState {
     double? progress,
     String? error,
     MediaItem? uploadedItem,
-  }) => MediaUploadState(
-    isUploading: isUploading ?? this.isUploading,
-    progress: progress ?? this.progress,
-    error: error,
-    uploadedItem: uploadedItem ?? this.uploadedItem,
-  );
+  }) =>
+      MediaUploadState(
+        isUploading: isUploading ?? this.isUploading,
+        progress: progress ?? this.progress,
+        error: error,
+        uploadedItem: uploadedItem ?? this.uploadedItem,
+      );
 }
 
 /// Провайдер состояния загрузки медиафайлов (мигрирован с StateNotifierProvider)
-final mediaUploadStateProvider = NotifierProvider<MediaUploadNotifier, MediaUploadState>(
+final mediaUploadStateProvider =
+    NotifierProvider<MediaUploadNotifier, MediaUploadState>(
   () => MediaUploadNotifier(),
 );
 
@@ -187,9 +193,11 @@ class MediaUploadNotifier extends Notifier<MediaUploadState> {
   }
 
   /// Обновить информацию о медиафайле
-  Future<void> updateMedia(String mediaId, {String? title, String? description}) async {
+  Future<void> updateMedia(String mediaId,
+      {String? title, String? description}) async {
     try {
-      await _mediaService.updateMedia(mediaId, title: title, description: description);
+      await _mediaService.updateMedia(mediaId,
+          title: title, description: description);
     } on Exception catch (e) {
       state = state.copyWith(error: e.toString());
     }

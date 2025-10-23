@@ -57,15 +57,20 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
+            Icon(Icons.error_outline,
+                size: 64, color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки договоров', style: Theme.of(context).textTheme.titleLarge),
+            Text('Ошибка загрузки договоров',
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
               widget.errorMessage!,
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.error),
+              )
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.error),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -88,16 +93,15 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: 16),
-            Text('Договор не создан', style: Theme.of(context).textTheme.titleLarge),
+            Text('Договор не создан',
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Text(
               'Для данного бронирования договор еще не был сформирован',
               style: Theme.of(
                 context,
-              )
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -111,7 +115,8 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.add),
-                label: Text(_isGeneratingContract ? 'Создание...' : 'Создать договор'),
+                label: Text(
+                    _isGeneratingContract ? 'Создание...' : 'Создать договор'),
               ),
           ],
         ),
@@ -147,20 +152,27 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
                           contract.title,
                           style: Theme.of(
                             context,
-                          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                          )
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           '№ ${contract.contractNumber}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: contract.status.statusColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -199,7 +211,8 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
             _buildInfoRow('Дата подписания', _formatDate(contract.signedAt!)),
           _buildInfoRow('Срок действия', _formatDate(contract.expiresAt)),
           if (contract.totalAmount != null)
-            _buildInfoRow('Сумма', '${contract.totalAmount!.toStringAsFixed(0)} ₽'),
+            _buildInfoRow(
+                'Сумма', '${contract.totalAmount!.toStringAsFixed(0)} ₽'),
         ],
       );
 
@@ -219,7 +232,9 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
           if (contract.status == ContractStatus.signed)
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: _isDownloadingPdf ? null : () => _downloadContractPdf(contract),
+                onPressed: _isDownloadingPdf
+                    ? null
+                    : () => _downloadContractPdf(contract),
                 icon: _isDownloadingPdf
                     ? const SizedBox(
                         width: 16,
@@ -254,16 +269,17 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
                 label,
                 style: Theme.of(
                   context,
-                )
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                ).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             ),
             Expanded(
               child: Text(
                 value,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(fontWeight: FontWeight.w500),
               ),
             ),
           ],
@@ -273,7 +289,8 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
   String _formatDate(DateTime date) =>
       '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
 
-  bool _canGenerateContract() => widget.booking.status == BookingStatus.confirmed;
+  bool _canGenerateContract() =>
+      widget.booking.status == BookingStatus.confirmed;
 
   bool _canSignContract(Contract contract) {
     // Здесь должна быть логика проверки прав пользователя на подписание
@@ -292,13 +309,17 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Договор успешно создан'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Договор успешно создан'),
+              backgroundColor: Colors.green),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка создания договора: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка создания договора: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -325,20 +346,26 @@ class _ContractTabWidgetState extends ConsumerState<ContractTabWidget> {
       final pdfBytes = await _pdfService.generateContractPdf(contract);
 
       // Сохраняем в Firebase Storage
-      final downloadUrl = await _storageService.uploadContractPdf(contract.id, pdfBytes);
+      final downloadUrl =
+          await _storageService.uploadContractPdf(contract.id, pdfBytes);
 
       // Скачиваем файл
-      await _storageService.downloadFile(downloadUrl, 'contract_${contract.contractNumber}.pdf');
+      await _storageService.downloadFile(
+          downloadUrl, 'contract_${contract.contractNumber}.pdf');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Договор успешно скачан'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Договор успешно скачан'),
+              backgroundColor: Colors.green),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка скачивания договора: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка скачивания договора: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {

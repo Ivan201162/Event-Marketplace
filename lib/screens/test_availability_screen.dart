@@ -8,10 +8,12 @@ class TestAvailabilityScreen extends ConsumerStatefulWidget {
   const TestAvailabilityScreen({super.key});
 
   @override
-  ConsumerState<TestAvailabilityScreen> createState() => _TestAvailabilityScreenState();
+  ConsumerState<TestAvailabilityScreen> createState() =>
+      _TestAvailabilityScreenState();
 }
 
-class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen> {
+class _TestAvailabilityScreenState
+    extends ConsumerState<TestAvailabilityScreen> {
   final AvailabilityService _availabilityService = AvailabilityService();
   final String _testSpecialistId = 'test_specialist_1';
 
@@ -48,81 +50,82 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
         _isLoading = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e')));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Тест календаря доступности'),
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.refresh),
-          onPressed: _loadAvailabilityData,
-          tooltip: 'Обновить данные',
+        appBar: AppBar(
+          title: const Text('Тест календаря доступности'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _loadAvailabilityData,
+              tooltip: 'Обновить данные',
+            ),
+          ],
         ),
-      ],
-    ),
-    body: _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : Column(
-            children: [
-              // Панель управления
-              _buildControlPanel(),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  // Панель управления
+                  _buildControlPanel(),
 
-              // Список данных
-              Expanded(child: _buildAvailabilityList()),
-            ],
-          ),
-  );
+                  // Список данных
+                  Expanded(child: _buildAvailabilityList()),
+                ],
+              ),
+      );
 
   Widget _buildControlPanel() => Card(
-    margin: const EdgeInsets.all(16),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Управление календарем',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-
-          // Кнопки действий
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+        margin: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton.icon(
-                onPressed: _addBusyDate,
-                icon: const Icon(Icons.block),
-                label: const Text('Добавить занятую дату'),
+              const Text(
+                'Управление календарем',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              ElevatedButton.icon(
-                onPressed: _addTimeSlot,
-                icon: const Icon(Icons.schedule),
-                label: const Text('Добавить временной слот'),
-              ),
-              ElevatedButton.icon(
-                onPressed: _testAvailability,
-                icon: const Icon(Icons.check),
-                label: const Text('Проверить доступность'),
-              ),
-              ElevatedButton.icon(
-                onPressed: _clearAllData,
-                icon: const Icon(Icons.clear_all),
-                label: const Text('Очистить все'),
+              const SizedBox(height: 16),
+
+              // Кнопки действий
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _addBusyDate,
+                    icon: const Icon(Icons.block),
+                    label: const Text('Добавить занятую дату'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: _addTimeSlot,
+                    icon: const Icon(Icons.schedule),
+                    label: const Text('Добавить временной слот'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: _testAvailability,
+                    icon: const Icon(Icons.check),
+                    label: const Text('Проверить доступность'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: _clearAllData,
+                    icon: const Icon(Icons.clear_all),
+                    label: const Text('Очистить все'),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildAvailabilityList() {
     if (_availabilityData.isEmpty) {
@@ -159,7 +162,8 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(availability.isAvailable ? 'Доступен' : 'Занят'),
-                if (availability.note != null) Text('Примечание: ${availability.note}'),
+                if (availability.note != null)
+                  Text('Примечание: ${availability.note}'),
                 if (availability.timeSlots.isNotEmpty)
                   Text('Слотов: ${availability.timeSlots.length}'),
               ],
@@ -169,7 +173,11 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
                 const PopupMenuItem(
                   value: 'edit',
                   child: Row(
-                    children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')],
+                    children: [
+                      Icon(Icons.edit),
+                      SizedBox(width: 8),
+                      Text('Редактировать')
+                    ],
                   ),
                 ),
                 const PopupMenuItem(
@@ -202,7 +210,8 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
 
     final note = await _showNoteDialog('Примечание (необязательно)');
 
-    final success = await _availabilityService.addBusyDate(_testSpecialistId, date, note: note);
+    final success = await _availabilityService
+        .addBusyDate(_testSpecialistId, date, note: note);
 
     if (success) {
       _loadAvailabilityData();
@@ -227,20 +236,23 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
     final timeSlot = await _showTimeSlotDialog();
     if (timeSlot == null) return;
 
-    final success = await _availabilityService.addTimeSlot(_testSpecialistId, date, timeSlot);
+    final success = await _availabilityService.addTimeSlot(
+        _testSpecialistId, date, timeSlot);
 
     if (success) {
       _loadAvailabilityData();
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Временной слот добавлен')));
+        ).showSnackBar(
+            const SnackBar(content: Text('Временной слот добавлен')));
       }
     } else {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Ошибка добавления слота')));
+        ).showSnackBar(
+            const SnackBar(content: Text('Ошибка добавления слота')));
       }
     }
   }
@@ -252,7 +264,8 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
     final time = await _selectTime();
     if (time == null) return;
 
-    final dateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    final dateTime =
+        DateTime(date.year, date.month, date.day, time.hour, time.minute);
 
     final isAvailable = await _availabilityService.isSpecialistAvailable(
       _testSpecialistId,
@@ -278,9 +291,12 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистить все данные'),
-        content: const Text('Вы уверены, что хотите удалить все данные о доступности?'),
+        content: const Text(
+            'Вы уверены, что хотите удалить все данные о доступности?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -296,7 +312,8 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
     if (confirmed ?? false) {
       // Удаляем все записи
       for (final availability in _availabilityData) {
-        await _availabilityService.removeBusyDate(_testSpecialistId, availability.date);
+        await _availabilityService.removeBusyDate(
+            _testSpecialistId, availability.date);
       }
 
       _loadAvailabilityData();
@@ -317,7 +334,9 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
           'Удалить запись за ${availability.date.day}.${availability.date.month}.${availability.date.year}?',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
@@ -374,53 +393,58 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
             ],
             if (availability.timeSlots.isNotEmpty) ...[
               const SizedBox(height: 16),
-              const Text('Временные слоты:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Временные слоты:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               ...availability.timeSlots.map(_buildTimeSlotInfo),
             ],
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
         ],
       ),
     );
   }
 
   Widget _buildTimeSlotInfo(TimeSlot slot) => Container(
-    margin: const EdgeInsets.only(bottom: 4),
-    padding: const EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      color: slot.isAvailable ? Colors.green.shade50 : Colors.red.shade50,
-      border: Border.all(color: slot.isAvailable ? Colors.green : Colors.red),
-      borderRadius: BorderRadius.circular(4),
-    ),
-    child: Row(
-      children: [
-        Icon(
-          slot.isAvailable ? Icons.check_circle : Icons.block,
-          color: slot.isAvailable ? Colors.green : Colors.red,
-          size: 16,
+        margin: const EdgeInsets.only(bottom: 4),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: slot.isAvailable ? Colors.green.shade50 : Colors.red.shade50,
+          border:
+              Border.all(color: slot.isAvailable ? Colors.green : Colors.red),
+          borderRadius: BorderRadius.circular(4),
         ),
-        const SizedBox(width: 8),
-        Text(
-          '${_formatTime(slot.startTime)} - ${_formatTime(slot.endTime)}',
-          style: const TextStyle(fontSize: 12),
+        child: Row(
+          children: [
+            Icon(
+              slot.isAvailable ? Icons.check_circle : Icons.block,
+              color: slot.isAvailable ? Colors.green : Colors.red,
+              size: 16,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${_formatTime(slot.startTime)} - ${_formatTime(slot.endTime)}',
+              style: const TextStyle(fontSize: 12),
+            ),
+            if (slot.note != null) ...[
+              const Spacer(),
+              Text(slot.note!,
+                  style: const TextStyle(color: Colors.grey, fontSize: 10)),
+            ],
+          ],
         ),
-        if (slot.note != null) ...[
-          const Spacer(),
-          Text(slot.note!, style: const TextStyle(color: Colors.grey, fontSize: 10)),
-        ],
-      ],
-    ),
-  );
+      );
 
   Future<DateTime?> _selectDate() async => showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime.now(),
-    lastDate: DateTime.now().add(const Duration(days: 365)),
-  );
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(const Duration(days: 365)),
+      );
 
   Future<TimeOfDay?> _selectTime() async =>
       showTimePicker(context: context, initialTime: TimeOfDay.now());
@@ -441,7 +465,9 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
           maxLines: 3,
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('Добавить'),
@@ -472,7 +498,8 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
                       : 'Выберите время',
                 ),
                 onTap: () async {
-                  final time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+                  final time = await showTimePicker(
+                      context: context, initialTime: TimeOfDay.now());
                   if (time != null) {
                     setState(() {
                       startTime = time;
@@ -509,7 +536,9 @@ class _TestAvailabilityScreenState extends ConsumerState<TestAvailabilityScreen>
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Отмена')),
             ElevatedButton(
               onPressed: (startTime != null && endTime != null)
                   ? () {

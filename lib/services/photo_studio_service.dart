@@ -51,7 +51,8 @@ class PhotoStudioService {
     );
 
     // Сохранить в Firestore
-    final docRef = await _firestore.collection(_collection).add(photoStudio.toMap());
+    final docRef =
+        await _firestore.collection(_collection).add(photoStudio.toMap());
 
     // Обновить ID
     final createdPhotoStudio = photoStudio.copyWith(id: docRef.id);
@@ -67,7 +68,8 @@ class PhotoStudioService {
   }
 
   /// Получить все фотостудии
-  Future<List<PhotoStudio>> getPhotoStudios({int limit = 20, DocumentSnapshot? startAfter}) async {
+  Future<List<PhotoStudio>> getPhotoStudios(
+      {int limit = 20, DocumentSnapshot? startAfter}) async {
     Query query = _firestore
         .collection(_collection)
         .where('isActive', isEqualTo: true)
@@ -91,20 +93,24 @@ class PhotoStudioService {
     List<String>? amenities,
     int limit = 20,
   }) async {
-    Query firestoreQuery = _firestore.collection(_collection).where('isActive', isEqualTo: true);
+    Query firestoreQuery =
+        _firestore.collection(_collection).where('isActive', isEqualTo: true);
 
     // Фильтр по местоположению
     if (location != null && location.isNotEmpty) {
-      firestoreQuery = firestoreQuery.where('address', isGreaterThanOrEqualTo: location);
+      firestoreQuery =
+          firestoreQuery.where('address', isGreaterThanOrEqualTo: location);
     }
 
     // Фильтр по цене
     if (minPrice != null) {
-      firestoreQuery = firestoreQuery.where('pricing.hourlyRate', isGreaterThanOrEqualTo: minPrice);
+      firestoreQuery = firestoreQuery.where('pricing.hourlyRate',
+          isGreaterThanOrEqualTo: minPrice);
     }
 
     if (maxPrice != null) {
-      firestoreQuery = firestoreQuery.where('pricing.hourlyRate', isLessThanOrEqualTo: maxPrice);
+      firestoreQuery = firestoreQuery.where('pricing.hourlyRate',
+          isLessThanOrEqualTo: maxPrice);
     }
 
     firestoreQuery = firestoreQuery.limit(limit);
@@ -128,7 +134,8 @@ class PhotoStudioService {
     // Фильтр по удобствам (если указаны)
     if (amenities != null && amenities.isNotEmpty) {
       studios = studios
-          .where((studio) => amenities.every((amenity) => studio.amenities.contains(amenity)))
+          .where((studio) =>
+              amenities.every((amenity) => studio.amenities.contains(amenity)))
           .toList();
     }
 
@@ -147,7 +154,8 @@ class PhotoStudioService {
   }
 
   /// Обновить фотостудию
-  Future<void> updatePhotoStudio(String studioId, Map<String, dynamic> updates) async {
+  Future<void> updatePhotoStudio(
+      String studioId, Map<String, dynamic> updates) async {
     final currentUser = _auth.currentUser;
     if (currentUser == null) {
       throw Exception('Пользователь не авторизован');
@@ -207,13 +215,15 @@ class PhotoStudioService {
     }
 
     // Проверить доступность времени
-    final isAvailable = await _isTimeSlotAvailable(studioId, startTime, endTime);
+    final isAvailable =
+        await _isTimeSlotAvailable(studioId, startTime, endTime);
     if (!isAvailable) {
       throw Exception('Выбранное время недоступно');
     }
 
     // Получить данные клиента
-    final customerDoc = await _firestore.collection(_usersCollection).doc(customerId).get();
+    final customerDoc =
+        await _firestore.collection(_usersCollection).doc(customerId).get();
 
     if (!customerDoc.exists) {
       throw Exception('Клиент не найден');
@@ -288,7 +298,8 @@ class PhotoStudioService {
   }
 
   /// Получить бронирования клиента
-  Future<List<PhotoStudioBooking>> getCustomerBookings(String customerId) async {
+  Future<List<PhotoStudioBooking>> getCustomerBookings(
+      String customerId) async {
     final snapshot = await _firestore
         .collection(_bookingsCollection)
         .where('customerId', isEqualTo: customerId)
@@ -316,7 +327,8 @@ class PhotoStudioService {
       throw Exception('Пользователь не авторизован');
     }
 
-    final bookingDoc = await _firestore.collection(_bookingsCollection).doc(bookingId).get();
+    final bookingDoc =
+        await _firestore.collection(_bookingsCollection).doc(bookingId).get();
     if (!bookingDoc.exists) {
       throw Exception('Бронирование не найдено');
     }
@@ -329,11 +341,15 @@ class PhotoStudioService {
     }
 
     // Проверить права доступа
-    if (currentUser.uid != booking.customerId && currentUser.uid != photoStudio.ownerId) {
+    if (currentUser.uid != booking.customerId &&
+        currentUser.uid != photoStudio.ownerId) {
       throw Exception('Недостаточно прав для изменения статуса');
     }
 
-    await _firestore.collection(_bookingsCollection).doc(bookingId).update({'status': status});
+    await _firestore
+        .collection(_bookingsCollection)
+        .doc(bookingId)
+        .update({'status': status});
 
     // Отправить уведомление
     if (status == 'confirmed') {
@@ -352,12 +368,12 @@ class PhotoStudioService {
   }
 
   /// Проверить доступность временного слота
-  Future<bool> _isTimeSlotAvailable(String studioId, DateTime startTime, DateTime endTime) async {
+  Future<bool> _isTimeSlotAvailable(
+      String studioId, DateTime startTime, DateTime endTime) async {
     final snapshot = await _firestore
         .collection(_bookingsCollection)
         .where('studioId', isEqualTo: studioId)
-        .where('status', whereIn: ['pending', 'confirmed'])
-        .get();
+        .where('status', whereIn: ['pending', 'confirmed']).get();
 
     for (final doc in snapshot.docs) {
       final data = doc.data();
@@ -394,7 +410,8 @@ class PhotoStudioService {
     final openTime = _parseTimeOfDay(workingHours['open']!);
     final closeTime = _parseTimeOfDay(workingHours['close']!);
 
-    final openDateTime = DateTime(date.year, date.month, date.day, openTime.hour, openTime.minute);
+    final openDateTime = DateTime(
+        date.year, date.month, date.day, openTime.hour, openTime.minute);
     final closeDateTime = DateTime(
       date.year,
       date.month,
@@ -407,8 +424,7 @@ class PhotoStudioService {
     final existingBookings = await _firestore
         .collection(_bookingsCollection)
         .where('studioId', isEqualTo: studioId)
-        .where('status', whereIn: ['pending', 'confirmed'])
-        .get();
+        .where('status', whereIn: ['pending', 'confirmed']).get();
 
     final bookedSlots = <Map<String, DateTime>>[];
     for (final doc in existingBookings.docs) {
@@ -433,7 +449,8 @@ class PhotoStudioService {
 
       // Проверить пересечение с существующими бронированиями
       for (final bookedSlot in bookedSlots) {
-        if (currentTime.isBefore(bookedSlot['end']!) && slotEnd.isAfter(bookedSlot['start']!)) {
+        if (currentTime.isBefore(bookedSlot['end']!) &&
+            slotEnd.isAfter(bookedSlot['start']!)) {
           isAvailable = false;
           break;
         }
@@ -450,7 +467,15 @@ class PhotoStudioService {
   }
 
   String _getDayName(int weekday) {
-    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const days = [
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+      'sunday'
+    ];
     return days[weekday - 1];
   }
 
@@ -460,7 +485,9 @@ class PhotoStudioService {
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) =>
-      date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+      date1.year == date2.year &&
+      date1.month == date2.month &&
+      date1.day == date2.day;
 
   /// Подписаться на изменения фотостудий
   Stream<List<PhotoStudio>> watchPhotoStudios() => _firestore
@@ -471,10 +498,12 @@ class PhotoStudioService {
       .map((snapshot) => snapshot.docs.map(PhotoStudio.fromDocument).toList());
 
   /// Подписаться на изменения бронирований клиента
-  Stream<List<PhotoStudioBooking>> watchCustomerBookings(String customerId) => _firestore
-      .collection(_bookingsCollection)
-      .where('customerId', isEqualTo: customerId)
-      .orderBy('startTime', descending: true)
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(PhotoStudioBooking.fromDocument).toList());
+  Stream<List<PhotoStudioBooking>> watchCustomerBookings(String customerId) =>
+      _firestore
+          .collection(_bookingsCollection)
+          .where('customerId', isEqualTo: customerId)
+          .orderBy('startTime', descending: true)
+          .snapshots()
+          .map((snapshot) =>
+              snapshot.docs.map(PhotoStudioBooking.fromDocument).toList());
 }

@@ -99,7 +99,8 @@ class ContractService {
       );
 
       // Сохраняем в Firestore
-      final docRef = await _firestore.collection('contracts').add(contract.toMap());
+      final docRef =
+          await _firestore.collection('contracts').add(contract.toMap());
 
       return contract.copyWith(id: docRef.id);
     } catch (e) {
@@ -108,7 +109,8 @@ class ContractService {
   }
 
   /// Подписать договор
-  Future<void> signContract({required String contractId, required String userId}) async {
+  Future<void> signContract(
+      {required String contractId, required String userId}) async {
     try {
       final contract = await _getContract(contractId);
       if (contract == null) {
@@ -131,7 +133,9 @@ class ContractService {
       }
 
       // Обновляем статус подписи
-      final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
+      final updateData = <String, dynamic>{
+        'updatedAt': Timestamp.fromDate(DateTime.now())
+      };
 
       if (isCustomer) {
         updateData['signedByCustomer'] = true;
@@ -143,21 +147,25 @@ class ContractService {
       // Если обе стороны подписали, обновляем статус договора
       final willBeFullySigned =
           (isCustomer ? true : contract.signedByCustomer) &&
-          (isSpecialist ? true : contract.signedBySpecialist);
+              (isSpecialist ? true : contract.signedBySpecialist);
 
       if (willBeFullySigned) {
         updateData['status'] = ContractStatus.signed.name;
         updateData['signedAt'] = Timestamp.fromDate(DateTime.now());
       }
 
-      await _firestore.collection('contracts').doc(contractId).update(updateData);
+      await _firestore
+          .collection('contracts')
+          .doc(contractId)
+          .update(updateData);
     } catch (e) {
       throw Exception('Ошибка подписания договора: $e');
     }
   }
 
   /// Получить договор по ID
-  Future<Contract?> getContract(String contractId) async => _getContract(contractId);
+  Future<Contract?> getContract(String contractId) async =>
+      _getContract(contractId);
 
   /// Получить договоры по бронированию
   Future<List<Contract>> getContractsByBooking(String bookingId) async {
@@ -202,7 +210,8 @@ class ContractService {
 
   Future<Specialist?> _getSpecialist(String specialistId) async {
     try {
-      final doc = await _firestore.collection('specialists').doc(specialistId).get();
+      final doc =
+          await _firestore.collection('specialists').doc(specialistId).get();
       if (doc.exists) {
         return Specialist.fromDocument(doc);
       }
@@ -214,7 +223,8 @@ class ContractService {
 
   Future<Contract?> _getContract(String contractId) async {
     try {
-      final doc = await _firestore.collection('contracts').doc(contractId).get();
+      final doc =
+          await _firestore.collection('contracts').doc(contractId).get();
       if (doc.exists) {
         return Contract.fromDocument(doc);
       }
@@ -229,7 +239,8 @@ class ContractService {
     final year = now.year;
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');
-    final random = (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
+    final random =
+        (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
 
     return 'ДУ-$year$month$day-$random';
   }
@@ -297,7 +308,8 @@ Email: ${customer.email ?? 'Не указан'}
 Заказчик: _________________ ${customer.name}
 ''';
 
-  Map<String, dynamic> _generateDefaultTerms(Booking booking, Map<String, dynamic>? customTerms) {
+  Map<String, dynamic> _generateDefaultTerms(
+      Booking booking, Map<String, dynamic>? customTerms) {
     final defaultTerms = {
       'paymentTerms': {
         'advanceRequired': true,
@@ -306,14 +318,22 @@ Email: ${customer.email ?? 'Не указан'}
       },
       'cancellationPolicy': {
         'customerCanCancel': true,
-        'refundPercentage': {'more_than_7_days': 100, '3_to_7_days': 50, 'less_than_3_days': 0},
+        'refundPercentage': {
+          'more_than_7_days': 100,
+          '3_to_7_days': 50,
+          'less_than_3_days': 0
+        },
       },
       'liability': {
         'specialistLiability': 'limited_to_service_cost',
         'customerLiability': 'damage_to_equipment',
       },
       'forceMajeure': {
-        'includes': ['natural_disasters', 'government_restrictions', 'pandemics'],
+        'includes': [
+          'natural_disasters',
+          'government_restrictions',
+          'pandemics'
+        ],
         'resolution': 'reschedule_or_refund',
       },
     };
@@ -401,7 +421,8 @@ Email: ${customer.email ?? 'Не указан'}
   Future<String> generateContractPDF(String contractId) async {
     try {
       // Получаем договор
-      final contractDoc = await _firestore.collection('contracts').doc(contractId).get();
+      final contractDoc =
+          await _firestore.collection('contracts').doc(contractId).get();
 
       if (!contractDoc.exists) {
         throw Exception('Договор не найден');

@@ -26,7 +26,9 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-              TextButton(onPressed: () => context.push('/search'), child: const Text('Все')),
+              TextButton(
+                  onPressed: () => context.push('/search'),
+                  child: const Text('Все')),
             ],
           ),
         ),
@@ -53,14 +55,17 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (error, stack) => Center(child: Text('Ошибка загрузки: $error')),
+            error: (error, stack) =>
+                Center(child: Text('Ошибка загрузки: $error')),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSpecialistCard(BuildContext context, Map<String, dynamic> specialist) => Container(
+  Widget _buildSpecialistCard(
+          BuildContext context, Map<String, dynamic> specialist) =>
+      Container(
         width: 160,
         margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
@@ -79,7 +84,8 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
           children: [
             // Фото специалиста
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               child: Container(
                 height: 100,
                 width: double.infinity,
@@ -89,7 +95,8 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                         specialist['avatar'] as String,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.person, size: 40, color: Colors.grey),
+                            const Icon(Icons.person,
+                                size: 40, color: Colors.grey),
                       )
                     : const Icon(Icons.person, size: 40, color: Colors.grey),
               ),
@@ -102,7 +109,8 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                 children: [
                   Text(
                     specialist['name'] as String? ?? 'Специалист',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -110,7 +118,10 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                   Text(
                     specialist['category'] as String? ?? 'Категория',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.7),
                       fontSize: 12,
                     ),
                     maxLines: 1,
@@ -122,8 +133,10 @@ class BestSpecialistsOfWeekCarousel extends ConsumerWidget {
                       const Icon(Icons.star, color: Colors.amber, size: 14),
                       const SizedBox(width: 4),
                       Text(
-                        (specialist['rating'] as double? ?? 0.0).toStringAsFixed(1),
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                        (specialist['rating'] as double? ?? 0.0)
+                            .toStringAsFixed(1),
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w500),
                       ),
                       const Spacer(),
                       Text(

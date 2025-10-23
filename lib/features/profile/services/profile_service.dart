@@ -15,13 +15,17 @@ class ProfileService {
 
   /// Обновить город пользователя
   Future<bool> updateUserCity(String uid, String city) async {
-    final updates = <String, dynamic>{'city': city.trim().isEmpty ? null : city.trim()};
+    final updates = <String, dynamic>{
+      'city': city.trim().isEmpty ? null : city.trim()
+    };
     return _userRepository.updateUser(uid, updates);
   }
 
   /// Обновить регион пользователя
   Future<bool> updateUserRegion(String uid, String region) async {
-    final updates = <String, dynamic>{'region': region.trim().isEmpty ? null : region.trim()};
+    final updates = <String, dynamic>{
+      'region': region.trim().isEmpty ? null : region.trim()
+    };
     return _userRepository.updateUser(uid, updates);
   }
 
@@ -34,7 +38,8 @@ class ProfileService {
   }
 
   /// Получить пользователя по ID
-  Future<AppUser?> getUser(String uid) async => _userRepository.getUserById(uid);
+  Future<AppUser?> getUser(String uid) async =>
+      _userRepository.getUserById(uid);
 }
 
 /// Провайдер сервиса профиля
@@ -44,7 +49,8 @@ final profileServiceProvider = Provider<ProfileService>((ref) {
 });
 
 /// Провайдер для обновления города пользователя
-final updateUserCityProvider = FutureProvider.family<bool, Map<String, String>>((
+final updateUserCityProvider =
+    FutureProvider.family<bool, Map<String, String>>((
   ref,
   params,
 ) async {
@@ -55,7 +61,8 @@ final updateUserCityProvider = FutureProvider.family<bool, Map<String, String>>(
 });
 
 /// Провайдер для обновления региона пользователя
-final updateUserRegionProvider = FutureProvider.family<bool, Map<String, String>>((
+final updateUserRegionProvider =
+    FutureProvider.family<bool, Map<String, String>>((
   ref,
   params,
 ) async {

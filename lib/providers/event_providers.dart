@@ -7,7 +7,8 @@ import '../services/event_service.dart';
 final eventServiceProvider = Provider<EventService>((ref) => EventService());
 
 /// Провайдер для формы создания события
-final createEventProvider = NotifierProvider<CreateEventNotifier, CreateEventState>(
+final createEventProvider =
+    NotifierProvider<CreateEventNotifier, CreateEventState>(
   CreateEventNotifier.new,
 );
 
@@ -17,10 +18,11 @@ class CreateEventState {
   final bool isLoading;
   final String? errorMessage;
 
-  CreateEventState copyWith({bool? isLoading, String? errorMessage}) => CreateEventState(
-    isLoading: isLoading ?? this.isLoading,
-    errorMessage: errorMessage ?? this.errorMessage,
-  );
+  CreateEventState copyWith({bool? isLoading, String? errorMessage}) =>
+      CreateEventState(
+        isLoading: isLoading ?? this.isLoading,
+        errorMessage: errorMessage ?? this.errorMessage,
+      );
 }
 
 /// Нотификатор для формы создания события
@@ -48,23 +50,31 @@ final eventsProvider = FutureProvider<List<Event>>((ref) async {
 });
 
 /// Провайдер событий пользователя
-final userEventsProvider = FutureProvider.family<List<Event>, String>((ref, userId) async {
+final userEventsProvider =
+    FutureProvider.family<List<Event>, String>((ref, userId) async {
   final eventService = ref.read(eventServiceProvider);
   return eventService.getUserEvents(userId).first;
 });
 
 /// Провайдер события по ID
-final eventProvider = FutureProvider.family<Event?, String>((ref, eventId) async {
+final eventProvider =
+    FutureProvider.family<Event?, String>((ref, eventId) async {
   final eventService = ref.read(eventServiceProvider);
   return eventService.getEvent(eventId);
 });
 
 /// Провайдер для статистики событий пользователя
-final userEventStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((
+final userEventStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((
   ref,
   userId,
 ) async {
   final eventService = ref.read(eventServiceProvider);
   // Заглушка для статистики событий пользователя
-  return {'totalEvents': 0, 'upcomingEvents': 0, 'pastEvents': 0, 'cancelledEvents': 0};
+  return {
+    'totalEvents': 0,
+    'upcomingEvents': 0,
+    'pastEvents': 0,
+    'cancelledEvents': 0
+  };
 });

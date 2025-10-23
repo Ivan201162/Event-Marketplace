@@ -16,7 +16,8 @@ class ProfileScreenImproved extends ConsumerStatefulWidget {
   const ProfileScreenImproved({super.key, required this.userId});
 
   @override
-  ConsumerState<ProfileScreenImproved> createState() => _ProfileScreenImprovedState();
+  ConsumerState<ProfileScreenImproved> createState() =>
+      _ProfileScreenImprovedState();
 }
 
 class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
@@ -143,7 +144,8 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                         const PopupMenuItem(
                           value: 'account_security',
                           child: ListTile(
-                            leading: Icon(Icons.security, color: Color(0xFF1E3A8A)),
+                            leading:
+                                Icon(Icons.security, color: Color(0xFF1E3A8A)),
                             title: Text('Аккаунт и безопасность'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -151,7 +153,8 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                         const PopupMenuItem(
                           value: 'appearance',
                           child: ListTile(
-                            leading: Icon(Icons.palette, color: Color(0xFF1E3A8A)),
+                            leading:
+                                Icon(Icons.palette, color: Color(0xFF1E3A8A)),
                             title: Text('Внешний вид'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -159,7 +162,8 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                         const PopupMenuItem(
                           value: 'notifications',
                           child: ListTile(
-                            leading: Icon(Icons.notifications, color: Color(0xFF1E3A8A)),
+                            leading: Icon(Icons.notifications,
+                                color: Color(0xFF1E3A8A)),
                             title: Text('Уведомления'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -167,7 +171,8 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                         const PopupMenuItem(
                           value: 'privacy',
                           child: ListTile(
-                            leading: Icon(Icons.privacy_tip, color: Color(0xFF1E3A8A)),
+                            leading: Icon(Icons.privacy_tip,
+                                color: Color(0xFF1E3A8A)),
                             title: Text('Конфиденциальность'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -175,7 +180,8 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                         const PopupMenuItem(
                           value: 'professional',
                           child: ListTile(
-                            leading: Icon(Icons.business, color: Color(0xFF1E3A8A)),
+                            leading:
+                                Icon(Icons.business, color: Color(0xFF1E3A8A)),
                             title: Text('Профессиональный аккаунт'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -183,7 +189,8 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                         const PopupMenuItem(
                           value: 'monetization',
                           child: ListTile(
-                            leading: Icon(Icons.attach_money, color: Color(0xFF1E3A8A)),
+                            leading: Icon(Icons.attach_money,
+                                color: Color(0xFF1E3A8A)),
                             title: Text('Монетизация'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -191,7 +198,8 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                         const PopupMenuItem(
                           value: 'blocked',
                           child: ListTile(
-                            leading: Icon(Icons.block, color: Color(0xFF1E3A8A)),
+                            leading:
+                                Icon(Icons.block, color: Color(0xFF1E3A8A)),
                             title: Text('Заблокированные пользователи'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -199,7 +207,8 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                         const PopupMenuItem(
                           value: 'report',
                           child: ListTile(
-                            leading: Icon(Icons.bug_report, color: Color(0xFF1E3A8A)),
+                            leading: Icon(Icons.bug_report,
+                                color: Color(0xFF1E3A8A)),
                             title: Text('Сообщить о проблеме'),
                             contentPadding: EdgeInsets.zero,
                           ),
@@ -208,7 +217,8 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                           value: 'logout',
                           child: ListTile(
                             leading: Icon(Icons.logout, color: Colors.red),
-                            title: Text('Выйти', style: TextStyle(color: Colors.red)),
+                            title: Text('Выйти',
+                                style: TextStyle(color: Colors.red)),
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
@@ -244,7 +254,9 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
                         indicatorColor: const Color(0xFF1E3A8A),
                         tabs: const [
                           Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
-                          Tab(icon: Icon(Icons.photo_library_outlined), text: 'Фото'),
+                          Tab(
+                              icon: Icon(Icons.photo_library_outlined),
+                              text: 'Фото'),
                           Tab(icon: Icon(Icons.movie_outlined), text: 'Видео'),
                           Tab(icon: Icon(Icons.star_outline), text: 'Отзывы'),
                         ],
@@ -275,7 +287,7 @@ class _ProfileScreenImprovedState extends ConsumerState<ProfileScreenImproved>
 class _ProfileHeader extends ConsumerWidget {
   final String userId;
   final bool isOwnProfile;
-  
+
   const _ProfileHeader({required this.userId, required this.isOwnProfile});
 
   @override
@@ -286,16 +298,18 @@ class _ProfileHeader extends ConsumerWidget {
         if (!snapshot.hasData) {
           return const Padding(
             padding: EdgeInsets.all(16),
-            child: Center(child: CircularProgressIndicator(color: Colors.white)),
+            child:
+                Center(child: CircularProgressIndicator(color: Colors.white)),
           );
         }
 
         final userData = snapshot.data!.data() as Map<String, dynamic>?;
-        final name = userData?['name'] ?? userData?['displayName'] ?? 'Пользователь';
+        final name =
+            userData?['name'] ?? userData?['displayName'] ?? 'Пользователь';
         final firstName = userData?['firstName'] ?? '';
         final lastName = userData?['lastName'] ?? '';
-        final fullName = firstName.isNotEmpty && lastName.isNotEmpty 
-            ? '$firstName $lastName' 
+        final fullName = firstName.isNotEmpty && lastName.isNotEmpty
+            ? '$firstName $lastName'
             : name;
         final city = userData?['city'] ?? 'Город не указан';
         final bio = userData?['bio'] ?? '';
@@ -320,9 +334,11 @@ class _ProfileHeader extends ConsumerWidget {
                     child: CircleAvatar(
                       radius: 38,
                       backgroundColor: Colors.white24,
-                      backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
-                      child: avatarUrl == null 
-                          ? const Icon(Icons.person, color: Colors.white, size: 38)
+                      backgroundImage:
+                          avatarUrl != null ? NetworkImage(avatarUrl) : null,
+                      child: avatarUrl == null
+                          ? const Icon(Icons.person,
+                              color: Colors.white, size: 38)
                           : null,
                     ),
                   ),
@@ -337,20 +353,21 @@ class _ProfileHeader extends ConsumerWidget {
                               child: Text(
                                 fullName,
                                 style: const TextStyle(
-                                  color: Colors.white, 
-                                  fontSize: 18, 
-                                  fontWeight: FontWeight.w700
-                                ),
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700),
                               ),
                             ),
                             if (isVerified)
-                              const Icon(Icons.verified, color: Colors.blue, size: 20),
+                              const Icon(Icons.verified,
+                                  color: Colors.blue, size: 20),
                           ],
                         ),
                         if (isProAccount && proCategory.isNotEmpty) ...[
                           const SizedBox(height: 4),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: Colors.orange.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(12),
@@ -369,13 +386,15 @@ class _ProfileHeader extends ConsumerWidget {
                         const SizedBox(height: 6),
                         Text(
                           city,
-                          style: const TextStyle(color: Colors.white70, fontSize: 14),
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 14),
                         ),
                         if (bio.isNotEmpty) ...[
                           const SizedBox(height: 6),
                           Text(
                             bio,
-                            style: const TextStyle(color: Colors.white70, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.white70, fontSize: 14),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -385,20 +404,21 @@ class _ProfileHeader extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Счетчики
               Row(
                 children: [
                   _Counter(label: 'Посты', value: postsCount.toString()),
-                  _Counter(label: 'Подписчики', value: followersCount.toString()),
+                  _Counter(
+                      label: 'Подписчики', value: followersCount.toString()),
                   _Counter(label: 'Подписки', value: followingCount.toString()),
                 ],
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Кнопки действий
               if (isOwnProfile) ...[
                 Row(
@@ -481,7 +501,8 @@ class _Counter extends StatelessWidget {
         children: [
           Text(
             value,
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 2),
           Text(
@@ -496,7 +517,7 @@ class _Counter extends StatelessWidget {
 
 class _StoriesSection extends ConsumerWidget {
   final String userId;
-  
+
   const _StoriesSection({required this.userId});
 
   @override
@@ -512,19 +533,20 @@ class _StoriesSection extends ConsumerWidget {
         stream: storyService.getUserStories(userId),
         builder: (context, snapshot) {
           final stories = snapshot.data ?? [];
-          
+
           return ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: stories.length + (isOwnProfile ? 1 : 0), // +1 для кнопки добавления
+            itemCount: stories.length +
+                (isOwnProfile ? 1 : 0), // +1 для кнопки добавления
             itemBuilder: (context, index) {
               if (isOwnProfile && index == 0) {
                 // Кнопка добавления сторис для владельца
                 return _AddStoryButton();
               }
-              
+
               final storyIndex = isOwnProfile ? index - 1 : index;
               final story = stories[storyIndex];
-              
+
               return _StoryItem(
                 story: story,
                 isViewed: story.hasViewed(currentUser.value?.uid ?? ''),
@@ -584,7 +606,7 @@ class _AddStoryButton extends StatelessWidget {
 class _StoryItem extends StatelessWidget {
   final Story story;
   final bool isViewed;
-  
+
   const _StoryItem({required this.story, required this.isViewed});
 
   @override
@@ -607,7 +629,7 @@ class _StoryItem extends StatelessWidget {
                   color: isViewed ? Colors.white54 : Colors.white,
                   width: 2,
                 ),
-                gradient: isViewed 
+                gradient: isViewed
                     ? null
                     : const LinearGradient(
                         colors: [Colors.purple, Colors.orange, Colors.red],
@@ -666,5 +688,3 @@ class _PlaceholderTab extends StatelessWidget {
     );
   }
 }
-
-

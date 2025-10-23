@@ -38,7 +38,8 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildSpecialistCard(BuildContext context, Map<String, dynamic> specialist, int rank) {
+  Widget _buildSpecialistCard(
+      BuildContext context, Map<String, dynamic> specialist, int rank) {
     return Container(
       width: 160,
       margin: const EdgeInsets.only(right: 12),
@@ -59,7 +60,8 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                     Container(
                       width: 24,
                       height: 24,
-                      decoration: BoxDecoration(color: _getRankColor(rank), shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                          color: _getRankColor(rank), shape: BoxShape.circle),
                       child: Center(
                         child: Text(
                           '$rank',
@@ -88,7 +90,8 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                 // Имя
                 Text(
                   specialist['name'] ?? 'Специалист',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 14),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -127,7 +130,8 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
                     const SizedBox(width: 2),
                     Text(
                       '${specialist['rating'] ?? 0.0}',
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -155,14 +159,16 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
   Widget _buildEmptyState() {
     return Container(
       height: 200,
-      decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+          color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
       child: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.people_outline, size: 48, color: Colors.grey),
             SizedBox(height: 8),
-            Text('Нет данных о специалистах', style: TextStyle(color: Colors.grey, fontSize: 14)),
+            Text('Нет данных о специалистах',
+                style: TextStyle(color: Colors.grey, fontSize: 14)),
           ],
         ),
       ),
@@ -172,7 +178,8 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
   Widget _buildLoadingState() {
     return Container(
       height: 200,
-      decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+          color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
       child: const Center(child: CircularProgressIndicator()),
     );
   }
@@ -180,14 +187,16 @@ class WeeklyPopularSpecialistsWidget extends ConsumerWidget {
   Widget _buildErrorState(String error) {
     return Container(
       height: 200,
-      decoration: BoxDecoration(color: Colors.red[50], borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+          color: Colors.red[50], borderRadius: BorderRadius.circular(12)),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 8),
-            Text('Ошибка загрузки', style: TextStyle(color: Colors.red[700], fontSize: 14)),
+            Text('Ошибка загрузки',
+                style: TextStyle(color: Colors.red[700], fontSize: 14)),
           ],
         ),
       ),

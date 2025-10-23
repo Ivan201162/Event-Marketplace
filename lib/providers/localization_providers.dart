@@ -5,7 +5,8 @@ import '../models/localization.dart';
 import '../services/localization_service.dart';
 
 /// Провайдер сервиса локализации
-final localizationServiceProvider = Provider<LocalizationService>((ref) => LocalizationService());
+final localizationServiceProvider =
+    Provider<LocalizationService>((ref) => LocalizationService());
 
 /// Нотификатор для настроек локализации
 class LocalizationSettingsNotifier extends Notifier<LocalizationSettings?> {
@@ -20,8 +21,8 @@ class LocalizationSettingsNotifier extends Notifier<LocalizationSettings?> {
 /// Провайдер настроек локализации
 final localizationSettingsProvider =
     NotifierProvider<LocalizationSettingsNotifier, LocalizationSettings?>(
-      LocalizationSettingsNotifier.new,
-    );
+  LocalizationSettingsNotifier.new,
+);
 
 /// Нотификатор для текущей локализации
 class CurrentLocalizationNotifier extends Notifier<LocalizationModel?> {
@@ -36,8 +37,8 @@ class CurrentLocalizationNotifier extends Notifier<LocalizationModel?> {
 /// Провайдер текущей локализации
 final currentLocalizationProvider =
     NotifierProvider<CurrentLocalizationNotifier, LocalizationModel?>(
-      CurrentLocalizationNotifier.new,
-    );
+  CurrentLocalizationNotifier.new,
+);
 
 /// Нотификатор для текущего языка
 class CurrentLanguageNotifier extends Notifier<String> {
@@ -50,7 +51,8 @@ class CurrentLanguageNotifier extends Notifier<String> {
 }
 
 /// Провайдер текущего языка
-final currentLanguageProvider = NotifierProvider<CurrentLanguageNotifier, String>(
+final currentLanguageProvider =
+    NotifierProvider<CurrentLanguageNotifier, String>(
   CurrentLanguageNotifier.new,
 );
 
@@ -85,8 +87,8 @@ class AvailableLocalizationsNotifier extends Notifier<List<LocalizationModel>> {
 /// Провайдер доступных локализаций
 final availableLocalizationsProvider =
     NotifierProvider<AvailableLocalizationsNotifier, List<LocalizationModel>>(
-      AvailableLocalizationsNotifier.new,
-    );
+  AvailableLocalizationsNotifier.new,
+);
 
 /// Провайдер поддерживаемых языков
 final supportedLanguagesProvider = Provider<List<SupportedLanguage>>(
@@ -94,8 +96,10 @@ final supportedLanguagesProvider = Provider<List<SupportedLanguage>>(
 );
 
 /// Провайдер статистики локализации
-final localizationStatsProvider = FutureProvider.family<LocalizationStats, String>(
-  (ref, languageCode) => ref.watch(localizationServiceProvider).getLocalizationStats(languageCode),
+final localizationStatsProvider =
+    FutureProvider.family<LocalizationStats, String>(
+  (ref, languageCode) =>
+      ref.watch(localizationServiceProvider).getLocalizationStats(languageCode),
 );
 
 /// Провайдер всех статистик локализации
@@ -104,7 +108,8 @@ final allLocalizationStatsProvider = FutureProvider<List<LocalizationStats>>(
 );
 
 /// Провайдер для перевода текста
-final translateProvider = Provider<String Function(String, {Map<String, dynamic>? params})>((ref) {
+final translateProvider =
+    Provider<String Function(String, {Map<String, dynamic>? params})>((ref) {
   final service = ref.watch(localizationServiceProvider);
   return service.translate;
 });
@@ -122,24 +127,29 @@ final localizationInitializationProvider = FutureProvider<void>((ref) async {
 
   // Обновляем провайдеры после инициализации
   ref.read(localizationSettingsProvider.notifier).state = service.settings;
-  ref.read(currentLocalizationProvider.notifier).state = service.currentLocalization;
+  ref.read(currentLocalizationProvider.notifier).state =
+      service.currentLocalization;
   ref.read(currentLanguageProvider.notifier).state = service.currentLanguage;
-  ref.read(availableLocalizationsProvider.notifier).state = service.availableLocalizations;
+  ref.read(availableLocalizationsProvider.notifier).state =
+      service.availableLocalizations;
 });
 
 /// Провайдер для изменения языка
-final changeLanguageProvider = FutureProvider.family<void, String>((ref, languageCode) async {
+final changeLanguageProvider =
+    FutureProvider.family<void, String>((ref, languageCode) async {
   final service = ref.watch(localizationServiceProvider);
   await service.setLanguage(languageCode);
 
   // Обновляем провайдеры после изменения языка
   ref.read(localizationSettingsProvider.notifier).state = service.settings;
-  ref.read(currentLocalizationProvider.notifier).state = service.currentLocalization;
+  ref.read(currentLocalizationProvider.notifier).state =
+      service.currentLocalization;
   ref.read(currentLanguageProvider.notifier).state = service.currentLanguage;
 });
 
 /// Провайдер для обновления настроек локализации
-final updateLocalizationSettingsProvider = FutureProvider.family<void, LocalizationSettings>((
+final updateLocalizationSettingsProvider =
+    FutureProvider.family<void, LocalizationSettings>((
   ref,
   settings,
 ) async {
@@ -148,17 +158,21 @@ final updateLocalizationSettingsProvider = FutureProvider.family<void, Localizat
 
   // Обновляем провайдеры после обновления настроек
   ref.read(localizationSettingsProvider.notifier).state = service.settings;
-  ref.read(currentLocalizationProvider.notifier).state = service.currentLocalization;
+  ref.read(currentLocalizationProvider.notifier).state =
+      service.currentLocalization;
   ref.read(currentLanguageProvider.notifier).state = service.currentLanguage;
 });
 
 /// Провайдер для экспорта переводов
-final exportTranslationsProvider = FutureProvider.family<Map<String, dynamic>, String>(
-  (ref, languageCode) => ref.watch(localizationServiceProvider).exportTranslations(languageCode),
+final exportTranslationsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>(
+  (ref, languageCode) =>
+      ref.watch(localizationServiceProvider).exportTranslations(languageCode),
 );
 
 /// Провайдер для импорта переводов
-final importTranslationsProvider = FutureProvider.family<void, Map<String, dynamic>>((
+final importTranslationsProvider =
+    FutureProvider.family<void, Map<String, dynamic>>((
   ref,
   data,
 ) async {
@@ -169,9 +183,11 @@ final importTranslationsProvider = FutureProvider.family<void, Map<String, dynam
   await service.importTranslations(languageCode, translations);
 
   // Обновляем провайдеры после импорта
-  ref.read(availableLocalizationsProvider.notifier).state = service.availableLocalizations;
+  ref.read(availableLocalizationsProvider.notifier).state =
+      service.availableLocalizations;
   if (languageCode == service.currentLanguage) {
-    ref.read(currentLocalizationProvider.notifier).state = service.currentLocalization;
+    ref.read(currentLocalizationProvider.notifier).state =
+        service.currentLocalization;
   }
 });
 
@@ -181,14 +197,15 @@ final clearLocalizationCacheProvider = FutureProvider<void>((ref) async {
   await service.clearCache();
 
   // Обновляем провайдеры после очистки кэша
-  ref.read(availableLocalizationsProvider.notifier).state = service.availableLocalizations;
-  ref.read(currentLocalizationProvider.notifier).state = service.currentLocalization;
+  ref.read(availableLocalizationsProvider.notifier).state =
+      service.availableLocalizations;
+  ref.read(currentLocalizationProvider.notifier).state =
+      service.currentLocalization;
 });
 
 /// Провайдер для получения языка по коду
 final getLanguageByCodeProvider = Provider<SupportedLanguage Function(String)>(
-  (ref) =>
-      (languageCode) => SupportedLanguage.values.firstWhere(
+  (ref) => (languageCode) => SupportedLanguage.values.firstWhere(
         (lang) => lang.languageCode == languageCode,
         orElse: () => SupportedLanguage.russian,
       ),

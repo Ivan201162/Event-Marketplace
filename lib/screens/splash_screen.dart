@@ -11,7 +11,8 @@ class SplashScreen extends ConsumerStatefulWidget {
   ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with TickerProviderStateMixin {
   late AnimationController _logoController;
   late AnimationController _progressController;
   // late Animation<double> _logoScaleAnimation; // Unused
@@ -173,10 +174,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with TickerProvider
             // Диагностический текст
             const Text(
               '✅ App started successfully',
-              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            Text('Status: $_statusText', style: const TextStyle(color: Colors.white, fontSize: 16)),
+            Text('Status: $_statusText',
+                style: const TextStyle(color: Colors.white, fontSize: 16)),
             const SizedBox(height: 10),
             Text(
               'Progress: ${(_progress * 100).toInt()}%',
@@ -245,12 +250,13 @@ class SplashState {
     double? progress,
     String? statusText,
     String? error,
-  }) => SplashState(
-    isInitialized: isInitialized ?? this.isInitialized,
-    progress: progress ?? this.progress,
-    statusText: statusText ?? this.statusText,
-    error: error ?? this.error,
-  );
+  }) =>
+      SplashState(
+        isInitialized: isInitialized ?? this.isInitialized,
+        progress: progress ?? this.progress,
+        statusText: statusText ?? this.statusText,
+        error: error ?? this.error,
+      );
 }
 
 class SplashStateNotifier extends Notifier<SplashState> {

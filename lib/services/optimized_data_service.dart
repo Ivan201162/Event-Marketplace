@@ -21,15 +21,15 @@ class OptimizedDataService {
   Future<List<Category>> getCategories({bool forceRefresh = false}) async {
     try {
       // Проверяем кэш
-      if (!forceRefresh && 
-          _cachedCategories != null && 
+      if (!forceRefresh &&
+          _cachedCategories != null &&
           _categoriesCacheTime != null &&
           DateTime.now().difference(_categoriesCacheTime!) < _cacheExpiry) {
         return _cachedCategories!;
       }
 
       debugPrint('📂 Загрузка категорий из Firestore...');
-      
+
       final snapshot = await _firestore
           .collection('categories')
           .orderBy('popularity', descending: true)
@@ -72,17 +72,18 @@ class OptimizedDataService {
   }) async {
     try {
       final cacheKey = '${city ?? 'all'}_${category ?? 'all'}_$limit';
-      
+
       // Проверяем кэш
-      if (!forceRefresh && 
+      if (!forceRefresh &&
           _specialistsCache.containsKey(cacheKey) &&
           _specialistsCacheTime.containsKey(cacheKey) &&
-          DateTime.now().difference(_specialistsCacheTime[cacheKey]!) < _cacheExpiry) {
+          DateTime.now().difference(_specialistsCacheTime[cacheKey]!) <
+              _cacheExpiry) {
         return _specialistsCache[cacheKey]!;
       }
 
       debugPrint('👥 Загрузка популярных специалистов из Firestore...');
-      
+
       Query query = _firestore
           .collection('specialists')
           .where('isActive', isEqualTo: true)
@@ -100,7 +101,7 @@ class OptimizedDataService {
       }
 
       final snapshot = await query.get();
-      
+
       final specialists = snapshot.docs.map((doc) {
         final data = doc.data();
         return Specialist.fromFirestore(doc);
@@ -127,7 +128,7 @@ class OptimizedDataService {
   }) async {
     try {
       debugPrint('🏙️ Загрузка специалистов для города: $city');
-      
+
       Query query = _firestore
           .collection('specialists')
           .where('city', isEqualTo: city)
@@ -154,7 +155,7 @@ class OptimizedDataService {
       }
 
       final snapshot = await query.get();
-      
+
       final specialists = snapshot.docs.map((doc) {
         return Specialist.fromFirestore(doc);
       }).toList();
@@ -172,12 +173,12 @@ class OptimizedDataService {
     try {
       final snapshot = await _firestore.collection('categories').get();
       final stats = <String, int>{};
-      
+
       for (final doc in snapshot.docs) {
         final data = doc.data();
         stats[doc.id] = data['specialistCount']?.toInt() ?? 0;
       }
-      
+
       return stats;
     } catch (e) {
       debugPrint('❌ Ошибка загрузки статистики категорий: $e');

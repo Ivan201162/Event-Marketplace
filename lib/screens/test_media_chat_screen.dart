@@ -11,7 +11,8 @@ class TestMediaChatScreen extends ConsumerStatefulWidget {
   const TestMediaChatScreen({super.key});
 
   @override
-  ConsumerState<TestMediaChatScreen> createState() => _TestMediaChatScreenState();
+  ConsumerState<TestMediaChatScreen> createState() =>
+      _TestMediaChatScreenState();
 }
 
 class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
@@ -41,7 +42,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user1',
         senderName: 'Анна',
-        senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+        senderAvatar:
+            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
         type: MessageType.text,
         content: 'Привет! Как дела?',
         status: MessageStatus.read,
@@ -52,7 +54,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user2',
         senderName: 'Максим',
-        senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+        senderAvatar:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
         type: MessageType.text,
         content: 'Привет! Всё отлично, спасибо! А у тебя?',
         status: MessageStatus.read,
@@ -63,10 +66,12 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user1',
         senderName: 'Анна',
-        senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+        senderAvatar:
+            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
         type: MessageType.image,
         content: 'Посмотри на это фото!',
-        fileUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+        fileUrl:
+            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
         fileName: 'mountain_landscape.jpg',
         fileType: 'jpg',
         fileSize: 1024000,
@@ -78,10 +83,12 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user2',
         senderName: 'Максим',
-        senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+        senderAvatar:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
         type: MessageType.video,
         content: 'А вот видео с концерта',
-        fileUrl: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
+        fileUrl:
+            'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
         fileName: 'concert_video.mp4',
         fileType: 'mp4',
         fileSize: 1048576,
@@ -93,10 +100,12 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user1',
         senderName: 'Анна',
-        senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+        senderAvatar:
+            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
         type: MessageType.file,
         content: 'Документ для работы',
-        fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        fileUrl:
+            'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
         fileName: 'project_document.pdf',
         fileType: 'pdf',
         fileSize: 512000,
@@ -108,7 +117,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user2',
         senderName: 'Максим',
-        senderAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
+        senderAvatar:
+            'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100',
         type: MessageType.audio,
         content: 'Голосовое сообщение',
         fileUrl: 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav',
@@ -157,7 +167,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
               children: [
                 Text(
                   'Тестирование медиафункций чата',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -175,16 +186,19 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[400]),
+                        Icon(Icons.chat_bubble_outline,
+                            size: 64, color: Colors.grey[400]),
                         const SizedBox(height: 16),
                         Text(
                           'Нет сообщений',
-                          style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                          style:
+                              TextStyle(fontSize: 18, color: Colors.grey[600]),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Нажмите "Создать тестовые сообщения" или отправьте новое',
-                          style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                          style:
+                              TextStyle(fontSize: 14, color: Colors.grey[500]),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -196,8 +210,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
                       final message = _messages[index];
-                      final isOwnMessage =
-                          message.senderId == 'user1'; // Симулируем текущего пользователя
+                      final isOwnMessage = message.senderId ==
+                          'user1'; // Симулируем текущего пользователя
 
                       return MediaMessageWidget(
                         message: message,
@@ -222,7 +236,9 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        border: Border(top: BorderSide(color: theme.colorScheme.outline.withValues(alpha: 0.2))),
+        border: Border(
+            top: BorderSide(
+                color: theme.colorScheme.outline.withValues(alpha: 0.2))),
       ),
       child: Row(
         children: [
@@ -245,8 +261,10 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
               controller: _messageController,
               decoration: InputDecoration(
                 hintText: 'Введите сообщение...',
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
               maxLines: null,
               onSubmitted: (_) => _sendTextMessage(),
@@ -256,7 +274,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
           const SizedBox(width: 8),
 
           // Кнопка отправки
-          FloatingActionButton.small(onPressed: _sendTextMessage, child: const Icon(Icons.send)),
+          FloatingActionButton.small(
+              onPressed: _sendTextMessage, child: const Icon(Icons.send)),
         ],
       ),
     );
@@ -271,7 +290,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
       chatId: 'test_chat',
       senderId: 'user1',
       senderName: 'Анна',
-      senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+      senderAvatar:
+          'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
       type: MessageType.text,
       content: content,
       status: MessageStatus.sent,
@@ -291,8 +311,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) =>
-          MediaAttachmentWidget(onMediaSelected: _handleMediaSelected, onError: _showErrorSnackBar),
+      builder: (context) => MediaAttachmentWidget(
+          onMediaSelected: _handleMediaSelected, onError: _showErrorSnackBar),
     );
   }
 
@@ -305,7 +325,8 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         chatId: 'test_chat',
         senderId: 'user1',
         senderName: 'Анна',
-        senderAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
+        senderAvatar:
+            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100',
         type: _getMessageTypeFromMediaType(mediaResult.mediaType),
         content: '${mediaResult.typeIcon} ${mediaResult.fileName}',
         fileUrl: mediaResult.fileUrl,
@@ -313,7 +334,10 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
         fileType: mediaResult.fileType,
         fileSize: mediaResult.fileSize,
         thumbnailUrl: mediaResult.thumbnailUrl,
-        metadata: {'storagePath': mediaResult.storagePath, 'mediaType': mediaResult.mediaType.name},
+        metadata: {
+          'storagePath': mediaResult.storagePath,
+          'mediaType': mediaResult.mediaType.name
+        },
         status: MessageStatus.sent,
         timestamp: DateTime.now(),
       );
@@ -423,7 +447,9 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -445,7 +471,9 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -465,11 +493,14 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
             const SizedBox(height: 16),
             Text('URL: ${message.fileUrl}'),
             const SizedBox(height: 16),
-            const Text('В реальном приложении здесь будет возможность скачать файл'),
+            const Text(
+                'В реальном приложении здесь будет возможность скачать файл'),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -494,12 +525,14 @@ class _TestMediaChatScreenState extends ConsumerState<TestMediaChatScreen> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 }

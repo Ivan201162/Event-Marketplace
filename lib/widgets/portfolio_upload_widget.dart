@@ -8,13 +8,15 @@ import '../providers/portfolio_providers.dart';
 
 /// Виджет для загрузки портфолио
 class PortfolioUploadWidget extends ConsumerStatefulWidget {
-  const PortfolioUploadWidget({super.key, required this.userId, this.onUploaded});
+  const PortfolioUploadWidget(
+      {super.key, required this.userId, this.onUploaded});
 
   final String userId;
   final VoidCallback? onUploaded;
 
   @override
-  ConsumerState<PortfolioUploadWidget> createState() => _PortfolioUploadWidgetState();
+  ConsumerState<PortfolioUploadWidget> createState() =>
+      _PortfolioUploadWidgetState();
 }
 
 class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
@@ -30,7 +32,8 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final uploadState = ref.watch<PortfolioUploadState>(portfolioUploadStateProvider);
+    final uploadState =
+        ref.watch<PortfolioUploadState>(portfolioUploadStateProvider);
 
     return Card(
       child: Padding(
@@ -45,7 +48,10 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
                   'Загрузка портфолио',
                   style: Theme.of(
                     context,
-                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  )
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 if (uploadState.isUploading)
                   const SizedBox(
@@ -89,7 +95,8 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
               LinearProgressIndicator(
                 value: uploadState.uploadProgress as double?,
                 backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).colorScheme.primary),
               ),
               const SizedBox(height: 8),
               Text(
@@ -122,7 +129,8 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
                       icon: const Icon(Icons.close, size: 16),
                       onPressed: () {
                         ref
-                            .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+                            .read<PortfolioUploadNotifier>(
+                                portfolioUploadStateProvider.notifier)
                             .clearError();
                       },
                     ),
@@ -153,10 +161,16 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
         spacing: 8,
         runSpacing: 8,
         children: [
-          _buildUploadButton(icon: Icons.photo, label: 'Фото', onPressed: _showImagePicker),
-          _buildUploadButton(icon: Icons.videocam, label: 'Видео', onPressed: _showVideoPicker),
           _buildUploadButton(
-              icon: Icons.description, label: 'Документ', onPressed: _showFilePicker),
+              icon: Icons.photo, label: 'Фото', onPressed: _showImagePicker),
+          _buildUploadButton(
+              icon: Icons.videocam,
+              label: 'Видео',
+              onPressed: _showVideoPicker),
+          _buildUploadButton(
+              icon: Icons.description,
+              label: 'Документ',
+              onPressed: _showFilePicker),
         ],
       );
 
@@ -192,7 +206,8 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
                 children: [
                   Text(
                     item.title ?? 'Без названия',
-                    style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 12),
                   ),
                   if (item.description != null)
                     Text(
@@ -208,7 +223,8 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
               icon: const Icon(Icons.close, size: 16),
               onPressed: () {
                 ref
-                    .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+                    .read<PortfolioUploadNotifier>(
+                        portfolioUploadStateProvider.notifier)
                     .removePortfolioItem(widget.userId, item.id);
               },
             ),
@@ -286,21 +302,24 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _pickImageFromGallery() async {
-    final file = await ref.read<Future<File?>>(pickImageFromGalleryProvider.future);
+    final file =
+        await ref.read<Future<File?>>(pickImageFromGalleryProvider.future);
     if (file != null) {
       await _uploadImage(file);
     }
   }
 
   Future<void> _takePhotoWithCamera() async {
-    final file = await ref.read<Future<File?>>(takePhotoWithCameraProvider.future);
+    final file =
+        await ref.read<Future<File?>>(takePhotoWithCameraProvider.future);
     if (file != null) {
       await _uploadImage(file);
     }
   }
 
   Future<void> _pickVideoFromGallery() async {
-    final file = await ref.read<Future<File?>>(pickVideoFromGalleryProvider.future);
+    final file =
+        await ref.read<Future<File?>>(pickVideoFromGalleryProvider.future);
     if (file != null) {
       await _uploadVideo(file);
     }
@@ -314,11 +333,16 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _uploadImage(File file) async {
-    await ref.read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier).uploadImage(
+    await ref
+        .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+        .uploadImage(
           userId: widget.userId,
           imageFile: file,
-          title: _titleController.text.isNotEmpty ? _titleController.text : null,
-          description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
+          title:
+              _titleController.text.isNotEmpty ? _titleController.text : null,
+          description: _descriptionController.text.isNotEmpty
+              ? _descriptionController.text
+              : null,
         );
 
     _clearFields();
@@ -326,11 +350,16 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _uploadVideo(File file) async {
-    await ref.read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier).uploadVideo(
+    await ref
+        .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+        .uploadVideo(
           userId: widget.userId,
           videoFile: file,
-          title: _titleController.text.isNotEmpty ? _titleController.text : null,
-          description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
+          title:
+              _titleController.text.isNotEmpty ? _titleController.text : null,
+          description: _descriptionController.text.isNotEmpty
+              ? _descriptionController.text
+              : null,
         );
 
     _clearFields();
@@ -338,11 +367,16 @@ class _PortfolioUploadWidgetState extends ConsumerState<PortfolioUploadWidget> {
   }
 
   Future<void> _uploadDocument(File file) async {
-    await ref.read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier).uploadDocument(
+    await ref
+        .read<PortfolioUploadNotifier>(portfolioUploadStateProvider.notifier)
+        .uploadDocument(
           userId: widget.userId,
           documentFile: file,
-          title: _titleController.text.isNotEmpty ? _titleController.text : null,
-          description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
+          title:
+              _titleController.text.isNotEmpty ? _titleController.text : null,
+          description: _descriptionController.text.isNotEmpty
+              ? _descriptionController.text
+              : null,
         );
 
     _clearFields();

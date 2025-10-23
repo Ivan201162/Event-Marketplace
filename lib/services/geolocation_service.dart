@@ -40,15 +40,19 @@ class GeolocationService {
   }
 
   /// Получение города по координатам
-  Future<String?> getCityFromCoordinates(double latitude, double longitude) async {
+  Future<String?> getCityFromCoordinates(
+      double latitude, double longitude) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
-      
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+
       if (placemarks.isNotEmpty) {
         final placemark = placemarks.first;
-        return placemark.locality ?? placemark.administrativeArea ?? 'Неизвестный город';
+        return placemark.locality ??
+            placemark.administrativeArea ??
+            'Неизвестный город';
       }
-      
+
       return null;
     } catch (e) {
       print('Ошибка получения города: $e');
@@ -61,7 +65,8 @@ class GeolocationService {
     try {
       final position = await getCurrentPosition();
       if (position != null) {
-        return await getCityFromCoordinates(position.latitude, position.longitude);
+        return await getCityFromCoordinates(
+            position.latitude, position.longitude);
       }
       return null;
     } catch (e) {
@@ -121,8 +126,8 @@ class GeolocationService {
       if (!serviceEnabled) return false;
 
       LocationPermission permission = await Geolocator.checkPermission();
-      return permission != LocationPermission.denied && 
-             permission != LocationPermission.deniedForever;
+      return permission != LocationPermission.denied &&
+          permission != LocationPermission.deniedForever;
     } catch (e) {
       print('Ошибка проверки доступности геолокации: $e');
       return false;
@@ -133,13 +138,13 @@ class GeolocationService {
   Future<bool> requestLocationPermission() async {
     try {
       LocationPermission permission = await Geolocator.checkPermission();
-      
+
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
       }
-      
-      return permission == LocationPermission.whileInUse || 
-             permission == LocationPermission.always;
+
+      return permission == LocationPermission.whileInUse ||
+          permission == LocationPermission.always;
     } catch (e) {
       print('Ошибка запроса разрешения на геолокацию: $e');
       return false;

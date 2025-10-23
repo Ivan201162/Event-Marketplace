@@ -17,11 +17,14 @@ class SpecialistPriceManagementWidget extends StatefulWidget {
   final void Function(String)? onPriceDeleted;
 
   @override
-  State<SpecialistPriceManagementWidget> createState() => _SpecialistPriceManagementWidgetState();
+  State<SpecialistPriceManagementWidget> createState() =>
+      _SpecialistPriceManagementWidgetState();
 }
 
-class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagementWidget> {
-  final SpecialistPriceManagementService _service = SpecialistPriceManagementService();
+class _SpecialistPriceManagementWidgetState
+    extends State<SpecialistPriceManagementWidget> {
+  final SpecialistPriceManagementService _service =
+      SpecialistPriceManagementService();
   final TextEditingController _serviceNameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -85,8 +88,12 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
         specialistId: widget.specialistId,
         serviceName: _serviceNameController.text,
         price: price,
-        description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
-        duration: _durationController.text.isNotEmpty ? _durationController.text : null,
+        description: _descriptionController.text.isNotEmpty
+            ? _descriptionController.text
+            : null,
+        duration: _durationController.text.isNotEmpty
+            ? _durationController.text
+            : null,
       );
 
       final newPrice = ServicePrice(
@@ -94,8 +101,12 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
         specialistId: widget.specialistId,
         serviceName: _serviceNameController.text,
         price: price,
-        description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
-        duration: _durationController.text.isNotEmpty ? _durationController.text : null,
+        description: _descriptionController.text.isNotEmpty
+            ? _descriptionController.text
+            : null,
+        duration: _durationController.text.isNotEmpty
+            ? _durationController.text
+            : null,
         isActive: true,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -134,8 +145,12 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
         priceId: _editingPrice!.id,
         serviceName: _serviceNameController.text,
         price: price,
-        description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
-        duration: _durationController.text.isNotEmpty ? _durationController.text : null,
+        description: _descriptionController.text.isNotEmpty
+            ? _descriptionController.text
+            : null,
+        duration: _durationController.text.isNotEmpty
+            ? _durationController.text
+            : null,
       );
 
       final updatedPrice = ServicePrice(
@@ -143,8 +158,12 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
         specialistId: _editingPrice!.specialistId,
         serviceName: _serviceNameController.text,
         price: price,
-        description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
-        duration: _durationController.text.isNotEmpty ? _durationController.text : null,
+        description: _descriptionController.text.isNotEmpty
+            ? _descriptionController.text
+            : null,
+        duration: _durationController.text.isNotEmpty
+            ? _durationController.text
+            : null,
         includedServices: _editingPrice!.includedServices,
         isActive: _editingPrice!.isActive,
         createdAt: _editingPrice!.createdAt,
@@ -254,7 +273,8 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
         children: [
           _buildHeader(),
           if (_isLoading) const _LoadingWidget(),
-          if (_error != null) _ErrorWidget(error: _error!, onRetry: _loadPrices),
+          if (_error != null)
+            _ErrorWidget(error: _error!, onRetry: _loadPrices),
           if (!_isLoading && _error == null) ...[
             if (_showAddForm) _buildAddForm(),
             _buildPricesList()
@@ -294,8 +314,11 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _editingPrice == null ? 'Добавить цену' : 'Редактировать цену',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  _editingPrice == null
+                      ? 'Добавить цену'
+                      : 'Редактировать цену',
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -335,11 +358,14 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
                 Row(
                   children: [
                     ElevatedButton(
-                      onPressed: _editingPrice == null ? _addPrice : _updatePrice,
-                      child: Text(_editingPrice == null ? 'Добавить' : 'Обновить'),
+                      onPressed:
+                          _editingPrice == null ? _addPrice : _updatePrice,
+                      child:
+                          Text(_editingPrice == null ? 'Добавить' : 'Обновить'),
                     ),
                     const SizedBox(width: 8),
-                    TextButton(onPressed: _hideAddForm, child: const Text('Отмена')),
+                    TextButton(
+                        onPressed: _hideAddForm, child: const Text('Отмена')),
                   ],
                 ),
               ],
@@ -367,13 +393,15 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 
   Future<bool> _showDeleteConfirmation(String serviceName) async =>
@@ -381,7 +409,8 @@ class _SpecialistPriceManagementWidgetState extends State<SpecialistPriceManagem
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Удалить цену'),
-          content: Text('Вы уверены, что хотите удалить цену для услуги "$serviceName"?'),
+          content: Text(
+              'Вы уверены, что хотите удалить цену для услуги "$serviceName"?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -407,7 +436,10 @@ class _LoadingWidget extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: const Row(
           children: [
-            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2)),
             SizedBox(width: 12),
             Text('Загружаем цены...'),
           ],
@@ -473,20 +505,23 @@ class _PriceCard extends StatelessWidget {
                         children: [
                           Text(
                             price.serviceName,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           if (price.description != null) ...[
                             const SizedBox(height: 4),
                             Text(
                               price.description!,
-                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.grey),
                             ),
                           ],
                         ],
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: price.isActive ? Colors.green : Colors.grey,
                         borderRadius: BorderRadius.circular(12),
@@ -517,7 +552,8 @@ class _PriceCard extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         '• ${price.duration}',
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
                   ],
@@ -532,12 +568,16 @@ class _PriceCard extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: onToggleStatus,
-                      icon: Icon(price.isActive ? Icons.pause : Icons.play_arrow, size: 20),
-                      tooltip: price.isActive ? 'Деактивировать' : 'Активировать',
+                      icon: Icon(
+                          price.isActive ? Icons.pause : Icons.play_arrow,
+                          size: 20),
+                      tooltip:
+                          price.isActive ? 'Деактивировать' : 'Активировать',
                     ),
                     IconButton(
                       onPressed: onDelete,
-                      icon: const Icon(Icons.delete, size: 20, color: Colors.red),
+                      icon:
+                          const Icon(Icons.delete, size: 20, color: Colors.red),
                       tooltip: 'Удалить',
                     ),
                     const Spacer(),

@@ -60,7 +60,8 @@ class InfoBlock extends StatelessWidget {
               decoration: BoxDecoration(
                 color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: theme.primaryColor.withValues(alpha: 0.3)),
+                border: Border.all(
+                    color: theme.primaryColor.withValues(alpha: 0.3)),
               ),
               child: Text(
                 host.priceRangeText,
@@ -111,7 +112,8 @@ class InfoBlock extends StatelessWidget {
             color: theme.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, color: theme.primaryColor, size: isMobile ? 20 : 24),
+          child:
+              Icon(icon, color: theme.primaryColor, size: isMobile ? 20 : 24),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -150,16 +152,19 @@ class InfoBlock extends StatelessWidget {
         );
 
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 8 : 12, vertical: isMobile ? 4 : 6),
+          padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 8 : 12, vertical: isMobile ? 4 : 6),
           decoration: BoxDecoration(
             color: theme.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: theme.primaryColor.withValues(alpha: 0.3)),
+            border:
+                Border.all(color: theme.primaryColor.withValues(alpha: 0.3)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(eventCategory.emoji, style: TextStyle(fontSize: isMobile ? 14 : 16)),
+              Text(eventCategory.emoji,
+                  style: TextStyle(fontSize: isMobile ? 14 : 16)),
               const SizedBox(width: 4),
               Text(
                 category,

@@ -11,18 +11,19 @@ import '../../widgets/animated_skeleton.dart';
 /// Улучшенный экран профиля пользователя
 class ProfileScreenEnhanced extends ConsumerStatefulWidget {
   final String? userId;
-  
+
   const ProfileScreenEnhanced({super.key, this.userId});
 
   @override
-  ConsumerState<ProfileScreenEnhanced> createState() => _ProfileScreenEnhancedState();
+  ConsumerState<ProfileScreenEnhanced> createState() =>
+      _ProfileScreenEnhancedState();
 }
 
 class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   bool _isEditing = false;
   final _nameController = TextEditingController();
   final _bioController = TextEditingController();
@@ -63,7 +64,8 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateProvider);
-    final isOwnProfile = widget.userId == null || widget.userId == user.value?.uid;
+    final isOwnProfile =
+        widget.userId == null || widget.userId == user.value?.uid;
 
     return Scaffold(
       body: Container(
@@ -83,7 +85,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
             children: [
               // Заголовок профиля
               _buildProfileHeader(isOwnProfile),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -123,9 +125,9 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
               size: 24,
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // Заголовок
           const Text(
             'Профиль',
@@ -135,9 +137,9 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
               fontWeight: FontWeight.bold,
             ),
           ),
-          
+
           const Spacer(),
-          
+
           // Действия
           if (isOwnProfile) ...[
             IconButton(
@@ -180,25 +182,25 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
             children: [
               // Информация о пользователе
               _buildUserInfo(userData, isOwnProfile),
-              
+
               const SizedBox(height: 24),
-              
+
               // Статистика
               _buildUserStats(userData),
-              
+
               const SizedBox(height: 24),
-              
+
               // Действия
-              if (isOwnProfile) 
+              if (isOwnProfile)
                 _buildOwnProfileActions()
               else
                 _buildOtherProfileActions(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Контент пользователя
               _buildUserContent(userData),
-              
+
               const SizedBox(height: 20),
             ],
           ),
@@ -270,9 +272,9 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
                 ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Имя пользователя
           if (_isEditing && isOwnProfile)
             Container(
@@ -303,9 +305,9 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
                 color: Color(0xFF1E3A8A),
               ),
             ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Био
           if (_isEditing && isOwnProfile)
             Container(
@@ -333,9 +335,9 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
               ),
               textAlign: TextAlign.center,
             ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Город
           if (_isEditing && isOwnProfile)
             Container(
@@ -556,9 +558,9 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
               color: Color(0xFF1E3A8A),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Заглушка для контента
           Container(
             width: double.infinity,
@@ -746,7 +748,8 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
             ),
             ListTile(
               leading: const Icon(Icons.report, color: Colors.red),
-              title: const Text('Пожаловаться', style: TextStyle(color: Colors.red)),
+              title: const Text('Пожаловаться',
+                  style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 _reportUser();
@@ -774,7 +777,10 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
 
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({
         'name': _nameController.text.trim(),
         'bio': _bioController.text.trim(),
         'city': _cityController.text.trim(),

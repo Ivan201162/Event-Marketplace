@@ -18,11 +18,13 @@ class SpecialistBadgesWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Wrap(spacing: 4, runSpacing: 4, children: badges.map(_buildBadge).toList());
+    return Wrap(
+        spacing: 4, runSpacing: 4, children: badges.map(_buildBadge).toList());
   }
 
   Widget _buildBadge(SpecialistBadge badge) => Container(
-        padding: EdgeInsets.symmetric(horizontal: showText ? 8.0 : 4.0, vertical: 2),
+        padding:
+            EdgeInsets.symmetric(horizontal: showText ? 8.0 : 4.0, vertical: 2),
         decoration: BoxDecoration(
           color: badge.color,
           borderRadius: BorderRadius.circular(12),

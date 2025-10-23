@@ -1,7 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Статус бронирования
-enum BookingStatus { pending, confirmed, inProgress, completed, cancelled, noShow, refunded }
+enum BookingStatus {
+  pending,
+  confirmed,
+  inProgress,
+  completed,
+  cancelled,
+  noShow,
+  refunded
+}
 
 /// Тип бронирования
 enum BookingType { service, consultation, event, package, subscription }
@@ -87,15 +95,17 @@ class Booking {
       status: _parseStatus(data['status']),
       date: data['date'] != null
           ? (data['date'] is Timestamp
-                ? (data['date'] as Timestamp).toDate()
-                : DateTime.parse(data['date'].toString()))
+              ? (data['date'] as Timestamp).toDate()
+              : DateTime.parse(data['date'].toString()))
           : DateTime.now(),
       time: data['time'] != null
           ? (data['time'] is Timestamp
-                ? (data['time'] as Timestamp).toDate()
-                : DateTime.parse(data['time'].toString()))
+              ? (data['time'] as Timestamp).toDate()
+              : DateTime.parse(data['time'].toString()))
           : DateTime.now(),
-      duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
+      duration: data['duration'] != null
+          ? Duration(milliseconds: data['duration'] as int)
+          : null,
       price: (data['price'] as num?)?.toDouble(),
       currency: data['currency'] as String? ?? 'RUB',
       description: data['description'] as String?,
@@ -105,32 +115,32 @@ class Booking {
           ? Map<String, dynamic>.from(data['contactInfo'])
           : null,
       specialRequests: data['specialRequests'] as String?,
-      reminders:
-          (data['reminders'] as List<dynamic>?)
-              ?.map((e) => e is Timestamp ? e.toDate() : DateTime.parse(e.toString()))
+      reminders: (data['reminders'] as List<dynamic>?)
+              ?.map((e) =>
+                  e is Timestamp ? e.toDate() : DateTime.parse(e.toString()))
               .toList() ??
           [],
       attachments: List<String>.from(data['attachments'] ?? []),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       confirmedAt: data['confirmedAt'] != null
           ? (data['confirmedAt'] is Timestamp
-                ? (data['confirmedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['confirmedAt'].toString()))
+              ? (data['confirmedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['confirmedAt'].toString()))
           : null,
       completedAt: data['completedAt'] != null
           ? (data['completedAt'] is Timestamp
-                ? (data['completedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['completedAt'].toString()))
+              ? (data['completedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['completedAt'].toString()))
           : null,
       cancelledAt: data['cancelledAt'] != null
           ? (data['cancelledAt'] is Timestamp
-                ? (data['cancelledAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['cancelledAt'].toString()))
+              ? (data['cancelledAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['cancelledAt'].toString()))
           : null,
       refundedAt: data['refundedAt'] != null
           ? (data['refundedAt'] is Timestamp
-                ? (data['refundedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['refundedAt'].toString()))
+              ? (data['refundedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['refundedAt'].toString()))
           : null,
       cancellationReason: data['cancellationReason'] as String?,
       refundReason: data['refundReason'] as String?,
@@ -141,13 +151,13 @@ class Booking {
       feedback: data['feedback'] as String?,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-                ? (data['updatedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['updatedAt'].toString()))
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -164,38 +174,42 @@ class Booking {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'customerId': customerId,
-    'specialistId': specialistId,
-    'serviceId': serviceId,
-    'type': type.name,
-    'status': status.name,
-    'date': Timestamp.fromDate(date),
-    'time': Timestamp.fromDate(time),
-    'duration': duration?.inMilliseconds,
-    'price': price,
-    'currency': currency,
-    'description': description,
-    'notes': notes,
-    'location': location,
-    'contactInfo': contactInfo,
-    'specialRequests': specialRequests,
-    'reminders': reminders.map(Timestamp.fromDate).toList(),
-    'attachments': attachments,
-    'metadata': metadata,
-    'confirmedAt': confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
-    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-    'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
-    'refundedAt': refundedAt != null ? Timestamp.fromDate(refundedAt!) : null,
-    'cancellationReason': cancellationReason,
-    'refundReason': refundReason,
-    'refundAmount': refundAmount,
-    'paymentId': paymentId,
-    'reviewId': reviewId,
-    'rating': rating,
-    'feedback': feedback,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-  };
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'serviceId': serviceId,
+        'type': type.name,
+        'status': status.name,
+        'date': Timestamp.fromDate(date),
+        'time': Timestamp.fromDate(time),
+        'duration': duration?.inMilliseconds,
+        'price': price,
+        'currency': currency,
+        'description': description,
+        'notes': notes,
+        'location': location,
+        'contactInfo': contactInfo,
+        'specialRequests': specialRequests,
+        'reminders': reminders.map(Timestamp.fromDate).toList(),
+        'attachments': attachments,
+        'metadata': metadata,
+        'confirmedAt':
+            confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'cancelledAt':
+            cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+        'refundedAt':
+            refundedAt != null ? Timestamp.fromDate(refundedAt!) : null,
+        'cancellationReason': cancellationReason,
+        'refundReason': refundReason,
+        'refundAmount': refundAmount,
+        'paymentId': paymentId,
+        'reviewId': reviewId,
+        'rating': rating,
+        'feedback': feedback,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      };
 
   /// Копировать с изменениями
   Booking copyWith({
@@ -231,40 +245,41 @@ class Booking {
     String? feedback,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => Booking(
-    id: id ?? this.id,
-    customerId: customerId ?? this.customerId,
-    specialistId: specialistId ?? this.specialistId,
-    serviceId: serviceId ?? this.serviceId,
-    type: type ?? this.type,
-    status: status ?? this.status,
-    date: date ?? this.date,
-    time: time ?? this.time,
-    duration: duration ?? this.duration,
-    price: price ?? this.price,
-    currency: currency ?? this.currency,
-    description: description ?? this.description,
-    notes: notes ?? this.notes,
-    location: location ?? this.location,
-    contactInfo: contactInfo ?? this.contactInfo,
-    specialRequests: specialRequests ?? this.specialRequests,
-    reminders: reminders ?? this.reminders,
-    attachments: attachments ?? this.attachments,
-    metadata: metadata ?? this.metadata,
-    confirmedAt: confirmedAt ?? this.confirmedAt,
-    completedAt: completedAt ?? this.completedAt,
-    cancelledAt: cancelledAt ?? this.cancelledAt,
-    refundedAt: refundedAt ?? this.refundedAt,
-    cancellationReason: cancellationReason ?? this.cancellationReason,
-    refundReason: refundReason ?? this.refundReason,
-    refundAmount: refundAmount ?? this.refundAmount,
-    paymentId: paymentId ?? this.paymentId,
-    reviewId: reviewId ?? this.reviewId,
-    rating: rating ?? this.rating,
-    feedback: feedback ?? this.feedback,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      Booking(
+        id: id ?? this.id,
+        customerId: customerId ?? this.customerId,
+        specialistId: specialistId ?? this.specialistId,
+        serviceId: serviceId ?? this.serviceId,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        date: date ?? this.date,
+        time: time ?? this.time,
+        duration: duration ?? this.duration,
+        price: price ?? this.price,
+        currency: currency ?? this.currency,
+        description: description ?? this.description,
+        notes: notes ?? this.notes,
+        location: location ?? this.location,
+        contactInfo: contactInfo ?? this.contactInfo,
+        specialRequests: specialRequests ?? this.specialRequests,
+        reminders: reminders ?? this.reminders,
+        attachments: attachments ?? this.attachments,
+        metadata: metadata ?? this.metadata,
+        confirmedAt: confirmedAt ?? this.confirmedAt,
+        completedAt: completedAt ?? this.completedAt,
+        cancelledAt: cancelledAt ?? this.cancelledAt,
+        refundedAt: refundedAt ?? this.refundedAt,
+        cancellationReason: cancellationReason ?? this.cancellationReason,
+        refundReason: refundReason ?? this.refundReason,
+        refundAmount: refundAmount ?? this.refundAmount,
+        paymentId: paymentId ?? this.paymentId,
+        reviewId: reviewId ?? this.reviewId,
+        rating: rating ?? this.rating,
+        feedback: feedback ?? this.feedback,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Парсинг типа из строки
   static BookingType _parseType(String? type) {
@@ -373,7 +388,8 @@ class Booking {
   bool get hasNotes => notes != null && notes!.isNotEmpty;
 
   /// Проверить, есть ли специальные запросы
-  bool get hasSpecialRequests => specialRequests != null && specialRequests!.isNotEmpty;
+  bool get hasSpecialRequests =>
+      specialRequests != null && specialRequests!.isNotEmpty;
 
   /// Проверить, есть ли напоминания
   bool get hasReminders => reminders.isNotEmpty;
@@ -391,7 +407,8 @@ class Booking {
   bool get hasFeedback => feedback != null && feedback!.isNotEmpty;
 
   /// Проверить, есть ли причина отмены
-  bool get hasCancellationReason => cancellationReason != null && cancellationReason!.isNotEmpty;
+  bool get hasCancellationReason =>
+      cancellationReason != null && cancellationReason!.isNotEmpty;
 
   /// Проверить, есть ли причина возврата
   bool get hasRefundReason => refundReason != null && refundReason!.isNotEmpty;

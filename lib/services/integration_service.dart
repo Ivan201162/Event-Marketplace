@@ -103,7 +103,10 @@ class IntegrationService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore.collection('externalIntegrations').doc(integrationId).update({
+      await _firestore
+          .collection('externalIntegrations')
+          .doc(integrationId)
+          .update({
         'status': IntegrationStatus.active.toString().split('.').last,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
         'lastError': null,
@@ -135,7 +138,10 @@ class IntegrationService {
       _stopIntegrationSync(integrationId);
 
       // Обновляем статус
-      await _firestore.collection('externalIntegrations').doc(integrationId).update({
+      await _firestore
+          .collection('externalIntegrations')
+          .doc(integrationId)
+          .update({
         'status': IntegrationStatus.inactive.toString().split('.').last,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -165,7 +171,9 @@ class IntegrationService {
       // Добавляем аутентификацию
       _addAuthentication(headers, integration);
 
-      final response = await http.get(url, headers: headers).timeout(const Duration(seconds: 30));
+      final response = await http
+          .get(url, headers: headers)
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode != 200) {
         throw Exception('HTTP ${response.statusCode}: ${response.body}');
@@ -176,7 +184,8 @@ class IntegrationService {
   }
 
   /// Добавить аутентификацию в заголовки
-  void _addAuthentication(Map<String, String> headers, ExternalIntegration integration) {
+  void _addAuthentication(
+      Map<String, String> headers, ExternalIntegration integration) {
     switch (integration.authType) {
       case AuthenticationType.apiKey:
         final apiKey = integration.credentials['apiKey'];
@@ -226,8 +235,8 @@ class IntegrationService {
       _stopIntegrationSync(integrationId);
 
       // Получаем интервал синхронизации
-      final syncInterval =
-          integration.configuration['syncInterval'] as int? ?? 300; // 5 минут по умолчанию
+      final syncInterval = integration.configuration['syncInterval'] as int? ??
+          300; // 5 минут по умолчанию
 
       // Создаем новый таймер
       final timer = Timer.periodic(Duration(seconds: syncInterval), (_) {
@@ -262,7 +271,10 @@ class IntegrationService {
       if (integration == null || !integration.isActive) return;
 
       // Обновляем время последней синхронизации
-      await _firestore.collection('externalIntegrations').doc(integrationId).update({
+      await _firestore
+          .collection('externalIntegrations')
+          .doc(integrationId)
+          .update({
         'lastSyncAt': Timestamp.fromDate(DateTime.now()),
         'lastError': null,
       });
@@ -316,7 +328,10 @@ class IntegrationService {
       }
 
       // Обновляем ошибку
-      await _firestore.collection('externalIntegrations').doc(integrationId).update({
+      await _firestore
+          .collection('externalIntegrations')
+          .doc(integrationId)
+          .update({
         'lastError': e.toString(),
         'status': IntegrationStatus.error.toString().split('.').last,
       });
@@ -331,7 +346,8 @@ class IntegrationService {
   /// Синхронизация API данных
   Future<void> _syncApiData(ExternalIntegration integration) async {
     try {
-      final endpoints = integration.configuration['endpoints'] as List<dynamic>? ?? [];
+      final endpoints =
+          integration.configuration['endpoints'] as List<dynamic>? ?? [];
 
       for (final endpoint in endpoints) {
         final endpointData = endpoint as Map<String, dynamic>;
@@ -584,7 +600,8 @@ class IntegrationService {
   /// Загрузить интеграции
   Future<void> _loadIntegrations() async {
     try {
-      final snapshot = await _firestore.collection('externalIntegrations').get();
+      final snapshot =
+          await _firestore.collection('externalIntegrations').get();
 
       for (final doc in snapshot.docs) {
         final integration = ExternalIntegration.fromDocument(doc);
@@ -620,15 +637,19 @@ class IntegrationService {
   List<ExternalIntegration> getIntegrations() => _integrations.values.toList();
 
   /// Получить интеграцию по ID
-  ExternalIntegration? getIntegration(String integrationId) => _integrations[integrationId];
+  ExternalIntegration? getIntegration(String integrationId) =>
+      _integrations[integrationId];
 
   /// Получить активные интеграции
-  List<ExternalIntegration> getActiveIntegrations() =>
-      _integrations.values.where((integration) => integration.isActive).toList();
+  List<ExternalIntegration> getActiveIntegrations() => _integrations.values
+      .where((integration) => integration.isActive)
+      .toList();
 
   /// Получить интеграции по типу
   List<ExternalIntegration> getIntegrationsByType(IntegrationType type) =>
-      _integrations.values.where((integration) => integration.type == type).toList();
+      _integrations.values
+          .where((integration) => integration.type == type)
+          .toList();
 
   /// Обновить интеграцию
   Future<void> updateIntegration(
@@ -636,7 +657,10 @@ class IntegrationService {
     ExternalIntegration updatedIntegration,
   ) async {
     try {
-      await _firestore.collection('externalIntegrations').doc(integrationId).update({
+      await _firestore
+          .collection('externalIntegrations')
+          .doc(integrationId)
+          .update({
         ...updatedIntegration.toMap(),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -664,7 +688,10 @@ class IntegrationService {
       _stopIntegrationSync(integrationId);
 
       // Удаляем из Firestore
-      await _firestore.collection('externalIntegrations').doc(integrationId).delete();
+      await _firestore
+          .collection('externalIntegrations')
+          .doc(integrationId)
+          .delete();
 
       // Удаляем из локального кэша
       _integrations.remove(integrationId);
@@ -693,7 +720,8 @@ class IntegrationService {
   }
 
   /// Получить статистику синхронизации
-  Future<List<DataSync>> getSyncHistory(String integrationId, {int limit = 50}) async {
+  Future<List<DataSync>> getSyncHistory(String integrationId,
+      {int limit = 50}) async {
     try {
       final snapshot = await _firestore
           .collection('dataSyncs')
@@ -769,7 +797,8 @@ class IntegrationService {
     try {
       final stats = <String, dynamic>{};
 
-      final totalIntegrations = await _firestore.collection('integrations').count().get();
+      final totalIntegrations =
+          await _firestore.collection('integrations').count().get();
       stats['totalIntegrations'] = totalIntegrations.count ?? 0;
 
       final activeIntegrations = await _firestore
@@ -889,7 +918,8 @@ class IntegrationService {
   }
 
   /// Получить адрес по координатам
-  Future<String> getAddressFromCoordinates(double latitude, double longitude) async {
+  Future<String> getAddressFromCoordinates(
+      double latitude, double longitude) async {
     try {
       // Заглушка для получения адреса по координатам
       // В реальном приложении здесь будет использоваться geocoding
@@ -900,7 +930,8 @@ class IntegrationService {
   }
 
   /// Поделиться контентом
-  Future<void> shareContent({required String content, String? subject, String? title}) async {
+  Future<void> shareContent(
+      {required String content, String? subject, String? title}) async {
     try {
       // Заглушка для шаринга контента
       // В реальном приложении здесь будет использоваться share_plus
@@ -926,13 +957,13 @@ class IntegrationService {
 
   /// Создать мок VK профиль
   Map<String, dynamic> createMockVKProfile(String url) => {
-    'id': '123456789',
-    'firstName': 'Иван',
-    'lastName': 'Петров',
-    'photoUrl': 'https://via.placeholder.com/100',
-    'url': url,
-    'followersCount': 150,
-    'postsCount': 25,
-    'isVerified': false,
-  };
+        'id': '123456789',
+        'firstName': 'Иван',
+        'lastName': 'Петров',
+        'photoUrl': 'https://via.placeholder.com/100',
+        'url': url,
+        'followersCount': 150,
+        'postsCount': 25,
+        'isVerified': false,
+      };
 }

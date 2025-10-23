@@ -49,7 +49,8 @@ class MonetizationProvider extends ChangeNotifier {
   int get userPriority => _userPriority;
   SubscriptionTier get userTier => _userTier;
 
-  bool get hasActiveSubscription => _activeSubscription != null && _activeSubscription!.isActive;
+  bool get hasActiveSubscription =>
+      _activeSubscription != null && _activeSubscription!.isActive;
   bool get hasActivePromotions => _activePromotions.isNotEmpty;
   bool get hasActiveAdvertisements => _activeAdvertisements.isNotEmpty;
   bool get isPremiumUser => _userTier != SubscriptionTier.free;
@@ -82,7 +83,8 @@ class MonetizationProvider extends ChangeNotifier {
       _subscriptionPlans = await _subscriptionService.getAvailablePlans();
       notifyListeners();
     } catch (e) {
-      debugPrint('ERROR: [monetization_provider] Ошибка загрузки планов подписки: $e');
+      debugPrint(
+          'ERROR: [monetization_provider] Ошибка загрузки планов подписки: $e');
     }
   }
 
@@ -92,14 +94,16 @@ class MonetizationProvider extends ChangeNotifier {
       _promotionPackages = await _promotionService.getAvailablePackages();
       notifyListeners();
     } catch (e) {
-      debugPrint('ERROR: [monetization_provider] Ошибка загрузки пакетов продвижения: $e');
+      debugPrint(
+          'ERROR: [monetization_provider] Ошибка загрузки пакетов продвижения: $e');
     }
   }
 
   /// Загрузка подписок пользователя
   Future<void> _loadUserSubscriptions(String userId) async {
     try {
-      _activeSubscription = await _subscriptionService.getActiveSubscription(userId);
+      _activeSubscription =
+          await _subscriptionService.getActiveSubscription(userId);
       notifyListeners();
     } catch (e) {
       debugPrint('ERROR: [monetization_provider] Ошибка загрузки подписок: $e');
@@ -112,7 +116,8 @@ class MonetizationProvider extends ChangeNotifier {
       _activePromotions = await _promotionService.getActivePromotions(userId);
       notifyListeners();
     } catch (e) {
-      debugPrint('ERROR: [monetization_provider] Ошибка загрузки продвижений: $e');
+      debugPrint(
+          'ERROR: [monetization_provider] Ошибка загрузки продвижений: $e');
     }
   }
 
@@ -137,7 +142,8 @@ class MonetizationProvider extends ChangeNotifier {
       _userTier = await _priorityService.getUserSubscriptionTier(userId);
       notifyListeners();
     } catch (e) {
-      debugPrint('ERROR: [monetization_provider] Ошибка загрузки приоритета: $e');
+      debugPrint(
+          'ERROR: [monetization_provider] Ошибка загрузки приоритета: $e');
     }
   }
 
@@ -147,12 +153,14 @@ class MonetizationProvider extends ChangeNotifier {
       _stats = await _priorityService.getPriorityStats();
       notifyListeners();
     } catch (e) {
-      debugPrint('ERROR: [monetization_provider] Ошибка загрузки статистики: $e');
+      debugPrint(
+          'ERROR: [monetization_provider] Ошибка загрузки статистики: $e');
     }
   }
 
   /// Покупка подписки
-  Future<bool> purchaseSubscription({required String userId, required String planId}) async {
+  Future<bool> purchaseSubscription(
+      {required String userId, required String planId}) async {
     _setLoading(true);
     _clearError();
 
@@ -174,7 +182,8 @@ class MonetizationProvider extends ChangeNotifier {
   }
 
   /// Покупка продвижения
-  Future<bool> purchasePromotion({required String userId, required String packageId}) async {
+  Future<bool> purchasePromotion(
+      {required String userId, required String packageId}) async {
     _setLoading(true);
     _clearError();
 
@@ -225,7 +234,8 @@ class MonetizationProvider extends ChangeNotifier {
     _clearError();
 
     try {
-      final success = await _subscriptionService.cancelSubscription(subscriptionId);
+      final success =
+          await _subscriptionService.cancelSubscription(subscriptionId);
       if (success) {
         // Обновляем данные после отмены
         if (_activeSubscription?.id == subscriptionId) {
@@ -365,7 +375,8 @@ class MonetizationProvider extends ChangeNotifier {
         isClick: isClick,
       );
     } catch (e) {
-      debugPrint('ERROR: [monetization_provider] Ошибка обновления статистики: $e');
+      debugPrint(
+          'ERROR: [monetization_provider] Ошибка обновления статистики: $e');
     }
   }
 
@@ -386,7 +397,8 @@ class MonetizationProvider extends ChangeNotifier {
         limit: limit,
       );
     } catch (e) {
-      debugPrint('ERROR: [monetization_provider] Ошибка получения рекомендаций: $e');
+      debugPrint(
+          'ERROR: [monetization_provider] Ошибка получения рекомендаций: $e');
       return [];
     }
   }
@@ -406,7 +418,8 @@ class MonetizationProvider extends ChangeNotifier {
         limit: limit,
       );
     } catch (e) {
-      debugPrint('ERROR: [monetization_provider] Ошибка получения топ пользователей: $e');
+      debugPrint(
+          'ERROR: [monetization_provider] Ошибка получения топ пользователей: $e');
       return [];
     }
   }

@@ -76,7 +76,8 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
       body: currentUser.when(
         data: (user) {
           if (user == null) {
-            return const Center(child: Text('Войдите в аккаунт, чтобы добавить идею'));
+            return const Center(
+                child: Text('Войдите в аккаунт, чтобы добавить идею'));
           }
 
           return _buildForm(user);
@@ -88,258 +89,265 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
   }
 
   Widget _buildForm(user) => SingleChildScrollView(
-    padding: const EdgeInsets.all(16),
-    child: Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Выбор медиа файла
-          _buildMediaSelector(),
-          const SizedBox(height: 24),
-
-          // Заголовок
-          TextFormField(
-            controller: _titleController,
-            decoration: const InputDecoration(
-              labelText: 'Заголовок *',
-              hintText: 'Краткое описание идеи',
-              border: OutlineInputBorder(),
-            ),
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Введите заголовок';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-
-          // Описание
-          TextFormField(
-            controller: _descriptionController,
-            decoration: const InputDecoration(
-              labelText: 'Описание *',
-              hintText: 'Подробное описание идеи',
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 4,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Введите описание';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-
-          // Категория
-          DropdownButtonFormField<String>(
-            initialValue: _selectedCategory,
-            decoration: const InputDecoration(
-              labelText: 'Категория *',
-              border: OutlineInputBorder(),
-            ),
-            items: _categories
-                .map((category) => DropdownMenuItem(value: category, child: Text(category)))
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                _selectedCategory = value!;
-              });
-            },
-          ),
-          const SizedBox(height: 16),
-
-          // Теги
-          TextFormField(
-            controller: _tagsController,
-            decoration: const InputDecoration(
-              labelText: 'Теги',
-              hintText: 'Введите теги через запятую',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Местоположение
-          TextFormField(
-            controller: _locationController,
-            decoration: const InputDecoration(
-              labelText: 'Местоположение',
-              hintText: 'Город или адрес',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Цена и валюта
-          Row(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 2,
-                child: TextFormField(
-                  controller: _priceController,
+              // Выбор медиа файла
+              _buildMediaSelector(),
+              const SizedBox(height: 24),
+
+              // Заголовок
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Заголовок *',
+                  hintText: 'Краткое описание идеи',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Введите заголовок';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Описание
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  labelText: 'Описание *',
+                  hintText: 'Подробное описание идеи',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 4,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Введите описание';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Категория
+              DropdownButtonFormField<String>(
+                initialValue: _selectedCategory,
+                decoration: const InputDecoration(
+                  labelText: 'Категория *',
+                  border: OutlineInputBorder(),
+                ),
+                items: _categories
+                    .map((category) => DropdownMenuItem(
+                        value: category, child: Text(category)))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCategory = value!;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Теги
+              TextFormField(
+                controller: _tagsController,
+                decoration: const InputDecoration(
+                  labelText: 'Теги',
+                  hintText: 'Введите теги через запятую',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Местоположение
+              TextFormField(
+                controller: _locationController,
+                decoration: const InputDecoration(
+                  labelText: 'Местоположение',
+                  hintText: 'Город или адрес',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Цена и валюта
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: TextFormField(
+                      controller: _priceController,
+                      decoration: const InputDecoration(
+                        labelText: 'Цена',
+                        hintText: '0',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      initialValue: _selectedPriceCurrency,
+                      decoration: const InputDecoration(
+                        labelText: 'Валюта',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: _currencies
+                          .map((currency) => DropdownMenuItem(
+                              value: currency, child: Text(currency)))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedPriceCurrency = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Длительность (для видео)
+              if (_isVideo) ...[
+                TextFormField(
+                  controller: _durationController,
                   decoration: const InputDecoration(
-                    labelText: 'Цена',
+                    labelText: 'Длительность (минуты)',
                     hintText: '0',
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.number,
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: DropdownButtonFormField<String>(
-                  initialValue: _selectedPriceCurrency,
-                  decoration: const InputDecoration(
-                    labelText: 'Валюта',
-                    border: OutlineInputBorder(),
-                  ),
-                  items: _currencies
-                      .map((currency) => DropdownMenuItem(value: currency, child: Text(currency)))
-                      .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedPriceCurrency = value!;
-                    });
-                  },
+                const SizedBox(height: 16),
+              ],
+
+              // Кнопка отправки
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _submitIdea,
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16)),
+                  child: _isLoading
+                      ? const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                            SizedBox(width: 16),
+                            Text('Публикация...'),
+                          ],
+                        )
+                      : const Text('Опубликовать идею'),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-
-          // Длительность (для видео)
-          if (_isVideo) ...[
-            TextFormField(
-              controller: _durationController,
-              decoration: const InputDecoration(
-                labelText: 'Длительность (минуты)',
-                hintText: '0',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16),
-          ],
-
-          // Кнопка отправки
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _isLoading ? null : _submitIdea,
-              style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
-              child: _isLoading
-                  ? const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                        SizedBox(width: 16),
-                        Text('Публикация...'),
-                      ],
-                    )
-                  : const Text('Опубликовать идею'),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildMediaSelector() => Container(
-    width: double.infinity,
-    height: 200,
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.grey),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: _selectedFile == null
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.add_photo_alternate, size: 48, color: Colors.grey),
-              const SizedBox(height: 16),
-              const Text('Выберите фото или видео'),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        width: double.infinity,
+        height: 200,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: _selectedFile == null
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton.icon(
-                    onPressed: () => _pickMedia(false),
-                    icon: const Icon(Icons.photo),
-                    label: const Text('Фото'),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () => _pickMedia(true),
-                    icon: const Icon(Icons.videocam),
-                    label: const Text('Видео'),
+                  const Icon(Icons.add_photo_alternate,
+                      size: 48, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  const Text('Выберите фото или видео'),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () => _pickMedia(false),
+                        icon: const Icon(Icons.photo),
+                        label: const Text('Фото'),
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () => _pickMedia(true),
+                        icon: const Icon(Icons.videocam),
+                        label: const Text('Видео'),
+                      ),
+                    ],
                   ),
                 ],
-              ),
-            ],
-          )
-        : Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: _isVideo
-                    ? Container(
-                        color: Colors.black,
-                        child: const Center(
-                          child: Icon(Icons.play_circle_fill, color: Colors.white, size: 60),
+              )
+            : Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: _isVideo
+                        ? Container(
+                            color: Colors.black,
+                            child: const Center(
+                              child: Icon(Icons.play_circle_fill,
+                                  color: Colors.white, size: 60),
+                            ),
+                          )
+                        : Image.file(
+                            _selectedFile!,
+                            width: double.infinity,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.black54, shape: BoxShape.circle),
+                      child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedFile = null;
+                            _isVideo = false;
+                          });
+                        },
+                        icon: const Icon(Icons.close, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  if (_isVideo)
+                    Positioned(
+                      bottom: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                      )
-                    : Image.file(
-                        _selectedFile!,
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Container(
-                  decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectedFile = null;
-                        _isVideo = false;
-                      });
-                    },
-                    icon: const Icon(Icons.close, color: Colors.white),
-                  ),
-                ),
-              ),
-              if (_isVideo)
-                Positioned(
-                  bottom: 8,
-                  left: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'ВИДЕО',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                        child: const Text(
+                          'ВИДЕО',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-            ],
-          ),
-  );
+                ],
+              ),
+      );
 
   Future<void> _pickMedia(bool isVideo) async {
     try {
@@ -376,7 +384,8 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
     if (currentUser == null) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Пользователь не авторизован')));
+      ).showSnackBar(
+          const SnackBar(content: Text('Пользователь не авторизован')));
       return;
     }
 
@@ -401,11 +410,15 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
         mediaFile: _selectedFile!,
         isVideo: _isVideo,
         tags: tags,
-        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+        location: _locationController.text.trim().isEmpty
+            ? null
+            : _locationController.text.trim(),
         price: _priceController.text.trim().isEmpty
             ? null
             : double.tryParse(_priceController.text.trim()),
-        priceCurrency: _priceController.text.trim().isEmpty ? null : _selectedPriceCurrency,
+        priceCurrency: _priceController.text.trim().isEmpty
+            ? null
+            : _selectedPriceCurrency,
         duration: _durationController.text.trim().isEmpty
             ? null
             : int.tryParse(_durationController.text.trim()),
@@ -414,7 +427,8 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
       if (ideaId != null) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Идея успешно опубликована!')));
+        ).showSnackBar(
+            const SnackBar(content: Text('Идея успешно опубликована!')));
         Navigator.of(context).pop();
       } else {
         ScaffoldMessenger.of(
@@ -422,7 +436,8 @@ class _AddIdeaScreenState extends ConsumerState<AddIdeaScreen> {
         ).showSnackBar(const SnackBar(content: Text('Ошибка публикации идеи')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {
       setState(() {
         _isLoading = false;

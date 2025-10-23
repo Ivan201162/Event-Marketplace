@@ -126,13 +126,14 @@ class MediaService {
     required MediaType type,
     String? title,
     String? description,
-  }) async => _uploadMediaFile(
-    file: file,
-    userId: userId,
-    type: type,
-    title: title,
-    description: description,
-  );
+  }) async =>
+      _uploadMediaFile(
+        file: file,
+        userId: userId,
+        type: type,
+        title: title,
+        description: description,
+      );
 
   /// Внутренний метод загрузки медиафайла
   Future<MediaItem> _uploadMediaFile({
@@ -200,9 +201,13 @@ class MediaService {
         },
       );
 
-      await _firestore.collection(_collection).doc(mediaItem.id).set(mediaItem.toMap());
+      await _firestore
+          .collection(_collection)
+          .doc(mediaItem.id)
+          .set(mediaItem.toMap());
 
-      SafeLog.info('MediaService: Media uploaded successfully: ${mediaItem.id}');
+      SafeLog.info(
+          'MediaService: Media uploaded successfully: ${mediaItem.id}');
       return mediaItem;
     } on Exception catch (e) {
       SafeLog.error('MediaService: Error uploading media file: $e');
@@ -236,7 +241,8 @@ class MediaService {
       // Удаляем превью видео, если есть
       if (mediaItem.thumbnailUrl != null) {
         try {
-          final thumbnailPath = _extractStoragePathFromUrl(mediaItem.thumbnailUrl!);
+          final thumbnailPath =
+              _extractStoragePathFromUrl(mediaItem.thumbnailUrl!);
           if (thumbnailPath != null) {
             await _storage.ref().child(thumbnailPath).delete();
           }
@@ -266,7 +272,8 @@ class MediaService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      final mediaItems = querySnapshot.docs.map(MediaItem.fromDocument).toList();
+      final mediaItems =
+          querySnapshot.docs.map(MediaItem.fromDocument).toList();
 
       SafeLog.info('MediaService: Found ${mediaItems.length} media items');
       return mediaItems;
@@ -288,7 +295,8 @@ class MediaService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      final mediaItems = querySnapshot.docs.map(MediaItem.fromDocument).toList();
+      final mediaItems =
+          querySnapshot.docs.map(MediaItem.fromDocument).toList();
 
       SafeLog.info('MediaService: Found ${mediaItems.length} $type items');
       return mediaItems;
@@ -299,7 +307,8 @@ class MediaService {
   }
 
   /// Обновить информацию о медиафайле
-  Future<void> updateMedia(String mediaId, {String? title, String? description}) async {
+  Future<void> updateMedia(String mediaId,
+      {String? title, String? description}) async {
     try {
       SafeLog.info('MediaService: Updating media: $mediaId');
 
@@ -308,7 +317,10 @@ class MediaService {
       if (description != null) updateData['description'] = description;
 
       if (updateData.isNotEmpty) {
-        await _firestore.collection(_collection).doc(mediaId).update(updateData);
+        await _firestore
+            .collection(_collection)
+            .doc(mediaId)
+            .update(updateData);
       }
 
       SafeLog.info('MediaService: Media updated successfully: $mediaId');

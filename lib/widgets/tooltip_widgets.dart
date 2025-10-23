@@ -80,7 +80,7 @@ class _InteractiveTooltipState extends State<InteractiveTooltip>
       duration: widget.duration ?? const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
@@ -88,7 +88,7 @@ class _InteractiveTooltipState extends State<InteractiveTooltip>
       parent: _controller,
       curve: Curves.elasticOut,
     ));
-    
+
     _opacityAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -275,7 +275,7 @@ class _OnboardingTooltipState extends State<OnboardingTooltip>
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -283,7 +283,7 @@ class _OnboardingTooltipState extends State<OnboardingTooltip>
       parent: _controller,
       curve: Curves.elasticOut,
     ));
-    
+
     _opacityAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -301,7 +301,7 @@ class _OnboardingTooltipState extends State<OnboardingTooltip>
       // Для демонстрации всегда показываем
       _shouldShow = true;
     }
-    
+
     if (_shouldShow) {
       await Future.delayed(const Duration(milliseconds: 500));
       if (mounted) {
@@ -342,7 +342,7 @@ class _OnboardingTooltipState extends State<OnboardingTooltip>
       // Здесь должно быть сохранение в SharedPreferences
       // что подсказка больше не должна показываться
     }
-    
+
     widget.onButtonPressed?.call();
     _hideTooltip();
   }

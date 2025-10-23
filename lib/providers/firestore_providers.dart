@@ -4,19 +4,22 @@ import '../models/booking.dart';
 import '../services/fcm_service.dart';
 import '../services/firestore_service.dart';
 
-final firestoreServiceProvider = Provider<FirestoreService>((ref) => FirestoreService());
+final firestoreServiceProvider =
+    Provider<FirestoreService>((ref) => FirestoreService());
 
 /// Провайдер FCM сервиса
 final fcmServiceProvider = Provider<FCMService>((ref) => FCMService());
 
 /// Провайдер занятых дат специалиста
-final busyDatesProvider = FutureProvider.family<List<DateTime>, String>((ref, specialistId) {
+final busyDatesProvider =
+    FutureProvider.family<List<DateTime>, String>((ref, specialistId) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.getBusyDates(specialistId);
 });
 
 /// Провайдер занятых дат с временными интервалами
-final busyDateRangesProvider = FutureProvider.family<List<Map<String, dynamic>>, String>((
+final busyDateRangesProvider =
+    FutureProvider.family<List<Map<String, dynamic>>, String>((
   ref,
   specialistId,
 ) {
@@ -25,7 +28,8 @@ final busyDateRangesProvider = FutureProvider.family<List<Map<String, dynamic>>,
 });
 
 /// Провайдер проверки конфликтов бронирования
-final bookingConflictProvider = FutureProvider.family<bool, BookingConflictParams>((ref, params) {
+final bookingConflictProvider =
+    FutureProvider.family<bool, BookingConflictParams>((ref, params) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.hasBookingConflict(
     params.specialistId,
@@ -60,11 +64,15 @@ class BookingConflictParams {
 
   @override
   int get hashCode =>
-      specialistId.hashCode ^ startTime.hashCode ^ endTime.hashCode ^ excludeBookingId.hashCode;
+      specialistId.hashCode ^
+      startTime.hashCode ^
+      endTime.hashCode ^
+      excludeBookingId.hashCode;
 }
 
 // Провайдер для получения бронирований по специалисту
-final bookingsBySpecialistProvider = FutureProvider.family<List<Booking>, String>((
+final bookingsBySpecialistProvider =
+    FutureProvider.family<List<Booking>, String>((
   ref,
   specialistId,
 ) {
@@ -73,7 +81,8 @@ final bookingsBySpecialistProvider = FutureProvider.family<List<Booking>, String
 });
 
 // Провайдер для получения бронирований по заказчику
-final bookingsByCustomerProvider = FutureProvider.family<List<Booking>, String>((ref, customerId) {
+final bookingsByCustomerProvider =
+    FutureProvider.family<List<Booking>, String>((ref, customerId) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.getBookingsByCustomer(customerId);
 });

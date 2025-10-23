@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import '../../models/transaction.dart';
 
 class RevenueChart extends StatelessWidget {
-  const RevenueChart({super.key, required this.transactions, required this.period});
+  const RevenueChart(
+      {super.key, required this.transactions, required this.period});
   final List<Transaction> transactions;
   final String period;
 
@@ -31,10 +32,10 @@ class RevenueChart extends StatelessWidget {
           gridData: FlGridData(
             horizontalInterval: 1,
             verticalInterval: 1,
-            getDrawingHorizontalLine: (value) =>
-                FlLine(color: Colors.grey.withValues(alpha: 0.2), strokeWidth: 1),
-            getDrawingVerticalLine: (value) =>
-                FlLine(color: Colors.grey.withValues(alpha: 0.2), strokeWidth: 1),
+            getDrawingHorizontalLine: (value) => FlLine(
+                color: Colors.grey.withValues(alpha: 0.2), strokeWidth: 1),
+            getDrawingVerticalLine: (value) => FlLine(
+                color: Colors.grey.withValues(alpha: 0.2), strokeWidth: 1),
           ),
           titlesData: FlTitlesData(
             rightTitles: const AxisTitles(),
@@ -78,11 +79,13 @@ class RevenueChart extends StatelessWidget {
                   .map((entry) => FlSpot(entry.key.toDouble(), entry.value))
                   .toList(),
               isCurved: true,
-              gradient: const LinearGradient(colors: [Colors.blue, Colors.indigo]),
+              gradient:
+                  const LinearGradient(colors: [Colors.blue, Colors.indigo]),
               barWidth: 3,
               isStrokeCapRound: true,
               dotData: FlDotData(
-                getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
+                getDotPainter: (spot, percent, barData, index) =>
+                    FlDotCirclePainter(
                   radius: 4,
                   color: Colors.blue,
                   strokeWidth: 2,
@@ -92,7 +95,10 @@ class RevenueChart extends StatelessWidget {
               belowBarData: BarAreaData(
                 show: true,
                 gradient: LinearGradient(
-                  colors: [Colors.blue.withValues(alpha: 0.3), Colors.blue.withValues(alpha: 0.1)],
+                  colors: [
+                    Colors.blue.withValues(alpha: 0.3),
+                    Colors.blue.withValues(alpha: 0.1)
+                  ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),

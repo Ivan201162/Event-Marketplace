@@ -3,7 +3,8 @@ import '../models/payment_models.dart';
 
 /// Ответ от СБП
 class SbpPaymentResponse {
-  const SbpPaymentResponse({required this.id, required this.confirmationUrl, this.qrCode});
+  const SbpPaymentResponse(
+      {required this.id, required this.confirmationUrl, this.qrCode});
   final String id;
   final String confirmationUrl;
   final String? qrCode;
@@ -11,7 +12,8 @@ class SbpPaymentResponse {
 
 /// Ответ от ЮKassa
 class YooKassaPaymentResponse {
-  const YooKassaPaymentResponse({required this.id, required this.confirmationUrl, this.qrCode});
+  const YooKassaPaymentResponse(
+      {required this.id, required this.confirmationUrl, this.qrCode});
   final String id;
   final String confirmationUrl;
   final String? qrCode;
@@ -19,7 +21,8 @@ class YooKassaPaymentResponse {
 
 /// Ответ от Тинькофф
 class TinkoffPaymentResponse {
-  const TinkoffPaymentResponse({required this.paymentId, required this.paymentUrl, this.qrCode});
+  const TinkoffPaymentResponse(
+      {required this.paymentId, required this.paymentUrl, this.qrCode});
   final String paymentId;
   final String paymentUrl;
   final String? qrCode;
@@ -117,8 +120,10 @@ class RussianBankService {
       await Future.delayed(const Duration(seconds: 1));
 
       return TinkoffPaymentResponse(
-        paymentId: 'tinkoff_${paymentId}_${DateTime.now().millisecondsSinceEpoch}',
-        paymentUrl: 'https://securepay.tinkoff.ru/v2/Checkout?OrderId=$paymentId',
+        paymentId:
+            'tinkoff_${paymentId}_${DateTime.now().millisecondsSinceEpoch}',
+        paymentUrl:
+            'https://securepay.tinkoff.ru/v2/Checkout?OrderId=$paymentId',
         qrCode:
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
       );
@@ -143,7 +148,8 @@ class RussianBankService {
   }
 
   /// Получить статус платежа ЮKassa
-  Future<YooKassaPaymentStatus> getYooKassaPaymentStatus(String externalPaymentId) async {
+  Future<YooKassaPaymentStatus> getYooKassaPaymentStatus(
+      String externalPaymentId) async {
     try {
       // В реальном приложении здесь должна быть проверка статуса в ЮKassa
       // Пока возвращаем заглушку
@@ -157,7 +163,8 @@ class RussianBankService {
   }
 
   /// Получить статус платежа Тинькофф
-  Future<TinkoffPaymentStatus> getTinkoffPaymentStatus(String externalPaymentId) async {
+  Future<TinkoffPaymentStatus> getTinkoffPaymentStatus(
+      String externalPaymentId) async {
     try {
       // В реальном приложении здесь должна быть проверка статуса в Тинькофф
       // Пока возвращаем заглушку
@@ -194,35 +201,35 @@ class RussianBankService {
 
   /// Получить доступные методы платежей
   List<PaymentMethodInfo> getAvailablePaymentMethods() => [
-    const PaymentMethodInfo(
-      method: PaymentMethod.sbp,
-      name: 'СБП',
-      description: 'Система быстрых платежей',
-      isAvailable: true,
-    ),
-    const PaymentMethodInfo(
-      method: PaymentMethod.yookassa,
-      name: 'ЮKassa',
-      description: 'Платежи через ЮKassa',
-      isAvailable: true,
-    ),
-    const PaymentMethodInfo(
-      method: PaymentMethod.tinkoff,
-      name: 'Тинькофф',
-      description: 'Платежи через Тинькофф',
-      isAvailable: true,
-    ),
-    const PaymentMethodInfo(
-      method: PaymentMethod.card,
-      name: 'Банковская карта',
-      description: 'Оплата банковской картой',
-      isAvailable: true,
-    ),
-    const PaymentMethodInfo(
-      method: PaymentMethod.cash,
-      name: 'Наличные',
-      description: 'Оплата наличными',
-      isAvailable: false,
-    ),
-  ];
+        const PaymentMethodInfo(
+          method: PaymentMethod.sbp,
+          name: 'СБП',
+          description: 'Система быстрых платежей',
+          isAvailable: true,
+        ),
+        const PaymentMethodInfo(
+          method: PaymentMethod.yookassa,
+          name: 'ЮKassa',
+          description: 'Платежи через ЮKassa',
+          isAvailable: true,
+        ),
+        const PaymentMethodInfo(
+          method: PaymentMethod.tinkoff,
+          name: 'Тинькофф',
+          description: 'Платежи через Тинькофф',
+          isAvailable: true,
+        ),
+        const PaymentMethodInfo(
+          method: PaymentMethod.card,
+          name: 'Банковская карта',
+          description: 'Оплата банковской картой',
+          isAvailable: true,
+        ),
+        const PaymentMethodInfo(
+          method: PaymentMethod.cash,
+          name: 'Наличные',
+          description: 'Оплата наличными',
+          isAvailable: false,
+        ),
+      ];
 }

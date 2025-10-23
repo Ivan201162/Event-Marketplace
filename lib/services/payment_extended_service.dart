@@ -8,7 +8,8 @@ import '../models/payment_extended.dart';
 class PaymentExtendedService {
   factory PaymentExtendedService() => _instance;
   PaymentExtendedService._internal();
-  static final PaymentExtendedService _instance = PaymentExtendedService._internal();
+  static final PaymentExtendedService _instance =
+      PaymentExtendedService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -133,7 +134,10 @@ class PaymentExtendedService {
   /// Обновить платеж
   Future<bool> updatePayment(PaymentExtended payment) async {
     try {
-      await _firestore.collection('payments').doc(payment.id).update(payment.toMap());
+      await _firestore
+          .collection('payments')
+          .doc(payment.id)
+          .update(payment.toMap());
       return true;
     } on Exception {
       // TODO(developer): Log error properly
@@ -156,14 +160,16 @@ class PaymentExtendedService {
   }
 
   /// Получить платежи пользователя
-  Stream<List<PaymentExtended>> getUserPayments(String userId, {bool isCustomer = true}) {
+  Stream<List<PaymentExtended>> getUserPayments(String userId,
+      {bool isCustomer = true}) {
     final field = isCustomer ? 'customerId' : 'specialistId';
     return _firestore
         .collection('payments')
         .where(field, isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map(PaymentExtended.fromDocument).toList());
+        .map((snapshot) =>
+            snapshot.docs.map(PaymentExtended.fromDocument).toList());
   }
 
   /// Оплатить взнос
@@ -194,7 +200,9 @@ class PaymentExtendedService {
           .fold(0, (total, i) => total + i.amount);
 
       final remainingAmount = payment.totalAmount - paidAmount;
-      final status = remainingAmount <= 0 ? PaymentStatus.completed : PaymentStatus.processing;
+      final status = remainingAmount <= 0
+          ? PaymentStatus.completed
+          : PaymentStatus.processing;
 
       // Обновляем платеж
       final updatedPayment = payment.copyWith(
@@ -227,7 +235,8 @@ class PaymentExtendedService {
               pw.Center(
                 child: pw.Text(
                   'КВИТАНЦИЯ ОБ ОПЛАТЕ',
-                  style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold),
+                  style: pw.TextStyle(
+                      fontSize: 20, fontWeight: pw.FontWeight.bold),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -239,13 +248,16 @@ class PaymentExtendedService {
               pw.SizedBox(height: 10),
 
               // Суммы
-              pw.Text('Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽'),
+              pw.Text(
+                  'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽'),
               pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
-              pw.Text('Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
+              pw.Text(
+                  'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
               pw.SizedBox(height: 20),
 
               // Взносы
-              pw.Text('Взносы:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Text('Взносы:',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 10),
 
               ...payment.installments.map(
@@ -268,7 +280,8 @@ class PaymentExtendedService {
 
       // Сохраняем PDF
       // final bytes = await pdf.save();
-      final fileName = 'receipt_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+      final fileName =
+          'receipt_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       // final ref = _storage.ref().child('receipts/$fileName');
 
       // final uploadTask = ref.putData(bytes);
@@ -305,7 +318,8 @@ class PaymentExtendedService {
               pw.Center(
                 child: pw.Text(
                   'СЧЁТ НА ОПЛАТУ',
-                  style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold),
+                  style: pw.TextStyle(
+                      fontSize: 20, fontWeight: pw.FontWeight.bold),
                 ),
               ),
               pw.SizedBox(height: 20),
@@ -313,7 +327,8 @@ class PaymentExtendedService {
               // Информация о счёте
               pw.Text('Номер счёта: ${payment.id}'),
               pw.Text('Дата создания: ${_formatDate(payment.createdAt)}'),
-              pw.Text('Срок оплаты: ${_formatDate(DateTime.now().add(const Duration(days: 7)))}'),
+              pw.Text(
+                  'Срок оплаты: ${_formatDate(DateTime.now().add(const Duration(days: 7)))}'),
               pw.SizedBox(height: 10),
 
               // Сумма к оплате
@@ -323,19 +338,23 @@ class PaymentExtendedService {
                 child: pw.Center(
                   child: pw.Text(
                     'К ОПЛАТЕ: ${payment.remainingAmount.toStringAsFixed(2)} ₽',
-                    style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+                    style: pw.TextStyle(
+                        fontSize: 18, fontWeight: pw.FontWeight.bold),
                   ),
                 ),
               ),
               pw.SizedBox(height: 20),
 
               // Детали платежа
-              pw.Text('Детали платежа:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Text('Детали платежа:',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 10),
 
-              pw.Text('Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽'),
+              pw.Text(
+                  'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽'),
               pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
-              pw.Text('Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
+              pw.Text(
+                  'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
             ],
           ),
         ),
@@ -343,7 +362,8 @@ class PaymentExtendedService {
 
       // Сохраняем PDF
       // final bytes = await pdf.save();
-      final fileName = 'invoice_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+      final fileName =
+          'invoice_${payment.id}_${DateTime.now().millisecondsSinceEpoch}.pdf';
       // final ref = _storage.ref().child('invoices/$fileName');
 
       // final uploadTask = ref.putData(bytes);
@@ -366,7 +386,8 @@ class PaymentExtendedService {
   }
 
   /// Получить статистику платежей
-  Future<PaymentStats> getPaymentStats(String userId, {bool isCustomer = true}) async {
+  Future<PaymentStats> getPaymentStats(String userId,
+      {bool isCustomer = true}) async {
     try {
       final field = isCustomer ? 'customerId' : 'specialistId';
       final snapshot = await _firestore
@@ -377,20 +398,26 @@ class PaymentExtendedService {
       final payments = snapshot.docs.map(PaymentExtended.fromDocument).toList();
 
       final totalPayments = payments.length;
-      final completedPayments = payments.where((p) => p.status == PaymentStatus.completed).length;
-      final pendingPayments = payments.where((p) => p.status == PaymentStatus.pending).length;
-      final failedPayments = payments.where((p) => p.status == PaymentStatus.failed).length;
+      final completedPayments =
+          payments.where((p) => p.status == PaymentStatus.completed).length;
+      final pendingPayments =
+          payments.where((p) => p.status == PaymentStatus.pending).length;
+      final failedPayments =
+          payments.where((p) => p.status == PaymentStatus.failed).length;
 
       final totalAmount = payments.fold(0, (total, p) => total + p.totalAmount);
       final paidAmount = payments.fold(0, (total, p) => total + p.paidAmount);
-      final pendingAmount = payments.fold(0, (total, p) => total + p.remainingAmount);
+      final pendingAmount =
+          payments.fold(0, (total, p) => total + p.remainingAmount);
 
       final paymentsByType = <String, int>{};
       final paymentsByStatus = <String, int>{};
 
       for (final payment in payments) {
-        paymentsByType[payment.type.name] = (paymentsByType[payment.type.name] ?? 0) + 1;
-        paymentsByStatus[payment.status.name] = (paymentsByStatus[payment.status.name] ?? 0) + 1;
+        paymentsByType[payment.type.name] =
+            (paymentsByType[payment.type.name] ?? 0) + 1;
+        paymentsByStatus[payment.status.name] =
+            (paymentsByStatus[payment.status.name] ?? 0) + 1;
       }
 
       return PaymentStats(
@@ -414,7 +441,8 @@ class PaymentExtendedService {
   /// Получить настройки предоплаты
   Future<AdvancePaymentSettings> getAdvancePaymentSettings() async {
     try {
-      final doc = await _firestore.collection('settings').doc('advance_payment').get();
+      final doc =
+          await _firestore.collection('settings').doc('advance_payment').get();
       if (doc.exists) {
         return AdvancePaymentSettings.fromMap(doc.data()!);
       }
@@ -426,9 +454,13 @@ class PaymentExtendedService {
   }
 
   /// Обновить настройки предоплаты
-  Future<bool> updateAdvancePaymentSettings(AdvancePaymentSettings settings) async {
+  Future<bool> updateAdvancePaymentSettings(
+      AdvancePaymentSettings settings) async {
     try {
-      await _firestore.collection('settings').doc('advance_payment').set(settings.toMap());
+      await _firestore
+          .collection('settings')
+          .doc('advance_payment')
+          .set(settings.toMap());
       return true;
     } on Exception {
       // TODO(developer): Log error properly

@@ -37,7 +37,8 @@ class AppUpdateNotificationWidget extends ConsumerWidget {
           // Заголовок
           Row(
             children: [
-              Icon(Icons.system_update, color: Color(updateInfo.updateTypeColor), size: 24),
+              Icon(Icons.system_update,
+                  color: Color(updateInfo.updateTypeColor), size: 24),
               const SizedBox(width: 12),
               Expanded(
                 child: ResponsiveText(
@@ -121,10 +122,13 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
             children: [
               const Icon(Icons.system_update),
               const SizedBox(width: 12),
-              const Expanded(child: ResponsiveText('Обновления приложения', isTitle: true)),
+              const Expanded(
+                  child:
+                      ResponsiveText('Обновления приложения', isTitle: true)),
               IconButton(
                 icon: const Icon(Icons.refresh),
-                onPressed: () => ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
+                onPressed: () =>
+                    ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
               ),
             ],
           ),
@@ -132,8 +136,10 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
 
           // Текущая версия
           if (versionDetails != null) ...[
-            _buildInfoRow('Текущая версия', 'v${versionDetails.currentVersion}', Icons.info),
-            _buildInfoRow('Номер сборки', versionDetails.buildNumber, Icons.build),
+            _buildInfoRow('Текущая версия', 'v${versionDetails.currentVersion}',
+                Icons.info),
+            _buildInfoRow(
+                'Номер сборки', versionDetails.buildNumber, Icons.build),
             _buildInfoRow('Имя приложения', versionDetails.appName, Icons.apps),
           ],
 
@@ -172,7 +178,9 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
                 child: ElevatedButton.icon(
                   onPressed: updateState.isChecking
                       ? null
-                      : () => ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
+                      : () => ref
+                          .read(appUpdateProvider.notifier)
+                          .forceCheckForUpdates(),
                   icon: updateState.isChecking
                       ? const SizedBox(
                           width: 16,
@@ -180,14 +188,18 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.refresh),
-                  label: Text(updateState.isChecking ? 'Проверка...' : 'Проверить обновления'),
+                  label: Text(updateState.isChecking
+                      ? 'Проверка...'
+                      : 'Проверить обновления'),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: updateState.updateInfo?.downloadUrl != null
-                      ? () => ref.read(appUpdateProvider.notifier).openDownloadPage()
+                      ? () => ref
+                          .read(appUpdateProvider.notifier)
+                          .openDownloadPage()
                       : null,
                   icon: const Icon(Icons.download),
                   label: const Text('Скачать'),
@@ -232,7 +244,8 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
             Icon(icon, size: 20, color: Colors.grey[600]),
             const SizedBox(width: 12),
             Expanded(child: ResponsiveText(label, isSubtitle: true)),
-            ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+            ResponsiveText(value,
+                style: const TextStyle(fontWeight: FontWeight.w500)),
           ],
         ),
       );
@@ -279,7 +292,8 @@ class VersionInfoWidget extends ConsumerWidget {
           const SizedBox(height: 16),
 
           // Полная информация о версии
-          _buildInfoRow('Версия приложения', versionDetails.fullVersionInfo, Icons.apps),
+          _buildInfoRow(
+              'Версия приложения', versionDetails.fullVersionInfo, Icons.apps),
 
           // Статус обновления
           if (versionDetails.hasUpdateAvailable) ...[
@@ -295,7 +309,8 @@ class VersionInfoWidget extends ConsumerWidget {
                 Icons.category,
               ),
           ] else ...[
-            _buildInfoRow('Статус обновления', 'Приложение актуально', Icons.check_circle),
+            _buildInfoRow('Статус обновления', 'Приложение актуально',
+                Icons.check_circle),
           ],
 
           const SizedBox(height: 16),
@@ -304,7 +319,8 @@ class VersionInfoWidget extends ConsumerWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () => ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
+              onPressed: () =>
+                  ref.read(appUpdateProvider.notifier).forceCheckForUpdates(),
               icon: const Icon(Icons.refresh),
               label: const Text('Проверить обновления'),
             ),
@@ -327,7 +343,8 @@ class VersionInfoWidget extends ConsumerWidget {
                 children: [
                   ResponsiveText(label, isSubtitle: true),
                   const SizedBox(height: 4),
-                  ResponsiveText(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+                  ResponsiveText(value,
+                      style: const TextStyle(fontWeight: FontWeight.w500)),
                 ],
               ),
             ),

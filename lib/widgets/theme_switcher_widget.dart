@@ -12,7 +12,8 @@ class ThemeSwitcherWidget extends ConsumerWidget {
     final themeNotifier = ref.read(themeProvider.notifier);
 
     return PopupMenuButton<ThemeMode>(
-      icon: Icon(_getThemeIcon(themeMode), color: Theme.of(context).colorScheme.onSurface),
+      icon: Icon(_getThemeIcon(themeMode),
+          color: Theme.of(context).colorScheme.onSurface),
       tooltip: 'Переключить тему',
       onSelected: (mode) {
         switch (mode) {
@@ -45,7 +46,9 @@ class ThemeSwitcherWidget extends ConsumerWidget {
                   color: themeMode == ThemeMode.light
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.onSurface,
-                  fontWeight: themeMode == ThemeMode.light ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight: themeMode == ThemeMode.light
+                      ? FontWeight.w600
+                      : FontWeight.normal,
                 ),
               ),
             ],
@@ -68,7 +71,9 @@ class ThemeSwitcherWidget extends ConsumerWidget {
                   color: themeMode == ThemeMode.dark
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.onSurface,
-                  fontWeight: themeMode == ThemeMode.dark ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight: themeMode == ThemeMode.dark
+                      ? FontWeight.w600
+                      : FontWeight.normal,
                 ),
               ),
             ],
@@ -91,7 +96,9 @@ class ThemeSwitcherWidget extends ConsumerWidget {
                   color: themeMode == ThemeMode.system
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.onSurface,
-                  fontWeight: themeMode == ThemeMode.system ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight: themeMode == ThemeMode.system
+                      ? FontWeight.w600
+                      : FontWeight.normal,
                 ),
               ),
             ],

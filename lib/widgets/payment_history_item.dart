@@ -45,13 +45,15 @@ class PaymentHistoryItem extends StatelessWidget {
                       children: [
                         Text(
                           payment.typeDisplayName ?? 'Платеж',
-                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                          style: theme.textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           payment.methodDisplayName ?? 'Не указан',
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -73,7 +75,8 @@ class PaymentHistoryItem extends StatelessWidget {
                         Text(
                           'налог: ${(payment.taxAmount ?? 0.0).toStringAsFixed(0)} ₽',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                           ),
                         ),
                     ],
@@ -88,12 +91,15 @@ class PaymentHistoryItem extends StatelessWidget {
                 children: [
                   // Status badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(payment.status).withValues(alpha: 0.1),
+                      color: _getStatusColor(payment.status)
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: _getStatusColor(payment.status).withValues(alpha: 0.3),
+                        color: _getStatusColor(payment.status)
+                            .withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -118,17 +124,20 @@ class PaymentHistoryItem extends StatelessWidget {
               ),
 
               // Failure reason if failed
-              if (payment.status == PaymentStatus.failed && payment.failureReason != null) ...[
+              if (payment.status == PaymentStatus.failed &&
+                  payment.failureReason != null) ...[
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.errorContainer.withValues(alpha: 0.3),
+                    color:
+                        theme.colorScheme.errorContainer.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.error_outline, size: 16, color: theme.colorScheme.error),
+                      Icon(Icons.error_outline,
+                          size: 16, color: theme.colorScheme.error),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(

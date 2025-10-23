@@ -40,7 +40,10 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
         appBar: AppBar(
           title: Text(widget.idea.title),
           actions: [
-            IconButton(onPressed: _shareIdea, icon: const Icon(Icons.share), tooltip: 'Поделиться'),
+            IconButton(
+                onPressed: _shareIdea,
+                icon: const Icon(Icons.share),
+                tooltip: 'Поделиться'),
             IconButton(
               onPressed: _toggleLike,
               icon: const Icon(Icons.favorite_border),
@@ -67,7 +70,10 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                       widget.idea.title,
                       style: Theme.of(
                         context,
-                      ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                      )
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
 
                     const SizedBox(height: 8),
@@ -77,20 +83,24 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                       children: [
                         CircleAvatar(
                           radius: 16,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withValues(alpha: 0.1),
                           backgroundImage: widget.idea.authorAvatar != null
                               ? NetworkImage(widget.idea.authorAvatar!)
                               : null,
                           child: widget.idea.authorAvatar == null
                               ? Text(
                                   (widget.idea.authorName ?? 'П').isNotEmpty
-                                      ? (widget.idea.authorName ?? 'П')[0].toUpperCase()
+                                      ? (widget.idea.authorName ?? 'П')[0]
+                                          .toUpperCase()
                                       : '?',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).colorScheme.primary,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                   ),
                                 )
                               : null,
@@ -104,13 +114,19 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                                 widget.idea.authorName ?? 'Пользователь',
                                 style: Theme.of(
                                   context,
-                                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                                )
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.w600),
                               ),
                               Text(
                                 widget.idea.timeAgo,
                                 style: Theme.of(
                                   context,
-                                ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                                )
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(color: Colors.grey[600]),
                               ),
                             ],
                           ),
@@ -121,7 +137,8 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                     const SizedBox(height: 16),
 
                     // Описание
-                    Text(widget.idea.description, style: Theme.of(context).textTheme.bodyLarge),
+                    Text(widget.idea.description,
+                        style: Theme.of(context).textTheme.bodyLarge),
 
                     const SizedBox(height: 16),
 
@@ -183,7 +200,9 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
             },
             errorBuilder: (context, error, stackTrace) => Container(
               color: Colors.grey[200],
-              child: const Center(child: Icon(Icons.broken_image, color: Colors.grey, size: 48)),
+              child: const Center(
+                  child:
+                      Icon(Icons.broken_image, color: Colors.grey, size: 48)),
             ),
           ),
         ),
@@ -219,8 +238,10 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
             children: [
               Text(
                 'Детали мероприятия',
-                style:
-                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               if (widget.idea.budget != null) ...[
@@ -276,9 +297,14 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
             const SizedBox(width: 12),
             Text(
               '$label: ',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w500),
             ),
-            Expanded(child: Text(value, style: Theme.of(context).textTheme.bodyMedium)),
+            Expanded(
+                child:
+                    Text(value, style: Theme.of(context).textTheme.bodyMedium)),
           ],
         ),
       );
@@ -288,7 +314,10 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
         children: [
           Text(
             'Теги',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -298,7 +327,10 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                 .map(
                   (tag) => Chip(
                     label: Text('#$tag'),
-                    backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    backgroundColor: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1),
                     labelStyle: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w500,
@@ -316,28 +348,48 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildStatItem(icon: Icons.favorite, count: widget.idea.likes, label: 'Лайки'),
               _buildStatItem(
-                  icon: Icons.comment, count: widget.idea.comments, label: 'Комментарии'),
-              _buildStatItem(icon: Icons.visibility, count: widget.idea.views, label: 'Просмотры'),
-              _buildStatItem(icon: Icons.share, count: widget.idea.shares, label: 'Поделились'),
+                  icon: Icons.favorite,
+                  count: widget.idea.likes,
+                  label: 'Лайки'),
+              _buildStatItem(
+                  icon: Icons.comment,
+                  count: widget.idea.comments,
+                  label: 'Комментарии'),
+              _buildStatItem(
+                  icon: Icons.visibility,
+                  count: widget.idea.views,
+                  label: 'Просмотры'),
+              _buildStatItem(
+                  icon: Icons.share,
+                  count: widget.idea.shares,
+                  label: 'Поделились'),
             ],
           ),
         ),
       );
 
-  Widget _buildStatItem({required IconData icon, required int count, required String label}) =>
+  Widget _buildStatItem(
+          {required IconData icon,
+          required int count,
+          required String label}) =>
       Column(
         children: [
           Icon(icon, color: Theme.of(context).colorScheme.primary),
           const SizedBox(height: 4),
           Text(
             count.toString(),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           Text(
             label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Colors.grey[600]),
           ),
         ],
       );
@@ -349,7 +401,10 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
           children: [
             Text(
               'Дополнительная информация',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
 
@@ -364,7 +419,10 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
                       'Создано',
                       style: Theme.of(
                         context,
-                      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      )
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -396,12 +454,14 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen>
         // Обновляем счетчик лайков
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Лайк добавлен!'), backgroundColor: Colors.green),
+        const SnackBar(
+            content: Text('Лайк добавлен!'), backgroundColor: Colors.green),
       );
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 }

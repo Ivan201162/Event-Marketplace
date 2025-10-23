@@ -47,7 +47,10 @@ class RecommendationCard extends StatelessWidget {
                 _buildHeader(context, specialist),
                 const SizedBox(height: 12),
                 _buildSpecialistInfo(context, specialist),
-                if (showReason) ...[const SizedBox(height: 12), _buildReason(context)],
+                if (showReason) ...[
+                  const SizedBox(height: 12),
+                  _buildReason(context)
+                ],
                 const SizedBox(height: 16),
                 _buildActions(context),
               ],
@@ -116,22 +119,32 @@ class RecommendationCard extends StatelessWidget {
 
   Widget _buildAvatar(Specialist specialist) => CircleAvatar(
         radius: 24,
-        backgroundImage: specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
+        backgroundImage: specialist.avatarUrl != null
+            ? NetworkImage(specialist.avatarUrl!)
+            : null,
         child: specialist.avatarUrl == null
             ? Text(
-                specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                specialist.name.isNotEmpty
+                    ? specialist.name[0].toUpperCase()
+                    : '?',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               )
             : null,
       );
 
   Widget _buildCompactAvatar(Specialist specialist) => CircleAvatar(
         radius: 20,
-        backgroundImage: specialist.avatarUrl != null ? NetworkImage(specialist.avatarUrl!) : null,
+        backgroundImage: specialist.avatarUrl != null
+            ? NetworkImage(specialist.avatarUrl!)
+            : null,
         child: specialist.avatarUrl == null
             ? Text(
-                specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                specialist.name.isNotEmpty
+                    ? specialist.name[0].toUpperCase()
+                    : '?',
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               )
             : null,
       );
@@ -141,12 +154,14 @@ class RecommendationCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: _getTypeColor(context).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: _getTypeColor(context).withValues(alpha: 0.3)),
+          border:
+              Border.all(color: _getTypeColor(context).withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(recommendation.type.icon, style: const TextStyle(fontSize: 12)),
+            Text(recommendation.type.icon,
+                style: const TextStyle(fontSize: 12)),
             const SizedBox(width: 4),
             Text(
               recommendation.type.displayName,
@@ -166,7 +181,8 @@ class RecommendationCard extends StatelessWidget {
           color: _getTypeColor(context).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(recommendation.type.icon, style: const TextStyle(fontSize: 10)),
+        child: Text(recommendation.type.icon,
+            style: const TextStyle(fontSize: 10)),
       );
 
   Widget _buildScoreChip(BuildContext context) => Container(
@@ -177,30 +193,34 @@ class RecommendationCard extends StatelessWidget {
         ),
         child: Text(
           '${(recommendation.score * 100).toInt()}%',
-          style:
-              TextStyle(fontSize: 12, color: _getScoreColor(context), fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 12,
+              color: _getScoreColor(context),
+              fontWeight: FontWeight.bold),
         ),
       );
 
-  Widget _buildSpecialistInfo(BuildContext context, Specialist specialist) => Column(
+  Widget _buildSpecialistInfo(BuildContext context, Specialist specialist) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.category, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              Icon(Icons.category,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
               const SizedBox(width: 4),
               Text(
                 specialist.category?.displayName ?? 'Категория',
                 style: Theme.of(
                   context,
-                )
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                ).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
               const SizedBox(width: 16),
               Icon(Icons.location_on,
-                  size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  size: 16,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
@@ -247,7 +267,10 @@ class RecommendationCard extends StatelessWidget {
 
   Widget _buildCompactPrice(Specialist specialist) => Text(
         specialist.priceRangeString ?? 'Цена не указана',
-        style: TextStyle(fontSize: 12, color: Colors.green[700], fontWeight: FontWeight.w500),
+        style: TextStyle(
+            fontSize: 12,
+            color: Colors.green[700],
+            fontWeight: FontWeight.w500),
       );
 
   Widget _buildRating(BuildContext context, Specialist specialist) => Row(
@@ -256,13 +279,17 @@ class RecommendationCard extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             specialist.rating.toStringAsFixed(1),
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(fontWeight: FontWeight.w500),
           ),
           Text(
             ' (${specialist.totalReviews} отзывов)',
             style: Theme.of(
               context,
-            ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ],
       );
@@ -275,7 +302,8 @@ class RecommendationCard extends StatelessWidget {
             specialist.priceRangeString ?? 'Цена не указана',
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.green[700], fontWeight: FontWeight.w500),
+            ).textTheme.bodyMedium?.copyWith(
+                color: Colors.green[700], fontWeight: FontWeight.w500),
           ),
         ],
       );
@@ -294,12 +322,16 @@ class RecommendationCard extends StatelessWidget {
   Widget _buildReason(BuildContext context) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          color: Theme.of(context)
+              .colorScheme
+              .surfaceContainerHighest
+              .withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
           children: [
-            Icon(Icons.lightbulb_outline, size: 16, color: Theme.of(context).colorScheme.primary),
+            Icon(Icons.lightbulb_outline,
+                size: 16, color: Theme.of(context).colorScheme.primary),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -317,11 +349,13 @@ class RecommendationCard extends StatelessWidget {
   Widget _buildActions(BuildContext context) => Row(
         children: [
           Expanded(
-            child: OutlinedButton(onPressed: onTap, child: const Text('Подробнее')),
+            child: OutlinedButton(
+                onPressed: onTap, child: const Text('Подробнее')),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: ElevatedButton(onPressed: onBook, child: const Text('Забронировать')),
+            child: ElevatedButton(
+                onPressed: onBook, child: const Text('Забронировать')),
           ),
         ],
       );

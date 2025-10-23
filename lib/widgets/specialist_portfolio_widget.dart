@@ -37,7 +37,10 @@ class SpecialistPortfolioWidget extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Портфолио
-            if (specialist.portfolio.isEmpty) _buildEmptyPortfolio() else _buildPortfolioGrid(),
+            if (specialist.portfolio.isEmpty)
+              _buildEmptyPortfolio()
+            else
+              _buildPortfolioGrid(),
           ],
         ),
       );
@@ -45,14 +48,19 @@ class SpecialistPortfolioWidget extends StatelessWidget {
   /// Построить пустое портфолио
   Widget _buildEmptyPortfolio() => Container(
         padding: const EdgeInsets.all(32),
-        decoration: BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+            color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
         child: Column(
           children: [
-            Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey[400]),
+            Icon(Icons.photo_library_outlined,
+                size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               'Портфолио пока пусто',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey[600]),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
@@ -74,7 +82,8 @@ class SpecialistPortfolioWidget extends StatelessWidget {
           mainAxisSpacing: 12,
           childAspectRatio: 1.2,
         ),
-        itemCount: specialist.portfolio.length > 6 ? 6 : specialist.portfolio.length,
+        itemCount:
+            specialist.portfolio.length > 6 ? 6 : specialist.portfolio.length,
         itemBuilder: (context, index) {
           final portfolioItem = specialist.portfolio[index];
           return _buildPortfolioItem(portfolioItem, index);
@@ -125,7 +134,10 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.7)
+                      ],
                     ),
                   ),
                 ),
@@ -148,7 +160,9 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                       ),
                       Text(
                         specialist.category?.displayName ?? 'Категория',
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 10),
+                        style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.9),
+                            fontSize: 10),
                       ),
                     ],
                   ),
@@ -164,7 +178,8 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                       color: Colors.black.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.zoom_in, color: Colors.white, size: 16),
+                    child: const Icon(Icons.zoom_in,
+                        color: Colors.white, size: 16),
                   ),
                 ),
               ],
@@ -201,7 +216,8 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                   children: [
                     Text(
                       'Портфолио ${specialist.name}',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
                     IconButton(
@@ -277,17 +293,20 @@ class PortfolioItemWidget extends StatelessWidget {
                       ? Container(
                           width: double.infinity,
                           color: Colors.grey[200],
-                          child: Icon(Icons.image, size: 48, color: Colors.grey[400]),
+                          child: Icon(Icons.image,
+                              size: 48, color: Colors.grey[400]),
                         )
                       : CachedNetworkImage(
                           imageUrl: imageUrl,
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: Colors.grey[200],
-                            child: const Center(child: CircularProgressIndicator()),
+                            child: const Center(
+                                child: CircularProgressIndicator()),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Container(color: Colors.grey[200], child: const Icon(Icons.error)),
+                          errorWidget: (context, url, error) => Container(
+                              color: Colors.grey[200],
+                              child: const Icon(Icons.error)),
                         ),
                 ),
 
@@ -299,7 +318,8 @@ class PortfolioItemWidget extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -307,7 +327,8 @@ class PortfolioItemWidget extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           description!,
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.grey[600]),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),

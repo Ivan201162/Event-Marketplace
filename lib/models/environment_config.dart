@@ -25,34 +25,43 @@ class EnvironmentConfig {
     required this.updatedBy,
   });
 
-  factory EnvironmentConfig.fromMap(Map<String, dynamic> map) => EnvironmentConfig(
-    id: map['id'] as String? ?? '',
-    name: map['name'] as String? ?? '',
-    type: EnvironmentType.fromString(map['type'] as String? ?? 'development'),
-    config: Map<String, dynamic>.from(map['config'] as Map<dynamic, dynamic>? ?? {}),
-    secrets: Map<String, dynamic>.from(map['secrets'] as Map<dynamic, dynamic>? ?? {}),
-    featureFlags: Map<String, dynamic>.from(map['featureFlags'] as Map<dynamic, dynamic>? ?? {}),
-    apiEndpoints: Map<String, dynamic>.from(map['apiEndpoints'] as Map<dynamic, dynamic>? ?? {}),
-    databaseConfig: Map<String, dynamic>.from(
-      map['databaseConfig'] as Map<dynamic, dynamic>? ?? {},
-    ),
-    cacheConfig: Map<String, dynamic>.from(map['cacheConfig'] as Map<dynamic, dynamic>? ?? {}),
-    loggingConfig: Map<String, dynamic>.from(map['loggingConfig'] as Map<dynamic, dynamic>? ?? {}),
-    monitoringConfig: Map<String, dynamic>.from(
-      map['monitoringConfig'] as Map<dynamic, dynamic>? ?? {},
-    ),
-    securityConfig: Map<String, dynamic>.from(
-      map['securityConfig'] as Map<dynamic, dynamic>? ?? {},
-    ),
-    isActive: map['isActive'] as bool? ?? false,
-    description: map['description'] as String?,
-    tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
-    metadata: Map<String, dynamic>.from((map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    createdBy: map['createdBy'] as String? ?? '',
-    updatedBy: map['updatedBy'] as String? ?? '',
-  );
+  factory EnvironmentConfig.fromMap(Map<String, dynamic> map) =>
+      EnvironmentConfig(
+        id: map['id'] as String? ?? '',
+        name: map['name'] as String? ?? '',
+        type:
+            EnvironmentType.fromString(map['type'] as String? ?? 'development'),
+        config: Map<String, dynamic>.from(
+            map['config'] as Map<dynamic, dynamic>? ?? {}),
+        secrets: Map<String, dynamic>.from(
+            map['secrets'] as Map<dynamic, dynamic>? ?? {}),
+        featureFlags: Map<String, dynamic>.from(
+            map['featureFlags'] as Map<dynamic, dynamic>? ?? {}),
+        apiEndpoints: Map<String, dynamic>.from(
+            map['apiEndpoints'] as Map<dynamic, dynamic>? ?? {}),
+        databaseConfig: Map<String, dynamic>.from(
+          map['databaseConfig'] as Map<dynamic, dynamic>? ?? {},
+        ),
+        cacheConfig: Map<String, dynamic>.from(
+            map['cacheConfig'] as Map<dynamic, dynamic>? ?? {}),
+        loggingConfig: Map<String, dynamic>.from(
+            map['loggingConfig'] as Map<dynamic, dynamic>? ?? {}),
+        monitoringConfig: Map<String, dynamic>.from(
+          map['monitoringConfig'] as Map<dynamic, dynamic>? ?? {},
+        ),
+        securityConfig: Map<String, dynamic>.from(
+          map['securityConfig'] as Map<dynamic, dynamic>? ?? {},
+        ),
+        isActive: map['isActive'] as bool? ?? false,
+        description: map['description'] as String?,
+        tags: List<String>.from((map['tags'] as List<dynamic>?) ?? []),
+        metadata: Map<String, dynamic>.from(
+            (map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
+      );
   final String id;
   final String name;
   final EnvironmentType type;
@@ -75,27 +84,27 @@ class EnvironmentConfig {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'type': type.value,
-    'config': config,
-    'secrets': secrets,
-    'featureFlags': featureFlags,
-    'apiEndpoints': apiEndpoints,
-    'databaseConfig': databaseConfig,
-    'cacheConfig': cacheConfig,
-    'loggingConfig': loggingConfig,
-    'monitoringConfig': monitoringConfig,
-    'securityConfig': securityConfig,
-    'isActive': isActive,
-    'description': description,
-    'tags': tags,
-    'metadata': metadata,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'createdBy': createdBy,
-    'updatedBy': updatedBy,
-  };
+        'id': id,
+        'name': name,
+        'type': type.value,
+        'config': config,
+        'secrets': secrets,
+        'featureFlags': featureFlags,
+        'apiEndpoints': apiEndpoints,
+        'databaseConfig': databaseConfig,
+        'cacheConfig': cacheConfig,
+        'loggingConfig': loggingConfig,
+        'monitoringConfig': monitoringConfig,
+        'securityConfig': securityConfig,
+        'isActive': isActive,
+        'description': description,
+        'tags': tags,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   EnvironmentConfig copyWith({
     String? id,
@@ -118,31 +127,33 @@ class EnvironmentConfig {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) => EnvironmentConfig(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    type: type ?? this.type,
-    config: config ?? this.config,
-    secrets: secrets ?? this.secrets,
-    featureFlags: featureFlags ?? this.featureFlags,
-    apiEndpoints: apiEndpoints ?? this.apiEndpoints,
-    databaseConfig: databaseConfig ?? this.databaseConfig,
-    cacheConfig: cacheConfig ?? this.cacheConfig,
-    loggingConfig: loggingConfig ?? this.loggingConfig,
-    monitoringConfig: monitoringConfig ?? this.monitoringConfig,
-    securityConfig: securityConfig ?? this.securityConfig,
-    isActive: isActive ?? this.isActive,
-    description: description ?? this.description,
-    tags: tags ?? this.tags,
-    metadata: metadata ?? this.metadata,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    createdBy: createdBy ?? this.createdBy,
-    updatedBy: updatedBy ?? this.updatedBy,
-  );
+  }) =>
+      EnvironmentConfig(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        type: type ?? this.type,
+        config: config ?? this.config,
+        secrets: secrets ?? this.secrets,
+        featureFlags: featureFlags ?? this.featureFlags,
+        apiEndpoints: apiEndpoints ?? this.apiEndpoints,
+        databaseConfig: databaseConfig ?? this.databaseConfig,
+        cacheConfig: cacheConfig ?? this.cacheConfig,
+        loggingConfig: loggingConfig ?? this.loggingConfig,
+        monitoringConfig: monitoringConfig ?? this.monitoringConfig,
+        securityConfig: securityConfig ?? this.securityConfig,
+        isActive: isActive ?? this.isActive,
+        description: description ?? this.description,
+        tags: tags ?? this.tags,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
-  String toString() => 'EnvironmentConfig(id: $id, name: $name, type: $type, isActive: $isActive)';
+  String toString() =>
+      'EnvironmentConfig(id: $id, name: $name, type: $type, isActive: $isActive)';
 
   @override
   bool operator ==(Object other) {
@@ -167,10 +178,11 @@ enum EnvironmentType {
   final String value;
   final String displayName;
 
-  static EnvironmentType fromString(String value) => EnvironmentType.values.firstWhere(
-    (type) => type.value == value,
-    orElse: () => EnvironmentType.development,
-  );
+  static EnvironmentType fromString(String value) =>
+      EnvironmentType.values.firstWhere(
+        (type) => type.value == value,
+        orElse: () => EnvironmentType.development,
+      );
 
   String get icon {
     switch (this) {
@@ -223,23 +235,27 @@ class EnvironmentVariable {
     required this.updatedBy,
   });
 
-  factory EnvironmentVariable.fromMap(Map<String, dynamic> map) => EnvironmentVariable(
-    id: map['id'] as String? ?? '',
-    key: map['key'] as String? ?? '',
-    value: map['value'] as String? ?? '',
-    type: EnvironmentVariableType.fromString(map['type'] as String? ?? 'string'),
-    isSecret: map['isSecret'] as bool? ?? false,
-    description: map['description'] as String?,
-    defaultValue: map['defaultValue'] as String?,
-    isRequired: map['isRequired'] as bool? ?? false,
-    allowedValues: List<String>.from((map['allowedValues'] as List<dynamic>?) ?? []),
-    validationPattern: map['validationPattern'] as String?,
-    metadata: Map<String, dynamic>.from((map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    createdBy: map['createdBy'] as String? ?? '',
-    updatedBy: map['updatedBy'] as String? ?? '',
-  );
+  factory EnvironmentVariable.fromMap(Map<String, dynamic> map) =>
+      EnvironmentVariable(
+        id: map['id'] as String? ?? '',
+        key: map['key'] as String? ?? '',
+        value: map['value'] as String? ?? '',
+        type: EnvironmentVariableType.fromString(
+            map['type'] as String? ?? 'string'),
+        isSecret: map['isSecret'] as bool? ?? false,
+        description: map['description'] as String?,
+        defaultValue: map['defaultValue'] as String?,
+        isRequired: map['isRequired'] as bool? ?? false,
+        allowedValues:
+            List<String>.from((map['allowedValues'] as List<dynamic>?) ?? []),
+        validationPattern: map['validationPattern'] as String?,
+        metadata: Map<String, dynamic>.from(
+            (map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
+      );
   final String id;
   final String key;
   final String value;
@@ -257,22 +273,22 @@ class EnvironmentVariable {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'key': key,
-    'value': value,
-    'type': type.value,
-    'isSecret': isSecret,
-    'description': description,
-    'defaultValue': defaultValue,
-    'isRequired': isRequired,
-    'allowedValues': allowedValues,
-    'validationPattern': validationPattern,
-    'metadata': metadata,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'createdBy': createdBy,
-    'updatedBy': updatedBy,
-  };
+        'id': id,
+        'key': key,
+        'value': value,
+        'type': type.value,
+        'isSecret': isSecret,
+        'description': description,
+        'defaultValue': defaultValue,
+        'isRequired': isRequired,
+        'allowedValues': allowedValues,
+        'validationPattern': validationPattern,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   EnvironmentVariable copyWith({
     String? id,
@@ -290,26 +306,28 @@ class EnvironmentVariable {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) => EnvironmentVariable(
-    id: id ?? this.id,
-    key: key ?? this.key,
-    value: value ?? this.value,
-    type: type ?? this.type,
-    isSecret: isSecret ?? this.isSecret,
-    description: description ?? this.description,
-    defaultValue: defaultValue ?? this.defaultValue,
-    isRequired: isRequired ?? this.isRequired,
-    allowedValues: allowedValues ?? this.allowedValues,
-    validationPattern: validationPattern ?? this.validationPattern,
-    metadata: metadata ?? this.metadata,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    createdBy: createdBy ?? this.createdBy,
-    updatedBy: updatedBy ?? this.updatedBy,
-  );
+  }) =>
+      EnvironmentVariable(
+        id: id ?? this.id,
+        key: key ?? this.key,
+        value: value ?? this.value,
+        type: type ?? this.type,
+        isSecret: isSecret ?? this.isSecret,
+        description: description ?? this.description,
+        defaultValue: defaultValue ?? this.defaultValue,
+        isRequired: isRequired ?? this.isRequired,
+        allowedValues: allowedValues ?? this.allowedValues,
+        validationPattern: validationPattern ?? this.validationPattern,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
-  String toString() => 'EnvironmentVariable(id: $id, key: $key, type: $type, isSecret: $isSecret)';
+  String toString() =>
+      'EnvironmentVariable(id: $id, key: $key, type: $type, isSecret: $isSecret)';
 
   @override
   bool operator ==(Object other) {
@@ -338,8 +356,9 @@ enum EnvironmentVariableType {
   final String value;
   final String displayName;
 
-  static EnvironmentVariableType fromString(String value) => EnvironmentVariableType.values
-      .firstWhere((type) => type.value == value, orElse: () => EnvironmentVariableType.string);
+  static EnvironmentVariableType fromString(String value) =>
+      EnvironmentVariableType.values.firstWhere((type) => type.value == value,
+          orElse: () => EnvironmentVariableType.string);
 
   String get icon {
     switch (this) {
@@ -388,34 +407,41 @@ class DeploymentConfig {
     required this.updatedBy,
   });
 
-  factory DeploymentConfig.fromMap(Map<String, dynamic> map) => DeploymentConfig(
-    id: map['id'] as String? ?? '',
-    environmentId: map['environmentId'] as String? ?? '',
-    version: map['version'] as String? ?? '',
-    status: DeploymentStatus.fromString(map['status'] as String? ?? 'draft'),
-    config: Map<String, dynamic>.from((map['config'] as Map<dynamic, dynamic>?) ?? {}),
-    secrets: Map<String, dynamic>.from((map['secrets'] as Map<dynamic, dynamic>?) ?? {}),
-    dependencies: List<String>.from((map['dependencies'] as List<dynamic>?) ?? []),
-    healthChecks: List<String>.from((map['healthChecks'] as List<dynamic>?) ?? []),
-    scalingConfig: Map<String, dynamic>.from(
-      (map['scalingConfig'] as Map<dynamic, dynamic>?) ?? {},
-    ),
-    networkingConfig: Map<String, dynamic>.from(
-      (map['networkingConfig'] as Map<dynamic, dynamic>?) ?? {},
-    ),
-    storageConfig: Map<String, dynamic>.from(
-      (map['storageConfig'] as Map<dynamic, dynamic>?) ?? {},
-    ),
-    monitoringConfig: Map<String, dynamic>.from(
-      (map['monitoringConfig'] as Map<dynamic, dynamic>?) ?? {},
-    ),
-    description: map['description'] as String?,
-    metadata: Map<String, dynamic>.from((map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    createdBy: map['createdBy'] as String? ?? '',
-    updatedBy: map['updatedBy'] as String? ?? '',
-  );
+  factory DeploymentConfig.fromMap(Map<String, dynamic> map) =>
+      DeploymentConfig(
+        id: map['id'] as String? ?? '',
+        environmentId: map['environmentId'] as String? ?? '',
+        version: map['version'] as String? ?? '',
+        status:
+            DeploymentStatus.fromString(map['status'] as String? ?? 'draft'),
+        config: Map<String, dynamic>.from(
+            (map['config'] as Map<dynamic, dynamic>?) ?? {}),
+        secrets: Map<String, dynamic>.from(
+            (map['secrets'] as Map<dynamic, dynamic>?) ?? {}),
+        dependencies:
+            List<String>.from((map['dependencies'] as List<dynamic>?) ?? []),
+        healthChecks:
+            List<String>.from((map['healthChecks'] as List<dynamic>?) ?? []),
+        scalingConfig: Map<String, dynamic>.from(
+          (map['scalingConfig'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        networkingConfig: Map<String, dynamic>.from(
+          (map['networkingConfig'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        storageConfig: Map<String, dynamic>.from(
+          (map['storageConfig'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        monitoringConfig: Map<String, dynamic>.from(
+          (map['monitoringConfig'] as Map<dynamic, dynamic>?) ?? {},
+        ),
+        description: map['description'] as String?,
+        metadata: Map<String, dynamic>.from(
+            (map['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
+      );
   final String id;
   final String environmentId;
   final String version;
@@ -436,25 +462,25 @@ class DeploymentConfig {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'environmentId': environmentId,
-    'version': version,
-    'status': status.value,
-    'config': config,
-    'secrets': secrets,
-    'dependencies': dependencies,
-    'healthChecks': healthChecks,
-    'scalingConfig': scalingConfig,
-    'networkingConfig': networkingConfig,
-    'storageConfig': storageConfig,
-    'monitoringConfig': monitoringConfig,
-    'description': description,
-    'metadata': metadata,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'createdBy': createdBy,
-    'updatedBy': updatedBy,
-  };
+        'id': id,
+        'environmentId': environmentId,
+        'version': version,
+        'status': status.value,
+        'config': config,
+        'secrets': secrets,
+        'dependencies': dependencies,
+        'healthChecks': healthChecks,
+        'scalingConfig': scalingConfig,
+        'networkingConfig': networkingConfig,
+        'storageConfig': storageConfig,
+        'monitoringConfig': monitoringConfig,
+        'description': description,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   DeploymentConfig copyWith({
     String? id,
@@ -475,26 +501,27 @@ class DeploymentConfig {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) => DeploymentConfig(
-    id: id ?? this.id,
-    environmentId: environmentId ?? this.environmentId,
-    version: version ?? this.version,
-    status: status ?? this.status,
-    config: config ?? this.config,
-    secrets: secrets ?? this.secrets,
-    dependencies: dependencies ?? this.dependencies,
-    healthChecks: healthChecks ?? this.healthChecks,
-    scalingConfig: scalingConfig ?? this.scalingConfig,
-    networkingConfig: networkingConfig ?? this.networkingConfig,
-    storageConfig: storageConfig ?? this.storageConfig,
-    monitoringConfig: monitoringConfig ?? this.monitoringConfig,
-    description: description ?? this.description,
-    metadata: metadata ?? this.metadata,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    createdBy: createdBy ?? this.createdBy,
-    updatedBy: updatedBy ?? this.updatedBy,
-  );
+  }) =>
+      DeploymentConfig(
+        id: id ?? this.id,
+        environmentId: environmentId ?? this.environmentId,
+        version: version ?? this.version,
+        status: status ?? this.status,
+        config: config ?? this.config,
+        secrets: secrets ?? this.secrets,
+        dependencies: dependencies ?? this.dependencies,
+        healthChecks: healthChecks ?? this.healthChecks,
+        scalingConfig: scalingConfig ?? this.scalingConfig,
+        networkingConfig: networkingConfig ?? this.networkingConfig,
+        storageConfig: storageConfig ?? this.storageConfig,
+        monitoringConfig: monitoringConfig ?? this.monitoringConfig,
+        description: description ?? this.description,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
   String toString() =>
@@ -525,10 +552,11 @@ enum DeploymentStatus {
   final String value;
   final String displayName;
 
-  static DeploymentStatus fromString(String value) => DeploymentStatus.values.firstWhere(
-    (status) => status.value == value,
-    orElse: () => DeploymentStatus.draft,
-  );
+  static DeploymentStatus fromString(String value) =>
+      DeploymentStatus.values.firstWhere(
+        (status) => status.value == value,
+        orElse: () => DeploymentStatus.draft,
+      );
 
   String get icon {
     switch (this) {

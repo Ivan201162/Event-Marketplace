@@ -7,7 +7,8 @@ import '../widgets/contract_card.dart';
 import '../widgets/contract_details_dialog.dart';
 
 class ContractsScreen extends ConsumerStatefulWidget {
-  const ContractsScreen({super.key, required this.userId, this.isSpecialist = false});
+  const ContractsScreen(
+      {super.key, required this.userId, this.isSpecialist = false});
   final String userId;
   final bool isSpecialist;
 
@@ -16,7 +17,8 @@ class ContractsScreen extends ConsumerStatefulWidget {
 }
 
 class _ContractsScreenState extends ConsumerState<ContractsScreen> {
-  final PaymentIntegrationService _paymentIntegrationService = PaymentIntegrationService();
+  final PaymentIntegrationService _paymentIntegrationService =
+      PaymentIntegrationService();
   ContractStatus? _selectedStatus;
   DateTime? _startDate;
   DateTime? _endDate;
@@ -30,7 +32,10 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
         title: Text(widget.isSpecialist ? 'Мои контракты' : 'Контракты'),
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: theme.colorScheme.onPrimary,
-        actions: [IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilters)],
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.filter_list), onPressed: _showFilters)
+        ],
       ),
       body: Column(
         children: [
@@ -65,7 +70,8 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
             child: Center(
               child: Text(
                 'Ошибка загрузки статистики',
-                style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: theme.colorScheme.error),
               ),
             ),
           );
@@ -78,7 +84,10 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.primary.withValues(alpha: 0.8)
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -137,93 +146,107 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
     );
   }
 
-  Widget _buildStatItem(ThemeData theme, String label, String value, IconData icon) => Column(
-    children: [
-      Icon(icon, color: theme.colorScheme.onPrimary.withValues(alpha: 0.8), size: 20),
-      const SizedBox(height: 4),
-      Text(
-        value,
-        style: theme.textTheme.titleMedium?.copyWith(
-          color: theme.colorScheme.onPrimary,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      Text(
-        label,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
-        ),
-      ),
-    ],
-  );
+  Widget _buildStatItem(
+          ThemeData theme, String label, String value, IconData icon) =>
+      Column(
+        children: [
+          Icon(icon,
+              color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
+              size: 20),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
+            ),
+          ),
+        ],
+      );
 
   Widget _buildContractsList() => StreamBuilder<List<Contract>>(
-    stream: _getContractsStream(),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
+        stream: _getContractsStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-      if (snapshot.hasError) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, size: 64, color: Theme.of(context).colorScheme.error),
-              const SizedBox(height: 16),
-              Text('Ошибка загрузки контрактов', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              Text(
-                snapshot.error.toString(),
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline,
+                      size: 64, color: Theme.of(context).colorScheme.error),
+                  const SizedBox(height: 16),
+                  Text('Ошибка загрузки контрактов',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text(
+                    snapshot.error.toString(),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
-            ],
-          ),
-        );
-      }
+            );
+          }
 
-      final contracts = snapshot.data ?? [];
-      final filteredContracts = _filterContracts(contracts);
+          final contracts = snapshot.data ?? [];
+          final filteredContracts = _filterContracts(contracts);
 
-      if (filteredContracts.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.description,
-                size: 64,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+          if (filteredContracts.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.description,
+                    size: 64,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.5),
+                  ),
+                  const SizedBox(height: 16),
+                  Text('Нет контрактов',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Здесь будут отображаться ваши контракты',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.7),
+                        ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              Text('Нет контрактов', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              Text(
-                'Здесь будут отображаться ваши контракты',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
+            );
+          }
 
-      return ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: filteredContracts.length,
-        itemBuilder: (context, index) {
-          final contract = filteredContracts[index];
-          return ContractCard(
-            contract: contract,
-            onTap: () => _showContractDetails(contract),
-            onStatusUpdate: (status) => _updateContractStatus(contract.id, status),
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: filteredContracts.length,
+            itemBuilder: (context, index) {
+              final contract = filteredContracts[index];
+              return ContractCard(
+                contract: contract,
+                onTap: () => _showContractDetails(contract),
+                onStatusUpdate: (status) =>
+                    _updateContractStatus(contract.id, status),
+              );
+            },
           );
         },
       );
-    },
-  );
 
   Stream<List<Contract>> _getContractsStream() {
     // This would typically stream from Firestore
@@ -242,18 +265,19 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
     );
   }
 
-  List<Contract> _filterContracts(List<Contract> contracts) => contracts.where((contract) {
-    if (_selectedStatus != null && contract.status != _selectedStatus) {
-      return false;
-    }
-    if (_startDate != null && contract.createdAt.isBefore(_startDate!)) {
-      return false;
-    }
-    if (_endDate != null && contract.createdAt.isAfter(_endDate!)) {
-      return false;
-    }
-    return true;
-  }).toList();
+  List<Contract> _filterContracts(List<Contract> contracts) =>
+      contracts.where((contract) {
+        if (_selectedStatus != null && contract.status != _selectedStatus) {
+          return false;
+        }
+        if (_startDate != null && contract.createdAt.isBefore(_startDate!)) {
+          return false;
+        }
+        if (_endDate != null && contract.createdAt.isAfter(_endDate!)) {
+          return false;
+        }
+        return true;
+      }).toList();
 
   void _showFilters() {
     showModalBottomSheet<void>(
@@ -293,12 +317,15 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
     );
   }
 
-  Future<void> _updateContractStatus(String contractId, ContractStatus status) async {
+  Future<void> _updateContractStatus(
+      String contractId, ContractStatus status) async {
     try {
       await _paymentIntegrationService.updateContractStatus(contractId, status);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Статус контракта обновлен'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Статус контракта обновлен'),
+              backgroundColor: Colors.green),
         );
       }
     } catch (e) {
@@ -375,12 +402,15 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
 
           Text(
             'Фильтры контрактов',
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
 
           // Status filter
-          Text('Статус', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
+          Text('Статус',
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w500)),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -402,7 +432,9 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
           const SizedBox(height: 24),
 
           // Date range
-          Text('Период', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500)),
+          Text('Период',
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w500)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -411,7 +443,9 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
                   onPressed: () => _selectDate(true),
                   icon: const Icon(Icons.calendar_today),
                   label: Text(
-                    _startDate != null ? DateFormat('dd.MM.yyyy').format(_startDate!) : 'С даты',
+                    _startDate != null
+                        ? DateFormat('dd.MM.yyyy').format(_startDate!)
+                        : 'С даты',
                   ),
                 ),
               ),
@@ -421,7 +455,9 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
                   onPressed: () => _selectDate(false),
                   icon: const Icon(Icons.calendar_today),
                   label: Text(
-                    _endDate != null ? DateFormat('dd.MM.yyyy').format(_endDate!) : 'По дату',
+                    _endDate != null
+                        ? DateFormat('dd.MM.yyyy').format(_endDate!)
+                        : 'По дату',
                   ),
                 ),
               ),
@@ -441,7 +477,8 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () => widget.onApplyFilters(_selectedStatus, _startDate, _endDate),
+                  onPressed: () => widget.onApplyFilters(
+                      _selectedStatus, _startDate, _endDate),
                   child: const Text('Применить'),
                 ),
               ),
@@ -467,7 +504,9 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
   Future<void> _selectDate(bool isStartDate) async {
     final date = await showDatePicker(
       context: context,
-      initialDate: isStartDate ? _startDate ?? DateTime.now() : _endDate ?? DateTime.now(),
+      initialDate: isStartDate
+          ? _startDate ?? DateTime.now()
+          : _endDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );

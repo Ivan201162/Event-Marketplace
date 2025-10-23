@@ -122,15 +122,17 @@ class EventService {
   }
 
   /// Получить события в диапазоне дат
-  Stream<List<Event>> getEventsByDateRange(DateTime startDate, DateTime endDate) => _firestore
-      .collection('events')
-      .where('isPublic', isEqualTo: true)
-      .where('status', isEqualTo: 'active')
-      .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
-      .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
-      .orderBy('date')
-      .snapshots()
-      .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
+  Stream<List<Event>> getEventsByDateRange(
+          DateTime startDate, DateTime endDate) =>
+      _firestore
+          .collection('events')
+          .where('isPublic', isEqualTo: true)
+          .where('status', isEqualTo: 'active')
+          .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+          .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
+          .orderBy('date')
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map(Event.fromDocument).toList());
 
   /// Получить популярные события
   Stream<List<Event>> getPopularEvents({int limit = 10}) => _firestore
@@ -213,7 +215,12 @@ class EventService {
         }
       }
 
-      return {'total': total, 'active': active, 'completed': completed, 'cancelled': cancelled};
+      return {
+        'total': total,
+        'active': active,
+        'completed': completed,
+        'cancelled': cancelled
+      };
     } on Exception catch (e) {
       throw Exception('Ошибка получения статистики: $e');
     }
@@ -228,15 +235,18 @@ class EventService {
 
     // Фильтр по дате
     if (filter.startDate != null) {
-      query = query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+      query = query.where('date',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
     }
     if (filter.endDate != null) {
-      query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+      query = query.where('date',
+          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
     }
 
     // Фильтр по категории
     if (filter.categories != null && filter.categories!.isNotEmpty) {
-      query = query.where('category', whereIn: filter.categories!.map((c) => c.name).toList());
+      query = query.where('category',
+          whereIn: filter.categories!.map((c) => c.name).toList());
     }
 
     // Фильтр по цене

@@ -3,7 +3,8 @@ import '../../core/extensions/context_extensions.dart';
 
 /// Адаптивный виджет для разных размеров экрана
 class ResponsiveWidget extends StatelessWidget {
-  const ResponsiveWidget({super.key, required this.mobile, this.tablet, this.desktop});
+  const ResponsiveWidget(
+      {super.key, required this.mobile, this.tablet, this.desktop});
 
   final Widget mobile;
   final Widget? tablet;
@@ -69,7 +70,8 @@ class ResponsiveText extends StatelessWidget {
       baseFontSize = (fontSize ?? (isTitle ? 18.0 : 14.0)) * 1.2;
     }
 
-    return TextStyle(fontSize: baseFontSize, fontWeight: fontWeight, color: color);
+    return TextStyle(
+        fontSize: baseFontSize, fontWeight: fontWeight, color: color);
   }
 }
 
@@ -95,16 +97,14 @@ class ResponsiveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final responsivePadding =
-        padding ??
+    final responsivePadding = padding ??
         context.responsive(
           const EdgeInsets.all(16),
           const EdgeInsets.all(20),
           const EdgeInsets.all(24),
         );
 
-    final responsiveMargin =
-        margin ??
+    final responsiveMargin = margin ??
         context.responsive(
           const EdgeInsets.all(8),
           const EdgeInsets.all(12),
@@ -113,8 +113,7 @@ class ResponsiveCard extends StatelessWidget {
 
     final responsiveElevation = elevation ?? context.responsive(2, 3, 4);
 
-    final responsiveBorderRadius =
-        borderRadius ??
+    final responsiveBorderRadius = borderRadius ??
         context.responsive(
           BorderRadius.circular(8),
           BorderRadius.circular(12),
@@ -156,16 +155,14 @@ class ResponsiveContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final responsivePadding =
-        padding ??
+    final responsivePadding = padding ??
         context.responsive(
           const EdgeInsets.all(16),
           const EdgeInsets.all(20),
           const EdgeInsets.all(24),
         );
 
-    final responsiveMargin =
-        margin ??
+    final responsiveMargin = margin ??
         context.responsive(
           const EdgeInsets.all(8),
           const EdgeInsets.all(12),
@@ -203,10 +200,14 @@ class ResponsiveGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final responsiveCrossAxisCount = crossAxisCount ?? context.responsive(2, 3, 4);
-    final responsiveCrossAxisSpacing = crossAxisSpacing ?? context.responsive(8, 12, 16);
-    final responsiveMainAxisSpacing = mainAxisSpacing ?? context.responsive(8, 12, 16);
-    final responsiveChildAspectRatio = childAspectRatio ?? context.responsive(1, 1.2, 1.5);
+    final responsiveCrossAxisCount =
+        crossAxisCount ?? context.responsive(2, 3, 4);
+    final responsiveCrossAxisSpacing =
+        crossAxisSpacing ?? context.responsive(8, 12, 16);
+    final responsiveMainAxisSpacing =
+        mainAxisSpacing ?? context.responsive(8, 12, 16);
+    final responsiveChildAspectRatio =
+        childAspectRatio ?? context.responsive(1, 1.2, 1.5);
 
     return GridView.builder(
       shrinkWrap: true,
@@ -225,7 +226,8 @@ class ResponsiveGrid extends StatelessWidget {
 
 /// Адаптивный список
 class ResponsiveList extends StatelessWidget {
-  const ResponsiveList({super.key, required this.children, this.padding, this.spacing});
+  const ResponsiveList(
+      {super.key, required this.children, this.padding, this.spacing});
 
   final List<Widget> children;
   final EdgeInsetsGeometry? padding;
@@ -233,8 +235,7 @@ class ResponsiveList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final responsivePadding =
-        padding ??
+    final responsivePadding = padding ??
         context.responsive(
           const EdgeInsets.all(16),
           const EdgeInsets.all(20),

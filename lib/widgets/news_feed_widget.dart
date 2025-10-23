@@ -74,7 +74,9 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const Spacer(),
             IconButton(
-                onPressed: _refreshNews, icon: const Icon(Icons.refresh), tooltip: 'Обновить'),
+                onPressed: _refreshNews,
+                icon: const Icon(Icons.refresh),
+                tooltip: 'Обновить'),
           ],
         ),
       );
@@ -101,7 +103,9 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
         itemBuilder: (context, index) {
           if (index == _newsItems.length) {
             return const Center(
-              child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
+              child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: CircularProgressIndicator()),
             );
           }
 
@@ -129,7 +133,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadNews, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadNews, child: const Text('Повторить')),
           ],
         ),
       );
@@ -138,9 +143,11 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.newspaper_outlined, size: 64, color: Colors.grey.shade300),
+            Icon(Icons.newspaper_outlined,
+                size: 64, color: Colors.grey.shade300),
             const SizedBox(height: 16),
-            const Text('Новостей пока нет', style: TextStyle(fontSize: 18, color: Colors.grey)),
+            const Text('Новостей пока нет',
+                style: TextStyle(fontSize: 18, color: Colors.grey)),
             const SizedBox(height: 8),
             const Text(
               'Следите за обновлениями от специалистов',
@@ -182,8 +189,11 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             radius: 20,
             backgroundColor: Colors.blue.shade100,
             child: Text(
-              newsItem.authorName.isNotEmpty ? newsItem.authorName[0].toUpperCase() : '?',
-              style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.bold),
+              newsItem.authorName.isNotEmpty
+                  ? newsItem.authorName[0].toUpperCase()
+                  : '?',
+              style: TextStyle(
+                  color: Colors.blue.shade700, fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(width: 12),
@@ -195,7 +205,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
                   onTap: () => _onAuthorTap(newsItem.authorId),
                   child: Text(
                     newsItem.authorName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
                 Row(
@@ -255,7 +266,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
           const SizedBox(width: 4),
           Text(
             type.name.toUpperCase(),
-            style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: color, fontSize: 10, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -265,7 +277,9 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   Widget _buildNewsContent(NewsItem newsItem) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(newsItem.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(newsItem.title,
+              style:
+                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Text(
             newsItem.content,
@@ -286,7 +300,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
           errorBuilder: (context, error, stackTrace) => Container(
             height: 200,
             color: Colors.grey.shade200,
-            child: const Center(child: Icon(Icons.broken_image, size: 48, color: Colors.grey)),
+            child: const Center(
+                child: Icon(Icons.broken_image, size: 48, color: Colors.grey)),
           ),
         ),
       );
@@ -305,7 +320,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             onTap: () => _onShareTap(newsItem),
           ),
           const SizedBox(width: 16),
-          _buildActionButton(icon: Icons.visibility, label: newsItem.views.toString()),
+          _buildActionButton(
+              icon: Icons.visibility, label: newsItem.views.toString()),
           const Spacer(),
           if (newsItem.linkUrl != null)
             TextButton.icon(
@@ -316,7 +332,10 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
         ],
       );
 
-  Widget _buildActionButton({required IconData icon, required String label, VoidCallback? onTap}) =>
+  Widget _buildActionButton(
+          {required IconData icon,
+          required String label,
+          VoidCallback? onTap}) =>
       InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(20),
@@ -327,7 +346,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
             children: [
               Icon(icon, size: 16, color: Colors.grey.shade600),
               const SizedBox(width: 4),
-              Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+              Text(label,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
             ],
           ),
         ),
@@ -343,7 +363,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
 
     try {
       final newsItems = widget.specialistId != null
-          ? await _newsService.getSpecialistNews(specialistId: widget.specialistId!)
+          ? await _newsService.getSpecialistNews(
+              specialistId: widget.specialistId!)
           : await _newsService.getNewsFeed(userId: widget.userId);
 
       setState(() {
@@ -364,7 +385,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       _loadMoreNews();
     }
   }
@@ -382,7 +404,8 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
               specialistId: widget.specialistId!,
               lastDocument: _lastDocument,
             )
-          : await _newsService.getNewsFeed(userId: widget.userId, lastDocument: _lastDocument);
+          : await _newsService.getNewsFeed(
+              userId: widget.userId, lastDocument: _lastDocument);
 
       setState(() {
         _newsItems.addAll(newsItems);
@@ -409,20 +432,24 @@ class _NewsFeedWidgetState extends State<NewsFeedWidget> {
     // TODO(developer): Implement like functionality
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Лайк добавлен'), duration: Duration(seconds: 1)));
+    ).showSnackBar(const SnackBar(
+        content: Text('Лайк добавлен'), duration: Duration(seconds: 1)));
   }
 
   void _onShareTap(NewsItem newsItem) {
     // TODO(developer): Implement share functionality
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Поделиться'), duration: Duration(seconds: 1)));
+    ).showSnackBar(const SnackBar(
+        content: Text('Поделиться'), duration: Duration(seconds: 1)));
   }
 
   void _onLinkTap(String linkUrl) {
     // TODO(developer): Implement link opening
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Открыть ссылку: $linkUrl'), duration: const Duration(seconds: 1)),
+      SnackBar(
+          content: Text('Открыть ссылку: $linkUrl'),
+          duration: const Duration(seconds: 1)),
     );
   }
 }

@@ -66,7 +66,8 @@ class PaymentService {
       );
 
       // Save to Firestore
-      final docRef = await _firestore.collection('payments').add(payment.toFirestore());
+      final docRef =
+          await _firestore.collection('payments').add(payment.toFirestore());
 
       final paymentId = docRef.id;
       debugPrint('Payment created with ID: $paymentId');
@@ -76,12 +77,14 @@ class PaymentService {
         await Stripe.instance.confirmPayment(
           paymentIntentId,
           const PaymentMethodParams.card(
-            paymentMethodData: PaymentMethodData(billingDetails: BillingDetails()),
+            paymentMethodData:
+                PaymentMethodData(billingDetails: BillingDetails()),
           ),
         );
 
         // Update payment status to completed
-        await _updatePaymentStatus(paymentId, PaymentStatus.completed, completedAt: DateTime.now());
+        await _updatePaymentStatus(paymentId, PaymentStatus.completed,
+            completedAt: DateTime.now());
 
         // Create transaction record
         await _createTransaction(
@@ -139,7 +142,9 @@ class PaymentService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs.map((doc) => Payment.fromFirestore(doc)).toList();
+      return querySnapshot.docs
+          .map((doc) => Payment.fromFirestore(doc))
+          .toList();
     } catch (e) {
       debugPrint('Error getting user payments: $e');
       return [];
@@ -155,7 +160,9 @@ class PaymentService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs.map((doc) => Payment.fromFirestore(doc)).toList();
+      return querySnapshot.docs
+          .map((doc) => Payment.fromFirestore(doc))
+          .toList();
     } catch (e) {
       debugPrint('Error getting specialist payments: $e');
       return [];
@@ -189,7 +196,8 @@ class PaymentService {
 
       // In real app, this would call Stripe refund API
       // For now, we'll just update the status
-      await _updatePaymentStatus(paymentId, PaymentStatus.refunded, updatedAt: DateTime.now());
+      await _updatePaymentStatus(paymentId, PaymentStatus.refunded,
+          updatedAt: DateTime.now());
 
       // Create refund transaction
       await _createTransaction(
@@ -218,7 +226,9 @@ class PaymentService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return querySnapshot.docs.map((doc) => Transaction.fromFirestore(doc)).toList();
+      return querySnapshot.docs
+          .map((doc) => Transaction.fromFirestore(doc))
+          .toList();
     } catch (e) {
       debugPrint('Error getting user transactions: $e');
       return [];
@@ -254,16 +264,21 @@ class PaymentService {
 
       final totalPayments = payments.length;
       final successfulPayments = payments.where((p) => p.isSuccessful).length;
-      final totalAmount = payments.where((p) => p.isSuccessful).fold(0, (sum, p) => sum + p.amount);
+      final totalAmount = payments
+          .where((p) => p.isSuccessful)
+          .fold(0, (sum, p) => sum + p.amount);
       final totalCommission = payments
           .where((p) => p.isSuccessful)
           .fold(0, (sum, p) => sum + p.commission);
 
       final incomeTransactions = transactions.where((t) => t.isIncome).toList();
-      final expenseTransactions = transactions.where((t) => t.isExpense).toList();
+      final expenseTransactions =
+          transactions.where((t) => t.isExpense).toList();
 
-      final totalIncome = incomeTransactions.fold(0, (sum, t) => sum + t.amount);
-      final totalExpense = expenseTransactions.fold(0, (sum, t) => sum + t.amount);
+      final totalIncome =
+          incomeTransactions.fold(0, (sum, t) => sum + t.amount);
+      final totalExpense =
+          expenseTransactions.fold(0, (sum, t) => sum + t.amount);
 
       return {
         'totalPayments': totalPayments,
@@ -289,7 +304,10 @@ class PaymentService {
     DateTime? failedAt,
   }) async {
     try {
-      final updateData = <String, dynamic>{'status': status.name, 'updatedAt': Timestamp.now()};
+      final updateData = <String, dynamic>{
+        'status': status.name,
+        'updatedAt': Timestamp.now()
+      };
 
       if (failureReason != null) {
         updateData['failureReason'] = failureReason;
@@ -339,7 +357,9 @@ class PaymentService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore.collection('transactions').add(transaction.toFirestore());
+      await _firestore
+          .collection('transactions')
+          .add(transaction.toFirestore());
 
       debugPrint('Transaction created for user: $userId');
     } catch (e) {
@@ -375,7 +395,8 @@ class PaymentService {
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Payment.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Payment.fromFirestore(doc)).toList());
   }
 
   /// Get transactions stream for user
@@ -385,7 +406,9 @@ class PaymentService {
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Transaction.fromFirestore(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Transaction.fromFirestore(doc))
+            .toList());
   }
 
   /// Get payments for a specific booking

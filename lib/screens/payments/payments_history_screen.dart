@@ -11,7 +11,8 @@ class PaymentsHistoryScreen extends ConsumerStatefulWidget {
   const PaymentsHistoryScreen({super.key});
 
   @override
-  ConsumerState<PaymentsHistoryScreen> createState() => _PaymentsHistoryScreenState();
+  ConsumerState<PaymentsHistoryScreen> createState() =>
+      _PaymentsHistoryScreenState();
 }
 
 class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
@@ -114,7 +115,8 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
             itemCount: payments.length,
             itemBuilder: (context, index) {
               final payment = payments[index];
-              return PaymentCard(payment: payment, onTap: () => _showPaymentDetails(payment));
+              return PaymentCard(
+                  payment: payment, onTap: () => _showPaymentDetails(payment));
             },
           ),
         );
@@ -125,7 +127,8 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
   }
 
   Widget _buildSuccessfulPaymentsTab(String userId) {
-    final successfulPaymentsAsync = ref.watch(successfulPaymentsProvider(userId));
+    final successfulPaymentsAsync =
+        ref.watch(successfulPaymentsProvider(userId));
 
     return successfulPaymentsAsync.when(
       data: (payments) {
@@ -146,7 +149,8 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
             itemCount: payments.length,
             itemBuilder: (context, index) {
               final payment = payments[index];
-              return PaymentCard(payment: payment, onTap: () => _showPaymentDetails(payment));
+              return PaymentCard(
+                  payment: payment, onTap: () => _showPaymentDetails(payment));
             },
           ),
         );
@@ -178,7 +182,8 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
             itemCount: payments.length,
             itemBuilder: (context, index) {
               final payment = payments[index];
-              return PaymentCard(payment: payment, onTap: () => _showPaymentDetails(payment));
+              return PaymentCard(
+                  payment: payment, onTap: () => _showPaymentDetails(payment));
             },
           ),
         );
@@ -203,7 +208,10 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.grey),
             textAlign: TextAlign.center,
           ),
         ],
@@ -222,7 +230,10 @@ class _PaymentsHistoryScreenState extends ConsumerState<PaymentsHistoryScreen>
           const SizedBox(height: 8),
           Text(
             error.toString(),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: Colors.grey),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -291,19 +302,24 @@ class PaymentDetailsSheet extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(payment.description, style: Theme.of(context).textTheme.titleLarge),
+                          Text(payment.description,
+                              style: Theme.of(context).textTheme.titleLarge),
                           Text(
                             payment.formattedAmount,
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              color: _getStatusColor(payment.status),
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(
+                                  color: _getStatusColor(payment.status),
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                         ],
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: _getStatusColor(payment.status).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16),
@@ -327,20 +343,25 @@ class PaymentDetailsSheet extends StatelessWidget {
                   children: [
                     _buildDetailRow('ID платежа', payment.id),
                     _buildDetailRow('Тип', payment.type.displayName),
-                    _buildDetailRow('Способ оплаты', payment.method.displayName),
+                    _buildDetailRow(
+                        'Способ оплаты', payment.method.displayName),
                     _buildDetailRow('Сумма', payment.formattedAmount),
                     _buildDetailRow('Комиссия', payment.formattedCommission),
                     _buildDetailRow('К получению', payment.formattedNetAmount),
                     _buildDetailRow('Валюта', payment.currency),
-                    _buildDetailRow('Создан', _formatDateTime(payment.createdAt)),
+                    _buildDetailRow(
+                        'Создан', _formatDateTime(payment.createdAt)),
                     if (payment.completedAt != null)
-                      _buildDetailRow('Завершен', _formatDateTime(payment.completedAt!)),
+                      _buildDetailRow(
+                          'Завершен', _formatDateTime(payment.completedAt!)),
                     if (payment.failedAt != null)
-                      _buildDetailRow('Неудачен', _formatDateTime(payment.failedAt!)),
+                      _buildDetailRow(
+                          'Неудачен', _formatDateTime(payment.failedAt!)),
                     if (payment.failureReason != null)
                       _buildDetailRow('Причина ошибки', payment.failureReason!),
                     if (payment.stripePaymentIntentId != null)
-                      _buildDetailRow('Stripe ID', payment.stripePaymentIntentId!),
+                      _buildDetailRow(
+                          'Stripe ID', payment.stripePaymentIntentId!),
                   ],
                 ),
               ),
@@ -355,7 +376,8 @@ class PaymentDetailsSheet extends StatelessWidget {
                         // TODO: Implement refund
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Функция возврата в разработке')),
+                          const SnackBar(
+                              content: Text('Функция возврата в разработке')),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -383,11 +405,13 @@ class PaymentDetailsSheet extends StatelessWidget {
             width: 120,
             child: Text(
               label,
-              style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                  color: Colors.grey, fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
-            child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+            child: Text(value,
+                style: const TextStyle(fontWeight: FontWeight.w500)),
           ),
         ],
       ),

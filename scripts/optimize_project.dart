@@ -96,8 +96,8 @@ class ProjectOptimizer {
       final libDir = Directory('lib');
       if (!libDir.existsSync()) {
         print('❌ Директория lib не найдена');
-      return;
-    }
+        return;
+      }
 
       int cleanedFiles = 0;
       

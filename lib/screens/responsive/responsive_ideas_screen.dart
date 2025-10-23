@@ -70,7 +70,8 @@ class ResponsiveIdeasScreen extends StatelessWidget {
           ResponsiveText(
             'Создать идею',
             style: TextStyle(
-              fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 18.0, tablet: 20.0, desktop: 22.0),
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -88,7 +89,8 @@ class ResponsiveIdeasScreen extends StatelessWidget {
                 backgroundColor: Colors.green,
               ),
             ],
-            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context, mobile: 2, tablet: 2, desktop: 2),
+            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
+                mobile: 2, tablet: 2, desktop: 2),
           ),
         ],
       ),
@@ -103,7 +105,8 @@ class ResponsiveIdeasScreen extends StatelessWidget {
           ResponsiveText(
             'Фильтры',
             style: TextStyle(
-              fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 18.0, tablet: 20.0, desktop: 22.0),
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -115,7 +118,8 @@ class ResponsiveIdeasScreen extends StatelessWidget {
               _buildFilterChip(context, 'Популярные', false),
               _buildFilterChip(context, 'Недавние', false),
             ],
-            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context, mobile: 2, tablet: 4, desktop: 4),
+            crossAxisCount: ResponsiveUtils.getResponsiveColumns(context,
+                mobile: 2, tablet: 4, desktop: 4),
           ),
         ],
       ),
@@ -141,16 +145,20 @@ class ResponsiveIdeasScreen extends StatelessWidget {
           ResponsiveText(
             'Идеи',
             style: TextStyle(
-              fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 18.0, tablet: 20.0, desktop: 22.0),
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                  mobile: 18.0, tablet: 20.0, desktop: 22.0),
               fontWeight: FontWeight.bold,
             ),
           ),
           ResponsiveSpacing(height: 16),
           ResponsiveList(
             children: [
-              _buildIdeaItem(context, 'Свадьба в стиле ретро', 'Анна Петрова', '2 дня назад', 15, 3, true),
-              _buildIdeaItem(context, 'Корпоратив на природе', 'Иван Сидоров', '4 дня назад', 28, 7, false),
-              _buildIdeaItem(context, 'День рождения в кафе', 'Мария Козлова', '1 неделя назад', 12, 2, false),
+              _buildIdeaItem(context, 'Свадьба в стиле ретро', 'Анна Петрова',
+                  '2 дня назад', 15, 3, true),
+              _buildIdeaItem(context, 'Корпоратив на природе', 'Иван Сидоров',
+                  '4 дня назад', 28, 7, false),
+              _buildIdeaItem(context, 'День рождения в кафе', 'Мария Козлова',
+                  '1 неделя назад', 12, 2, false),
             ],
           ),
         ],
@@ -158,7 +166,8 @@ class ResponsiveIdeasScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIdeaItem(BuildContext context, String title, String author, String time, int likes, int comments, bool isLiked) {
+  Widget _buildIdeaItem(BuildContext context, String title, String author,
+      String time, int likes, int comments, bool isLiked) {
     return ResponsiveCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,13 +175,15 @@ class ResponsiveIdeasScreen extends StatelessWidget {
           Row(
             children: [
               CircleAvatar(
-                radius: ResponsiveUtils.getResponsiveIconSize(context, mobile: 20.0, tablet: 24.0, desktop: 28.0),
+                radius: ResponsiveUtils.getResponsiveIconSize(context,
+                    mobile: 20.0, tablet: 24.0, desktop: 28.0),
                 backgroundColor: Colors.blue,
                 child: ResponsiveText(
                   author[0],
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 14.0, tablet: 16.0, desktop: 18.0),
+                    fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                        mobile: 14.0, tablet: 16.0, desktop: 18.0),
                   ),
                 ),
               ),
@@ -184,14 +195,16 @@ class ResponsiveIdeasScreen extends StatelessWidget {
                     ResponsiveText(
                       author,
                       style: TextStyle(
-                        fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 14.0, tablet: 16.0, desktop: 18.0),
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                            mobile: 14.0, tablet: 16.0, desktop: 18.0),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     ResponsiveText(
                       time,
                       style: TextStyle(
-                        fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 12.0, tablet: 14.0, desktop: 16.0),
+                        fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                            mobile: 12.0, tablet: 14.0, desktop: 16.0),
                         color: Colors.grey[600],
                       ),
                     ),
@@ -205,7 +218,8 @@ class ResponsiveIdeasScreen extends StatelessWidget {
           ResponsiveText(
             title,
             style: TextStyle(
-              fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 16.0, tablet: 18.0, desktop: 20.0),
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                  mobile: 16.0, tablet: 18.0, desktop: 20.0),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -213,7 +227,8 @@ class ResponsiveIdeasScreen extends StatelessWidget {
           ResponsiveText(
             'Отличная идея для организации мероприятия!',
             style: TextStyle(
-              fontSize: ResponsiveUtils.getResponsiveFontSize(context, mobile: 14.0, tablet: 16.0, desktop: 18.0),
+              fontSize: ResponsiveUtils.getResponsiveFontSize(context,
+                  mobile: 14.0, tablet: 16.0, desktop: 18.0),
               color: Colors.grey[600],
             ),
           ),
@@ -223,9 +238,12 @@ class ResponsiveIdeasScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildActionButton(context, Icons.thumb_up, '$likes', Colors.blue, isLiked),
-              _buildActionButton(context, Icons.comment, '$comments', Colors.green, false),
-              _buildActionButton(context, Icons.share, 'Поделиться', Colors.orange, false),
+              _buildActionButton(
+                  context, Icons.thumb_up, '$likes', Colors.blue, isLiked),
+              _buildActionButton(
+                  context, Icons.comment, '$comments', Colors.green, false),
+              _buildActionButton(
+                  context, Icons.share, 'Поделиться', Colors.orange, false),
             ],
           ),
         ],
@@ -233,7 +251,8 @@ class ResponsiveIdeasScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(BuildContext context, IconData icon, String label, Color color, bool isActive) {
+  Widget _buildActionButton(BuildContext context, IconData icon, String label,
+      Color color, bool isActive) {
     return ResponsiveButton(
       text: label,
       onPressed: () {},

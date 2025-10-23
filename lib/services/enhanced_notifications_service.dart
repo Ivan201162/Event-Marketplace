@@ -8,12 +8,14 @@ import '../models/enhanced_notification.dart';
 class EnhancedNotificationsService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
   /// Инициализация сервиса уведомлений
   Future<void> initialize() async {
     // Инициализация локальных уведомлений
-    const initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const initializationSettingsIOS = DarwinInitializationSettings();
 
@@ -38,12 +40,14 @@ class EnhancedNotificationsService {
   Future<void> _requestPermissions() async {
     // Android
     await _localNotifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
 
     // iOS
     await _localNotifications
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(alert: true, badge: true, sound: true);
 
     // Firebase Messaging
@@ -112,7 +116,8 @@ class EnhancedNotificationsService {
       presentSound: true,
     );
 
-    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
+    const details =
+        NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     await _localNotifications.show(
       DateTime.now().millisecondsSinceEpoch.remainder(100000),
@@ -149,7 +154,8 @@ class EnhancedNotificationsService {
       final notifications = <EnhancedNotification>[];
 
       for (final doc in snapshot.docs) {
-        final notification = EnhancedNotification.fromMap(doc.data()! as Map<String, dynamic>);
+        final notification =
+            EnhancedNotification.fromMap(doc.data()! as Map<String, dynamic>);
         notifications.add(notification);
       }
 
@@ -177,7 +183,8 @@ class EnhancedNotificationsService {
       final notifications = <EnhancedNotification>[];
 
       for (final doc in snapshot.docs) {
-        final notification = EnhancedNotification.fromMap(doc.data()! as Map<String, dynamic>);
+        final notification =
+            EnhancedNotification.fromMap(doc.data()! as Map<String, dynamic>);
         notifications.add(notification);
       }
 
@@ -188,7 +195,8 @@ class EnhancedNotificationsService {
   }
 
   /// Получить уведомление по ID
-  Future<EnhancedNotification?> getNotificationById(String notificationId) async {
+  Future<EnhancedNotification?> getNotificationById(
+      String notificationId) async {
     try {
       final DocumentSnapshot doc = await _firestore
           .collection('notifications')
@@ -196,7 +204,8 @@ class EnhancedNotificationsService {
           .get();
 
       if (doc.exists) {
-        return EnhancedNotification.fromMap(doc.data()! as Map<String, dynamic>);
+        return EnhancedNotification.fromMap(
+            doc.data()! as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -242,7 +251,10 @@ class EnhancedNotificationsService {
         expiresAt: expiresAt,
       );
 
-      await _firestore.collection('notifications').doc(notificationId).set(notification.toMap());
+      await _firestore
+          .collection('notifications')
+          .doc(notificationId)
+          .set(notification.toMap());
 
       // Отправить push-уведомление
       await _sendPushNotification(notification);
@@ -257,7 +269,8 @@ class EnhancedNotificationsService {
   Future<void> _sendPushNotification(EnhancedNotification notification) async {
     try {
       // Получить FCM токен пользователя
-      final userDoc = await _firestore.collection('users').doc(notification.userId).get();
+      final userDoc =
+          await _firestore.collection('users').doc(notification.userId).get();
 
       if (userDoc.exists) {
         final userData = userDoc.data()!;
@@ -309,7 +322,8 @@ class EnhancedNotificationsService {
       final batch = _firestore.batch();
 
       for (final doc in snapshot.docs) {
-        batch.update(doc.reference, {'isRead': true, 'readAt': FieldValue.serverTimestamp()});
+        batch.update(doc.reference,
+            {'isRead': true, 'readAt': FieldValue.serverTimestamp()});
       }
 
       await batch.commit();
@@ -383,7 +397,8 @@ class EnhancedNotificationsService {
         final type = NotificationType.fromString(data['type'] as String);
         byType[type] = (byType[type] ?? 0) + 1;
 
-        final priority = NotificationPriority.fromString(data['priority'] as String? ?? 'normal');
+        final priority = NotificationPriority.fromString(
+            data['priority'] as String? ?? 'normal');
         byPriority[priority] = (byPriority[priority] ?? 0) + 1;
       }
 

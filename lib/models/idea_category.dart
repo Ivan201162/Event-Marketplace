@@ -48,8 +48,7 @@ class IdeaCategory {
       icon: data['icon'] as String?,
       color: data['color'] as String?,
       parentId: data['parentId'] as String?,
-      children:
-          (data['children'] as List<dynamic>?)
+      children: (data['children'] as List<dynamic>?)
               ?.map((e) => IdeaCategory.fromMap(Map<String, dynamic>.from(e)))
               .toList() ??
           [],
@@ -61,13 +60,13 @@ class IdeaCategory {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-                ? (data['updatedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['updatedAt'].toString()))
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -84,21 +83,21 @@ class IdeaCategory {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'description': description,
-    'icon': icon,
-    'color': color,
-    'parentId': parentId,
-    'children': children.map((e) => e.toMap()).toList(),
-    'tags': tags,
-    'isActive': isActive,
-    'isFeatured': isFeatured,
-    'order': order,
-    'ideasCount': ideasCount,
-    'metadata': metadata,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-  };
+        'name': name,
+        'description': description,
+        'icon': icon,
+        'color': color,
+        'parentId': parentId,
+        'children': children.map((e) => e.toMap()).toList(),
+        'tags': tags,
+        'isActive': isActive,
+        'isFeatured': isFeatured,
+        'order': order,
+        'ideasCount': ideasCount,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      };
 
   /// Копировать с изменениями
   IdeaCategory copyWith({
@@ -117,23 +116,24 @@ class IdeaCategory {
     Map<String, dynamic>? metadata,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => IdeaCategory(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    icon: icon ?? this.icon,
-    color: color ?? this.color,
-    parentId: parentId ?? this.parentId,
-    children: children ?? this.children,
-    tags: tags ?? this.tags,
-    isActive: isActive ?? this.isActive,
-    isFeatured: isFeatured ?? this.isFeatured,
-    order: order ?? this.order,
-    ideasCount: ideasCount ?? this.ideasCount,
-    metadata: metadata ?? this.metadata,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      IdeaCategory(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        icon: icon ?? this.icon,
+        color: color ?? this.color,
+        parentId: parentId ?? this.parentId,
+        children: children ?? this.children,
+        tags: tags ?? this.tags,
+        isActive: isActive ?? this.isActive,
+        isFeatured: isFeatured ?? this.isFeatured,
+        order: order ?? this.order,
+        ideasCount: ideasCount ?? this.ideasCount,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Проверить, активна ли категория
   bool get isActive => isActive;

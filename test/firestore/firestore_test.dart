@@ -25,7 +25,7 @@ void main() {
     test('AuthService can create user', () async {
       // Проверка создания пользователя
       final authService = AuthServiceEnhanced();
-      
+
       try {
         final user = await authService.getCurrentUser();
         expect(user, isNotNull);
@@ -38,7 +38,7 @@ void main() {
     test('ChatService can create chat', () async {
       // Проверка создания чата
       final chatService = ChatService();
-      
+
       try {
         final chats = await chatService.getUserChatsFuture();
         expect(chats, isA<List<Chat>>());
@@ -51,7 +51,7 @@ void main() {
     test('Firestore rules allow reading posts', () async {
       // Проверка правил Firestore для чтения постов
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         final posts = await firestore.collection('posts').limit(1).get();
         expect(posts, isNotNull);
@@ -64,7 +64,7 @@ void main() {
     test('Firestore rules allow reading requests', () async {
       // Проверка правил Firestore для чтения заявок
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         final requests = await firestore.collection('requests').limit(1).get();
         expect(requests, isNotNull);
@@ -77,7 +77,7 @@ void main() {
     test('Firestore rules allow reading chats', () async {
       // Проверка правил Firestore для чтения чатов
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         final chats = await firestore.collection('chats').limit(1).get();
         expect(chats, isNotNull);
@@ -90,7 +90,7 @@ void main() {
     test('Firestore rules allow reading ideas', () async {
       // Проверка правил Firestore для чтения идей
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         final ideas = await firestore.collection('ideas').limit(1).get();
         expect(ideas, isNotNull);
@@ -103,7 +103,7 @@ void main() {
     test('Firestore rules allow reading profiles', () async {
       // Проверка правил Firestore для чтения профилей
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         final profiles = await firestore.collection('profiles').limit(1).get();
         expect(profiles, isNotNull);
@@ -116,9 +116,10 @@ void main() {
     test('Firestore handles errors gracefully', () async {
       // Проверка обработки ошибок Firestore
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
-        final invalidCollection = await firestore.collection('invalid_collection').get();
+        final invalidCollection =
+            await firestore.collection('invalid_collection').get();
         expect(invalidCollection, isNotNull);
       } catch (e) {
         // Ожидаемо для несуществующей коллекции
@@ -129,20 +130,20 @@ void main() {
     test('Firestore supports offline mode', () async {
       // Проверка поддержки офлайн режима
       final firestore = FirebaseFirestore.instance;
-      
+
       // Включение офлайн режима
       firestore.settings = const Settings(
         persistenceEnabled: true,
         cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
       );
-      
+
       expect(firestore.settings.persistenceEnabled, isTrue);
     });
 
     test('Firestore supports real-time updates', () async {
       // Проверка поддержки обновлений в реальном времени
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         final stream = firestore.collection('posts').snapshots();
         expect(stream, isA<Stream<QuerySnapshot>>());
@@ -155,7 +156,7 @@ void main() {
     test('Firestore supports batch operations', () async {
       // Проверка поддержки пакетных операций
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         final batch = firestore.batch();
         expect(batch, isNotNull);
@@ -168,7 +169,7 @@ void main() {
     test('Firestore supports transactions', () async {
       // Проверка поддержки транзакций
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         await firestore.runTransaction((transaction) async {
           // Простая транзакция
@@ -183,14 +184,14 @@ void main() {
     test('Firestore supports compound queries', () async {
       // Проверка поддержки составных запросов
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         final query = firestore
             .collection('posts')
             .where('isPublished', isEqualTo: true)
             .orderBy('createdAt', descending: true)
             .limit(10);
-        
+
         expect(query, isNotNull);
       } catch (e) {
         // Ожидаемо, если есть проблемы с индексами
@@ -201,18 +202,18 @@ void main() {
     test('Firestore supports pagination', () async {
       // Проверка поддержки пагинации
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         final query = firestore.collection('posts').limit(10);
         final snapshot = await query.get();
-        
+
         if (snapshot.docs.isNotEmpty) {
           final lastDoc = snapshot.docs.last;
           final nextQuery = firestore
               .collection('posts')
               .startAfterDocument(lastDoc)
               .limit(10);
-          
+
           expect(nextQuery, isNotNull);
         }
       } catch (e) {
@@ -224,7 +225,7 @@ void main() {
     test('Firestore supports security rules', () async {
       // Проверка поддержки правил безопасности
       final firestore = FirebaseFirestore.instance;
-      
+
       try {
         // Попытка чтения защищенной коллекции
         final protectedCollection = await firestore.collection('admin').get();

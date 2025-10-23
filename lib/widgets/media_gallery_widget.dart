@@ -65,7 +65,8 @@ class _MediaGalleryWidgetState extends State<MediaGalleryWidget> {
       );
 
   Widget _buildLoading() => const Center(
-        child: Padding(padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
+        child: Padding(
+            padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
       );
 
   Widget _buildError() => Container(
@@ -81,9 +82,11 @@ class _MediaGalleryWidgetState extends State<MediaGalleryWidget> {
             Icon(Icons.error, color: Colors.red.shade700),
             const SizedBox(width: 8),
             Expanded(
-              child: Text(_error!, style: TextStyle(color: Colors.red.shade700)),
+              child:
+                  Text(_error!, style: TextStyle(color: Colors.red.shade700)),
             ),
-            TextButton(onPressed: _loadMediaFiles, child: const Text('Повторить')),
+            TextButton(
+                onPressed: _loadMediaFiles, child: const Text('Повторить')),
           ],
         ),
       );
@@ -94,7 +97,11 @@ class _MediaGalleryWidgetState extends State<MediaGalleryWidget> {
     }
 
     return Column(
-      children: [_buildCategoryFilter(), const SizedBox(height: 16), _buildMediaGrid()],
+      children: [
+        _buildCategoryFilter(),
+        const SizedBox(height: 16),
+        _buildMediaGrid()
+      ],
     );
   }
 
@@ -108,12 +115,15 @@ class _MediaGalleryWidgetState extends State<MediaGalleryWidget> {
         ),
         child: Column(
           children: [
-            Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey.shade400),
+            Icon(Icons.photo_library_outlined,
+                size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
             Text(
               'Медиафайлы не загружены',
-              style:
-                  TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
             Text(
@@ -195,7 +205,8 @@ class _MediaGalleryWidgetState extends State<MediaGalleryWidget> {
                   Image.network(
                     file.downloadUrl,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => _buildErrorPlaceholder(),
+                    errorBuilder: (context, error, stackTrace) =>
+                        _buildErrorPlaceholder(),
                   )
                 else if (file.isVideo)
                   _buildVideoThumbnail(file)
@@ -213,7 +224,10 @@ class _MediaGalleryWidgetState extends State<MediaGalleryWidget> {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 0.7)
+                        ],
                       ),
                     ),
                     child: Column(
@@ -232,7 +246,8 @@ class _MediaGalleryWidgetState extends State<MediaGalleryWidget> {
                         ),
                         Text(
                           file.formattedSize,
-                          style: const TextStyle(color: Colors.white70, fontSize: 8),
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 8),
                         ),
                       ],
                     ),
@@ -271,9 +286,11 @@ class _MediaGalleryWidgetState extends State<MediaGalleryWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.play_circle_filled, size: 48, color: Colors.grey.shade600),
+            Icon(Icons.play_circle_filled,
+                size: 48, color: Colors.grey.shade600),
             const SizedBox(height: 8),
-            Text('Видео', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+            Text('Видео',
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
           ],
         ),
       );
@@ -401,10 +418,13 @@ class _MediaDetailsDialog extends StatelessWidget {
             Expanded(
               child: Text(
                 file.fileName,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
-            IconButton(onPressed: () => Navigator.of(context).pop(), icon: const Icon(Icons.close)),
+            IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.close)),
           ],
         ),
       );
@@ -435,8 +455,8 @@ class _MediaDetailsDialog extends StatelessWidget {
           child: Image.network(
             file.downloadUrl,
             fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) =>
-                const Center(child: Icon(Icons.broken_image, size: 64, color: Colors.grey)),
+            errorBuilder: (context, error, stackTrace) => const Center(
+                child: Icon(Icons.broken_image, size: 64, color: Colors.grey)),
           ),
         ),
       );
@@ -452,9 +472,11 @@ class _MediaDetailsDialog extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.play_circle_filled, size: 64, color: Colors.grey.shade600),
+            Icon(Icons.play_circle_filled,
+                size: 64, color: Colors.grey.shade600),
             const SizedBox(height: 16),
-            Text('Видео файл', style: TextStyle(color: Colors.grey.shade600, fontSize: 18)),
+            Text('Видео файл',
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 18)),
           ],
         ),
       );
@@ -490,7 +512,8 @@ class _MediaDetailsDialog extends StatelessWidget {
           _buildInfoRow('Размер:', file.formattedSize),
           _buildInfoRow('Тип:', file.mimeType),
           _buildInfoRow('Загружен:', _formatDate(file.uploadedAt)),
-          if (file.description != null) _buildInfoRow('Описание:', file.description!),
+          if (file.description != null)
+            _buildInfoRow('Описание:', file.description!),
         ],
       );
 
@@ -501,7 +524,8 @@ class _MediaDetailsDialog extends StatelessWidget {
           children: [
             SizedBox(
               width: 80,
-              child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(label,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
             Expanded(child: Text(value)),
           ],
@@ -520,7 +544,9 @@ class _MediaDetailsDialog extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Закрыть')),
             const SizedBox(width: 8),
             ElevatedButton.icon(
               onPressed: () => _downloadFile(context),
@@ -542,14 +568,18 @@ class _MediaDetailsDialog extends StatelessWidget {
       } else {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Не удалось открыть файл'), backgroundColor: Colors.red),
+            const SnackBar(
+                content: Text('Не удалось открыть файл'),
+                backgroundColor: Colors.red),
           );
         }
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка скачивания: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка скачивания: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }

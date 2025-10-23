@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import '../models/common_types.dart';
 
 // Временное определение для совместимости
-enum SpecialistSortOption { rating, price, experience, reviews, name, dateAdded }
+enum SpecialistSortOption {
+  rating,
+  price,
+  experience,
+  reviews,
+  name,
+  dateAdded
+}
 
 extension SpecialistSortOptionExtension on SpecialistSortOption {
   String get label {
@@ -99,8 +106,11 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Фильтры', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                TextButton(onPressed: _clearAllFilters, child: const Text('Сбросить')),
+                const Text('Фильтры',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                TextButton(
+                    onPressed: _clearAllFilters, child: const Text('Сбросить')),
               ],
             ),
 
@@ -141,7 +151,8 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
   Widget _buildCategoryFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Категория', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Категория',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -178,7 +189,8 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
   Widget _buildCityFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Город', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Город',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             initialValue: widget.selectedCity,
@@ -190,7 +202,8 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
             items: [
               const DropdownMenuItem<String>(child: Text('Все города')),
               ..._availableCities.map(
-                (city) => DropdownMenuItem<String>(value: city, child: Text(city)),
+                (city) =>
+                    DropdownMenuItem<String>(value: city, child: Text(city)),
               ),
             ],
             onChanged: widget.onCityChanged,
@@ -202,7 +215,8 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
   Widget _buildBudgetFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Бюджет', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Бюджет',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -259,8 +273,10 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
                     widget.selectedDate != null
                         ? '${widget.selectedDate!.day}.${widget.selectedDate!.month}.${widget.selectedDate!.year}'
                         : 'Выберите дату',
-                    style:
-                        TextStyle(color: widget.selectedDate != null ? Colors.black : Colors.grey),
+                    style: TextStyle(
+                        color: widget.selectedDate != null
+                            ? Colors.black
+                            : Colors.grey),
                   ),
                   const Spacer(),
                   if (widget.selectedDate != null)
@@ -291,7 +307,8 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
                     label: style,
                     selected: widget.selectedStyles.contains(style),
                     onSelected: (selected) {
-                      final newStyles = List<String>.from(widget.selectedStyles);
+                      final newStyles =
+                          List<String>.from(widget.selectedStyles);
                       if (selected) {
                         newStyles.add(style);
                       } else {
@@ -310,7 +327,8 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
   Widget _buildSortFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Сортировка', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+          const Text('Сортировка',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           DropdownButtonFormField<SpecialistSortOption>(
             initialValue: widget.selectedSort,
@@ -320,10 +338,11 @@ class _SmartSearchFiltersState extends State<SmartSearchFilters> {
             ),
             hint: const Text('Выберите сортировку'),
             items: [
-              const DropdownMenuItem<SpecialistSortOption>(child: Text('По умолчанию')),
+              const DropdownMenuItem<SpecialistSortOption>(
+                  child: Text('По умолчанию')),
               ...SpecialistSortOption.values.map(
-                (sort) =>
-                    DropdownMenuItem<SpecialistSortOption>(value: sort, child: Text(sort.label)),
+                (sort) => DropdownMenuItem<SpecialistSortOption>(
+                    value: sort, child: Text(sort.label)),
               ),
             ],
             onChanged: widget.onSortChanged,

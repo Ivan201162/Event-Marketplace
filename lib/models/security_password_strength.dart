@@ -15,20 +15,22 @@ class SecurityPasswordStrength {
     this.hasNoCommonPatterns = false,
   });
 
-  factory SecurityPasswordStrength.fromJson(Map<String, dynamic> json) => SecurityPasswordStrength(
-    strength: PasswordStrength.values.firstWhere(
-      (e) => e.name == json['strength'],
-      orElse: () => PasswordStrength.weak,
-    ),
-    score: json['score'] as int? ?? 0,
-    suggestions: (json['suggestions'] as List<dynamic>?)?.cast<String>() ?? [],
-    hasMinLength: json['hasMinLength'] as bool? ?? false,
-    hasUppercase: json['hasUppercase'] as bool? ?? false,
-    hasLowercase: json['hasLowercase'] as bool? ?? false,
-    hasNumbers: json['hasNumbers'] as bool? ?? false,
-    hasSpecialChars: json['hasSpecialChars'] as bool? ?? false,
-    hasNoCommonPatterns: json['hasNoCommonPatterns'] as bool? ?? false,
-  );
+  factory SecurityPasswordStrength.fromJson(Map<String, dynamic> json) =>
+      SecurityPasswordStrength(
+        strength: PasswordStrength.values.firstWhere(
+          (e) => e.name == json['strength'],
+          orElse: () => PasswordStrength.weak,
+        ),
+        score: json['score'] as int? ?? 0,
+        suggestions:
+            (json['suggestions'] as List<dynamic>?)?.cast<String>() ?? [],
+        hasMinLength: json['hasMinLength'] as bool? ?? false,
+        hasUppercase: json['hasUppercase'] as bool? ?? false,
+        hasLowercase: json['hasLowercase'] as bool? ?? false,
+        hasNumbers: json['hasNumbers'] as bool? ?? false,
+        hasSpecialChars: json['hasSpecialChars'] as bool? ?? false,
+        hasNoCommonPatterns: json['hasNoCommonPatterns'] as bool? ?? false,
+      );
 
   factory SecurityPasswordStrength.fromMap(Map<String, dynamic> map) =>
       SecurityPasswordStrength.fromJson(map);
@@ -56,14 +58,14 @@ class SecurityPasswordStrength {
   int get maxScore => 100;
 
   Map<String, dynamic> toJson() => {
-    'strength': strength.name,
-    'score': score,
-    'suggestions': suggestions,
-    'hasMinLength': hasMinLength,
-    'hasUppercase': hasUppercase,
-    'hasLowercase': hasLowercase,
-    'hasNumbers': hasNumbers,
-    'hasSpecialChars': hasSpecialChars,
-    'hasNoCommonPatterns': hasNoCommonPatterns,
-  };
+        'strength': strength.name,
+        'score': score,
+        'suggestions': suggestions,
+        'hasMinLength': hasMinLength,
+        'hasUppercase': hasUppercase,
+        'hasLowercase': hasLowercase,
+        'hasNumbers': hasNumbers,
+        'hasSpecialChars': hasSpecialChars,
+        'hasNoCommonPatterns': hasNoCommonPatterns,
+      };
 }

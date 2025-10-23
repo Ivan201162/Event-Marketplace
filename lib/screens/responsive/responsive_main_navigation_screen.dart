@@ -13,10 +13,12 @@ class ResponsiveMainNavigationScreen extends StatefulWidget {
   const ResponsiveMainNavigationScreen({super.key});
 
   @override
-  State<ResponsiveMainNavigationScreen> createState() => _ResponsiveMainNavigationScreenState();
+  State<ResponsiveMainNavigationScreen> createState() =>
+      _ResponsiveMainNavigationScreenState();
 }
 
-class _ResponsiveMainNavigationScreenState extends State<ResponsiveMainNavigationScreen> {
+class _ResponsiveMainNavigationScreenState
+    extends State<ResponsiveMainNavigationScreen> {
   int _currentIndex = 0;
   late PageController _pageController;
 
@@ -107,11 +109,13 @@ class _ResponsiveMainNavigationScreenState extends State<ResponsiveMainNavigatio
             ),
           ),
           ResponsiveBottomNavBar(
-            items: _navigationItems.map((item) => BottomNavigationBarItem(
-              icon: ResponsiveIcon(item.icon),
-              activeIcon: ResponsiveIcon(item.activeIcon),
-              label: item.label,
-            )).toList(),
+            items: _navigationItems
+                .map((item) => BottomNavigationBarItem(
+                      icon: ResponsiveIcon(item.icon),
+                      activeIcon: ResponsiveIcon(item.activeIcon),
+                      label: item.label,
+                    ))
+                .toList(),
             currentIndex: _currentIndex,
             onTap: _onItemTapped,
           ),
@@ -125,7 +129,8 @@ class _ResponsiveMainNavigationScreenState extends State<ResponsiveMainNavigatio
       child: Row(
         children: [
           ResponsiveContainer(
-            width: ResponsiveUtils.getResponsiveWidth(context, mobile: 0.0, tablet: 0.3, desktop: 0.2),
+            width: ResponsiveUtils.getResponsiveWidth(context,
+                mobile: 0.0, tablet: 0.3, desktop: 0.2),
             child: ResponsiveList(
               children: [
                 ResponsiveSpacing(height: 16),
@@ -138,7 +143,8 @@ class _ResponsiveMainNavigationScreenState extends State<ResponsiveMainNavigatio
                     child: ResponsiveButton(
                       text: item.label,
                       onPressed: () => _onItemTapped(index),
-                      backgroundColor: isActive ? Colors.blue : Colors.transparent,
+                      backgroundColor:
+                          isActive ? Colors.blue : Colors.transparent,
                       textColor: isActive ? Colors.white : Colors.black,
                     ),
                   );
@@ -167,7 +173,8 @@ class _ResponsiveMainNavigationScreenState extends State<ResponsiveMainNavigatio
       child: Row(
         children: [
           ResponsiveContainer(
-            width: ResponsiveUtils.getResponsiveWidth(context, mobile: 0.0, tablet: 0.0, desktop: 0.15),
+            width: ResponsiveUtils.getResponsiveWidth(context,
+                mobile: 0.0, tablet: 0.0, desktop: 0.15),
             child: ResponsiveList(
               children: [
                 ResponsiveSpacing(height: 16),
@@ -180,7 +187,8 @@ class _ResponsiveMainNavigationScreenState extends State<ResponsiveMainNavigatio
                     child: ResponsiveButton(
                       text: item.label,
                       onPressed: () => _onItemTapped(index),
-                      backgroundColor: isActive ? Colors.blue : Colors.transparent,
+                      backgroundColor:
+                          isActive ? Colors.blue : Colors.transparent,
                       textColor: isActive ? Colors.white : Colors.black,
                     ),
                   );

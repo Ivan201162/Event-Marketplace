@@ -3,7 +3,8 @@ import 'package:event_marketplace_app/models/review.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class MockDocumentSnapshot extends Mock implements DocumentSnapshot<Map<String, dynamic>> {
+class MockDocumentSnapshot extends Mock
+    implements DocumentSnapshot<Map<String, dynamic>> {
   final String _id;
   final Map<String, dynamic> _data;
 

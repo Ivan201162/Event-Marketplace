@@ -22,7 +22,9 @@ class MessageBubble extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 4),
           child: Row(
-            mainAxisAlignment: isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: isFromCurrentUser
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (!isFromCurrentUser) ...[
@@ -40,10 +42,14 @@ class MessageBubble extends StatelessWidget {
               ],
               Flexible(
                 child: Container(
-                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.7),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: isFromCurrentUser ? Theme.of(context).primaryColor : Colors.grey[200],
+                    color: isFromCurrentUser
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey[200],
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(20),
                       topRight: const Radius.circular(20),
@@ -94,7 +100,9 @@ class MessageBubble extends StatelessWidget {
       case MessageType.text:
         return Text(
           message.text ?? '',
-          style: TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 16),
+          style: TextStyle(
+              color: isFromCurrentUser ? Colors.white : Colors.black87,
+              fontSize: 16),
         );
       case MessageType.image:
         return _buildImageMessage(context);
@@ -136,8 +144,9 @@ class MessageBubble extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               message.text ?? '',
-              style:
-                  TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 16),
+              style: TextStyle(
+                  color: isFromCurrentUser ? Colors.white : Colors.black87,
+                  fontSize: 16),
             ),
           ],
         ],
@@ -150,8 +159,8 @@ class MessageBubble extends StatelessWidget {
             Container(
               width: 200,
               height: 150,
-              decoration:
-                  BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(8)),
               child: Stack(
                 children: [
                   Center(
@@ -169,8 +178,9 @@ class MessageBubble extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               message.text ?? '',
-              style:
-                  TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 16),
+              style: TextStyle(
+                  color: isFromCurrentUser ? Colors.white : Colors.black87,
+                  fontSize: 16),
             ),
           ],
         ],
@@ -178,18 +188,22 @@ class MessageBubble extends StatelessWidget {
 
   Widget _buildAudioMessage(BuildContext context) => Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.play_arrow, color: isFromCurrentUser ? Colors.white : Colors.black87),
+            Icon(Icons.play_arrow,
+                color: isFromCurrentUser ? Colors.white : Colors.black87),
             const SizedBox(width: 8),
-            Icon(Icons.audiotrack, color: isFromCurrentUser ? Colors.white : Colors.black87),
+            Icon(Icons.audiotrack,
+                color: isFromCurrentUser ? Colors.white : Colors.black87),
             const SizedBox(width: 8),
             Text(
               message.text ?? '',
-              style:
-                  TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 14),
+              style: TextStyle(
+                  color: isFromCurrentUser ? Colors.white : Colors.black87,
+                  fontSize: 14),
             ),
           ],
         ),
@@ -197,11 +211,13 @@ class MessageBubble extends StatelessWidget {
 
   Widget _buildFileMessage(BuildContext context) => Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(_getFileIcon(), color: isFromCurrentUser ? Colors.white : Colors.black87),
+            Icon(_getFileIcon(),
+                color: isFromCurrentUser ? Colors.white : Colors.black87),
             const SizedBox(width: 8),
             Flexible(
               child: Column(
@@ -219,7 +235,9 @@ class MessageBubble extends StatelessWidget {
                     Text(
                       message.formattedFileSize,
                       style: TextStyle(
-                        color: isFromCurrentUser ? Colors.white70 : Colors.grey[600],
+                        color: isFromCurrentUser
+                            ? Colors.white70
+                            : Colors.grey[600],
                         fontSize: 12,
                       ),
                     ),
@@ -232,16 +250,19 @@ class MessageBubble extends StatelessWidget {
 
   Widget _buildLocationMessage(BuildContext context) => Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.location_on, color: isFromCurrentUser ? Colors.white : Colors.black87),
+            Icon(Icons.location_on,
+                color: isFromCurrentUser ? Colors.white : Colors.black87),
             const SizedBox(width: 8),
             Text(
               message.text ?? '',
-              style:
-                  TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 14),
+              style: TextStyle(
+                  color: isFromCurrentUser ? Colors.white : Colors.black87,
+                  fontSize: 14),
             ),
           ],
         ),
@@ -262,8 +283,10 @@ class MessageBubble extends StatelessWidget {
             Flexible(
               child: Text(
                 message.text ?? '',
-                style:
-                    TextStyle(color: Colors.blue[800], fontSize: 14, fontStyle: FontStyle.italic),
+                style: TextStyle(
+                    color: Colors.blue[800],
+                    fontSize: 14,
+                    fontStyle: FontStyle.italic),
               ),
             ),
           ],
@@ -272,16 +295,19 @@ class MessageBubble extends StatelessWidget {
 
   Widget _buildAttachmentMessage(BuildContext context) => Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.attachment, color: isFromCurrentUser ? Colors.white : Colors.black87),
+            Icon(Icons.attachment,
+                color: isFromCurrentUser ? Colors.white : Colors.black87),
             const SizedBox(width: 8),
             Text(
               message.text ?? '',
-              style:
-                  TextStyle(color: isFromCurrentUser ? Colors.white : Colors.black87, fontSize: 14),
+              style: TextStyle(
+                  color: isFromCurrentUser ? Colors.white : Colors.black87,
+                  fontSize: 14),
             ),
           ],
         ),

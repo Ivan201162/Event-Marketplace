@@ -13,10 +13,12 @@ class CustomErrorWidget extends StatelessWidget {
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text(message,
-                style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center),
             if (onRetry != null) ...[
               const SizedBox(height: 16),
-              ElevatedButton(onPressed: onRetry, child: const Text('Повторить')),
+              ElevatedButton(
+                  onPressed: onRetry, child: const Text('Повторить')),
             ],
           ],
         ),

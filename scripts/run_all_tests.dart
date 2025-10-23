@@ -21,7 +21,7 @@ void main() async {
 
   for (final testFile in testFiles) {
     print('📋 Запуск тестов: $testFile');
-    
+
     try {
       final result = await Process.run(
         'flutter',
@@ -37,7 +37,7 @@ void main() async {
         print('Ошибка: ${result.stderr}');
         failedTests++;
       }
-      
+
       totalTests++;
     } catch (e) {
       print('❌ Ошибка при запуске тестов: $testFile');
@@ -45,7 +45,7 @@ void main() async {
       failedTests++;
       totalTests++;
     }
-    
+
     print('');
   }
 
@@ -55,7 +55,7 @@ void main() async {
   print('✅ Прошло тестов: $passedTests');
   print('❌ Не прошло тестов: $failedTests');
   print('📋 Всего тестов: $totalTests');
-  
+
   if (failedTests == 0) {
     print('🎉 Все тесты прошли успешно!');
   } else {

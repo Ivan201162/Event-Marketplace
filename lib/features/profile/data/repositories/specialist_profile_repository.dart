@@ -37,7 +37,8 @@ class SpecialistProfileRepository {
   /// Создать новый профиль специалиста
   Future<String> createProfile(SpecialistProfile profile) async {
     try {
-      final docRef = await _firestore.collection(_collection).add(profile.toMap());
+      final docRef =
+          await _firestore.collection(_collection).add(profile.toMap());
       return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания профиля: $e');
@@ -70,7 +71,9 @@ class SpecialistProfileRepository {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return query.docs.map((doc) => SpecialistProfile.fromDocument(doc)).toList();
+      return query.docs
+          .map((doc) => SpecialistProfile.fromDocument(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения профилей: $e');
     }
@@ -85,7 +88,9 @@ class SpecialistProfileRepository {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return query.docs.map((doc) => SpecialistProfile.fromDocument(doc)).toList();
+      return query.docs
+          .map((doc) => SpecialistProfile.fromDocument(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения профилей по категории: $e');
     }
@@ -100,7 +105,9 @@ class SpecialistProfileRepository {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return query.docs.map((doc) => SpecialistProfile.fromDocument(doc)).toList();
+      return query.docs
+          .map((doc) => SpecialistProfile.fromDocument(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения профилей по городу: $e');
     }

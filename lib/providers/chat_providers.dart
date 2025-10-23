@@ -15,13 +15,14 @@ final chatServiceProvider = Provider<ChatService>((ref) {
 final userChatsProvider = StreamProvider<List<Chat>>((ref) {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) return Stream.value([]);
-  
+
   final chatService = ref.read(chatServiceProvider);
   return chatService.getUserChats(user.uid);
 });
 
 /// Провайдер для сообщений конкретного чата
-final chatMessagesProvider = StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
+final chatMessagesProvider =
+    StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getChatMessages(chatId);
 });
@@ -36,9 +37,9 @@ final chatProvider = FutureProvider.family<Chat?, String>((ref, chatId) {
 final totalUnreadCountProvider = StreamProvider<int>((ref) {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) return Stream.value(0);
-  
+
   final chatService = ref.read(chatServiceProvider);
-  
+
   // Создаем периодический стрим для обновления счетчика
   return Stream.periodic(const Duration(seconds: 30), (_) {
     return chatService.getTotalUnreadCount(user.uid);
@@ -46,7 +47,8 @@ final totalUnreadCountProvider = StreamProvider<int>((ref) {
 });
 
 /// Провайдер для состояния отправки сообщения
-final messageSendingProvider = NotifierProvider<MessageSendingNotifier, bool>(() {
+final messageSendingProvider =
+    NotifierProvider<MessageSendingNotifier, bool>(() {
   return MessageSendingNotifier();
 });
 
@@ -61,7 +63,8 @@ class MessageSendingNotifier extends Notifier<bool> {
 }
 
 /// Провайдер для выбранного чата
-final selectedChatProvider = NotifierProvider<SelectedChatNotifier, String?>(() {
+final selectedChatProvider =
+    NotifierProvider<SelectedChatNotifier, String?>(() {
   return SelectedChatNotifier();
 });
 
@@ -98,23 +101,27 @@ class ChatSearchNotifier extends Notifier<String> {
 final filteredChatsProvider = Provider<List<Chat>>((ref) {
   final chats = ref.watch(userChatsProvider).value ?? [];
   final searchQuery = ref.watch(chatSearchProvider);
-  
+
   if (searchQuery.isEmpty) return chats;
-  
+
   return chats.where((chat) {
     return chat.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-           (chat.lastMessageContent?.toLowerCase().contains(searchQuery.toLowerCase()) ?? false);
+        (chat.lastMessageContent
+                ?.toLowerCase()
+                .contains(searchQuery.toLowerCase()) ??
+            false);
   }).toList();
 });
 
 /// Провайдер для чата с пользователем (для отображения информации о собеседнике)
-final chatWithUserProvider = FutureProvider.family<Map<String, dynamic>?, String>((ref, chatId) async {
+final chatWithUserProvider =
+    FutureProvider.family<Map<String, dynamic>?, String>((ref, chatId) async {
   final chat = await ref.watch(chatProvider(chatId).future);
   if (chat == null) return null;
-  
+
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) return null;
-  
+
   // Для прямых чатов получаем информацию о другом участнике
   if (chat.isDirectChat) {
     final otherUserId = chat.getOtherParticipantId(user.uid);
@@ -124,7 +131,7 @@ final chatWithUserProvider = FutureProvider.family<Map<String, dynamic>?, String
             .collection('users')
             .doc(otherUserId)
             .get();
-        
+
         if (userDoc.exists) {
           final userData = userDoc.data()!;
           return {
@@ -139,7 +146,7 @@ final chatWithUserProvider = FutureProvider.family<Map<String, dynamic>?, String
       }
     }
   }
-  
+
   return {
     'id': chat.id,
     'name': chat.name,

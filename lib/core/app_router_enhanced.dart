@@ -34,7 +34,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'main',
         builder: (context, state) => const MainNavigationScreenEnhanced(),
       ),
-      
+
       // Аутентификация
       GoRoute(
         path: '/login',
@@ -63,7 +63,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           transitionType: PageTransitionType.fade,
         ),
       ),
-      
+
       // Профиль
       GoRoute(
         path: '/profile/:userId',
@@ -86,7 +86,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           transitionType: PageTransitionType.slideLeft,
         ),
       ),
-      
+
       // Лента и идеи
       GoRoute(
         path: '/feed',
@@ -124,7 +124,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           transitionType: PageTransitionType.slideUp,
         ),
       ),
-      
+
       // Заявки
       GoRoute(
         path: '/create-request',
@@ -135,7 +135,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           transitionType: PageTransitionType.slideUp,
         ),
       ),
-      
+
       // Настройки и помощь
       GoRoute(
         path: '/settings',
@@ -182,7 +182,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           transitionType: PageTransitionType.slideLeft,
         ),
       ),
-      
+
       // Загрузка
       GoRoute(
         path: '/loading',
@@ -220,7 +220,8 @@ Page<void> _buildPageWithAnimation(
     key: state.pageKey,
     child: child,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return _buildTransition(animation, secondaryAnimation, child, transitionType);
+      return _buildTransition(
+          animation, secondaryAnimation, child, transitionType);
     },
     transitionDuration: const Duration(milliseconds: 300),
     reverseTransitionDuration: const Duration(milliseconds: 300),
@@ -310,24 +311,27 @@ Widget _buildTransition(
 }
 
 /// Обработать редирект
-Future<String?> _handleRedirect(BuildContext context, GoRouterState state) async {
+Future<String?> _handleRedirect(
+    BuildContext context, GoRouterState state) async {
   try {
     // Проверяем, есть ли активная сессия
     final hasSession = await SessionService.hasActiveSession();
     final currentPath = state.uri.path;
-    
+
     // Если пользователь не авторизован и не на экранах входа
     if (!hasSession && !_isAuthPath(currentPath)) {
-      NavigationService.logNavigation(currentPath, '/login', data: {'reason': 'no_session'});
+      NavigationService.logNavigation(currentPath, '/login',
+          data: {'reason': 'no_session'});
       return '/login';
     }
-    
+
     // Если пользователь авторизован и на экране входа, перенаправляем на главную
     if (hasSession && _isAuthPath(currentPath)) {
-      NavigationService.logNavigation(currentPath, '/main', data: {'reason': 'already_authenticated'});
+      NavigationService.logNavigation(currentPath, '/main',
+          data: {'reason': 'already_authenticated'});
       return '/main';
     }
-    
+
     return null; // Нет редиректа
   } catch (e) {
     debugPrint('❌ Error in redirect handler: $e');

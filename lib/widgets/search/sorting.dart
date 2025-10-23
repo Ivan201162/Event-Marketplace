@@ -4,12 +4,14 @@ import '../../models/specialist_sorting.dart' as sorting_utils;
 import '../../providers/search_providers.dart';
 
 class SearchSortingWidget extends ConsumerStatefulWidget {
-  const SearchSortingWidget({super.key, this.onSortingChanged, this.showTitle = true});
+  const SearchSortingWidget(
+      {super.key, this.onSortingChanged, this.showTitle = true});
   final VoidCallback? onSortingChanged;
   final bool showTitle;
 
   @override
-  ConsumerState<SearchSortingWidget> createState() => _SearchSortingWidgetState();
+  ConsumerState<SearchSortingWidget> createState() =>
+      _SearchSortingWidgetState();
 }
 
 class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
@@ -27,7 +29,8 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
         child: Column(
           children: [
             if (widget.showTitle)
-              const ListTile(leading: Icon(Icons.sort), title: Text('Сортировка')),
+              const ListTile(
+                  leading: Icon(Icons.sort), title: Text('Сортировка')),
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -48,7 +51,8 @@ class _SearchSortingWidgetState extends ConsumerState<SearchSortingWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Сортировать по:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const Text('Сортировать по:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         ...sortOptions.map(_buildSortOption),
       ],
@@ -140,9 +144,8 @@ class QuickSortingWidget extends ConsumerWidget {
                 selected: isSelected,
                 onSelected: (selected) {
                   if (selected) {
-                    ref
-                        .read(searchSortingProvider.notifier)
-                        .updateSorting(sorting_utils.SpecialistSorting(sortOption: option));
+                    ref.read(searchSortingProvider.notifier).updateSorting(
+                        sorting_utils.SpecialistSorting(sortOption: option));
                   } else {
                     ref
                         .read(searchSortingProvider.notifier)
@@ -178,7 +181,8 @@ class CurrentSortingWidget extends ConsumerWidget {
           const SizedBox(width: 8),
           Text(
             'Сортировка: ${currentSorting.displayName}',
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.blue),
+            style: const TextStyle(
+                fontSize: 14, fontWeight: FontWeight.w500, color: Colors.blue),
           ),
           const Spacer(),
           TextButton(
@@ -255,10 +259,14 @@ class _SortingDialogState extends ConsumerState<SortingDialog> {
           },
           child: const Text('Сбросить'),
         ),
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Отмена')),
         ElevatedButton(
           onPressed: () {
-            ref.read(searchSortingProvider.notifier).updateSorting(_selectedSorting);
+            ref
+                .read(searchSortingProvider.notifier)
+                .updateSorting(_selectedSorting);
             Navigator.of(context).pop();
           },
           child: const Text('Применить'),
@@ -310,7 +318,8 @@ class SortingStatsWidget extends ConsumerWidget {
           Row(
             children: [
               Expanded(
-                child: _buildStatItem('Найдено', '${searchStats['totalCount'] ?? 0}', Icons.search),
+                child: _buildStatItem('Найдено',
+                    '${searchStats['totalCount'] ?? 0}', Icons.search),
               ),
               Expanded(
                 child: _buildStatItem(
@@ -339,10 +348,13 @@ class SortingStatsWidget extends ConsumerWidget {
           const SizedBox(height: 4),
           Text(
             value,
-            style:
-                TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.blue.shade700),
+            style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue.shade700),
           ),
-          Text(label, style: TextStyle(fontSize: 10, color: Colors.blue.shade600)),
+          Text(label,
+              style: TextStyle(fontSize: 10, color: Colors.blue.shade600)),
         ],
       );
 }

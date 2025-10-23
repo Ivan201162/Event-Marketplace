@@ -29,7 +29,8 @@ class OptimizedCachedImageWidget extends StatefulWidget {
   final CacheManager? cacheManager;
 
   @override
-  State<OptimizedCachedImageWidget> createState() => _OptimizedCachedImageWidgetState();
+  State<OptimizedCachedImageWidget> createState() =>
+      _OptimizedCachedImageWidgetState();
 }
 
 class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
@@ -48,7 +49,8 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
   Future<void> _preloadImage() async {
     try {
       await precacheImage(
-        CachedNetworkImageProvider(widget.imageUrl, cacheManager: widget.cacheManager),
+        CachedNetworkImageProvider(widget.imageUrl,
+            cacheManager: widget.cacheManager),
         context,
       );
     } catch (e) {
@@ -64,19 +66,23 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
         child: Container(
           width: widget.width,
           height: widget.height,
-          decoration: BoxDecoration(color: Colors.white, borderRadius: widget.borderRadius),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: widget.borderRadius),
         ),
       );
 
   Widget _buildErrorWidget() => Container(
         width: widget.width,
         height: widget.height,
-        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: widget.borderRadius),
+        decoration: BoxDecoration(
+            color: Colors.grey[200], borderRadius: widget.borderRadius),
         child: Icon(
           Icons.error_outline,
           color: Colors.grey[400],
           size: (widget.width != null && widget.height != null)
-              ? (widget.width! < widget.height! ? widget.width! * 0.3 : widget.height! * 0.3)
+              ? (widget.width! < widget.height!
+                  ? widget.width! * 0.3
+                  : widget.height! * 0.3)
               : 24,
         ),
       );
@@ -95,8 +101,10 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
       height: widget.height,
       fit: widget.fit,
       cacheManager: widget.cacheManager,
-      placeholder: (context, url) => widget.placeholder ?? _buildShimmerPlaceholder(),
-      errorWidget: (context, url, error) => widget.errorWidget ?? _buildErrorWidget(),
+      placeholder: (context, url) =>
+          widget.placeholder ?? _buildShimmerPlaceholder(),
+      errorWidget: (context, url, error) =>
+          widget.errorWidget ?? _buildErrorWidget(),
       fadeInDuration: const Duration(milliseconds: 300),
       fadeOutDuration: const Duration(milliseconds: 100),
       memCacheWidth: widget.width?.toInt(),
@@ -104,10 +112,12 @@ class _OptimizedCachedImageWidgetState extends State<OptimizedCachedImageWidget>
     );
 
     if (widget.borderRadius != null) {
-      imageWidget = ClipRRect(borderRadius: widget.borderRadius!, child: imageWidget);
+      imageWidget =
+          ClipRRect(borderRadius: widget.borderRadius!, child: imageWidget);
     }
 
-    return AnimatedSwitcher(duration: const Duration(milliseconds: 300), child: imageWidget);
+    return AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300), child: imageWidget);
   }
 }
 
@@ -132,7 +142,9 @@ class CachedAvatarWidget extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: borderColor != null ? Border.all(color: borderColor!, width: borderWidth) : null,
+          border: borderColor != null
+              ? Border.all(color: borderColor!, width: borderWidth)
+              : null,
         ),
         child: CircleAvatar(
           radius: radius,
@@ -143,10 +155,11 @@ class CachedAvatarWidget extends StatelessWidget {
                   width: radius * 2,
                   height: radius * 2,
                   borderRadius: BorderRadius.circular(radius),
-                  placeholder:
-                      placeholder ?? Icon(Icons.person, size: radius, color: Colors.grey[400]),
+                  placeholder: placeholder ??
+                      Icon(Icons.person, size: radius, color: Colors.grey[400]),
                 )
-              : placeholder ?? Icon(Icons.person, size: radius, color: Colors.grey[400]),
+              : placeholder ??
+                  Icon(Icons.person, size: radius, color: Colors.grey[400]),
         ),
       );
 }

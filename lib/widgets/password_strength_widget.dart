@@ -38,7 +38,8 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
   }
 
   Future<void> _updateStrength() async {
-    final result = await _securityService.checkPasswordStrength(widget.password);
+    final result =
+        await _securityService.checkPasswordStrength(widget.password);
     setState(() {
       _strength = SecurityPasswordStrength.fromMap(result);
     });
@@ -138,7 +139,8 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb_outline, size: 16, color: Colors.orange[700]),
+                Icon(Icons.lightbulb_outline,
+                    size: 16, color: Colors.orange[700]),
                 const SizedBox(width: 8),
                 Text(
                   'Рекомендации:',
@@ -160,7 +162,9 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
                     Icon(Icons.circle, size: 4, color: Colors.orange[700]),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(issue, style: TextStyle(fontSize: 11, color: Colors.orange[700])),
+                      child: Text(issue,
+                          style: TextStyle(
+                              fontSize: 11, color: Colors.orange[700])),
                     ),
                   ],
                 ),
@@ -208,7 +212,8 @@ class PasswordGeneratorWidget extends StatefulWidget {
   final String? initialPassword;
 
   @override
-  State<PasswordGeneratorWidget> createState() => _PasswordGeneratorWidgetState();
+  State<PasswordGeneratorWidget> createState() =>
+      _PasswordGeneratorWidgetState();
 }
 
 class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
@@ -273,7 +278,8 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
                     Expanded(
                       child: Text(
                         _generatedPassword,
-                        style: const TextStyle(fontSize: 14, fontFamily: 'monospace'),
+                        style: const TextStyle(
+                            fontSize: 14, fontFamily: 'monospace'),
                       ),
                     ),
                     IconButton(
@@ -282,7 +288,8 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
                         // TODO(developer): Копировать в буфер обмена
                         ScaffoldMessenger.of(
                           context,
-                        ).showSnackBar(const SnackBar(content: Text('Пароль скопирован')));
+                        ).showSnackBar(
+                            const SnackBar(content: Text('Пароль скопирован')));
                       },
                     ),
                   ],
@@ -292,7 +299,8 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
               const SizedBox(height: 16),
 
               // Настройки генерации
-              const Text('Настройки:', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              const Text('Настройки:',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
 
               const SizedBox(height: 8),
 

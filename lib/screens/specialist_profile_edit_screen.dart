@@ -9,10 +9,12 @@ class SpecialistProfileEditScreen extends ConsumerStatefulWidget {
   final String specialistId;
 
   @override
-  ConsumerState<SpecialistProfileEditScreen> createState() => _SpecialistProfileEditScreenState();
+  ConsumerState<SpecialistProfileEditScreen> createState() =>
+      _SpecialistProfileEditScreenState();
 }
 
-class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileEditScreen> {
+class _SpecialistProfileEditScreenState
+    extends ConsumerState<SpecialistProfileEditScreen> {
   // final SpecialistProfileService _profileService = SpecialistProfileService(); // Unused field
   final SpecialistService _specialistService = SpecialistService();
 
@@ -46,7 +48,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
 
   Future<void> _loadSpecialist() async {
     try {
-      final specialist = await _specialistService.getSpecialistById(widget.specialistId);
+      final specialist =
+          await _specialistService.getSpecialistById(widget.specialistId);
       setState(() {
         _specialist = specialist;
         _isLoading = false;
@@ -54,13 +57,16 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
 
       // Инициализируем контроллеры для контактов
       for (final contact in (specialist?.contacts ?? {}).entries) {
-        _contactControllers[contact.key] = TextEditingController(text: contact.value);
+        _contactControllers[contact.key] =
+            TextEditingController(text: contact.value);
       }
 
       // Инициализируем контроллеры для услуг
       for (final service in (specialist?.servicesWithPrices ?? {}).entries) {
-        _serviceControllers[service.key] = TextEditingController(text: service.key);
-        _priceControllers[service.key] = TextEditingController(text: service.value.toString());
+        _serviceControllers[service.key] =
+            TextEditingController(text: service.key);
+        _priceControllers[service.key] =
+            TextEditingController(text: service.value.toString());
       }
     } on Exception catch (e) {
       setState(() {
@@ -68,7 +74,9 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки профиля: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка загрузки профиля: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -87,13 +95,17 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Контакты сохранены'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Контакты сохранены'),
+              backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка сохранения контактов: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка сохранения контактов: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -118,20 +130,30 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Услуги сохранены'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Услуги сохранены'), backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка сохранения услуг: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка сохранения услуг: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
   }
 
   void _addContact() {
-    final contactTypes = ['Телефон', 'Email', 'Instagram', 'VK', 'Telegram', 'Другое'];
+    final contactTypes = [
+      'Телефон',
+      'Email',
+      'Instagram',
+      'VK',
+      'Telegram',
+      'Другое'
+    ];
 
     showDialog<void>(
       context: context,
@@ -143,7 +165,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
             DropdownButtonFormField<String>(
               decoration: const InputDecoration(labelText: 'Тип контакта'),
               items: contactTypes
-                  .map((type) => DropdownMenuItem(value: type, child: Text(type)))
+                  .map((type) =>
+                      DropdownMenuItem(value: type, child: Text(type)))
                   .toList(),
               onChanged: (value) {
                 if (value != null && !_contactControllers.containsKey(value)) {
@@ -161,7 +184,9 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -220,7 +245,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
               await _saveContacts();
               await _saveServices();
             },
-            child: const Text('Сохранить', style: TextStyle(color: Colors.white)),
+            child:
+                const Text('Сохранить', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -241,117 +267,125 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
   }
 
   Widget _buildContactsSection() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Контакты', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              IconButton(onPressed: _addContact, icon: const Icon(Icons.add)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Контакты',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  IconButton(
+                      onPressed: _addContact, icon: const Icon(Icons.add)),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (_contactControllers.isEmpty)
+                const Center(
+                  child: Text('Контакты не добавлены',
+                      style: TextStyle(color: Colors.grey)),
+                )
+              else
+                ..._contactControllers.entries.map(
+                  (entry) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(entry.key,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w500)),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            controller: entry.value,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => _removeContact(entry.key),
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
-          const SizedBox(height: 16),
-          if (_contactControllers.isEmpty)
-            const Center(
-              child: Text('Контакты не добавлены', style: TextStyle(color: Colors.grey)),
-            )
-          else
-            ..._contactControllers.entries.map(
-              (entry) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Text(entry.key, style: const TextStyle(fontWeight: FontWeight.w500)),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        controller: entry.value,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          isDense: true,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () => _removeContact(entry.key),
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildServicesSection() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Услуги и цены',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Услуги и цены',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                      onPressed: _addService, icon: const Icon(Icons.add)),
+                ],
               ),
-              IconButton(onPressed: _addService, icon: const Icon(Icons.add)),
+              const SizedBox(height: 16),
+              if (_serviceControllers.isEmpty)
+                const Center(
+                  child: Text('Услуги не добавлены',
+                      style: TextStyle(color: Colors.grey)),
+                )
+              else
+                ..._serviceControllers.keys.map(
+                  (serviceKey) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            controller: _serviceControllers[serviceKey],
+                            decoration: const InputDecoration(
+                              labelText: 'Название услуги',
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 2,
+                          child: TextField(
+                            controller: _priceControllers[serviceKey],
+                            decoration: const InputDecoration(
+                              labelText: 'Цена (₽)',
+                              border: OutlineInputBorder(),
+                              isDense: true,
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => _removeService(serviceKey),
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
-          const SizedBox(height: 16),
-          if (_serviceControllers.isEmpty)
-            const Center(
-              child: Text('Услуги не добавлены', style: TextStyle(color: Colors.grey)),
-            )
-          else
-            ..._serviceControllers.keys.map(
-              (serviceKey) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        controller: _serviceControllers[serviceKey],
-                        decoration: const InputDecoration(
-                          labelText: 'Название услуги',
-                          border: OutlineInputBorder(),
-                          isDense: true,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        controller: _priceControllers[serviceKey],
-                        decoration: const InputDecoration(
-                          labelText: 'Цена (₽)',
-                          border: OutlineInputBorder(),
-                          isDense: true,
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () => _removeService(serviceKey),
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

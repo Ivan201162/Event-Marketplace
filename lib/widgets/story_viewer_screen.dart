@@ -43,7 +43,8 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
       vsync: this,
     );
 
-    _progressAnimation = Tween<double>(begin: 0, end: 1).animate(_progressController);
+    _progressAnimation =
+        Tween<double>(begin: 0, end: 1).animate(_progressController);
 
     _startProgress();
   }
@@ -174,10 +175,12 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                       _markStoryAsViewed(story);
                       return child;
                     }
-                    return const Center(child: CircularProgressIndicator(color: Colors.white));
+                    return const Center(
+                        child: CircularProgressIndicator(color: Colors.white));
                   },
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Center(child: Icon(Icons.broken_image, color: Colors.white, size: 64)),
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                      child: Icon(Icons.broken_image,
+                          color: Colors.white, size: 64)),
                 )
               : story.isVideo
                   ? const Center(
@@ -235,7 +238,8 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
                           builder: (context, child) => LinearProgressIndicator(
                             value: _progressAnimation.value,
                             backgroundColor: Colors.transparent,
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.white),
                           ),
                         )
                       : isCompleted
@@ -279,9 +283,14 @@ class _StoryViewerScreenState extends ConsumerState<StoryViewerScreen>
               children: [
                 const Text(
                   'Автор сторис', // Здесь можно добавить имя автора
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
                 ),
-                Text(story.timeAgo, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+                Text(story.timeAgo,
+                    style:
+                        const TextStyle(color: Colors.white70, fontSize: 12)),
               ],
             ),
           ),

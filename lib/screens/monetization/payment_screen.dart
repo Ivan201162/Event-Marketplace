@@ -81,10 +81,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
           children: [
             Text(
               'Детали заказа',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            if (widget.type == PaymentType.subscription && widget.plan != null) ...[
+            if (widget.type == PaymentType.subscription &&
+                widget.plan != null) ...[
               _buildOrderItem(
                 'Подписка ${widget.plan!.name}',
                 '${widget.plan!.durationDays} дней',
@@ -92,7 +96,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 Icons.star,
                 Colors.amber,
               ),
-            ] else if (widget.type == PaymentType.promotion && widget.promotionPackage != null) ...[
+            ] else if (widget.type == PaymentType.promotion &&
+                widget.promotionPackage != null) ...[
               _buildOrderItem(
                 'Продвижение ${widget.promotionPackage!.name}',
                 '${widget.promotionPackage!.durationDays} дней',
@@ -123,9 +128,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 Text(
                   '${_getTotalAmount().toInt()} ₽',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple,
-                  ),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepPurple,
+                      ),
                 ),
               ],
             ),
@@ -135,7 +140,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _buildOrderItem(String title, String subtitle, String price, IconData icon, Color color) {
+  Widget _buildOrderItem(
+      String title, String subtitle, String price, IconData icon, Color color) {
     return Row(
       children: [
         Container(
@@ -159,7 +165,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
               Text(
                 subtitle,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
@@ -168,7 +177,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
           price,
           style: Theme.of(
             context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: color),
+          )
+              .textTheme
+              .titleMedium
+              ?.copyWith(fontWeight: FontWeight.bold, color: color),
         ),
       ],
     );
@@ -180,7 +192,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       children: [
         Text(
           'Способ оплаты',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         _buildPaymentMethodOption(
@@ -261,7 +276,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       title,
                       style: Theme.of(
                         context,
-                      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      )
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       subtitle,
@@ -295,7 +313,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       children: [
         Text(
           'Платежная система',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge
+              ?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         _buildProviderOption(
@@ -360,7 +381,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       title,
                       style: Theme.of(
                         context,
-                      ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                      )
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       subtitle,
@@ -397,7 +421,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
         child: _isProcessing
             ? const Row(
@@ -417,7 +442,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               )
             : Text(
                 'Оплатить ${_getTotalAmount().toInt()} ₽',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
       ),
     );
@@ -509,7 +535,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             break;
 
           case PaymentType.advertisement:
-            activationResult = await _advertisementService.activateAdvertisement(
+            activationResult =
+                await _advertisementService.activateAdvertisement(
               adId: widget.advertisement!.id,
               transactionId: result.transactionId!,
             );
@@ -530,7 +557,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {

@@ -14,7 +14,8 @@ class EditProfileImproved extends ConsumerStatefulWidget {
   const EditProfileImproved({super.key});
 
   @override
-  ConsumerState<EditProfileImproved> createState() => _EditProfileImprovedState();
+  ConsumerState<EditProfileImproved> createState() =>
+      _EditProfileImprovedState();
 }
 
 class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
@@ -22,7 +23,7 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
   final _cityController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  
+
   bool _isLoading = false;
   File? _selectedImage;
   String? _currentAvatarUrl;
@@ -75,9 +76,9 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
     try {
       final authService = ref.read(authServiceProvider);
       final storageService = ref.read(storageServiceProvider);
-      
+
       String? avatarUrl = _currentAvatarUrl;
-      
+
       // Загружаем новое изображение, если выбрано
       if (_selectedImage != null) {
         final user = FirebaseAuth.instance.currentUser;
@@ -125,7 +126,7 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateProvider).value;
-    
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -148,7 +149,8 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                   children: [
                     IconButton(
                       onPressed: () => context.pop(),
-                      icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                      icon: const Icon(Icons.arrow_back,
+                          color: Colors.white, size: 28),
                     ),
                     const Expanded(
                       child: Text(
@@ -165,7 +167,7 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                   ],
                 ),
               ),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -185,7 +187,7 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const SizedBox(height: 20),
-                          
+
                           // Аватар
                           GestureDetector(
                             onTap: _pickImage,
@@ -218,7 +220,8 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                                             ? Image.network(
                                                 _currentAvatarUrl!,
                                                 fit: BoxFit.cover,
-                                                errorBuilder: (context, error, stackTrace) {
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
                                                   return const Icon(
                                                     Icons.person,
                                                     size: 60,
@@ -253,7 +256,7 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                               ],
                             ),
                           ),
-                          
+
                           const SizedBox(height: 8),
                           const Text(
                             'Нажмите для изменения фото',
@@ -262,21 +265,23 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                               fontSize: 14,
                             ),
                           ),
-                          
+
                           const SizedBox(height: 32),
-                          
+
                           // Поле имени
                           TextFormField(
                             controller: _nameController,
                             decoration: InputDecoration(
                               labelText: 'Имя',
-                              prefixIcon: const Icon(Icons.person, color: Color(0xFF1E3A8A)),
+                              prefixIcon: const Icon(Icons.person,
+                                  color: Color(0xFF1E3A8A)),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Color(0xFF1E3A8A), width: 2),
+                                borderSide: const BorderSide(
+                                    color: Color(0xFF1E3A8A), width: 2),
                               ),
                             ),
                             validator: (value) {
@@ -286,47 +291,51 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                               return null;
                             },
                           ),
-                          
+
                           const SizedBox(height: 16),
-                          
+
                           // Поле города
                           TextFormField(
                             controller: _cityController,
                             decoration: InputDecoration(
                               labelText: 'Город',
-                              prefixIcon: const Icon(Icons.location_city, color: Color(0xFF1E3A8A)),
+                              prefixIcon: const Icon(Icons.location_city,
+                                  color: Color(0xFF1E3A8A)),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Color(0xFF1E3A8A), width: 2),
+                                borderSide: const BorderSide(
+                                    color: Color(0xFF1E3A8A), width: 2),
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 16),
-                          
+
                           // Поле описания
                           TextFormField(
                             controller: _descriptionController,
                             maxLines: 4,
                             decoration: InputDecoration(
                               labelText: 'О себе',
-                              prefixIcon: const Icon(Icons.description, color: Color(0xFF1E3A8A)),
+                              prefixIcon: const Icon(Icons.description,
+                                  color: Color(0xFF1E3A8A)),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(color: Color(0xFF1E3A8A), width: 2),
+                                borderSide: const BorderSide(
+                                    color: Color(0xFF1E3A8A), width: 2),
                               ),
                               alignLabelWithHint: true,
                             ),
                           ),
-                          
+
                           const SizedBox(height: 32),
-                          
+
                           // Кнопка сохранения
                           SizedBox(
                             width: double.infinity,
@@ -335,28 +344,33 @@ class _EditProfileImprovedState extends ConsumerState<EditProfileImproved> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF1E3A8A),
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 elevation: 2,
                               ),
                               child: _isLoading
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                      ),
+                                    )
+                                  : const Text(
+                                      'Сохранить изменения',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600),
                                     ),
-                                  )
-                                : const Text(
-                                    'Сохранить изменения',
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                                  ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 20),
                         ],
                       ),

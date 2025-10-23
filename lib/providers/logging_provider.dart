@@ -2,13 +2,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/logging_service.dart';
 
 /// Провайдер для сервиса логирования
-final loggingServiceProvider = Provider<LoggingService>((ref) => LoggingService());
+final loggingServiceProvider =
+    Provider<LoggingService>((ref) => LoggingService());
 
 /// Провайдер для уровня логирования
-final logLevelProvider = NotifierProvider<LogLevelNotifier, LogLevel>(LogLevelNotifier.new);
+final logLevelProvider =
+    NotifierProvider<LogLevelNotifier, LogLevel>(LogLevelNotifier.new);
 
 /// Провайдер для настроек логирования
-final loggingSettingsProvider = NotifierProvider<LoggingSettingsNotifier, LoggingSettings>(
+final loggingSettingsProvider =
+    NotifierProvider<LoggingSettingsNotifier, LoggingSettings>(
   LoggingSettingsNotifier.new,
 );
 
@@ -54,14 +57,15 @@ class LoggingSettings {
     bool? enableFileLogging,
     int? maxLogFileSize,
     int? maxLogFiles,
-  }) => LoggingSettings(
-    enableCrashlytics: enableCrashlytics ?? this.enableCrashlytics,
-    enablePerformance: enablePerformance ?? this.enablePerformance,
-    enableConsoleLogging: enableConsoleLogging ?? this.enableConsoleLogging,
-    enableFileLogging: enableFileLogging ?? this.enableFileLogging,
-    maxLogFileSize: maxLogFileSize ?? this.maxLogFileSize,
-    maxLogFiles: maxLogFiles ?? this.maxLogFiles,
-  );
+  }) =>
+      LoggingSettings(
+        enableCrashlytics: enableCrashlytics ?? this.enableCrashlytics,
+        enablePerformance: enablePerformance ?? this.enablePerformance,
+        enableConsoleLogging: enableConsoleLogging ?? this.enableConsoleLogging,
+        enableFileLogging: enableFileLogging ?? this.enableFileLogging,
+        maxLogFileSize: maxLogFileSize ?? this.maxLogFileSize,
+        maxLogFiles: maxLogFiles ?? this.maxLogFiles,
+      );
 }
 
 /// Нотификатор для настроек логирования
@@ -135,13 +139,16 @@ final logLevelColorProvider = Provider<int>((ref) {
 /// Провайдер для проверки, включено ли логирование
 final isLoggingEnabledProvider = Provider<bool>((ref) {
   final settings = ref.watch(loggingSettingsProvider);
-  return settings.enableConsoleLogging || settings.enableFileLogging || settings.enableCrashlytics;
+  return settings.enableConsoleLogging ||
+      settings.enableFileLogging ||
+      settings.enableCrashlytics;
 });
 
 /// Провайдер для получения статистики логирования
 final loggingStatsProvider = FutureProvider<LoggingStats>((ref) async {
   // В реальном приложении здесь можно получить статистику из файлов или базы данных
-  return const LoggingStats(totalLogs: 0, errorLogs: 0, warningLogs: 0, infoLogs: 0, debugLogs: 0);
+  return const LoggingStats(
+      totalLogs: 0, errorLogs: 0, warningLogs: 0, infoLogs: 0, debugLogs: 0);
 });
 
 /// Статистика логирования

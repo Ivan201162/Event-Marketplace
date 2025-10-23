@@ -76,7 +76,8 @@ class MediaStorageService {
       );
 
       // Сохраняем информацию о файле в Firestore
-      final docRef = await _firestore.collection('media_files').add(mediaFile.toMap());
+      final docRef =
+          await _firestore.collection('media_files').add(mediaFile.toMap());
 
       return mediaFile.copyWith(id: docRef.id);
     } catch (e) {
@@ -150,7 +151,8 @@ class MediaStorageService {
   Future<void> deleteMediaFile(String mediaFileId) async {
     try {
       // Получаем информацию о файле
-      final doc = await _firestore.collection('media_files').doc(mediaFileId).get();
+      final doc =
+          await _firestore.collection('media_files').doc(mediaFileId).get();
 
       if (!doc.exists) return;
 
@@ -179,8 +181,10 @@ class MediaStorageService {
 
       final totalFiles = files.length;
       final totalSize = files.fold<int>(0, (sum, file) => sum + file.fileSize);
-      final photoCount = files.where((f) => f.mimeType.startsWith('image/')).length;
-      final videoCount = files.where((f) => f.mimeType.startsWith('video/')).length;
+      final photoCount =
+          files.where((f) => f.mimeType.startsWith('image/')).length;
+      final videoCount =
+          files.where((f) => f.mimeType.startsWith('video/')).length;
 
       return MediaStats(
         specialistId: specialistId,
@@ -199,7 +203,8 @@ class MediaStorageService {
   /// Создать ссылку для скачивания
   Future<String> createDownloadLink(String mediaFileId) async {
     try {
-      final doc = await _firestore.collection('media_files').doc(mediaFileId).get();
+      final doc =
+          await _firestore.collection('media_files').doc(mediaFileId).get();
 
       if (!doc.exists) {
         throw Exception('Файл не найден');
@@ -310,30 +315,31 @@ class MediaFile {
     String? mimeType,
     String? description,
     DateTime? uploadedAt,
-  }) => MediaFile(
-    id: id ?? this.id,
-    bookingId: bookingId ?? this.bookingId,
-    specialistId: specialistId ?? this.specialistId,
-    fileName: fileName ?? this.fileName,
-    filePath: filePath ?? this.filePath,
-    downloadUrl: downloadUrl ?? this.downloadUrl,
-    fileSize: fileSize ?? this.fileSize,
-    mimeType: mimeType ?? this.mimeType,
-    description: description ?? this.description,
-    uploadedAt: uploadedAt ?? this.uploadedAt,
-  );
+  }) =>
+      MediaFile(
+        id: id ?? this.id,
+        bookingId: bookingId ?? this.bookingId,
+        specialistId: specialistId ?? this.specialistId,
+        fileName: fileName ?? this.fileName,
+        filePath: filePath ?? this.filePath,
+        downloadUrl: downloadUrl ?? this.downloadUrl,
+        fileSize: fileSize ?? this.fileSize,
+        mimeType: mimeType ?? this.mimeType,
+        description: description ?? this.description,
+        uploadedAt: uploadedAt ?? this.uploadedAt,
+      );
 
   Map<String, dynamic> toMap() => {
-    'bookingId': bookingId,
-    'specialistId': specialistId,
-    'fileName': fileName,
-    'filePath': filePath,
-    'downloadUrl': downloadUrl,
-    'fileSize': fileSize,
-    'mimeType': mimeType,
-    'description': description,
-    'uploadedAt': Timestamp.fromDate(uploadedAt),
-  };
+        'bookingId': bookingId,
+        'specialistId': specialistId,
+        'fileName': fileName,
+        'filePath': filePath,
+        'downloadUrl': downloadUrl,
+        'fileSize': fileSize,
+        'mimeType': mimeType,
+        'description': description,
+        'uploadedAt': Timestamp.fromDate(uploadedAt),
+      };
 
   bool get isImage => mimeType.startsWith('image/');
   bool get isVideo => mimeType.startsWith('video/');
@@ -363,13 +369,13 @@ class MediaStats {
   });
 
   factory MediaStats.empty() => MediaStats(
-    specialistId: '',
-    totalFiles: 0,
-    totalSize: 0,
-    photoCount: 0,
-    videoCount: 0,
-    lastUpdated: DateTime.now(),
-  );
+        specialistId: '',
+        totalFiles: 0,
+        totalSize: 0,
+        photoCount: 0,
+        videoCount: 0,
+        lastUpdated: DateTime.now(),
+      );
 
   final String specialistId;
   final int totalFiles;

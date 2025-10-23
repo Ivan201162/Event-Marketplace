@@ -29,7 +29,9 @@ class SpecialistCard extends StatelessWidget {
                         ? NetworkImage(specialist.avatarUrl!)
                         : null,
                     child: specialist.avatarUrl == null
-                        ? Text(specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?')
+                        ? Text(specialist.name.isNotEmpty
+                            ? specialist.name[0].toUpperCase()
+                            : '?')
                         : null,
                   ),
                   const SizedBox(width: 12),
@@ -39,21 +41,25 @@ class SpecialistCard extends StatelessWidget {
                       children: [
                         Text(
                           specialist.name,
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            const Icon(Icons.star, color: Colors.amber, size: 16),
+                            const Icon(Icons.star,
+                                color: Colors.amber, size: 16),
                             const SizedBox(width: 4),
                             Text(
                               specialist.rating.toStringAsFixed(1),
-                              style: const TextStyle(fontWeight: FontWeight.w500),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w500),
                             ),
                             const SizedBox(width: 8),
                             Text(
                               '(${specialist.reviewCount} отзывов)',
-                              style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                              style: TextStyle(
+                                  color: Colors.grey[600], fontSize: 12),
                             ),
                           ],
                         ),
@@ -62,7 +68,8 @@ class SpecialistCard extends StatelessWidget {
                   ),
                   if (specialist.isAvailable)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(12),
@@ -91,7 +98,8 @@ class SpecialistCard extends StatelessWidget {
                 runSpacing: 4,
                 children: specialist.categories.take(3).map((category) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue[50],
                       borderRadius: BorderRadius.circular(12),

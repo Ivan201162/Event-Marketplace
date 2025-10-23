@@ -36,42 +36,50 @@ class Report {
       parameters: Map<String, dynamic>.from(data['parameters'] ?? {}),
       generatedBy: data['generatedBy'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      generatedAt: data['generatedAt'] != null ? (data['generatedAt'] as Timestamp).toDate() : null,
+      generatedAt: data['generatedAt'] != null
+          ? (data['generatedAt'] as Timestamp).toDate()
+          : null,
       status: ReportStatus.values.firstWhere(
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => ReportStatus.pending,
       ),
       fileUrl: data['fileUrl'],
       errorMessage: data['errorMessage'],
-      metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
+      metadata: data['metadata'] != null
+          ? Map<String, dynamic>.from(data['metadata'])
+          : null,
     );
   }
 
   /// Создать из Map
   factory Report.fromMap(Map<String, dynamic> data) => Report(
-    id: data['id'] ?? '',
-    name: data['name'] ?? '',
-    description: data['description'] ?? '',
-    type: ReportType.values.firstWhere(
-      (e) => e.toString().split('.').last == data['type'],
-      orElse: () => ReportType.custom,
-    ),
-    category: ReportCategory.values.firstWhere(
-      (e) => e.toString().split('.').last == data['category'],
-      orElse: () => ReportCategory.general,
-    ),
-    parameters: Map<String, dynamic>.from(data['parameters'] ?? {}),
-    generatedBy: data['generatedBy'],
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-    generatedAt: data['generatedAt'] != null ? (data['generatedAt'] as Timestamp).toDate() : null,
-    status: ReportStatus.values.firstWhere(
-      (e) => e.toString().split('.').last == data['status'],
-      orElse: () => ReportStatus.pending,
-    ),
-    fileUrl: data['fileUrl'],
-    errorMessage: data['errorMessage'],
-    metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
-  );
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        type: ReportType.values.firstWhere(
+          (e) => e.toString().split('.').last == data['type'],
+          orElse: () => ReportType.custom,
+        ),
+        category: ReportCategory.values.firstWhere(
+          (e) => e.toString().split('.').last == data['category'],
+          orElse: () => ReportCategory.general,
+        ),
+        parameters: Map<String, dynamic>.from(data['parameters'] ?? {}),
+        generatedBy: data['generatedBy'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        generatedAt: data['generatedAt'] != null
+            ? (data['generatedAt'] as Timestamp).toDate()
+            : null,
+        status: ReportStatus.values.firstWhere(
+          (e) => e.toString().split('.').last == data['status'],
+          orElse: () => ReportStatus.pending,
+        ),
+        fileUrl: data['fileUrl'],
+        errorMessage: data['errorMessage'],
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(data['metadata'])
+            : null,
+      );
   final String id;
   final String name;
   final String description;
@@ -88,19 +96,20 @@ class Report {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'description': description,
-    'type': type.toString().split('.').last,
-    'category': category.toString().split('.').last,
-    'parameters': parameters,
-    'generatedBy': generatedBy,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'generatedAt': generatedAt != null ? Timestamp.fromDate(generatedAt!) : null,
-    'status': status.toString().split('.').last,
-    'fileUrl': fileUrl,
-    'errorMessage': errorMessage,
-    'metadata': metadata,
-  };
+        'name': name,
+        'description': description,
+        'type': type.toString().split('.').last,
+        'category': category.toString().split('.').last,
+        'parameters': parameters,
+        'generatedBy': generatedBy,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'generatedAt':
+            generatedAt != null ? Timestamp.fromDate(generatedAt!) : null,
+        'status': status.toString().split('.').last,
+        'fileUrl': fileUrl,
+        'errorMessage': errorMessage,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   Report copyWith({
@@ -117,21 +126,22 @@ class Report {
     String? fileUrl,
     String? errorMessage,
     Map<String, dynamic>? metadata,
-  }) => Report(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    type: type ?? this.type,
-    category: category ?? this.category,
-    parameters: parameters ?? this.parameters,
-    generatedBy: generatedBy ?? this.generatedBy,
-    createdAt: createdAt ?? this.createdAt,
-    generatedAt: generatedAt ?? this.generatedAt,
-    status: status ?? this.status,
-    fileUrl: fileUrl ?? this.fileUrl,
-    errorMessage: errorMessage ?? this.errorMessage,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      Report(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        type: type ?? this.type,
+        category: category ?? this.category,
+        parameters: parameters ?? this.parameters,
+        generatedBy: generatedBy ?? this.generatedBy,
+        createdAt: createdAt ?? this.createdAt,
+        generatedAt: generatedAt ?? this.generatedAt,
+        status: status ?? this.status,
+        fileUrl: fileUrl ?? this.fileUrl,
+        errorMessage: errorMessage ?? this.errorMessage,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, готов ли отчет
   bool get isReady => status == ReportStatus.completed && fileUrl != null;
@@ -163,20 +173,20 @@ class Report {
 
   @override
   int get hashCode => Object.hash(
-    id,
-    name,
-    description,
-    type,
-    category,
-    parameters,
-    generatedBy,
-    createdAt,
-    generatedAt,
-    status,
-    fileUrl,
-    errorMessage,
-    metadata,
-  );
+        id,
+        name,
+        description,
+        type,
+        category,
+        parameters,
+        generatedBy,
+        createdAt,
+        generatedAt,
+        status,
+        fileUrl,
+        errorMessage,
+        metadata,
+      );
 
   @override
   String toString() => 'Report(id: $id, name: $name, status: $status)';
@@ -196,7 +206,14 @@ enum ReportType {
 }
 
 /// Категории отчетов
-enum ReportCategory { general, financial, operational, marketing, technical, user }
+enum ReportCategory {
+  general,
+  financial,
+  operational,
+  marketing,
+  technical,
+  user
+}
 
 /// Статусы отчетов
 enum ReportStatus { pending, generating, completed, failed }
@@ -227,13 +244,13 @@ class ReportData {
 
   /// Создать из Map
   factory ReportData.fromMap(Map<String, dynamic> data) => ReportData(
-    reportId: data['reportId'] ?? '',
-    rows: List<Map<String, dynamic>>.from(data['rows'] ?? []),
-    columns: List<String>.from(data['columns'] ?? []),
-    summary: Map<String, dynamic>.from(data['summary'] ?? {}),
-    generatedAt: (data['generatedAt'] as Timestamp).toDate(),
-    totalRows: data['totalRows'] as int? ?? 0,
-  );
+        reportId: data['reportId'] ?? '',
+        rows: List<Map<String, dynamic>>.from(data['rows'] ?? []),
+        columns: List<String>.from(data['columns'] ?? []),
+        summary: Map<String, dynamic>.from(data['summary'] ?? {}),
+        generatedAt: (data['generatedAt'] as Timestamp).toDate(),
+        totalRows: data['totalRows'] as int? ?? 0,
+      );
   final String reportId;
   final List<Map<String, dynamic>> rows;
   final List<String> columns;
@@ -243,12 +260,12 @@ class ReportData {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'rows': rows,
-    'columns': columns,
-    'summary': summary,
-    'generatedAt': Timestamp.fromDate(generatedAt),
-    'totalRows': totalRows,
-  };
+        'rows': rows,
+        'columns': columns,
+        'summary': summary,
+        'generatedAt': Timestamp.fromDate(generatedAt),
+        'totalRows': totalRows,
+      };
 
   /// Получить значение ячейки
   dynamic getCellValue(int rowIndex, String columnName) {
@@ -263,7 +280,8 @@ class ReportData {
   }
 
   /// Получить все значения колонки
-  List<dynamic> getColumnValues(String columnName) => rows.map((row) => row[columnName]).toList();
+  List<dynamic> getColumnValues(String columnName) =>
+      rows.map((row) => row[columnName]).toList();
 
   /// Получить уникальные значения колонки
   List<dynamic> getUniqueColumnValues(String columnName) {
@@ -285,7 +303,8 @@ class ReportData {
 
   /// Получить статистику по числовой колонке
   Map<String, dynamic> getNumericColumnStats(String columnName) {
-    final values = getColumnValues(columnName).whereType<num>().cast<num>().toList();
+    final values =
+        getColumnValues(columnName).whereType<num>().cast<num>().toList();
 
     if (values.isEmpty) {
       return {'count': 0, 'min': null, 'max': null, 'sum': 0, 'avg': 0};
@@ -337,7 +356,8 @@ class ReportTemplate {
         (e) => e.toString().split('.').last == data['category'],
         orElse: () => ReportCategory.general,
       ),
-      defaultParameters: Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
+      defaultParameters:
+          Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
       requiredParameters: List<String>.from(data['requiredParameters'] ?? []),
       isActive: data['isActive'] as bool? ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -347,23 +367,24 @@ class ReportTemplate {
 
   /// Создать из Map
   factory ReportTemplate.fromMap(Map<String, dynamic> data) => ReportTemplate(
-    id: data['id'] ?? '',
-    name: data['name'] ?? '',
-    description: data['description'] ?? '',
-    type: ReportType.values.firstWhere(
-      (e) => e.toString().split('.').last == data['type'],
-      orElse: () => ReportType.custom,
-    ),
-    category: ReportCategory.values.firstWhere(
-      (e) => e.toString().split('.').last == data['category'],
-      orElse: () => ReportCategory.general,
-    ),
-    defaultParameters: Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
-    requiredParameters: List<String>.from(data['requiredParameters'] ?? []),
-    isActive: data['isActive'] as bool? ?? true,
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-  );
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        type: ReportType.values.firstWhere(
+          (e) => e.toString().split('.').last == data['type'],
+          orElse: () => ReportType.custom,
+        ),
+        category: ReportCategory.values.firstWhere(
+          (e) => e.toString().split('.').last == data['category'],
+          orElse: () => ReportCategory.general,
+        ),
+        defaultParameters:
+            Map<String, dynamic>.from(data['defaultParameters'] ?? {}),
+        requiredParameters: List<String>.from(data['requiredParameters'] ?? []),
+        isActive: data['isActive'] as bool? ?? true,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
   final String id;
   final String name;
   final String description;
@@ -377,16 +398,16 @@ class ReportTemplate {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'description': description,
-    'type': type.toString().split('.').last,
-    'category': category.toString().split('.').last,
-    'defaultParameters': defaultParameters,
-    'requiredParameters': requiredParameters,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'name': name,
+        'description': description,
+        'type': type.toString().split('.').last,
+        'category': category.toString().split('.').last,
+        'defaultParameters': defaultParameters,
+        'requiredParameters': requiredParameters,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Создать копию с изменениями
   ReportTemplate copyWith({
@@ -400,23 +421,25 @@ class ReportTemplate {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => ReportTemplate(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    type: type ?? this.type,
-    category: category ?? this.category,
-    defaultParameters: defaultParameters ?? this.defaultParameters,
-    requiredParameters: requiredParameters ?? this.requiredParameters,
-    isActive: isActive ?? this.isActive,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      ReportTemplate(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        type: type ?? this.type,
+        category: category ?? this.category,
+        defaultParameters: defaultParameters ?? this.defaultParameters,
+        requiredParameters: requiredParameters ?? this.requiredParameters,
+        isActive: isActive ?? this.isActive,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Проверить, валидны ли параметры
   bool areParametersValid(Map<String, dynamic> parameters) {
     for (final requiredParam in requiredParameters) {
-      if (!parameters.containsKey(requiredParam) || parameters[requiredParam] == null) {
+      if (!parameters.containsKey(requiredParam) ||
+          parameters[requiredParam] == null) {
         return false;
       }
     }
@@ -441,17 +464,17 @@ class ReportTemplate {
 
   @override
   int get hashCode => Object.hash(
-    id,
-    name,
-    description,
-    type,
-    category,
-    defaultParameters,
-    requiredParameters,
-    isActive,
-    createdAt,
-    updatedAt,
-  );
+        id,
+        name,
+        description,
+        type,
+        category,
+        defaultParameters,
+        requiredParameters,
+        isActive,
+        createdAt,
+        updatedAt,
+      );
 
   @override
   String toString() => 'ReportTemplate(id: $id, name: $name, type: $type)';

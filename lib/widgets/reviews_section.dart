@@ -44,9 +44,11 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
         _error = null;
       });
 
-      final reviews = await _reviewService.getSpecialistReviews(widget.specialistId);
+      final reviews =
+          await _reviewService.getSpecialistReviews(widget.specialistId);
 
-      final stats = await _reviewService.getSpecialistReviewStats(widget.specialistId);
+      final stats =
+          await _reviewService.getSpecialistReviewStats(widget.specialistId);
 
       setState(() {
         _reviews = reviews;
@@ -65,7 +67,8 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Center(
-        child: Padding(padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
+        child: Padding(
+            padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
       );
     }
 
@@ -77,15 +80,20 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
             children: [
               Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
               const SizedBox(height: 16),
-              Text('Ошибка загрузки отзывов', style: Theme.of(context).textTheme.titleMedium),
+              Text('Ошибка загрузки отзывов',
+                  style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               Text(
                 _error!,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              ElevatedButton(onPressed: _loadReviews, child: const Text('Повторить')),
+              ElevatedButton(
+                  onPressed: _loadReviews, child: const Text('Повторить')),
             ],
           ),
         ),
@@ -101,7 +109,10 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
           children: [
             Text(
               'Отзывы',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             Row(
               children: [
@@ -144,14 +155,17 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
               ),
 
               // Кнопка "Показать все отзывы"
-              if (!widget.showAllReviews && _stats != null && _stats!.totalReviews > 5)
+              if (!widget.showAllReviews &&
+                  _stats != null &&
+                  _stats!.totalReviews > 5)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
                       onPressed: _showAllReviews,
-                      child: Text('Показать все отзывы (${_stats!.totalReviews})'),
+                      child:
+                          Text('Показать все отзывы (${_stats!.totalReviews})'),
                     ),
                   ),
                 ),
@@ -174,12 +188,18 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
             const SizedBox(height: 16),
             Text(
               'Пока нет отзывов',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Станьте первым, кто оставит отзыв об этом специалисте',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -200,7 +220,8 @@ class _ReviewsSectionState extends ConsumerState<ReviewsSection> {
 
 /// Экран со всеми отзывами специалиста
 class AllReviewsScreen extends ConsumerStatefulWidget {
-  const AllReviewsScreen({super.key, required this.specialistId, required this.specialistName});
+  const AllReviewsScreen(
+      {super.key, required this.specialistId, required this.specialistName});
 
   final String specialistId;
   final String specialistName;
@@ -229,9 +250,11 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
         _error = null;
       });
 
-      final reviews = await _reviewService.getSpecialistReviews(widget.specialistId);
+      final reviews =
+          await _reviewService.getSpecialistReviews(widget.specialistId);
 
-      final stats = await _reviewService.getSpecialistReviewStats(widget.specialistId);
+      final stats =
+          await _reviewService.getSpecialistReviewStats(widget.specialistId);
 
       setState(() {
         _reviews = reviews;
@@ -248,7 +271,8 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text('Отзывы ${widget.specialistName}'), elevation: 0),
+        appBar: AppBar(
+            title: Text('Отзывы ${widget.specialistName}'), elevation: 0),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _error != null
@@ -256,7 +280,8 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
+                        Icon(Icons.error_outline,
+                            size: 48, color: Colors.grey[400]),
                         const SizedBox(height: 16),
                         Text('Ошибка загрузки отзывов',
                             style: Theme.of(context).textTheme.titleMedium),
@@ -270,7 +295,9 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
-                        ElevatedButton(onPressed: _loadAllReviews, child: const Text('Повторить')),
+                        ElevatedButton(
+                            onPressed: _loadAllReviews,
+                            child: const Text('Повторить')),
                       ],
                     ),
                   )
@@ -308,12 +335,18 @@ class _AllReviewsScreenState extends ConsumerState<AllReviewsScreen> {
             const SizedBox(height: 16),
             Text(
               'Пока нет отзывов',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Станьте первым, кто оставит отзыв об этом специалисте',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],

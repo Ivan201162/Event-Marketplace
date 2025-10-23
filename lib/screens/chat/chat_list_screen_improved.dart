@@ -11,10 +11,12 @@ class ChatListScreenImproved extends ConsumerStatefulWidget {
   const ChatListScreenImproved({super.key});
 
   @override
-  ConsumerState<ChatListScreenImproved> createState() => _ChatListScreenImprovedState();
+  ConsumerState<ChatListScreenImproved> createState() =>
+      _ChatListScreenImprovedState();
 }
 
-class _ChatListScreenImprovedState extends ConsumerState<ChatListScreenImproved> {
+class _ChatListScreenImprovedState
+    extends ConsumerState<ChatListScreenImproved> {
   final _searchController = TextEditingController();
 
   @override
@@ -59,7 +61,8 @@ class _ChatListScreenImprovedState extends ConsumerState<ChatListScreenImproved>
                     const Spacer(),
                     if (totalUnread > 0)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.red,
                           borderRadius: BorderRadius.circular(12),
@@ -87,7 +90,7 @@ class _ChatListScreenImprovedState extends ConsumerState<ChatListScreenImproved>
                   ],
                 ),
               ),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -114,18 +117,24 @@ class _ChatListScreenImprovedState extends ConsumerState<ChatListScreenImproved>
                         child: TextField(
                           controller: _searchController,
                           onChanged: (value) {
-                            ref.read(chatSearchProvider.notifier).setSearchQuery(value);
+                            ref
+                                .read(chatSearchProvider.notifier)
+                                .setSearchQuery(value);
                           },
                           decoration: InputDecoration(
                             hintText: 'Поиск в чатах...',
-                            prefixIcon: const Icon(Icons.search, color: Color(0xFF1E3A8A)),
+                            prefixIcon: const Icon(Icons.search,
+                                color: Color(0xFF1E3A8A)),
                             suffixIcon: _searchController.text.isNotEmpty
                                 ? IconButton(
                                     onPressed: () {
                                       _searchController.clear();
-                                      ref.read(chatSearchProvider.notifier).clearSearch();
+                                      ref
+                                          .read(chatSearchProvider.notifier)
+                                          .clearSearch();
                                     },
-                                    icon: const Icon(Icons.clear, color: Colors.grey),
+                                    icon: const Icon(Icons.clear,
+                                        color: Colors.grey),
                                   )
                                 : null,
                             border: OutlineInputBorder(
@@ -134,11 +143,12 @@ class _ChatListScreenImprovedState extends ConsumerState<ChatListScreenImproved>
                             ),
                             filled: true,
                             fillColor: Colors.white,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
                           ),
                         ),
                       ),
-                      
+
                       // Список чатов
                       Expanded(
                         child: chats.isEmpty
@@ -259,7 +269,8 @@ class _ChatListItem extends ConsumerWidget {
                         data: (userData) => userData?['avatarUrl'] == null
                             ? const Icon(Icons.person, size: 28)
                             : null,
-                        loading: () => const CircularProgressIndicator(strokeWidth: 2),
+                        loading: () =>
+                            const CircularProgressIndicator(strokeWidth: 2),
                         error: (_, __) => const Icon(Icons.person, size: 28),
                       ),
                     ),
@@ -280,9 +291,9 @@ class _ChatListItem extends ConsumerWidget {
                       ),
                   ],
                 ),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // Информация о чате
                 Expanded(
                   child: Column(
@@ -294,7 +305,8 @@ class _ChatListItem extends ConsumerWidget {
                           Expanded(
                             child: Text(
                               chatWithUser.when(
-                                data: (userData) => userData?['name'] ?? chat.name,
+                                data: (userData) =>
+                                    userData?['name'] ?? chat.name,
                                 loading: () => chat.name,
                                 error: (_, __) => chat.name,
                               ),
@@ -315,9 +327,9 @@ class _ChatListItem extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 4),
-                      
+
                       // Последнее сообщение
                       Row(
                         children: [
@@ -326,8 +338,12 @@ class _ChatListItem extends ConsumerWidget {
                               chat.lastMessageContent ?? 'Нет сообщений',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: unreadCount > 0 ? Colors.black87 : Colors.grey,
-                                fontWeight: unreadCount > 0 ? FontWeight.w500 : FontWeight.normal,
+                                color: unreadCount > 0
+                                    ? Colors.black87
+                                    : Colors.grey,
+                                fontWeight: unreadCount > 0
+                                    ? FontWeight.w500
+                                    : FontWeight.normal,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -336,7 +352,8 @@ class _ChatListItem extends ConsumerWidget {
                           if (unreadCount > 0) ...[
                             const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF1E3A8A),
                                 borderRadius: BorderRadius.circular(12),

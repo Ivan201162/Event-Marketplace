@@ -128,7 +128,8 @@ class UICards {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: valueColor ?? Theme.of(context).textTheme.headlineSmall?.color,
+                    color: valueColor ??
+                        Theme.of(context).textTheme.headlineSmall?.color,
                   ),
                 ),
                 const SizedBox(height: 4),

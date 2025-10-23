@@ -9,7 +9,8 @@ class TestRemindersScreen extends ConsumerStatefulWidget {
   const TestRemindersScreen({super.key});
 
   @override
-  ConsumerState<TestRemindersScreen> createState() => _TestRemindersScreenState();
+  ConsumerState<TestRemindersScreen> createState() =>
+      _TestRemindersScreenState();
 }
 
 class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
@@ -40,7 +41,8 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
       final reminders = await _reminderService.getUserReminders(testUserId);
 
       // Загружаем годовщины
-      final anniversaries = await _anniversaryService.getUserAnniversaries(testUserId);
+      final anniversaries =
+          await _anniversaryService.getUserAnniversaries(testUserId);
 
       setState(() {
         _reminders = reminders;
@@ -67,7 +69,10 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
         backgroundColor: theme.colorScheme.primary,
         foregroundColor: theme.colorScheme.onPrimary,
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData, tooltip: 'Обновить'),
+          IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _loadData,
+              tooltip: 'Обновить'),
         ],
       ),
       body: Column(
@@ -80,7 +85,8 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
               children: [
                 Text(
                   'Тестирование системы напоминаний',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 Text(_statusMessage, style: theme.textTheme.bodySmall),
@@ -136,7 +142,11 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
       return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [CircularProgressIndicator(), SizedBox(height: 16), Text('Загрузка...')],
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Загрузка...')
+          ],
         ),
       );
     }
@@ -151,7 +161,9 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
               Tab(text: 'Годовщины', icon: Icon(Icons.cake)),
             ],
           ),
-          Expanded(child: TabBarView(children: [_buildRemindersTab(), _buildAnniversariesTab()])),
+          Expanded(
+              child: TabBarView(
+                  children: [_buildRemindersTab(), _buildAnniversariesTab()])),
         ],
       ),
     );
@@ -165,7 +177,8 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
           children: [
             Icon(Icons.alarm_off, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Нет напоминаний', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Нет напоминаний',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Создайте тестовые напоминания для проверки функционала',
@@ -195,7 +208,8 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
           children: [
             Icon(Icons.cake_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Нет годовщин', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Нет годовщин',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Создайте тестовые годовщины для проверки функционала',
@@ -237,12 +251,14 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
                     children: [
                       Text(
                         reminder.title,
-                        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         reminder.typeName,
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -311,20 +327,27 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
                     children: [
                       Text(
                         anniversary.title,
-                        style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        _anniversaryService.getAnniversaryTypeName(anniversary.type),
+                        _anniversaryService
+                            .getAnniversaryTypeName(anniversary.type),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Chip(
-                  label: Text(anniversary.isRecurring ? 'Повторяющаяся' : 'Одноразовая'),
-                  backgroundColor: anniversary.isRecurring ? Colors.green[100] : Colors.blue[100],
+                  label: Text(anniversary.isRecurring
+                      ? 'Повторяющаяся'
+                      : 'Одноразовая'),
+                  backgroundColor: anniversary.isRecurring
+                      ? Colors.green[100]
+                      : Colors.blue[100],
                 ),
               ],
             ),
@@ -526,12 +549,14 @@ class _TestRemindersScreenState extends ConsumerState<TestRemindersScreen> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 }

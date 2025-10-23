@@ -15,7 +15,8 @@ class PaymentsScreen extends ConsumerStatefulWidget {
   ConsumerState<PaymentsScreen> createState() => _PaymentsScreenState();
 }
 
-class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProviderStateMixin {
+class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
+    with TickerProviderStateMixin {
   late TabController _tabController;
   final PaymentFilter _currentFilter = const PaymentFilter();
 
@@ -33,29 +34,35 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProv
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text(widget.specialistId != null ? 'Платежи специалиста' : 'Мои платежи'),
-      bottom: TabBar(
-        controller: _tabController,
-        tabs: const [
-          Tab(text: 'Все', icon: Icon(Icons.list)),
-          Tab(text: 'Ожидают', icon: Icon(Icons.schedule)),
-          Tab(text: 'Оплачены', icon: Icon(Icons.check_circle)),
-          Tab(text: 'Предоплаты', icon: Icon(Icons.payment)),
-        ],
-      ),
-      actions: [IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog)],
-    ),
-    body: TabBarView(
-      controller: _tabController,
-      children: [
-        _buildAllPaymentsTab(),
-        _buildPendingPaymentsTab(),
-        _buildCompletedPaymentsTab(),
-        _buildPrepaymentsTab(),
-      ],
-    ),
-  );
+        appBar: AppBar(
+          title: Text(widget.specialistId != null
+              ? 'Платежи специалиста'
+              : 'Мои платежи'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Все', icon: Icon(Icons.list)),
+              Tab(text: 'Ожидают', icon: Icon(Icons.schedule)),
+              Tab(text: 'Оплачены', icon: Icon(Icons.check_circle)),
+              Tab(text: 'Предоплаты', icon: Icon(Icons.payment)),
+            ],
+          ),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.filter_list),
+                onPressed: _showFilterDialog)
+          ],
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildAllPaymentsTab(),
+            _buildPendingPaymentsTab(),
+            _buildCompletedPaymentsTab(),
+            _buildPrepaymentsTab(),
+          ],
+        ),
+      );
 
   Widget _buildAllPaymentsTab() {
     final paymentsAsync = widget.userId != null
@@ -95,7 +102,8 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProv
     return pendingPaymentsAsync.when(
       data: (payments) {
         if (payments.isEmpty) {
-          return _buildEmptyState('Нет ожидающих платежей', 'Все платежи обработаны');
+          return _buildEmptyState(
+              'Нет ожидающих платежей', 'Все платежи обработаны');
         }
 
         return RefreshIndicator(
@@ -124,7 +132,8 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProv
     return completedPaymentsAsync.when(
       data: (payments) {
         if (payments.isEmpty) {
-          return _buildEmptyState('Нет завершенных платежей', 'Завершенные платежи появятся здесь');
+          return _buildEmptyState(
+              'Нет завершенных платежей', 'Завершенные платежи появятся здесь');
         }
 
         return RefreshIndicator(
@@ -176,107 +185,114 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProv
   }
 
   Widget _buildPaymentCard(Payment payment) => Card(
-    margin: const EdgeInsets.only(bottom: 12),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок
-          Row(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(payment.type.icon, style: const TextStyle(fontSize: 24)),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      payment.type.displayName,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              // Заголовок
+              Row(
+                children: [
+                  Text(payment.type.icon, style: const TextStyle(fontSize: 24)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          payment.type.displayName,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        if (payment.bookingTitle != null) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            payment.bookingTitle!,
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 14),
+                          ),
+                        ],
+                      ],
                     ),
-                    if (payment.bookingTitle != null) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        payment.bookingTitle!,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              _buildStatusChip(payment.status),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Сумма и информация
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Сумма: ${payment.amount.toStringAsFixed(0)} ₽',
-                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                    ),
-                    if (payment.fee != null && payment.fee! > 0) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        'Комиссия: ${payment.fee!.toStringAsFixed(0)} ₽',
-                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (payment.status == PaymentStatus.pending)
-                ElevatedButton(
-                  onPressed: () => _handlePayment(payment),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   ),
-                  child: const Text('Оплатить'),
-                ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Дополнительная информация
-          Row(
-            children: [
-              Icon(Icons.access_time, size: 16, color: Colors.grey[500]),
-              const SizedBox(width: 4),
-              Text(
-                'Создан: ${_formatDate(payment.createdAt)}',
-                style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  _buildStatusChip(payment.status),
+                ],
               ),
-              if (payment.paidAt != null) ...[
-                const SizedBox(width: 16),
-                Icon(Icons.check_circle, size: 16, color: Colors.green[500]),
-                const SizedBox(width: 4),
-                Text(
-                  'Оплачен: ${_formatDate(payment.paidAt!)}',
-                  style: TextStyle(color: Colors.green[500], fontSize: 12),
-                ),
+
+              const SizedBox(height: 12),
+
+              // Сумма и информация
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Сумма: ${payment.amount.toStringAsFixed(0)} ₽',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 16),
+                        ),
+                        if (payment.fee != null && payment.fee! > 0) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            'Комиссия: ${payment.fee!.toStringAsFixed(0)} ₽',
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 12),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  if (payment.status == PaymentStatus.pending)
+                    ElevatedButton(
+                      onPressed: () => _handlePayment(payment),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                      ),
+                      child: const Text('Оплатить'),
+                    ),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+
+              // Дополнительная информация
+              Row(
+                children: [
+                  Icon(Icons.access_time, size: 16, color: Colors.grey[500]),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Создан: ${_formatDate(payment.createdAt)}',
+                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  ),
+                  if (payment.paidAt != null) ...[
+                    const SizedBox(width: 16),
+                    Icon(Icons.check_circle,
+                        size: 16, color: Colors.green[500]),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Оплачен: ${_formatDate(payment.paidAt!)}',
+                      style: TextStyle(color: Colors.green[500], fontSize: 12),
+                    ),
+                  ],
+                ],
+              ),
+
+              // Описание
+              ...[
+                const SizedBox(height: 8),
+                Text(payment.description,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12)),
               ],
             ],
           ),
-
-          // Описание
-          ...[
-            const SizedBox(height: 8),
-            Text(payment.description, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-          ],
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildStatusChip(PaymentStatus status) {
     Color backgroundColor;
@@ -340,7 +356,8 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProv
           const SizedBox(width: 4),
           Text(
             status.displayName,
-            style: TextStyle(fontSize: 12, color: textColor, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: 12, color: textColor, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -348,52 +365,64 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProv
   }
 
   Widget _buildEmptyState(String title, String subtitle) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.payment, size: 64, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.payment, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.grey[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          subtitle,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildErrorState(Object error) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
-        const SizedBox(height: 16),
-        Text(
-          'Ошибка загрузки',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.red[600]),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, size: 64, color: Colors.red[400]),
+            const SizedBox(height: 16),
+            Text(
+              'Ошибка загрузки',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.red[600]),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              error.toString(),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.red[500]),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(userPaymentsProvider);
+                ref.invalidate(specialistPaymentsProvider);
+              },
+              child: const Text('Повторить'),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          error.toString(),
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red[500]),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: () {
-            ref.invalidate(userPaymentsProvider);
-            ref.invalidate(specialistPaymentsProvider);
-          },
-          child: const Text('Повторить'),
-        ),
-      ],
-    ),
-  );
+      );
 
   void _showFilterDialog() {
     showDialog<void>(
@@ -408,7 +437,9 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProv
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -425,11 +456,16 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProv
           children: [
             Text('Тип: ${payment.type.displayName}'),
             Text('Сумма: ${payment.amount.toStringAsFixed(0)} ₽'),
-            ...[const SizedBox(height: 8), Text('Описание: ${payment.description}')],
+            ...[
+              const SizedBox(height: 8),
+              Text('Описание: ${payment.description}')
+            ],
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -452,7 +488,9 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with TickerProv
     );
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Платеж успешно обработан'), backgroundColor: Colors.green),
+      const SnackBar(
+          content: Text('Платеж успешно обработан'),
+          backgroundColor: Colors.green),
     );
   }
 

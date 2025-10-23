@@ -88,7 +88,14 @@ class UploadService {
     'webm',
     'mkv',
   ];
-  static const List<String> _allowedAudioExtensions = ['mp3', 'wav', 'aac', 'flac', 'ogg', 'm4a'];
+  static const List<String> _allowedAudioExtensions = [
+    'mp3',
+    'wav',
+    'aac',
+    'flac',
+    'ogg',
+    'm4a'
+  ];
   static const List<String> _allowedDocumentExtensions = [
     'pdf',
     'doc',
@@ -100,7 +107,13 @@ class UploadService {
     'txt',
     'rtf',
   ];
-  static const List<String> _allowedArchiveExtensions = ['zip', 'rar', '7z', 'tar', 'gz'];
+  static const List<String> _allowedArchiveExtensions = [
+    'zip',
+    'rar',
+    '7z',
+    'tar',
+    'gz'
+  ];
 
   final FirebaseStorage? _storage = getStorage();
   final ImagePicker _imagePicker = ImagePicker();
@@ -153,7 +166,8 @@ class UploadService {
     try {
       SafeLog.info('UploadService: Picking video from ${source.name}');
 
-      final video = await _imagePicker.pickVideo(source: source, maxDuration: maxDuration);
+      final video = await _imagePicker.pickVideo(
+          source: source, maxDuration: maxDuration);
 
       if (video == null) {
         SafeLog.info('UploadService: No video selected');
@@ -178,7 +192,8 @@ class UploadService {
     }
 
     try {
-      SafeLog.info('UploadService: Picking file with extensions: $allowedExtensions');
+      SafeLog.info(
+          'UploadService: Picking file with extensions: $allowedExtensions');
 
       final result = await FilePicker.platform.pickFiles(
         type: FileType.image,
@@ -228,7 +243,8 @@ class UploadService {
       // Получаем информацию о файле
       final fileStat = await file.stat();
       final fileName = path.basename(file.path);
-      final fileExtension = path.extension(fileName).toLowerCase().replaceFirst('.', '');
+      final fileExtension =
+          path.extension(fileName).toLowerCase().replaceFirst('.', '');
 
       // Валидация размера файла
       _validateFileSize(fileStat.size, fileType);
@@ -248,13 +264,16 @@ class UploadService {
       // Загружаем файл
       final uploadTask = ref.putFile(
         file,
-        SettableMetadata(contentType: _getContentType(fileExtension), customMetadata: metadata),
+        SettableMetadata(
+            contentType: _getContentType(fileExtension),
+            customMetadata: metadata),
       );
 
       // Отслеживаем прогресс загрузки
       uploadTask.snapshotEvents.listen((snapshot) {
         final progress = snapshot.bytesTransferred / snapshot.totalBytes;
-        SafeLog.info('UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%');
+        SafeLog.info(
+            'UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%');
       });
 
       // Ждем завершения загрузки
@@ -314,7 +333,8 @@ class UploadService {
       _validateFileSize(bytes.length, fileType);
 
       // Валидация расширения файла
-      final fileExtension = path.extension(fileName).toLowerCase().replaceFirst('.', '');
+      final fileExtension =
+          path.extension(fileName).toLowerCase().replaceFirst('.', '');
       _validateFileExtension(fileExtension, fileType);
 
       // Генерируем уникальное имя файла
@@ -329,14 +349,17 @@ class UploadService {
       // Загружаем файл
       final uploadTask = ref.putData(
         bytes,
-        SettableMetadata(contentType: _getContentType(fileExtension), customMetadata: metadata),
+        SettableMetadata(
+            contentType: _getContentType(fileExtension),
+            customMetadata: metadata),
       );
 
       // Ждем завершения загрузки
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
-      SafeLog.info('UploadService: File uploaded successfully from bytes: $downloadUrl');
+      SafeLog.info(
+          'UploadService: File uploaded successfully from bytes: $downloadUrl');
 
       // Создаем превью для изображений
       String? thumbnailUrl;
@@ -360,7 +383,8 @@ class UploadService {
         },
       );
     } catch (e, stackTrace) {
-      SafeLog.error('UploadService: Error uploading file from bytes', e, stackTrace);
+      SafeLog.error(
+          'UploadService: Error uploading file from bytes', e, stackTrace);
 
       if (e is UploadException) {
         rethrow;
@@ -407,7 +431,8 @@ class UploadService {
       final ref = _storage.ref().child(filePath);
       return await ref.getMetadata();
     } catch (e, stackTrace) {
-      SafeLog.error('UploadService: Error getting file metadata', e, stackTrace);
+      SafeLog.error(
+          'UploadService: Error getting file metadata', e, stackTrace);
       throw UploadException('Ошибка получения метаданных файла: $e');
     }
   }
@@ -499,7 +524,8 @@ class UploadService {
 
   /// Получить путь для загрузки
   String _getUploadPath(FileType fileType, String fileName) {
-    final timestamp = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD
+    final timestamp =
+        DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD
 
     switch (fileType) {
       case FileType.image:

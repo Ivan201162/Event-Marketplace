@@ -119,7 +119,8 @@ class ArchiveService {
       FileType fileType;
       if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].contains(fileExtension)) {
         fileType = FileType.image;
-      } else if (['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm'].contains(fileExtension)) {
+      } else if (['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm']
+          .contains(fileExtension)) {
         fileType = FileType.video;
       } else {
         fileType = FileType.other;
@@ -155,9 +156,13 @@ class ArchiveService {
         },
       );
 
-      await _firestore.collection(_collection).doc(archive.id).set(archive.toMap());
+      await _firestore
+          .collection(_collection)
+          .doc(archive.id)
+          .set(archive.toMap());
 
-      SafeLog.info('ArchiveService: Archive uploaded successfully: ${archive.id}');
+      SafeLog.info(
+          'ArchiveService: Archive uploaded successfully: ${archive.id}');
       return archive;
     } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error uploading archive file: $e');
@@ -176,7 +181,8 @@ class ArchiveService {
           .orderBy('uploadedAt', descending: true)
           .get();
 
-      final archives = querySnapshot.docs.map(EventArchive.fromDocument).toList();
+      final archives =
+          querySnapshot.docs.map(EventArchive.fromDocument).toList();
 
       SafeLog.info('ArchiveService: Found ${archives.length} archives');
       return archives;
@@ -189,14 +195,16 @@ class ArchiveService {
   /// Получить архивы по ID бронирования (Stream)
   Stream<List<EventArchive>> getArchivesByBookingStream(String bookingId) {
     try {
-      SafeLog.info('ArchiveService: Getting archives stream for booking: $bookingId');
+      SafeLog.info(
+          'ArchiveService: Getting archives stream for booking: $bookingId');
 
       return _firestore
           .collection(_collection)
           .where('bookingId', isEqualTo: bookingId)
           .orderBy('uploadedAt', descending: true)
           .snapshots()
-          .map((snapshot) => snapshot.docs.map(EventArchive.fromDocument).toList());
+          .map((snapshot) =>
+              snapshot.docs.map(EventArchive.fromDocument).toList());
     } on Exception catch (e) {
       SafeLog.error('ArchiveService: Error getting archives stream: $e');
       rethrow;
@@ -222,7 +230,8 @@ class ArchiveService {
         try {
           await _storage.ref().child(storagePath).delete();
         } on Exception catch (e) {
-          SafeLog.warning('ArchiveService: Error deleting file from storage: $e');
+          SafeLog.warning(
+              'ArchiveService: Error deleting file from storage: $e');
         }
       }
 
@@ -237,11 +246,15 @@ class ArchiveService {
   }
 
   /// Обновить описание архива
-  Future<void> updateArchiveDescription(String archiveId, String description) async {
+  Future<void> updateArchiveDescription(
+      String archiveId, String description) async {
     try {
       SafeLog.info('ArchiveService: Updating archive description: $archiveId');
 
-      await _firestore.collection(_collection).doc(archiveId).update({'description': description});
+      await _firestore
+          .collection(_collection)
+          .doc(archiveId)
+          .update({'description': description});
 
       SafeLog.info('ArchiveService: Archive description updated successfully');
     } on Exception catch (e) {
@@ -253,7 +266,8 @@ class ArchiveService {
   /// Получить статистику архивов для бронирования
   Future<Map<String, int>> getArchiveStats(String bookingId) async {
     try {
-      SafeLog.info('ArchiveService: Getting archive stats for booking: $bookingId');
+      SafeLog.info(
+          'ArchiveService: Getting archive stats for booking: $bookingId');
 
       final querySnapshot = await _firestore
           .collection(_collection)

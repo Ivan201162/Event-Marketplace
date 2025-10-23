@@ -92,7 +92,8 @@ extension BookingStatusExtension on BookingStatus {
   }
 
   /// Проверить, можно ли отменить бронирование
-  bool get canCancel => this == BookingStatus.pending || this == BookingStatus.confirmed;
+  bool get canCancel =>
+      this == BookingStatus.pending || this == BookingStatus.confirmed;
 
   /// Проверить, можно ли подтвердить бронирование
   bool get canConfirm => this == BookingStatus.pending;
@@ -120,18 +121,19 @@ class BookingStatusInfo {
   });
 
   /// Создать из статуса
-  factory BookingStatusInfo.fromStatus(BookingStatus status) => BookingStatusInfo(
-    status: status,
-    name: status.name,
-    description: status.description,
-    color: status.color,
-    icon: status.icon,
-    sortOrder: status.sortOrder,
-    canCancel: status.canCancel,
-    canConfirm: status.canConfirm,
-    canReject: status.canReject,
-    canComplete: status.canComplete,
-  );
+  factory BookingStatusInfo.fromStatus(BookingStatus status) =>
+      BookingStatusInfo(
+        status: status,
+        name: status.name,
+        description: status.description,
+        color: status.color,
+        icon: status.icon,
+        sortOrder: status.sortOrder,
+        canCancel: status.canCancel,
+        canConfirm: status.canConfirm,
+        canReject: status.canReject,
+        canComplete: status.canComplete,
+      );
   final BookingStatus status;
   final String name;
   final String description;
@@ -150,30 +152,31 @@ class BookingStatusUtils {
   static List<BookingStatus> get allStatuses => BookingStatus.values;
 
   /// Получить активные статусы (не завершенные)
-  static List<BookingStatus> get activeStatuses => [BookingStatus.pending, BookingStatus.confirmed];
+  static List<BookingStatus> get activeStatuses =>
+      [BookingStatus.pending, BookingStatus.confirmed];
 
   /// Получить завершенные статусы
   static List<BookingStatus> get completedStatuses => [
-    BookingStatus.completed,
-    BookingStatus.cancelled,
-    BookingStatus.rejected,
-  ];
+        BookingStatus.completed,
+        BookingStatus.cancelled,
+        BookingStatus.rejected,
+      ];
 
   /// Получить статусы для клиента
   static List<BookingStatus> get customerStatuses => [
-    BookingStatus.pending,
-    BookingStatus.confirmed,
-    BookingStatus.completed,
-    BookingStatus.cancelled,
-  ];
+        BookingStatus.pending,
+        BookingStatus.confirmed,
+        BookingStatus.completed,
+        BookingStatus.cancelled,
+      ];
 
   /// Получить статусы для специалиста
   static List<BookingStatus> get specialistStatuses => [
-    BookingStatus.pending,
-    BookingStatus.confirmed,
-    BookingStatus.completed,
-    BookingStatus.rejected,
-  ];
+        BookingStatus.pending,
+        BookingStatus.confirmed,
+        BookingStatus.completed,
+        BookingStatus.rejected,
+      ];
 
   /// Получить информацию о статусе
   static BookingStatusInfo getStatusInfo(BookingStatus status) =>

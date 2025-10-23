@@ -15,10 +15,12 @@ class SpecialistDiscountOfferWidget extends StatefulWidget {
   final void Function(SpecialistDiscount)? onDiscountOffered;
 
   @override
-  State<SpecialistDiscountOfferWidget> createState() => _SpecialistDiscountOfferWidgetState();
+  State<SpecialistDiscountOfferWidget> createState() =>
+      _SpecialistDiscountOfferWidgetState();
 }
 
-class _SpecialistDiscountOfferWidgetState extends State<SpecialistDiscountOfferWidget> {
+class _SpecialistDiscountOfferWidgetState
+    extends State<SpecialistDiscountOfferWidget> {
   final SpecialistDiscountService _service = SpecialistDiscountService();
   final TextEditingController _messageController = TextEditingController();
 
@@ -40,7 +42,8 @@ class _SpecialistDiscountOfferWidgetState extends State<SpecialistDiscountOfferW
 
   Future<void> _checkCanOfferDiscount() async {
     try {
-      final canOffer = await _service.canOfferDiscount(widget.specialistId, widget.bookingId);
+      final canOffer = await _service.canOfferDiscount(
+          widget.specialistId, widget.bookingId);
       setState(() {
         _canOfferDiscount = canOffer;
       });
@@ -66,7 +69,8 @@ class _SpecialistDiscountOfferWidgetState extends State<SpecialistDiscountOfferW
         specialistId: widget.specialistId,
         bookingId: widget.bookingId,
         discountPercent: discountPercent,
-        message: _messageController.text.isNotEmpty ? _messageController.text : null,
+        message:
+            _messageController.text.isNotEmpty ? _messageController.text : null,
         expiresAt: DateTime.now().add(const Duration(days: 7)),
       );
 
@@ -75,7 +79,8 @@ class _SpecialistDiscountOfferWidgetState extends State<SpecialistDiscountOfferW
         specialistId: widget.specialistId,
         bookingId: widget.bookingId,
         discountPercent: discountPercent,
-        message: _messageController.text.isNotEmpty ? _messageController.text : null,
+        message:
+            _messageController.text.isNotEmpty ? _messageController.text : null,
         isActive: true,
         isAccepted: false,
         createdAt: DateTime.now(),
@@ -102,7 +107,8 @@ class _SpecialistDiscountOfferWidgetState extends State<SpecialistDiscountOfferW
   @override
   Widget build(BuildContext context) {
     if (_error != null) {
-      return _DiscountErrorWidget(error: _error!, onRetry: _checkCanOfferDiscount);
+      return _DiscountErrorWidget(
+          error: _error!, onRetry: _checkCanOfferDiscount);
     }
 
     if (!_canOfferDiscount) {
@@ -119,13 +125,15 @@ class _SpecialistDiscountOfferWidgetState extends State<SpecialistDiscountOfferW
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 }
 
@@ -164,12 +172,14 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        const Icon(Icons.local_offer, color: Colors.orange, size: 24),
+                        const Icon(Icons.local_offer,
+                            color: Colors.orange, size: 24),
                         const SizedBox(width: 12),
                         const Expanded(
                           child: Text(
                             'Предложить скидку заказчику',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
                         ElevatedButton.icon(
@@ -194,12 +204,14 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                       children: [
                         const Text(
                           'Предложить скидку',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 16),
                         const Text(
                           'Размер скидки:',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -210,7 +222,8 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                                 min: 5,
                                 max: 50,
                                 divisions: 9,
-                                label: '${_selectedDiscount.toStringAsFixed(0)}%',
+                                label:
+                                    '${_selectedDiscount.toStringAsFixed(0)}%',
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedDiscount = value;
@@ -219,11 +232,14 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
                                 color: Colors.orange.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(6),
-                                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                                border: Border.all(
+                                    color:
+                                        Colors.orange.withValues(alpha: 0.3)),
                               ),
                               child: Text(
                                 '${_selectedDiscount.toStringAsFixed(0)}%',
@@ -241,7 +257,8 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                           decoration: const InputDecoration(
                             labelText: 'Сообщение заказчику (необязательно)',
                             border: OutlineInputBorder(),
-                            hintText: 'Например: "Специальное предложение для вашего мероприятия"',
+                            hintText:
+                                'Например: "Специальное предложение для вашего мероприятия"',
                           ),
                           maxLines: 2,
                         ),
@@ -252,15 +269,19 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                               child: ElevatedButton.icon(
                                 onPressed: widget.isLoading
                                     ? null
-                                    : () => widget.onOfferDiscount(_selectedDiscount),
+                                    : () => widget
+                                        .onOfferDiscount(_selectedDiscount),
                                 icon: widget.isLoading
                                     ? const SizedBox(
                                         width: 16,
                                         height: 16,
-                                        child: CircularProgressIndicator(strokeWidth: 2),
+                                        child: CircularProgressIndicator(
+                                            strokeWidth: 2),
                                       )
                                     : const Icon(Icons.send),
-                                label: Text(widget.isLoading ? 'Отправка...' : 'Предложить скидку'),
+                                label: Text(widget.isLoading
+                                    ? 'Отправка...'
+                                    : 'Предложить скидку'),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.orange,
                                   foregroundColor: Colors.white,
@@ -269,8 +290,9 @@ class _DiscountOfferFormState extends State<_DiscountOfferForm> {
                             ),
                             const SizedBox(width: 8),
                             TextButton(
-                              onPressed:
-                                  widget.isLoading ? null : () => setState(() => _showForm = false),
+                              onPressed: widget.isLoading
+                                  ? null
+                                  : () => setState(() => _showForm = false),
                               child: const Text('Отмена'),
                             ),
                           ],

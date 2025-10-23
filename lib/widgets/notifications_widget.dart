@@ -36,12 +36,15 @@ class NotificationsWidget extends ConsumerWidget {
                     onPressed: () async {
                       try {
                         await ref.read(
-                          markAllNotificationsAsReadProvider(currentUser.id ?? '').future,
+                          markAllNotificationsAsReadProvider(
+                                  currentUser.id ?? '')
+                              .future,
                         );
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Все уведомления отмечены как прочитанные'),
+                              content: Text(
+                                  'Все уведомления отмечены как прочитанные'),
                               backgroundColor: Colors.green,
                             ),
                           );
@@ -49,7 +52,9 @@ class NotificationsWidget extends ConsumerWidget {
                       } on Exception catch (e) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),
+                            SnackBar(
+                                content: Text('Ошибка: $e'),
+                                backgroundColor: Colors.red),
                           );
                         }
                       }
@@ -77,7 +82,8 @@ class NotificationsWidget extends ConsumerWidget {
               return NotificationItem(
                 notification: notification,
                 onTap: () => _handleNotificationTap(context, ref, notification),
-                onDelete: () => _handleNotificationDelete(context, ref, notification),
+                onDelete: () =>
+                    _handleNotificationDelete(context, ref, notification),
               );
             },
           );
@@ -96,12 +102,18 @@ class NotificationsWidget extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'Нет уведомлений',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Здесь будут появляться уведомления о новых заявках, отзывах и других событиях',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -116,12 +128,18 @@ class NotificationsWidget extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'Ошибка загрузки уведомлений',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.red[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(color: Colors.red[600]),
             ),
             const SizedBox(height: 8),
             Text(
               error.toString(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.red[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -135,23 +153,27 @@ class NotificationsWidget extends ConsumerWidget {
   ) {
     // Отмечаем как прочитанное, если еще не прочитано
     if (notification['isRead'] != true) {
-      ref.read(markNotificationAsReadProvider(notification['id'].toString()).future);
+      ref.read(
+          markNotificationAsReadProvider(notification['id'].toString()).future);
     }
 
     // Обрабатываем нажатие в зависимости от типа уведомления
     switch (notification['type']) {
       case 'new_booking':
         // Переходим к заявке
-        _navigateToBooking(context, notification['data']?['bookingId']?.toString() ?? '');
+        _navigateToBooking(
+            context, notification['data']?['bookingId']?.toString() ?? '');
         break;
       case 'booking_confirmed':
       case 'booking_rejected':
         // Переходим к заявке
-        _navigateToBooking(context, notification['data']?['bookingId']?.toString() ?? '');
+        _navigateToBooking(
+            context, notification['data']?['bookingId']?.toString() ?? '');
         break;
       case 'chat_message':
         // Переходим к чату
-        _navigateToChat(context, notification['data']?['chatId']?.toString() ?? '');
+        _navigateToChat(
+            context, notification['data']?['chatId']?.toString() ?? '');
         break;
       case 'system':
         // Показываем детали уведомления
@@ -179,12 +201,16 @@ class NotificationsWidget extends ConsumerWidget {
         title: const Text('Удалить уведомление'),
         content: const Text('Вы уверены, что хотите удалить это уведомление?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
               try {
-                await ref.read(deleteNotificationProvider(notification['id'].toString()).future);
+                await ref.read(
+                    deleteNotificationProvider(notification['id'].toString())
+                        .future);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -196,7 +222,9 @@ class NotificationsWidget extends ConsumerWidget {
               } on Exception catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red),
+                    SnackBar(
+                        content: Text('Ошибка удаления: $e'),
+                        backgroundColor: Colors.red),
                   );
                 }
               }
@@ -244,7 +272,8 @@ class NotificationsWidget extends ConsumerWidget {
     }
   }
 
-  void _showNotificationDetails(BuildContext context, Map<String, dynamic> notification) {
+  void _showNotificationDetails(
+      BuildContext context, Map<String, dynamic> notification) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -258,13 +287,18 @@ class NotificationsWidget extends ConsumerWidget {
               const SizedBox(height: 16),
               Text(
                 'Дата: ${_formatDate(DateTime.parse(notification['createdAt'].toString()))}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -307,7 +341,9 @@ class NotificationItem extends StatelessWidget {
           title: Text(
             notification.title ?? 'Уведомление',
             style: TextStyle(
-              fontWeight: notification.isRead == true ? FontWeight.normal : FontWeight.bold,
+              fontWeight: notification.isRead == true
+                  ? FontWeight.normal
+                  : FontWeight.bold,
             ),
           ),
           subtitle: Column(
@@ -317,7 +353,10 @@ class NotificationItem extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 _formatDate(notification.createdAt),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
@@ -341,7 +380,9 @@ class NotificationItem extends StatelessWidget {
             },
           ),
           onTap: onTap,
-          tileColor: notification.isRead == true ? null : Colors.blue.withValues(alpha: 0.05),
+          tileColor: notification.isRead == true
+              ? null
+              : Colors.blue.withValues(alpha: 0.05),
         ),
       );
 
@@ -375,7 +416,8 @@ class NotificationItem extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.1), shape: BoxShape.circle),
+      decoration: BoxDecoration(
+          color: iconColor.withValues(alpha: 0.1), shape: BoxShape.circle),
       child: Icon(iconData, color: iconColor, size: 20),
     );
   }

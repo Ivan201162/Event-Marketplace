@@ -54,11 +54,13 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
 
   void _initializeVideoPlayer() {
     if (widget.idea.media.isNotEmpty) {
-      final firstVideo =
-          widget.idea.media.where((media) => media.type == IdeaMediaType.video).firstOrNull;
+      final firstVideo = widget.idea.media
+          .where((media) => media.type == IdeaMediaType.video)
+          .firstOrNull;
 
       if (firstVideo != null) {
-        _videoController = VideoPlayerController.networkUrl(Uri.parse(firstVideo.url));
+        _videoController =
+            VideoPlayerController.networkUrl(Uri.parse(firstVideo.url));
         _videoController?.initialize().then((_) {
           setState(() {});
         });
@@ -99,7 +101,9 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                         'https://ui-avatars.com/api/?name=${widget.idea.authorId}&size=40',
                       )
                     : null,
-                child: widget.idea.authorId.isEmpty ? const Icon(Icons.person) : null,
+                child: widget.idea.authorId.isEmpty
+                    ? const Icon(Icons.person)
+                    : null,
               ),
             ),
             const SizedBox(width: 12),
@@ -109,11 +113,13 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                 children: [
                   Text(
                     'Пользователь ${widget.idea.authorId}',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Row(
                     children: [
-                      Text(widget.idea.type.icon, style: const TextStyle(fontSize: 14)),
+                      Text(widget.idea.type.icon,
+                          style: const TextStyle(fontSize: 14)),
                       const SizedBox(width: 4),
                       Text(
                         widget.idea.type.displayName,
@@ -129,8 +135,10 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                 ],
               ),
             ),
-            if (widget.idea.isFeatured) const Icon(Icons.star, color: Colors.amber, size: 16),
-            IconButton(onPressed: widget.onMore, icon: const Icon(Icons.more_vert)),
+            if (widget.idea.isFeatured)
+              const Icon(Icons.star, color: Colors.amber, size: 16),
+            IconButton(
+                onPressed: widget.onMore, icon: const Icon(Icons.more_vert)),
           ],
         ),
       );
@@ -141,7 +149,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.idea.title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Text(
               widget.idea.description,
@@ -178,12 +187,15 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                     // TODO: Переход к поиску по тегу
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue[100],
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text('#$tag', style: TextStyle(color: Colors.blue[800], fontSize: 12)),
+                    child: Text('#$tag',
+                        style:
+                            TextStyle(color: Colors.blue[800], fontSize: 12)),
                   ),
                 ),
               )
@@ -195,8 +207,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
         padding: const EdgeInsets.only(top: 12),
         child: Container(
           padding: const EdgeInsets.all(12),
-          decoration:
-              BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(
+              color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
           child: Column(
             children: [
               if (widget.idea.budget != null)
@@ -208,7 +220,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
               if (widget.idea.timeline != null)
                 _buildDetailRow(Icons.schedule, 'Сроки', widget.idea.timeline!),
               if (widget.idea.location != null)
-                _buildDetailRow(Icons.location_on, 'Место', widget.idea.location!),
+                _buildDetailRow(
+                    Icons.location_on, 'Место', widget.idea.location!),
             ],
           ),
         ),
@@ -222,7 +235,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
             const SizedBox(width: 8),
             Text(
               '$label: ',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[700]),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.grey[700]),
             ),
             Expanded(
               child: Text(value, style: TextStyle(color: Colors.grey[600])),
@@ -263,8 +277,10 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                 color: Colors.grey[300],
                 child: const Center(child: CircularProgressIndicator()),
               ),
-              errorWidget: (context, url, error) =>
-                  Container(height: 200, color: Colors.grey[300], child: const Icon(Icons.error)),
+              errorWidget: (context, url, error) => Container(
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.error)),
             ),
           ),
         );
@@ -316,7 +332,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
               child: VideoPlayer(_videoController!),
             ),
             if (!_videoController!.value.isPlaying)
-              const Icon(Icons.play_circle_fill, size: 64, color: Colors.white70),
+              const Icon(Icons.play_circle_fill,
+                  size: 64, color: Colors.white70),
           ],
         ),
       ),
@@ -334,7 +351,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                 });
               },
               itemCount: widget.idea.media.length,
-              itemBuilder: (context, index) => _buildSingleMedia(widget.idea.media[index]),
+              itemBuilder: (context, index) =>
+                  _buildSingleMedia(widget.idea.media[index]),
             ),
           ),
           if (widget.idea.media.length > 1)
@@ -350,7 +368,9 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                     height: 8,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _currentMediaIndex == index ? Colors.blue : Colors.grey[300],
+                      color: _currentMediaIndex == index
+                          ? Colors.blue
+                          : Colors.grey[300],
                     ),
                   ),
                 ),
@@ -374,9 +394,11 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
               },
             ),
             const SizedBox(width: 16),
-            _buildActionButton(icon: Icons.chat_bubble_outline, onTap: widget.onComment),
+            _buildActionButton(
+                icon: Icons.chat_bubble_outline, onTap: widget.onComment),
             const SizedBox(width: 16),
-            _buildActionButton(icon: Icons.share_outlined, onTap: widget.onShare),
+            _buildActionButton(
+                icon: Icons.share_outlined, onTap: widget.onShare),
             const Spacer(),
             _buildActionButton(
               icon: _isSaved ? Icons.bookmark : Icons.bookmark_border,
@@ -392,7 +414,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
         ),
       );
 
-  Widget _buildActionButton({required IconData icon, Color? color, VoidCallback? onTap}) =>
+  Widget _buildActionButton(
+          {required IconData icon, Color? color, VoidCallback? onTap}) =>
       GestureDetector(
         onTap: onTap,
         child: Icon(icon, color: color ?? Colors.grey[600], size: 24),
@@ -433,7 +456,8 @@ class _IdeaCardWidgetState extends ConsumerState<IdeaCardWidget> {
                       children: [
                         TextSpan(
                           text: 'Пользователь ${comment.authorId} ',
-                          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.black),
                         ),
                         TextSpan(
                           text: comment.text,

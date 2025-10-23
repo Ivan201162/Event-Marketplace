@@ -8,7 +8,10 @@ class OrganizerService {
   /// Создать профиль организатора
   Future<void> createOrganizerProfile(OrganizerProfile profile) async {
     try {
-      await _firestore.collection('organizer_profiles').doc(profile.id).set(profile.toMap());
+      await _firestore
+          .collection('organizer_profiles')
+          .doc(profile.id)
+          .set(profile.toMap());
     } on Exception catch (e) {
       debugPrint('Ошибка создания профиля организатора: $e');
       throw Exception('Ошибка создания профиля организатора: $e');
@@ -18,7 +21,10 @@ class OrganizerService {
   /// Получить профиль организатора по ID
   Future<OrganizerProfile?> getOrganizerProfile(String organizerId) async {
     try {
-      final doc = await _firestore.collection('organizer_profiles').doc(organizerId).get();
+      final doc = await _firestore
+          .collection('organizer_profiles')
+          .doc(organizerId)
+          .get();
 
       if (doc.exists) {
         return OrganizerProfile.fromDocument(doc);
@@ -66,7 +72,10 @@ class OrganizerService {
   /// Удалить профиль организатора
   Future<void> deleteOrganizerProfile(String organizerId) async {
     try {
-      await _firestore.collection('organizer_profiles').doc(organizerId).delete();
+      await _firestore
+          .collection('organizer_profiles')
+          .doc(organizerId)
+          .delete();
     } on Exception catch (e) {
       debugPrint('Ошибка удаления профиля организатора: $e');
       throw Exception('Ошибка удаления профиля организатора: $e');
@@ -124,7 +133,8 @@ class OrganizerService {
   }
 
   /// Поиск организаторов по названию
-  Future<List<OrganizerProfile>> searchOrganizers(String searchQuery, {int limit = 20}) async {
+  Future<List<OrganizerProfile>> searchOrganizers(String searchQuery,
+      {int limit = 20}) async {
     try {
       // Firestore не поддерживает полнотекстовый поиск, поэтому используем простой фильтр
       final querySnapshot = await _firestore
@@ -134,7 +144,8 @@ class OrganizerService {
           .limit(limit)
           .get();
 
-      final allOrganizers = querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
+      final allOrganizers =
+          querySnapshot.docs.map(OrganizerProfile.fromDocument).toList();
 
       // Фильтруем результаты на клиенте
       final searchLower = searchQuery.toLowerCase();
@@ -142,7 +153,8 @@ class OrganizerService {
           .where(
             (organizer) =>
                 organizer.name.toLowerCase().contains(searchLower) ||
-                (organizer.description?.toLowerCase().contains(searchLower) ?? false) ||
+                (organizer.description?.toLowerCase().contains(searchLower) ??
+                    false) ||
                 organizer.categories.any(
                   (category) => category.toLowerCase().contains(searchLower),
                 ),
@@ -195,9 +207,13 @@ class OrganizerService {
   }
 
   /// Обновить рейтинг организатора
-  Future<void> updateOrganizerRating(String organizerId, double newRating, int reviewCount) async {
+  Future<void> updateOrganizerRating(
+      String organizerId, double newRating, int reviewCount) async {
     try {
-      await _firestore.collection('organizer_profiles').doc(organizerId).update({
+      await _firestore
+          .collection('organizer_profiles')
+          .doc(organizerId)
+          .update({
         'rating': newRating,
         'reviewCount': reviewCount,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
@@ -211,7 +227,10 @@ class OrganizerService {
   /// Добавить событие в портфолио
   Future<void> addEventToPortfolio(String organizerId, String eventId) async {
     try {
-      await _firestore.collection('organizer_profiles').doc(organizerId).update({
+      await _firestore
+          .collection('organizer_profiles')
+          .doc(organizerId)
+          .update({
         'pastEvents': FieldValue.arrayUnion([eventId]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -224,7 +243,10 @@ class OrganizerService {
   /// Добавить изображение в портфолио
   Future<void> addPortfolioImage(String organizerId, String imageUrl) async {
     try {
-      await _firestore.collection('organizer_profiles').doc(organizerId).update({
+      await _firestore
+          .collection('organizer_profiles')
+          .doc(organizerId)
+          .update({
         'portfolioImages': FieldValue.arrayUnion([imageUrl]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -237,7 +259,10 @@ class OrganizerService {
   /// Добавить видео в портфолио
   Future<void> addPortfolioVideo(String organizerId, String videoUrl) async {
     try {
-      await _firestore.collection('organizer_profiles').doc(organizerId).update({
+      await _firestore
+          .collection('organizer_profiles')
+          .doc(organizerId)
+          .update({
         'portfolioVideos': FieldValue.arrayUnion([videoUrl]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -250,7 +275,10 @@ class OrganizerService {
   /// Добавить члена команды
   Future<void> addTeamMember(String organizerId, String specialistId) async {
     try {
-      await _firestore.collection('organizer_profiles').doc(organizerId).update({
+      await _firestore
+          .collection('organizer_profiles')
+          .doc(organizerId)
+          .update({
         'teamMembers': FieldValue.arrayUnion([specialistId]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -263,7 +291,10 @@ class OrganizerService {
   /// Удалить члена команды
   Future<void> removeTeamMember(String organizerId, String specialistId) async {
     try {
-      await _firestore.collection('organizer_profiles').doc(organizerId).update({
+      await _firestore
+          .collection('organizer_profiles')
+          .doc(organizerId)
+          .update({
         'teamMembers': FieldValue.arrayRemove([specialistId]),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -292,8 +323,8 @@ class OrganizerService {
       final activeProjectsQuery = await _firestore
           .collection('bookings')
           .where('organizerId', isEqualTo: organizerId)
-          .where('status', whereIn: ['pending', 'confirmed', 'in_progress'])
-          .get();
+          .where('status',
+              whereIn: ['pending', 'confirmed', 'in_progress']).get();
 
       return {
         'totalProjects': organizer.pastEvents.length,

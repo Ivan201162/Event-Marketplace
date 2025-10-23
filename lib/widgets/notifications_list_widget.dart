@@ -5,13 +5,15 @@ import '../services/notification_service.dart';
 
 /// Виджет для отображения списка уведомлений
 class NotificationsListWidget extends StatefulWidget {
-  const NotificationsListWidget({super.key, required this.userId, this.onNotificationTap});
+  const NotificationsListWidget(
+      {super.key, required this.userId, this.onNotificationTap});
 
   final String userId;
   final void Function(Map<String, dynamic>)? onNotificationTap;
 
   @override
-  State<NotificationsListWidget> createState() => _NotificationsListWidgetState();
+  State<NotificationsListWidget> createState() =>
+      _NotificationsListWidgetState();
 }
 
 class _NotificationsListWidgetState extends State<NotificationsListWidget> {
@@ -24,7 +26,9 @@ class _NotificationsListWidgetState extends State<NotificationsListWidget> {
           }
 
           if (snapshot.hasError) {
-            return _ErrorWidget(error: snapshot.error.toString(), onRetry: () => setState(() {}));
+            return _ErrorWidget(
+                error: snapshot.error.toString(),
+                onRetry: () => setState(() {}));
           }
 
           final notifications = snapshot.data ?? [];
@@ -62,13 +66,15 @@ class _NotificationsListWidgetState extends State<NotificationsListWidget> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 }
 
@@ -129,7 +135,10 @@ class _EmptyWidget extends StatelessWidget {
             SizedBox(height: 16),
             Text(
               'Нет уведомлений',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey),
             ),
             SizedBox(height: 8),
             Text(
@@ -184,10 +193,12 @@ class _NotificationsList extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            const Text('Уведомления', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const Text('Уведомления',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const Spacer(),
             TextButton(
-                onPressed: onMarkAllAsRead, child: const Text('Отметить все как прочитанные')),
+                onPressed: onMarkAllAsRead,
+                child: const Text('Отметить все как прочитанные')),
           ],
         ),
       );
@@ -222,22 +233,25 @@ class _NotificationCard extends StatelessWidget {
                           notification['title'] as String? ?? 'Уведомление',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: (notification['isRead'] as bool? ?? false)
-                                ? FontWeight.normal
-                                : FontWeight.bold,
+                            fontWeight:
+                                (notification['isRead'] as bool? ?? false)
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           notification['body'] as String? ?? '',
-                          style: const TextStyle(fontSize: 14, color: Colors.grey),
+                          style:
+                              const TextStyle(fontSize: 14, color: Colors.grey),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           _formatDate(notification['createdAt']),
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                          style:
+                              const TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ],
                     ),
@@ -246,7 +260,8 @@ class _NotificationCard extends StatelessWidget {
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+                      decoration: const BoxDecoration(
+                          color: Colors.blue, shape: BoxShape.circle),
                     ),
                 ],
               ),

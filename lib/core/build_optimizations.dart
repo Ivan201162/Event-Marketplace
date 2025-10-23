@@ -48,7 +48,8 @@ class BuildOptimizations {
   static void _optimizeMemory() {
     // Настройка кэша изображений
     PaintingBinding.instance.imageCache.maximumSize = 50;
-    PaintingBinding.instance.imageCache.maximumSizeBytes = 25 * 1024 * 1024; // 25MB
+    PaintingBinding.instance.imageCache.maximumSizeBytes =
+        25 * 1024 * 1024; // 25MB
 
     // Очистка кэша при нехватке памяти
     PaintingBinding.instance.imageCache.clearLiveImages();
@@ -57,12 +58,14 @@ class BuildOptimizations {
   /// Оптимизация анимаций
   static void _optimizeAnimations() {
     // Отключаем системные анимации для лучшей производительности
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
+        overlays: [SystemUiOverlay.top]);
   }
 
   /// Оптимизация для разных платформ
   static void initializePlatformOptimizations() {
-    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName.contains('android')
+    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName
+            .contains('android')
         ? TargetPlatform.android
         : TargetPlatform.iOS;
 
@@ -123,14 +126,17 @@ class BuildOptimizations {
 
   /// Получение информации о производительности
   static Map<String, dynamic> getPerformanceInfo() {
-    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName.contains('android')
+    final platform = WidgetsBinding.instance.platformDispatcher.defaultRouteName
+            .contains('android')
         ? TargetPlatform.android
         : TargetPlatform.iOS;
     return {
       'imageCacheSize': PaintingBinding.instance.imageCache.currentSize,
-      'imageCacheSizeBytes': PaintingBinding.instance.imageCache.currentSizeBytes,
+      'imageCacheSizeBytes':
+          PaintingBinding.instance.imageCache.currentSizeBytes,
       'imageCacheMaxSize': PaintingBinding.instance.imageCache.maximumSize,
-      'imageCacheMaxSizeBytes': PaintingBinding.instance.imageCache.maximumSizeBytes,
+      'imageCacheMaxSizeBytes':
+          PaintingBinding.instance.imageCache.maximumSizeBytes,
       'platform': platform.toString(),
     };
   }
@@ -150,7 +156,8 @@ class BuildOptimizations {
 
 /// Оптимизированный виджет для release сборки
 class OptimizedWidget extends StatelessWidget {
-  const OptimizedWidget({super.key, required this.child, this.enableOptimizations = true});
+  const OptimizedWidget(
+      {super.key, required this.child, this.enableOptimizations = true});
 
   final Widget child;
   final bool enableOptimizations;
@@ -188,14 +195,15 @@ class OptimizedListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.separated(
-    controller: scrollController,
-    physics: physics,
-    padding: padding,
-    cacheExtent: cacheExtent,
-    itemCount: itemCount,
-    separatorBuilder: separatorBuilder ?? (context, index) => const SizedBox.shrink(),
-    itemBuilder: itemBuilder,
-  );
+        controller: scrollController,
+        physics: physics,
+        padding: padding,
+        cacheExtent: cacheExtent,
+        itemCount: itemCount,
+        separatorBuilder:
+            separatorBuilder ?? (context, index) => const SizedBox.shrink(),
+        itemBuilder: itemBuilder,
+      );
 }
 
 /// Оптимизированный виджет для сетки
@@ -227,17 +235,17 @@ class OptimizedGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => GridView.builder(
-    controller: scrollController,
-    physics: physics,
-    padding: padding,
-    cacheExtent: cacheExtent,
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: crossAxisCount,
-      crossAxisSpacing: crossAxisSpacing,
-      mainAxisSpacing: mainAxisSpacing,
-      childAspectRatio: childAspectRatio,
-    ),
-    itemCount: itemCount,
-    itemBuilder: itemBuilder,
-  );
+        controller: scrollController,
+        physics: physics,
+        padding: padding,
+        cacheExtent: cacheExtent,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: crossAxisSpacing,
+          mainAxisSpacing: mainAxisSpacing,
+          childAspectRatio: childAspectRatio,
+        ),
+        itemCount: itemCount,
+        itemBuilder: itemBuilder,
+      );
 }

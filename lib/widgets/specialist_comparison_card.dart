@@ -41,11 +41,15 @@ class SpecialistComparisonCard extends StatelessWidget {
                           // Аватар
                           CircleAvatar(
                             radius: 24,
-                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                             child: Text(
-                              specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
-                              style:
-                                  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              specialist.name.isNotEmpty
+                                  ? specialist.name[0].toUpperCase()
+                                  : '?',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -57,12 +61,16 @@ class SpecialistComparisonCard extends StatelessWidget {
                               children: [
                                 Text(
                                   specialist.name,
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  specialist.category?.displayName ?? 'Категория',
+                                  specialist.category?.displayName ??
+                                      'Категория',
                                   style: TextStyle(
-                                    color: Theme.of(context).colorScheme.primary,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -76,7 +84,8 @@ class SpecialistComparisonCard extends StatelessWidget {
                     // Индикатор лучшего
                     if (isBest)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Colors.amber,
                           borderRadius: BorderRadius.circular(12),
@@ -117,11 +126,13 @@ class SpecialistComparisonCard extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Описание
-                if (specialist.description != null && specialist.description!.isNotEmpty)
+                if (specialist.description != null &&
+                    specialist.description!.isNotEmpty)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Описание:', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text('Описание:',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
                       Text(
                         specialist.description!,
@@ -138,7 +149,8 @@ class SpecialistComparisonCard extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Услуги:', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text('Услуги:',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
                       Wrap(
                         spacing: 4,
@@ -147,17 +159,21 @@ class SpecialistComparisonCard extends StatelessWidget {
                             .take(3)
                             .map(
                               (service) => Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
                                   service,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Theme.of(context).colorScheme.primary,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                   ),
                                 ),
                               ),
@@ -167,8 +183,9 @@ class SpecialistComparisonCard extends StatelessWidget {
                       if (specialist.services.length > 3)
                         Text(
                           'и еще ${specialist.services.length - 3}...',
-                          style:
-                              TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.outline),
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).colorScheme.outline),
                         ),
                       const SizedBox(height: 16),
                     ],
@@ -234,7 +251,8 @@ class SpecialistComparisonCard extends StatelessWidget {
         ],
       );
 
-  Widget _buildCharacteristicItem(String label, String value, IconData icon, Color color) =>
+  Widget _buildCharacteristicItem(
+          String label, String value, IconData icon, Color color) =>
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -248,10 +266,13 @@ class SpecialistComparisonCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               value,
-              style: TextStyle(fontWeight: FontWeight.bold, color: color, fontSize: 12),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: color, fontSize: 12),
               textAlign: TextAlign.center,
             ),
-            Text(label, style: const TextStyle(fontSize: 10), textAlign: TextAlign.center),
+            Text(label,
+                style: const TextStyle(fontSize: 10),
+                textAlign: TextAlign.center),
           ],
         ),
       );
@@ -259,7 +280,8 @@ class SpecialistComparisonCard extends StatelessWidget {
 
 /// Виджет для отображения детального сравнения
 class DetailedComparisonWidget extends StatelessWidget {
-  const DetailedComparisonWidget({super.key, required this.comparison, required this.criteria});
+  const DetailedComparisonWidget(
+      {super.key, required this.comparison, required this.criteria});
   final SpecialistComparison comparison;
   final ComparisonCriteria criteria;
 
@@ -272,7 +294,8 @@ class DetailedComparisonWidget extends StatelessWidget {
             children: [
               Text(
                 'Сравнение по ${criteria.label.toLowerCase()}',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
 
@@ -286,7 +309,8 @@ class DetailedComparisonWidget extends StatelessWidget {
                     children: [
                       const Padding(
                         padding: EdgeInsets.all(8),
-                        child: Text('Критерий', style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text('Критерий',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       ...comparison.specialists.map(
                         (specialist) => Padding(
@@ -302,15 +326,19 @@ class DetailedComparisonWidget extends StatelessWidget {
                   ),
 
                   // Строки сравнения
-                  _buildComparisonRow('Рейтинг', (s) => '${s.rating.toStringAsFixed(1)} ⭐'),
+                  _buildComparisonRow(
+                      'Рейтинг', (s) => '${s.rating.toStringAsFixed(1)} ⭐'),
                   _buildComparisonRow(
                     'Цена',
                     (s) => '${s.hourlyRate?.toStringAsFixed(0) ?? '0'} ₽/час',
                   ),
-                  _buildComparisonRow('Опыт', (s) => '${s.yearsOfExperience} лет'),
+                  _buildComparisonRow(
+                      'Опыт', (s) => '${s.yearsOfExperience} лет'),
                   _buildComparisonRow('Отзывы', (s) => '${s.reviewCount}'),
-                  _buildComparisonRow('Доступность', (s) => s.isAvailable ? 'Доступен' : 'Занят'),
-                  _buildComparisonRow('Локация', (s) => s.location ?? 'Не указана'),
+                  _buildComparisonRow('Доступность',
+                      (s) => s.isAvailable ? 'Доступен' : 'Занят'),
+                  _buildComparisonRow(
+                      'Локация', (s) => s.location ?? 'Не указана'),
                 ],
               ),
             ],
@@ -318,7 +346,9 @@ class DetailedComparisonWidget extends StatelessWidget {
         ),
       );
 
-  TableRow _buildComparisonRow(String label, String Function(Specialist) getValue) => TableRow(
+  TableRow _buildComparisonRow(
+          String label, String Function(Specialist) getValue) =>
+      TableRow(
         children: [
           Padding(padding: const EdgeInsets.all(8), child: Text(label)),
           ...comparison.specialists.map(

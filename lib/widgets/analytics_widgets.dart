@@ -21,7 +21,8 @@ class KPIWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       kpi.name,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                   ),
                   _buildStatusIcon(kpi.status),
@@ -32,14 +33,18 @@ class KPIWidget extends StatelessWidget {
                 children: [
                   Text(
                     kpi.value.toStringAsFixed(kpi.unit == '%' ? 1 : 0),
-                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(width: 4),
                   Text(
                     kpi.unit,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.7),
                     ),
                   ),
                 ],
@@ -54,7 +59,10 @@ class KPIWidget extends StatelessWidget {
                     'Цель: ${kpi.target.toStringAsFixed(0)} ${kpi.unit}',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.7),
                     ),
                   ),
                   _buildChangeIndicator(context, kpi.percentageChange),
@@ -93,11 +101,14 @@ class KPIWidget extends StatelessWidget {
   }
 
   /// Построить прогресс-бар
-  Widget _buildProgressBar(BuildContext context, double percentage) => LinearProgressIndicator(
+  Widget _buildProgressBar(BuildContext context, double percentage) =>
+      LinearProgressIndicator(
         value: percentage / 100,
         backgroundColor: Colors.grey.withValues(alpha: 0.3),
         valueColor: AlwaysStoppedAnimation<Color>(
-          percentage >= 100 ? Colors.green : Theme.of(context).colorScheme.primary,
+          percentage >= 100
+              ? Colors.green
+              : Theme.of(context).colorScheme.primary,
         ),
       );
 
@@ -114,7 +125,8 @@ class KPIWidget extends StatelessWidget {
         const SizedBox(width: 2),
         Text(
           '${change.abs().toStringAsFixed(1)}%',
-          style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              fontSize: 12, color: color, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -141,7 +153,9 @@ class MetricWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final change = previousValue != null ? ((value - previousValue!) / previousValue!) * 100 : 0.0;
+    final change = previousValue != null
+        ? ((value - previousValue!) / previousValue!) * 100
+        : 0.0;
     final isPositive = change >= 0;
 
     return Card(
@@ -154,16 +168,20 @@ class MetricWidget extends StatelessWidget {
             Row(
               children: [
                 if (icon != null) ...[
-                  Icon(icon, color: color ?? Theme.of(context).colorScheme.primary, size: 20),
+                  Icon(icon,
+                      color: color ?? Theme.of(context).colorScheme.primary,
+                      size: 20),
                   const SizedBox(width: 8),
                 ],
                 Expanded(
                   child: Text(
                     name,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
-                if (previousValue != null) _buildChangeIndicator(context, change, isPositive),
+                if (previousValue != null)
+                  _buildChangeIndicator(context, change, isPositive),
               ],
             ),
             const SizedBox(height: 8),
@@ -178,7 +196,8 @@ class MetricWidget extends StatelessWidget {
   }
 
   /// Построить индикатор изменения
-  Widget _buildChangeIndicator(BuildContext context, double change, bool isPositive) {
+  Widget _buildChangeIndicator(
+      BuildContext context, double change, bool isPositive) {
     final color = isPositive ? Colors.green : Colors.red;
     final icon = isPositive ? Icons.arrow_upward : Icons.arrow_downward;
 
@@ -189,7 +208,8 @@ class MetricWidget extends StatelessWidget {
         const SizedBox(width: 2),
         Text(
           '${change.abs().toStringAsFixed(1)}%',
-          style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              fontSize: 12, color: color, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -211,15 +231,20 @@ class PeriodStatisticsWidget extends StatelessWidget {
             children: [
               Text(
                 'Статистика за ${_getPeriodName(statistics.period)}',
-                style:
-                    Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               Text(
                 '${_formatDate(statistics.startDate)} - ${_formatDate(statistics.endDate)}',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 16),
@@ -305,7 +330,8 @@ class ReportWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         report.title,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     _buildTypeChip(context, report.type),
@@ -316,7 +342,10 @@ class ReportWidget extends StatelessWidget {
                   report.description,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -327,14 +356,20 @@ class ReportWidget extends StatelessWidget {
                       '${_formatDate(report.startDate)} - ${_formatDate(report.endDate)}',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
                       _formatDate(report.createdAt),
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -382,7 +417,8 @@ class ReportWidget extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+        style:
+            TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
       ),
     );
   }
@@ -414,11 +450,14 @@ class DashboardWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         dashboard.title,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     if (dashboard.isPublic)
-                      Icon(Icons.public, size: 16, color: Theme.of(context).colorScheme.primary),
+                      Icon(Icons.public,
+                          size: 16,
+                          color: Theme.of(context).colorScheme.primary),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -426,7 +465,10 @@ class DashboardWidget extends StatelessWidget {
                   dashboard.description,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -437,14 +479,20 @@ class DashboardWidget extends StatelessWidget {
                       '${dashboard.widgets.length} виджетов',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
                       _formatDate(dashboard.updatedAt),
                       style: TextStyle(
                         fontSize: 12,
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -462,7 +510,8 @@ class DashboardWidget extends StatelessWidget {
 /// Виджет формы отчета
 class ReportFormWidget extends ConsumerStatefulWidget {
   const ReportFormWidget({super.key, this.onSubmit});
-  final Function(ReportType type, AnalyticsPeriod period, DateTime date)? onSubmit;
+  final Function(ReportType type, AnalyticsPeriod period, DateTime date)?
+      onSubmit;
 
   @override
   ConsumerState<ReportFormWidget> createState() => _ReportFormWidgetState();
@@ -482,22 +531,28 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
           children: [
             Text(
               'Создать отчет',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
 
             // Тип отчета
-            const Text('Тип отчета', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            const Text('Тип отчета',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             DropdownButtonFormField<ReportType>(
               initialValue: formState.selectedType,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: ReportType.values
                   .map(
-                    (type) => DropdownMenuItem(value: type, child: Text(_getReportTypeName(type))),
+                    (type) => DropdownMenuItem(
+                        value: type, child: Text(_getReportTypeName(type))),
                   )
                   .toList(),
               onChanged: (value) {
@@ -509,18 +564,20 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
             const SizedBox(height: 16),
 
             // Период
-            const Text('Период', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            const Text('Период',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             DropdownButtonFormField<AnalyticsPeriod>(
               initialValue: formState.selectedPeriod,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: AnalyticsPeriod.values
                   .map(
-                    (period) =>
-                        DropdownMenuItem(value: period, child: Text(_getPeriodName(period))),
+                    (period) => DropdownMenuItem(
+                        value: period, child: Text(_getPeriodName(period))),
                   )
                   .toList(),
               onChanged: (value) {
@@ -532,12 +589,14 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
             const SizedBox(height: 16),
 
             // Дата
-            const Text('Дата', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            const Text('Дата',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             InkWell(
               onTap: () => _selectDate(context),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(4),
@@ -615,7 +674,8 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
   /// Создать отчет
   void _createReport() {
     final formState = ref.read(reportFormProvider);
-    widget.onSubmit?.call(formState.selectedType, formState.selectedPeriod, formState.selectedDate);
+    widget.onSubmit?.call(formState.selectedType, formState.selectedPeriod,
+        formState.selectedDate);
   }
 
   /// Получить название типа отчета

@@ -3,12 +3,14 @@ import '../models/customer_profile_extended.dart';
 import '../services/customer_profile_extended_service.dart';
 
 /// Провайдер сервиса расширенного профиля
-final customerProfileExtendedServiceProvider = Provider<CustomerProfileExtendedService>(
+final customerProfileExtendedServiceProvider =
+    Provider<CustomerProfileExtendedService>(
   (ref) => CustomerProfileExtendedService(),
 );
 
 /// Провайдер расширенного профиля заказчика
-final customerProfileExtendedProvider = FutureProvider.family<CustomerProfileExtended?, String>((
+final customerProfileExtendedProvider =
+    FutureProvider.family<CustomerProfileExtended?, String>((
   ref,
   userId,
 ) async {
@@ -17,40 +19,49 @@ final customerProfileExtendedProvider = FutureProvider.family<CustomerProfileExt
 });
 
 /// Провайдер заметок заказчика
-final customerNotesProvider = FutureProvider.family<List<CustomerNote>, String>((
+final customerNotesProvider =
+    FutureProvider.family<List<CustomerNote>, String>((
   ref,
   userId,
 ) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.notes ?? [];
 });
 
 /// Провайдер фото для вдохновения
-final inspirationPhotosProvider = FutureProvider.family<List<InspirationPhoto>, String>((
+final inspirationPhotosProvider =
+    FutureProvider.family<List<InspirationPhoto>, String>((
   ref,
   userId,
 ) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.inspirationPhotos ?? [];
 });
 
 /// Провайдер избранных специалистов
-final favoriteSpecialistsProvider = FutureProvider.family<List<String>, String>((
+final favoriteSpecialistsProvider =
+    FutureProvider.family<List<String>, String>((
   ref,
   userId,
 ) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.favoriteSpecialists ?? [];
 });
 
 /// Провайдер сохранённых событий
-final savedEventsProvider = FutureProvider.family<List<String>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final savedEventsProvider =
+    FutureProvider.family<List<String>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.savedEvents ?? [];
 });
 
 /// Провайдер заметок по тегу
-final notesByTagProvider = FutureProvider.family<List<CustomerNote>, (String, String)>((
+final notesByTagProvider =
+    FutureProvider.family<List<CustomerNote>, (String, String)>((
   ref,
   params,
 ) async {
@@ -60,7 +71,8 @@ final notesByTagProvider = FutureProvider.family<List<CustomerNote>, (String, St
 });
 
 /// Провайдер фото по тегу
-final photosByTagProvider = FutureProvider.family<List<InspirationPhoto>, (String, String)>((
+final photosByTagProvider =
+    FutureProvider.family<List<InspirationPhoto>, (String, String)>((
   ref,
   params,
 ) async {
@@ -70,7 +82,8 @@ final photosByTagProvider = FutureProvider.family<List<InspirationPhoto>, (Strin
 });
 
 /// Провайдер поиска по заметкам
-final searchNotesProvider = FutureProvider.family<List<CustomerNote>, (String, String)>((
+final searchNotesProvider =
+    FutureProvider.family<List<CustomerNote>, (String, String)>((
   ref,
   params,
 ) async {
@@ -80,7 +93,8 @@ final searchNotesProvider = FutureProvider.family<List<CustomerNote>, (String, S
 });
 
 /// Провайдер поиска по фото
-final searchPhotosProvider = FutureProvider.family<List<InspirationPhoto>, (String, String)>((
+final searchPhotosProvider =
+    FutureProvider.family<List<InspirationPhoto>, (String, String)>((
   ref,
   params,
 ) async {
@@ -90,7 +104,8 @@ final searchPhotosProvider = FutureProvider.family<List<InspirationPhoto>, (Stri
 });
 
 /// Провайдер статистики профиля
-final customerProfileStatsProvider = FutureProvider.family<CustomerProfileStats, String>((
+final customerProfileStatsProvider =
+    FutureProvider.family<CustomerProfileStats, String>((
   ref,
   userId,
 ) async {
@@ -99,33 +114,43 @@ final customerProfileStatsProvider = FutureProvider.family<CustomerProfileStats,
 });
 
 /// Провайдер всех тегов пользователя
-final userTagsProvider = FutureProvider.family<List<String>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final userTagsProvider =
+    FutureProvider.family<List<String>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.allTags.toList() ?? <String>[];
 });
 
 /// Провайдер закреплённых заметок
-final pinnedNotesProvider = FutureProvider.family<List<CustomerNote>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final pinnedNotesProvider =
+    FutureProvider.family<List<CustomerNote>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.pinnedNotes ?? [];
 });
 
 /// Провайдер публичных фото
-final publicPhotosProvider = FutureProvider.family<List<InspirationPhoto>, String>((
+final publicPhotosProvider =
+    FutureProvider.family<List<InspirationPhoto>, String>((
   ref,
   userId,
 ) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.publicPhotos ?? [];
 });
 
 /// Провайдер предпочтений пользователя
-final customerPreferencesProvider = FutureProvider.family<CustomerPreferences?, String>((
+final customerPreferencesProvider =
+    FutureProvider.family<CustomerPreferences?, String>((
   ref,
   userId,
 ) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
-  return profile?.preferences != null ? CustomerPreferences.fromMap(profile!.preferences!) : null;
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
+  return profile?.preferences != null
+      ? CustomerPreferences.fromMap(profile!.preferences!)
+      : null;
 });
 
 /// Нотификатор для управления состоянием загрузки фото
@@ -143,7 +168,8 @@ class PhotoUploadStateNotifier extends Notifier<Map<String, bool>> {
 }
 
 /// Провайдер для управления состоянием загрузки фото
-final photoUploadStateProvider = NotifierProvider<PhotoUploadStateNotifier, Map<String, bool>>(
+final photoUploadStateProvider =
+    NotifierProvider<PhotoUploadStateNotifier, Map<String, bool>>(
   PhotoUploadStateNotifier.new,
 );
 
@@ -162,7 +188,8 @@ class NoteCreationStateNotifier extends Notifier<Map<String, bool>> {
 }
 
 /// Провайдер для управления состоянием создания заметок
-final noteCreationStateProvider = NotifierProvider<NoteCreationStateNotifier, Map<String, bool>>(
+final noteCreationStateProvider =
+    NotifierProvider<NoteCreationStateNotifier, Map<String, bool>>(
   NoteCreationStateNotifier.new,
 );
 
@@ -181,7 +208,8 @@ class SearchStateNotifier extends Notifier<Map<String, String>> {
 }
 
 /// Провайдер для управления состоянием поиска
-final searchStateProvider = NotifierProvider<SearchStateNotifier, Map<String, String>>(
+final searchStateProvider =
+    NotifierProvider<SearchStateNotifier, Map<String, String>>(
   SearchStateNotifier.new,
 );
 
@@ -204,7 +232,8 @@ class SelectedTagsNotifier extends Notifier<Set<String>> {
 }
 
 /// Провайдер для управления выбранными тегами
-final selectedTagsProvider = NotifierProvider<SelectedTagsNotifier, Set<String>>(
+final selectedTagsProvider =
+    NotifierProvider<SelectedTagsNotifier, Set<String>>(
   SelectedTagsNotifier.new,
 );
 
@@ -242,7 +271,8 @@ class PhotoFiltersNotifier extends Notifier<PhotoFilters> {
 }
 
 /// Провайдер для управления фильтрами фото
-final photoFiltersProvider = NotifierProvider<PhotoFiltersNotifier, PhotoFilters>(
+final photoFiltersProvider =
+    NotifierProvider<PhotoFiltersNotifier, PhotoFilters>(
   PhotoFiltersNotifier.new,
 );
 
@@ -276,16 +306,17 @@ class NoteFilters {
     DateTime? toDate,
     String? eventId,
     String? specialistId,
-  }) => NoteFilters(
-    searchQuery: searchQuery ?? this.searchQuery,
-    selectedTags: selectedTags ?? this.selectedTags,
-    showPinnedOnly: showPinnedOnly ?? this.showPinnedOnly,
-    showByDate: showByDate ?? this.showByDate,
-    fromDate: fromDate ?? this.fromDate,
-    toDate: toDate ?? this.toDate,
-    eventId: eventId ?? this.eventId,
-    specialistId: specialistId ?? this.specialistId,
-  );
+  }) =>
+      NoteFilters(
+        searchQuery: searchQuery ?? this.searchQuery,
+        selectedTags: selectedTags ?? this.selectedTags,
+        showPinnedOnly: showPinnedOnly ?? this.showPinnedOnly,
+        showByDate: showByDate ?? this.showByDate,
+        fromDate: fromDate ?? this.fromDate,
+        toDate: toDate ?? this.toDate,
+        eventId: eventId ?? this.eventId,
+        specialistId: specialistId ?? this.specialistId,
+      );
 }
 
 /// Фильтры для фото
@@ -312,12 +343,13 @@ class PhotoFilters {
     bool? showByDate,
     DateTime? fromDate,
     DateTime? toDate,
-  }) => PhotoFilters(
-    searchQuery: searchQuery ?? this.searchQuery,
-    selectedTags: selectedTags ?? this.selectedTags,
-    showPublicOnly: showPublicOnly ?? this.showPublicOnly,
-    showByDate: showByDate ?? this.showByDate,
-    fromDate: fromDate ?? this.fromDate,
-    toDate: toDate ?? this.toDate,
-  );
+  }) =>
+      PhotoFilters(
+        searchQuery: searchQuery ?? this.searchQuery,
+        selectedTags: selectedTags ?? this.selectedTags,
+        showPublicOnly: showPublicOnly ?? this.showPublicOnly,
+        showByDate: showByDate ?? this.showByDate,
+        fromDate: fromDate ?? this.fromDate,
+        toDate: toDate ?? this.toDate,
+      );
 }

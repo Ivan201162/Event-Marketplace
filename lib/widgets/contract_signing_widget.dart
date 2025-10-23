@@ -31,8 +31,10 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
             children: [
               Text(
                 'Подписание договора',
-                style:
-                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
 
@@ -57,7 +59,8 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.edit),
-                    label: Text(_isSigning ? 'Подписание...' : 'Подписать договор'),
+                    label: Text(
+                        _isSigning ? 'Подписание...' : 'Подписать договор'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).primaryColor,
                       foregroundColor: Colors.white,
@@ -88,12 +91,14 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
         ],
       );
 
-  Widget _buildSignatureRow(String label, bool isSigned, bool isCurrentUser) => Container(
+  Widget _buildSignatureRow(String label, bool isSigned, bool isCurrentUser) =>
+      Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSigned ? Colors.green.shade50 : Colors.orange.shade50,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSigned ? Colors.green.shade300 : Colors.orange.shade300),
+          border: Border.all(
+              color: isSigned ? Colors.green.shade300 : Colors.orange.shade300),
         ),
         child: Row(
           children: [
@@ -121,12 +126,17 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
                     label,
                     style: Theme.of(
                       context,
-                    ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
                     isSigned ? 'Подписан' : 'Ожидает подписи',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: isSigned ? Colors.green.shade700 : Colors.orange.shade700,
+                          color: isSigned
+                              ? Colors.green.shade700
+                              : Colors.orange.shade700,
                         ),
                   ),
                   if (isCurrentUser && !isSigned)
@@ -156,7 +166,8 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
             Icon(Icons.error_outline, color: Colors.red.shade600),
             const SizedBox(width: 8),
             Expanded(
-              child: Text(_errorMessage!, style: TextStyle(color: Colors.red.shade600)),
+              child: Text(_errorMessage!,
+                  style: TextStyle(color: Colors.red.shade600)),
             ),
           ],
         ),
@@ -181,7 +192,9 @@ class _ContractSigningWidgetState extends State<ContractSigningWidget> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Договор успешно подписан'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Договор успешно подписан'),
+              backgroundColor: Colors.green),
         );
 
         // Вызываем callback для обновления UI

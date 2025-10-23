@@ -7,7 +7,8 @@ import 'upload_media_dialog.dart';
 
 /// Виджет галереи специалиста
 class GalleryWidget extends ConsumerStatefulWidget {
-  const GalleryWidget({super.key, required this.specialistId, this.isOwner = false});
+  const GalleryWidget(
+      {super.key, required this.specialistId, this.isOwner = false});
 
   final String specialistId;
   final bool isOwner;
@@ -82,7 +83,10 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
           Expanded(
             child: Text(
               'Галерея',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
 
@@ -154,15 +158,20 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
           children: [
             Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки галереи', style: Theme.of(context).textTheme.titleMedium),
+            Text('Ошибка загрузки галереи',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
               _error!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadGallery, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadGallery, child: const Text('Повторить')),
           ],
         ),
       );
@@ -171,11 +180,15 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.photo_library_outlined, size: 64, color: Colors.grey[400]),
+            Icon(Icons.photo_library_outlined,
+                size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               _showFeaturedOnly ? 'Нет избранных работ' : 'Галерея пуста',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
@@ -184,7 +197,10 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
                   : widget.isOwner
                       ? 'Добавьте свои работы в галерею'
                       : 'Специалист еще не добавил работы в галерею',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             if (widget.isOwner && !_showFeaturedOnly) ...[
@@ -220,7 +236,8 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -229,7 +246,8 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить работу'),
-        content: const Text('Вы уверены, что хотите удалить эту работу из галереи?'),
+        content:
+            const Text('Вы уверены, что хотите удалить эту работу из галереи?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -248,12 +266,15 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
         await _galleryService.deleteGalleryItem(item.id);
         await _loadGallery();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Работа удалена из галереи'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Работа удалена из галереи'),
+              backgroundColor: Colors.green),
         );
       } catch (e) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(SnackBar(
+            content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -270,22 +291,28 @@ class _GalleryWidgetState extends ConsumerState<GalleryWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (item.description != null) ...[
-              const Text('Описание:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Описание:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               Text(item.description!),
               const SizedBox(height: 8),
             ],
             if (item.tags.isNotEmpty) ...[
-              const Text('Теги:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Теги:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               Wrap(
                 children: item.tags
-                    .map((tag) => Chip(label: Text(tag), labelStyle: const TextStyle(fontSize: 12)))
+                    .map((tag) => Chip(
+                        label: Text(tag),
+                        labelStyle: const TextStyle(fontSize: 12)))
                     .toList(),
               ),
             ],
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -365,7 +392,9 @@ class _MediaViewerScreenState extends State<MediaViewerScreen> {
                       fit: BoxFit.contain,
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
-                        return const Center(child: CircularProgressIndicator(color: Colors.white));
+                        return const Center(
+                            child:
+                                CircularProgressIndicator(color: Colors.white));
                       },
                     )
                   : const Center(

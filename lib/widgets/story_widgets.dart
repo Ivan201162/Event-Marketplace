@@ -10,7 +10,8 @@ import '../providers/story_providers.dart';
 
 /// Виджет для отображения сториса
 class StoryWidget extends ConsumerWidget {
-  const StoryWidget({super.key, required this.story, this.onTap, this.showProgress = true});
+  const StoryWidget(
+      {super.key, required this.story, this.onTap, this.showProgress = true});
   final Story story;
   final VoidCallback? onTap;
   final bool showProgress;
@@ -67,7 +68,8 @@ class StoryWidget extends ConsumerWidget {
                     const Positioned(
                       bottom: 4,
                       right: 4,
-                      child: Icon(Icons.play_circle_fill, color: Colors.white, size: 16),
+                      child: Icon(Icons.play_circle_fill,
+                          color: Colors.white, size: 16),
                     ),
                   ],
                 )
@@ -223,7 +225,9 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
       if (mounted) {
         final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${l10n.errorCreatingStory}: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('${l10n.errorCreatingStory}: $e'),
+              backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -258,7 +262,8 @@ class StoriesListWidget extends ConsumerWidget {
           final story = stories[index];
           return Padding(
             padding: const EdgeInsets.only(right: 12),
-            child: StoryWidget(story: story, onTap: () => onStoryTap?.call(story)),
+            child:
+                StoryWidget(story: story, onTap: () => onStoryTap?.call(story)),
           );
         },
       ),
@@ -308,16 +313,19 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                       fit: BoxFit.contain,
                       placeholder: (context, url) =>
                           const Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) =>
-                          const Center(child: Icon(Icons.error, color: Colors.white, size: 64)),
+                      errorWidget: (context, url, error) => const Center(
+                          child:
+                              Icon(Icons.error, color: Colors.white, size: 64)),
                     )
                   : widget.story.type == StoryType.video
                       ? const Center(
-                          child: Icon(Icons.play_circle_fill, color: Colors.white, size: 64))
+                          child: Icon(Icons.play_circle_fill,
+                              color: Colors.white, size: 64))
                       : Center(
                           child: Text(
                             widget.story.caption,
-                            style: const TextStyle(color: Colors.white, fontSize: 24),
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 24),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -330,7 +338,9 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
               right: 16,
               child: Row(
                 children: [
-                  CircleAvatar(backgroundImage: NetworkImage(widget.story.specialistPhotoUrl)),
+                  CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(widget.story.specialistPhotoUrl)),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -346,7 +356,8 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                         ),
                         Text(
                           _formatTimeAgo(widget.story.createdAt),
-                          style: const TextStyle(color: Colors.white70, fontSize: 12),
+                          style: const TextStyle(
+                              color: Colors.white70, fontSize: 12),
                         ),
                       ],
                     ),
@@ -387,12 +398,15 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                   IconButton(
                     onPressed: _likeStory,
                     icon: Icon(
-                      widget.story.likes > 0 ? Icons.favorite : Icons.favorite_border,
+                      widget.story.likes > 0
+                          ? Icons.favorite
+                          : Icons.favorite_border,
                       color: Colors.white,
                       size: 32,
                     ),
                   ),
-                  Text(widget.story.likes.toString(), style: const TextStyle(color: Colors.white)),
+                  Text(widget.story.likes.toString(),
+                      style: const TextStyle(color: Colors.white)),
                 ],
               ),
             ),
@@ -409,7 +423,8 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка лайка: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Ошибка лайка: $e')));
       }
     }
   }

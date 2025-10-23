@@ -12,7 +12,8 @@ final currentUserProvider = StreamProvider<User?>(
 );
 
 /// Провайдер для управления уведомлениями пользователя
-final userNotificationsProvider = StreamProvider<List<app_notification.AppNotification>>((ref) {
+final userNotificationsProvider =
+    StreamProvider<List<app_notification.AppNotification>>((ref) {
   final userAsync = ref.watch(currentUserProvider);
   return userAsync.when(
     data: (user) {
@@ -23,8 +24,9 @@ final userNotificationsProvider = StreamProvider<List<app_notification.AppNotifi
           .orderBy('createdAt', descending: true)
           .snapshots()
           .map(
-            (snapshot) =>
-                snapshot.docs.map(app_notification.AppNotification.fromFirestore).toList(),
+            (snapshot) => snapshot.docs
+                .map(app_notification.AppNotification.fromFirestore)
+                .toList(),
           );
     },
     loading: () => Stream.value([]),
@@ -51,7 +53,8 @@ final unreadNotificationsCountProvider = StreamProvider<int>((ref) {
 });
 
 /// Провайдер для управления уведомлениями (мигрирован с StateNotifier)
-class NotificationNotifier extends Notifier<AsyncValue<List<app_notification.AppNotification>>> {
+class NotificationNotifier
+    extends Notifier<AsyncValue<List<app_notification.AppNotification>>> {
   @override
   AsyncValue<List<app_notification.AppNotification>> build() {
     _loadNotifications();
@@ -71,11 +74,13 @@ class NotificationNotifier extends Notifier<AsyncValue<List<app_notification.App
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs.map(app_notification.AppNotification.fromFirestore).toList(),
+          (snapshot) => snapshot.docs
+              .map(app_notification.AppNotification.fromFirestore)
+              .toList(),
         )
         .listen((notifications) {
-          state = AsyncValue.data(notifications);
-        });
+      state = AsyncValue.data(notifications);
+    });
   }
 
   /// Отметить уведомление как прочитанное
@@ -136,10 +141,10 @@ class NotificationNotifier extends Notifier<AsyncValue<List<app_notification.App
   }
 }
 
-final notificationNotifierProvider =
-    NotifierProvider<NotificationNotifier, AsyncValue<List<app_notification.AppNotification>>>(
-      () => NotificationNotifier(),
-    );
+final notificationNotifierProvider = NotifierProvider<NotificationNotifier,
+    AsyncValue<List<app_notification.AppNotification>>>(
+  () => NotificationNotifier(),
+);
 
 /// Временный класс для совместимости с DocumentSnapshot
 class MockDocumentSnapshot implements DocumentSnapshot {

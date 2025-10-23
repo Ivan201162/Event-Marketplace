@@ -19,7 +19,8 @@ class FadeInWidget extends StatefulWidget {
   State<FadeInWidget> createState() => _FadeInWidgetState();
 }
 
-class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderStateMixin {
+class _FadeInWidgetState extends State<FadeInWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -47,7 +48,8 @@ class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderSt
   }
 
   @override
-  Widget build(BuildContext context) => FadeTransition(opacity: _animation, child: widget.child);
+  Widget build(BuildContext context) =>
+      FadeTransition(opacity: _animation, child: widget.child);
 }
 
 /// Виджет для анимированного появления снизу
@@ -71,7 +73,8 @@ class SlideInUpWidget extends StatefulWidget {
   State<SlideInUpWidget> createState() => _SlideInUpWidgetState();
 }
 
-class _SlideInUpWidgetState extends State<SlideInUpWidget> with SingleTickerProviderStateMixin {
+class _SlideInUpWidgetState extends State<SlideInUpWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
 
@@ -98,7 +101,8 @@ class _SlideInUpWidgetState extends State<SlideInUpWidget> with SingleTickerProv
   }
 
   @override
-  Widget build(BuildContext context) => SlideTransition(position: _animation, child: widget.child);
+  Widget build(BuildContext context) =>
+      SlideTransition(position: _animation, child: widget.child);
 }
 
 /// Виджет для анимированного масштабирования
@@ -122,7 +126,8 @@ class ScaleInWidget extends StatefulWidget {
   State<ScaleInWidget> createState() => _ScaleInWidgetState();
 }
 
-class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProviderStateMixin {
+class _ScaleInWidgetState extends State<ScaleInWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -149,7 +154,8 @@ class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => ScaleTransition(scale: _animation, child: widget.child);
+  Widget build(BuildContext context) =>
+      ScaleTransition(scale: _animation, child: widget.child);
 }
 
 /// Виджет для анимированного поворота
@@ -173,7 +179,8 @@ class RotateInWidget extends StatefulWidget {
   State<RotateInWidget> createState() => _RotateInWidgetState();
 }
 
-class _RotateInWidgetState extends State<RotateInWidget> with SingleTickerProviderStateMixin {
+class _RotateInWidgetState extends State<RotateInWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -200,7 +207,8 @@ class _RotateInWidgetState extends State<RotateInWidget> with SingleTickerProvid
   }
 
   @override
-  Widget build(BuildContext context) => RotationTransition(turns: _animation, child: widget.child);
+  Widget build(BuildContext context) =>
+      RotationTransition(turns: _animation, child: widget.child);
 }
 
 /// Виджет для анимированного списка
@@ -235,7 +243,8 @@ class _AnimatedListViewState extends State<AnimatedListView> {
             curve: widget.curve,
             child: SlideInUpWidget(
               duration: widget.duration,
-              delay: Duration(milliseconds: widget.delay.inMilliseconds * index),
+              delay:
+                  Duration(milliseconds: widget.delay.inMilliseconds * index),
               curve: widget.curve,
               child: child,
             ),
@@ -265,7 +274,8 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -375,7 +385,8 @@ class AnimatedLoadingIndicator extends StatefulWidget {
   final Duration duration;
 
   @override
-  State<AnimatedLoadingIndicator> createState() => _AnimatedLoadingIndicatorState();
+  State<AnimatedLoadingIndicator> createState() =>
+      _AnimatedLoadingIndicatorState();
 }
 
 class _AnimatedLoadingIndicatorState extends State<AnimatedLoadingIndicator>

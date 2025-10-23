@@ -45,8 +45,10 @@ class ChatAttachmentPicker extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 'Прикрепить файл',
-                style:
-                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
             ),
 
@@ -146,7 +148,8 @@ class ChatAttachmentPicker extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 label,
-                style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: color, fontSize: 10, fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -276,7 +279,8 @@ class ChatAttachmentPicker extends StatelessWidget {
   void _showErrorSnackBar(BuildContext context, String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 }
 
@@ -329,7 +333,8 @@ class FileUploadProgressWidget extends StatelessWidget {
             LinearProgressIndicator(
               value: progress,
               backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
             ),
             const SizedBox(height: 4),
             Text(

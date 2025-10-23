@@ -11,7 +11,8 @@ Future<void> main() async {
 
   try {
     // Инициализация Firebase
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
     print('✅ Firebase инициализирован');
 
     // Создаем генератор данных
@@ -25,7 +26,8 @@ Future<void> main() async {
     final specialists = await generator.generateSpecialists();
     final customers = await generator.generateCustomers();
     final bookings = await generator.generateBookings(customers, specialists);
-    final reviews = await generator.generateReviews(bookings, customers, specialists);
+    final reviews =
+        await generator.generateReviews(bookings, customers, specialists);
     final ideas = await generator.generateEventIdeas();
 
     print('\n📤 ЭТАП 2: Загрузка данных в Firestore');

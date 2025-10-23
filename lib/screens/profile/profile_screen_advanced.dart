@@ -16,7 +16,8 @@ class ProfileScreenAdvanced extends ConsumerStatefulWidget {
   const ProfileScreenAdvanced({super.key, required this.userId});
 
   @override
-  ConsumerState<ProfileScreenAdvanced> createState() => _ProfileScreenAdvancedState();
+  ConsumerState<ProfileScreenAdvanced> createState() =>
+      _ProfileScreenAdvancedState();
 }
 
 class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
@@ -143,7 +144,8 @@ class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
                       const PopupMenuItem(
                         value: 'account_security',
                         child: ListTile(
-                          leading: Icon(Icons.security, color: Color(0xFF1E3A8A)),
+                          leading:
+                              Icon(Icons.security, color: Color(0xFF1E3A8A)),
                           title: Text('Аккаунт и безопасность'),
                           contentPadding: EdgeInsets.zero,
                         ),
@@ -151,7 +153,8 @@ class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
                       const PopupMenuItem(
                         value: 'appearance',
                         child: ListTile(
-                          leading: Icon(Icons.palette, color: Color(0xFF1E3A8A)),
+                          leading:
+                              Icon(Icons.palette, color: Color(0xFF1E3A8A)),
                           title: Text('Внешний вид'),
                           contentPadding: EdgeInsets.zero,
                         ),
@@ -159,7 +162,8 @@ class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
                       const PopupMenuItem(
                         value: 'notifications',
                         child: ListTile(
-                          leading: Icon(Icons.notifications, color: Color(0xFF1E3A8A)),
+                          leading: Icon(Icons.notifications,
+                              color: Color(0xFF1E3A8A)),
                           title: Text('Уведомления'),
                           contentPadding: EdgeInsets.zero,
                         ),
@@ -167,7 +171,8 @@ class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
                       const PopupMenuItem(
                         value: 'privacy',
                         child: ListTile(
-                          leading: Icon(Icons.privacy_tip, color: Color(0xFF1E3A8A)),
+                          leading:
+                              Icon(Icons.privacy_tip, color: Color(0xFF1E3A8A)),
                           title: Text('Конфиденциальность'),
                           contentPadding: EdgeInsets.zero,
                         ),
@@ -175,7 +180,8 @@ class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
                       const PopupMenuItem(
                         value: 'professional',
                         child: ListTile(
-                          leading: Icon(Icons.business, color: Color(0xFF1E3A8A)),
+                          leading:
+                              Icon(Icons.business, color: Color(0xFF1E3A8A)),
                           title: Text('Профессиональный аккаунт'),
                           contentPadding: EdgeInsets.zero,
                         ),
@@ -183,7 +189,8 @@ class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
                       const PopupMenuItem(
                         value: 'monetization',
                         child: ListTile(
-                          leading: Icon(Icons.attach_money, color: Color(0xFF1E3A8A)),
+                          leading: Icon(Icons.attach_money,
+                              color: Color(0xFF1E3A8A)),
                           title: Text('Монетизация'),
                           contentPadding: EdgeInsets.zero,
                         ),
@@ -199,7 +206,8 @@ class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
                       const PopupMenuItem(
                         value: 'report',
                         child: ListTile(
-                          leading: Icon(Icons.bug_report, color: Color(0xFF1E3A8A)),
+                          leading:
+                              Icon(Icons.bug_report, color: Color(0xFF1E3A8A)),
                           title: Text('Сообщить о проблеме'),
                           contentPadding: EdgeInsets.zero,
                         ),
@@ -208,7 +216,8 @@ class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
                         value: 'logout',
                         child: ListTile(
                           leading: Icon(Icons.logout, color: Colors.red),
-                          title: Text('Выйти', style: TextStyle(color: Colors.red)),
+                          title: Text('Выйти',
+                              style: TextStyle(color: Colors.red)),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -253,10 +262,14 @@ class _ProfileScreenAdvancedState extends ConsumerState<ProfileScreenAdvanced>
                         isScrollable: true,
                         tabs: const [
                           Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
-                          Tab(icon: Icon(Icons.photo_library_outlined), text: 'Фото'),
+                          Tab(
+                              icon: Icon(Icons.photo_library_outlined),
+                              text: 'Фото'),
                           Tab(icon: Icon(Icons.movie_outlined), text: 'Видео'),
                           Tab(icon: Icon(Icons.star_outline), text: 'Отзывы'),
-                          Tab(icon: Icon(Icons.analytics_outlined), text: 'Аналитика'),
+                          Tab(
+                              icon: Icon(Icons.analytics_outlined),
+                              text: 'Аналитика'),
                         ],
                       ),
                       Expanded(
@@ -311,16 +324,18 @@ class _ProfileHeaderAdvanced extends ConsumerWidget {
         if (!snapshot.hasData) {
           return const Padding(
             padding: EdgeInsets.all(16),
-            child: Center(child: CircularProgressIndicator(color: Colors.white)),
+            child:
+                Center(child: CircularProgressIndicator(color: Colors.white)),
           );
         }
 
         final userData = snapshot.data!.data() as Map<String, dynamic>?;
-        final name = userData?['name'] ?? userData?['displayName'] ?? 'Пользователь';
+        final name =
+            userData?['name'] ?? userData?['displayName'] ?? 'Пользователь';
         final firstName = userData?['firstName'] ?? '';
         final lastName = userData?['lastName'] ?? '';
-        final fullName = firstName.isNotEmpty && lastName.isNotEmpty 
-            ? '$firstName $lastName' 
+        final fullName = firstName.isNotEmpty && lastName.isNotEmpty
+            ? '$firstName $lastName'
             : name;
         final city = userData?['city'] ?? 'Город не указан';
         final bio = userData?['bio'] ?? '';
@@ -380,9 +395,12 @@ class _ProfileHeaderAdvanced extends ConsumerWidget {
                         child: CircleAvatar(
                           radius: 50,
                           backgroundColor: Colors.white,
-                          backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
+                          backgroundImage: avatarUrl != null
+                              ? NetworkImage(avatarUrl)
+                              : null,
                           child: avatarUrl == null
-                              ? const Icon(Icons.person, color: Colors.grey, size: 50)
+                              ? const Icon(Icons.person,
+                                  color: Colors.grey, size: 50)
                               : null,
                         ),
                       ),
@@ -434,13 +452,15 @@ class _ProfileHeaderAdvanced extends ConsumerWidget {
                                   ),
                                 ),
                                 if (isVerified)
-                                  const Icon(Icons.verified, color: Colors.blue, size: 24),
+                                  const Icon(Icons.verified,
+                                      color: Colors.blue, size: 24),
                               ],
                             ),
                             if (isProAccount && proCategory.isNotEmpty) ...[
                               const SizedBox(height: 4),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Colors.orange.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(16),
@@ -459,16 +479,19 @@ class _ProfileHeaderAdvanced extends ConsumerWidget {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                Icon(Icons.location_on, color: Colors.white70, size: 16),
+                                Icon(Icons.location_on,
+                                    color: Colors.white70, size: 16),
                                 const SizedBox(width: 4),
                                 Text(
                                   city,
-                                  style: const TextStyle(color: Colors.white70, fontSize: 16),
+                                  style: const TextStyle(
+                                      color: Colors.white70, fontSize: 16),
                                 ),
                                 if (isOnline) ...[
                                   const SizedBox(width: 8),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: Colors.green,
                                       borderRadius: BorderRadius.circular(12),
@@ -489,7 +512,8 @@ class _ProfileHeaderAdvanced extends ConsumerWidget {
                               const SizedBox(height: 8),
                               Text(
                                 bio,
-                                style: const TextStyle(color: Colors.white70, fontSize: 16),
+                                style: const TextStyle(
+                                    color: Colors.white70, fontSize: 16),
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -500,7 +524,9 @@ class _ProfileHeaderAdvanced extends ConsumerWidget {
                                 children: [
                                   ...List.generate(5, (index) {
                                     return Icon(
-                                      index < rating ? Icons.star : Icons.star_border,
+                                      index < rating
+                                          ? Icons.star
+                                          : Icons.star_border,
                                       color: Colors.amber,
                                       size: 16,
                                     );
@@ -529,8 +555,11 @@ class _ProfileHeaderAdvanced extends ConsumerWidget {
                   Row(
                     children: [
                       _StatItem(label: 'Посты', value: postsCount.toString()),
-                      _StatItem(label: 'Подписчики', value: followersCount.toString()),
-                      _StatItem(label: 'Подписки', value: followingCount.toString()),
+                      _StatItem(
+                          label: 'Подписчики',
+                          value: followersCount.toString()),
+                      _StatItem(
+                          label: 'Подписки', value: followingCount.toString()),
                     ],
                   ),
 
@@ -566,13 +595,19 @@ class _ProfileHeaderAdvanced extends ConsumerWidget {
                           child: ElevatedButton.icon(
                             onPressed: onFollowToggle,
                             icon: Icon(
-                              isFollowing ? Icons.person_remove : Icons.person_add_alt_1,
+                              isFollowing
+                                  ? Icons.person_remove
+                                  : Icons.person_add_alt_1,
                               size: 18,
                             ),
-                            label: Text(isFollowing ? 'Отписаться' : 'Подписаться'),
+                            label: Text(
+                                isFollowing ? 'Отписаться' : 'Подписаться'),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: isFollowing ? Colors.grey : Colors.white,
-                              foregroundColor: isFollowing ? Colors.white : const Color(0xFF1E3A8A),
+                              backgroundColor:
+                                  isFollowing ? Colors.grey : Colors.white,
+                              foregroundColor: isFollowing
+                                  ? Colors.white
+                                  : const Color(0xFF1E3A8A),
                               elevation: 0,
                             ),
                           ),

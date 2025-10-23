@@ -9,7 +9,8 @@ void main() {
   group('Authentication Flow Integration Tests', () {
     testWidgets('Guest login flow', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -33,7 +34,8 @@ void main() {
 
     testWidgets('Email registration flow', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -66,7 +68,8 @@ void main() {
 
     testWidgets('Email login flow', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -99,7 +102,8 @@ void main() {
 
     testWidgets('Phone authentication flow', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -127,7 +131,8 @@ void main() {
 
     testWidgets('Google sign-in flow', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -150,7 +155,8 @@ void main() {
 
     testWidgets('Form validation', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 
@@ -172,7 +178,8 @@ void main() {
 
     testWidgets('Password visibility toggle', (tester) async {
       // Запускаем приложение
-      await tester.pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
+      await tester
+          .pumpWidget(const ProviderScope(child: EventMarketplaceApp()));
 
       await tester.pumpAndSettle();
 

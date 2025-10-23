@@ -27,7 +27,8 @@ class PaymentCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(payment.status).withValues(alpha: 0.1),
+                      color: _getStatusColor(payment.status)
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -45,14 +46,20 @@ class PaymentCard extends StatelessWidget {
                           payment.description ?? 'Платеж',
                           style: Theme.of(
                             context,
-                          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                          )
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           payment.type.displayName,
                           style: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                          )
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -69,9 +76,11 @@ class PaymentCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(payment.status).withValues(alpha: 0.1),
+                          color: _getStatusColor(payment.status)
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -95,14 +104,20 @@ class PaymentCard extends StatelessWidget {
                   const SizedBox(width: 4),
                   Text(
                     payment.method.displayName,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.grey[600]),
                   ),
                   const Spacer(),
                   Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text(
                     _formatDateTime(payment.createdAt),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -167,12 +182,14 @@ class PaymentCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.error_outline, size: 16, color: Colors.red[700]),
+                      Icon(Icons.error_outline,
+                          size: 16, color: Colors.red[700]),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           payment.failureReason!,
-                          style: TextStyle(color: Colors.red[700], fontSize: 12),
+                          style:
+                              TextStyle(color: Colors.red[700], fontSize: 12),
                         ),
                       ),
                     ],

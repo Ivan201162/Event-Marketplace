@@ -35,7 +35,8 @@ class MessageBubbleWidget extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
           child: Row(
-            mainAxisAlignment: isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment:
+                isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (!isCurrentUser && showAvatar) ...[
@@ -48,8 +49,9 @@ class MessageBubbleWidget extends StatelessWidget {
               ],
               Flexible(
                 child: Column(
-                  crossAxisAlignment:
-                      isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                  crossAxisAlignment: isCurrentUser
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
                   children: [
                     // Ответ на сообщение
                     if (message.replyTo != null) ...[
@@ -104,7 +106,10 @@ class MessageBubbleWidget extends StatelessWidget {
           children: [
             Text(
               'Ответ на сообщение',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey[600]),
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600]),
             ),
             const SizedBox(height: 2),
             Text(
@@ -119,7 +124,8 @@ class MessageBubbleWidget extends StatelessWidget {
 
   Widget _buildForwardHeader() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -127,20 +133,28 @@ class MessageBubbleWidget extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               'Пересланное сообщение',
-              style: TextStyle(fontSize: 10, color: Colors.blue[700], fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.blue[700],
+                  fontWeight: FontWeight.bold),
             ),
           ],
         ),
       );
 
   Widget _buildMessageContent(BuildContext context) => Container(
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isCurrentUser ? Colors.blue : Colors.grey[200],
           borderRadius: BorderRadius.circular(18).copyWith(
-            bottomLeft: isCurrentUser ? const Radius.circular(18) : const Radius.circular(4),
-            bottomRight: isCurrentUser ? const Radius.circular(4) : const Radius.circular(18),
+            bottomLeft: isCurrentUser
+                ? const Radius.circular(18)
+                : const Radius.circular(4),
+            bottomRight: isCurrentUser
+                ? const Radius.circular(4)
+                : const Radius.circular(18),
           ),
         ),
         child: Column(
@@ -150,8 +164,9 @@ class MessageBubbleWidget extends StatelessWidget {
             if (message.text.isNotEmpty) ...[
               Text(
                 message.text,
-                style:
-                    TextStyle(color: isCurrentUser ? Colors.white : Colors.black87, fontSize: 14),
+                style: TextStyle(
+                    color: isCurrentUser ? Colors.white : Colors.black87,
+                    fontSize: 14),
               ),
               if (message.attachments.isNotEmpty) const SizedBox(height: 8),
             ],
@@ -208,7 +223,8 @@ class MessageBubbleWidget extends StatelessWidget {
   Widget _buildVideoAttachment(MessageAttachment attachment) => Container(
         width: 200,
         height: 150,
-        decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.black, borderRadius: BorderRadius.circular(8)),
         child: Stack(
           children: [
             if (attachment.thumbnailUrl != null)
@@ -221,13 +237,16 @@ class MessageBubbleWidget extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-            const Center(child: Icon(Icons.play_circle_outline, color: Colors.white, size: 48)),
+            const Center(
+                child: Icon(Icons.play_circle_outline,
+                    color: Colors.white, size: 48)),
             if (attachment.duration != null)
               Positioned(
                 bottom: 8,
                 right: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(4),
@@ -245,11 +264,14 @@ class MessageBubbleWidget extends StatelessWidget {
   Widget _buildAudioAttachment(MessageAttachment attachment) => Container(
         width: 200,
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
         child: Row(
           children: [
             Icon(
-              attachment.type == MessageAttachmentType.voice ? Icons.mic : Icons.audiotrack,
+              attachment.type == MessageAttachmentType.voice
+                  ? Icons.mic
+                  : Icons.audiotrack,
               color: Colors.grey[600],
             ),
             const SizedBox(width: 8),
@@ -259,7 +281,8 @@ class MessageBubbleWidget extends StatelessWidget {
                 children: [
                   Text(
                     attachment.name,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w500),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -279,7 +302,8 @@ class MessageBubbleWidget extends StatelessWidget {
   Widget _buildDocumentAttachment(MessageAttachment attachment) => Container(
         width: 200,
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
         child: Row(
           children: [
             const Icon(Icons.description, color: Colors.grey),
@@ -290,7 +314,8 @@ class MessageBubbleWidget extends StatelessWidget {
                 children: [
                   Text(
                     attachment.name,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w500),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -313,8 +338,9 @@ class MessageBubbleWidget extends StatelessWidget {
         child: Image.network(
           attachment.url,
           fit: BoxFit.contain,
-          errorBuilder: (context, error, stackTrace) =>
-              Container(color: Colors.grey[300], child: const Icon(Icons.emoji_emotions, size: 48)),
+          errorBuilder: (context, error, stackTrace) => Container(
+              color: Colors.grey[300],
+              child: const Icon(Icons.emoji_emotions, size: 48)),
         ),
       );
 
@@ -328,7 +354,8 @@ class MessageBubbleWidget extends StatelessWidget {
           // Статус сообщения (только для текущего пользователя)
           if (isCurrentUser) ...[
             const SizedBox(width: 4),
-            Icon(_getStatusIcon(message.status), size: 12, color: _getStatusColor(message.status)),
+            Icon(_getStatusIcon(message.status),
+                size: 12, color: _getStatusColor(message.status)),
           ],
 
           // Индикатор редактирования
@@ -336,7 +363,10 @@ class MessageBubbleWidget extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               'ред.',
-              style: TextStyle(fontSize: 10, color: Colors.grey[600], fontStyle: FontStyle.italic),
+              style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey[600],
+                  fontStyle: FontStyle.italic),
             ),
           ],
         ],

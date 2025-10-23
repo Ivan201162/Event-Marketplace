@@ -63,8 +63,10 @@ class _FAQWidgetState extends State<FAQWidget> {
 
     setState(() {
       _filteredItems = _faqItems.where((item) {
-        final titleMatch = item.title.toLowerCase().contains(query.toLowerCase());
-        final contentMatch = item.content.toLowerCase().contains(query.toLowerCase());
+        final titleMatch =
+            item.title.toLowerCase().contains(query.toLowerCase());
+        final contentMatch =
+            item.content.toLowerCase().contains(query.toLowerCase());
         return titleMatch || contentMatch;
       }).toList();
     });
@@ -86,7 +88,8 @@ class _FAQWidgetState extends State<FAQWidget> {
             hintText: 'Поиск в FAQ...',
             prefixIcon: const Icon(Icons.search),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
           onChanged: _searchFAQ,
         ),
@@ -110,7 +113,8 @@ class _FAQWidgetState extends State<FAQWidget> {
       itemCount: _filteredItems.length,
       itemBuilder: (context, index) {
         final item = _filteredItems[index];
-        return _FAQItemCard(item: item, onTap: () => widget.onItemTap?.call(item));
+        return _FAQItemCard(
+            item: item, onTap: () => widget.onItemTap?.call(item));
       },
     );
   }
@@ -160,11 +164,15 @@ class _EmptyWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(isSearching ? Icons.search_off : Icons.help_outline, size: 64, color: Colors.grey),
+            Icon(isSearching ? Icons.search_off : Icons.help_outline,
+                size: 64, color: Colors.grey),
             const SizedBox(height: 16),
             Text(
               isSearching ? 'Ничего не найдено' : 'FAQ пуст',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey),
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey),
             ),
             const SizedBox(height: 8),
             Text(
@@ -204,7 +212,8 @@ class _FAQItemCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           item.title,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
                       const Icon(Icons.chevron_right, color: Colors.grey),
@@ -213,7 +222,8 @@ class _FAQItemCard extends StatelessWidget {
                   if (item.category.isNotEmpty) ...[
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.blue.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -256,30 +266,38 @@ class FAQDetailWidget extends StatelessWidget {
             children: [
               if (item.category.isNotEmpty) ...[
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
                     item.category,
-                    style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 16),
               ],
-              Text(item.title, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              Text(item.title,
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              Text(item.content, style: const TextStyle(fontSize: 16, height: 1.5)),
+              Text(item.content,
+                  style: const TextStyle(fontSize: 16, height: 1.5)),
               if (item.tags.isNotEmpty) ...[
                 const SizedBox(height: 24),
-                const Text('Теги:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const Text('Теги:',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
                   children: item.tags
-                      .map((tag) => Chip(label: Text(tag), backgroundColor: Colors.grey[200]))
+                      .map((tag) => Chip(
+                          label: Text(tag), backgroundColor: Colors.grey[200]))
                       .toList(),
                 ),
               ],

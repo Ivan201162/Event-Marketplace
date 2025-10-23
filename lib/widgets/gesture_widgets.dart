@@ -24,7 +24,8 @@ class SwipeableWidget extends StatefulWidget {
   State<SwipeableWidget> createState() => _SwipeableWidgetState();
 }
 
-class _SwipeableWidgetState extends State<SwipeableWidget> with SingleTickerProviderStateMixin {
+class _SwipeableWidgetState extends State<SwipeableWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
   double _dragExtent = 0;
@@ -33,7 +34,8 @@ class _SwipeableWidgetState extends State<SwipeableWidget> with SingleTickerProv
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 200), vsync: this);
     _animation = Tween<Offset>(
       begin: Offset.zero,
       end: const Offset(1, 0),
@@ -80,8 +82,8 @@ class _SwipeableWidgetState extends State<SwipeableWidget> with SingleTickerProv
             // Основной контент
             AnimatedBuilder(
               animation: _animation,
-              builder: (context, child) =>
-                  Transform.translate(offset: Offset(_dragExtent, 0), child: widget.child),
+              builder: (context, child) => Transform.translate(
+                  offset: Offset(_dragExtent, 0), child: widget.child),
             ),
           ],
         ),
@@ -167,7 +169,8 @@ class LongPressWidget extends StatefulWidget {
   State<LongPressWidget> createState() => _LongPressWidgetState();
 }
 
-class _LongPressWidgetState extends State<LongPressWidget> with SingleTickerProviderStateMixin {
+class _LongPressWidgetState extends State<LongPressWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isLongPressing = false;
@@ -195,8 +198,8 @@ class _LongPressWidgetState extends State<LongPressWidget> with SingleTickerProv
         onTapCancel: _onTapCancel,
         child: AnimatedBuilder(
           animation: _scaleAnimation,
-          builder: (context, child) =>
-              Transform.scale(scale: _scaleAnimation.value, child: widget.child),
+          builder: (context, child) => Transform.scale(
+              scale: _scaleAnimation.value, child: widget.child),
         ),
       );
 
@@ -274,9 +277,11 @@ class _PinchZoomWidgetState extends State<PinchZoomWidget> {
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
     setState(() {
-      _scale = (_previousScale * details.scale).clamp(widget.minScale, widget.maxScale);
+      _scale = (_previousScale * details.scale)
+          .clamp(widget.minScale, widget.maxScale);
 
-      final newOffset = _previousOffset + details.focalPoint - details.localFocalPoint;
+      final newOffset =
+          _previousOffset + details.focalPoint - details.localFocalPoint;
       _offset = newOffset;
     });
   }
@@ -315,7 +320,8 @@ class _DoubleTapWidgetState extends State<DoubleTapWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(onTap: _onTap, child: widget.child);
+  Widget build(BuildContext context) =>
+      GestureDetector(onTap: _onTap, child: widget.child);
 
   void _onTap() {
     _tapCount++;
@@ -382,7 +388,9 @@ class _DraggableWidgetState extends State<DraggableWidget> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        transform: _isDragging ? (Matrix4.identity()..scale(1.05)) : Matrix4.identity(),
+        transform: _isDragging
+            ? (Matrix4.identity()..scale(1.05))
+            : Matrix4.identity(),
         child: widget.child,
       ),
     );

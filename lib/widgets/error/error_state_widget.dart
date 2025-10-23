@@ -46,18 +46,20 @@ class ErrorStateWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               title,
-              style: titleStyle ?? theme.textTheme.headlineSmall?.copyWith(
-                color: defaultIconColor,
-                fontWeight: FontWeight.bold,
-              ),
+              style: titleStyle ??
+                  theme.textTheme.headlineSmall?.copyWith(
+                    color: defaultIconColor,
+                    fontWeight: FontWeight.bold,
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               error,
-              style: messageStyle ?? theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: messageStyle ??
+                  theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey[600],
+                  ),
               textAlign: TextAlign.center,
             ),
             if (onRetry != null) ...[
@@ -123,18 +125,20 @@ class EmptyStateWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               title,
-              style: titleStyle ?? theme.textTheme.headlineSmall?.copyWith(
-                color: Colors.grey[600],
-                fontWeight: FontWeight.bold,
-              ),
+              style: titleStyle ??
+                  theme.textTheme.headlineSmall?.copyWith(
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               message,
-              style: messageStyle ?? theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[500],
-              ),
+              style: messageStyle ??
+                  theme.textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey[500],
+                  ),
               textAlign: TextAlign.center,
             ),
             if (action != null) ...[

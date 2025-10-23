@@ -26,27 +26,29 @@ class KPIMetric {
   });
 
   factory KPIMetric.fromMap(Map<String, dynamic> map) => KPIMetric(
-    id: map['id'] as String? ?? '',
-    name: map['name'] as String? ?? '',
-    description: map['description'] as String? ?? '',
-    type: MetricType.fromString(map['type'] ?? 'counter'),
-    category: MetricCategory.fromString(map['category'] ?? 'business'),
-    unit: map['unit'] ?? '',
-    value: (map['value'] ?? 0.0).toDouble(),
-    target: map['target']?.toDouble(),
-    previousValue: map['previousValue']?.toDouble(),
-    change: map['change']?.toDouble(),
-    changePercentage: map['changePercentage']?.toDouble(),
-    status: MetricStatus.fromString(map['status'] ?? 'normal'),
-    timestamp: (map['timestamp'] as Timestamp).toDate(),
-    lastUpdated: map['lastUpdated'] != null ? (map['lastUpdated'] as Timestamp).toDate() : null,
-    dataSource: map['dataSource'],
-    metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-    tags: List<String>.from(map['tags'] ?? []),
-    isActive: map['isActive'] ?? true,
-    createdBy: map['createdBy'] ?? '',
-    updatedBy: map['updatedBy'] ?? '',
-  );
+        id: map['id'] as String? ?? '',
+        name: map['name'] as String? ?? '',
+        description: map['description'] as String? ?? '',
+        type: MetricType.fromString(map['type'] ?? 'counter'),
+        category: MetricCategory.fromString(map['category'] ?? 'business'),
+        unit: map['unit'] ?? '',
+        value: (map['value'] ?? 0.0).toDouble(),
+        target: map['target']?.toDouble(),
+        previousValue: map['previousValue']?.toDouble(),
+        change: map['change']?.toDouble(),
+        changePercentage: map['changePercentage']?.toDouble(),
+        status: MetricStatus.fromString(map['status'] ?? 'normal'),
+        timestamp: (map['timestamp'] as Timestamp).toDate(),
+        lastUpdated: map['lastUpdated'] != null
+            ? (map['lastUpdated'] as Timestamp).toDate()
+            : null,
+        dataSource: map['dataSource'],
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+        tags: List<String>.from(map['tags'] ?? []),
+        isActive: map['isActive'] ?? true,
+        createdBy: map['createdBy'] ?? '',
+        updatedBy: map['updatedBy'] ?? '',
+      );
   final String id;
   final String name;
   final String description;
@@ -69,27 +71,28 @@ class KPIMetric {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'description': description,
-    'type': type.value,
-    'category': category.value,
-    'unit': unit,
-    'value': value,
-    'target': target,
-    'previousValue': previousValue,
-    'change': change,
-    'changePercentage': changePercentage,
-    'status': status.value,
-    'timestamp': Timestamp.fromDate(timestamp),
-    'lastUpdated': lastUpdated != null ? Timestamp.fromDate(lastUpdated!) : null,
-    'dataSource': dataSource,
-    'metadata': metadata,
-    'tags': tags,
-    'isActive': isActive,
-    'createdBy': createdBy,
-    'updatedBy': updatedBy,
-  };
+        'id': id,
+        'name': name,
+        'description': description,
+        'type': type.value,
+        'category': category.value,
+        'unit': unit,
+        'value': value,
+        'target': target,
+        'previousValue': previousValue,
+        'change': change,
+        'changePercentage': changePercentage,
+        'status': status.value,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'lastUpdated':
+            lastUpdated != null ? Timestamp.fromDate(lastUpdated!) : null,
+        'dataSource': dataSource,
+        'metadata': metadata,
+        'tags': tags,
+        'isActive': isActive,
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   KPIMetric copyWith({
     String? id,
@@ -112,31 +115,33 @@ class KPIMetric {
     bool? isActive,
     String? createdBy,
     String? updatedBy,
-  }) => KPIMetric(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    type: type ?? this.type,
-    category: category ?? this.category,
-    unit: unit ?? this.unit,
-    value: value ?? this.value,
-    target: target ?? this.target,
-    previousValue: previousValue ?? this.previousValue,
-    change: change ?? this.change,
-    changePercentage: changePercentage ?? this.changePercentage,
-    status: status ?? this.status,
-    timestamp: timestamp ?? this.timestamp,
-    lastUpdated: lastUpdated ?? this.lastUpdated,
-    dataSource: dataSource ?? this.dataSource,
-    metadata: metadata ?? this.metadata,
-    tags: tags ?? this.tags,
-    isActive: isActive ?? this.isActive,
-    createdBy: createdBy ?? this.createdBy,
-    updatedBy: updatedBy ?? this.updatedBy,
-  );
+  }) =>
+      KPIMetric(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        type: type ?? this.type,
+        category: category ?? this.category,
+        unit: unit ?? this.unit,
+        value: value ?? this.value,
+        target: target ?? this.target,
+        previousValue: previousValue ?? this.previousValue,
+        change: change ?? this.change,
+        changePercentage: changePercentage ?? this.changePercentage,
+        status: status ?? this.status,
+        timestamp: timestamp ?? this.timestamp,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+        dataSource: dataSource ?? this.dataSource,
+        metadata: metadata ?? this.metadata,
+        tags: tags ?? this.tags,
+        isActive: isActive ?? this.isActive,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
-  String toString() => 'KPIMetric(id: $id, name: $name, value: $value, status: $status)';
+  String toString() =>
+      'KPIMetric(id: $id, name: $name, value: $value, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -168,7 +173,8 @@ enum MetricType {
   final String displayName;
 
   static MetricType fromString(String value) =>
-      MetricType.values.firstWhere((type) => type.value == value, orElse: () => MetricType.counter);
+      MetricType.values.firstWhere((type) => type.value == value,
+          orElse: () => MetricType.counter);
 
   String get icon {
     switch (this) {
@@ -243,10 +249,11 @@ enum MetricCategory {
   final String value;
   final String displayName;
 
-  static MetricCategory fromString(String value) => MetricCategory.values.firstWhere(
-    (category) => category.value == value,
-    orElse: () => MetricCategory.business,
-  );
+  static MetricCategory fromString(String value) =>
+      MetricCategory.values.firstWhere(
+        (category) => category.value == value,
+        orElse: () => MetricCategory.business,
+      );
 
   String get icon {
     switch (this) {
@@ -312,10 +319,11 @@ enum MetricStatus {
   final String value;
   final String displayName;
 
-  static MetricStatus fromString(String value) => MetricStatus.values.firstWhere(
-    (status) => status.value == value,
-    orElse: () => MetricStatus.normal,
-  );
+  static MetricStatus fromString(String value) =>
+      MetricStatus.values.firstWhere(
+        (status) => status.value == value,
+        orElse: () => MetricStatus.normal,
+      );
 
   String get icon {
     switch (this) {
@@ -367,20 +375,20 @@ class KPIDashboard {
   });
 
   factory KPIDashboard.fromMap(Map<String, dynamic> map) => KPIDashboard(
-    id: map['id'] ?? '',
-    name: map['name'] ?? '',
-    description: map['description'] ?? '',
-    metricIds: List<String>.from(map['metricIds'] ?? []),
-    layout: DashboardLayout.fromString(map['layout'] ?? 'grid'),
-    tags: List<String>.from(map['tags'] ?? []),
-    isPublic: map['isPublic'] ?? false,
-    isDefault: map['isDefault'] ?? false,
-    settings: Map<String, dynamic>.from(map['settings'] ?? {}),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    createdBy: map['createdBy'] ?? '',
-    updatedBy: map['updatedBy'] ?? '',
-  );
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        description: map['description'] ?? '',
+        metricIds: List<String>.from(map['metricIds'] ?? []),
+        layout: DashboardLayout.fromString(map['layout'] ?? 'grid'),
+        tags: List<String>.from(map['tags'] ?? []),
+        isPublic: map['isPublic'] ?? false,
+        isDefault: map['isDefault'] ?? false,
+        settings: Map<String, dynamic>.from(map['settings'] ?? {}),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] ?? '',
+        updatedBy: map['updatedBy'] ?? '',
+      );
   final String id;
   final String name;
   final String description;
@@ -396,20 +404,20 @@ class KPIDashboard {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'description': description,
-    'metricIds': metricIds,
-    'layout': layout.value,
-    'tags': tags,
-    'isPublic': isPublic,
-    'isDefault': isDefault,
-    'settings': settings,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'createdBy': createdBy,
-    'updatedBy': updatedBy,
-  };
+        'id': id,
+        'name': name,
+        'description': description,
+        'metricIds': metricIds,
+        'layout': layout.value,
+        'tags': tags,
+        'isPublic': isPublic,
+        'isDefault': isDefault,
+        'settings': settings,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   KPIDashboard copyWith({
     String? id,
@@ -425,24 +433,26 @@ class KPIDashboard {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) => KPIDashboard(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    metricIds: metricIds ?? this.metricIds,
-    layout: layout ?? this.layout,
-    tags: tags ?? this.tags,
-    isPublic: isPublic ?? this.isPublic,
-    isDefault: isDefault ?? this.isDefault,
-    settings: settings ?? this.settings,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    createdBy: createdBy ?? this.createdBy,
-    updatedBy: updatedBy ?? this.updatedBy,
-  );
+  }) =>
+      KPIDashboard(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        metricIds: metricIds ?? this.metricIds,
+        layout: layout ?? this.layout,
+        tags: tags ?? this.tags,
+        isPublic: isPublic ?? this.isPublic,
+        isDefault: isDefault ?? this.isDefault,
+        settings: settings ?? this.settings,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
-  String toString() => 'KPIDashboard(id: $id, name: $name, metricIds: ${metricIds.length})';
+  String toString() =>
+      'KPIDashboard(id: $id, name: $name, metricIds: ${metricIds.length})';
 
   @override
   bool operator ==(Object other) {
@@ -467,10 +477,11 @@ enum DashboardLayout {
   final String value;
   final String displayName;
 
-  static DashboardLayout fromString(String value) => DashboardLayout.values.firstWhere(
-    (layout) => layout.value == value,
-    orElse: () => DashboardLayout.grid,
-  );
+  static DashboardLayout fromString(String value) =>
+      DashboardLayout.values.firstWhere(
+        (layout) => layout.value == value,
+        orElse: () => DashboardLayout.grid,
+      );
 
   String get icon {
     switch (this) {
@@ -511,24 +522,24 @@ class KPIReport {
   });
 
   factory KPIReport.fromMap(Map<String, dynamic> map) => KPIReport(
-    id: map['id'] ?? '',
-    name: map['name'] ?? '',
-    description: map['description'] ?? '',
-    type: ReportType.fromString(map['type'] ?? 'summary'),
-    metricIds: List<String>.from(map['metricIds'] ?? []),
-    dashboardIds: List<String>.from(map['dashboardIds'] ?? []),
-    startDate: (map['startDate'] as Timestamp).toDate(),
-    endDate: (map['endDate'] as Timestamp).toDate(),
-    template: map['template'],
-    filters: Map<String, dynamic>.from(map['filters'] ?? {}),
-    settings: Map<String, dynamic>.from(map['settings'] ?? {}),
-    status: ReportStatus.fromString(map['status'] ?? 'draft'),
-    fileUrl: map['fileUrl'],
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    createdBy: map['createdBy'] ?? '',
-    updatedBy: map['updatedBy'] ?? '',
-  );
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        description: map['description'] ?? '',
+        type: ReportType.fromString(map['type'] ?? 'summary'),
+        metricIds: List<String>.from(map['metricIds'] ?? []),
+        dashboardIds: List<String>.from(map['dashboardIds'] ?? []),
+        startDate: (map['startDate'] as Timestamp).toDate(),
+        endDate: (map['endDate'] as Timestamp).toDate(),
+        template: map['template'],
+        filters: Map<String, dynamic>.from(map['filters'] ?? {}),
+        settings: Map<String, dynamic>.from(map['settings'] ?? {}),
+        status: ReportStatus.fromString(map['status'] ?? 'draft'),
+        fileUrl: map['fileUrl'],
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] ?? '',
+        updatedBy: map['updatedBy'] ?? '',
+      );
   final String id;
   final String name;
   final String description;
@@ -548,24 +559,24 @@ class KPIReport {
   final String updatedBy;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'description': description,
-    'type': type.value,
-    'metricIds': metricIds,
-    'dashboardIds': dashboardIds,
-    'startDate': Timestamp.fromDate(startDate),
-    'endDate': Timestamp.fromDate(endDate),
-    'template': template,
-    'filters': filters,
-    'settings': settings,
-    'status': status.value,
-    'fileUrl': fileUrl,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'createdBy': createdBy,
-    'updatedBy': updatedBy,
-  };
+        'id': id,
+        'name': name,
+        'description': description,
+        'type': type.value,
+        'metricIds': metricIds,
+        'dashboardIds': dashboardIds,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'template': template,
+        'filters': filters,
+        'settings': settings,
+        'status': status.value,
+        'fileUrl': fileUrl,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   KPIReport copyWith({
     String? id,
@@ -585,28 +596,30 @@ class KPIReport {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) => KPIReport(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    type: type ?? this.type,
-    metricIds: metricIds ?? this.metricIds,
-    dashboardIds: dashboardIds ?? this.dashboardIds,
-    startDate: startDate ?? this.startDate,
-    endDate: endDate ?? this.endDate,
-    template: template ?? this.template,
-    filters: filters ?? this.filters,
-    settings: settings ?? this.settings,
-    status: status ?? this.status,
-    fileUrl: fileUrl ?? this.fileUrl,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    createdBy: createdBy ?? this.createdBy,
-    updatedBy: updatedBy ?? this.updatedBy,
-  );
+  }) =>
+      KPIReport(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        type: type ?? this.type,
+        metricIds: metricIds ?? this.metricIds,
+        dashboardIds: dashboardIds ?? this.dashboardIds,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        template: template ?? this.template,
+        filters: filters ?? this.filters,
+        settings: settings ?? this.settings,
+        status: status ?? this.status,
+        fileUrl: fileUrl ?? this.fileUrl,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
-  String toString() => 'KPIReport(id: $id, name: $name, type: $type, status: $status)';
+  String toString() =>
+      'KPIReport(id: $id, name: $name, type: $type, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -632,7 +645,8 @@ enum ReportType {
   final String displayName;
 
   static ReportType fromString(String value) =>
-      ReportType.values.firstWhere((type) => type.value == value, orElse: () => ReportType.summary);
+      ReportType.values.firstWhere((type) => type.value == value,
+          orElse: () => ReportType.summary);
 
   String get icon {
     switch (this) {
@@ -663,10 +677,11 @@ enum ReportStatus {
   final String value;
   final String displayName;
 
-  static ReportStatus fromString(String value) => ReportStatus.values.firstWhere(
-    (status) => status.value == value,
-    orElse: () => ReportStatus.draft,
-  );
+  static ReportStatus fromString(String value) =>
+      ReportStatus.values.firstWhere(
+        (status) => status.value == value,
+        orElse: () => ReportStatus.draft,
+      );
 
   String get icon {
     switch (this) {

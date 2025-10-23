@@ -66,7 +66,8 @@ class BackupService {
       await _updateBackupStatus(backupId, BackupStatus.inProgress);
 
       // Получаем данные бэкапа
-      final backupDoc = await _firestore.collection('backups').doc(backupId).get();
+      final backupDoc =
+          await _firestore.collection('backups').doc(backupId).get();
       if (!backupDoc.exists) return;
 
       final backup = Backup.fromDocument(backupDoc);
@@ -77,7 +78,8 @@ class BackupService {
 
       for (final collectionName in backup.collections) {
         try {
-          final collectionData = await _exportCollection(collectionName, backup.filters);
+          final collectionData =
+              await _exportCollection(collectionName, backup.filters);
           backupData[collectionName] = collectionData;
           totalDocuments += collectionData.length;
         } catch (e) {
@@ -107,7 +109,8 @@ class BackupService {
       final bytes = utf8.encode(jsonString);
 
       // Загружаем файл в Firebase Storage
-      final fileName = 'backup_${backupId}_${DateTime.now().millisecondsSinceEpoch}.json';
+      final fileName =
+          'backup_${backupId}_${DateTime.now().millisecondsSinceEpoch}.json';
       final ref = _storage.ref().child('backups/$fileName');
 
       final uploadTask = ref.putData(
@@ -139,7 +142,8 @@ class BackupService {
       }
 
       // Обновляем статус на "ошибка"
-      await _updateBackupStatus(backupId, BackupStatus.failed, errorMessage: e.toString());
+      await _updateBackupStatus(backupId, BackupStatus.failed,
+          errorMessage: e.toString());
     }
   }
 
@@ -228,10 +232,12 @@ class BackupService {
         query = query.where('type', isEqualTo: type.toString().split('.').last);
       }
       if (status != null) {
-        query = query.where('status', isEqualTo: status.toString().split('.').last);
+        query =
+            query.where('status', isEqualTo: status.toString().split('.').last);
       }
 
-      final snapshot = await query.orderBy('createdAt', descending: true).limit(limit).get();
+      final snapshot =
+          await query.orderBy('createdAt', descending: true).limit(limit).get();
 
       return snapshot.docs.map(Backup.fromDocument).toList();
     } catch (e) {
@@ -302,7 +308,10 @@ class BackupService {
         createdAt: now,
       );
 
-      await _firestore.collection('restores').doc(restoreId).set(restore.toMap());
+      await _firestore
+          .collection('restores')
+          .doc(restoreId)
+          .set(restore.toMap());
 
       // Запускаем восстановление в фоне
       _restoreFromBackup(restoreId);
@@ -323,7 +332,8 @@ class BackupService {
       await _updateRestoreStatus(restoreId, RestoreStatus.inProgress);
 
       // Получаем данные восстановления
-      final restoreDoc = await _firestore.collection('restores').doc(restoreId).get();
+      final restoreDoc =
+          await _firestore.collection('restores').doc(restoreId).get();
       if (!restoreDoc.exists) return;
 
       final restore = Restore.fromDocument(restoreDoc);
@@ -348,7 +358,8 @@ class BackupService {
       }
 
       // Обновляем статус на "ошибка"
-      await _updateRestoreStatus(restoreId, RestoreStatus.failed, errorMessage: e.toString());
+      await _updateRestoreStatus(restoreId, RestoreStatus.failed,
+          errorMessage: e.toString());
     }
   }
 
@@ -367,7 +378,8 @@ class BackupService {
   }
 
   /// Импортировать данные бэкапа
-  Future<void> _importBackupData(Map<String, dynamic> backupData, Restore restore) async {
+  Future<void> _importBackupData(
+      Map<String, dynamic> backupData, Restore restore) async {
     try {
       final data = backupData['data'] as Map<String, dynamic>?;
       if (data == null) return;
@@ -380,7 +392,8 @@ class BackupService {
         final collectionData = data[collectionName] as List<dynamic>?;
         if (collectionData == null) continue;
 
-        await _importCollection(collectionName, collectionData, restore.options);
+        await _importCollection(
+            collectionName, collectionData, restore.options);
       }
     } catch (e) {
       if (kDebugMode) {
@@ -471,10 +484,12 @@ class BackupService {
         query = query.where('type', isEqualTo: type.toString().split('.').last);
       }
       if (status != null) {
-        query = query.where('status', isEqualTo: status.toString().split('.').last);
+        query =
+            query.where('status', isEqualTo: status.toString().split('.').last);
       }
 
-      final snapshot = await query.orderBy('createdAt', descending: true).limit(limit).get();
+      final snapshot =
+          await query.orderBy('createdAt', descending: true).limit(limit).get();
 
       return snapshot.docs.map(Restore.fromDocument).toList();
     } catch (e) {
@@ -508,7 +523,8 @@ class BackupService {
             if (backup.fileSize != null) {
               totalSize += backup.fileSize!;
             }
-            if (backup.completedAt != null && backup.completedAt!.isAfter(lastBackup)) {
+            if (backup.completedAt != null &&
+                backup.completedAt!.isAfter(lastBackup)) {
               lastBackup = backup.completedAt!;
             }
             break;
@@ -519,8 +535,10 @@ class BackupService {
             break;
         }
 
-        backupsByType[backup.type.name] = (backupsByType[backup.type.name] ?? 0) + 1;
-        backupsByStatus[backup.status.name] = (backupsByStatus[backup.status.name] ?? 0) + 1;
+        backupsByType[backup.type.name] =
+            (backupsByType[backup.type.name] ?? 0) + 1;
+        backupsByStatus[backup.status.name] =
+            (backupsByStatus[backup.status.name] ?? 0) + 1;
       }
 
       return BackupStatistics(

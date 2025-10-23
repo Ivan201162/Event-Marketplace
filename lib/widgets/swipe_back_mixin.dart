@@ -6,7 +6,8 @@ mixin SwipeBackMixin<T extends StatefulWidget> on State<T> {
   Widget wrapWithSwipeBack(Widget child) => GestureDetector(
         onHorizontalDragEnd: (details) {
           // Проверяем, был ли свайп влево с достаточной скоростью
-          if (details.primaryVelocity != null && details.primaryVelocity! > 300) {
+          if (details.primaryVelocity != null &&
+              details.primaryVelocity! > 300) {
             Navigator.of(context).pop();
           }
         },

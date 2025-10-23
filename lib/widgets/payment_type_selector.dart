@@ -61,7 +61,8 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
           // Кнопка подтверждения
           SizedBox(
             width: double.infinity,
-            child: ElevatedButton(onPressed: _confirmSelection, child: const Text('Подтвердить')),
+            child: ElevatedButton(
+                onPressed: _confirmSelection, child: const Text('Подтвердить')),
           ),
         ],
       );
@@ -120,10 +121,12 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color:
-              isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.grey[50],
+          color: isSelected
+              ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+              : Colors.grey[50],
           border: Border.all(
-            color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
+            color:
+                isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -133,10 +136,14 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300],
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[300],
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: isSelected ? Colors.white : Colors.grey[600], size: 20),
+              child: Icon(icon,
+                  color: isSelected ? Colors.white : Colors.grey[600],
+                  size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -148,10 +155,13 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
+                      color: isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.black87,
                     ),
                   ),
-                  Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                  Text(subtitle,
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                 ],
               ),
             ),
@@ -160,7 +170,9 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isSelected ? Theme.of(context).primaryColor : Colors.black87,
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Colors.black87,
               ),
             ),
           ],
@@ -203,12 +215,17 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: isSelected ? Theme.of(context).primaryColor : Colors.white,
+                      color: isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
+                        color: isSelected
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey[300]!,
                       ),
                     ),
                     child: Text(
@@ -238,7 +255,8 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                   final amount = double.tryParse(value);
                   if (amount != null && amount > 0) {
                     setState(() {
-                      _selectedAdvancePercentage = (amount / widget.totalAmount) * 100;
+                      _selectedAdvancePercentage =
+                          (amount / widget.totalAmount) * 100;
                     });
                   }
                 },
@@ -283,12 +301,17 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: isSelected ? Theme.of(context).primaryColor : Colors.white,
+                      color: isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
+                        color: isSelected
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey[300]!,
                       ),
                     ),
                     child: Text(
@@ -308,7 +331,8 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
 
   Widget _buildPaymentSummary() => Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -353,9 +377,11 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
         ),
       );
 
-  double _calculateAdvanceAmount() => widget.totalAmount * (_selectedAdvancePercentage / 100);
+  double _calculateAdvanceAmount() =>
+      widget.totalAmount * (_selectedAdvancePercentage / 100);
 
-  double _calculateInstallmentAmount() => widget.totalAmount / _selectedInstallments;
+  double _calculateInstallmentAmount() =>
+      widget.totalAmount / _selectedInstallments;
 
   double _getFirstPaymentAmount() {
     switch (_selectedType) {
@@ -382,6 +408,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
       installments = _selectedInstallments;
     }
 
-    widget.onPaymentTypeSelected(_selectedType, advancePercentage, installments);
+    widget.onPaymentTypeSelected(
+        _selectedType, advancePercentage, installments);
   }
 }

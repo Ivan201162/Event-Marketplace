@@ -9,10 +9,12 @@ class RequestsScreenImproved extends ConsumerStatefulWidget {
   const RequestsScreenImproved({super.key});
 
   @override
-  ConsumerState<RequestsScreenImproved> createState() => _RequestsScreenImprovedState();
+  ConsumerState<RequestsScreenImproved> createState() =>
+      _RequestsScreenImprovedState();
 }
 
-class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved> {
+class _RequestsScreenImprovedState
+    extends ConsumerState<RequestsScreenImproved> {
   String _selectedFilter = 'all';
   String _selectedSort = 'date';
   bool _isLoading = false;
@@ -74,7 +76,7 @@ class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved>
                   ],
                 ),
               ),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -116,19 +118,25 @@ class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved>
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
                                       children: _filters.map((filter) {
-                                        final isSelected = _selectedFilter == filter['value'];
+                                        final isSelected =
+                                            _selectedFilter == filter['value'];
                                         return Padding(
-                                          padding: const EdgeInsets.only(right: 8),
+                                          padding:
+                                              const EdgeInsets.only(right: 8),
                                           child: FilterChip(
                                             label: Text(filter['label']),
                                             selected: isSelected,
                                             onSelected: (selected) {
                                               setState(() {
-                                                _selectedFilter = filter['value'];
+                                                _selectedFilter =
+                                                    filter['value'];
                                               });
                                             },
-                                            selectedColor: const Color(0xFF1E3A8A).withOpacity(0.2),
-                                            checkmarkColor: const Color(0xFF1E3A8A),
+                                            selectedColor:
+                                                const Color(0xFF1E3A8A)
+                                                    .withOpacity(0.2),
+                                            checkmarkColor:
+                                                const Color(0xFF1E3A8A),
                                           ),
                                         );
                                       }).toList(),
@@ -137,9 +145,9 @@ class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved>
                                 ),
                               ],
                             ),
-                            
+
                             const SizedBox(height: 12),
-                            
+
                             // Сортировка
                             Row(
                               children: [
@@ -156,9 +164,11 @@ class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved>
                                     scrollDirection: Axis.horizontal,
                                     child: Row(
                                       children: _sortOptions.map((sort) {
-                                        final isSelected = _selectedSort == sort['value'];
+                                        final isSelected =
+                                            _selectedSort == sort['value'];
                                         return Padding(
-                                          padding: const EdgeInsets.only(right: 8),
+                                          padding:
+                                              const EdgeInsets.only(right: 8),
                                           child: FilterChip(
                                             label: Text(sort['label']),
                                             selected: isSelected,
@@ -167,8 +177,11 @@ class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved>
                                                 _selectedSort = sort['value'];
                                               });
                                             },
-                                            selectedColor: const Color(0xFF1E3A8A).withOpacity(0.2),
-                                            checkmarkColor: const Color(0xFF1E3A8A),
+                                            selectedColor:
+                                                const Color(0xFF1E3A8A)
+                                                    .withOpacity(0.2),
+                                            checkmarkColor:
+                                                const Color(0xFF1E3A8A),
                                           ),
                                         );
                                       }).toList(),
@@ -180,13 +193,14 @@ class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved>
                           ],
                         ),
                       ),
-                      
+
                       // Список заявок
                       Expanded(
                         child: StreamBuilder<QuerySnapshot>(
                           stream: _getRequestsStream(),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const Center(
                                 child: CircularProgressIndicator(),
                               );
@@ -205,12 +219,16 @@ class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved>
                                     const SizedBox(height: 16),
                                     Text(
                                       'Ошибка загрузки заявок',
-                                      style: Theme.of(context).textTheme.titleLarge,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
                                       snapshot.error.toString(),
-                                      style: Theme.of(context).textTheme.bodyMedium,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
                                       textAlign: TextAlign.center,
                                     ),
                                   ],
@@ -233,7 +251,9 @@ class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved>
                                     const SizedBox(height: 16),
                                     Text(
                                       'Нет заявок',
-                                      style: Theme.of(context).textTheme.titleLarge,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
                                     ),
                                     const SizedBox(height: 8),
                                     const Text(
@@ -247,10 +267,12 @@ class _RequestsScreenImprovedState extends ConsumerState<RequestsScreenImproved>
                                         // TODO: Navigate to create request
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFF1E3A8A),
+                                        backgroundColor:
+                                            const Color(0xFF1E3A8A),
                                         foregroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
                                       ),
                                       child: const Text('Создать заявку'),
@@ -363,7 +385,7 @@ class _RequestCard extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Описание
           if (description.isNotEmpty) ...[
             Padding(
@@ -380,7 +402,7 @@ class _RequestCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
           ],
-          
+
           // Бюджет и дата
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -411,9 +433,9 @@ class _RequestCard extends StatelessWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Действия
           Padding(
             padding: const EdgeInsets.all(16),

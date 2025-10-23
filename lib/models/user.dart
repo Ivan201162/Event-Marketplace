@@ -125,7 +125,12 @@ extension UserRoleExtension on UserRole {
           'system.manage',
         ];
       case UserRole.moderator:
-        return ['users.moderate', 'content.moderate', 'reports.view', 'analytics.view'];
+        return [
+          'users.moderate',
+          'content.moderate',
+          'reports.view',
+          'analytics.view'
+        ];
       case UserRole.specialist:
         return [
           'profile.manage',
@@ -135,16 +140,27 @@ extension UserRoleExtension on UserRole {
           'analytics.view',
         ];
       case UserRole.organizer:
-        return ['profile.manage', 'events.manage', 'proposals.create', 'analytics.view'];
+        return [
+          'profile.manage',
+          'events.manage',
+          'proposals.create',
+          'analytics.view'
+        ];
       case UserRole.customer:
-        return ['profile.manage', 'bookings.create', 'reviews.create', 'content.view'];
+        return [
+          'profile.manage',
+          'bookings.create',
+          'reviews.create',
+          'content.view'
+        ];
       case UserRole.guest:
         return ['content.view'];
     }
   }
 
   /// Проверить, есть ли у роли определенное право
-  bool hasPermission(String permission) => defaultPermissions.contains(permission);
+  bool hasPermission(String permission) =>
+      defaultPermissions.contains(permission);
 
   /// Получить отображаемое имя для совместимости
   String get displayName => roleDisplayName;
@@ -182,31 +198,36 @@ class AppUser {
 
   /// Создать пользователя из Map
   factory AppUser.fromMap(Map<String, dynamic> data, [String? id]) => AppUser(
-    id: id ?? data['id'] ?? '',
-    email: data['email'] ?? '',
-    displayName: (data['displayName'] ?? data['name'] ?? 'Без имени') as String?,
-    photoURL: data['photoURL'],
-    role: _parseUserRole(data['role']),
-    createdAt: _parseTs(data['createdAt']),
-    lastLoginAt: data['lastLoginAt'] != null ? _parseTs(data['lastLoginAt']) : null,
-    isActive: data['isActive'] as bool? ?? true,
-    socialProvider: data['socialProvider'],
-    socialId: data['socialId'],
-    additionalData: data['additionalData'],
-    maritalStatus: data['maritalStatus'] != null
-        ? MaritalStatus.values.firstWhere(
-            (e) => e.name == data['maritalStatus'],
-            orElse: () => MaritalStatus.single,
-          )
-        : null,
-    weddingDate: data['weddingDate'] != null ? _parseTs(data['weddingDate']) : null,
-    partnerName: data['partnerName'],
-    anniversaryRemindersEnabled: data['anniversaryRemindersEnabled'] as bool? ?? false,
-    city: data['city'] as String?,
-    region: data['region'] as String?,
-    avatarUrl: data['avatarUrl'] as String?,
-    updatedAt: data['updatedAt'] != null ? _parseTs(data['updatedAt']) : null,
-  );
+        id: id ?? data['id'] ?? '',
+        email: data['email'] ?? '',
+        displayName:
+            (data['displayName'] ?? data['name'] ?? 'Без имени') as String?,
+        photoURL: data['photoURL'],
+        role: _parseUserRole(data['role']),
+        createdAt: _parseTs(data['createdAt']),
+        lastLoginAt:
+            data['lastLoginAt'] != null ? _parseTs(data['lastLoginAt']) : null,
+        isActive: data['isActive'] as bool? ?? true,
+        socialProvider: data['socialProvider'],
+        socialId: data['socialId'],
+        additionalData: data['additionalData'],
+        maritalStatus: data['maritalStatus'] != null
+            ? MaritalStatus.values.firstWhere(
+                (e) => e.name == data['maritalStatus'],
+                orElse: () => MaritalStatus.single,
+              )
+            : null,
+        weddingDate:
+            data['weddingDate'] != null ? _parseTs(data['weddingDate']) : null,
+        partnerName: data['partnerName'],
+        anniversaryRemindersEnabled:
+            data['anniversaryRemindersEnabled'] as bool? ?? false,
+        city: data['city'] as String?,
+        region: data['region'] as String?,
+        avatarUrl: data['avatarUrl'] as String?,
+        updatedAt:
+            data['updatedAt'] != null ? _parseTs(data['updatedAt']) : null,
+      );
 
   /// Создать пользователя из Firebase User
   factory AppUser.fromFirebaseUser(
@@ -217,17 +238,18 @@ class AppUser {
     UserRole role = UserRole.customer,
     String? socialProvider,
     String? socialId,
-  }) => AppUser(
-    id: uid,
-    email: email,
-    displayName: displayName,
-    photoURL: photoURL,
-    role: role,
-    createdAt: DateTime.now(),
-    lastLoginAt: DateTime.now(),
-    socialProvider: socialProvider,
-    socialId: socialId,
-  );
+  }) =>
+      AppUser(
+        id: uid,
+        email: email,
+        displayName: displayName,
+        photoURL: photoURL,
+        role: role,
+        createdAt: DateTime.now(),
+        lastLoginAt: DateTime.now(),
+        socialProvider: socialProvider,
+        socialId: socialId,
+      );
   final String id;
   final String email;
 
@@ -280,27 +302,29 @@ class AppUser {
     String? region,
     String? avatarUrl,
     DateTime? updatedAt,
-  }) => AppUser(
-    id: id ?? this.id,
-    email: email ?? this.email,
-    displayName: displayName ?? this.displayName,
-    photoURL: photoURL ?? this.photoURL,
-    role: role ?? this.role,
-    createdAt: createdAt ?? this.createdAt,
-    lastLoginAt: lastLoginAt ?? this.lastLoginAt,
-    isActive: isActive ?? this.isActive,
-    socialProvider: socialProvider ?? this.socialProvider,
-    socialId: socialId ?? this.socialId,
-    additionalData: additionalData ?? this.additionalData,
-    maritalStatus: maritalStatus ?? this.maritalStatus,
-    weddingDate: weddingDate ?? this.weddingDate,
-    partnerName: partnerName ?? this.partnerName,
-    anniversaryRemindersEnabled: anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
-    city: city ?? this.city,
-    region: region ?? this.region,
-    avatarUrl: avatarUrl ?? this.avatarUrl,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      AppUser(
+        id: id ?? this.id,
+        email: email ?? this.email,
+        displayName: displayName ?? this.displayName,
+        photoURL: photoURL ?? this.photoURL,
+        role: role ?? this.role,
+        createdAt: createdAt ?? this.createdAt,
+        lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+        isActive: isActive ?? this.isActive,
+        socialProvider: socialProvider ?? this.socialProvider,
+        socialId: socialId ?? this.socialId,
+        additionalData: additionalData ?? this.additionalData,
+        maritalStatus: maritalStatus ?? this.maritalStatus,
+        weddingDate: weddingDate ?? this.weddingDate,
+        partnerName: partnerName ?? this.partnerName,
+        anniversaryRemindersEnabled:
+            anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
+        city: city ?? this.city,
+        region: region ?? this.region,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить отображаемое имя
   String get displayNameOrEmail => displayName ?? email.split('@').first;
@@ -360,7 +384,8 @@ class AppUser {
   bool get isVerified => additionalData?['isVerified'] as bool? ?? false;
 
   /// Геттер для специализаций
-  List<String> get specialties => List<String>.from(additionalData?['specialties'] ?? []);
+  List<String> get specialties =>
+      List<String>.from(additionalData?['specialties'] ?? []);
 
   /// Геттер для специализации (строка)
   String? get specialization => additionalData?['specialization'] as String?;
@@ -429,5 +454,6 @@ class AppUser {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'AppUser(id: $id, email: $email, role: $role, displayName: $displayName)';
+  String toString() =>
+      'AppUser(id: $id, email: $email, role: $role, displayName: $displayName)';
 }

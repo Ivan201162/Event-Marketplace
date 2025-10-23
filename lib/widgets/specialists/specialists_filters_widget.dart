@@ -70,7 +70,8 @@ class SpecialistsFiltersWidget extends StatelessWidget {
           // Категории
           Text(
             'Категория',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -95,15 +96,21 @@ class SpecialistsFiltersWidget extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Города
-          Text('Город', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text('Город',
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             initialValue: selectedCity,
             decoration: InputDecoration(
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             ),
-            items: cities.map((city) => DropdownMenuItem(value: city, child: Text(city))).toList(),
+            items: cities
+                .map((city) => DropdownMenuItem(value: city, child: Text(city)))
+                .toList(),
             onChanged: (city) {
               if (city != null) {
                 onCityChanged(city);
@@ -116,7 +123,8 @@ class SpecialistsFiltersWidget extends StatelessWidget {
           // Диапазон цен
           Text(
             'Диапазон цен',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Row(
@@ -127,8 +135,10 @@ class SpecialistsFiltersWidget extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'От',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                   onChanged: (value) {
                     final price = double.tryParse(value) ?? 0;
@@ -143,8 +153,10 @@ class SpecialistsFiltersWidget extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'До',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                   onChanged: (value) {
                     final price = double.tryParse(value) ?? 100000;

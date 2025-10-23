@@ -11,7 +11,9 @@ class MapCoordinates {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is MapCoordinates && other.latitude == latitude && other.longitude == longitude;
+    return other is MapCoordinates &&
+        other.latitude == latitude &&
+        other.longitude == longitude;
   }
 
   @override

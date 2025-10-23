@@ -16,7 +16,8 @@ class FormValidators {
       return 'Email обязателен';
     }
 
-    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
     if (!emailRegex.hasMatch(value.trim())) {
       return errorText ?? 'Введите корректный email';
@@ -48,7 +49,8 @@ class FormValidators {
   }
 
   /// Валидатор для подтверждения пароля
-  static String? confirmPassword(String? value, String? password, {String? errorText}) {
+  static String? confirmPassword(String? value, String? password,
+      {String? errorText}) {
     if (value == null || value.isEmpty) {
       return 'Подтвердите пароль';
     }
@@ -119,7 +121,8 @@ class FormValidators {
   }
 
   /// Валидатор для диапазона чисел
-  static String? numberRange(String? value, double min, double max, {String? errorText}) {
+  static String? numberRange(String? value, double min, double max,
+      {String? errorText}) {
     final numberError = number(value, errorText: errorText);
     if (numberError != null) return numberError;
 
@@ -189,7 +192,8 @@ class FormValidators {
   }
 
   /// Комбинированный валидатор
-  static String? combine(List<String? Function(String?)> validators, String? value) {
+  static String? combine(
+      List<String? Function(String?)> validators, String? value) {
     for (final validator in validators) {
       final error = validator(value);
       if (error != null) return error;
@@ -200,7 +204,8 @@ class FormValidators {
 
 /// Виджет для отображения ошибок валидации
 class ValidationErrorWidget extends StatelessWidget {
-  const ValidationErrorWidget({super.key, required this.error, this.icon, this.style});
+  const ValidationErrorWidget(
+      {super.key, required this.error, this.icon, this.style});
 
   final String error;
   final IconData? icon;
@@ -215,12 +220,15 @@ class ValidationErrorWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon ?? Icons.error_outline, size: 16, color: theme.colorScheme.error),
+          Icon(icon ?? Icons.error_outline,
+              size: 16, color: theme.colorScheme.error),
           const SizedBox(width: 4),
           Expanded(
             child: Text(
               error,
-              style: style ?? theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.error),
+              style: style ??
+                  theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.error),
             ),
           ),
         ],
@@ -231,7 +239,8 @@ class ValidationErrorWidget extends StatelessWidget {
 
 /// Виджет для отображения успешной валидации
 class ValidationSuccessWidget extends StatelessWidget {
-  const ValidationSuccessWidget({super.key, required this.message, this.icon, this.style});
+  const ValidationSuccessWidget(
+      {super.key, required this.message, this.icon, this.style});
 
   final String message;
   final IconData? icon;
@@ -246,12 +255,15 @@ class ValidationSuccessWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon ?? Icons.check_circle_outline, size: 16, color: theme.colorScheme.primary),
+          Icon(icon ?? Icons.check_circle_outline,
+              size: 16, color: theme.colorScheme.primary),
           const SizedBox(width: 4),
           Expanded(
             child: Text(
               message,
-              style: style ?? theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary),
+              style: style ??
+                  theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.primary),
             ),
           ),
         ],
@@ -262,7 +274,8 @@ class ValidationSuccessWidget extends StatelessWidget {
 
 /// Виджет для отображения подсказки
 class ValidationHintWidget extends StatelessWidget {
-  const ValidationHintWidget({super.key, required this.hint, this.icon, this.style});
+  const ValidationHintWidget(
+      {super.key, required this.hint, this.icon, this.style});
 
   final String hint;
   final IconData? icon;
@@ -277,13 +290,15 @@ class ValidationHintWidget extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon ?? Icons.info_outline, size: 16, color: theme.colorScheme.onSurfaceVariant),
+          Icon(icon ?? Icons.info_outline,
+              size: 16, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(width: 4),
           Expanded(
             child: Text(
               hint,
               style: style ??
-                  theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
           ),
         ],
@@ -294,7 +309,8 @@ class ValidationHintWidget extends StatelessWidget {
 
 /// Виджет для отображения силы пароля
 class PasswordStrengthWidget extends StatelessWidget {
-  const PasswordStrengthWidget({super.key, required this.password, this.showStrength = true});
+  const PasswordStrengthWidget(
+      {super.key, required this.password, this.showStrength = true});
 
   final String password;
   final bool showStrength;
@@ -417,7 +433,8 @@ class PasswordStrengthWidget extends StatelessWidget {
         color = Colors.red;
     }
 
-    return PasswordStrength(score: score, label: label, color: color, suggestions: suggestions);
+    return PasswordStrength(
+        score: score, label: label, color: color, suggestions: suggestions);
   }
 }
 

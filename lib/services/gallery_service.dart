@@ -29,7 +29,8 @@ class GalleryService {
   }) async {
     try {
       // Генерируем уникальное имя файла
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${imageFile.name}';
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}_${imageFile.name}';
       final storagePath = 'gallery/$specialistId/images/$fileName';
 
       // Загружаем файл в Firebase Storage
@@ -56,7 +57,8 @@ class GalleryService {
         isFeatured: isFeatured,
       );
 
-      final docRef = await _firestore.collection('gallery').add(galleryItem.toMap());
+      final docRef =
+          await _firestore.collection('gallery').add(galleryItem.toMap());
 
       debugPrint('Image uploaded to gallery: ${docRef.id}');
       return docRef.id;
@@ -77,7 +79,8 @@ class GalleryService {
   }) async {
     try {
       // Генерируем уникальное имя файла
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${videoFile.name}';
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}_${videoFile.name}';
       final storagePath = 'gallery/$specialistId/videos/$fileName';
 
       // Загружаем видео в Firebase Storage
@@ -96,8 +99,8 @@ class GalleryService {
 
       if (thumbnailPath != null) {
         final thumbnailRef = storage.ref().child(
-          'gallery/$specialistId/thumbnails/${fileName}_thumb.jpg',
-        );
+              'gallery/$specialistId/thumbnails/${fileName}_thumb.jpg',
+            );
         final thumbnailUploadTask = thumbnailRef.putFile(File(thumbnailPath));
         final thumbnailSnapshot = await thumbnailUploadTask;
         thumbnailUrl = await thumbnailSnapshot.ref.getDownloadURL();
@@ -127,7 +130,8 @@ class GalleryService {
         fileSize: await File(videoFile.path).length(),
       );
 
-      final docRef = await _firestore.collection('gallery').add(galleryItem.toMap());
+      final docRef =
+          await _firestore.collection('gallery').add(galleryItem.toMap());
 
       debugPrint('Video uploaded to gallery: ${docRef.id}');
       return docRef.id;
@@ -177,7 +181,9 @@ class GalleryService {
     bool? isPublic,
   }) async {
     try {
-      final updateData = <String, dynamic>{'updatedAt': Timestamp.fromDate(DateTime.now())};
+      final updateData = <String, dynamic>{
+        'updatedAt': Timestamp.fromDate(DateTime.now())
+      };
 
       if (title != null) updateData['title'] = title;
       if (description != null) updateData['description'] = description;
@@ -304,7 +310,12 @@ class GalleryService {
       };
     } catch (e) {
       debugPrint('Error getting video info: $e');
-      return {'duration': null, 'width': null, 'height': null, 'fileSize': null};
+      return {
+        'duration': null,
+        'width': null,
+        'height': null,
+        'fileSize': null
+      };
     }
   }
 

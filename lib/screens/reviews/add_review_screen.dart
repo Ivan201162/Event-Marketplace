@@ -53,7 +53,8 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
     if (_photos.length >= 3) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Можно добавить максимум 3 фотографии')));
+      ).showSnackBar(const SnackBar(
+          content: Text('Можно добавить максимум 3 фотографии')));
       return;
     }
 
@@ -95,7 +96,8 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
           'review_id': widget.existingReview!.id,
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Отзыв обновлен')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Отзыв обновлен')));
       } else {
         // Создание нового отзыва
         await _reviewsService.addReview(
@@ -113,12 +115,14 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
           'has_photos': _photos.isNotEmpty,
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Отзыв добавлен')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Отзыв добавлен')));
       }
 
       Navigator.pop(context, true);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {
       setState(() {
         _isLoading = false;
@@ -128,193 +132,208 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: Text(widget.existingReview != null ? 'Редактировать отзыв' : 'Добавить отзыв'),
-      actions: [
-        if (widget.existingReview != null)
-          IconButton(icon: const Icon(Icons.delete), onPressed: _showDeleteDialog),
-      ],
-    ),
-    body: Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Информация о специалисте
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundColor: Colors.blue.shade100,
-                    child: Text(
-                      widget.specialistName.isNotEmpty
-                          ? widget.specialistName[0].toUpperCase()
-                          : 'С',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.specialistName,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Оставьте отзыв о работе специалиста',
-                          style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Рейтинг
-            const Text('Оценка', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Row(
-              children: List.generate(
-                5,
-                (index) => GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _rating = (index + 1).toDouble();
-                    });
-                  },
-                  child: Icon(
-                    index < _rating ? Icons.star : Icons.star_border,
-                    color: Colors.amber,
-                    size: 40,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _getRatingText(_rating),
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Текст отзыва
-            const Text('Отзыв', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _textController,
-              maxLines: 5,
-              decoration: const InputDecoration(
-                hintText: 'Расскажите о своем опыте работы с этим специалистом...',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().length < 20) {
-                  return 'Отзыв должен содержать минимум 20 символов';
-                }
-                return null;
-              },
-            ),
-
-            const SizedBox(height: 24),
-
-            // Фотографии
-            const Text(
-              'Фотографии (необязательно)',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-
-            if (_photos.isNotEmpty) ...[
-              SizedBox(
-                height: 100,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _photos.length,
-                  itemBuilder: (context, index) => Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            _photos[index],
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.grey.shade300,
-                              child: const Icon(Icons.image),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 4,
-                          right: 4,
-                          child: GestureDetector(
-                            onTap: () => _removePhoto(index),
-                            child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.close, color: Colors.white, size: 16),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-            ],
-
-            if (_photos.length < 3)
-              ElevatedButton.icon(
-                onPressed: _pickImage,
-                icon: const Icon(Icons.add_photo_alternate),
-                label: const Text('Добавить фото'),
-              ),
-
-            const SizedBox(height: 32),
-
-            // Кнопка отправки
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _submitReview,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                ),
-                child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text(widget.existingReview != null ? 'Обновить отзыв' : 'Отправить отзыв'),
-              ),
-            ),
+        appBar: AppBar(
+          title: Text(widget.existingReview != null
+              ? 'Редактировать отзыв'
+              : 'Добавить отзыв'),
+          actions: [
+            if (widget.existingReview != null)
+              IconButton(
+                  icon: const Icon(Icons.delete), onPressed: _showDeleteDialog),
           ],
         ),
-      ),
-    ),
-  );
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Информация о специалисте
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 25,
+                        backgroundColor: Colors.blue.shade100,
+                        child: Text(
+                          widget.specialistName.isNotEmpty
+                              ? widget.specialistName[0].toUpperCase()
+                              : 'С',
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.specialistName,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              'Оставьте отзыв о работе специалиста',
+                              style: TextStyle(
+                                  color: Colors.grey.shade600, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Рейтинг
+                const Text('Оценка',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 12),
+                Row(
+                  children: List.generate(
+                    5,
+                    (index) => GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _rating = (index + 1).toDouble();
+                        });
+                      },
+                      child: Icon(
+                        index < _rating ? Icons.star : Icons.star_border,
+                        color: Colors.amber,
+                        size: 40,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _getRatingText(_rating),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                ),
+
+                const SizedBox(height: 24),
+
+                // Текст отзыва
+                const Text('Отзыв',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _textController,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    hintText:
+                        'Расскажите о своем опыте работы с этим специалистом...',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().length < 20) {
+                      return 'Отзыв должен содержать минимум 20 символов';
+                    }
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 24),
+
+                // Фотографии
+                const Text(
+                  'Фотографии (необязательно)',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12),
+
+                if (_photos.isNotEmpty) ...[
+                  SizedBox(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _photos.length,
+                      itemBuilder: (context, index) => Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                _photos[index],
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: Colors.grey.shade300,
+                                  child: const Icon(Icons.image),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 4,
+                              right: 4,
+                              child: GestureDetector(
+                                onTap: () => _removePhoto(index),
+                                child: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.close,
+                                      color: Colors.white, size: 16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+
+                if (_photos.length < 3)
+                  ElevatedButton.icon(
+                    onPressed: _pickImage,
+                    icon: const Icon(Icons.add_photo_alternate),
+                    label: const Text('Добавить фото'),
+                  ),
+
+                const SizedBox(height: 32),
+
+                // Кнопка отправки
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _submitReview,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(widget.existingReview != null
+                            ? 'Обновить отзыв'
+                            : 'Отправить отзыв'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
 
   String _getRatingText(double rating) {
     switch (rating.toInt()) {
@@ -340,7 +359,9 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
         title: const Text('Удалить отзыв'),
         content: const Text('Вы уверены, что хотите удалить этот отзыв?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -368,11 +389,13 @@ class _AddReviewScreenState extends ConsumerState<AddReviewScreen> {
         'review_id': widget.existingReview!.id,
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Отзыв удален')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Отзыв удален')));
 
       Navigator.pop(context, true);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {
       setState(() {
         _isLoading = false;

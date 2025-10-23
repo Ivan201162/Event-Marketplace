@@ -33,7 +33,9 @@ class SpecialistTip {
       ),
       isCompleted: data['isCompleted'] ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null ? (data['completedAt'] as Timestamp).toDate() : null,
+      completedAt: data['completedAt'] != null
+          ? (data['completedAt'] as Timestamp).toDate()
+          : null,
     );
   }
   final String id;
@@ -50,17 +52,18 @@ class SpecialistTip {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-    'userId': userId,
-    'field': field,
-    'title': title,
-    'message': message,
-    'action': action,
-    'actionRoute': actionRoute,
-    'priority': priority.value,
-    'isCompleted': isCompleted,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-  };
+        'userId': userId,
+        'field': field,
+        'title': title,
+        'message': message,
+        'action': action,
+        'actionRoute': actionRoute,
+        'priority': priority.value,
+        'isCompleted': isCompleted,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      };
 
   /// Копирование с изменениями
   SpecialistTip copyWith({
@@ -75,19 +78,20 @@ class SpecialistTip {
     bool? isCompleted,
     DateTime? createdAt,
     DateTime? completedAt,
-  }) => SpecialistTip(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    field: field ?? this.field,
-    title: title ?? this.title,
-    message: message ?? this.message,
-    action: action ?? this.action,
-    actionRoute: actionRoute ?? this.actionRoute,
-    priority: priority ?? this.priority,
-    isCompleted: isCompleted ?? this.isCompleted,
-    createdAt: createdAt ?? this.createdAt,
-    completedAt: completedAt ?? this.completedAt,
-  );
+  }) =>
+      SpecialistTip(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        field: field ?? this.field,
+        title: title ?? this.title,
+        message: message ?? this.message,
+        action: action ?? this.action,
+        actionRoute: actionRoute ?? this.actionRoute,
+        priority: priority ?? this.priority,
+        isCompleted: isCompleted ?? this.isCompleted,
+        createdAt: createdAt ?? this.createdAt,
+        completedAt: completedAt ?? this.completedAt,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -99,7 +103,8 @@ class SpecialistTip {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'SpecialistTip(id: $id, field: $field, title: $title, priority: $priority)';
+  String toString() =>
+      'SpecialistTip(id: $id, field: $field, title: $title, priority: $priority)';
 }
 
 /// Приоритет совета
@@ -197,13 +202,13 @@ class ProfileStats {
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toFirestore() => {
-    'completionPercentage': completionPercentage,
-    'totalFields': totalFields,
-    'completedFields': completedFields,
-    'missingFields': missingFields,
-    'weakFields': weakFields,
-    'lastUpdated': Timestamp.fromDate(lastUpdated),
-  };
+        'completionPercentage': completionPercentage,
+        'totalFields': totalFields,
+        'completedFields': completedFields,
+        'missingFields': missingFields,
+        'weakFields': weakFields,
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+      };
 
   @override
   bool operator ==(Object other) {
@@ -215,5 +220,6 @@ class ProfileStats {
   int get hashCode => userId.hashCode;
 
   @override
-  String toString() => 'ProfileStats(userId: $userId, completion: $completionPercentage%)';
+  String toString() =>
+      'ProfileStats(userId: $userId, completion: $completionPercentage%)';
 }

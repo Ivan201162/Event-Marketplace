@@ -49,7 +49,9 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка загрузки сторисов: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка загрузки сторисов: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -121,7 +123,8 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
       );
 
   Widget _buildStoryCircle(String userId, List<Story> stories) {
-    final hasUnviewedStories = stories.any((story) => !story.isViewedBy(userId));
+    final hasUnviewedStories =
+        stories.any((story) => !story.isViewedBy(userId));
 
     return GestureDetector(
       onTap: () => _openStoriesView(userId, stories),
@@ -137,14 +140,18 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: hasUnviewedStories ? Theme.of(context).primaryColor : Colors.grey.shade300,
+                  color: hasUnviewedStories
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey.shade300,
                   width: 3,
                 ),
               ),
               child: CircleAvatar(
                 radius: 27,
-                backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                child: Icon(Icons.person, color: Theme.of(context).primaryColor, size: 30),
+                backgroundColor:
+                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                child: Icon(Icons.person,
+                    color: Theme.of(context).primaryColor, size: 30),
               ),
             ),
             const SizedBox(height: 4),
@@ -181,13 +188,15 @@ class _StoriesSectionState extends ConsumerState<StoriesSection> {
   }
 
   void _openStoriesView(String userId, List<Story> stories) {
-    context.push(AppRoutes.storiesView, extra: {'userId': userId, 'stories': stories});
+    context.push(AppRoutes.storiesView,
+        extra: {'userId': userId, 'stories': stories});
   }
 }
 
 /// Экран просмотра сторисов
 class StoriesViewScreen extends ConsumerStatefulWidget {
-  const StoriesViewScreen({super.key, required this.userId, required this.stories});
+  const StoriesViewScreen(
+      {super.key, required this.userId, required this.stories});
   final String userId;
   final List<Story> stories;
 
@@ -267,7 +276,8 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
           foregroundColor: Colors.white,
         ),
         body: const Center(
-          child: Text('Нет активных сторисов', style: TextStyle(color: Colors.white, fontSize: 18)),
+          child: Text('Нет активных сторисов',
+              style: TextStyle(color: Colors.white, fontSize: 18)),
         ),
       );
     }
@@ -307,9 +317,10 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
   Widget _buildStoryContent(Story story) => SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
-            ? _buildVideoContent(story)
-            : _buildImageContent(story),
+        child:
+            (story.mediaUrl.contains('mp4') || story.mediaUrl.contains('mov'))
+                ? _buildVideoContent(story)
+                : _buildImageContent(story),
       );
 
   Widget _buildImageContent(Story story) => Image.network(
@@ -317,10 +328,11 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
         fit: BoxFit.cover,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
-          return const Center(child: CircularProgressIndicator(color: Colors.white));
+          return const Center(
+              child: CircularProgressIndicator(color: Colors.white));
         },
-        errorBuilder: (context, error, stackTrace) =>
-            const Center(child: Icon(Icons.error, color: Colors.white, size: 50)),
+        errorBuilder: (context, error, stackTrace) => const Center(
+            child: Icon(Icons.error, color: Colors.white, size: 50)),
       );
 
   Widget _buildVideoContent(Story story) {
@@ -333,7 +345,8 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
           children: [
             Icon(Icons.play_circle_outline, color: Colors.white, size: 80),
             SizedBox(height: 16),
-            Text('Видео контент', style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text('Видео контент',
+                style: TextStyle(color: Colors.white, fontSize: 18)),
           ],
         ),
       ),
@@ -356,7 +369,8 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
                     (index) => Expanded(
                       child: Container(
                         height: 3,
-                        margin: EdgeInsets.only(right: index < widget.stories.length - 1 ? 4 : 0),
+                        margin: EdgeInsets.only(
+                            right: index < widget.stories.length - 1 ? 4 : 0),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(2),
@@ -380,7 +394,8 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
                   children: [
                     IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                      icon: const Icon(Icons.close,
+                          color: Colors.white, size: 28),
                     ),
                     Text(
                       '${_currentIndex + 1}/${widget.stories.length}',
@@ -422,15 +437,19 @@ class _StoriesViewScreenState extends ConsumerState<StoriesViewScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (story.caption.isNotEmpty)
-                Text(story.caption, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                Text(story.caption,
+                    style: const TextStyle(color: Colors.white, fontSize: 16)),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(Icons.visibility, color: Colors.white.withValues(alpha: 0.7), size: 16),
+                  Icon(Icons.visibility,
+                      color: Colors.white.withValues(alpha: 0.7), size: 16),
                   const SizedBox(width: 4),
                   Text(
                     '${story.viewCount}',
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14),
+                    style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.7),
+                        fontSize: 14),
                   ),
                 ],
               ),

@@ -84,11 +84,13 @@ class AdminLog {
       id: map['id'] ?? '',
       adminId: map['adminId'] ?? '',
       adminEmail: map['adminEmail'] ?? '',
-      action: AdminAction.values.byName(map['action'] ?? AdminAction.create.name),
+      action:
+          AdminAction.values.byName(map['action'] ?? AdminAction.create.name),
       target: map['target'] ?? '',
       targetId: map['targetId'],
       description: map['description'],
-      status: AdminActionStatus.values.byName(map['status'] ?? AdminActionStatus.completed.name),
+      status: AdminActionStatus.values
+          .byName(map['status'] ?? AdminActionStatus.completed.name),
       timestamp: (map['timestamp'] as Timestamp).toDate(),
       metadata: map['metadata'],
       errorMessage: map['errorMessage'],
@@ -187,7 +189,15 @@ enum MarketingCampaignType {
 }
 
 /// Статусы маркетинговых кампаний
-enum MarketingCampaignStatus { draft, scheduled, active, paused, completed, cancelled, expired }
+enum MarketingCampaignStatus {
+  draft,
+  scheduled,
+  active,
+  paused,
+  completed,
+  cancelled,
+  expired
+}
 
 /// Модель рассылки
 class MarketingNewsletter {
@@ -238,7 +248,8 @@ class MarketingNewsletter {
       'type': type.name,
       'status': status.name,
       'targetSegment': targetSegment,
-      'scheduledAt': scheduledAt != null ? Timestamp.fromDate(scheduledAt!) : null,
+      'scheduledAt':
+          scheduledAt != null ? Timestamp.fromDate(scheduledAt!) : null,
       'sentAt': sentAt != null ? Timestamp.fromDate(sentAt!) : null,
       'totalRecipients': totalRecipients,
       'deliveredCount': deliveredCount,
@@ -257,11 +268,16 @@ class MarketingNewsletter {
       title: map['title'] ?? '',
       subject: map['subject'] ?? '',
       content: map['content'] ?? '',
-      type: NewsletterType.values.byName(map['type'] ?? NewsletterType.email.name),
-      status: NewsletterStatus.values.byName(map['status'] ?? NewsletterStatus.draft.name),
+      type: NewsletterType.values
+          .byName(map['type'] ?? NewsletterType.email.name),
+      status: NewsletterStatus.values
+          .byName(map['status'] ?? NewsletterStatus.draft.name),
       targetSegment: map['targetSegment'],
-      scheduledAt: map['scheduledAt'] != null ? (map['scheduledAt'] as Timestamp).toDate() : null,
-      sentAt: map['sentAt'] != null ? (map['sentAt'] as Timestamp).toDate() : null,
+      scheduledAt: map['scheduledAt'] != null
+          ? (map['scheduledAt'] as Timestamp).toDate()
+          : null,
+      sentAt:
+          map['sentAt'] != null ? (map['sentAt'] as Timestamp).toDate() : null,
       totalRecipients: map['totalRecipients'],
       deliveredCount: map['deliveredCount'],
       openedCount: map['openedCount'],

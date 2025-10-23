@@ -41,11 +41,13 @@ class _CustomButtonState extends State<CustomButton> {
         child: ElevatedButton(
           onPressed: _getOnPressed(),
           style: ElevatedButton.styleFrom(
-            backgroundColor:
-                widget.backgroundColor ?? (widget.isPrimary ? Colors.blue : Colors.grey.shade200),
-            foregroundColor: widget.textColor ?? (widget.isPrimary ? Colors.white : Colors.black87),
+            backgroundColor: widget.backgroundColor ??
+                (widget.isPrimary ? Colors.blue : Colors.grey.shade200),
+            foregroundColor: widget.textColor ??
+                (widget.isPrimary ? Colors.white : Colors.black87),
             elevation: 0,
-            padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: widget.padding ??
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius ?? 8),
             ),
@@ -68,7 +70,8 @@ class _CustomButtonState extends State<CustomButton> {
                     ],
                     Text(
                       widget.text,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),

@@ -60,7 +60,8 @@ class DevSeedService {
 
   /// Проверка существования тестовых данных
   Future<bool> _checkExistingTestData() async {
-    final seededDoc = await _firestore.collection('system').doc('seeded_data').get();
+    final seededDoc =
+        await _firestore.collection('system').doc('seeded_data').get();
 
     return seededDoc.exists && seededDoc.data()?['seededAt'] != null;
   }
@@ -111,7 +112,8 @@ class DevSeedService {
       name: 'Анна Фотограф',
       description:
           'Профессиональный фотограф с 5-летним опытом. Специализируюсь на свадебной и портретной фотографии.',
-      bio: 'Люблю создавать красивые моменты и запечатлевать эмоции. Работаю в Москве и области.',
+      bio:
+          'Люблю создавать красивые моменты и запечатлевать эмоции. Работаю в Москве и области.',
       category: SpecialistCategory.photographer,
       experienceLevel: ExperienceLevel.intermediate,
       yearsOfExperience: 5,
@@ -190,7 +192,8 @@ class DevSeedService {
       name: 'DJ Алексей',
       description:
           'Профессиональный DJ с 8-летним опытом. Специализируюсь на свадьбах и корпоративных мероприятиях.',
-      bio: 'Создаю атмосферу праздника с помощью качественной музыки и современного оборудования.',
+      bio:
+          'Создаю атмосферу праздника с помощью качественной музыки и современного оборудования.',
       category: SpecialistCategory.dj,
       experienceLevel: ExperienceLevel.advanced,
       yearsOfExperience: 8,
@@ -316,7 +319,8 @@ class DevSeedService {
       hourlyRate: 8000,
       price: 8000,
       location: 'Москва',
-      imageUrl: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop',
       isVerified: true,
       rating: 4.8,
       reviewCount: 167,
@@ -344,7 +348,8 @@ class DevSeedService {
       id: 'test_caterer_1',
       userId: 'test_user_caterer',
       name: 'Кейтеринг "Вкус"',
-      description: 'Профессиональный кейтеринг для любых мероприятий. Качественная еда и сервис.',
+      description:
+          'Профессиональный кейтеринг для любых мероприятий. Качественная еда и сервис.',
       bio:
           'Готовим вкусную еду и обеспечиваем отличный сервис. Работаем с любыми диетическими требованиями.',
       category: SpecialistCategory.caterer,
@@ -353,7 +358,8 @@ class DevSeedService {
       hourlyRate: 2000,
       price: 2000,
       location: 'Москва',
-      imageUrl: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop',
+      imageUrl:
+          'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop',
       isVerified: true,
       rating: 4.9,
       reviewCount: 234,
@@ -381,7 +387,8 @@ class DevSeedService {
       id: 'test_animator_1',
       userId: 'test_user_animator',
       name: 'Аниматор Мария',
-      description: 'Опытный аниматор для детских праздников. Создаю веселье и радость для детей.',
+      description:
+          'Опытный аниматор для детских праздников. Создаю веселье и радость для детей.',
       bio:
           'Специализируюсь на детских праздниках. Игры, конкурсы, шоу-программы для любого возраста.',
       category: SpecialistCategory.animator,
@@ -419,8 +426,10 @@ class DevSeedService {
       id: 'test_florist_1',
       userId: 'test_user_florist',
       name: 'Флорист Ольга',
-      description: 'Профессиональный флорист. Создаю красивые букеты и цветочные композиции.',
-      bio: 'Свежие цветы, креативные композиции, индивидуальный подход к каждому заказу.',
+      description:
+          'Профессиональный флорист. Создаю красивые букеты и цветочные композиции.',
+      bio:
+          'Свежие цветы, креативные композиции, индивидуальный подход к каждому заказу.',
       category: SpecialistCategory.florist,
       experienceLevel: ExperienceLevel.intermediate,
       yearsOfExperience: 7,
@@ -456,7 +465,8 @@ class DevSeedService {
       id: 'test_makeup_1',
       userId: 'test_user_makeup',
       name: 'Визажист Катя',
-      description: 'Профессиональный визажист. Создаю идеальный образ для любого мероприятия.',
+      description:
+          'Профессиональный визажист. Создаю идеальный образ для любого мероприятия.',
       bio:
           'Специализируюсь на свадебном макияже и макияже для фотосессий. Работаю с любыми типами кожи.',
       category: SpecialistCategory.makeup,
@@ -533,7 +543,8 @@ class DevSeedService {
         'likes': 0,
         'comments': 0,
         'shares': 0,
-        'createdAt': Timestamp.fromDate(DateTime.now().subtract(Duration(days: i))),
+        'createdAt':
+            Timestamp.fromDate(DateTime.now().subtract(Duration(days: i))),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
         'metadata': {'createdBy': 'dev_seed_service', 'isTestData': true},
       });
@@ -578,8 +589,10 @@ class DevSeedService {
         'mediaUrl': storyData['mediaUrl'],
         'text': storyData['text'],
         'views': 0,
-        'createdAt': Timestamp.fromDate(DateTime.now().subtract(Duration(hours: i))),
-        'expiresAt': Timestamp.fromDate(DateTime.now().add(const Duration(hours: 24))),
+        'createdAt':
+            Timestamp.fromDate(DateTime.now().subtract(Duration(hours: i))),
+        'expiresAt':
+            Timestamp.fromDate(DateTime.now().add(const Duration(hours: 24))),
         'metadata': {'createdBy': 'dev_seed_service', 'isTestData': true},
       });
     }
@@ -608,7 +621,8 @@ class DevSeedService {
         'specialistId': specialistIds[2], // DJ
         'customerName': 'Александр',
         'rating': 4,
-        'text': 'Отличный DJ! Музыка была на высоте, все гости танцевали до утра.',
+        'text':
+            'Отличный DJ! Музыка была на высоте, все гости танцевали до утра.',
       },
     ];
 
@@ -625,7 +639,8 @@ class DevSeedService {
         'customerName': reviewData['customerName'],
         'rating': reviewData['rating'],
         'text': reviewData['text'],
-        'createdAt': Timestamp.fromDate(DateTime.now().subtract(Duration(days: i + 1))),
+        'createdAt':
+            Timestamp.fromDate(DateTime.now().subtract(Duration(days: i + 1))),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
         'metadata': {'createdBy': 'dev_seed_service', 'isTestData': true},
       });
@@ -674,7 +689,8 @@ class DevSeedService {
         'service': bookingData['service'],
         'date': Timestamp.fromDate(bookingData['date']! as DateTime),
         'status': bookingData['status'],
-        'createdAt': Timestamp.fromDate(DateTime.now().subtract(Duration(days: i + 2))),
+        'createdAt':
+            Timestamp.fromDate(DateTime.now().subtract(Duration(days: i + 2))),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
         'metadata': {'createdBy': 'dev_seed_service', 'isTestData': true},
       });

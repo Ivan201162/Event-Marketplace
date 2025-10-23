@@ -23,7 +23,8 @@ class EditableImage extends StatelessWidget {
             Container(
               width: double.infinity,
               height: double.infinity,
-              decoration: BoxDecoration(color: Colors.grey[300], shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                  color: Colors.grey[300], shape: BoxShape.circle),
               child: imageUrl != null
                   ? CachedNetworkImage(
                       imageUrl: imageUrl!,
@@ -32,8 +33,9 @@ class EditableImage extends StatelessWidget {
                         color: Colors.grey[300],
                         child: const Center(child: CircularProgressIndicator()),
                       ),
-                      errorWidget: (context, url, error) =>
-                          Container(color: Colors.grey[300], child: Icon(placeholder, size: 50)),
+                      errorWidget: (context, url, error) => Container(
+                          color: Colors.grey[300],
+                          child: Icon(placeholder, size: 50)),
                     )
                   : Icon(placeholder, size: 50),
             ),
@@ -49,7 +51,8 @@ class EditableImage extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
                 ),
-                child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
+                child:
+                    const Icon(Icons.camera_alt, color: Colors.white, size: 16),
               ),
             ),
           ],

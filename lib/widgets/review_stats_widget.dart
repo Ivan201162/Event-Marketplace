@@ -28,17 +28,20 @@ class ReviewStatsWidget extends StatelessWidget {
                   children: [
                     Text(
                       stats.averageRating.toStringAsFixed(1),
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                     ),
                     RatingWidget(rating: stats.averageRating, starSize: 24),
                     const SizedBox(height: 4),
                     Text(
                       '${stats.totalReviews} отзывов',
-                      style:
-                          Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -53,12 +56,16 @@ class ReviewStatsWidget extends StatelessWidget {
                         'Распределение оценок',
                         style: Theme.of(
                           context,
-                        ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                        )
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 8),
                       ...List.generate(5, (index) {
                         final rating = 5 - index;
-                        final count = stats.ratingDistribution[rating.toString()] ?? 0;
+                        final count =
+                            stats.ratingDistribution[rating.toString()] ?? 0;
                         final percentage = stats.getRatingPercentage(rating);
 
                         return Padding(
@@ -66,7 +73,8 @@ class ReviewStatsWidget extends StatelessWidget {
                           child: Row(
                             children: [
                               // Звезда
-                              const Icon(Icons.star, size: 16, color: Colors.amber),
+                              const Icon(Icons.star,
+                                  size: 16, color: Colors.amber),
                               const SizedBox(width: 8),
 
                               // Номер рейтинга
@@ -99,7 +107,10 @@ class ReviewStatsWidget extends StatelessWidget {
                                   count.toString(),
                                   style: Theme.of(
                                     context,
-                                  ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                                  )
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(color: Colors.grey[600]),
                                   textAlign: TextAlign.right,
                                 ),
                               ),
@@ -139,7 +150,10 @@ class CompactRatingWidget extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               '($reviewCount)',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
           ],
         ],

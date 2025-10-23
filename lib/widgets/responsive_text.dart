@@ -30,7 +30,7 @@ class ResponsiveText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     // Calculate responsive font size based on type
     double baseFontSize = fontSize ?? 14.0;
     if (isTitle == true) {
@@ -38,7 +38,7 @@ class ResponsiveText extends StatelessWidget {
     } else if (isSubtitle == true) {
       baseFontSize = fontSize ?? 16.0;
     }
-    
+
     double responsiveFontSize = baseFontSize;
     if (screenWidth < 600) {
       responsiveFontSize = baseFontSize * 0.9;

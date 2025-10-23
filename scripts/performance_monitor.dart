@@ -53,7 +53,7 @@ void main() async {
   try {
     final cpuResult = await Process.run(
       'adb',
-      ['shell', 'top', '-n', '1', '-p', '$(pidof com.eventmarketplace.app)'],
+      ['shell', 'top', '-n', '1'],
       workingDirectory: Directory.current.path,
     );
 

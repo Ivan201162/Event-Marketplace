@@ -180,7 +180,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
 
   PreferredSizeWidget _buildAppBar(BuildContext context, AppUser currentUser) {
     final theme = Theme.of(context);
-    
+
     return AppBar(
       title: Row(
         children: [
@@ -201,7 +201,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
               children: [
                 Text(
                   widget.otherUserName ?? 'Пользователь',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'В сети',
@@ -234,7 +235,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
         // Отмечаем сообщения как прочитанные
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (_currentUserId != null) {
-            ref.read(chatStateProvider(widget.chatId).notifier)
+            ref
+                .read(chatStateProvider(widget.chatId).notifier)
                 .markAsRead(_currentUserId!);
           }
         });
@@ -246,8 +248,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
           itemBuilder: (context, index) {
             final message = messages[index];
             final isFromCurrentUser = message.senderId == _currentUserId;
-            final showAvatar = index == 0 || 
-                messages[index - 1].senderId != message.senderId;
+            final showAvatar =
+                index == 0 || messages[index - 1].senderId != message.senderId;
 
             if (message.type == MessageType.system) {
               return SystemMessageBubble(message: message);
@@ -286,8 +288,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
           Text(
             'Начните общение',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -304,7 +306,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
 
   Widget _buildMessageInput() {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

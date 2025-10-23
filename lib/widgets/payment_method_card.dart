@@ -48,8 +48,9 @@ class PaymentMethodCard extends StatelessWidget {
                 ),
                 child: Icon(
                   _getMethodIcon(methodInfo),
-                  color:
-                      isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
+                  color: isSelected
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurfaceVariant,
                   size: 24,
                 ),
               ),
@@ -66,7 +67,8 @@ class PaymentMethodCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: methodInfo.isAvailable
                             ? theme.colorScheme.onSurface
-                            : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                            : theme.colorScheme.onSurface
+                                .withValues(alpha: 0.5),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -75,7 +77,8 @@ class PaymentMethodCard extends StatelessWidget {
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: methodInfo.isAvailable
                             ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
-                            : theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                            : theme.colorScheme.onSurface
+                                .withValues(alpha: 0.3),
                       ),
                     ),
                     if (methodInfo.fee > 0) ...[
@@ -101,7 +104,8 @@ class PaymentMethodCard extends StatelessWidget {
                     color: theme.colorScheme.primary,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.check, color: theme.colorScheme.onPrimary, size: 16),
+                  child: Icon(Icons.check,
+                      color: theme.colorScheme.onPrimary, size: 16),
                 )
               else if (!methodInfo.isAvailable)
                 Icon(
@@ -114,7 +118,8 @@ class PaymentMethodCard extends StatelessWidget {
                   width: 24,
                   height: 24,
                   decoration: BoxDecoration(
-                    border: Border.all(color: theme.colorScheme.outline, width: 2),
+                    border:
+                        Border.all(color: theme.colorScheme.outline, width: 2),
                     shape: BoxShape.circle,
                   ),
                 ),

@@ -18,23 +18,28 @@ class GuestAccess {
     this.metadata,
   });
 
-  factory GuestAccess.fromMap(Map<String, dynamic> map, String id) => GuestAccess(
-    id: id,
-    eventId: map['eventId'] as String,
-    organizerId: map['organizerId'] as String,
-    guestName: map['guestName'] as String?,
-    guestEmail: map['guestEmail'] as String?,
-    accessCode: map['accessCode'] as String,
-    status: GuestAccessStatus.values.firstWhere(
-      (e) => e.toString() == 'GuestAccessStatus.${map['status']}',
-      orElse: () => GuestAccessStatus.active,
-    ),
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    expiresAt: map['expiresAt'] != null ? (map['expiresAt'] as Timestamp).toDate() : null,
-    lastUsedAt: map['lastUsedAt'] != null ? (map['lastUsedAt'] as Timestamp).toDate() : null,
-    usageCount: map['usageCount'] as int,
-    metadata: map['metadata'] as Map<String, dynamic>?,
-  );
+  factory GuestAccess.fromMap(Map<String, dynamic> map, String id) =>
+      GuestAccess(
+        id: id,
+        eventId: map['eventId'] as String,
+        organizerId: map['organizerId'] as String,
+        guestName: map['guestName'] as String?,
+        guestEmail: map['guestEmail'] as String?,
+        accessCode: map['accessCode'] as String,
+        status: GuestAccessStatus.values.firstWhere(
+          (e) => e.toString() == 'GuestAccessStatus.${map['status']}',
+          orElse: () => GuestAccessStatus.active,
+        ),
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        expiresAt: map['expiresAt'] != null
+            ? (map['expiresAt'] as Timestamp).toDate()
+            : null,
+        lastUsedAt: map['lastUsedAt'] != null
+            ? (map['lastUsedAt'] as Timestamp).toDate()
+            : null,
+        usageCount: map['usageCount'] as int,
+        metadata: map['metadata'] as Map<String, dynamic>?,
+      );
   final String id;
   final String eventId;
   final String organizerId;
@@ -49,18 +54,19 @@ class GuestAccess {
   final Map<String, dynamic>? metadata;
 
   Map<String, dynamic> toMap() => {
-    'eventId': eventId,
-    'organizerId': organizerId,
-    'guestName': guestName,
-    'guestEmail': guestEmail,
-    'accessCode': accessCode,
-    'status': status.toString().split('.').last,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-    'lastUsedAt': lastUsedAt != null ? Timestamp.fromDate(lastUsedAt!) : null,
-    'usageCount': usageCount,
-    'metadata': metadata,
-  };
+        'eventId': eventId,
+        'organizerId': organizerId,
+        'guestName': guestName,
+        'guestEmail': guestEmail,
+        'accessCode': accessCode,
+        'status': status.toString().split('.').last,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+        'lastUsedAt':
+            lastUsedAt != null ? Timestamp.fromDate(lastUsedAt!) : null,
+        'usageCount': usageCount,
+        'metadata': metadata,
+      };
 
   /// Проверить, активен ли доступ
   bool get isActive {

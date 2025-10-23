@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Исправленный экран профиля с безопасной загрузкой данных
 class FixedProfileScreen extends ConsumerStatefulWidget {
-  const FixedProfileScreen({super.key, required this.userId, this.isOwnProfile = false});
+  const FixedProfileScreen(
+      {super.key, required this.userId, this.isOwnProfile = false});
 
   final String userId;
   final bool isOwnProfile;
@@ -31,7 +32,8 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
     _animationController.forward();
   }
 
@@ -61,7 +63,10 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
       body: widget.userId.isEmpty
           ? const Center(child: Text('Ошибка загрузки профиля'))
           : StreamBuilder<DocumentSnapshot>(
-              stream: FirebaseFirestore.instance.collection('users').doc(widget.userId).snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(widget.userId)
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -71,9 +76,11 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.person_off, size: 64, color: theme.colorScheme.error),
+                        Icon(Icons.person_off,
+                            size: 64, color: theme.colorScheme.error),
                         const SizedBox(height: 16),
-                        Text('Профиль не найден', style: theme.textTheme.headlineSmall),
+                        Text('Профиль не найден',
+                            style: theme.textTheme.headlineSmall),
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () => Navigator.pop(context),
@@ -96,7 +103,8 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
     );
   }
 
-  Widget _buildProfileContent(Map<String, dynamic> userData, bool isOwnProfile) {
+  Widget _buildProfileContent(
+      Map<String, dynamic> userData, bool isOwnProfile) {
     final theme = Theme.of(context);
 
     return CustomScrollView(
@@ -137,7 +145,10 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withValues(alpha: 0.7)
+                ],
               ),
             ),
           ),
@@ -178,7 +189,9 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
             const SizedBox(height: 16),
 
             // Имя
-            Text(name, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+            Text(name,
+                style: theme.textTheme.headlineSmall
+                    ?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
 
             // Город
@@ -214,23 +227,23 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
   }
 
   Widget _buildStatItem(String label, String value, ThemeData theme) => Column(
-    children: [
-      Text(
-        value,
-        style: theme.textTheme.headlineSmall?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: theme.primaryColor,
-        ),
-      ),
-      const SizedBox(height: 4),
-      Text(
-        label,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-        ),
-      ),
-    ],
-  );
+        children: [
+          Text(
+            value,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.primaryColor,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      );
 
   Widget _buildActionButtons(Map<String, dynamic> userData, bool isOwnProfile) {
     final theme = Theme.of(context);
@@ -285,7 +298,8 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
           children: [
             Text(
               'О себе',
-              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(about, style: theme.textTheme.bodyMedium),
@@ -302,12 +316,14 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
     return SliverToBoxAdapter(
       child: Container(
         decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: theme.dividerColor, width: 0.5)),
+          border:
+              Border(bottom: BorderSide(color: theme.dividerColor, width: 0.5)),
         ),
         child: TabBar(
           controller: _tabController,
           labelColor: theme.primaryColor,
-          unselectedLabelColor: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+          unselectedLabelColor:
+              theme.colorScheme.onSurface.withValues(alpha: 0.6),
           indicatorColor: theme.primaryColor,
           tabs: const [
             Tab(text: 'Заявки'),
@@ -320,11 +336,15 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
   }
 
   Widget _buildTabContent(Map<String, dynamic> userData) => SliverFillRemaining(
-    child: TabBarView(
-      controller: _tabController,
-      children: [_buildBookingsTab(), _buildReviewsTab(), _buildPortfolioTab()],
-    ),
-  );
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildBookingsTab(),
+            _buildReviewsTab(),
+            _buildPortfolioTab()
+          ],
+        ),
+      );
 
   Widget _buildBookingsTab() {
     final theme = Theme.of(context);
@@ -359,7 +379,9 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.star, size: 64, color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+          Icon(Icons.star,
+              size: 64,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           Text('Отзывы', style: theme.textTheme.headlineSmall),
           const SizedBox(height: 8),
@@ -409,7 +431,8 @@ class _FixedProfileScreenState extends ConsumerState<FixedProfileScreen>
 
   void _sendMessage() {
     // TODO: Реализовать отправку сообщения
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Отправка сообщения')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Отправка сообщения')));
   }
 
   void _shareProfile() {

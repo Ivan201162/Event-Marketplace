@@ -26,7 +26,8 @@ class RequestService {
   }
 
   /// Get requests received by user
-  Future<List<Request>> getReceivedRequests(String userId, {int limit = 20}) async {
+  Future<List<Request>> getReceivedRequests(String userId,
+      {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -65,7 +66,8 @@ class RequestService {
   }
 
   /// Get requests by category
-  Future<List<Request>> getRequestsByCategory(String category, {int limit = 20}) async {
+  Future<List<Request>> getRequestsByCategory(String category,
+      {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -141,7 +143,8 @@ class RequestService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef = await _firestore.collection(_collection).add(request.toFirestore());
+      final docRef =
+          await _firestore.collection(_collection).add(request.toFirestore());
       return docRef.id;
     } catch (e) {
       debugPrint('Error creating request: $e');
@@ -150,7 +153,8 @@ class RequestService {
   }
 
   /// Update request status
-  Future<bool> updateRequestStatus(String requestId, RequestStatus status) async {
+  Future<bool> updateRequestStatus(
+      String requestId, RequestStatus status) async {
     try {
       await _firestore.collection(_collection).doc(requestId).update({
         'status': status.toString().split('.').last,
@@ -165,7 +169,8 @@ class RequestService {
   }
 
   /// Update request
-  Future<bool> updateRequest(String requestId, Map<String, dynamic> updates) async {
+  Future<bool> updateRequest(
+      String requestId, Map<String, dynamic> updates) async {
     try {
       await _firestore.collection(_collection).doc(requestId).update({
         ...updates,
@@ -212,12 +217,14 @@ class RequestService {
           .limit(limit)
           .get();
 
-      final requests = snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList();
+      final requests =
+          snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList();
 
       // Filter requests that contain the query in description, category, or city
       return requests.where((request) {
         final searchQuery = query.toLowerCase();
-        return (request.description?.toLowerCase().contains(searchQuery) ?? false) ||
+        return (request.description?.toLowerCase().contains(searchQuery) ??
+                false) ||
             request.category.toLowerCase().contains(searchQuery) ||
             request.city.toLowerCase().contains(searchQuery) ||
             (request.eventType?.toLowerCase().contains(searchQuery) ?? false);
@@ -272,7 +279,13 @@ class RequestService {
       };
     } catch (e) {
       debugPrint('Error getting request stats: $e');
-      return {'sent': 0, 'received': 0, 'pending': 0, 'accepted': 0, 'completed': 0};
+      return {
+        'sent': 0,
+        'received': 0,
+        'pending': 0,
+        'accepted': 0,
+        'completed': 0
+      };
     }
   }
 
@@ -326,18 +339,21 @@ class RequestService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList());
   }
 
   /// Stream of received requests
-  Stream<List<Request>> getReceivedRequestsStream(String userId, {int limit = 20}) {
+  Stream<List<Request>> getReceivedRequestsStream(String userId,
+      {int limit = 20}) {
     return _firestore
         .collection(_collection)
         .where('toUserId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Request.fromFirestore(doc)).toList());
   }
 
   /// Get pending requests count
@@ -346,7 +362,8 @@ class RequestService {
       final snapshot = await _firestore
           .collection(_collection)
           .where('toUserId', isEqualTo: userId)
-          .where('status', isEqualTo: RequestStatus.pending.toString().split('.').last)
+          .where('status',
+              isEqualTo: RequestStatus.pending.toString().split('.').last)
           .get();
 
       return snapshot.docs.length;
@@ -361,7 +378,8 @@ class RequestService {
     return _firestore
         .collection(_collection)
         .where('toUserId', isEqualTo: userId)
-        .where('status', isEqualTo: RequestStatus.pending.toString().split('.').last)
+        .where('status',
+            isEqualTo: RequestStatus.pending.toString().split('.').last)
         .snapshots()
         .map((snapshot) => snapshot.docs.length);
   }

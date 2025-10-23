@@ -39,7 +39,8 @@ class GuestModeService {
       );
 
       // Сохраняем в Firestore
-      final docRef = await _firestore.collection('guest_access').add(guestAccess.toMap());
+      final docRef =
+          await _firestore.collection('guest_access').add(guestAccess.toMap());
 
       // Отправляем приглашение
       await _sendInvitation(docRef.id, guestAccess);
@@ -118,7 +119,8 @@ class GuestModeService {
       }
 
       // Получаем информацию о мероприятии
-      final eventDoc = await _firestore.collection('events').doc(guestAccess.eventId).get();
+      final eventDoc =
+          await _firestore.collection('events').doc(guestAccess.eventId).get();
       if (!eventDoc.exists) {
         throw Exception('Мероприятие не найдено');
       }
@@ -199,7 +201,8 @@ class GuestModeService {
     return code.toString();
   }
 
-  Future<void> _sendInvitation(String guestAccessId, GuestAccess guestAccess) async {
+  Future<void> _sendInvitation(
+      String guestAccessId, GuestAccess guestAccess) async {
     try {
       // TODO(developer): Отправить email с кодом доступа
       // TODO(developer): Отправить SMS с кодом доступа (если указан телефон)
@@ -260,7 +263,9 @@ class GuestAccess {
       ),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      activatedAt: data['activatedAt'] != null ? (data['activatedAt'] as Timestamp).toDate() : null,
+      activatedAt: data['activatedAt'] != null
+          ? (data['activatedAt'] as Timestamp).toDate()
+          : null,
       expiresAt: (data['expiresAt'] as Timestamp).toDate(),
       lastAccessedAt: data['lastAccessedAt'] != null
           ? (data['lastAccessedAt'] as Timestamp).toDate()
@@ -288,22 +293,24 @@ class GuestAccess {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'eventId': eventId,
-    'organizerId': organizerId,
-    'guestName': guestName,
-    'guestEmail': guestEmail,
-    'guestPhone': guestPhone,
-    'invitationMessage': invitationMessage,
-    'accessCode': accessCode,
-    'status': status.name,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'activatedAt': activatedAt != null ? Timestamp.fromDate(activatedAt!) : null,
-    'expiresAt': Timestamp.fromDate(expiresAt),
-    'lastAccessedAt': lastAccessedAt != null ? Timestamp.fromDate(lastAccessedAt!) : null,
-    'accessCount': accessCount,
-    'metadata': metadata,
-  };
+        'eventId': eventId,
+        'organizerId': organizerId,
+        'guestName': guestName,
+        'guestEmail': guestEmail,
+        'guestPhone': guestPhone,
+        'invitationMessage': invitationMessage,
+        'accessCode': accessCode,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'activatedAt':
+            activatedAt != null ? Timestamp.fromDate(activatedAt!) : null,
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'lastAccessedAt':
+            lastAccessedAt != null ? Timestamp.fromDate(lastAccessedAt!) : null,
+        'accessCount': accessCount,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   GuestAccess copyWith({
@@ -323,24 +330,25 @@ class GuestAccess {
     DateTime? lastAccessedAt,
     int? accessCount,
     Map<String, dynamic>? metadata,
-  }) => GuestAccess(
-    id: id ?? this.id,
-    eventId: eventId ?? this.eventId,
-    organizerId: organizerId ?? this.organizerId,
-    guestName: guestName ?? this.guestName,
-    guestEmail: guestEmail ?? this.guestEmail,
-    guestPhone: guestPhone ?? this.guestPhone,
-    invitationMessage: invitationMessage ?? this.invitationMessage,
-    accessCode: accessCode ?? this.accessCode,
-    status: status ?? this.status,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    activatedAt: activatedAt ?? this.activatedAt,
-    expiresAt: expiresAt ?? this.expiresAt,
-    lastAccessedAt: lastAccessedAt ?? this.lastAccessedAt,
-    accessCount: accessCount ?? this.accessCount,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      GuestAccess(
+        id: id ?? this.id,
+        eventId: eventId ?? this.eventId,
+        organizerId: organizerId ?? this.organizerId,
+        guestName: guestName ?? this.guestName,
+        guestEmail: guestEmail ?? this.guestEmail,
+        guestPhone: guestPhone ?? this.guestPhone,
+        invitationMessage: invitationMessage ?? this.invitationMessage,
+        accessCode: accessCode ?? this.accessCode,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        activatedAt: activatedAt ?? this.activatedAt,
+        expiresAt: expiresAt ?? this.expiresAt,
+        lastAccessedAt: lastAccessedAt ?? this.lastAccessedAt,
+        accessCount: accessCount ?? this.accessCount,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Информация о мероприятии для гостя

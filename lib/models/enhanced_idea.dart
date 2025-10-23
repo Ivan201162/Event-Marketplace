@@ -36,52 +36,52 @@ class EnhancedIdea {
 
   /// Создать из Map
   factory EnhancedIdea.fromMap(Map<String, dynamic> map) => EnhancedIdea(
-    id: map['id'] as String,
-    authorId: map['authorId'] as String,
-    title: map['title'] as String,
-    description: map['description'] as String,
-    type: IdeaType.fromString(map['type'] as String),
-    createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-    media:
-        (map['media'] as List?)
-            ?.map((media) => IdeaMedia.fromMap(media as Map<String, dynamic>))
-            .toList() ??
-        [],
-    likesCount: (map['likesCount'] as int?) ?? 0,
-    commentsCount: (map['commentsCount'] as int?) ?? 0,
-    sharesCount: (map['sharesCount'] as int?) ?? 0,
-    savesCount: (map['savesCount'] as int?) ?? 0,
-    viewsCount: (map['viewsCount'] as int?) ?? 0,
-    likes: List<String>.from((map['likes'] as List?) ?? []),
-    comments:
-        (map['comments'] as List?)
-            ?.map((comment) => IdeaComment.fromMap(comment as Map<String, dynamic>))
-            .toList() ??
-        [],
-    shares:
-        (map['shares'] as List?)
-            ?.map((share) => IdeaShare.fromMap(share as Map<String, dynamic>))
-            .toList() ??
-        [],
-    saves: List<String>.from((map['saves'] as List?) ?? []),
-    tags: List<String>.from((map['tags'] as List?) ?? []),
-    category: map['category'] as String?,
-    collectionId: map['collectionId'] as String?,
-    specialistId: map['specialistId'] as String?,
-    budget: (map['budget'] as num?)?.toDouble(),
-    timeline: map['timeline'] as String?,
-    location: map['location'] as String?,
-    isPublic: (map['isPublic'] as bool?) ?? true,
-    isFeatured: (map['isFeatured'] as bool?) ?? false,
-    isArchived: (map['isArchived'] as bool?) ?? false,
-    updatedAt: map['updatedAt'] != null
-        ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
-        : null,
-    metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-    authorName: map['authorName'] as String?,
-    isLiked: (map['isLiked'] as bool?) ?? false,
-    isSaved: (map['isSaved'] as bool?) ?? false,
-  );
+        id: map['id'] as String,
+        authorId: map['authorId'] as String,
+        title: map['title'] as String,
+        description: map['description'] as String,
+        type: IdeaType.fromString(map['type'] as String),
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        media: (map['media'] as List?)
+                ?.map(
+                    (media) => IdeaMedia.fromMap(media as Map<String, dynamic>))
+                .toList() ??
+            [],
+        likesCount: (map['likesCount'] as int?) ?? 0,
+        commentsCount: (map['commentsCount'] as int?) ?? 0,
+        sharesCount: (map['sharesCount'] as int?) ?? 0,
+        savesCount: (map['savesCount'] as int?) ?? 0,
+        viewsCount: (map['viewsCount'] as int?) ?? 0,
+        likes: List<String>.from((map['likes'] as List?) ?? []),
+        comments: (map['comments'] as List?)
+                ?.map((comment) =>
+                    IdeaComment.fromMap(comment as Map<String, dynamic>))
+                .toList() ??
+            [],
+        shares: (map['shares'] as List?)
+                ?.map(
+                    (share) => IdeaShare.fromMap(share as Map<String, dynamic>))
+                .toList() ??
+            [],
+        saves: List<String>.from((map['saves'] as List?) ?? []),
+        tags: List<String>.from((map['tags'] as List?) ?? []),
+        category: map['category'] as String?,
+        collectionId: map['collectionId'] as String?,
+        specialistId: map['specialistId'] as String?,
+        budget: (map['budget'] as num?)?.toDouble(),
+        timeline: map['timeline'] as String?,
+        location: map['location'] as String?,
+        isPublic: (map['isPublic'] as bool?) ?? true,
+        isFeatured: (map['isFeatured'] as bool?) ?? false,
+        isArchived: (map['isArchived'] as bool?) ?? false,
+        updatedAt: map['updatedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
+            : null,
+        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+        authorName: map['authorName'] as String?,
+        isLiked: (map['isLiked'] as bool?) ?? false,
+        isSaved: (map['isSaved'] as bool?) ?? false,
+      );
 
   /// Уникальный идентификатор
   final String id;
@@ -178,38 +178,38 @@ class EnhancedIdea {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'authorId': authorId,
-    'title': title,
-    'description': description,
-    'type': type.value,
-    'createdAt': createdAt.millisecondsSinceEpoch,
-    'media': media.map((media) => media.toMap()).toList(),
-    'likesCount': likesCount,
-    'commentsCount': commentsCount,
-    'sharesCount': sharesCount,
-    'savesCount': savesCount,
-    'viewsCount': viewsCount,
-    'likes': likes,
-    'comments': comments.map((comment) => comment.toMap()).toList(),
-    'shares': shares.map((share) => share.toMap()).toList(),
-    'saves': saves,
-    'tags': tags,
-    'category': category,
-    'collectionId': collectionId,
-    'specialistId': specialistId,
-    'budget': budget,
-    'timeline': timeline,
-    'location': location,
-    'isPublic': isPublic,
-    'isFeatured': isFeatured,
-    'isArchived': isArchived,
-    'updatedAt': updatedAt?.millisecondsSinceEpoch,
-    'metadata': metadata,
-    'authorName': authorName,
-    'isLiked': isLiked,
-    'isSaved': isSaved,
-  };
+        'id': id,
+        'authorId': authorId,
+        'title': title,
+        'description': description,
+        'type': type.value,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'media': media.map((media) => media.toMap()).toList(),
+        'likesCount': likesCount,
+        'commentsCount': commentsCount,
+        'sharesCount': sharesCount,
+        'savesCount': savesCount,
+        'viewsCount': viewsCount,
+        'likes': likes,
+        'comments': comments.map((comment) => comment.toMap()).toList(),
+        'shares': shares.map((share) => share.toMap()).toList(),
+        'saves': saves,
+        'tags': tags,
+        'category': category,
+        'collectionId': collectionId,
+        'specialistId': specialistId,
+        'budget': budget,
+        'timeline': timeline,
+        'location': location,
+        'isPublic': isPublic,
+        'isFeatured': isFeatured,
+        'isArchived': isArchived,
+        'updatedAt': updatedAt?.millisecondsSinceEpoch,
+        'metadata': metadata,
+        'authorName': authorName,
+        'isLiked': isLiked,
+        'isSaved': isSaved,
+      };
 
   /// Создать копию с изменениями
   EnhancedIdea copyWith({
@@ -244,39 +244,40 @@ class EnhancedIdea {
     String? authorName,
     bool? isLiked,
     bool? isSaved,
-  }) => EnhancedIdea(
-    id: id ?? this.id,
-    authorId: authorId ?? this.authorId,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    type: type ?? this.type,
-    createdAt: createdAt ?? this.createdAt,
-    media: media ?? this.media,
-    likesCount: likesCount ?? this.likesCount,
-    commentsCount: commentsCount ?? this.commentsCount,
-    sharesCount: sharesCount ?? this.sharesCount,
-    savesCount: savesCount ?? this.savesCount,
-    viewsCount: viewsCount ?? this.viewsCount,
-    likes: likes ?? this.likes,
-    comments: comments ?? this.comments,
-    shares: shares ?? this.shares,
-    saves: saves ?? this.saves,
-    tags: tags ?? this.tags,
-    category: category ?? this.category,
-    collectionId: collectionId ?? this.collectionId,
-    specialistId: specialistId ?? this.specialistId,
-    budget: budget ?? this.budget,
-    timeline: timeline ?? this.timeline,
-    location: location ?? this.location,
-    isPublic: isPublic ?? this.isPublic,
-    isFeatured: isFeatured ?? this.isFeatured,
-    isArchived: isArchived ?? this.isArchived,
-    updatedAt: updatedAt ?? this.updatedAt,
-    metadata: metadata ?? this.metadata,
-    authorName: authorName ?? this.authorName,
-    isLiked: isLiked ?? this.isLiked,
-    isSaved: isSaved ?? this.isSaved,
-  );
+  }) =>
+      EnhancedIdea(
+        id: id ?? this.id,
+        authorId: authorId ?? this.authorId,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        type: type ?? this.type,
+        createdAt: createdAt ?? this.createdAt,
+        media: media ?? this.media,
+        likesCount: likesCount ?? this.likesCount,
+        commentsCount: commentsCount ?? this.commentsCount,
+        sharesCount: sharesCount ?? this.sharesCount,
+        savesCount: savesCount ?? this.savesCount,
+        viewsCount: viewsCount ?? this.viewsCount,
+        likes: likes ?? this.likes,
+        comments: comments ?? this.comments,
+        shares: shares ?? this.shares,
+        saves: saves ?? this.saves,
+        tags: tags ?? this.tags,
+        category: category ?? this.category,
+        collectionId: collectionId ?? this.collectionId,
+        specialistId: specialistId ?? this.specialistId,
+        budget: budget ?? this.budget,
+        timeline: timeline ?? this.timeline,
+        location: location ?? this.location,
+        isPublic: isPublic ?? this.isPublic,
+        isFeatured: isFeatured ?? this.isFeatured,
+        isArchived: isArchived ?? this.isArchived,
+        updatedAt: updatedAt ?? this.updatedAt,
+        metadata: metadata ?? this.metadata,
+        authorName: authorName ?? this.authorName,
+        isLiked: isLiked ?? this.isLiked,
+        isSaved: isSaved ?? this.isSaved,
+      );
 }
 
 /// Тип идеи
@@ -403,17 +404,19 @@ class IdeaMedia {
   });
 
   factory IdeaMedia.fromMap(Map<String, dynamic> map) => IdeaMedia(
-    id: map['id'] as String,
-    url: map['url'] as String,
-    type: IdeaMediaType.fromString(map['type'] as String),
-    width: map['width'] as int,
-    height: map['height'] as int,
-    thumbnailUrl: map['thumbnailUrl'] as String?,
-    duration: map['duration'] != null ? Duration(milliseconds: map['duration'] as int) : null,
-    caption: map['caption'] as String?,
-    altText: map['altText'] as String?,
-    metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
-  );
+        id: map['id'] as String,
+        url: map['url'] as String,
+        type: IdeaMediaType.fromString(map['type'] as String),
+        width: map['width'] as int,
+        height: map['height'] as int,
+        thumbnailUrl: map['thumbnailUrl'] as String?,
+        duration: map['duration'] != null
+            ? Duration(milliseconds: map['duration'] as int)
+            : null,
+        caption: map['caption'] as String?,
+        altText: map['altText'] as String?,
+        metadata: Map<String, dynamic>.from((map['metadata'] as Map?) ?? {}),
+      );
 
   final String id;
   final String url;
@@ -427,17 +430,17 @@ class IdeaMedia {
   final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'url': url,
-    'type': type.value,
-    'width': width,
-    'height': height,
-    'thumbnailUrl': thumbnailUrl,
-    'duration': duration?.inMilliseconds,
-    'caption': caption,
-    'altText': altText,
-    'metadata': metadata,
-  };
+        'id': id,
+        'url': url,
+        'type': type.value,
+        'width': width,
+        'height': height,
+        'thumbnailUrl': thumbnailUrl,
+        'duration': duration?.inMilliseconds,
+        'caption': caption,
+        'altText': altText,
+        'metadata': metadata,
+      };
 }
 
 /// Тип медиафайла идеи
@@ -497,25 +500,25 @@ class IdeaComment {
   });
 
   factory IdeaComment.fromMap(Map<String, dynamic> map) => IdeaComment(
-    id: map['id'] as String,
-    ideaId: map['ideaId'] as String,
-    authorId: map['authorId'] as String,
-    text: map['text'] as String,
-    createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-    parentId: map['parentId'] as String?,
-    replies:
-        (map['replies'] as List?)
-            ?.map((reply) => IdeaComment.fromMap(reply as Map<String, dynamic>))
-            .toList() ??
-        [],
-    likesCount: (map['likesCount'] as int?) ?? 0,
-    likes: List<String>.from((map['likes'] as List?) ?? []),
-    mentions: List<String>.from((map['mentions'] as List?) ?? []),
-    isEdited: (map['isEdited'] as bool?) ?? false,
-    editedAt: map['editedAt'] != null
-        ? DateTime.fromMillisecondsSinceEpoch(map['editedAt'] as int)
-        : null,
-  );
+        id: map['id'] as String,
+        ideaId: map['ideaId'] as String,
+        authorId: map['authorId'] as String,
+        text: map['text'] as String,
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        parentId: map['parentId'] as String?,
+        replies: (map['replies'] as List?)
+                ?.map((reply) =>
+                    IdeaComment.fromMap(reply as Map<String, dynamic>))
+                .toList() ??
+            [],
+        likesCount: (map['likesCount'] as int?) ?? 0,
+        likes: List<String>.from((map['likes'] as List?) ?? []),
+        mentions: List<String>.from((map['mentions'] as List?) ?? []),
+        isEdited: (map['isEdited'] as bool?) ?? false,
+        editedAt: map['editedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['editedAt'] as int)
+            : null,
+      );
 
   final String id;
   final String ideaId;
@@ -531,19 +534,19 @@ class IdeaComment {
   final DateTime? editedAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'ideaId': ideaId,
-    'authorId': authorId,
-    'text': text,
-    'createdAt': createdAt.millisecondsSinceEpoch,
-    'parentId': parentId,
-    'replies': replies.map((reply) => reply.toMap()).toList(),
-    'likesCount': likesCount,
-    'likes': likes,
-    'mentions': mentions,
-    'isEdited': isEdited,
-    'editedAt': editedAt?.millisecondsSinceEpoch,
-  };
+        'id': id,
+        'ideaId': ideaId,
+        'authorId': authorId,
+        'text': text,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'parentId': parentId,
+        'replies': replies.map((reply) => reply.toMap()).toList(),
+        'likesCount': likesCount,
+        'likes': likes,
+        'mentions': mentions,
+        'isEdited': isEdited,
+        'editedAt': editedAt?.millisecondsSinceEpoch,
+      };
 }
 
 /// Репост идеи
@@ -559,14 +562,14 @@ class IdeaShare {
   });
 
   factory IdeaShare.fromMap(Map<String, dynamic> map) => IdeaShare(
-    id: map['id'] as String,
-    ideaId: map['ideaId'] as String,
-    userId: map['userId'] as String,
-    sharedAt: DateTime.fromMillisecondsSinceEpoch(map['sharedAt'] as int),
-    comment: map['comment'] as String?,
-    targetChatId: map['targetChatId'] as String?,
-    targetUserId: map['targetUserId'] as String?,
-  );
+        id: map['id'] as String,
+        ideaId: map['ideaId'] as String,
+        userId: map['userId'] as String,
+        sharedAt: DateTime.fromMillisecondsSinceEpoch(map['sharedAt'] as int),
+        comment: map['comment'] as String?,
+        targetChatId: map['targetChatId'] as String?,
+        targetUserId: map['targetUserId'] as String?,
+      );
 
   final String id;
   final String ideaId;
@@ -577,14 +580,14 @@ class IdeaShare {
   final String? targetUserId;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'ideaId': ideaId,
-    'userId': userId,
-    'sharedAt': sharedAt.millisecondsSinceEpoch,
-    'comment': comment,
-    'targetChatId': targetChatId,
-    'targetUserId': targetUserId,
-  };
+        'id': id,
+        'ideaId': ideaId,
+        'userId': userId,
+        'sharedAt': sharedAt.millisecondsSinceEpoch,
+        'comment': comment,
+        'targetChatId': targetChatId,
+        'targetUserId': targetUserId,
+      };
 }
 
 /// Коллекция идей
@@ -605,21 +608,21 @@ class IdeaCollection {
   });
 
   factory IdeaCollection.fromMap(Map<String, dynamic> map) => IdeaCollection(
-    id: map['id'] as String,
-    name: map['name'] as String,
-    description: map['description'] as String,
-    authorId: map['authorId'] as String,
-    createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-    ideas: List<String>.from((map['ideas'] as List?) ?? []),
-    coverImageUrl: map['coverImageUrl'] as String?,
-    isPublic: (map['isPublic'] as bool?) ?? true,
-    followersCount: (map['followersCount'] as int?) ?? 0,
-    followers: List<String>.from((map['followers'] as List?) ?? []),
-    tags: List<String>.from((map['tags'] as List?) ?? []),
-    updatedAt: map['updatedAt'] != null
-        ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
-        : null,
-  );
+        id: map['id'] as String,
+        name: map['name'] as String,
+        description: map['description'] as String,
+        authorId: map['authorId'] as String,
+        createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
+        ideas: List<String>.from((map['ideas'] as List?) ?? []),
+        coverImageUrl: map['coverImageUrl'] as String?,
+        isPublic: (map['isPublic'] as bool?) ?? true,
+        followersCount: (map['followersCount'] as int?) ?? 0,
+        followers: List<String>.from((map['followers'] as List?) ?? []),
+        tags: List<String>.from((map['tags'] as List?) ?? []),
+        updatedAt: map['updatedAt'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] as int)
+            : null,
+      );
 
   final String id;
   final String name;
@@ -635,17 +638,17 @@ class IdeaCollection {
   final DateTime? updatedAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'description': description,
-    'authorId': authorId,
-    'createdAt': createdAt.millisecondsSinceEpoch,
-    'ideas': ideas,
-    'coverImageUrl': coverImageUrl,
-    'isPublic': isPublic,
-    'followersCount': followersCount,
-    'followers': followers,
-    'tags': tags,
-    'updatedAt': updatedAt?.millisecondsSinceEpoch,
-  };
+        'id': id,
+        'name': name,
+        'description': description,
+        'authorId': authorId,
+        'createdAt': createdAt.millisecondsSinceEpoch,
+        'ideas': ideas,
+        'coverImageUrl': coverImageUrl,
+        'isPublic': isPublic,
+        'followersCount': followersCount,
+        'followers': followers,
+        'tags': tags,
+        'updatedAt': updatedAt?.millisecondsSinceEpoch,
+      };
 }

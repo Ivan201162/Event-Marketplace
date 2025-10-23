@@ -9,10 +9,12 @@ class SpecialistReviewsWidgetSimple extends StatefulWidget {
   final String specialistId;
 
   @override
-  State<SpecialistReviewsWidgetSimple> createState() => _SpecialistReviewsWidgetSimpleState();
+  State<SpecialistReviewsWidgetSimple> createState() =>
+      _SpecialistReviewsWidgetSimpleState();
 }
 
-class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetSimple> {
+class _SpecialistReviewsWidgetSimpleState
+    extends State<SpecialistReviewsWidgetSimple> {
   final _reviewsService = ReviewsService();
   List<Review> _reviews = [];
   bool _isLoading = true;
@@ -31,7 +33,8 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
         _error = '';
       });
 
-      final reviews = await _reviewsService.getSpecialistReviews(widget.specialistId);
+      final reviews =
+          await _reviewsService.getSpecialistReviews(widget.specialistId);
 
       setState(() {
         _reviews = reviews;
@@ -100,7 +103,8 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
             const SizedBox(height: 8),
             Text(
               'Ошибка загрузки отзывов',
-              style: TextStyle(color: Colors.red.shade600, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.red.shade600, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
@@ -109,7 +113,8 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            ElevatedButton(onPressed: _loadReviews, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadReviews, child: const Text('Повторить')),
           ],
         ),
       );
@@ -123,11 +128,13 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
         ),
         child: Column(
           children: [
-            Icon(Icons.rate_review_outlined, color: Colors.grey.shade400, size: 32),
+            Icon(Icons.rate_review_outlined,
+                color: Colors.grey.shade400, size: 32),
             const SizedBox(height: 8),
             Text(
               'Пока нет отзывов',
-              style: TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.grey.shade600, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
@@ -173,8 +180,11 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                     radius: 16,
                     backgroundColor: Colors.blue.shade100,
                     child: Text(
-                      review.clientName.isNotEmpty ? review.clientName[0].toUpperCase() : 'П',
-                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      review.clientName.isNotEmpty
+                          ? review.clientName[0].toUpperCase()
+                          : 'П',
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -184,11 +194,13 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                       children: [
                         Text(
                           review.clientName,
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           _formatDate(review.createdAt),
-                          style: TextStyle(color: Colors.grey.shade600, fontSize: 10),
+                          style: TextStyle(
+                              color: Colors.grey.shade600, fontSize: 10),
                         ),
                       ],
                     ),
@@ -199,7 +211,9 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                       ...List.generate(
                         5,
                         (index) => Icon(
-                          index < review.rating ? Icons.star : Icons.star_border,
+                          index < review.rating
+                              ? Icons.star
+                              : Icons.star_border,
                           color: Colors.amber,
                           size: 12,
                         ),
@@ -207,7 +221,8 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                       const SizedBox(width: 4),
                       Text(
                         review.rating.toStringAsFixed(1),
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 12),
                       ),
                     ],
                   ),
@@ -241,7 +256,8 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                           width: 40,
                           height: 40,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
                             width: 40,
                             height: 40,
                             color: Colors.grey.shade300,
@@ -272,7 +288,8 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.business, size: 12, color: Colors.blue.shade600),
+                                  Icon(Icons.business,
+                                      size: 12, color: Colors.blue.shade600),
                                   const SizedBox(width: 4),
                                   Text(
                                     response['authorName'] ?? 'Специалист',
@@ -291,7 +308,8 @@ class _SpecialistReviewsWidgetSimpleState extends State<SpecialistReviewsWidgetS
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              if (response != review.responses.last) const SizedBox(height: 4),
+                              if (response != review.responses.last)
+                                const SizedBox(height: 4),
                             ],
                           ),
                         )

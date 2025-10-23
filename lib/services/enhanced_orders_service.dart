@@ -6,9 +6,12 @@ class EnhancedOrdersService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить заявки пользователя
-  Future<List<EnhancedOrder>> getUserOrders(String userId, {OrderStatus? status}) async {
+  Future<List<EnhancedOrder>> getUserOrders(String userId,
+      {OrderStatus? status}) async {
     try {
-      Query query = _firestore.collection('orders').where('customerId', isEqualTo: userId);
+      Query query = _firestore
+          .collection('orders')
+          .where('customerId', isEqualTo: userId);
 
       if (status != null) {
         query = query.where('status', isEqualTo: status.value);
@@ -18,8 +21,8 @@ class EnhancedOrdersService {
 
       return snapshot.docs
           .map(
-            (doc) =>
-                EnhancedOrder.fromMap({'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
+            (doc) => EnhancedOrder.fromMap(
+                {'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
           )
           .toList();
     } on Exception catch (e) {
@@ -34,7 +37,9 @@ class EnhancedOrdersService {
     OrderStatus? status,
   }) async {
     try {
-      Query query = _firestore.collection('orders').where('specialistId', isEqualTo: specialistId);
+      Query query = _firestore
+          .collection('orders')
+          .where('specialistId', isEqualTo: specialistId);
 
       if (status != null) {
         query = query.where('status', isEqualTo: status.value);
@@ -44,8 +49,8 @@ class EnhancedOrdersService {
 
       return snapshot.docs
           .map(
-            (doc) =>
-                EnhancedOrder.fromMap({'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
+            (doc) => EnhancedOrder.fromMap(
+                {'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
           )
           .toList();
     } on Exception catch (e) {
@@ -241,7 +246,8 @@ class EnhancedOrdersService {
   }
 
   /// Добавить событие в таймлайн
-  Future<void> _addTimelineEvent(String orderId, OrderTimelineEvent event) async {
+  Future<void> _addTimelineEvent(
+      String orderId, OrderTimelineEvent event) async {
     try {
       await _firestore.collection('orders').doc(orderId).update({
         'timeline': FieldValue.arrayUnion([event.toMap()]),
@@ -271,7 +277,8 @@ class EnhancedOrdersService {
     Map<String, dynamic> customizations,
   ) async {
     try {
-      final templateDoc = await _firestore.collection('orderTemplates').doc(templateId).get();
+      final templateDoc =
+          await _firestore.collection('orderTemplates').doc(templateId).get();
 
       if (!templateDoc.exists) {
         throw Exception('Шаблон не найден');
@@ -283,19 +290,26 @@ class EnhancedOrdersService {
         id: '', // Будет установлен при создании
         customerId: customerId,
         specialistId: specialistId,
-        title: (customizations['title'] as String?) ?? (template['title'] as String),
-        description:
-            (customizations['description'] as String?) ?? (template['description'] as String),
+        title: (customizations['title'] as String?) ??
+            (template['title'] as String),
+        description: (customizations['description'] as String?) ??
+            (template['description'] as String),
         status: OrderStatus.pending,
         createdAt: DateTime.now(),
-        budget: (customizations['budget'] as double?) ?? (template['budget'] as double?),
+        budget: (customizations['budget'] as double?) ??
+            (template['budget'] as double?),
         deadline: customizations['deadline'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(customizations['deadline'] as int)
+            ? DateTime.fromMillisecondsSinceEpoch(
+                customizations['deadline'] as int)
             : null,
-        location: (customizations['location'] as String?) ?? (template['location'] as String?),
-        category: (customizations['category'] as String?) ?? (template['category'] as String?),
+        location: (customizations['location'] as String?) ??
+            (template['location'] as String?),
+        category: (customizations['category'] as String?) ??
+            (template['category'] as String?),
         priority: OrderPriority.fromString(
-          (customizations['priority'] as String?) ?? (template['priority'] as String?) ?? 'medium',
+          (customizations['priority'] as String?) ??
+              (template['priority'] as String?) ??
+              'medium',
         ),
       );
 

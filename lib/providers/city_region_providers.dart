@@ -5,7 +5,8 @@ import '../models/city_region.dart';
 import '../services/city_region_service.dart';
 
 /// Провайдер сервиса городов и регионов
-final cityRegionServiceProvider = Provider<CityRegionService>((ref) => CityRegionService());
+final cityRegionServiceProvider =
+    Provider<CityRegionService>((ref) => CityRegionService());
 
 /// Провайдер для получения всех городов
 final citiesProvider = FutureProvider<List<CityRegion>>((ref) async {
@@ -16,11 +17,12 @@ final citiesProvider = FutureProvider<List<CityRegion>>((ref) async {
 /// Провайдер для получения городов с фильтрами (мигрирован с StateNotifierProvider)
 final filteredCitiesProvider =
     NotifierProvider<FilteredCitiesNotifier, AsyncValue<List<CityRegion>>>(() {
-      return FilteredCitiesNotifier();
-    });
+  return FilteredCitiesNotifier();
+});
 
 /// Провайдер для поиска городов по названию (мигрирован с StateNotifierProvider)
-final citySearchProvider = NotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>(() {
+final citySearchProvider =
+    NotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>(() {
   return CitySearchNotifier();
 });
 
@@ -43,7 +45,8 @@ final currentLocationProvider = FutureProvider<Position?>((ref) async {
 });
 
 /// Провайдер для получения ближайших городов (мигрирован с StateNotifierProvider)
-final nearbyCitiesProvider = NotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>(
+final nearbyCitiesProvider =
+    NotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>(
   () {
     return NearbyCitiesNotifier();
   },
@@ -200,9 +203,11 @@ class NearbyCitiesNotifier extends Notifier<AsyncValue<List<CityRegion>>> {
     try {
       final position = await _service.getCurrentLocation();
       if (position != null) {
-        await getNearbyCities(latitude: position.latitude, longitude: position.longitude);
+        await getNearbyCities(
+            latitude: position.latitude, longitude: position.longitude);
       } else {
-        state = const AsyncValue.error('Не удалось получить местоположение', null);
+        state =
+            const AsyncValue.error('Не удалось получить местоположение', null);
       }
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -225,13 +230,15 @@ final citiesByRegionProvider = FutureProvider.family<List<CityRegion>, String>((
 });
 
 /// Провайдер для получения города по ID
-final cityByIdProvider = FutureProvider.family<CityRegion?, String>((ref, cityId) async {
+final cityByIdProvider =
+    FutureProvider.family<CityRegion?, String>((ref, cityId) async {
   final service = ref.read(cityRegionServiceProvider);
   return service.getCityById(cityId);
 });
 
 /// Провайдер для получения города по координатам
-final cityByCoordinatesProvider = FutureProvider.family<CityRegion?, Map<String, double>>((
+final cityByCoordinatesProvider =
+    FutureProvider.family<CityRegion?, Map<String, double>>((
   ref,
   coordinates,
 ) async {
@@ -243,7 +250,8 @@ final cityByCoordinatesProvider = FutureProvider.family<CityRegion?, Map<String,
 });
 
 /// Провайдер для статистики специалистов в городе
-final citySpecialistStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((
+final citySpecialistStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((
   ref,
   cityId,
 ) async {
@@ -277,7 +285,8 @@ final locationServiceEnabledProvider = FutureProvider<bool>(
 );
 
 /// Провайдер для потока городов с фильтрами
-final citiesStreamProvider = StreamProvider.family<List<CityRegion>, CitySearchFilters>((
+final citiesStreamProvider =
+    StreamProvider.family<List<CityRegion>, CitySearchFilters>((
   ref,
   filters,
 ) {
@@ -286,7 +295,8 @@ final citiesStreamProvider = StreamProvider.family<List<CityRegion>, CitySearchF
 });
 
 /// Провайдер для популярных городов в регионе
-final popularCitiesInRegionProvider = FutureProvider.family<List<CityRegion>, String>((
+final popularCitiesInRegionProvider =
+    FutureProvider.family<List<CityRegion>, String>((
   ref,
   regionName,
 ) async {
@@ -299,7 +309,8 @@ final popularCitiesInRegionProvider = FutureProvider.family<List<CityRegion>, St
 });
 
 /// Провайдер для городов с специалистами определенной категории
-final citiesWithSpecialistsProvider = FutureProvider.family<List<CityRegion>, String>((
+final citiesWithSpecialistsProvider =
+    FutureProvider.family<List<CityRegion>, String>((
   ref,
   category,
 ) async {

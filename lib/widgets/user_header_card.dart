@@ -66,9 +66,11 @@ class UserHeaderCard extends ConsumerWidget {
                 child: CircleAvatar(
                   radius: 27,
                   backgroundColor: Colors.white,
-                  backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl!) : null,
+                  backgroundImage:
+                      avatarUrl != null ? NetworkImage(avatarUrl!) : null,
                   child: avatarUrl == null
-                      ? Icon(Icons.person, size: 30, color: Theme.of(context).primaryColor)
+                      ? Icon(Icons.person,
+                          size: 30, color: Theme.of(context).primaryColor)
                       : null,
                 ),
               ),
@@ -91,9 +93,12 @@ class UserHeaderCard extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(Icons.location_on, color: Colors.white70, size: 16),
+                        const Icon(Icons.location_on,
+                            color: Colors.white70, size: 16),
                         const SizedBox(width: 4),
-                        Text(city!, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+                        Text(city!,
+                            style: const TextStyle(
+                                color: Colors.white70, fontSize: 14)),
                       ],
                     ),
                   ],

@@ -41,11 +41,13 @@ class CityListWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.location_city_outlined, size: 64, color: theme.colorScheme.onSurfaceVariant),
+          Icon(Icons.location_city_outlined,
+              size: 64, color: theme.colorScheme.onSurfaceVariant),
           const SizedBox(height: 16),
           Text(
             emptyMessage,
-            style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
         ],
       ),
@@ -76,7 +78,8 @@ class CityListWidget extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             _buildCityInfo(city, theme),
-            if (showDistance && userLocation != null) _buildDistanceInfo(city, theme),
+            if (showDistance && userLocation != null)
+              _buildDistanceInfo(city, theme),
           ],
         ),
         trailing: _buildTrailingInfo(city, theme),
@@ -91,28 +94,36 @@ class CityListWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: _getCityColor(city, theme).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: _getCityColor(city, theme).withValues(alpha: 0.3), width: 2),
+          border: Border.all(
+              color: _getCityColor(city, theme).withValues(alpha: 0.3),
+              width: 2),
         ),
-        child: Center(child: Text(city.citySize.icon, style: const TextStyle(fontSize: 20))),
+        child: Center(
+            child:
+                Text(city.citySize.icon, style: const TextStyle(fontSize: 20))),
       );
 
   Widget _buildCityInfo(CityRegion city, ThemeData theme) => Row(
         children: [
           if (city.population > 0) ...[
-            Icon(Icons.people, size: 14, color: theme.colorScheme.onSurfaceVariant),
+            Icon(Icons.people,
+                size: 14, color: theme.colorScheme.onSurfaceVariant),
             const SizedBox(width: 4),
             Text(
               _formatPopulation(city.population),
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
             const SizedBox(width: 16),
           ],
           if (city.totalSpecialists > 0) ...[
-            Icon(Icons.work, size: 14, color: theme.colorScheme.onSurfaceVariant),
+            Icon(Icons.work,
+                size: 14, color: theme.colorScheme.onSurfaceVariant),
             const SizedBox(width: 4),
             Text(
               '${city.totalSpecialists} специалистов',
-              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
             ),
           ],
         ],

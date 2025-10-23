@@ -125,8 +125,9 @@ void main() async {
       final size = await apkFile.length();
       final sizeMB = (size / (1024 * 1024)).toStringAsFixed(2);
       print('📱 Размер APK: ${sizeMB}MB');
-      
-      if (size > 100 * 1024 * 1024) { // 100MB
+
+      if (size > 100 * 1024 * 1024) {
+        // 100MB
         print('⚠️  APK слишком большой (>100MB)');
       } else {
         print('✅ Размер APK в норме');
@@ -149,9 +150,10 @@ void main() async {
       workingDirectory: Directory.current.path,
     );
 
-    if (devicesResult.exitCode == 0 && devicesResult.stdout.toString().contains('device')) {
+    if (devicesResult.exitCode == 0 &&
+        devicesResult.stdout.toString().contains('device')) {
       print('📱 Устройство подключено, устанавливаем APK...');
-      
+
       final installResult = await Process.run(
         'adb',
         ['install', '-r', 'build/app/outputs/flutter-apk/app-release.apk'],

@@ -34,7 +34,8 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
@@ -252,7 +253,8 @@ class _AnimatedLikeButtonState extends State<AnimatedLikeButton>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
+    _controller =
+        AnimationController(duration: widget.animationDuration, vsync: this);
 
     _scaleAnimation = Tween<double>(
       begin: 1,
@@ -331,7 +333,8 @@ class _AnimatedShareButtonState extends State<AnimatedShareButton>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
+    _controller =
+        AnimationController(duration: widget.animationDuration, vsync: this);
 
     _rotationAnimation = Tween<double>(
       begin: 0,
@@ -407,7 +410,8 @@ class _AnimatedSaveButtonState extends State<AnimatedSaveButton>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
+    _controller =
+        AnimationController(duration: widget.animationDuration, vsync: this);
 
     _scaleAnimation = Tween<double>(
       begin: 1,
@@ -473,14 +477,16 @@ class PulsingButton extends StatefulWidget {
   State<PulsingButton> createState() => _PulsingButtonState();
 }
 
-class _PulsingButtonState extends State<PulsingButton> with SingleTickerProviderStateMixin {
+class _PulsingButtonState extends State<PulsingButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _pulseAnimation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.pulseDuration, vsync: this);
+    _controller =
+        AnimationController(duration: widget.pulseDuration, vsync: this);
 
     _pulseAnimation = Tween<double>(
       begin: 1.0 - widget.scaleRange,
@@ -516,8 +522,8 @@ class _PulsingButtonState extends State<PulsingButton> with SingleTickerProvider
         onTap: widget.onPressed,
         child: AnimatedBuilder(
           animation: _pulseAnimation,
-          builder: (context, child) =>
-              Transform.scale(scale: _pulseAnimation.value, child: widget.child),
+          builder: (context, child) => Transform.scale(
+              scale: _pulseAnimation.value, child: widget.child),
         ),
       );
 }

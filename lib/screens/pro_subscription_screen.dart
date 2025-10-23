@@ -11,7 +11,8 @@ class ProSubscriptionScreen extends ConsumerStatefulWidget {
   final String userId;
 
   @override
-  ConsumerState<ProSubscriptionScreen> createState() => _ProSubscriptionScreenState();
+  ConsumerState<ProSubscriptionScreen> createState() =>
+      _ProSubscriptionScreenState();
 }
 
 class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
@@ -25,7 +26,9 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
 
     // Загрузить подписку пользователя
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(subscriptionStateProvider.notifier).loadUserSubscription(widget.userId);
+      ref
+          .read(subscriptionStateProvider.notifier)
+          .loadUserSubscription(widget.userId);
     });
   }
 
@@ -37,55 +40,59 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('PRO Подписка'),
-      bottom: TabBar(
-        controller: _tabController,
-        tabs: const [
-          Tab(text: 'Текущая', icon: Icon(Icons.star)),
-          Tab(text: 'Планы', icon: Icon(Icons.credit_card)),
-          Tab(text: 'История', icon: Icon(Icons.history)),
-        ],
-      ),
-    ),
-    body: TabBarView(
-      controller: _tabController,
-      children: [
-        // Текущая подписка
-        SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              CurrentSubscriptionWidget(userId: widget.userId),
-              const SizedBox(height: 24),
-              const SubscriptionStatsWidget(),
+        appBar: AppBar(
+          title: const Text('PRO Подписка'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Текущая', icon: Icon(Icons.star)),
+              Tab(text: 'Планы', icon: Icon(Icons.credit_card)),
+              Tab(text: 'История', icon: Icon(Icons.history)),
             ],
           ),
         ),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            // Текущая подписка
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  CurrentSubscriptionWidget(userId: widget.userId),
+                  const SizedBox(height: 24),
+                  const SubscriptionStatsWidget(),
+                ],
+              ),
+            ),
 
-        // Планы подписки
-        SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: SubscriptionPlansWidget(
-            userId: widget.userId,
-            onPlanSelected: _handlePlanSelected,
-          ),
+            // Планы подписки
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: SubscriptionPlansWidget(
+                userId: widget.userId,
+                onPlanSelected: _handlePlanSelected,
+              ),
+            ),
+
+            // История платежей
+            SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: _buildPaymentHistoryTab()),
+          ],
         ),
-
-        // История платежей
-        SingleChildScrollView(padding: const EdgeInsets.all(16), child: _buildPaymentHistoryTab()),
-      ],
-    ),
-  );
+      );
 
   Widget _buildPaymentHistoryTab() {
-    final subscriptionAsync = ref.watch(userSubscriptionProvider(widget.userId));
+    final subscriptionAsync =
+        ref.watch(userSubscriptionProvider(widget.userId));
 
     return subscriptionAsync.when(
       data: (subscription) {
         if (subscription == null) {
           return const Center(
-            child: Text('У вас нет активной подписки', style: TextStyle(color: Colors.grey)),
+            child: Text('У вас нет активной подписки',
+                style: TextStyle(color: Colors.grey)),
           );
         }
 
@@ -114,14 +121,16 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            const Text('Включенные функции:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Включенные функции:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             ...plan.features.map(
               (feature) => Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Row(
                   children: [
-                    const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                    const Icon(Icons.check_circle,
+                        color: Colors.green, size: 16),
                     const SizedBox(width: 8),
                     Expanded(child: Text(feature)),
                   ],
@@ -131,7 +140,9 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
@@ -152,11 +163,14 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('План: ${plan.displayName}', style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text('План: ${plan.displayName}',
+                style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text('Стоимость: ${plan.monthlyPrice}₽/месяц', style: const TextStyle(fontSize: 16)),
+            Text('Стоимость: ${plan.monthlyPrice}₽/месяц',
+                style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 16),
-            const Text('Выберите способ оплаты:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Выберите способ оплаты:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.credit_card),
@@ -179,7 +193,9 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
         ],
       ),
     );
@@ -206,13 +222,12 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
       Navigator.of(context).pop(); // Закрыть диалог загрузки
 
       // Создать подписку
-      ref
-          .read(subscriptionStateProvider.notifier)
-          .createSubscription(
+      ref.read(subscriptionStateProvider.notifier).createSubscription(
             userId: widget.userId,
             plan: plan,
             paymentMethodId: 'mock_payment_method_$paymentMethod',
-            isTrial: plan == SubscriptionPlan.basic, // Базовый план с пробным периодом
+            isTrial: plan ==
+                SubscriptionPlan.basic, // Базовый план с пробным периодом
           );
 
       // Показать результат
@@ -226,7 +241,9 @@ class _ProSubscriptionScreenState extends ConsumerState<ProSubscriptionScreen>
       builder: (context) => AlertDialog(
         title: Text(success ? 'Успешно!' : 'Ошибка'),
         content: Text(
-          success ? 'Подписка успешно оформлена!' : 'Произошла ошибка при оформлении подписки.',
+          success
+              ? 'Подписка успешно оформлена!'
+              : 'Произошла ошибка при оформлении подписки.',
         ),
         actions: [
           ElevatedButton(

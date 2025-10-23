@@ -26,7 +26,8 @@ class SpecialistPricingService {
       final bookings = bookingsSnapshot.docs.map(Booking.fromDocument).toList();
 
       // Рассчитываем среднюю цену
-      final totalPrice = bookings.fold<double>(0, (sum, booking) => sum + booking.totalPrice);
+      final totalPrice =
+          bookings.fold<double>(0, (sum, booking) => sum + booking.totalPrice);
       final averagePrice = totalPrice / bookings.length;
 
       return averagePrice;
@@ -51,10 +52,12 @@ class SpecialistPricingService {
         return 0.0;
       }
 
-      final specialists = specialistsSnapshot.docs.map(Specialist.fromDocument).toList();
+      final specialists =
+          specialistsSnapshot.docs.map(Specialist.fromDocument).toList();
 
       // Рассчитываем среднюю цену
-      final totalPrice = specialists.fold<double>(0, (sum, specialist) => sum + specialist.price);
+      final totalPrice = specialists.fold<double>(
+          0, (sum, specialist) => sum + specialist.price);
       final averagePrice = totalPrice / specialists.length;
 
       return averagePrice;
@@ -65,7 +68,8 @@ class SpecialistPricingService {
   }
 
   /// Получить статистику цен специалиста
-  Future<SpecialistPricingStats> getSpecialistPricingStats(String specialistId) async {
+  Future<SpecialistPricingStats> getSpecialistPricingStats(
+      String specialistId) async {
     try {
       // Получаем все завершенные заказы специалиста
       final bookingsSnapshot = await _firestore
@@ -122,7 +126,8 @@ class SpecialistPricingService {
   }
 
   /// Получить историю цен специалиста
-  Future<List<PriceHistoryEntry>> getSpecialistPriceHistory(String specialistId) async {
+  Future<List<PriceHistoryEntry>> getSpecialistPriceHistory(
+      String specialistId) async {
     try {
       // Получаем все завершенные заказы специалиста с датами
       final bookingsSnapshot = await _firestore
@@ -152,7 +157,8 @@ class SpecialistPricingService {
 
       for (final entry in monthlyPrices.entries) {
         final prices = entry.value;
-        final averagePrice = prices.fold<double>(0, (sum, price) => sum + price) / prices.length;
+        final averagePrice =
+            prices.fold<double>(0, (sum, price) => sum + price) / prices.length;
 
         history.add(
           PriceHistoryEntry(
@@ -203,26 +209,27 @@ class SpecialistPricingStats {
   });
 
   factory SpecialistPricingStats.empty() => SpecialistPricingStats(
-    specialistId: '',
-    totalOrders: 0,
-    averagePrice: 0,
-    minPrice: 0,
-    maxPrice: 0,
-    medianPrice: 0,
-    lastUpdated: DateTime.now(),
-  );
+        specialistId: '',
+        totalOrders: 0,
+        averagePrice: 0,
+        minPrice: 0,
+        maxPrice: 0,
+        medianPrice: 0,
+        lastUpdated: DateTime.now(),
+      );
 
-  factory SpecialistPricingStats.fromMap(Map<String, dynamic> data) => SpecialistPricingStats(
-    specialistId: data['specialistId'] as String? ?? '',
-    totalOrders: data['totalOrders'] as int? ?? 0,
-    averagePrice: (data['averagePrice'] as num?)?.toDouble() ?? 0.0,
-    minPrice: (data['minPrice'] as num?)?.toDouble() ?? 0.0,
-    maxPrice: (data['maxPrice'] as num?)?.toDouble() ?? 0.0,
-    medianPrice: (data['medianPrice'] as num?)?.toDouble() ?? 0.0,
-    lastUpdated: data['lastUpdated'] != null
-        ? (data['lastUpdated'] as Timestamp).toDate()
-        : DateTime.now(),
-  );
+  factory SpecialistPricingStats.fromMap(Map<String, dynamic> data) =>
+      SpecialistPricingStats(
+        specialistId: data['specialistId'] as String? ?? '',
+        totalOrders: data['totalOrders'] as int? ?? 0,
+        averagePrice: (data['averagePrice'] as num?)?.toDouble() ?? 0.0,
+        minPrice: (data['minPrice'] as num?)?.toDouble() ?? 0.0,
+        maxPrice: (data['maxPrice'] as num?)?.toDouble() ?? 0.0,
+        medianPrice: (data['medianPrice'] as num?)?.toDouble() ?? 0.0,
+        lastUpdated: data['lastUpdated'] != null
+            ? (data['lastUpdated'] as Timestamp).toDate()
+            : DateTime.now(),
+      );
 
   final String specialistId;
   final int totalOrders;
@@ -233,14 +240,14 @@ class SpecialistPricingStats {
   final DateTime lastUpdated;
 
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'totalOrders': totalOrders,
-    'averagePrice': averagePrice,
-    'minPrice': minPrice,
-    'maxPrice': maxPrice,
-    'medianPrice': medianPrice,
-    'lastUpdated': Timestamp.fromDate(lastUpdated),
-  };
+        'specialistId': specialistId,
+        'totalOrders': totalOrders,
+        'averagePrice': averagePrice,
+        'minPrice': minPrice,
+        'maxPrice': maxPrice,
+        'medianPrice': medianPrice,
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+      };
 }
 
 /// Запись истории цен
@@ -251,19 +258,20 @@ class PriceHistoryEntry {
     required this.orderCount,
   });
 
-  factory PriceHistoryEntry.fromMap(Map<String, dynamic> data) => PriceHistoryEntry(
-    month: data['month'] as String? ?? '',
-    averagePrice: (data['averagePrice'] as num?)?.toDouble() ?? 0.0,
-    orderCount: data['orderCount'] as int? ?? 0,
-  );
+  factory PriceHistoryEntry.fromMap(Map<String, dynamic> data) =>
+      PriceHistoryEntry(
+        month: data['month'] as String? ?? '',
+        averagePrice: (data['averagePrice'] as num?)?.toDouble() ?? 0.0,
+        orderCount: data['orderCount'] as int? ?? 0,
+      );
 
   final String month;
   final double averagePrice;
   final int orderCount;
 
   Map<String, dynamic> toMap() => {
-    'month': month,
-    'averagePrice': averagePrice,
-    'orderCount': orderCount,
-  };
+        'month': month,
+        'averagePrice': averagePrice,
+        'orderCount': orderCount,
+      };
 }

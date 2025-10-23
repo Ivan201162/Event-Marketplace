@@ -46,11 +46,13 @@ class TaxCalculation {
       taxStatus: _parseTaxStatus(data['taxStatus']),
       calculatedAt: data['calculatedAt'] != null
           ? (data['calculatedAt'] is Timestamp
-                ? (data['calculatedAt'] as Timestamp).toDate()
-                : DateTime.parse(data['calculatedAt'].toString()))
+              ? (data['calculatedAt'] as Timestamp).toDate()
+              : DateTime.parse(data['calculatedAt'].toString()))
           : DateTime.now(),
       description: data['description'] as String?,
-      metadata: data['metadata'] != null ? Map<String, dynamic>.from(data['metadata']) : null,
+      metadata: data['metadata'] != null
+          ? Map<String, dynamic>.from(data['metadata'])
+          : null,
     );
   }
 
@@ -66,16 +68,16 @@ class TaxCalculation {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'paymentId': paymentId,
-    'grossAmount': grossAmount,
-    'taxAmount': taxAmount,
-    'netAmount': netAmount,
-    'taxRate': taxRate,
-    'taxStatus': taxStatus.name,
-    'calculatedAt': Timestamp.fromDate(calculatedAt),
-    'description': description,
-    'metadata': metadata,
-  };
+        'paymentId': paymentId,
+        'grossAmount': grossAmount,
+        'taxAmount': taxAmount,
+        'netAmount': netAmount,
+        'taxRate': taxRate,
+        'taxStatus': taxStatus.name,
+        'calculatedAt': Timestamp.fromDate(calculatedAt),
+        'description': description,
+        'metadata': metadata,
+      };
 
   /// Копировать с изменениями
   TaxCalculation copyWith({
@@ -89,18 +91,19 @@ class TaxCalculation {
     DateTime? calculatedAt,
     String? description,
     Map<String, dynamic>? metadata,
-  }) => TaxCalculation(
-    id: id ?? this.id,
-    paymentId: paymentId ?? this.paymentId,
-    grossAmount: grossAmount ?? this.grossAmount,
-    taxAmount: taxAmount ?? this.taxAmount,
-    netAmount: netAmount ?? this.netAmount,
-    taxRate: taxRate ?? this.taxRate,
-    taxStatus: taxStatus ?? this.taxStatus,
-    calculatedAt: calculatedAt ?? this.calculatedAt,
-    description: description ?? this.description,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      TaxCalculation(
+        id: id ?? this.id,
+        paymentId: paymentId ?? this.paymentId,
+        grossAmount: grossAmount ?? this.grossAmount,
+        taxAmount: taxAmount ?? this.taxAmount,
+        netAmount: netAmount ?? this.netAmount,
+        taxRate: taxRate ?? this.taxRate,
+        taxStatus: taxStatus ?? this.taxStatus,
+        calculatedAt: calculatedAt ?? this.calculatedAt,
+        description: description ?? this.description,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Парсинг статуса налогообложения из строки
   static TaxStatus _parseTaxStatus(String? status) {

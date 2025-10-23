@@ -35,20 +35,21 @@ class SpecialistPriceStats {
   }
 
   /// Создать из Map
-  factory SpecialistPriceStats.fromMap(Map<String, dynamic> data) => SpecialistPriceStats(
-    specialistId: data['specialistId'] ?? '',
-    categoryId: data['categoryId'] ?? '',
-    categoryName: data['categoryName'] ?? '',
-    minPrice: (data['minPrice'] as num).toDouble(),
-    maxPrice: (data['maxPrice'] as num).toDouble(),
-    averagePrice: (data['averagePrice'] as num).toDouble(),
-    completedBookings: data['completedBookings'] as int? ?? 0,
-    totalRevenue: (data['totalRevenue'] as num).toDouble(),
-    lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
-    additionalStats: data['additionalStats'] != null
-        ? Map<String, dynamic>.from(data['additionalStats'])
-        : null,
-  );
+  factory SpecialistPriceStats.fromMap(Map<String, dynamic> data) =>
+      SpecialistPriceStats(
+        specialistId: data['specialistId'] ?? '',
+        categoryId: data['categoryId'] ?? '',
+        categoryName: data['categoryName'] ?? '',
+        minPrice: (data['minPrice'] as num).toDouble(),
+        maxPrice: (data['maxPrice'] as num).toDouble(),
+        averagePrice: (data['averagePrice'] as num).toDouble(),
+        completedBookings: data['completedBookings'] as int? ?? 0,
+        totalRevenue: (data['totalRevenue'] as num).toDouble(),
+        lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
+        additionalStats: data['additionalStats'] != null
+            ? Map<String, dynamic>.from(data['additionalStats'])
+            : null,
+      );
   final String specialistId;
   final String categoryId;
   final String categoryName;
@@ -62,17 +63,17 @@ class SpecialistPriceStats {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'categoryId': categoryId,
-    'categoryName': categoryName,
-    'minPrice': minPrice,
-    'maxPrice': maxPrice,
-    'averagePrice': averagePrice,
-    'completedBookings': completedBookings,
-    'totalRevenue': totalRevenue,
-    'lastUpdated': Timestamp.fromDate(lastUpdated),
-    'additionalStats': additionalStats,
-  };
+        'specialistId': specialistId,
+        'categoryId': categoryId,
+        'categoryName': categoryName,
+        'minPrice': minPrice,
+        'maxPrice': maxPrice,
+        'averagePrice': averagePrice,
+        'completedBookings': completedBookings,
+        'totalRevenue': totalRevenue,
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+        'additionalStats': additionalStats,
+      };
 
   /// Создать копию с изменениями
   SpecialistPriceStats copyWith({
@@ -86,18 +87,19 @@ class SpecialistPriceStats {
     double? totalRevenue,
     DateTime? lastUpdated,
     Map<String, dynamic>? additionalStats,
-  }) => SpecialistPriceStats(
-    specialistId: specialistId ?? this.specialistId,
-    categoryId: categoryId ?? this.categoryId,
-    categoryName: categoryName ?? this.categoryName,
-    minPrice: minPrice ?? this.minPrice,
-    maxPrice: maxPrice ?? this.maxPrice,
-    averagePrice: averagePrice ?? this.averagePrice,
-    completedBookings: completedBookings ?? this.completedBookings,
-    totalRevenue: totalRevenue ?? this.totalRevenue,
-    lastUpdated: lastUpdated ?? this.lastUpdated,
-    additionalStats: additionalStats ?? this.additionalStats,
-  );
+  }) =>
+      SpecialistPriceStats(
+        specialistId: specialistId ?? this.specialistId,
+        categoryId: categoryId ?? this.categoryId,
+        categoryName: categoryName ?? this.categoryName,
+        minPrice: minPrice ?? this.minPrice,
+        maxPrice: maxPrice ?? this.maxPrice,
+        averagePrice: averagePrice ?? this.averagePrice,
+        completedBookings: completedBookings ?? this.completedBookings,
+        totalRevenue: totalRevenue ?? this.totalRevenue,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+        additionalStats: additionalStats ?? this.additionalStats,
+      );
 
   /// Получить диапазон цен в читаемом виде
   String get priceRange {
@@ -108,7 +110,8 @@ class SpecialistPriceStats {
   }
 
   /// Получить средний чек
-  double get averageCheck => completedBookings > 0 ? totalRevenue / completedBookings : 0;
+  double get averageCheck =>
+      completedBookings > 0 ? totalRevenue / completedBookings : 0;
 
   /// Получить коэффициент вариации цен
   double get priceVariation {
@@ -139,16 +142,16 @@ class SpecialistPriceStats {
 
   @override
   int get hashCode => Object.hash(
-    specialistId,
-    categoryId,
-    categoryName,
-    minPrice,
-    maxPrice,
-    averagePrice,
-    completedBookings,
-    totalRevenue,
-    lastUpdated,
-  );
+        specialistId,
+        categoryId,
+        categoryName,
+        minPrice,
+        maxPrice,
+        averagePrice,
+        completedBookings,
+        totalRevenue,
+        lastUpdated,
+      );
 
   @override
   String toString() =>
@@ -173,7 +176,8 @@ class SpecialistPriceAggregate {
   final DateTime lastUpdated;
 
   /// Получить статистику по категории
-  SpecialistPriceStats? getCategoryStats(String categoryId) => categoryStats[categoryId];
+  SpecialistPriceStats? getCategoryStats(String categoryId) =>
+      categoryStats[categoryId];
 
   /// Получить все категории
   List<String> get categories => categoryStats.keys.toList();
@@ -187,7 +191,8 @@ class SpecialistPriceAggregate {
     if (categoryStats.isEmpty) return null;
 
     return categoryStats.entries
-        .reduce((a, b) => a.value.completedBookings > b.value.completedBookings ? a : b)
+        .reduce((a, b) =>
+            a.value.completedBookings > b.value.completedBookings ? a : b)
         .key;
   }
 

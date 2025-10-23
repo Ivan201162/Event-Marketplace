@@ -14,10 +14,12 @@ class EnhancedSearchFiltersWidget extends StatefulWidget {
   final SearchFilters? initialFilters;
 
   @override
-  State<EnhancedSearchFiltersWidget> createState() => _EnhancedSearchFiltersWidgetState();
+  State<EnhancedSearchFiltersWidget> createState() =>
+      _EnhancedSearchFiltersWidgetState();
 }
 
-class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidget> {
+class _EnhancedSearchFiltersWidgetState
+    extends State<EnhancedSearchFiltersWidget> {
   late SearchFilters _filters;
 
   @override
@@ -49,7 +51,8 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
                       .titleMedium
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
-                TextButton(onPressed: _clearFilters, child: const Text('Сбросить')),
+                TextButton(
+                    onPressed: _clearFilters, child: const Text('Сбросить')),
               ],
             ),
             const SizedBox(height: 16),
@@ -97,10 +100,12 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
           const SizedBox(height: 8),
           DropdownButtonFormField<SpecialistCategory?>(
             initialValue: _filters.category,
-            decoration: const InputDecoration(border: OutlineInputBorder(), isDense: true),
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(), isDense: true),
             hint: const Text('Все категории'),
             items: [
-              const DropdownMenuItem<SpecialistCategory?>(child: Text('Все категории')),
+              const DropdownMenuItem<SpecialistCategory?>(
+                  child: Text('Все категории')),
               ...SpecialistCategory.values.map(
                 (category) => DropdownMenuItem<SpecialistCategory?>(
                   value: category,
@@ -133,7 +138,9 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
             children: [
               Expanded(
                 child: TextFormField(
-                  initialValue: _filters.minPrice > 0 ? _filters.minPrice.toInt().toString() : '',
+                  initialValue: _filters.minPrice > 0
+                      ? _filters.minPrice.toInt().toString()
+                      : '',
                   decoration: const InputDecoration(
                     labelText: 'От',
                     border: OutlineInputBorder(),
@@ -152,8 +159,9 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
               const SizedBox(width: 16),
               Expanded(
                 child: TextFormField(
-                  initialValue:
-                      _filters.maxPrice < 10000 ? _filters.maxPrice.toInt().toString() : '',
+                  initialValue: _filters.maxPrice < 10000
+                      ? _filters.maxPrice.toInt().toString()
+                      : '',
                   decoration: const InputDecoration(
                     labelText: 'До',
                     border: OutlineInputBorder(),
@@ -177,7 +185,8 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
   Widget _buildRatingFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Минимальный рейтинг', style: Theme.of(context).textTheme.titleSmall),
+          Text('Минимальный рейтинг',
+              style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 8),
           Row(
             children: List.generate(
@@ -185,7 +194,9 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
               (index) => IconButton(
                 icon: Icon(
                   Icons.star,
-                  color: index < _filters.minRating ? Colors.amber : Colors.grey[300],
+                  color: index < _filters.minRating
+                      ? Colors.amber
+                      : Colors.grey[300],
                 ),
                 onPressed: () {
                   setState(() {
@@ -213,7 +224,8 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
                     selected: _filters.experienceLevel == level,
                     onSelected: (selected) {
                       setState(() {
-                        _filters = _filters.copyWith(experienceLevel: selected ? level : null);
+                        _filters = _filters.copyWith(
+                            experienceLevel: selected ? level : null);
                       });
                       widget.onFiltersChanged(_filters);
                     },
@@ -238,7 +250,8 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
             ),
             onChanged: (value) {
               setState(() {
-                _filters = _filters.copyWith(location: value.isEmpty ? null : value);
+                _filters =
+                    _filters.copyWith(location: value.isEmpty ? null : value);
               });
               widget.onFiltersChanged(_filters);
             },
@@ -294,7 +307,8 @@ class _EnhancedSearchFiltersWidgetState extends State<EnhancedSearchFiltersWidge
           const SizedBox(height: 8),
           DropdownButtonFormField<SpecialistSorting>(
             initialValue: _filters.sorting,
-            decoration: const InputDecoration(border: OutlineInputBorder(), isDense: true),
+            decoration: const InputDecoration(
+                border: OutlineInputBorder(), isDense: true),
             items: SpecialistSorting.values
                 .map(
                   (sorting) => DropdownMenuItem<SpecialistSorting>(

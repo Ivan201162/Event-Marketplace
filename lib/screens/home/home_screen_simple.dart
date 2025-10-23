@@ -70,7 +70,7 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
             children: [
               // Заголовок
               _buildHeader(user),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -162,9 +162,9 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // Приветствие
           Expanded(
             child: Column(
@@ -172,7 +172,7 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
               children: [
                 user.when(
                   data: (userData) => Text(
-                    userData != null 
+                    userData != null
                         ? '${_getGreetingByTime()}, ${_getUserDisplayName(userData)}!'
                         : '${_getGreetingByTime()}!',
                     style: const TextStyle(
@@ -225,7 +225,7 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
               ],
             ),
           ),
-          
+
           // Уведомления
           _buildNotificationsButton(user),
         ],
@@ -242,22 +242,22 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
         children: [
           // Поисковая строка
           _buildSearchBar(),
-          
+
           const SizedBox(height: 32),
-          
+
           // ТОП специалисты
           _buildTopSpecialists(),
-          
+
           const SizedBox(height: 32),
-          
+
           // Быстрые действия
           _buildQuickActions(),
-          
+
           const SizedBox(height: 32),
-          
+
           // Статистика
           _buildStatistics(),
-          
+
           const SizedBox(height: 20),
         ],
       ),
@@ -295,7 +295,8 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
             },
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
@@ -345,9 +346,9 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Заглушка для специалистов
         Container(
           width: double.infinity,
@@ -402,9 +403,7 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
             color: Color(0xFF1E3A8A),
           ),
         ),
-        
         const SizedBox(height: 16),
-        
         Row(
           children: [
             Expanded(
@@ -449,9 +448,7 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
             color: Color(0xFF1E3A8A),
           ),
         ),
-        
         const SizedBox(height: 16),
-        
         Row(
           children: [
             Expanded(
@@ -497,7 +494,8 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              onPressed: () => NavigationService.safeGo(context, '/notifications'),
+              onPressed: () =>
+                  NavigationService.safeGo(context, '/notifications'),
               icon: const Icon(
                 Icons.notifications_outlined,
                 color: Colors.white,
@@ -506,13 +504,12 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
             ),
           );
         }
-        
+
         return Consumer(
           builder: (context, ref, child) {
-            final unreadCountAsync = ref.watch(
-              NotificationProviders.unreadCountProvider(userData.uid)
-            );
-            
+            final unreadCountAsync = ref
+                .watch(NotificationProviders.unreadCountProvider(userData.uid));
+
             return Stack(
               children: [
                 Container(
@@ -521,7 +518,8 @@ class _HomeScreenSimpleState extends ConsumerState<HomeScreenSimple>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
-                    onPressed: () => NavigationService.safeGo(context, '/notifications'),
+                    onPressed: () =>
+                        NavigationService.safeGo(context, '/notifications'),
                     icon: const Icon(
                       Icons.notifications_outlined,
                       color: Colors.white,

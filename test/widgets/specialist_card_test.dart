@@ -33,13 +33,17 @@ void main() {
         serviceAreas: const ['Москва', 'Санкт-Петербург'],
         languages: const ['Русский', 'Английский'],
         equipment: const ['Canon EOS R5', 'Canon 24-70mm f/2.8'],
-        portfolio: const ['https://example.com/portfolio1', 'https://example.com/portfolio2'],
+        portfolio: const [
+          'https://example.com/portfolio1',
+          'https://example.com/portfolio2'
+        ],
         isVerified: true,
         reviewCount: 47,
       );
     });
 
-    testWidgets('should display specialist information correctly', (tester) async {
+    testWidgets('should display specialist information correctly',
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -80,7 +84,8 @@ void main() {
       expect(find.byIcon(Icons.star), findsWidgets);
     });
 
-    testWidgets('should display verification badge for verified specialist', (tester) async {
+    testWidgets('should display verification badge for verified specialist',
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -96,7 +101,9 @@ void main() {
       expect(find.text('✓'), findsOneWidget);
     });
 
-    testWidgets('should not display verification badge for unverified specialist', (tester) async {
+    testWidgets(
+        'should not display verification badge for unverified specialist',
+        (tester) async {
       // Arrange
       final unverifiedSpecialist = testSpecialist.copyWith(isVerified: false);
 
@@ -105,7 +112,8 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(specialist: unverifiedSpecialist, onTap: () {}),
+              body: SpecialistCard(
+                  specialist: unverifiedSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -132,7 +140,8 @@ void main() {
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
     });
 
-    testWidgets('should display unavailable status for unavailable specialist', (tester) async {
+    testWidgets('should display unavailable status for unavailable specialist',
+        (tester) async {
       // Arrange
       final unavailableSpecialist = testSpecialist.copyWith(isAvailable: false);
 
@@ -141,7 +150,8 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(specialist: unavailableSpecialist, onTap: () {}),
+              body: SpecialistCard(
+                  specialist: unavailableSpecialist, onTap: () {}),
             ),
           ),
         ),
@@ -211,7 +221,8 @@ void main() {
       expect(find.text('6000 - 36000 ₽'), findsOneWidget);
     });
 
-    testWidgets('should display hourly rate when no min/max booking hours', (tester) async {
+    testWidgets('should display hourly rate when no min/max booking hours',
+        (tester) async {
       // Arrange
       final specialistWithoutHours = testSpecialist.copyWith();
 
@@ -220,7 +231,8 @@ void main() {
         ProviderScope(
           child: MaterialApp(
             home: Scaffold(
-              body: SpecialistCard(specialist: specialistWithoutHours, onTap: () {}),
+              body: SpecialistCard(
+                  specialist: specialistWithoutHours, onTap: () {}),
             ),
           ),
         ),

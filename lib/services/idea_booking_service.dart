@@ -35,7 +35,10 @@ class IdeaBookingService {
         'attachedAt': Timestamp.fromDate(now),
       };
 
-      await _firestore.collection('idea_booking_attachments').doc(attachmentId).set(attachment);
+      await _firestore
+          .collection('idea_booking_attachments')
+          .doc(attachmentId)
+          .set(attachment);
 
       // Обновляем заявку, добавляя ID прикрепленной идеи
       await _firestore.collection('bookings').doc(bookingId).update({
@@ -43,15 +46,18 @@ class IdeaBookingService {
         'updatedAt': Timestamp.fromDate(now),
       });
 
-      AppLogger.logI('Прикреплена идея $ideaId к заявке $bookingId', 'idea_booking_service');
+      AppLogger.logI('Прикреплена идея $ideaId к заявке $bookingId',
+          'idea_booking_service');
     } on Exception catch (e) {
-      AppLogger.logE('Ошибка прикрепления идеи к заявке', 'idea_booking_service', e);
+      AppLogger.logE(
+          'Ошибка прикрепления идеи к заявке', 'idea_booking_service', e);
       rethrow;
     }
   }
 
   /// Открепить идею от заявки
-  Future<void> detachIdeaFromBooking({required String bookingId, required String ideaId}) async {
+  Future<void> detachIdeaFromBooking(
+      {required String bookingId, required String ideaId}) async {
     try {
       // Удаляем прикрепление
       final snapshot = await _firestore
@@ -73,9 +79,11 @@ class IdeaBookingService {
 
       await batch.commit();
 
-      AppLogger.logI('Откреплена идея $ideaId от заявки $bookingId', 'idea_booking_service');
+      AppLogger.logI('Откреплена идея $ideaId от заявки $bookingId',
+          'idea_booking_service');
     } on Exception catch (e) {
-      AppLogger.logE('Ошибка открепления идеи от заявки', 'idea_booking_service', e);
+      AppLogger.logE(
+          'Ошибка открепления идеи от заявки', 'idea_booking_service', e);
       rethrow;
     }
   }
@@ -92,14 +100,17 @@ class IdeaBookingService {
         return [];
       }
 
-      final ideaIds = snapshot.docs.map((doc) => doc.data()['ideaId'] as String).toList();
+      final ideaIds =
+          snapshot.docs.map((doc) => doc.data()['ideaId'] as String).toList();
 
       final ideasSnapshot = await _firestore
           .collection('event_ideas')
           .where(FieldPath.documentId, whereIn: ideaIds)
           .get();
 
-      final ideas = ideasSnapshot.docs.map((doc) => EventIdea.fromMap(doc.data())).toList();
+      final ideas = ideasSnapshot.docs
+          .map((doc) => EventIdea.fromMap(doc.data()))
+          .toList();
 
       AppLogger.logI(
         'Получено идей для заявки $bookingId: ${ideas.length}',
@@ -124,7 +135,9 @@ class IdeaBookingService {
         return [];
       }
 
-      final bookingIds = snapshot.docs.map((doc) => doc.data()['bookingId'] as String).toList();
+      final bookingIds = snapshot.docs
+          .map((doc) => doc.data()['bookingId'] as String)
+          .toList();
 
       final bookingsSnapshot = await _firestore
           .collection('bookings')
@@ -145,7 +158,8 @@ class IdeaBookingService {
   }
 
   /// Проверить, прикреплена ли идея к заявке
-  Future<bool> isIdeaAttachedToBooking({required String bookingId, required String ideaId}) async {
+  Future<bool> isIdeaAttachedToBooking(
+      {required String bookingId, required String ideaId}) async {
     try {
       final snapshot = await _firestore
           .collection('idea_booking_attachments')
@@ -156,13 +170,15 @@ class IdeaBookingService {
 
       return snapshot.docs.isNotEmpty;
     } on Exception catch (e) {
-      AppLogger.logE('Ошибка проверки прикрепления идеи', 'idea_booking_service', e);
+      AppLogger.logE(
+          'Ошибка проверки прикрепления идеи', 'idea_booking_service', e);
       return false;
     }
   }
 
   /// Получить все прикрепления пользователя
-  Future<List<Map<String, dynamic>>> getUserIdeaAttachments(String userId) async {
+  Future<List<Map<String, dynamic>>> getUserIdeaAttachments(
+      String userId) async {
     try {
       final snapshot = await _firestore
           .collection('idea_booking_attachments')
@@ -170,7 +186,8 @@ class IdeaBookingService {
           .orderBy('attachedAt', descending: true)
           .get();
 
-      final attachments = snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
+      final attachments =
+          snapshot.docs.map((doc) => {'id': doc.id, ...doc.data()}).toList();
 
       AppLogger.logI(
         'Получено прикреплений пользователя $userId: ${attachments.length}',
@@ -178,7 +195,8 @@ class IdeaBookingService {
       );
       return attachments;
     } on Exception catch (e) {
-      AppLogger.logE('Ошибка получения прикреплений пользователя', 'idea_booking_service', e);
+      AppLogger.logE('Ошибка получения прикреплений пользователя',
+          'idea_booking_service', e);
       rethrow;
     }
   }
@@ -186,7 +204,8 @@ class IdeaBookingService {
   /// Получить статистику использования идей в заявках
   Future<Map<String, int>> getIdeaUsageStats() async {
     try {
-      final snapshot = await _firestore.collection('idea_booking_attachments').get();
+      final snapshot =
+          await _firestore.collection('idea_booking_attachments').get();
 
       final stats = <String, int>{};
       for (final doc in snapshot.docs) {
@@ -194,10 +213,12 @@ class IdeaBookingService {
         stats[ideaId] = (stats[ideaId] ?? 0) + 1;
       }
 
-      AppLogger.logI('Получена статистика использования идей', 'idea_booking_service');
+      AppLogger.logI(
+          'Получена статистика использования идей', 'idea_booking_service');
       return stats;
     } on Exception catch (e) {
-      AppLogger.logE('Ошибка получения статистики идей', 'idea_booking_service', e);
+      AppLogger.logE(
+          'Ошибка получения статистики идей', 'idea_booking_service', e);
       return {};
     }
   }

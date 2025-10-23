@@ -8,153 +8,169 @@ class ConnectionSettingsScreen extends ConsumerStatefulWidget {
   const ConnectionSettingsScreen({super.key});
 
   @override
-  ConsumerState<ConnectionSettingsScreen> createState() => _ConnectionSettingsScreenState();
+  ConsumerState<ConnectionSettingsScreen> createState() =>
+      _ConnectionSettingsScreenState();
 }
 
-class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScreen> {
+class _ConnectionSettingsScreenState
+    extends ConsumerState<ConnectionSettingsScreen> {
   final IntegrationService _integrationService = IntegrationService();
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Настройки подключения'),
-      actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _refreshConnectionStatus)],
-    ),
-    body: SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Статус подключения
-          _buildConnectionStatus(),
+        appBar: AppBar(
+          title: const Text('Настройки подключения'),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.refresh),
+                onPressed: _refreshConnectionStatus)
+          ],
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Статус подключения
+              _buildConnectionStatus(),
 
-          const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-          // Тип подключения
-          _buildConnectionType(),
+              // Тип подключения
+              _buildConnectionType(),
 
-          const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-          // Настройки синхронизации
-          _buildSyncSettings(),
+              // Настройки синхронизации
+              _buildSyncSettings(),
 
-          const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-          // Диагностика
-          _buildDiagnostics(),
-        ],
-      ),
-    ),
-  );
+              // Диагностика
+              _buildDiagnostics(),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildConnectionStatus() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Статус подключения',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Consumer(
-            builder: (context, ref, child) {
-              final connectivityAsync = ref.watch(connectivityStatusProvider);
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Статус подключения',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Consumer(
+                builder: (context, ref, child) {
+                  final connectivityAsync =
+                      ref.watch(connectivityStatusProvider);
 
-              return connectivityAsync.when(
-                data: (isConnected) => Row(
-                  children: [
-                    Icon(
-                      isConnected ? Icons.wifi : Icons.wifi_off,
-                      size: 32,
-                      color: isConnected ? Colors.green : Colors.red,
+                  return connectivityAsync.when(
+                    data: (isConnected) => Row(
+                      children: [
+                        Icon(
+                          isConnected ? Icons.wifi : Icons.wifi_off,
+                          size: 32,
+                          color: isConnected ? Colors.green : Colors.red,
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                isConnected
+                                    ? 'Подключено к интернету'
+                                    : 'Нет подключения к интернету',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color:
+                                      isConnected ? Colors.green : Colors.red,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                isConnected
+                                    ? 'Все функции доступны'
+                                    : 'Некоторые функции недоступны',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey[600]),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            isConnected ? 'Подключено к интернету' : 'Нет подключения к интернету',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: isConnected ? Colors.green : Colors.red,
-                            ),
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) => Row(
+                      children: [
+                        const Icon(Icons.error, size: 32, color: Colors.red),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Ошибка проверки подключения',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Ошибка: $error',
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.grey[600]),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            isConnected ? 'Все функции доступны' : 'Некоторые функции недоступны',
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Row(
-                  children: [
-                    const Icon(Icons.error, size: 32, color: Colors.red),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Ошибка проверки подключения',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.red,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Ошибка: $error',
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildConnectionType() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Тип подключения',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Consumer(
-            builder: (context, ref, child) {
-              final connectionTypeAsync = ref.watch(connectionTypeProvider);
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Тип подключения',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              Consumer(
+                builder: (context, ref, child) {
+                  final connectionTypeAsync = ref.watch(connectionTypeProvider);
 
-              return connectionTypeAsync.when(
-                data: _buildConnectionTypeInfo,
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) =>
-                    Text('Ошибка: $error', style: const TextStyle(color: Colors.red)),
-              );
-            },
+                  return connectionTypeAsync.when(
+                    data: _buildConnectionTypeInfo,
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (error, stack) => Text('Ошибка: $error',
+                        style: const TextStyle(color: Colors.red)),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildConnectionTypeInfo(ConnectivityResult connectionType) {
     var icon = Icons.help;
@@ -217,10 +233,12 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
             children: [
               Text(
                 title,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: color),
+                style: TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.w500, color: color),
               ),
               const SizedBox(height: 4),
-              Text(description, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              Text(description,
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600])),
             ],
           ),
         ),
@@ -229,121 +247,128 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
   }
 
   Widget _buildSyncSettings() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Настройки синхронизации',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Настройки синхронизации',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+
+              // Автоматическая синхронизация
+              SwitchListTile(
+                title: const Text('Автоматическая синхронизация'),
+                subtitle: const Text(
+                    'Автоматически синхронизировать данные при подключении к Wi-Fi'),
+                value: true, // TODO(developer): Получить из настроек
+                onChanged: (value) {
+                  // TODO(developer): Сохранить настройку
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Настройка сохранена')));
+                },
+              ),
+
+              const Divider(),
+
+              // Синхронизация только по Wi-Fi
+              SwitchListTile(
+                title: const Text('Синхронизация только по Wi-Fi'),
+                subtitle: const Text(
+                    'Синхронизировать данные только при подключении к Wi-Fi'),
+                value: false, // TODO(developer): Получить из настроек
+                onChanged: (value) {
+                  // TODO(developer): Сохранить настройку
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Настройка сохранена')));
+                },
+              ),
+
+              const Divider(),
+
+              // Синхронизация в фоне
+              SwitchListTile(
+                title: const Text('Синхронизация в фоне'),
+                subtitle: const Text(
+                    'Разрешить синхронизацию данных в фоновом режиме'),
+                value: true, // TODO(developer): Получить из настроек
+                onChanged: (value) {
+                  // TODO(developer): Сохранить настройку
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Настройка сохранена')));
+                },
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-
-          // Автоматическая синхронизация
-          SwitchListTile(
-            title: const Text('Автоматическая синхронизация'),
-            subtitle: const Text('Автоматически синхронизировать данные при подключении к Wi-Fi'),
-            value: true, // TODO(developer): Получить из настроек
-            onChanged: (value) {
-              // TODO(developer): Сохранить настройку
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Настройка сохранена')));
-            },
-          ),
-
-          const Divider(),
-
-          // Синхронизация только по Wi-Fi
-          SwitchListTile(
-            title: const Text('Синхронизация только по Wi-Fi'),
-            subtitle: const Text('Синхронизировать данные только при подключении к Wi-Fi'),
-            value: false, // TODO(developer): Получить из настроек
-            onChanged: (value) {
-              // TODO(developer): Сохранить настройку
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Настройка сохранена')));
-            },
-          ),
-
-          const Divider(),
-
-          // Синхронизация в фоне
-          SwitchListTile(
-            title: const Text('Синхронизация в фоне'),
-            subtitle: const Text('Разрешить синхронизацию данных в фоновом режиме'),
-            value: true, // TODO(developer): Получить из настроек
-            onChanged: (value) {
-              // TODO(developer): Сохранить настройку
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Настройка сохранена')));
-            },
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildDiagnostics() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Диагностика подключения',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Диагностика подключения',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+
+              // Проверить подключение
+              ListTile(
+                leading: const Icon(Icons.network_check, color: Colors.blue),
+                title: const Text('Проверить подключение'),
+                subtitle: const Text('Проверить доступность интернета'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _checkConnection,
+              ),
+
+              const Divider(),
+
+              // Тест скорости
+              ListTile(
+                leading: const Icon(Icons.speed, color: Colors.green),
+                title: const Text('Тест скорости'),
+                subtitle: const Text('Измерить скорость интернет-соединения'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _testSpeed,
+              ),
+
+              const Divider(),
+
+              // Сброс сетевых настроек
+              ListTile(
+                leading: const Icon(Icons.refresh, color: Colors.orange),
+                title: const Text('Сброс сетевых настроек'),
+                subtitle:
+                    const Text('Сбросить настройки сети и переподключиться'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _resetNetworkSettings,
+              ),
+
+              const Divider(),
+
+              // Логи подключения
+              ListTile(
+                leading: const Icon(Icons.history, color: Colors.purple),
+                title: const Text('Логи подключения'),
+                subtitle: const Text('Просмотреть историю подключений'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _showConnectionLogs,
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-
-          // Проверить подключение
-          ListTile(
-            leading: const Icon(Icons.network_check, color: Colors.blue),
-            title: const Text('Проверить подключение'),
-            subtitle: const Text('Проверить доступность интернета'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: _checkConnection,
-          ),
-
-          const Divider(),
-
-          // Тест скорости
-          ListTile(
-            leading: const Icon(Icons.speed, color: Colors.green),
-            title: const Text('Тест скорости'),
-            subtitle: const Text('Измерить скорость интернет-соединения'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: _testSpeed,
-          ),
-
-          const Divider(),
-
-          // Сброс сетевых настроек
-          ListTile(
-            leading: const Icon(Icons.refresh, color: Colors.orange),
-            title: const Text('Сброс сетевых настроек'),
-            subtitle: const Text('Сбросить настройки сети и переподключиться'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: _resetNetworkSettings,
-          ),
-
-          const Divider(),
-
-          // Логи подключения
-          ListTile(
-            leading: const Icon(Icons.history, color: Colors.purple),
-            title: const Text('Логи подключения'),
-            subtitle: const Text('Просмотреть историю подключений'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: _showConnectionLogs,
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   void _refreshConnectionStatus() {
     // Обновляем провайдеры
@@ -352,7 +377,8 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Статус подключения обновлен')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Статус подключения обновлен')));
   }
 
   void _checkConnection() {
@@ -368,7 +394,11 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
             Text('Проверяем подключение к интернету...'),
           ],
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена'))],
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена'))
+        ],
       ),
     );
 
@@ -397,7 +427,11 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
             Text('Измеряем скорость интернет-соединения...'),
           ],
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена'))],
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена'))
+        ],
       ),
     );
 
@@ -419,7 +453,9 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Закрыть')),
           ],
         ),
       );
@@ -435,7 +471,9 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
           'Вы уверены, что хотите сбросить сетевые настройки? Это может потребовать переподключения к Wi-Fi.',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -473,7 +511,9 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
         ],
       ),
     );

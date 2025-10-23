@@ -27,9 +27,9 @@ class AppUpdateService {
       }
 
       // Получаем информацию о последней версии
-      final response = await http
-          .get(Uri.parse(_updateCheckUrl), headers: {'Accept': 'application/vnd.github.v3+json'})
-          .timeout(const Duration(seconds: 10));
+      final response = await http.get(Uri.parse(_updateCheckUrl), headers: {
+        'Accept': 'application/vnd.github.v3+json'
+      }).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -67,9 +67,9 @@ class AppUpdateService {
       final packageInfo = await PackageInfo.fromPlatform();
       final currentVersion = packageInfo.version;
 
-      final response = await http
-          .get(Uri.parse(_updateCheckUrl), headers: {'Accept': 'application/vnd.github.v3+json'})
-          .timeout(const Duration(seconds: 10));
+      final response = await http.get(Uri.parse(_updateCheckUrl), headers: {
+        'Accept': 'application/vnd.github.v3+json'
+      }).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -126,7 +126,9 @@ class AppUpdateService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final timestamp = prefs.getInt(_lastCheckKey);
-      return timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp) : null;
+      return timestamp != null
+          ? DateTime.fromMillisecondsSinceEpoch(timestamp)
+          : null;
     } catch (e) {
       debugPrint('Ошибка получения времени последней проверки: $e');
       return null;
@@ -203,7 +205,8 @@ class AppUpdateService {
   }
 
   /// Получить информацию о текущей версии
-  static Future<PackageInfo> getCurrentVersionInfo() async => PackageInfo.fromPlatform();
+  static Future<PackageInfo> getCurrentVersionInfo() async =>
+      PackageInfo.fromPlatform();
 
   /// Открыть страницу загрузки
   static Future<void> openDownloadPage(String? downloadUrl) async {
@@ -241,13 +244,13 @@ class UpdateInfo {
 
   /// Создать из JSON
   factory UpdateInfo.fromJson(Map<String, dynamic> json) => UpdateInfo(
-    currentVersion: json['currentVersion'] ?? '',
-    latestVersion: json['latestVersion'] ?? '',
-    releaseNotes: json['releaseNotes'] ?? '',
-    downloadUrl: json['downloadUrl'],
-    isUpdateAvailable: json['isUpdateAvailable'] ?? false,
-    checkTime: DateTime.fromMillisecondsSinceEpoch(json['checkTime'] ?? 0),
-  );
+        currentVersion: json['currentVersion'] ?? '',
+        latestVersion: json['latestVersion'] ?? '',
+        releaseNotes: json['releaseNotes'] ?? '',
+        downloadUrl: json['downloadUrl'],
+        isUpdateAvailable: json['isUpdateAvailable'] ?? false,
+        checkTime: DateTime.fromMillisecondsSinceEpoch(json['checkTime'] ?? 0),
+      );
   final String currentVersion;
   final String latestVersion;
   final String releaseNotes;
@@ -257,16 +260,17 @@ class UpdateInfo {
 
   /// Преобразовать в JSON
   Map<String, dynamic> toJson() => {
-    'currentVersion': currentVersion,
-    'latestVersion': latestVersion,
-    'releaseNotes': releaseNotes,
-    'downloadUrl': downloadUrl,
-    'isUpdateAvailable': isUpdateAvailable,
-    'checkTime': checkTime.millisecondsSinceEpoch,
-  };
+        'currentVersion': currentVersion,
+        'latestVersion': latestVersion,
+        'releaseNotes': releaseNotes,
+        'downloadUrl': downloadUrl,
+        'isUpdateAvailable': isUpdateAvailable,
+        'checkTime': checkTime.millisecondsSinceEpoch,
+      };
 
   /// Получить тип обновления
-  UpdateType get updateType => AppUpdateService.getUpdateType(currentVersion, latestVersion);
+  UpdateType get updateType =>
+      AppUpdateService.getUpdateType(currentVersion, latestVersion);
 
   /// Получить описание типа обновления
   String get updateTypeDescription {

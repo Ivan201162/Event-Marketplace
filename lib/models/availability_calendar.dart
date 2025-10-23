@@ -20,8 +20,9 @@ class AvailabilityCalendar {
       id: doc.id,
       specialistId: data['specialistId'] ?? '',
       date: (data['date'] as Timestamp).toDate(),
-      timeSlots:
-          (data['timeSlots'] as List<dynamic>?)?.map((slot) => TimeSlot.fromMap(slot)).toList() ??
+      timeSlots: (data['timeSlots'] as List<dynamic>?)
+              ?.map((slot) => TimeSlot.fromMap(slot))
+              .toList() ??
           [],
       isAvailable: data['isAvailable'] as bool? ?? true,
       note: data['note'],
@@ -40,14 +41,14 @@ class AvailabilityCalendar {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'date': Timestamp.fromDate(date),
-    'timeSlots': timeSlots.map((slot) => slot.toMap()).toList(),
-    'isAvailable': isAvailable,
-    'note': note,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'specialistId': specialistId,
+        'date': Timestamp.fromDate(date),
+        'timeSlots': timeSlots.map((slot) => slot.toMap()).toList(),
+        'isAvailable': isAvailable,
+        'note': note,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Создать копию с изменениями
   AvailabilityCalendar copyWith({
@@ -59,16 +60,17 @@ class AvailabilityCalendar {
     String? note,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => AvailabilityCalendar(
-    id: id ?? this.id,
-    specialistId: specialistId ?? this.specialistId,
-    date: date ?? this.date,
-    timeSlots: timeSlots ?? this.timeSlots,
-    isAvailable: isAvailable ?? this.isAvailable,
-    note: note ?? this.note,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      AvailabilityCalendar(
+        id: id ?? this.id,
+        specialistId: specialistId ?? this.specialistId,
+        date: date ?? this.date,
+        timeSlots: timeSlots ?? this.timeSlots,
+        isAvailable: isAvailable ?? this.isAvailable,
+        note: note ?? this.note,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Проверить, доступен ли специалист в указанное время
   bool isAvailableAt(DateTime dateTime) {
@@ -85,7 +87,8 @@ class AvailabilityCalendar {
   /// Получить доступные временные слоты на дату
   List<TimeSlot> getAvailableSlots(DateTime date) {
     final targetDate = DateTime(date.year, date.month, date.day);
-    final calendarDate = DateTime(this.date.year, this.date.month, this.date.day);
+    final calendarDate =
+        DateTime(this.date.year, this.date.month, this.date.day);
 
     if (!targetDate.isAtSameMomentAs(calendarDate) || !isAvailable) {
       return [];
@@ -108,13 +111,13 @@ class TimeSlot {
 
   /// Создать из Map
   factory TimeSlot.fromMap(Map<String, dynamic> map) => TimeSlot(
-    id: map['id'] ?? '',
-    startTime: (map['startTime'] as Timestamp).toDate(),
-    endTime: (map['endTime'] as Timestamp).toDate(),
-    isAvailable: map['isAvailable'] ?? true,
-    bookingId: map['bookingId'],
-    note: map['note'],
-  );
+        id: map['id'] ?? '',
+        startTime: (map['startTime'] as Timestamp).toDate(),
+        endTime: (map['endTime'] as Timestamp).toDate(),
+        isAvailable: map['isAvailable'] ?? true,
+        bookingId: map['bookingId'],
+        note: map['note'],
+      );
   final String id;
   final DateTime startTime;
   final DateTime endTime;
@@ -124,19 +127,21 @@ class TimeSlot {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'startTime': Timestamp.fromDate(startTime),
-    'endTime': Timestamp.fromDate(endTime),
-    'isAvailable': isAvailable,
-    'bookingId': bookingId,
-    'note': note,
-  };
+        'id': id,
+        'startTime': Timestamp.fromDate(startTime),
+        'endTime': Timestamp.fromDate(endTime),
+        'isAvailable': isAvailable,
+        'bookingId': bookingId,
+        'note': note,
+      };
 
   /// Проверить, находится ли время в этом слоте
-  bool isTimeInSlot(DateTime dateTime) => dateTime.isAfter(startTime) && dateTime.isBefore(endTime);
+  bool isTimeInSlot(DateTime dateTime) =>
+      dateTime.isAfter(startTime) && dateTime.isBefore(endTime);
 
   /// Получить продолжительность слота в часах
-  double get durationInHours => endTime.difference(startTime).inHours.toDouble();
+  double get durationInHours =>
+      endTime.difference(startTime).inHours.toDouble();
 
   /// Создать копию с изменениями
   TimeSlot copyWith({
@@ -146,14 +151,15 @@ class TimeSlot {
     bool? isAvailable,
     String? bookingId,
     String? note,
-  }) => TimeSlot(
-    id: id ?? this.id,
-    startTime: startTime ?? this.startTime,
-    endTime: endTime ?? this.endTime,
-    isAvailable: isAvailable ?? this.isAvailable,
-    bookingId: bookingId ?? this.bookingId,
-    note: note ?? this.note,
-  );
+  }) =>
+      TimeSlot(
+        id: id ?? this.id,
+        startTime: startTime ?? this.startTime,
+        endTime: endTime ?? this.endTime,
+        isAvailable: isAvailable ?? this.isAvailable,
+        bookingId: bookingId ?? this.bookingId,
+        note: note ?? this.note,
+      );
 }
 
 /// Типы доступности
@@ -172,19 +178,22 @@ class WorkingHours {
     this.minBookingHours = 1,
     this.maxBookingHours = 8,
   });
-  final Map<int, List<TimeSlot>> weeklySchedule; // 1-7 (понедельник-воскресенье)
+  final Map<int, List<TimeSlot>>
+      weeklySchedule; // 1-7 (понедельник-воскресенье)
   final List<DateTime> holidays; // Праздничные дни
   final int minBookingHours;
   final int maxBookingHours;
 
   /// Получить рабочие часы для дня недели
-  List<TimeSlot> getWorkingHoursForDay(int dayOfWeek) => weeklySchedule[dayOfWeek] ?? [];
+  List<TimeSlot> getWorkingHoursForDay(int dayOfWeek) =>
+      weeklySchedule[dayOfWeek] ?? [];
 
   /// Проверить, является ли день праздничным
   bool isHoliday(DateTime date) {
     final dateOnly = DateTime(date.year, date.month, date.day);
     return holidays.any(
-      (holiday) => DateTime(holiday.year, holiday.month, holiday.day).isAtSameMomentAs(dateOnly),
+      (holiday) => DateTime(holiday.year, holiday.month, holiday.day)
+          .isAtSameMomentAs(dateOnly),
     );
   }
 
@@ -192,6 +201,7 @@ class WorkingHours {
   bool isWorkingDay(DateTime date) {
     if (isHoliday(date)) return false;
     final dayOfWeek = date.weekday;
-    return weeklySchedule.containsKey(dayOfWeek) && weeklySchedule[dayOfWeek]!.isNotEmpty;
+    return weeklySchedule.containsKey(dayOfWeek) &&
+        weeklySchedule[dayOfWeek]!.isNotEmpty;
   }
 }

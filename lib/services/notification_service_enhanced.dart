@@ -7,51 +7,52 @@ import 'dart:convert';
 /// Улучшенный сервис уведомлений
 class NotificationServiceEnhanced {
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  static final FlutterLocalNotificationsPlugin _localNotifications = 
+  static final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
-  
+
   static bool _isInitialized = false;
   static String? _fcmToken;
-  
+
   /// Инициализировать сервис уведомлений
   static Future<void> initialize() async {
     if (_isInitialized) return;
-    
+
     try {
       // Настройка локальных уведомлений
-      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+      const androidSettings =
+          AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosSettings = DarwinInitializationSettings(
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true,
       );
-      
+
       const initSettings = InitializationSettings(
         android: androidSettings,
         iOS: iosSettings,
       );
-      
+
       await _localNotifications.initialize(
         initSettings,
         onDidReceiveNotificationResponse: _onNotificationTapped,
       );
-      
+
       // Запрос разрешений
       await _requestPermissions();
-      
+
       // Получение FCM токена
       await _getFCMToken();
-      
+
       // Настройка обработчиков сообщений
       _setupMessageHandlers();
-      
+
       _isInitialized = true;
       debugPrint('✅ Notification service initialized successfully');
     } catch (e) {
       debugPrint('❌ Error initializing notification service: $e');
     }
   }
-  
+
   /// Запросить разрешения на уведомления
   static Future<void> _requestPermissions() async {
     try {
@@ -64,13 +65,14 @@ class NotificationServiceEnhanced {
         provisional: false,
         sound: true,
       );
-      
-      debugPrint('📱 Notification permission status: ${settings.authorizationStatus}');
+
+      debugPrint(
+          '📱 Notification permission status: ${settings.authorizationStatus}');
     } catch (e) {
       debugPrint('❌ Error requesting notification permissions: $e');
     }
   }
-  
+
   /// Получить FCM токен
   static Future<void> _getFCMToken() async {
     try {
@@ -83,7 +85,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error getting FCM token: $e');
     }
   }
-  
+
   /// Сохранить FCM токен
   static Future<void> _saveFCMToken(String token) async {
     try {
@@ -93,7 +95,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error saving FCM token: $e');
     }
   }
-  
+
   /// Получить сохраненный FCM токен
   static Future<String?> getSavedFCMToken() async {
     try {
@@ -104,36 +106,36 @@ class NotificationServiceEnhanced {
       return null;
     }
   }
-  
+
   /// Настроить обработчики сообщений
   static void _setupMessageHandlers() {
     // Обработка сообщений в фоне
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    
+
     // Обработка сообщений в foreground
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-    
+
     // Обработка нажатий на уведомления
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
   }
-  
+
   /// Обработать сообщение в foreground
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
     try {
       debugPrint('📱 Received foreground message: ${message.messageId}');
-      
+
       // Показать локальное уведомление
       await _showLocalNotification(message);
     } catch (e) {
       debugPrint('❌ Error handling foreground message: $e');
     }
   }
-  
+
   /// Обработать нажатие на уведомление
   static Future<void> _handleNotificationTap(RemoteMessage message) async {
     try {
       debugPrint('📱 Notification tapped: ${message.messageId}');
-      
+
       // Здесь можно добавить навигацию к соответствующему экрану
       final data = message.data;
       if (data.containsKey('route')) {
@@ -143,7 +145,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error handling notification tap: $e');
     }
   }
-  
+
   /// Показать локальное уведомление
   static Future<void> _showLocalNotification(RemoteMessage message) async {
     try {
@@ -155,18 +157,18 @@ class NotificationServiceEnhanced {
         priority: Priority.high,
         icon: '@mipmap/ic_launcher',
       );
-      
+
       const iosDetails = DarwinNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
       );
-      
+
       final notificationDetails = NotificationDetails(
         android: androidDetails,
         iOS: iosDetails,
       );
-      
+
       await _localNotifications.show(
         message.hashCode,
         message.notification?.title ?? 'Event Marketplace',
@@ -178,12 +180,12 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error showing local notification: $e');
     }
   }
-  
+
   /// Обработать нажатие на локальное уведомление
   static void _onNotificationTapped(NotificationResponse response) {
     try {
       debugPrint('📱 Local notification tapped: ${response.payload}');
-      
+
       if (response.payload != null) {
         final data = jsonDecode(response.payload!) as Map<String, dynamic>;
         if (data.containsKey('route')) {
@@ -194,7 +196,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error handling local notification tap: $e');
     }
   }
-  
+
   /// Показать локальное уведомление
   static Future<void> showLocalNotification({
     required int id,
@@ -209,23 +211,24 @@ class NotificationServiceEnhanced {
       final androidDetails = AndroidNotificationDetails(
         channelId ?? 'default_channel',
         channelName ?? 'Default Notifications',
-        channelDescription: channelDescription ?? 'Default notification channel',
+        channelDescription:
+            channelDescription ?? 'Default notification channel',
         importance: Importance.high,
         priority: Priority.high,
         icon: '@mipmap/ic_launcher',
       );
-      
+
       const iosDetails = DarwinNotificationDetails(
         presentAlert: true,
         presentBadge: true,
         presentSound: true,
       );
-      
+
       final notificationDetails = NotificationDetails(
         android: androidDetails,
         iOS: iosDetails,
       );
-      
+
       await _localNotifications.show(
         id,
         title,
@@ -237,7 +240,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error showing local notification: $e');
     }
   }
-  
+
   /// Показать уведомление о новом сообщении
   static Future<void> showMessageNotification({
     required String senderName,
@@ -254,7 +257,7 @@ class NotificationServiceEnhanced {
       channelDescription: 'Уведомления о новых сообщениях',
     );
   }
-  
+
   /// Показать уведомление о новой заявке
   static Future<void> showRequestNotification({
     required String requestTitle,
@@ -270,7 +273,7 @@ class NotificationServiceEnhanced {
       channelDescription: 'Уведомления о заявках',
     );
   }
-  
+
   /// Показать уведомление о новой идее
   static Future<void> showIdeaNotification({
     required String ideaTitle,
@@ -286,7 +289,7 @@ class NotificationServiceEnhanced {
       channelDescription: 'Уведомления о новых идеях',
     );
   }
-  
+
   /// Показать системное уведомление
   static Future<void> showSystemNotification({
     required String title,
@@ -297,13 +300,14 @@ class NotificationServiceEnhanced {
       id: DateTime.now().millisecondsSinceEpoch,
       title: title,
       body: body,
-      payload: route != null ? jsonEncode({'route': route, 'type': 'system'}) : null,
+      payload:
+          route != null ? jsonEncode({'route': route, 'type': 'system'}) : null,
       channelId: 'system',
       channelName: 'Системные уведомления',
       channelDescription: 'Системные уведомления приложения',
     );
   }
-  
+
   /// Отменить уведомление
   static Future<void> cancelNotification(int id) async {
     try {
@@ -312,7 +316,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error canceling notification: $e');
     }
   }
-  
+
   /// Отменить все уведомления
   static Future<void> cancelAllNotifications() async {
     try {
@@ -321,7 +325,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error canceling all notifications: $e');
     }
   }
-  
+
   /// Получить количество непрочитанных уведомлений
   static Future<int> getUnreadCount() async {
     try {
@@ -332,7 +336,7 @@ class NotificationServiceEnhanced {
       return 0;
     }
   }
-  
+
   /// Установить количество непрочитанных уведомлений
   static Future<void> setUnreadCount(int count) async {
     try {
@@ -342,7 +346,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error setting unread count: $e');
     }
   }
-  
+
   /// Увеличить количество непрочитанных уведомлений
   static Future<void> incrementUnreadCount() async {
     try {
@@ -352,7 +356,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error incrementing unread count: $e');
     }
   }
-  
+
   /// Сбросить количество непрочитанных уведомлений
   static Future<void> resetUnreadCount() async {
     try {
@@ -361,7 +365,7 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error resetting unread count: $e');
     }
   }
-  
+
   /// Проверить, включены ли уведомления
   static Future<bool> areNotificationsEnabled() async {
     try {
@@ -372,7 +376,7 @@ class NotificationServiceEnhanced {
       return true;
     }
   }
-  
+
   /// Включить/выключить уведомления
   static Future<void> setNotificationsEnabled(bool enabled) async {
     try {
@@ -382,12 +386,12 @@ class NotificationServiceEnhanced {
       debugPrint('❌ Error setting notification settings: $e');
     }
   }
-  
+
   /// Получить FCM токен
   static String? getFCMToken() {
     return _fcmToken;
   }
-  
+
   /// Обновить FCM токен
   static Future<void> refreshFCMToken() async {
     try {

@@ -58,7 +58,8 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           // Заголовок
           Text(
             isEditing ? 'Редактировать отзыв' : 'Оставить отзыв',
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 8),
@@ -78,7 +79,8 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
               children: [
                 Text(
                   'Ваша оценка',
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 16),
                 RatingSelectorWidget(
@@ -108,15 +110,18 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
           // Комментарий
           Text(
             'Комментарий',
-            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
+            style: theme.textTheme.titleMedium
+                ?.copyWith(fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
           TextFormField(
             controller: _commentController,
             maxLines: 4,
             decoration: InputDecoration(
-              hintText: 'Расскажите о вашем опыте работы с этим специалистом...',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              hintText:
+                  'Расскажите о вашем опыте работы с этим специалистом...',
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(color: theme.primaryColor),
@@ -140,7 +145,8 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
+                  onPressed:
+                      _isLoading ? null : () => Navigator.of(context).pop(),
                   child: const Text('Отмена'),
                 ),
               ),
@@ -188,7 +194,9 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
 
     if (_rating == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Пожалуйста, выберите оценку'), backgroundColor: Colors.red),
+        const SnackBar(
+            content: Text('Пожалуйста, выберите оценку'),
+            backgroundColor: Colors.red),
       );
       return;
     }
@@ -239,7 +247,9 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(widget.initialReview != null ? 'Отзыв обновлен' : 'Отзыв добавлен'),
+            content: Text(widget.initialReview != null
+                ? 'Отзыв обновлен'
+                : 'Отзыв добавлен'),
             backgroundColor: Colors.green,
           ),
         );
@@ -248,7 +258,8 @@ class _ReviewFormState extends ConsumerState<ReviewForm> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {

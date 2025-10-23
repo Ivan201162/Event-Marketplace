@@ -8,5 +8,6 @@ class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => const EnhancedSettingsScreen();
+  Widget build(BuildContext context, WidgetRef ref) =>
+      const EnhancedSettingsScreen();
 }

@@ -6,13 +6,16 @@ void main() {
     test('should have correct display names', () {
       expect(TaxType.individual.displayName, 'Физическое лицо');
       expect(TaxType.selfEmployed.displayName, 'Самозанятый');
-      expect(TaxType.individualEntrepreneur.displayName, 'Индивидуальный предприниматель');
+      expect(TaxType.individualEntrepreneur.displayName,
+          'Индивидуальный предприниматель');
       expect(TaxType.government.displayName, 'Государственное учреждение');
     });
 
     test('should have correct descriptions', () {
-      expect(TaxType.individual.description, 'Налог должен быть уплачен самостоятельно (13% НДФЛ)');
-      expect(TaxType.selfEmployed.description, 'Налог на профессиональный доход (4-6%)');
+      expect(TaxType.individual.description,
+          'Налог должен быть уплачен самостоятельно (13% НДФЛ)');
+      expect(TaxType.selfEmployed.description,
+          'Налог на профессиональный доход (4-6%)');
       expect(
         TaxType.individualEntrepreneur.description,
         'Упрощённая система налогообложения (6% или 15%)',
@@ -84,7 +87,8 @@ void main() {
     });
 
     test('should detect overdue taxes correctly', () {
-      final oldTaxInfo = taxInfo.copyWith(createdAt: DateTime(2023), period: '2023-01');
+      final oldTaxInfo =
+          taxInfo.copyWith(createdAt: DateTime(2023), period: '2023-01');
       expect(oldTaxInfo.isOverdue, true);
 
       final recentTaxInfo = taxInfo.copyWith(

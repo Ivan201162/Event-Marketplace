@@ -12,7 +12,8 @@ class SocialFollowingScreen extends ConsumerStatefulWidget {
   const SocialFollowingScreen({super.key, required this.username});
 
   @override
-  ConsumerState<SocialFollowingScreen> createState() => _SocialFollowingScreenState();
+  ConsumerState<SocialFollowingScreen> createState() =>
+      _SocialFollowingScreenState();
 }
 
 class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
@@ -35,7 +36,8 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
       });
 
       // Загружаем профиль пользователя
-      final profile = await SupabaseService.getProfileByUsername(widget.username);
+      final profile =
+          await SupabaseService.getProfileByUsername(widget.username);
       if (profile == null) {
         setState(() {
           _error = 'Профиль не найден';
@@ -80,7 +82,8 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
           children: [
             Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки', style: Theme.of(context).textTheme.titleMedium),
+            Text('Ошибка загрузки',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -88,7 +91,8 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadData, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadData, child: const Text('Повторить')),
           ],
         ),
       );
@@ -105,13 +109,15 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
               color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
-            Text('Нет подписок', style: Theme.of(context).textTheme.titleMedium),
+            Text('Нет подписок',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(
               '${_profile?.name ?? 'Пользователь'} пока ни на кого не подписан',
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color),
+              ).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).textTheme.bodySmall?.color),
               textAlign: TextAlign.center,
             ),
           ],
@@ -140,7 +146,8 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
             : null,
         child: following.avatarUrl == null ? const Icon(Icons.person) : null,
       ),
-      title: Text(following.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+      title: Text(following.name,
+          style: const TextStyle(fontWeight: FontWeight.w500)),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -154,7 +161,8 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
                   color: Theme.of(context).textTheme.bodySmall?.color,
                 ),
                 const SizedBox(width: 4),
-                Text(following.city!, style: Theme.of(context).textTheme.bodySmall),
+                Text(following.city!,
+                    style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
         ],
@@ -210,14 +218,17 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Вы отписались от ${following.name}'),
-            action: SnackBarAction(label: 'Отменить', onPressed: () => _refollow(following)),
+            action: SnackBarAction(
+                label: 'Отменить', onPressed: () => _refollow(following)),
           ),
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Ошибка отписки')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Ошибка отписки')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -231,7 +242,8 @@ class _SocialFollowingScreenState extends ConsumerState<SocialFollowingScreen> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 }

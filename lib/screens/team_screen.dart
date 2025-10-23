@@ -32,140 +32,147 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Команда специалистов'),
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      actions: [
-        if (widget.isEditable)
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: _showAddSpecialistDialog,
-            tooltip: 'Добавить специалиста',
-          ),
-      ],
-    ),
-    body: StreamBuilder<SpecialistTeam?>(
-      stream: _teamService.watchTeam(widget.teamId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+        appBar: AppBar(
+          title: const Text('Команда специалистов'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          actions: [
+            if (widget.isEditable)
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: _showAddSpecialistDialog,
+                tooltip: 'Добавить специалиста',
+              ),
+          ],
+        ),
+        body: StreamBuilder<SpecialistTeam?>(
+          stream: _teamService.watchTeam(widget.teamId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('Ошибка: ${snapshot.error}'),
-                const SizedBox(height: 16),
-                ElevatedButton(onPressed: () => setState(() {}), child: const Text('Повторить')),
-              ],
-            ),
-          );
-        }
+            if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline,
+                        size: 64, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text('Ошибка: ${snapshot.error}'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                        onPressed: () => setState(() {}),
+                        child: const Text('Повторить')),
+                  ],
+                ),
+              );
+            }
 
-        final team = snapshot.data;
-        if (team == null) {
-          return const Center(child: Text('Команда не найдена'));
-        }
+            final team = snapshot.data;
+            if (team == null) {
+              return const Center(child: Text('Команда не найдена'));
+            }
 
-        return _buildTeamContent(team);
-      },
-    ),
-  );
+            return _buildTeamContent(team);
+          },
+        ),
+      );
 
   Widget _buildTeamContent(SpecialistTeam team) => SingleChildScrollView(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Информация о команде
-        _buildTeamInfo(team),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Информация о команде
+            _buildTeamInfo(team),
 
-        const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-        // Статус команды
-        _buildTeamStatus(team),
+            // Статус команды
+            _buildTeamStatus(team),
 
-        const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-        // Список специалистов
-        _buildSpecialistsList(team),
+            // Список специалистов
+            _buildSpecialistsList(team),
 
-        const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-        // Информация об оплате
-        if (team.totalPrice != null) _buildPaymentInfo(team),
+            // Информация об оплате
+            if (team.totalPrice != null) _buildPaymentInfo(team),
 
-        const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
-        // Действия
-        if (widget.isEditable) _buildActions(team),
-      ],
-    ),
-  );
+            // Действия
+            if (widget.isEditable) _buildActions(team),
+          ],
+        ),
+      );
 
   Widget _buildTeamInfo(SpecialistTeam team) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Информация о команде', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Информация о команде',
+                  style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 16),
 
-          // Название команды
-          if (team.teamName != null) ...[
-            _buildInfoRow('Название:', team.teamName!),
-            const SizedBox(height: 8),
-          ],
+              // Название команды
+              if (team.teamName != null) ...[
+                _buildInfoRow('Название:', team.teamName!),
+                const SizedBox(height: 8),
+              ],
 
-          // Описание
-          if (team.description != null) ...[
-            _buildInfoRow('Описание:', team.description!),
-            const SizedBox(height: 8),
-          ],
+              // Описание
+              if (team.description != null) ...[
+                _buildInfoRow('Описание:', team.description!),
+                const SizedBox(height: 8),
+              ],
 
-          // Мероприятие
-          if (team.eventTitle != null) ...[
-            _buildInfoRow('Мероприятие:', team.eventTitle!),
-            const SizedBox(height: 8),
-          ],
+              // Мероприятие
+              if (team.eventTitle != null) ...[
+                _buildInfoRow('Мероприятие:', team.eventTitle!),
+                const SizedBox(height: 8),
+              ],
 
-          // Дата мероприятия
-          if (team.eventDate != null) ...[
-            _buildInfoRow(
-              'Дата:',
-              '${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}',
-            ),
-            const SizedBox(height: 8),
-          ],
+              // Дата мероприятия
+              if (team.eventDate != null) ...[
+                _buildInfoRow(
+                  'Дата:',
+                  '${team.eventDate!.day}.${team.eventDate!.month}.${team.eventDate!.year}',
+                ),
+                const SizedBox(height: 8),
+              ],
 
-          // Место проведения
-          if (team.eventLocation != null) ...[
-            _buildInfoRow('Место:', team.eventLocation!),
-            const SizedBox(height: 8),
-          ],
+              // Место проведения
+              if (team.eventLocation != null) ...[
+                _buildInfoRow('Место:', team.eventLocation!),
+                const SizedBox(height: 8),
+              ],
 
-          // Заметки
-          if (team.notes != null) ...[_buildInfoRow('Заметки:', team.notes!)],
-        ],
-      ),
-    ),
-  );
+              // Заметки
+              if (team.notes != null) ...[
+                _buildInfoRow('Заметки:', team.notes!)
+              ],
+            ],
+          ),
+        ),
+      );
 
   Widget _buildInfoRow(String label, String value) => Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(
-        width: 100,
-        child: Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
-      ),
-      Expanded(child: Text(value)),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(label,
+                style: const TextStyle(fontWeight: FontWeight.w500)),
+          ),
+          Expanded(child: Text(value)),
+        ],
+      );
 
   Widget _buildTeamStatus(SpecialistTeam team) {
     Color statusColor;
@@ -208,12 +215,13 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   Text(
                     team.status.displayName,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: statusColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                          color: statusColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 4),
-                  Text(team.status.description, style: TextStyle(color: Colors.grey[600])),
+                  Text(team.status.description,
+                      style: TextStyle(color: Colors.grey[600])),
                 ],
               ),
             ),
@@ -224,50 +232,53 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
   }
 
   Widget _buildSpecialistsList(SpecialistTeam team) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Специалисты (${team.specialistCount})',
-                style: Theme.of(context).textTheme.titleLarge,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Специалисты (${team.specialistCount})',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  if (widget.isEditable && team.status == TeamStatus.draft)
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: _showAddSpecialistDialog,
+                      tooltip: 'Добавить специалиста',
+                    ),
+                ],
               ),
-              if (widget.isEditable && team.status == TeamStatus.draft)
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: _showAddSpecialistDialog,
-                  tooltip: 'Добавить специалиста',
-                ),
+              const SizedBox(height: 16),
+              if (team.specialists.isEmpty)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(32),
+                    child: Text(
+                      'В команде пока нет специалистов',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                )
+              else
+                ...team.specialists.map(
+                    (specialistId) => _buildSpecialistItem(team, specialistId)),
             ],
           ),
-          const SizedBox(height: 16),
-          if (team.specialists.isEmpty)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.all(32),
-                child: Text(
-                  'В команде пока нет специалистов',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
-            )
-          else
-            ...team.specialists.map((specialistId) => _buildSpecialistItem(team, specialistId)),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildSpecialistItem(SpecialistTeam team, String specialistId) =>
       FutureBuilder<Specialist?>(
         future: ref.read(specialistProvider(specialistId).future),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const ListTile(leading: CircularProgressIndicator(), title: Text('Загрузка...'));
+            return const ListTile(
+                leading: CircularProgressIndicator(),
+                title: Text('Загрузка...'));
           }
 
           final specialist = snapshot.data;
@@ -294,14 +305,16 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                 backgroundImage: specialist.avatar != null
                     ? NetworkImage(specialist.avatar!)
                     : null,
-                child: specialist.avatar == null ? const Icon(Icons.person) : null,
+                child:
+                    specialist.avatar == null ? const Icon(Icons.person) : null,
               ),
               title: Text(specialist.name),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (role != null) Text('Роль: $role'),
-                  if (payment > 0) Text('Оплата: ${payment.toStringAsFixed(0)} ₽'),
+                  if (payment > 0)
+                    Text('Оплата: ${payment.toStringAsFixed(0)} ₽'),
                   Text(specialist.specialization ?? ''),
                 ],
               ),
@@ -319,91 +332,101 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
       );
 
   Widget _buildPaymentInfo(SpecialistTeam team) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Информация об оплате', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 16),
-          _buildInfoRow('Общая стоимость:', '${team.totalPrice!.toStringAsFixed(0)} ₽'),
-          const SizedBox(height: 8),
-          _buildInfoRow('Общая оплата:', '${team.totalPaymentAmount.toStringAsFixed(0)} ₽'),
-          if (team.paymentSplit.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            const Text('Распределение оплаты:', style: TextStyle(fontWeight: FontWeight.w500)),
-            const SizedBox(height: 8),
-            ...team.paymentSplit.entries.map(
-              (entry) => FutureBuilder<Specialist?>(
-                future: ref.read(specialistProvider(entry.key).future),
-                builder: (context, snapshot) {
-                  final specialistName = snapshot.data?.name ?? 'Неизвестный';
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [Text(specialistName), Text('${entry.value.toStringAsFixed(0)} ₽')],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ],
-      ),
-    ),
-  );
-
-  Widget _buildActions(SpecialistTeam team) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Действия', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 16),
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () => _editTeamInfo(team),
-                  icon: const Icon(Icons.edit),
-                  label: const Text('Редактировать'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: team.status == TeamStatus.draft ? () => _confirmTeam(team) : null,
-                  icon: const Icon(Icons.check),
-                  label: const Text('Подтвердить'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
+              Text('Информация об оплате',
+                  style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 16),
+              _buildInfoRow('Общая стоимость:',
+                  '${team.totalPrice!.toStringAsFixed(0)} ₽'),
+              const SizedBox(height: 8),
+              _buildInfoRow('Общая оплата:',
+                  '${team.totalPaymentAmount.toStringAsFixed(0)} ₽'),
+              if (team.paymentSplit.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                const Text('Распределение оплаты:',
+                    style: TextStyle(fontWeight: FontWeight.w500)),
+                const SizedBox(height: 8),
+                ...team.paymentSplit.entries.map(
+                  (entry) => FutureBuilder<Specialist?>(
+                    future: ref.read(specialistProvider(entry.key).future),
+                    builder: (context, snapshot) {
+                      final specialistName =
+                          snapshot.data?.name ?? 'Неизвестный';
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(specialistName),
+                            Text('${entry.value.toStringAsFixed(0)} ₽')
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ),
+              ],
             ],
           ),
-          if (team.status == TeamStatus.draft) ...[
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _rejectTeam(team),
-                icon: const Icon(Icons.cancel),
-                label: const Text('Отклонить'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                ),
+        ),
+      );
+
+  Widget _buildActions(SpecialistTeam team) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Действия', style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _editTeamInfo(team),
+                      icon: const Icon(Icons.edit),
+                      label: const Text('Редактировать'),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: team.status == TeamStatus.draft
+                          ? () => _confirmTeam(team)
+                          : null,
+                      icon: const Icon(Icons.check),
+                      label: const Text('Подтвердить'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ],
-      ),
-    ),
-  );
+              if (team.status == TeamStatus.draft) ...[
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => _rejectTeam(team),
+                    icon: const Icon(Icons.cancel),
+                    label: const Text('Отклонить'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
 
   void _showAddSpecialistDialog() {
     showDialog<void>(
@@ -414,7 +437,9 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
           'Функция добавления специалистов будет реализована в следующем обновлении.',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK')),
         ],
       ),
     );
@@ -425,9 +450,12 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить специалиста'),
-        content: const Text('Вы уверены, что хотите удалить этого специалиста из команды?'),
+        content: const Text(
+            'Вы уверены, что хотите удалить этого специалиста из команды?'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -439,11 +467,13 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                 if (mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Специалист удален из команды')));
+                  ).showSnackBar(const SnackBar(
+                      content: Text('Специалист удален из команды')));
                 }
               } on Exception catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -454,7 +484,8 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
     );
   }
 
-  void _showSpecialistDetails(Specialist specialist, String? role, double payment) {
+  void _showSpecialistDetails(
+      Specialist specialist, String? role, double payment) {
     showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
@@ -471,7 +502,9 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -519,7 +552,9 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -532,16 +567,20 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                   description: _descriptionController.text.trim().isEmpty
                       ? null
                       : _descriptionController.text.trim(),
-                  notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+                  notes: _notesController.text.trim().isEmpty
+                      ? null
+                      : _notesController.text.trim(),
                 );
                 if (mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Команда обновлена')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Команда обновлена')));
                 }
               } on Exception catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -561,7 +600,9 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
           'Вы уверены, что хотите подтвердить эту команду? После подтверждения изменения будут ограничены.',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
@@ -570,11 +611,13 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                 if (mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Команда подтверждена')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Команда подтверждена')));
                 }
               } on Exception catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },
@@ -599,19 +642,23 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: reasonController,
-              decoration: const InputDecoration(labelText: 'Причина', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                  labelText: 'Причина', border: OutlineInputBorder()),
               maxLines: 3,
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () async {
               if (reasonController.text.trim().isEmpty) {
                 ScaffoldMessenger.of(
                   context,
-                ).showSnackBar(const SnackBar(content: Text('Укажите причину отклонения')));
+                ).showSnackBar(const SnackBar(
+                    content: Text('Укажите причину отклонения')));
                 return;
               }
 
@@ -624,11 +671,13 @@ class _TeamScreenState extends ConsumerState<TeamScreen> {
                 if (mounted) {
                   ScaffoldMessenger.of(
                     context,
-                  ).showSnackBar(const SnackBar(content: Text('Команда отклонена')));
+                  ).showSnackBar(
+                      const SnackBar(content: Text('Команда отклонена')));
                 }
               } on Exception catch (e) {
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
                 }
               }
             },

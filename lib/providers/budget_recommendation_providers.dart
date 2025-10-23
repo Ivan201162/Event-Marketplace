@@ -3,15 +3,17 @@ import '../models/specialist.dart';
 import '../services/budget_recommendation_service.dart';
 
 /// Провайдер сервиса рекомендаций по бюджету
-final budgetRecommendationServiceProvider = Provider<BudgetRecommendationService>(
+final budgetRecommendationServiceProvider =
+    Provider<BudgetRecommendationService>(
   (ref) => BudgetRecommendationService(),
 );
 
 /// Провайдер состояния рекомендаций по бюджету (мигрирован с StateNotifierProvider)
 final budgetRecommendationsProvider =
-    NotifierProvider<BudgetRecommendationsNotifier, BudgetRecommendationsState>(() {
-      return BudgetRecommendationsNotifier();
-    });
+    NotifierProvider<BudgetRecommendationsNotifier, BudgetRecommendationsState>(
+        () {
+  return BudgetRecommendationsNotifier();
+});
 
 /// Состояние рекомендаций по бюджету
 class BudgetRecommendationsState {
@@ -32,22 +34,25 @@ class BudgetRecommendationsState {
     bool? isLoading,
     String? error,
     DateTime? lastUpdated,
-  }) => BudgetRecommendationsState(
-    recommendations: recommendations ?? this.recommendations,
-    isLoading: isLoading ?? this.isLoading,
-    error: error ?? this.error,
-    lastUpdated: lastUpdated ?? this.lastUpdated,
-  );
+  }) =>
+      BudgetRecommendationsState(
+        recommendations: recommendations ?? this.recommendations,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+      );
 }
 
 /// Notifier для управления рекомендациями по бюджету (мигрирован с StateNotifier)
-class BudgetRecommendationsNotifier extends Notifier<BudgetRecommendationsState> {
+class BudgetRecommendationsNotifier
+    extends Notifier<BudgetRecommendationsState> {
   @override
   BudgetRecommendationsState build() {
     return const BudgetRecommendationsState();
   }
 
-  BudgetRecommendationService get _service => ref.read(budgetRecommendationServiceProvider);
+  BudgetRecommendationService get _service =>
+      ref.read(budgetRecommendationServiceProvider);
 
   /// Загрузить рекомендации по бюджету
   Future<void> loadBudgetRecommendations({
@@ -140,23 +145,23 @@ class BudgetRecommendationsNotifier extends Notifier<BudgetRecommendationsState>
 }
 
 /// Провайдер для получения рекомендаций по бюджету
-final budgetRecommendationsForParamsProvider =
-    FutureProvider.family<List<BudgetRecommendation>, BudgetRecommendationsParams>((
-      ref,
-      params,
-    ) async {
-      final service = ref.watch(budgetRecommendationServiceProvider);
+final budgetRecommendationsForParamsProvider = FutureProvider.family<
+    List<BudgetRecommendation>, BudgetRecommendationsParams>((
+  ref,
+  params,
+) async {
+  final service = ref.watch(budgetRecommendationServiceProvider);
 
-      if (params.selectedSpecialistIds.isEmpty) {
-        return [];
-      }
+  if (params.selectedSpecialistIds.isEmpty) {
+    return [];
+  }
 
-      return service.getBudgetRecommendations(
-        currentBudget: params.currentBudget,
-        selectedSpecialistIds: params.selectedSpecialistIds,
-        userId: params.userId,
-      );
-    });
+  return service.getBudgetRecommendations(
+    currentBudget: params.currentBudget,
+    selectedSpecialistIds: params.selectedSpecialistIds,
+    userId: params.userId,
+  );
+});
 
 /// Параметры для получения рекомендаций по бюджету
 class BudgetRecommendationsParams {
@@ -184,7 +189,8 @@ class BudgetRecommendationsParams {
 }
 
 /// Провайдер для получения минимальной цены категории
-final minimumPriceForCategoryProvider = FutureProvider.family<double, SpecialistCategory>((
+final minimumPriceForCategoryProvider =
+    FutureProvider.family<double, SpecialistCategory>((
   ref,
   category,
 ) async {
@@ -193,7 +199,8 @@ final minimumPriceForCategoryProvider = FutureProvider.family<double, Specialist
 });
 
 /// Провайдер для получения средней цены категории
-final averagePriceForCategoryProvider = FutureProvider.family<double, SpecialistCategory>((
+final averagePriceForCategoryProvider =
+    FutureProvider.family<double, SpecialistCategory>((
   ref,
   category,
 ) async {

@@ -25,7 +25,10 @@ class ThemeSettingsScreen extends ConsumerWidget {
             // Режим темы
             _buildSection(
               title: 'Режим темы',
-              children: [_buildThemeModeCard(context: context, ref: ref, currentMode: themeMode)],
+              children: [
+                _buildThemeModeCard(
+                    context: context, ref: ref, currentMode: themeMode)
+              ],
             ),
 
             const SizedBox(height: 24),
@@ -51,10 +54,13 @@ class ThemeSettingsScreen extends ConsumerWidget {
               children: [
                 _buildSwitchTile(
                   title: 'Использовать системную тему',
-                  subtitle: 'Автоматически переключаться между светлой и темной темой',
+                  subtitle:
+                      'Автоматически переключаться между светлой и темной темой',
                   value: themeSettings.useSystemTheme,
                   onChanged: (value) {
-                    ref.read(themeSettingsProvider.notifier).setUseSystemTheme(value);
+                    ref
+                        .read(themeSettingsProvider.notifier)
+                        .setUseSystemTheme(value);
                   },
                 ),
                 const SizedBox(height: 8),
@@ -63,7 +69,9 @@ class ThemeSettingsScreen extends ConsumerWidget {
                   subtitle: 'Использовать новую версию Material Design',
                   value: themeSettings.useMaterial3,
                   onChanged: (value) {
-                    ref.read(themeSettingsProvider.notifier).setUseMaterial3(value);
+                    ref
+                        .read(themeSettingsProvider.notifier)
+                        .setUseMaterial3(value);
                   },
                 ),
               ],
@@ -88,55 +96,60 @@ class ThemeSettingsScreen extends ConsumerWidget {
   }
 
   /// Построить секцию
-  Widget _buildSection({required String title, required List<Widget> children}) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      const SizedBox(height: 12),
-      ...children,
-    ],
-  );
+  Widget _buildSection(
+          {required String title, required List<Widget> children}) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 12),
+          ...children,
+        ],
+      );
 
   /// Построить карточку режима темы
   Widget _buildThemeModeCard({
     required BuildContext context,
     required WidgetRef ref,
     required ThemeMode currentMode,
-  }) => Card(
-    child: Column(
-      children: [
-        _buildThemeModeOption(
-          context: context,
-          ref: ref,
-          mode: ThemeMode.light,
-          title: 'Светлая тема',
-          subtitle: 'Всегда использовать светлую тему',
-          icon: Icons.light_mode,
-          isSelected: currentMode == ThemeMode.light,
+  }) =>
+      Card(
+        child: Column(
+          children: [
+            _buildThemeModeOption(
+              context: context,
+              ref: ref,
+              mode: ThemeMode.light,
+              title: 'Светлая тема',
+              subtitle: 'Всегда использовать светлую тему',
+              icon: Icons.light_mode,
+              isSelected: currentMode == ThemeMode.light,
+            ),
+            const Divider(height: 1),
+            _buildThemeModeOption(
+              context: context,
+              ref: ref,
+              mode: ThemeMode.dark,
+              title: 'Темная тема',
+              subtitle: 'Всегда использовать темную тему',
+              icon: Icons.dark_mode,
+              isSelected: currentMode == ThemeMode.dark,
+            ),
+            const Divider(height: 1),
+            _buildThemeModeOption(
+              context: context,
+              ref: ref,
+              mode: ThemeMode.system,
+              title: 'Системная тема',
+              subtitle: 'Следовать настройкам системы',
+              icon: Icons.brightness_auto,
+              isSelected: currentMode == ThemeMode.system,
+            ),
+          ],
         ),
-        const Divider(height: 1),
-        _buildThemeModeOption(
-          context: context,
-          ref: ref,
-          mode: ThemeMode.dark,
-          title: 'Темная тема',
-          subtitle: 'Всегда использовать темную тему',
-          icon: Icons.dark_mode,
-          isSelected: currentMode == ThemeMode.dark,
-        ),
-        const Divider(height: 1),
-        _buildThemeModeOption(
-          context: context,
-          ref: ref,
-          mode: ThemeMode.system,
-          title: 'Системная тема',
-          subtitle: 'Следовать настройкам системы',
-          icon: Icons.brightness_auto,
-          isSelected: currentMode == ThemeMode.system,
-        ),
-      ],
-    ),
-  );
+      );
 
   /// Построить опцию режима темы
   Widget _buildThemeModeOption({
@@ -147,16 +160,18 @@ class ThemeSettingsScreen extends ConsumerWidget {
     required String subtitle,
     required IconData icon,
     required bool isSelected,
-  }) => ListTile(
-    leading: Icon(icon),
-    title: Text(title),
-    subtitle: Text(subtitle),
-    trailing: isSelected ? const Icon(Icons.check, color: Colors.green) : null,
-    selected: isSelected,
-    onTap: () {
-      ref.read(themeProvider.notifier).update((state) => mode);
-    },
-  );
+  }) =>
+      ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        subtitle: Text(subtitle),
+        trailing:
+            isSelected ? const Icon(Icons.check, color: Colors.green) : null,
+        selected: isSelected,
+        onTap: () {
+          ref.read(themeProvider.notifier).update((state) => mode);
+        },
+      );
 
   /// Построить выбор цвета
   Widget _buildColorPicker({
@@ -164,83 +179,91 @@ class ThemeSettingsScreen extends ConsumerWidget {
     required WidgetRef ref,
     required Color currentColor,
     required List<Color> predefinedColors,
-  }) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Выберите основной цвет',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 16),
+  }) =>
+      Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Выберите основной цвет',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 16),
 
-          // Предустановленные цвета
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: predefinedColors.map((color) {
-              final isSelected = color.value == currentColor.value;
-              return GestureDetector(
-                onTap: () {
-                  ref.read(themeSettingsProvider.notifier).setPrimaryColor(color);
-                },
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isSelected ? Colors.white : Colors.grey,
-                      width: isSelected ? 3 : 1,
+              // Предустановленные цвета
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: predefinedColors.map((color) {
+                  final isSelected = color.value == currentColor.value;
+                  return GestureDetector(
+                    onTap: () {
+                      ref
+                          .read(themeSettingsProvider.notifier)
+                          .setPrimaryColor(color);
+                    },
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected ? Colors.white : Colors.grey,
+                          width: isSelected ? 3 : 1,
+                        ),
+                        boxShadow: isSelected
+                            ? [
+                                BoxShadow(
+                                  color: color.withValues(alpha: 0.5),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: isSelected
+                          ? const Icon(Icons.check,
+                              color: Colors.white, size: 24)
+                          : null,
                     ),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: color.withValues(alpha: 0.5),
-                              blurRadius: 8,
-                              spreadRadius: 2,
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: isSelected ? const Icon(Icons.check, color: Colors.white, size: 24) : null,
-                ),
-              );
-            }).toList(),
-          ),
+                  );
+                }).toList(),
+              ),
 
-          const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-          // Текущий цвет
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: currentColor.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: currentColor.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(color: currentColor, shape: BoxShape.circle),
+              // Текущий цвет
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: currentColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border:
+                      Border.all(color: currentColor.withValues(alpha: 0.3)),
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  'Текущий цвет: ${_getColorName(currentColor)}',
-                  style: const TextStyle(fontWeight: FontWeight.w500),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                          color: currentColor, shape: BoxShape.circle),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Текущий цвет: ${_getColorName(currentColor)}',
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   /// Построить переключатель
   Widget _buildSwitchTile({
@@ -248,122 +271,130 @@ class ThemeSettingsScreen extends ConsumerWidget {
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
-  }) => Card(
-    child: SwitchListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
-      value: value,
-      onChanged: onChanged,
-      activeThumbColor: Theme.of(context).colorScheme.primary,
-    ),
-  );
+  }) =>
+      Card(
+        child: SwitchListTile(
+          title: Text(title),
+          subtitle: Text(subtitle),
+          value: value,
+          onChanged: onChanged,
+          activeThumbColor: Theme.of(context).colorScheme.primary,
+        ),
+      );
 
   /// Построить предварительный просмотр темы
   Widget _buildThemePreview(BuildContext context) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Предварительный просмотр',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Предварительный просмотр',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 16),
 
-          // Пример AppBar
-          Container(
-            height: 56,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Text(
-                'AppBar',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold,
+              // Пример AppBar
+              Container(
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // Пример карточки
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Заголовок карточки',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.bold,
+                child: Center(
+                  child: Text(
+                    'AppBar',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  'Описание карточки',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Пример карточки
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outline
+                        .withValues(alpha: 0.2),
                   ),
                 ),
-              ],
-            ),
-          ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Заголовок карточки',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Описание карточки',
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-          const SizedBox(height: 12),
+              const SizedBox(height: 12),
 
-          // Пример кнопки
-          ElevatedButton(
-            onPressed: () {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Пример кнопки - функция в разработке')));
-            },
-            child: const Text('Кнопка'),
+              // Пример кнопки
+              ElevatedButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(
+                      content: Text('Пример кнопки - функция в разработке')));
+                },
+                child: const Text('Кнопка'),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   /// Построить кнопки действий
   Widget _buildActionButtons(BuildContext context, WidgetRef ref) => Column(
-    children: [
-      SizedBox(
-        width: double.infinity,
-        child: ElevatedButton.icon(
-          onPressed: () => _resetToDefault(context, ref),
-          icon: const Icon(Icons.restore),
-          label: const Text('Сбросить к умолчанию'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey,
-            foregroundColor: Colors.white,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => _resetToDefault(context, ref),
+              icon: const Icon(Icons.restore),
+              label: const Text('Сбросить к умолчанию'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey,
+                foregroundColor: Colors.white,
+              ),
+            ),
           ),
-        ),
-      ),
-      const SizedBox(height: 12),
-      SizedBox(
-        width: double.infinity,
-        child: OutlinedButton.icon(
-          onPressed: () => _exportTheme(context, ref),
-          icon: const Icon(Icons.download),
-          label: const Text('Экспортировать настройки'),
-        ),
-      ),
-    ],
-  );
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _exportTheme(context, ref),
+              icon: const Icon(Icons.download),
+              label: const Text('Экспортировать настройки'),
+            ),
+          ),
+        ],
+      );
 
   /// Сбросить к умолчанию
   void _resetToDefault(BuildContext context, WidgetRef ref) {
@@ -371,20 +402,28 @@ class ThemeSettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Сбросить настройки'),
-        content: const Text('Вы уверены, что хотите сбросить все настройки темы к умолчанию?'),
+        content: const Text(
+            'Вы уверены, что хотите сбросить все настройки темы к умолчанию?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
-              ref.read(themeProvider.notifier).update((state) => ThemeMode.system);
-              ref.read(themeSettingsProvider.notifier).setPrimaryColor(Colors.deepPurple);
+              ref
+                  .read(themeProvider.notifier)
+                  .update((state) => ThemeMode.system);
+              ref
+                  .read(themeSettingsProvider.notifier)
+                  .setPrimaryColor(Colors.deepPurple);
               ref.read(themeSettingsProvider.notifier).setUseSystemTheme(true);
               ref.read(themeSettingsProvider.notifier).setUseMaterial3(true);
               Navigator.pop(context);
 
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(const SnackBar(content: Text('Настройки сброшены к умолчанию')));
+              ).showSnackBar(const SnackBar(
+                  content: Text('Настройки сброшены к умолчанию')));
             },
             child: const Text('Сбросить'),
           ),
@@ -400,7 +439,8 @@ class ThemeSettingsScreen extends ConsumerWidget {
 
     // TODO(developer): Реализовать экспорт настроек
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Экспорт настроек будет реализован в следующем шаге')),
+      const SnackBar(
+          content: Text('Экспорт настроек будет реализован в следующем шаге')),
     );
   }
 

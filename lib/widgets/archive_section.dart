@@ -8,7 +8,8 @@ import '../providers/archive_providers.dart';
 
 /// Виджет секции архивов фото/видео
 class ArchiveSection extends ConsumerStatefulWidget {
-  const ArchiveSection({super.key, required this.bookingId, required this.currentUserId});
+  const ArchiveSection(
+      {super.key, required this.bookingId, required this.currentUserId});
   final String bookingId;
   final String currentUserId;
 
@@ -43,14 +44,17 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
       if (source == null) return;
 
       if (source == ImageSource.gallery) {
-        await ref.read(archiveUploadStateProvider.notifier).uploadArchiveFromGallery(
+        await ref
+            .read(archiveUploadStateProvider.notifier)
+            .uploadArchiveFromGallery(
               bookingId: widget.bookingId,
               uploadedBy: widget.currentUserId,
             );
       } else if (source == ImageSource.camera) {
         await ref
             .read(archiveUploadStateProvider.notifier)
-            .uploadArchiveFromCamera(bookingId: widget.bookingId, uploadedBy: widget.currentUserId);
+            .uploadArchiveFromCamera(
+                bookingId: widget.bookingId, uploadedBy: widget.currentUserId);
       }
 
       // Обновляем список архивов
@@ -58,14 +62,17 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Архив успешно загружен'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Архив успешно загружен'),
+              backgroundColor: Colors.green),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(SnackBar(
+            content: Text('Ошибка загрузки: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -97,21 +104,25 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
       final confirmed = await _showDeleteConfirmation(archive);
       if (!confirmed) return;
 
-      await ref.read(archiveUploadStateProvider.notifier).deleteArchive(archive.id);
+      await ref
+          .read(archiveUploadStateProvider.notifier)
+          .deleteArchive(archive.id);
 
       // Обновляем список архивов
       ref.refresh(bookingArchivesProvider(widget.bookingId));
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Архив удален'), backgroundColor: Colors.orange),
+          const SnackBar(
+              content: Text('Архив удален'), backgroundColor: Colors.orange),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(SnackBar(
+            content: Text('Ошибка удаления: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -121,7 +132,8 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Удалить архив?'),
-          content: Text('Вы уверены, что хотите удалить "${archive.fileName ?? 'файл'}"?'),
+          content: Text(
+              'Вы уверены, что хотите удалить "${archive.fileName ?? 'файл'}"?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
@@ -167,7 +179,8 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.upload),
-                    label: Text(uploadState.isUploading ? 'Загрузка...' : 'Загрузить'),
+                    label: Text(
+                        uploadState.isUploading ? 'Загрузка...' : 'Загрузить'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: BrandColors.primary,
                       foregroundColor: Colors.white,
@@ -201,7 +214,8 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
           children: [
             Icon(Icons.folder_open, size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
-            Text('Архив пуст', style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
+            Text('Архив пуст',
+                style: TextStyle(fontSize: 18, color: Colors.grey.shade600)),
             const SizedBox(height: 8),
             Text(
               'Загрузите фото и видео после завершения мероприятия',
@@ -218,7 +232,8 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
           children: [
             Icon(Icons.error_outline, size: 64, color: Colors.red.shade400),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки', style: TextStyle(fontSize: 18, color: Colors.red.shade600)),
+            Text('Ошибка загрузки',
+                style: TextStyle(fontSize: 18, color: Colors.red.shade600)),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -227,7 +242,8 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => ref.refresh(bookingArchivesProvider(widget.bookingId)),
+              onPressed: () =>
+                  ref.refresh(bookingArchivesProvider(widget.bookingId)),
               child: const Text('Повторить'),
             ),
           ],
@@ -245,15 +261,17 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         ),
         child: ListTile(
           leading: _buildArchiveIcon(archive),
-          title:
-              Text(archive.fileName ?? 'Файл', style: const TextStyle(fontWeight: FontWeight.w500)),
+          title: Text(archive.fileName ?? 'Файл',
+              style: const TextStyle(fontWeight: FontWeight.w500)),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(archive.formattedFileSize),
-              if (archive.description != null && archive.description!.isNotEmpty)
+              if (archive.description != null &&
+                  archive.description!.isNotEmpty)
                 Text(archive.description!,
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                    style:
+                        TextStyle(color: Colors.grey.shade600, fontSize: 12)),
               Text(
                 'Загружено: ${_formatDate(archive.uploadedAt)}',
                 style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
@@ -274,7 +292,11 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
             itemBuilder: (context) => [
               const PopupMenuItem(
                 value: 'download',
-                child: Row(children: [Icon(Icons.download), SizedBox(width: 8), Text('Скачать')]),
+                child: Row(children: [
+                  Icon(Icons.download),
+                  SizedBox(width: 8),
+                  Text('Скачать')
+                ]),
               ),
               if (_canUpload)
                 const PopupMenuItem(
@@ -301,11 +323,14 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           image: archive.isImage
-              ? DecorationImage(image: NetworkImage(archive.fileUrl), fit: BoxFit.cover)
+              ? DecorationImage(
+                  image: NetworkImage(archive.fileUrl), fit: BoxFit.cover)
               : null,
           color: !archive.isImage ? Colors.grey.shade200 : null,
         ),
-        child: !archive.isImage ? const Icon(Icons.image, color: Colors.grey) : null,
+        child: !archive.isImage
+            ? const Icon(Icons.image, color: Colors.grey)
+            : null,
       );
     } else if (archive.isVideo) {
       return Container(
@@ -364,7 +389,8 @@ class _ArchiveSectionState extends ConsumerState<ArchiveSection> {
                     Expanded(
                       child: Text(
                         archive.fileName ?? 'Файл',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
                     IconButton(

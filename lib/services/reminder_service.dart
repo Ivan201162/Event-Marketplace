@@ -12,7 +12,8 @@ class ReminderService {
   ReminderService._internal();
   static final ReminderService _instance = ReminderService._internal();
 
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -33,10 +34,12 @@ class ReminderService {
 
   /// Инициализация локальных уведомлений
   Future<void> _initializeLocalNotifications() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings();
 
-    const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
+    const initSettings =
+        InitializationSettings(android: androidSettings, iOS: iosSettings);
 
     await _localNotifications.initialize(
       initSettings,
@@ -63,7 +66,8 @@ class ReminderService {
       await _scheduleReminder(
         id: bookingId.hashCode,
         title: 'Напоминание о событии',
-        body: 'Завтра в ${_formatTime(eventDateTime)}: $eventTitle с $specialistName',
+        body:
+            'Завтра в ${_formatTime(eventDateTime)}: $eventTitle с $specialistName',
         scheduledTime: eventDateTime.subtract(const Duration(hours: 24)),
         payload: 'booking_24h_$bookingId',
       );
@@ -117,7 +121,8 @@ class ReminderService {
       sound: 'notification_sound.aiff',
     );
 
-    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
+    const details =
+        NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     await _localNotifications.zonedSchedule(
       id,

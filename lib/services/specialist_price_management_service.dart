@@ -44,7 +44,9 @@ class SpecialistPriceManagementService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef = await _firestore.collection('specialist_prices').add(servicePrice.toMap());
+      final docRef = await _firestore
+          .collection('specialist_prices')
+          .add(servicePrice.toMap());
 
       // Обновляем время последнего обновления цен в профиле специалиста
       await _updateSpecialistLastPriceUpdate(specialistId);
@@ -76,7 +78,8 @@ class SpecialistPriceManagementService {
       });
 
       // Получаем specialistId для обновления времени последнего обновления
-      final doc = await _firestore.collection('specialist_prices').doc(priceId).get();
+      final doc =
+          await _firestore.collection('specialist_prices').doc(priceId).get();
 
       if (doc.exists) {
         final data = doc.data()!;
@@ -93,7 +96,8 @@ class SpecialistPriceManagementService {
   Future<void> deleteServicePrice(String priceId) async {
     try {
       // Получаем specialistId перед удалением
-      final doc = await _firestore.collection('specialist_prices').doc(priceId).get();
+      final doc =
+          await _firestore.collection('specialist_prices').doc(priceId).get();
 
       if (doc.exists) {
         final data = doc.data()!;
@@ -126,7 +130,8 @@ class SpecialistPriceManagementService {
   /// Проверить, нужно ли напомнить об обновлении цен
   Future<bool> shouldRemindAboutPriceUpdate(String specialistId) async {
     try {
-      final doc = await _firestore.collection('specialists').doc(specialistId).get();
+      final doc =
+          await _firestore.collection('specialists').doc(specialistId).get();
 
       if (!doc.exists) return false;
 
@@ -170,7 +175,8 @@ class SpecialistPriceManagementService {
     required String templateId,
   }) async {
     try {
-      final templateDoc = await _firestore.collection('price_templates').doc(templateId).get();
+      final templateDoc =
+          await _firestore.collection('price_templates').doc(templateId).get();
 
       if (!templateDoc.exists) {
         throw Exception('Шаблон не найден');
@@ -256,16 +262,16 @@ class ServicePrice {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'serviceName': serviceName,
-    'price': price,
-    'description': description,
-    'duration': duration,
-    'includedServices': includedServices,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'specialistId': specialistId,
+        'serviceName': serviceName,
+        'price': price,
+        'description': description,
+        'duration': duration,
+        'includedServices': includedServices,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 }
 
 /// Модель шаблона цен
@@ -289,9 +295,9 @@ class ServicePriceTemplate {
       ),
       name: data['name'] as String? ?? '',
       description: data['description'] as String? ?? '',
-      services:
-          (data['services'] as List<dynamic>?)
-              ?.map((e) => TemplateService.fromMap(Map<String, dynamic>.from(e)))
+      services: (data['services'] as List<dynamic>?)
+              ?.map(
+                  (e) => TemplateService.fromMap(Map<String, dynamic>.from(e)))
               .toList() ??
           [],
       createdAt: data['createdAt'] != null
@@ -319,12 +325,12 @@ class TemplateService {
   });
 
   factory TemplateService.fromMap(Map<String, dynamic> data) => TemplateService(
-    name: data['name'] as String? ?? '',
-    price: (data['price'] as num?)?.toDouble() ?? 0.0,
-    description: data['description'] as String?,
-    duration: data['duration'] as String?,
-    includedServices: List<String>.from(data['includedServices'] ?? []),
-  );
+        name: data['name'] as String? ?? '',
+        price: (data['price'] as num?)?.toDouble() ?? 0.0,
+        description: data['description'] as String?,
+        duration: data['duration'] as String?,
+        includedServices: List<String>.from(data['includedServices'] ?? []),
+      );
 
   final String name;
   final double price;
@@ -333,10 +339,10 @@ class TemplateService {
   final List<String> includedServices;
 
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'price': price,
-    'description': description,
-    'duration': duration,
-    'includedServices': includedServices,
-  };
+        'name': name,
+        'price': price,
+        'description': description,
+        'duration': duration,
+        'includedServices': includedServices,
+      };
 }

@@ -100,13 +100,15 @@ class _BookingDiscountsWidgetState extends State<BookingDiscountsWidget> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 }
 
@@ -119,7 +121,10 @@ class _DiscountLoadingWidget extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: const Row(
           children: [
-            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2)),
             SizedBox(width: 12),
             Text('Загружаем предложения скидок...'),
           ],
@@ -155,7 +160,10 @@ class _DiscountErrorWidget extends StatelessWidget {
 
 /// Список скидок
 class _DiscountsList extends StatelessWidget {
-  const _DiscountsList({required this.discounts, required this.onAccept, required this.onReject});
+  const _DiscountsList(
+      {required this.discounts,
+      required this.onAccept,
+      required this.onReject});
 
   final List<SpecialistDiscount> discounts;
   final void Function(SpecialistDiscount) onAccept;
@@ -194,7 +202,8 @@ class _DiscountsList extends StatelessWidget {
 
 /// Карточка скидки
 class _DiscountCard extends StatelessWidget {
-  const _DiscountCard({required this.discount, required this.onAccept, required this.onReject});
+  const _DiscountCard(
+      {required this.discount, required this.onAccept, required this.onReject});
 
   final SpecialistDiscount discount;
   final VoidCallback onAccept;
@@ -213,11 +222,13 @@ class _DiscountCard extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.orange.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                        border: Border.all(
+                            color: Colors.orange.withValues(alpha: 0.3)),
                       ),
                       child: Text(
                         'Скидка: -${discount.discountPercent.toStringAsFixed(0)}%',
@@ -237,7 +248,8 @@ class _DiscountCard extends StatelessWidget {
                 ),
                 if (discount.message != null) ...[
                   const SizedBox(height: 8),
-                  Text(discount.message!, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                  Text(discount.message!,
+                      style: const TextStyle(fontSize: 14, color: Colors.grey)),
                 ],
                 const SizedBox(height: 12),
                 Row(

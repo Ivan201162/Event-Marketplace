@@ -5,7 +5,8 @@ import '../models/post.dart';
 
 /// Виджет для отображения сетки постов
 class PostGridWidget extends StatelessWidget {
-  const PostGridWidget({super.key, required this.posts, required this.onPostTap});
+  const PostGridWidget(
+      {super.key, required this.posts, required this.onPostTap});
 
   final List<Post> posts;
   final void Function(Post) onPostTap;
@@ -33,10 +34,12 @@ class PostGridWidget extends StatelessWidget {
                         color: Colors.grey[300],
                         child: const Center(child: CircularProgressIndicator()),
                       ),
-                      errorWidget: (context, url, error) =>
-                          Container(color: Colors.grey[300], child: const Icon(Icons.error)),
+                      errorWidget: (context, url, error) => Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.error)),
                     )
-                  : Container(color: Colors.grey[300], child: const Icon(Icons.image)),
+                  : Container(
+                      color: Colors.grey[300], child: const Icon(Icons.image)),
             ),
           );
         },

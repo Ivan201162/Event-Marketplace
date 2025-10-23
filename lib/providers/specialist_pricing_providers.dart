@@ -10,8 +10,8 @@ final specialistPricingServiceProvider = Provider<SpecialistPricingService>(
 /// Провайдер состояния цен специалиста (мигрирован с StateNotifierProvider)
 final specialistPricingProvider =
     NotifierProvider<SpecialistPricingNotifier, SpecialistPricingState>(() {
-      return SpecialistPricingNotifier();
-    });
+  return SpecialistPricingNotifier();
+});
 
 /// Состояние цен специалиста
 class SpecialistPricingState {
@@ -35,13 +35,14 @@ class SpecialistPricingState {
     bool? isLoading,
     String? error,
     DateTime? lastUpdated,
-  }) => SpecialistPricingState(
-    stats: stats ?? this.stats,
-    history: history ?? this.history,
-    isLoading: isLoading ?? this.isLoading,
-    error: error ?? this.error,
-    lastUpdated: lastUpdated ?? this.lastUpdated,
-  );
+  }) =>
+      SpecialistPricingState(
+        stats: stats ?? this.stats,
+        history: history ?? this.history,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+      );
 }
 
 /// Notifier для управления ценами специалиста (мигрирован с StateNotifier)
@@ -51,7 +52,8 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
     return const SpecialistPricingState();
   }
 
-  SpecialistPricingService get _service => ref.read(specialistPricingServiceProvider);
+  SpecialistPricingService get _service =>
+      ref.read(specialistPricingServiceProvider);
 
   /// Загрузить статистику цен специалиста
   Future<void> loadSpecialistPricingStats(String specialistId) async {
@@ -60,7 +62,8 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
     try {
       final stats = await _service.getSpecialistPricingStats(specialistId);
 
-      state = state.copyWith(stats: stats, isLoading: false, lastUpdated: DateTime.now());
+      state = state.copyWith(
+          stats: stats, isLoading: false, lastUpdated: DateTime.now());
     } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
@@ -73,7 +76,8 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
     try {
       final history = await _service.getSpecialistPriceHistory(specialistId);
 
-      state = state.copyWith(history: history, isLoading: false, lastUpdated: DateTime.now());
+      state = state.copyWith(
+          history: history, isLoading: false, lastUpdated: DateTime.now());
     } on Exception catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
@@ -141,7 +145,8 @@ class SpecialistPricingNotifier extends Notifier<SpecialistPricingState> {
 }
 
 /// Провайдер для получения статистики цен специалиста
-final specialistPricingStatsProvider = FutureProvider.family<SpecialistPricingStats, String>((
+final specialistPricingStatsProvider =
+    FutureProvider.family<SpecialistPricingStats, String>((
   ref,
   specialistId,
 ) async {
@@ -159,7 +164,8 @@ final specialistAveragePriceProvider = FutureProvider.family<double, String>((
 });
 
 /// Провайдер для получения среднего прайса по категории
-final categoryAveragePriceProvider = FutureProvider.family<double, SpecialistCategory>((
+final categoryAveragePriceProvider =
+    FutureProvider.family<double, SpecialistCategory>((
   ref,
   category,
 ) async {
@@ -168,7 +174,8 @@ final categoryAveragePriceProvider = FutureProvider.family<double, SpecialistCat
 });
 
 /// Провайдер для получения истории цен специалиста
-final specialistPriceHistoryProvider = FutureProvider.family<List<PriceHistoryEntry>, String>((
+final specialistPriceHistoryProvider =
+    FutureProvider.family<List<PriceHistoryEntry>, String>((
   ref,
   specialistId,
 ) async {

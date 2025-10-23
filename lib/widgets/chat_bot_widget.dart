@@ -67,7 +67,8 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                     color: Colors.blue[100],
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Icon(Icons.smart_toy, color: Colors.blue[600], size: 20),
+                  child:
+                      Icon(Icons.smart_toy, color: Colors.blue[600], size: 20),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -76,7 +77,8 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                     children: [
                       const Text(
                         'Бот-помощник',
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 16),
                       ),
                       Text(
                         'Готов помочь с вашими вопросами',
@@ -122,7 +124,8 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                     decoration: const InputDecoration(
                       hintText: 'Напишите ваш вопрос...',
                       border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     ),
                     maxLines: null,
                     onSubmitted: _isLoading ? null : _sendMessage,
@@ -161,13 +164,15 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
             ],
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                    message.isBot ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+                crossAxisAlignment: message.isBot
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.end,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: message.isBot ? Colors.grey[100] : Colors.blue[600],
+                      color:
+                          message.isBot ? Colors.grey[100] : Colors.blue[600],
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -175,7 +180,10 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                       children: [
                         Text(
                           message.content,
-                          style: TextStyle(color: message.isBot ? Colors.black87 : Colors.white),
+                          style: TextStyle(
+                              color: message.isBot
+                                  ? Colors.black87
+                                  : Colors.white),
                         ),
                         if (message.suggestions.isNotEmpty) ...[
                           const SizedBox(height: 8),
@@ -187,24 +195,28 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                                   (suggestion) => InkWell(
                                     onTap: () => _selectSuggestion(suggestion),
                                     child: Container(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
                                       decoration: BoxDecoration(
                                         color: message.isBot
                                             ? Colors.blue[50]
-                                            : Colors.white.withValues(alpha: 0.2),
+                                            : Colors.white
+                                                .withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(16),
                                         border: Border.all(
                                           color: message.isBot
                                               ? Colors.blue[200]!
-                                              : Colors.white.withValues(alpha: 0.3),
+                                              : Colors.white
+                                                  .withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: Text(
                                         suggestion,
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: message.isBot ? Colors.blue[700] : Colors.white,
+                                          color: message.isBot
+                                              ? Colors.blue[700]
+                                              : Colors.white,
                                         ),
                                       ),
                                     ),

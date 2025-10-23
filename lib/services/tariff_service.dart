@@ -132,7 +132,8 @@ class TariffService {
   /// Create tariff (admin only)
   Future<String?> createTariff(Tariff tariff) async {
     try {
-      final docRef = await _firestore.collection(_collection).add(tariff.toFirestore());
+      final docRef =
+          await _firestore.collection(_collection).add(tariff.toFirestore());
       return docRef.id;
     } catch (e) {
       debugPrint('Error creating tariff: $e');
@@ -141,7 +142,8 @@ class TariffService {
   }
 
   /// Update tariff (admin only)
-  Future<bool> updateTariff(String tariffId, Map<String, dynamic> updates) async {
+  Future<bool> updateTariff(
+      String tariffId, Map<String, dynamic> updates) async {
     try {
       await _firestore.collection(_collection).doc(tariffId).update({
         ...updates,
@@ -172,11 +174,13 @@ class TariffService {
         .where('isActive', isEqualTo: true)
         .orderBy('sortOrder')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Tariff.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Tariff.fromFirestore(doc)).toList());
   }
 
   /// Get tariffs by price range
-  Future<List<Tariff>> getTariffsByPriceRange(double minPrice, double maxPrice) async {
+  Future<List<Tariff>> getTariffsByPriceRange(
+      double minPrice, double maxPrice) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)

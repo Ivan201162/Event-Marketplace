@@ -13,7 +13,8 @@ class ErrorLoggerService {
   ErrorLoggerService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
-  final StreamController<AppError> _errorController = StreamController<AppError>.broadcast();
+  final StreamController<AppError> _errorController =
+      StreamController<AppError>.broadcast();
 
   static final ErrorLoggerService _instance = ErrorLoggerService._internal();
 
@@ -289,7 +290,8 @@ class ErrorLoggerService {
         query = query.where('resolved', isEqualTo: false);
       }
 
-      final snapshot = await query.orderBy('timestamp', descending: true).limit(limit).get();
+      final snapshot =
+          await query.orderBy('timestamp', descending: true).limit(limit).get();
 
       return snapshot.docs.map(AppError.fromDocument).toList();
     } catch (e) {
@@ -349,7 +351,10 @@ class ErrorLoggerService {
   /// Отметить ошибку как решенную
   Future<void> markErrorAsResolved(String errorId) async {
     try {
-      await _firestore.collection('appErrors').doc(errorId).update({'resolved': true});
+      await _firestore
+          .collection('appErrors')
+          .doc(errorId)
+          .update({'resolved': true});
     } catch (e) {
       developer.log('Ошибка при отметке ошибки как решенной: $e');
     }
@@ -358,7 +363,10 @@ class ErrorLoggerService {
   /// Отметить ошибку как нерешенную
   Future<void> markErrorAsUnresolved(String errorId) async {
     try {
-      await _firestore.collection('appErrors').doc(errorId).update({'resolved': false});
+      await _firestore
+          .collection('appErrors')
+          .doc(errorId)
+          .update({'resolved': false});
     } catch (e) {
       developer.log('Ошибка при отметке ошибки как нерешенной: $e');
     }
@@ -398,7 +406,8 @@ class ErrorLoggerService {
           recentErrors++;
         }
 
-        errorsByType[error.errorType] = (errorsByType[error.errorType] ?? 0) + 1;
+        errorsByType[error.errorType] =
+            (errorsByType[error.errorType] ?? 0) + 1;
         errorsByScreen[error.screen] = (errorsByScreen[error.screen] ?? 0) + 1;
         errorsByDevice[error.device] = (errorsByDevice[error.device] ?? 0) + 1;
       }
@@ -434,7 +443,8 @@ class ErrorLoggerService {
       final csv = StringBuffer();
 
       // Заголовки
-      csv.writeln('ID,User ID,Device,Screen,Error Message,Error Type,Resolved,Timestamp');
+      csv.writeln(
+          'ID,User ID,Device,Screen,Error Message,Error Type,Resolved,Timestamp');
 
       // Данные
       for (final error in errors) {

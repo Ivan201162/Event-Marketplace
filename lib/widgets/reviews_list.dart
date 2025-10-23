@@ -6,7 +6,8 @@ class ReviewsList extends ConsumerStatefulWidget {
   final String specialistId;
   final VoidCallback onWriteReview;
 
-  const ReviewsList({super.key, required this.specialistId, required this.onWriteReview});
+  const ReviewsList(
+      {super.key, required this.specialistId, required this.onWriteReview});
 
   @override
   ConsumerState<ReviewsList> createState() => _ReviewsListState();
@@ -28,14 +29,16 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
             children: [
               Text(
                 'Отзывы (${reviews.length})',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               ElevatedButton.icon(
                 onPressed: widget.onWriteReview,
                 icon: const Icon(Icons.edit, size: 16),
                 label: const Text('Написать отзыв'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
               ),
             ],
@@ -68,10 +71,12 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
           SizedBox(height: 16),
           Text(
             'Пока нет отзывов',
-            style: TextStyle(fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 8),
-          Text('Будьте первым, кто оставит отзыв!', style: TextStyle(color: Colors.grey)),
+          Text('Будьте первым, кто оставит отзыв!',
+              style: TextStyle(color: Colors.grey)),
         ],
       ),
     );
@@ -90,10 +95,12 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
               children: [
                 CircleAvatar(
                   radius: 20,
-                  backgroundImage:
-                      review.userAvatarUrl != null ? NetworkImage(review.userAvatarUrl!) : null,
-                  child:
-                      review.userAvatarUrl == null ? Text(review.userName.substring(0, 1)) : null,
+                  backgroundImage: review.userAvatarUrl != null
+                      ? NetworkImage(review.userAvatarUrl!)
+                      : null,
+                  child: review.userAvatarUrl == null
+                      ? Text(review.userName.substring(0, 1))
+                      : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -102,7 +109,8 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                     children: [
                       Text(
                         review.userName,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
                         _formatDate(review.date),
@@ -140,7 +148,8 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                     // TODO: Toggle like
                     ScaffoldMessenger.of(
                       context,
-                    ).showSnackBar(const SnackBar(content: Text('Лайк пока не реализован')));
+                    ).showSnackBar(const SnackBar(
+                        content: Text('Лайк пока не реализован')));
                   },
                 ),
                 Text(
@@ -153,7 +162,8 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
                   onPressed: () {
                     // TODO: Reply to review
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Ответ на отзыв пока не реализован')),
+                      const SnackBar(
+                          content: Text('Ответ на отзыв пока не реализован')),
                     );
                   },
                 ),
@@ -244,7 +254,8 @@ class _ReviewsListState extends ConsumerState<ReviewsList> {
         userName: 'Михаил Иванов',
         specialistId: widget.specialistId,
         rating: 4,
-        text: 'Хорошая работа, но были небольшие задержки. В целом доволен результатом.',
+        text:
+            'Хорошая работа, но были небольшие задержки. В целом доволен результатом.',
         date: DateTime.now().subtract(const Duration(days: 5)),
         likesCount: 1,
         isLiked: true,

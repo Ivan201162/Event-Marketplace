@@ -55,7 +55,9 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
           child: Column(
             children: [
               AppBar(
-                title: Text(widget.existingFAQ == null ? 'Новый вопрос' : 'Редактировать вопрос'),
+                title: Text(widget.existingFAQ == null
+                    ? 'Новый вопрос'
+                    : 'Редактировать вопрос'),
                 actions: [
                   TextButton(
                     onPressed: _isSaving ? null : _saveFAQ,
@@ -112,11 +114,20 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
                                 border: OutlineInputBorder(),
                               ),
                               items: const [
-                                DropdownMenuItem(value: 'general', child: Text('Общие вопросы')),
-                                DropdownMenuItem(value: 'pricing', child: Text('Цены и оплата')),
-                                DropdownMenuItem(value: 'booking', child: Text('Бронирование')),
-                                DropdownMenuItem(value: 'services', child: Text('Услуги')),
-                                DropdownMenuItem(value: 'equipment', child: Text('Оборудование')),
+                                DropdownMenuItem(
+                                    value: 'general',
+                                    child: Text('Общие вопросы')),
+                                DropdownMenuItem(
+                                    value: 'pricing',
+                                    child: Text('Цены и оплата')),
+                                DropdownMenuItem(
+                                    value: 'booking',
+                                    child: Text('Бронирование')),
+                                DropdownMenuItem(
+                                    value: 'services', child: Text('Услуги')),
+                                DropdownMenuItem(
+                                    value: 'equipment',
+                                    child: Text('Оборудование')),
                                 DropdownMenuItem(
                                   value: 'cancellation',
                                   child: Text('Отмена и возврат'),
@@ -159,7 +170,8 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
   Widget _buildSettingsSection() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Настройки', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Настройки',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           SwitchListTile(
             title: const Text('Опубликовать вопрос'),
@@ -222,10 +234,14 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
       widget.onFAQSaved();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(widget.existingFAQ == null ? 'Вопрос добавлен' : 'Вопрос обновлён')),
+        SnackBar(
+            content: Text(widget.existingFAQ == null
+                ? 'Вопрос добавлен'
+                : 'Вопрос обновлён')),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка сохранения: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка сохранения: $e')));
     } finally {
       setState(() {
         _isSaving = false;

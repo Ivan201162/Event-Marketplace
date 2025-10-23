@@ -45,10 +45,16 @@ class PostCard extends StatelessWidget {
               ],
 
               // Media content
-              if (post.hasMedia) ...[_buildMediaContent(context), const SizedBox(height: 12)],
+              if (post.hasMedia) ...[
+                _buildMediaContent(context),
+                const SizedBox(height: 12)
+              ],
 
               // Tags
-              if (post.tags.isNotEmpty) ...[_buildTags(), const SizedBox(height: 12)],
+              if (post.tags.isNotEmpty) ...[
+                _buildTags(),
+                const SizedBox(height: 12)
+              ],
 
               // Location
               if (post.location != null && post.location!.isNotEmpty) ...[
@@ -57,7 +63,10 @@ class PostCard extends StatelessWidget {
               ],
 
               // Actions
-              if (showActions) ...[_buildActions(context), const SizedBox(height: 8)],
+              if (showActions) ...[
+                _buildActions(context),
+                const SizedBox(height: 8)
+              ],
 
               // Stats
               _buildStats(),
@@ -88,13 +97,16 @@ class PostCard extends StatelessWidget {
             children: [
               Text(
                 post.authorName ?? 'Неизвестный пользователь',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              Text(post.timeAgo, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+              Text(post.timeAgo,
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12)),
             ],
           ),
         ),
-        if (post.isPinned) Icon(Icons.push_pin, color: Colors.blue[600], size: 16),
+        if (post.isPinned)
+          Icon(Icons.push_pin, color: Colors.blue[600], size: 16),
       ],
     );
   }
@@ -123,16 +135,19 @@ class PostCard extends StatelessWidget {
     } else if (post.mediaType == MediaType.video) {
       return Container(
         height: 200,
-        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
         child: Stack(
           children: [
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.play_circle_filled, size: 60, color: Colors.grey[600]),
+                  Icon(Icons.play_circle_filled,
+                      size: 60, color: Colors.grey[600]),
                   const SizedBox(height: 8),
-                  Text('Видео', style: TextStyle(color: Colors.grey[600], fontSize: 16)),
+                  Text('Видео',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 16)),
                 ],
               ),
             ),
@@ -145,7 +160,8 @@ class PostCard extends StatelessWidget {
                   color: Colors.black54,
                   borderRadius: BorderRadius.circular(4),
                 ),
-                child: const Text('🎥', style: TextStyle(color: Colors.white, fontSize: 12)),
+                child: const Text('🎥',
+                    style: TextStyle(color: Colors.white, fontSize: 12)),
               ),
             ),
           ],
@@ -169,7 +185,10 @@ class PostCard extends StatelessWidget {
           ),
           child: Text(
             '#$tag',
-            style: TextStyle(color: Colors.blue[700], fontSize: 12, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                color: Colors.blue[700],
+                fontSize: 12,
+                fontWeight: FontWeight.w500),
           ),
         );
       }).toList(),
@@ -181,7 +200,8 @@ class PostCard extends StatelessWidget {
       children: [
         Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
         const SizedBox(width: 4),
-        Text(post.location!, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+        Text(post.location!,
+            style: TextStyle(color: Colors.grey[600], fontSize: 12)),
       ],
     );
   }
@@ -199,7 +219,8 @@ class PostCard extends StatelessWidget {
         _buildActionButton(
           icon: Icons.comment_outlined,
           color: Colors.grey[600],
-          label: post.commentsCount > 0 ? '${post.commentsCount}' : 'Комментарий',
+          label:
+              post.commentsCount > 0 ? '${post.commentsCount}' : 'Комментарий',
           onTap: onComment,
         ),
         const SizedBox(width: 24),
@@ -231,7 +252,8 @@ class PostCard extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               label,
-              style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  color: color, fontSize: 12, fontWeight: FontWeight.w500),
             ),
           ],
         ),

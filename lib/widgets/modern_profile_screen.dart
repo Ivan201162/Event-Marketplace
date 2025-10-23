@@ -15,13 +15,15 @@ import '../widgets/story_circle_widget.dart';
 
 /// Современный экран профиля в стиле Instagram
 class ModernProfileScreen extends ConsumerStatefulWidget {
-  const ModernProfileScreen({super.key, required this.userId, this.isOwnProfile = false});
+  const ModernProfileScreen(
+      {super.key, required this.userId, this.isOwnProfile = false});
 
   final String userId;
   final bool isOwnProfile;
 
   @override
-  ConsumerState<ModernProfileScreen> createState() => _ModernProfileScreenState();
+  ConsumerState<ModernProfileScreen> createState() =>
+      _ModernProfileScreenState();
 }
 
 class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
@@ -44,7 +46,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this); // Посты, Отзывы, Портфолио, Расписание
+    _tabController = TabController(
+        length: 4, vsync: this); // Посты, Отзывы, Портфолио, Расписание
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -53,7 +56,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
 
     _animationController.forward();
     _loadProfileData();
@@ -123,13 +127,17 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [IconButton(icon: const Icon(Icons.more_vert), onPressed: _showOptionsMenu)],
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.more_vert), onPressed: _showOptionsMenu)
+        ],
       ),
       body: _buildProfileContent(_specialist!),
     );
   }
 
-  Widget _buildProfileContent(Map<String, dynamic> specialist) => FadeTransition(
+  Widget _buildProfileContent(Map<String, dynamic> specialist) =>
+      FadeTransition(
         opacity: _fadeAnimation,
         child: CustomScrollView(
           controller: _scrollController,
@@ -146,7 +154,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildProfileHeader(Map<String, dynamic> specialist) => SliverToBoxAdapter(
+  Widget _buildProfileHeader(Map<String, dynamic> specialist) =>
+      SliverToBoxAdapter(
         child: Container(
           height: 200,
           decoration: BoxDecoration(
@@ -167,10 +176,14 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                   child: CachedNetworkImage(
                     imageUrl: specialist['coverImageUrl'] as String,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        Container(color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
-                    errorWidget: (context, url, error) =>
-                        Container(color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
+                    placeholder: (context, url) => Container(
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.3)),
+                    errorWidget: (context, url, error) => Container(
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.3)),
                   ),
                 ),
               // Градиентный оверлей
@@ -179,7 +192,10 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.7)
+                    ],
                   ),
                 ),
               ),
@@ -204,7 +220,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildProfileInfo(Map<String, dynamic> specialist) => SliverToBoxAdapter(
+  Widget _buildProfileInfo(Map<String, dynamic> specialist) =>
+      SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Padding(
@@ -219,7 +236,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     height: 100,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Theme.of(context).primaryColor, width: 3),
+                      border: Border.all(
+                          color: Theme.of(context).primaryColor, width: 3),
                     ),
                     child: ClipOval(
                       child: widget.isOwnProfile
@@ -229,7 +247,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                               placeholder: Icons.person,
                             )
                           : CachedNetworkImage(
-                              imageUrl: (specialist['imageUrl'] as String?) ?? '',
+                              imageUrl:
+                                  (specialist['imageUrl'] as String?) ?? '',
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
                                 color: Colors.grey[300],
@@ -251,13 +270,15 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     children: [
                       Text(
                         specialist['name'] as String,
-                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
                       if (specialist['city'] != null)
                         Text(
                           specialist['city'] as String,
-                          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.grey[600]),
                         ),
                       const SizedBox(height: 8),
                       Row(
@@ -266,12 +287,14 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                           const SizedBox(width: 4),
                           Text(
                             (specialist['rating'] as num).toStringAsFixed(1),
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                           const SizedBox(width: 8),
                           Text(
                             '(${specialist['reviewCount']} отзывов)',
-                            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -284,7 +307,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildStatsSection(Map<String, dynamic> specialist) => SliverToBoxAdapter(
+  Widget _buildStatsSection(Map<String, dynamic> specialist) =>
+      SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Container(
@@ -293,7 +317,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Theme.of(context).colorScheme.surfaceContainerHighest),
+              border: Border.all(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.1),
@@ -308,7 +333,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                 _buildStatItem('Посты', _posts.length.toString()),
                 _buildStatItem('Подписчики', '1.2K'),
                 _buildStatItem('Подписки', '156'),
-                _buildStatItem('Проекты', specialist['totalBookings']?.toString() ?? '0'),
+                _buildStatItem(
+                    'Проекты', specialist['totalBookings']?.toString() ?? '0'),
               ],
             ),
           ),
@@ -329,7 +355,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ],
       );
 
-  Widget _buildActionButtons(Map<String, dynamic> specialist) => SliverToBoxAdapter(
+  Widget _buildActionButtons(Map<String, dynamic> specialist) =>
+      SliverToBoxAdapter(
         child: FadeTransition(
           opacity: _fadeAnimation,
           child: Padding(
@@ -376,12 +403,16 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                       Expanded(
                         child: FilledButton.icon(
                           onPressed: _toggleFollow,
-                          icon: Icon(_isFollowing ? Icons.person_remove : Icons.person_add),
-                          label: Text(_isFollowing ? 'Отписаться' : 'Подписаться'),
+                          icon: Icon(_isFollowing
+                              ? Icons.person_remove
+                              : Icons.person_add),
+                          label:
+                              Text(_isFollowing ? 'Отписаться' : 'Подписаться'),
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            backgroundColor:
-                                _isFollowing ? Colors.red : Theme.of(context).primaryColor,
+                            backgroundColor: _isFollowing
+                                ? Colors.red
+                                : Theme.of(context).primaryColor,
                           ),
                         ),
                       ),
@@ -392,7 +423,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
       );
 
   Widget _buildBioSection(Map<String, dynamic> specialist) {
-    if (specialist['description'] == null || (specialist['description'] as String).isEmpty) {
+    if (specialist['description'] == null ||
+        (specialist['description'] as String).isEmpty) {
       return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
 
@@ -405,7 +437,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Theme.of(context).colorScheme.surfaceContainerHighest),
+            border: Border.all(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.1),
@@ -417,7 +450,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('О специалисте', style: Theme.of(context).textTheme.titleMedium),
+              Text('О специалисте',
+                  style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               Text(
                 specialist['description'] as String,
@@ -434,20 +468,26 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                       .take(5)
                       .map(
                         (service) => Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                            color: Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                              color: Theme.of(context)
+                                  .primaryColor
+                                  .withValues(alpha: 0.3),
                             ),
                           ),
                           child: Text(
                             service.toString(),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                           ),
                         ),
                       )
@@ -517,7 +557,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                 height: 60,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+                  border: Border.all(
+                      color: Theme.of(context).primaryColor, width: 2),
                 ),
                 child: const Icon(Icons.add, color: Colors.grey),
               ),
@@ -535,7 +576,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             controller: _tabController,
             indicatorColor: Theme.of(context).primaryColor,
             labelColor: Theme.of(context).primaryColor,
-            unselectedLabelColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            unselectedLabelColor:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
             tabs: const [
               Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
               Tab(icon: Icon(Icons.star), text: 'Отзывы'),
@@ -546,7 +588,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         ),
       );
 
-  Widget _buildTabContent(Map<String, dynamic> specialist) => SliverFillRemaining(
+  Widget _buildTabContent(Map<String, dynamic> specialist) =>
+      SliverFillRemaining(
         child: TabBarView(
           controller: _tabController,
           children: [
@@ -584,7 +627,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
             color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Center(child: Icon(Icons.favorite, color: Colors.red, size: 32)),
+          child: const Center(
+              child: Icon(Icons.favorite, color: Colors.red, size: 32)),
         ),
       );
 
@@ -600,7 +644,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Theme.of(context).colorScheme.surfaceContainerHighest),
+          border: Border.all(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.1),
@@ -619,7 +664,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                   backgroundColor: Theme.of(context).primaryColor,
                   child: Text(
                     'U$index',
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -627,7 +673,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Пользователь $index', style: Theme.of(context).textTheme.titleSmall),
+                      Text('Пользователь $index',
+                          style: Theme.of(context).textTheme.titleSmall),
                       Row(
                         children: List.generate(
                           5,
@@ -641,7 +688,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                     ],
                   ),
                 ),
-                Text('${index + 1} дн. назад', style: Theme.of(context).textTheme.bodySmall),
+                Text('${index + 1} дн. назад',
+                    style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
             const SizedBox(height: 12),
@@ -675,16 +723,18 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
               ),
               itemCount: (specialist['portfolioImages'] as List).length,
               itemBuilder: (context, index) => Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(8)),
                 child: CachedNetworkImage(
-                  imageUrl: (specialist['portfolioImages'] as List)[index].toString(),
+                  imageUrl:
+                      (specialist['portfolioImages'] as List)[index].toString(),
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: Colors.grey[300],
                     child: const Center(child: CircularProgressIndicator()),
                   ),
-                  errorWidget: (context, url, error) =>
-                      Container(color: Colors.grey[300], child: const Icon(Icons.error)),
+                  errorWidget: (context, url, error) => Container(
+                      color: Colors.grey[300], child: const Icon(Icons.error)),
                 ),
               ),
             );
@@ -716,49 +766,58 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
   void _editProfile() {
     // TODO: Открыть экран редактирования профиля
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Редактирование профиля будет доступно в следующей версии')),
+      const SnackBar(
+          content:
+              Text('Редактирование профиля будет доступно в следующей версии')),
     );
   }
 
   void _addPost() {
     // TODO: Открыть экран создания поста
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Создание поста будет доступно в следующей версии')),
+      const SnackBar(
+          content: Text('Создание поста будет доступно в следующей версии')),
     );
   }
 
   void _addStory() {
     // TODO: Открыть экран создания сторис
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Создание сторис будет доступно в следующей версии')),
+      const SnackBar(
+          content: Text('Создание сторис будет доступно в следующей версии')),
     );
   }
 
   void _openChat() {
     // TODO: Открыть чат с пользователем
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Открытие чата будет доступно в следующей версии')),
+      const SnackBar(
+          content: Text('Открытие чата будет доступно в следующей версии')),
     );
   }
 
   void _viewPost(Post post) {
     // TODO: Открыть детали поста
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Просмотр поста будет доступен в следующей версии')),
+      const SnackBar(
+          content: Text('Просмотр поста будет доступен в следующей версии')),
     );
   }
 
   void _viewStory(Story story) {
     // TODO: Открыть просмотр сторис
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Просмотр сторис будет доступен в следующей версии')),
+      const SnackBar(
+          content: Text('Просмотр сторис будет доступен в следующей версии')),
     );
   }
 
   void _updateProfileImage(String imageUrl) {
     // TODO: Обновить изображение профиля
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Обновление изображения будет доступно в следующей версии')),
+      const SnackBar(
+          content:
+              Text('Обновление изображения будет доступно в следующей версии')),
     );
   }
 
@@ -799,7 +858,8 @@ class _ModernProfileScreenState extends ConsumerState<ModernProfileScreen>
                   if (currentUser == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Для редактирования профиля войдите в систему.'),
+                        content: Text(
+                            'Для редактирования профиля войдите в систему.'),
                         backgroundColor: Colors.orange,
                       ),
                     );
@@ -826,9 +886,12 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) =>
-      Container(color: Theme.of(context).scaffoldBackgroundColor, child: tabBar);
+  Widget build(
+          BuildContext context, double shrinkOffset, bool overlapsContent) =>
+      Container(
+          color: Theme.of(context).scaffoldBackgroundColor, child: tabBar);
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }

@@ -5,7 +5,7 @@ class ResponsiveUtils {
   /// Определение типа экрана
   static ScreenType getScreenType(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    
+
     if (width < 600) {
       return ScreenType.mobile;
     } else if (width < 900) {
@@ -18,7 +18,7 @@ class ResponsiveUtils {
   /// Определение размера экрана
   static ScreenSize getScreenSize(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    
+
     if (size.width < 360) {
       return ScreenSize.small;
     } else if (size.width < 600) {
@@ -31,14 +31,15 @@ class ResponsiveUtils {
   }
 
   /// Адаптивная ширина
-  static double getResponsiveWidth(BuildContext context, {
+  static double getResponsiveWidth(
+    BuildContext context, {
     double mobile = 1.0,
     double tablet = 0.8,
     double desktop = 0.6,
   }) {
     final screenType = getScreenType(context);
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return screenWidth * mobile;
@@ -50,14 +51,15 @@ class ResponsiveUtils {
   }
 
   /// Адаптивная высота
-  static double getResponsiveHeight(BuildContext context, {
+  static double getResponsiveHeight(
+    BuildContext context, {
     double mobile = 1.0,
     double tablet = 0.9,
     double desktop = 0.8,
   }) {
     final screenType = getScreenType(context);
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return screenHeight * mobile;
@@ -69,13 +71,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивный размер шрифта
-  static double getResponsiveFontSize(BuildContext context, {
+  static double getResponsiveFontSize(
+    BuildContext context, {
     double mobile = 14.0,
     double tablet = 16.0,
     double desktop = 18.0,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -87,13 +90,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивный отступ
-  static EdgeInsets getResponsivePadding(BuildContext context, {
+  static EdgeInsets getResponsivePadding(
+    BuildContext context, {
     EdgeInsets mobile = const EdgeInsets.all(16.0),
     EdgeInsets tablet = const EdgeInsets.all(24.0),
     EdgeInsets desktop = const EdgeInsets.all(32.0),
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -105,13 +109,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивное количество колонок
-  static int getResponsiveColumns(BuildContext context, {
+  static int getResponsiveColumns(
+    BuildContext context, {
     int mobile = 1,
     int tablet = 2,
     int desktop = 3,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -123,13 +128,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивный размер карточки
-  static Size getResponsiveCardSize(BuildContext context, {
+  static Size getResponsiveCardSize(
+    BuildContext context, {
     Size mobile = const Size(300, 200),
     Size tablet = const Size(400, 250),
     Size desktop = const Size(500, 300),
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -141,13 +147,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивный размер иконки
-  static double getResponsiveIconSize(BuildContext context, {
+  static double getResponsiveIconSize(
+    BuildContext context, {
     double mobile = 24.0,
     double tablet = 28.0,
     double desktop = 32.0,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -159,13 +166,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивная высота кнопки
-  static double getResponsiveButtonHeight(BuildContext context, {
+  static double getResponsiveButtonHeight(
+    BuildContext context, {
     double mobile = 48.0,
     double tablet = 52.0,
     double desktop = 56.0,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -177,13 +185,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивный радиус границы
-  static double getResponsiveBorderRadius(BuildContext context, {
+  static double getResponsiveBorderRadius(
+    BuildContext context, {
     double mobile = 8.0,
     double tablet = 12.0,
     double desktop = 16.0,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -195,13 +204,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивный отступ между элементами
-  static double getResponsiveSpacing(BuildContext context, {
+  static double getResponsiveSpacing(
+    BuildContext context, {
     double mobile = 8.0,
     double tablet = 12.0,
     double desktop = 16.0,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -213,13 +223,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивная высота AppBar
-  static double getResponsiveAppBarHeight(BuildContext context, {
+  static double getResponsiveAppBarHeight(
+    BuildContext context, {
     double mobile = 56.0,
     double tablet = 64.0,
     double desktop = 72.0,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -231,13 +242,14 @@ class ResponsiveUtils {
   }
 
   /// Адаптивная высота BottomNavigationBar
-  static double getResponsiveBottomNavHeight(BuildContext context, {
+  static double getResponsiveBottomNavHeight(
+    BuildContext context, {
     double mobile = 60.0,
     double tablet = 70.0,
     double desktop = 80.0,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile;
@@ -270,8 +282,8 @@ class ResponsiveUtils {
 
   /// Проверка, является ли экран большим
   static bool isLargeScreen(BuildContext context) {
-    return getScreenSize(context) == ScreenSize.large || 
-           getScreenSize(context) == ScreenSize.extraLarge;
+    return getScreenSize(context) == ScreenSize.large ||
+        getScreenSize(context) == ScreenSize.extraLarge;
   }
 
   /// Адаптивный LayoutBuilder
@@ -282,14 +294,16 @@ class ResponsiveUtils {
     Widget Function(BuildContext context)? desktop,
   }) {
     final screenType = getScreenType(context);
-    
+
     switch (screenType) {
       case ScreenType.mobile:
         return mobile(context);
       case ScreenType.tablet:
         return tablet?.call(context) ?? mobile(context);
       case ScreenType.desktop:
-        return desktop?.call(context) ?? tablet?.call(context) ?? mobile(context);
+        return desktop?.call(context) ??
+            tablet?.call(context) ??
+            mobile(context);
     }
   }
 
@@ -301,7 +315,7 @@ class ResponsiveUtils {
     double runSpacing = 8.0,
   }) {
     final columns = getResponsiveColumns(context);
-    
+
     return GridView.count(
       crossAxisCount: columns,
       crossAxisSpacing: spacing,
@@ -338,12 +352,13 @@ class ResponsiveUtils {
     return Container(
       padding: padding ?? getResponsivePadding(context),
       margin: margin,
-      decoration: decoration ?? BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(
-          borderRadius ?? getResponsiveBorderRadius(context),
-        ),
-      ),
+      decoration: decoration ??
+          BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(
+              borderRadius ?? getResponsiveBorderRadius(context),
+            ),
+          ),
       child: child,
     );
   }
@@ -360,10 +375,11 @@ class ResponsiveUtils {
     return Text(
       text,
       style: style?.copyWith(
-        fontSize: getResponsiveFontSize(context),
-      ) ?? TextStyle(
-        fontSize: getResponsiveFontSize(context),
-      ),
+            fontSize: getResponsiveFontSize(context),
+          ) ??
+          TextStyle(
+            fontSize: getResponsiveFontSize(context),
+          ),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
@@ -385,10 +401,11 @@ class ResponsiveUtils {
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         foregroundColor: textColor,
-        padding: padding ?? EdgeInsets.symmetric(
-          horizontal: getResponsiveSpacing(context) * 2,
-          vertical: getResponsiveSpacing(context),
-        ),
+        padding: padding ??
+            EdgeInsets.symmetric(
+              horizontal: getResponsiveSpacing(context) * 2,
+              vertical: getResponsiveSpacing(context),
+            ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
             borderRadius ?? getResponsiveBorderRadius(context),
@@ -437,7 +454,8 @@ class ResponsiveUtils {
         title,
         context: context,
         style: TextStyle(
-          fontSize: getResponsiveFontSize(context, mobile: 18.0, tablet: 20.0, desktop: 22.0),
+          fontSize: getResponsiveFontSize(context,
+              mobile: 18.0, tablet: 20.0, desktop: 22.0),
         ),
       ),
       actions: actions,
@@ -465,7 +483,9 @@ class ResponsiveUtils {
       backgroundColor: backgroundColor,
       selectedItemColor: selectedItemColor,
       unselectedItemColor: unselectedItemColor,
-      type: isDesktop(context) ? BottomNavigationBarType.fixed : BottomNavigationBarType.fixed,
+      type: isDesktop(context)
+          ? BottomNavigationBarType.fixed
+          : BottomNavigationBarType.fixed,
       elevation: 8.0,
     );
   }

@@ -61,15 +61,19 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
         ),
         actions: [
           TextButton(onPressed: _clearFilters, child: const Text('Очистить')),
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
-          ElevatedButton(onPressed: _applyFilters, child: const Text('Применить')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
+          ElevatedButton(
+              onPressed: _applyFilters, child: const Text('Применить')),
         ],
       );
 
   Widget _buildCategorySection() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Категория', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Категория',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
@@ -79,7 +83,11 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
               return FilterChip(
                 label: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [Text(category.icon), const SizedBox(width: 4), Text(category.name)],
+                  children: [
+                    Text(category.icon),
+                    const SizedBox(width: 4),
+                    Text(category.name)
+                  ],
                 ),
                 selected: isSelected,
                 onSelected: (selected) {
@@ -88,9 +96,15 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
                   });
                 },
                 backgroundColor: isSelected
-                    ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
+                    ? Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.2)
                     : null,
-                selectedColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                selectedColor: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.2),
                 checkmarkColor: Theme.of(context).colorScheme.primary,
               );
             }).toList(),
@@ -122,9 +136,15 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
                   });
                 },
                 backgroundColor: isSelected
-                    ? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2)
+                    ? Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withValues(alpha: 0.2)
                     : null,
-                selectedColor: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2),
+                selectedColor: Theme.of(context)
+                    .colorScheme
+                    .secondary
+                    .withValues(alpha: 0.2),
                 checkmarkColor: Theme.of(context).colorScheme.secondary,
               );
             }).toList(),
@@ -137,7 +157,8 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
             decoration: InputDecoration(
               hintText: 'Добавить тег',
               border: const OutlineInputBorder(),
-              suffixIcon: IconButton(icon: const Icon(Icons.add), onPressed: _addCustomTag),
+              suffixIcon: IconButton(
+                  icon: const Icon(Icons.add), onPressed: _addCustomTag),
             ),
             onSubmitted: _addCustomTag,
           ),
@@ -161,7 +182,9 @@ class _IdeaFiltersWidgetState extends State<IdeaFiltersWidget> {
             autofocus: true,
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Отмена')),
             ElevatedButton(
               onPressed: () {
                 final newTag = controller.text.trim();
@@ -228,7 +251,8 @@ class ActiveFiltersWidget extends StatelessWidget {
           if (selectedCategory != null)
             _buildFilterChip(
               context,
-              label: '${selectedCategory!.icon} ${selectedCategory!.displayName}',
+              label:
+                  '${selectedCategory!.icon} ${selectedCategory!.displayName}',
               onRemove: () => onFiltersChanged(null, selectedTags),
             ),
           ...selectedTags.map(
@@ -258,7 +282,8 @@ class ActiveFiltersWidget extends StatelessWidget {
           label: Text(label),
           deleteIcon: const Icon(Icons.close, size: 18),
           onDeleted: onRemove,
-          backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+          backgroundColor:
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
           labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
       );

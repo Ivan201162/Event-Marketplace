@@ -22,18 +22,23 @@ class MediaMessageWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       child: Row(
-        mainAxisAlignment: isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isOwnMessage) ...[
             CircleAvatar(
               radius: 16,
               backgroundImage: (message as dynamic).senderAvatar != null
-                  ? CachedNetworkImageProvider((message as dynamic).senderAvatar as String)
+                  ? CachedNetworkImageProvider(
+                      (message as dynamic).senderAvatar as String)
                   : null,
               child: ((message as dynamic).senderAvatar as String?) == null
                   ? Text(
-                      (((message as dynamic).senderName as String?)?.isNotEmpty ?? false)
-                          ? ((message as dynamic).senderName as String)[0].toUpperCase()
+                      (((message as dynamic).senderName as String?)
+                                  ?.isNotEmpty ??
+                              false)
+                          ? ((message as dynamic).senderName as String)[0]
+                              .toUpperCase()
                           : '?',
                       style: const TextStyle(fontSize: 12),
                     )
@@ -43,16 +48,20 @@ class MediaMessageWidget extends StatelessWidget {
           ],
           Flexible(
             child: Container(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7),
               child: Column(
-                crossAxisAlignment:
-                    isOwnMessage ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                crossAxisAlignment: isOwnMessage
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
                 children: [
                   if (!isOwnMessage) ...[
                     Text(
-                      ((message as dynamic).senderName as String?) ?? 'Неизвестный',
+                      ((message as dynamic).senderName as String?) ??
+                          'Неизвестный',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -62,7 +71,8 @@ class MediaMessageWidget extends StatelessWidget {
                   if ((message.text ?? '').isNotEmpty) ...[
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         color: isOwnMessage
                             ? theme.colorScheme.primary
@@ -84,9 +94,11 @@ class MediaMessageWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _formatTime(DateTime.parse((message as dynamic).timestamp as String)),
+                        _formatTime(DateTime.parse(
+                            (message as dynamic).timestamp as String)),
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.5),
                           fontSize: 11,
                         ),
                       ),
@@ -103,12 +115,16 @@ class MediaMessageWidget extends StatelessWidget {
             CircleAvatar(
               radius: 16,
               backgroundImage: (message as dynamic).senderAvatar != null
-                  ? CachedNetworkImageProvider((message as dynamic).senderAvatar as String)
+                  ? CachedNetworkImageProvider(
+                      (message as dynamic).senderAvatar as String)
                   : null,
               child: ((message as dynamic).senderAvatar as String?) == null
                   ? Text(
-                      (((message as dynamic).senderName as String?)?.isNotEmpty ?? false)
-                          ? ((message as dynamic).senderName as String)[0].toUpperCase()
+                      (((message as dynamic).senderName as String?)
+                                  ?.isNotEmpty ??
+                              false)
+                          ? ((message as dynamic).senderName as String)[0]
+                              .toUpperCase()
                           : '?',
                       style: const TextStyle(fontSize: 12),
                     )
@@ -162,7 +178,9 @@ class MediaMessageWidget extends StatelessWidget {
             placeholder: (context, url) => Container(
               height: 200,
               color: theme.colorScheme.surfaceContainerHighest,
-              child: Center(child: CircularProgressIndicator(color: theme.colorScheme.primary)),
+              child: Center(
+                  child: CircularProgressIndicator(
+                      color: theme.colorScheme.primary)),
             ),
             errorWidget: (context, url, error) => Container(
               height: 200,
@@ -172,14 +190,16 @@ class MediaMessageWidget extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.broken_image,
-                    color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                    color: theme.colorScheme.onSurfaceVariant
+                        .withValues(alpha: 0.6),
                     size: 48,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Ошибка загрузки',
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                      color: theme.colorScheme.onSurfaceVariant
+                          .withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -227,7 +247,8 @@ class MediaMessageWidget extends StatelessWidget {
                     color: Colors.black.withValues(alpha: 0.6),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.play_arrow, color: Colors.white, size: 32),
+                  child: const Icon(Icons.play_arrow,
+                      color: Colors.white, size: 32),
                 ),
               ),
 
@@ -237,25 +258,29 @@ class MediaMessageWidget extends StatelessWidget {
                 left: 8,
                 right: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.video_file, color: Colors.white, size: 16),
+                      const Icon(Icons.video_file,
+                          color: Colors.white, size: 16),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           message.fileName ?? 'Видео',
-                          style: const TextStyle(color: Colors.white, fontSize: 12),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 12),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Text(
                         _formatFileSize(message.fileSize ?? 0),
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ],
                   ),
@@ -278,14 +303,17 @@ class MediaMessageWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+          border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: theme.colorScheme.primary, shape: BoxShape.circle),
-              child: const Icon(Icons.play_arrow, color: Colors.white, size: 20),
+              decoration: BoxDecoration(
+                  color: theme.colorScheme.primary, shape: BoxShape.circle),
+              child:
+                  const Icon(Icons.play_arrow, color: Colors.white, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -294,7 +322,8 @@ class MediaMessageWidget extends StatelessWidget {
                 children: [
                   Text(
                     message.fileName ?? 'Аудиофайл',
-                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w500),
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
@@ -324,7 +353,8 @@ class MediaMessageWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+          border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Row(
           children: [
@@ -347,7 +377,8 @@ class MediaMessageWidget extends StatelessWidget {
                 children: [
                   Text(
                     message.fileName ?? 'Файл',
-                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w500),
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
@@ -383,7 +414,8 @@ class MediaMessageWidget extends StatelessWidget {
   String _formatFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    if (bytes < 1024 * 1024 * 1024)
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 

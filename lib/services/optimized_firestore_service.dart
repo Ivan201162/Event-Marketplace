@@ -20,7 +20,8 @@ class OptimizedFirestoreService {
 
     if (useCache && _queryCache.containsKey(cacheKey)) {
       final timestamp = _cacheTimestamps[cacheKey];
-      if (timestamp != null && DateTime.now().difference(timestamp) < _cacheExpiration) {
+      if (timestamp != null &&
+          DateTime.now().difference(timestamp) < _cacheExpiration) {
         // Возвращаем кэшированный результат
         return _queryCache[cacheKey]?.docs.first;
       }
@@ -50,11 +51,13 @@ class OptimizedFirestoreService {
     List<QueryFilter>? where,
     bool useCache = true,
   }) async {
-    final cacheKey = _generateCacheKey(collection, limit, startAfter, orderBy, where);
+    final cacheKey =
+        _generateCacheKey(collection, limit, startAfter, orderBy, where);
 
     if (useCache && _queryCache.containsKey(cacheKey)) {
       final timestamp = _cacheTimestamps[cacheKey];
-      if (timestamp != null && DateTime.now().difference(timestamp) < _cacheExpiration) {
+      if (timestamp != null &&
+          DateTime.now().difference(timestamp) < _cacheExpiration) {
         return _queryCache[cacheKey]!;
       }
     }
@@ -126,7 +129,8 @@ class OptimizedFirestoreService {
   }
 
   /// Создание документа с оптимизацией
-  static Future<String?> createDocument(String collection, Map<String, dynamic> data) async {
+  static Future<String?> createDocument(
+      String collection, Map<String, dynamic> data) async {
     try {
       final docRef = await _firestore.collection(collection).add(data);
 
@@ -160,7 +164,8 @@ class OptimizedFirestoreService {
   }
 
   /// Удаление документа с оптимизацией
-  static Future<bool> deleteDocument(String collection, String documentId) async {
+  static Future<bool> deleteDocument(
+      String collection, String documentId) async {
     try {
       await _firestore.collection(collection).doc(documentId).delete();
 
@@ -226,9 +231,9 @@ class OptimizedFirestoreService {
 
   /// Получение статистики кэша
   static Map<String, dynamic> getCacheStats() => {
-    'cacheSize': _queryCache.length,
-    'cacheKeys': _queryCache.keys.toList(),
-  };
+        'cacheSize': _queryCache.length,
+        'cacheKeys': _queryCache.keys.toList(),
+      };
 }
 
 /// Класс для фильтров запросов

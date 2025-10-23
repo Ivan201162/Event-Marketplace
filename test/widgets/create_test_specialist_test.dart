@@ -5,11 +5,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Create Test Specialist Button Tests', () {
-    testWidgets('CreateTestSpecialistButton should render correctly', (tester) async {
+    testWidgets('CreateTestSpecialistButton should render correctly',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
+            home: Scaffold(
+                body:
+                    CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -19,11 +22,14 @@ void main() {
       expect(find.byIcon(Icons.person_add), findsOneWidget);
     });
 
-    testWidgets('CreateTestSpecialistButton should show loading state', (tester) async {
+    testWidgets('CreateTestSpecialistButton should show loading state',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
+            home: Scaffold(
+                body:
+                    CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -37,7 +43,8 @@ void main() {
       expect(find.text('Создание...'), findsOneWidget);
     });
 
-    testWidgets('CreateTestSpecialistButton should handle different specialist types', (
+    testWidgets(
+        'CreateTestSpecialistButton should handle different specialist types', (
       tester,
     ) async {
       final specialistTypes = ['photographer', 'videographer', 'dj', 'host'];
@@ -46,7 +53,8 @@ void main() {
         await tester.pumpWidget(
           ProviderScope(
             child: MaterialApp(
-              home: Scaffold(body: CreateTestSpecialistButton(specialistType: type)),
+              home: Scaffold(
+                  body: CreateTestSpecialistButton(specialistType: type)),
             ),
           ),
         );
@@ -56,7 +64,8 @@ void main() {
       }
     });
 
-    testWidgets('CreateTestSpecialistButton should call onSpecialistCreated callback', (
+    testWidgets(
+        'CreateTestSpecialistButton should call onSpecialistCreated callback', (
       tester,
     ) async {
       // var callbackCalled = false;
@@ -85,11 +94,14 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('CreateTestSpecialistButton should be disabled when loading', (tester) async {
+    testWidgets('CreateTestSpecialistButton should be disabled when loading',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
+            home: Scaffold(
+                body:
+                    CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -103,11 +115,14 @@ void main() {
       expect(button.onPressed, isNull);
     });
 
-    testWidgets('CreateTestSpecialistButton should show error message', (tester) async {
+    testWidgets('CreateTestSpecialistButton should show error message',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
+            home: Scaffold(
+                body:
+                    CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -117,11 +132,14 @@ void main() {
       expect(find.text('Создать тест-специалиста'), findsOneWidget);
     });
 
-    testWidgets('CreateTestSpecialistButton should show success message', (tester) async {
+    testWidgets('CreateTestSpecialistButton should show success message',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
+            home: Scaffold(
+                body:
+                    CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -131,11 +149,14 @@ void main() {
       expect(find.text('Создать тест-специалиста'), findsOneWidget);
     });
 
-    testWidgets('CreateTestSpecialistButton should have correct styling', (tester) async {
+    testWidgets('CreateTestSpecialistButton should have correct styling',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(body: CreateTestSpecialistButton(specialistType: 'photographer')),
+            home: Scaffold(
+                body:
+                    CreateTestSpecialistButton(specialistType: 'photographer')),
           ),
         ),
       );
@@ -146,10 +167,12 @@ void main() {
       expect(button.style?.foregroundColor?.resolve({}), equals(Colors.white));
     });
 
-    testWidgets('CreateTestSpecialistButton should handle null specialistType', (tester) async {
+    testWidgets('CreateTestSpecialistButton should handle null specialistType',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(home: Scaffold(body: CreateTestSpecialistButton())),
+          child:
+              MaterialApp(home: Scaffold(body: CreateTestSpecialistButton())),
         ),
       );
 
@@ -157,11 +180,13 @@ void main() {
       expect(find.text('Создать тест-специалиста'), findsOneWidget);
     });
 
-    testWidgets('CreateTestSpecialistButton should handle empty specialistType', (tester) async {
+    testWidgets('CreateTestSpecialistButton should handle empty specialistType',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: Scaffold(body: CreateTestSpecialistButton(specialistType: '')),
+            home:
+                Scaffold(body: CreateTestSpecialistButton(specialistType: '')),
           ),
         ),
       );

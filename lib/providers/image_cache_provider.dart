@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер для управления кэшем изображений
-final imageCacheProvider = Provider<ImageCacheManager>((ref) => ImageCacheManager());
+final imageCacheProvider =
+    Provider<ImageCacheManager>((ref) => ImageCacheManager());
 
 /// Менеджер кэша изображений
 class ImageCacheManager {
-  static const int _maxCacheSize = 100; // Максимальное количество изображений в кэше
+  static const int _maxCacheSize =
+      100; // Максимальное количество изображений в кэше
   static const int _maxCacheBytes = 50 * 1024 * 1024; // 50MB
 
   /// Инициализация кэша изображений
@@ -52,7 +54,8 @@ class ImageCacheManager {
 }
 
 /// Провайдер для предварительной загрузки изображений
-final imagePreloadProvider = FutureProvider.family<void, String>((ref, imageUrl) async {
+final imagePreloadProvider =
+    FutureProvider.family<void, String>((ref, imageUrl) async {
   try {
     // Инициализируем кэш
     ref.read(imageCacheProvider).initializeCache();

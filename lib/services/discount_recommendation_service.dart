@@ -63,7 +63,8 @@ class DiscountRecommendationService {
   }
 
   /// Отправляет уведомление с рекомендациями по увеличению бюджета
-  Future<void> sendBudgetRecommendation(Booking booking, List<String> suggestions) async {
+  Future<void> sendBudgetRecommendation(
+      Booking booking, List<String> suggestions) async {
     if (suggestions.isNotEmpty) {
       await _notificationService.sendNotification(
         booking.customerId,
@@ -82,7 +83,9 @@ class DiscountRecommendationService {
 
     final daysUntilEvent = booking.eventDate.difference(DateTime.now()).inDays;
 
-    return booking.totalPrice > 50000 || booking.participantsCount > 50 || daysUntilEvent > 30;
+    return booking.totalPrice > 50000 ||
+        booking.participantsCount > 50 ||
+        daysUntilEvent > 30;
   }
 
   /// Рассчитывает рекомендуемый размер скидки

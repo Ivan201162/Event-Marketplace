@@ -43,9 +43,19 @@ class _FiltersDialogState extends State<FiltersDialog> {
     'Танцор',
   ];
 
-  final List<String> _ratings = ['Любой рейтинг', '4.5+ звезд', '4.0+ звезд', '3.5+ звезд'];
+  final List<String> _ratings = [
+    'Любой рейтинг',
+    '4.5+ звезд',
+    '4.0+ звезд',
+    '3.5+ звезд'
+  ];
 
-  final List<String> _types = ['Любой тип', 'Физическое лицо', 'ИП', 'Организация'];
+  final List<String> _types = [
+    'Любой тип',
+    'Физическое лицо',
+    'ИП',
+    'Организация'
+  ];
 
   @override
   void initState() {
@@ -120,7 +130,8 @@ class _FiltersDialogState extends State<FiltersDialog> {
                                 _selectedCity = selected ? city : null;
                               });
                             },
-                            selectedColor: theme.primaryColor.withValues(alpha: 0.2),
+                            selectedColor:
+                                theme.primaryColor.withValues(alpha: 0.2),
                             checkmarkColor: theme.primaryColor,
                           );
                         }).toList(),
@@ -146,7 +157,8 @@ class _FiltersDialogState extends State<FiltersDialog> {
                                 _selectedCategory = selected ? category : null;
                               });
                             },
-                            selectedColor: theme.primaryColor.withValues(alpha: 0.2),
+                            selectedColor:
+                                theme.primaryColor.withValues(alpha: 0.2),
                             checkmarkColor: theme.primaryColor,
                           );
                         }).toList(),
@@ -249,7 +261,8 @@ class _FiltersDialogState extends State<FiltersDialog> {
                         backgroundColor: theme.primaryColor,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      child: const Text('Применить', style: TextStyle(color: Colors.white)),
+                      child: const Text('Применить',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ],
@@ -275,7 +288,9 @@ class _FiltersDialogState extends State<FiltersDialog> {
           children: [
             Icon(icon, size: 20, color: theme.primaryColor),
             const SizedBox(width: 8),
-            Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+            Text(title,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
           ],
         ),
         const SizedBox(height: 12),

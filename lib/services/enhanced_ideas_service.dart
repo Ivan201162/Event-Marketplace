@@ -93,7 +93,8 @@ class EnhancedIdeasService {
   /// Получить идею по ID
   Future<EnhancedIdea?> getIdeaById(String ideaId) async {
     try {
-      final DocumentSnapshot doc = await _firestore.collection('ideas').doc(ideaId).get();
+      final DocumentSnapshot doc =
+          await _firestore.collection('ideas').doc(ideaId).get();
 
       if (doc.exists) {
         return EnhancedIdea.fromMap(doc.data()! as Map<String, dynamic>);
@@ -137,7 +138,9 @@ class EnhancedIdeasService {
     bool? isArchived,
   }) async {
     try {
-      final updates = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
+      final updates = <String, dynamic>{
+        'updatedAt': FieldValue.serverTimestamp()
+      };
 
       if (title != null) updates['title'] = title;
       if (description != null) updates['description'] = description;
@@ -220,7 +223,10 @@ class EnhancedIdeasService {
       );
 
       // Добавляем комментарий в коллекцию комментариев
-      await _firestore.collection('idea_comments').doc(commentId).set(comment.toMap());
+      await _firestore
+          .collection('idea_comments')
+          .doc(commentId)
+          .set(comment.toMap());
 
       // Обновляем счётчик комментариев в идее
       await _firestore.collection('ideas').doc(ideaId).update({
@@ -255,7 +261,8 @@ class EnhancedIdeasService {
       final comments = <IdeaComment>[];
 
       for (final doc in snapshot.docs) {
-        final comment = IdeaComment.fromMap(doc.data()! as Map<String, dynamic>);
+        final comment =
+            IdeaComment.fromMap(doc.data()! as Map<String, dynamic>);
         comments.add(comment);
       }
 
@@ -288,7 +295,10 @@ class EnhancedIdeasService {
       );
 
       // Добавляем репост в коллекцию репостов
-      await _firestore.collection('idea_shares').doc(shareId).set(share.toMap());
+      await _firestore
+          .collection('idea_shares')
+          .doc(shareId)
+          .set(share.toMap());
 
       // Обновляем счётчик репостов в идее
       await _firestore.collection('ideas').doc(ideaId).update({
@@ -402,17 +412,21 @@ class EnhancedIdeasService {
         final idea = EnhancedIdea.fromMap(doc.data()! as Map<String, dynamic>);
 
         // Фильтр по тексту и бюджету (на клиенте)
-        final matchesQuery =
-            query.isEmpty ||
+        final matchesQuery = query.isEmpty ||
             idea.title.toLowerCase().contains(query.toLowerCase()) ||
             idea.description.toLowerCase().contains(query.toLowerCase()) ||
-            idea.tags.any((tag) => tag.toLowerCase().contains(query.toLowerCase()));
+            idea.tags
+                .any((tag) => tag.toLowerCase().contains(query.toLowerCase()));
 
         var matchesBudget = true;
-        if (minBudget != null && idea.budget != null && idea.budget! < minBudget) {
+        if (minBudget != null &&
+            idea.budget != null &&
+            idea.budget! < minBudget) {
           matchesBudget = false;
         }
-        if (maxBudget != null && idea.budget != null && idea.budget! > maxBudget) {
+        if (maxBudget != null &&
+            idea.budget != null &&
+            idea.budget! > maxBudget) {
           matchesBudget = false;
         }
 
@@ -428,7 +442,8 @@ class EnhancedIdeasService {
   }
 
   /// Получить популярные идеи
-  Future<List<EnhancedIdea>> getPopularIdeas({int limit = 10, IdeaType? type}) async {
+  Future<List<EnhancedIdea>> getPopularIdeas(
+      {int limit = 10, IdeaType? type}) async {
     try {
       Query query = _firestore
           .collection('ideas')
@@ -479,7 +494,10 @@ class EnhancedIdeasService {
         isPublic: isPublic,
       );
 
-      await _firestore.collection('idea_collections').doc(collectionId).set(collection.toMap());
+      await _firestore
+          .collection('idea_collections')
+          .doc(collectionId)
+          .set(collection.toMap());
 
       return collection;
     } catch (e) {
@@ -488,7 +506,8 @@ class EnhancedIdeasService {
   }
 
   /// Получить коллекции пользователя
-  Future<List<IdeaCollection>> getUserCollections({required String userId, int limit = 20}) async {
+  Future<List<IdeaCollection>> getUserCollections(
+      {required String userId, int limit = 20}) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('idea_collections')
@@ -500,7 +519,8 @@ class EnhancedIdeasService {
       final collections = <IdeaCollection>[];
 
       for (final doc in snapshot.docs) {
-        final collection = IdeaCollection.fromMap(doc.data()! as Map<String, dynamic>);
+        final collection =
+            IdeaCollection.fromMap(doc.data()! as Map<String, dynamic>);
         collections.add(collection);
       }
 
@@ -522,7 +542,8 @@ class EnhancedIdeasService {
   }
 
   /// Удалить идею из коллекции
-  Future<void> removeIdeaFromCollection(String collectionId, String ideaId) async {
+  Future<void> removeIdeaFromCollection(
+      String collectionId, String ideaId) async {
     try {
       await _firestore.collection('idea_collections').doc(collectionId).update({
         'ideas': FieldValue.arrayRemove([ideaId]),
@@ -685,7 +706,8 @@ class EnhancedIdeasService {
   }
 
   /// Поделиться идеей в чат
-  Future<void> shareIdeaToChat(String ideaId, String chatId, String userId) async {
+  Future<void> shareIdeaToChat(
+      String ideaId, String chatId, String userId) async {
     try {
       final idea = await getIdeaById(ideaId);
       if (idea == null) {
@@ -693,7 +715,11 @@ class EnhancedIdeasService {
       }
 
       // Добавляем сообщение в чат
-      await _firestore.collection('chats').doc(chatId).collection('messages').add({
+      await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .add({
         'id': DateTime.now().millisecondsSinceEpoch.toString(),
         'senderId': userId,
         'type': 'idea_share',
@@ -746,7 +772,8 @@ class EnhancedIdeasService {
   }
 
   /// Удалить специалиста из идеи
-  Future<void> removeSpecialistFromIdea(String ideaId, String specialistId) async {
+  Future<void> removeSpecialistFromIdea(
+      String ideaId, String specialistId) async {
     try {
       await _firestore.collection('ideas').doc(ideaId).update({
         'specialists': FieldValue.arrayRemove([specialistId]),

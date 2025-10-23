@@ -34,15 +34,16 @@ class HostFilters {
     String? city,
     DateTime? availableDate,
     String? searchQuery,
-  }) => HostFilters(
-    minPrice: minPrice ?? this.minPrice,
-    maxPrice: maxPrice ?? this.maxPrice,
-    minRating: minRating ?? this.minRating,
-    maxRating: maxRating ?? this.maxRating,
-    city: city ?? this.city,
-    availableDate: availableDate ?? this.availableDate,
-    searchQuery: searchQuery ?? this.searchQuery,
-  );
+  }) =>
+      HostFilters(
+        minPrice: minPrice ?? this.minPrice,
+        maxPrice: maxPrice ?? this.maxPrice,
+        minRating: minRating ?? this.minRating,
+        maxRating: maxRating ?? this.maxRating,
+        city: city ?? this.city,
+        availableDate: availableDate ?? this.availableDate,
+        searchQuery: searchQuery ?? this.searchQuery,
+      );
 
   bool get hasActiveFilters =>
       minPrice != null ||
@@ -67,18 +68,20 @@ class HostFilters {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(minPrice, maxPrice, minRating, maxRating, city, availableDate, searchQuery);
+  int get hashCode => Object.hash(minPrice, maxPrice, minRating, maxRating,
+      city, availableDate, searchQuery);
 }
 
 /// Провайдер фильтров для ведущих
-final hostFiltersProvider = StateProvider<HostFilters>((ref) => const HostFilters());
+final hostFiltersProvider =
+    StateProvider<HostFilters>((ref) => const HostFilters());
 
 /// Провайдер для загрузки всех ведущих с фильтрами
 final hostsProvider = FutureProvider.family<List<Specialist>, HostFilters>(
   (ref, filters) async {
     if (FeatureFlags.useRealHosts) {
-      return ref.read(RealHostsProviders.hostsWithFiltersProvider(filters).future);
+      return ref
+          .read(RealHostsProviders.hostsWithFiltersProvider(filters).future);
     }
     return _loadHostsWithFilters(filters);
   },
@@ -87,14 +90,14 @@ final hostsProvider = FutureProvider.family<List<Specialist>, HostFilters>(
 /// Провайдер для пагинированной загрузки ведущих (мигрирован с StateNotifierProvider)
 final paginatedHostsProvider =
     NotifierProvider<PaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
-      () => PaginatedHostsNotifier(),
-    );
+  () => PaginatedHostsNotifier(),
+);
 
 /// Провайдер для получения mock-данных ведущих (для тестирования) (мигрирован с StateNotifierProvider)
 final mockPaginatedHostsProvider =
     NotifierProvider<MockPaginatedHostsNotifier, AsyncValue<List<Specialist>>>(
-      () => MockPaginatedHostsNotifier(),
-    );
+  () => MockPaginatedHostsNotifier(),
+);
 
 /// Провайдер для получения уникальных городов ведущих
 final hostCitiesProvider = FutureProvider<List<String>>((ref) async {
@@ -191,7 +194,8 @@ bool _matchesFilters(Specialist specialist, HostFilters filters) {
   // Фильтр по поисковому запросу
   if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
     final query = filters.searchQuery!.toLowerCase();
-    final fullName = '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
+    final fullName =
+        '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
     final city = specialist.city.toLowerCase();
 
     if (!fullName.contains(query) && !city.contains(query)) {
@@ -243,7 +247,8 @@ class PaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
       }
 
       if (_currentFilters.minRating != null) {
-        query = query.where('rating', isGreaterThanOrEqualTo: _currentFilters.minRating);
+        query = query.where('rating',
+            isGreaterThanOrEqualTo: _currentFilters.minRating);
       }
 
       if (_lastDocument != null) {
@@ -264,11 +269,13 @@ class PaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
         }
       }
 
-      _lastDocument = querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+      _lastDocument =
+          querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
       _hasMore = querySnapshot.docs.length == _pageSize;
 
       final currentList = state.valueOrNull ?? <Specialist>[];
-      final updatedList = refresh ? newSpecialists : [...currentList, ...newSpecialists];
+      final updatedList =
+          refresh ? newSpecialists : [...currentList, ...newSpecialists];
 
       state = AsyncValue.data(updatedList);
     } on Exception catch (e) {
@@ -294,11 +301,18 @@ class PaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
 }
 
 /// Провайдер для получения mock-данных ведущих (для тестирования)
-final mockHostsProvider = Provider<List<Specialist>>((ref) => _generateMockHosts());
+final mockHostsProvider =
+    Provider<List<Specialist>>((ref) => _generateMockHosts());
 
 /// Генерация mock-данных для ведущих
 List<Specialist> _generateMockHosts() {
-  final cities = ['Москва', 'Санкт-Петербург', 'Новосибирск', 'Екатеринбург', 'Казань'];
+  final cities = [
+    'Москва',
+    'Санкт-Петербург',
+    'Новосибирск',
+    'Екатеринбург',
+    'Казань'
+  ];
   final names = [
     ('Алексей', 'Смирнов'),
     ('Анна', 'Петрова'),
@@ -347,7 +361,8 @@ List<Specialist> _generateMockHosts() {
 }
 
 /// Notifier для пагинированной загрузки mock-данных ведущих (мигрирован с StateNotifier)
-class MockPaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> {
+class MockPaginatedHostsNotifier
+    extends Notifier<AsyncValue<List<Specialist>>> {
   @override
   AsyncValue<List<Specialist>> build() {
     loadHosts();
@@ -424,10 +439,12 @@ class MockPaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> 
     if (filters.minPrice != null || filters.maxPrice != null) {
       final priceRange = specialist.priceRange;
       if (priceRange != null) {
-        if (filters.minPrice != null && priceRange.maxPrice < filters.minPrice!) {
+        if (filters.minPrice != null &&
+            priceRange.maxPrice < filters.minPrice!) {
           return false;
         }
-        if (filters.maxPrice != null && priceRange.minPrice > filters.maxPrice!) {
+        if (filters.maxPrice != null &&
+            priceRange.minPrice > filters.maxPrice!) {
           return false;
         }
       }
@@ -451,7 +468,8 @@ class MockPaginatedHostsNotifier extends Notifier<AsyncValue<List<Specialist>>> 
     // Фильтр по поисковому запросу
     if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
       final query = filters.searchQuery!.toLowerCase();
-      final fullName = '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
+      final fullName =
+          '${specialist.firstName} ${specialist.lastName}'.toLowerCase();
       final city = specialist.city.toLowerCase();
 
       if (!fullName.contains(query) && !city.contains(query)) {

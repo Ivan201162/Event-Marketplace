@@ -78,7 +78,8 @@ class AnimatedPageTransitions {
           scale: Tween<double>(
             begin: 0.8,
             end: 1,
-          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut)),
+          ).animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeInOut)),
           child: child,
         ),
       );
@@ -110,7 +111,8 @@ class AnimatedPageRoute<T> extends PageRouteBuilder<T> {
           transitionDuration: duration,
           reverseTransitionDuration: reverseDuration,
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              _buildTransition(context, animation, secondaryAnimation, child, transitionType),
+              _buildTransition(context, animation, secondaryAnimation, child,
+                  transitionType),
         );
 
   static Widget _buildTransition(
@@ -203,7 +205,8 @@ class AnimatedContentSwitcher extends StatelessWidget {
             case AnimatedSwitcherTransitionType.slide:
               return SlideTransition(
                 position:
-                    Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero).animate(animation),
+                    Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+                        .animate(animation),
                 child: child,
               );
             case AnimatedSwitcherTransitionType.size:
@@ -236,7 +239,8 @@ class AnimatedListItem extends StatefulWidget {
   State<AnimatedListItem> createState() => _AnimatedListItemState();
 }
 
-class _AnimatedListItemState extends State<AnimatedListItem> with SingleTickerProviderStateMixin {
+class _AnimatedListItemState extends State<AnimatedListItem>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -316,7 +320,8 @@ class AnimatedListWidget extends StatelessWidget {
           final child = entry.value;
 
           return AnimatedListItem(
-            delay: Duration(milliseconds: delayBetweenItems.inMilliseconds * index),
+            delay: Duration(
+                milliseconds: delayBetweenItems.inMilliseconds * index),
             duration: duration,
             animationType: animationType,
             child: child,

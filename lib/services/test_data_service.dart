@@ -1,4 +1,4 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
@@ -18,10 +18,15 @@ class TestDataService {
       'id': 'category_1',
       'name': 'Ведущие',
       'displayName': 'Ведущие',
-      'description': 'Профессиональные ведущие для свадеб, корпоративов и праздников',
+      'description':
+          'Профессиональные ведущие для свадеб, корпоративов и праздников',
       'icon': '🎤',
       'color': '#FF6B6B',
-      'subcategories': ['Свадебный ведущий', 'Корпоративный ведущий', 'Детский ведущий'],
+      'subcategories': [
+        'Свадебный ведущий',
+        'Корпоративный ведущий',
+        'Детский ведущий'
+      ],
       'isActive': true,
       'sortOrder': 1,
     },
@@ -32,7 +37,11 @@ class TestDataService {
       'description': 'Профессиональная фотосъемка для любых мероприятий',
       'icon': '📸',
       'color': '#4ECDC4',
-      'subcategories': ['Свадебная фотосъемка', 'Портретная фотосъемка', 'Студийная фотосъемка'],
+      'subcategories': [
+        'Свадебная фотосъемка',
+        'Портретная фотосъемка',
+        'Студийная фотосъемка'
+      ],
       'isActive': true,
       'sortOrder': 2,
     },
@@ -43,7 +52,11 @@ class TestDataService {
       'description': 'Цветочные композиции и декорации для мероприятий',
       'icon': '🌸',
       'color': '#45B7D1',
-      'subcategories': ['Свадебная флористика', 'Корпоративная флористика', 'Праздничная флористика'],
+      'subcategories': [
+        'Свадебная флористика',
+        'Корпоративная флористика',
+        'Праздничная флористика'
+      ],
       'isActive': true,
       'sortOrder': 3,
     },
@@ -54,7 +67,11 @@ class TestDataService {
       'description': 'Живая музыка для ваших мероприятий',
       'icon': '🎵',
       'color': '#96CEB4',
-      'subcategories': ['Свадебная музыка', 'Корпоративная музыка', 'Детская музыка'],
+      'subcategories': [
+        'Свадебная музыка',
+        'Корпоративная музыка',
+        'Детская музыка'
+      ],
       'isActive': true,
       'sortOrder': 4,
     },
@@ -65,7 +82,11 @@ class TestDataService {
       'description': 'Оформление и декорирование мероприятий',
       'icon': '🎨',
       'color': '#FFEAA7',
-      'subcategories': ['Свадебное оформление', 'Корпоративное оформление', 'Детское оформление'],
+      'subcategories': [
+        'Свадебное оформление',
+        'Корпоративное оформление',
+        'Детское оформление'
+      ],
       'isActive': true,
       'sortOrder': 5,
     },
@@ -92,7 +113,12 @@ class TestDataService {
       'price': 2990.0,
       'currency': 'RUB',
       'duration': 30,
-      'features': ['Неограниченные заявки', 'Приоритет в поиске', 'Расширенная аналитика', 'Премиум поддержка'],
+      'features': [
+        'Неограниченные заявки',
+        'Приоритет в поиске',
+        'Расширенная аналитика',
+        'Премиум поддержка'
+      ],
       'isActive': true,
       'isPopular': true,
       'sortOrder': 2,
@@ -104,7 +130,12 @@ class TestDataService {
       'price': 5990.0,
       'currency': 'RUB',
       'duration': 30,
-      'features': ['Все возможности Профессионального', 'Персональный менеджер', 'VIP поддержка', 'Эксклюзивные возможности'],
+      'features': [
+        'Все возможности Профессионального',
+        'Персональный менеджер',
+        'VIP поддержка',
+        'Эксклюзивные возможности'
+      ],
       'isActive': true,
       'isPopular': false,
       'sortOrder': 3,
@@ -303,7 +334,8 @@ class TestDataService {
       'avatarUrl': 'https://picsum.photos/200?random=5',
       'description':
           'Декоратор с 6-летним опытом. Создаю уникальные интерьеры для любых мероприятий.',
-      'about': 'Декоратор с 6-летним опытом. Создаю уникальные интерьеры для любых мероприятий.',
+      'about':
+          'Декоратор с 6-летним опытом. Создаю уникальные интерьеры для любых мероприятий.',
       'availableDates': ['2025-10-14', '2025-10-21', '2025-10-28'],
       'portfolioImages': [
         'https://picsum.photos/400?random=51',
@@ -426,7 +458,8 @@ class TestDataService {
       'avatarUrl': 'https://picsum.photos/200?random=9',
       'description':
           'Шеф-повар с 12-летним опытом. Организую кейтеринг для мероприятий любого масштаба.',
-      'about': 'Шеф-повар с 12-летним опытом. Организую кейтеринг для мероприятий любого масштаба.',
+      'about':
+          'Шеф-повар с 12-летним опытом. Организую кейтеринг для мероприятий любого масштаба.',
       'availableDates': ['2025-10-18', '2025-10-25', '2025-11-01'],
       'portfolioImages': [
         'https://picsum.photos/400?random=91',
@@ -498,21 +531,26 @@ class TestDataService {
           'senderName': 'Алексей Смирнов',
           'content':
               'Добро пожаловать! Да, 10 октября свободен. Расскажите подробнее о мероприятии.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 1, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_1',
           'senderName': 'Ольга Иванова',
-          'content': 'Свадьба на 80 человек в загородном клубе. Нужен ведущий на 6 часов.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 1, minutes: 30)),
+          'content':
+              'Свадьба на 80 человек в загородном клубе. Нужен ведущий на 6 часов.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 1, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_1',
           'senderName': 'Алексей Смирнов',
-          'content': 'Отлично! Мой тариф 30 000 ₽ за 6 часов. Включает сценарий, игры и конкурсы.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 1, minutes: 15)),
+          'content':
+              'Отлично! Мой тариф 30 000 ₽ за 6 часов. Включает сценарий, игры и конкурсы.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 1, minutes: 15)),
           'type': 'text',
         },
         {
@@ -541,21 +579,25 @@ class TestDataService {
           'senderId': 'specialist_2',
           'senderName': 'Анна Лебедева',
           'content': 'Здравствуйте! Когда планируется мероприятие?',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 2, minutes: 45)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 2, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_2',
           'senderName': 'Игорь Петров',
           'content': '12 октября, в офисе на 50 человек.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 2, minutes: 30)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 2, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_2',
           'senderName': 'Анна Лебедева',
-          'content': 'Понятно! Мой тариф 25 000 ₽ за 4 часа съемки + обработка всех фото.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 2, minutes: 15)),
+          'content':
+              'Понятно! Мой тариф 25 000 ₽ за 4 часа съемки + обработка всех фото.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 2, minutes: 15)),
           'type': 'text',
         },
       ],
@@ -576,22 +618,27 @@ class TestDataService {
         {
           'senderId': 'specialist_3',
           'senderName': 'Дмитрий Козлов',
-          'content': 'Здравствуйте! 11 октября свободен. Расскажите о мероприятии.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 3, minutes: 45)),
+          'content':
+              'Здравствуйте! 11 октября свободен. Расскажите о мероприятии.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 3, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_3',
           'senderName': 'Мария Сидорова',
           'content': 'Свадьба на 120 человек в ресторане. Нужно на 6 часов.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 3, minutes: 30)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 3, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_3',
           'senderName': 'Дмитрий Козлов',
-          'content': 'Отлично! Мой тариф 20 000 ₽ за 6 часов. Включает оборудование и музыку.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 3, minutes: 15)),
+          'content':
+              'Отлично! Мой тариф 20 000 ₽ за 6 часов. Включает оборудование и музыку.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 3, minutes: 15)),
           'type': 'text',
         },
       ],
@@ -613,21 +660,25 @@ class TestDataService {
           'senderId': 'specialist_4',
           'senderName': 'Елена Петрова',
           'content': 'Здравствуйте! Когда планируется мероприятие?',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 4, minutes: 45)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 4, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_4',
           'senderName': 'Александр Козлов',
           'content': '13 октября, в конференц-зале на 80 человек.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 4, minutes: 30)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 4, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_4',
           'senderName': 'Елена Петрова',
-          'content': 'Понятно! Мой тариф 35 000 ₽ за 4 часа съемки + монтаж ролика.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 4, minutes: 15)),
+          'content':
+              'Понятно! Мой тариф 35 000 ₽ за 4 часа съемки + монтаж ролика.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 4, minutes: 15)),
           'type': 'text',
         },
       ],
@@ -649,21 +700,26 @@ class TestDataService {
           'senderId': 'specialist_5',
           'senderName': 'Михаил Волков',
           'content': 'Здравствуйте! Отличный выбор стиля! Когда мероприятие?',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 5, minutes: 45)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 5, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_5',
           'senderName': 'Екатерина Морозова',
-          'content': '14 октября, в загородном клубе. Нужно оформить зал и фотозону.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 5, minutes: 30)),
+          'content':
+              '14 октября, в загородном клубе. Нужно оформить зал и фотозону.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 5, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_5',
           'senderName': 'Михаил Волков',
-          'content': 'Понятно! Мой тариф 15 000 ₽ за полное оформление в стиле прованс.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 5, minutes: 15)),
+          'content':
+              'Понятно! Мой тариф 15 000 ₽ за полное оформление в стиле прованс.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 5, minutes: 15)),
           'type': 'text',
         },
       ],
@@ -684,22 +740,28 @@ class TestDataService {
         {
           'senderId': 'specialist_6',
           'senderName': 'Ольга Морозова',
-          'content': 'Здравствуйте! С удовольствием помогу! Расскажите подробнее.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 6, minutes: 45)),
+          'content':
+              'Здравствуйте! С удовольствием помогу! Расскажите подробнее.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 6, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_6',
           'senderName': 'Дмитрий Соколов',
-          'content': '15 октября, для 20 детей 5-7 лет. Тема: пиратская вечеринка.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 6, minutes: 30)),
+          'content':
+              '15 октября, для 20 детей 5-7 лет. Тема: пиратская вечеринка.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 6, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_6',
           'senderName': 'Ольга Морозова',
-          'content': 'Отлично! Мой тариф 40 000 ₽ за полную организацию пиратской вечеринки.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 6, minutes: 15)),
+          'content':
+              'Отлично! Мой тариф 40 000 ₽ за полную организацию пиратской вечеринки.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 6, minutes: 15)),
           'type': 'text',
         },
       ],
@@ -721,21 +783,25 @@ class TestDataService {
           'senderId': 'specialist_7',
           'senderName': 'Сергей Новиков',
           'content': 'Здравствуйте! Какой репертуар предпочитаете?',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 7, minutes: 45)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 7, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_7',
           'senderName': 'Анна Федорова',
           'content': '16 октября, романтические баллады и джаз. 2 часа.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 7, minutes: 30)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 7, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_7',
           'senderName': 'Сергей Новиков',
-          'content': 'Понятно! Мой тариф 25 000 ₽ за 2 часа романтической музыки.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 7, minutes: 15)),
+          'content':
+              'Понятно! Мой тариф 25 000 ₽ за 2 часа романтической музыки.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 7, minutes: 15)),
           'type': 'text',
         },
       ],
@@ -757,21 +823,25 @@ class TestDataService {
           'senderId': 'specialist_8',
           'senderName': 'Татьяна Соколова',
           'content': 'Здравствуйте! Какой стиль и цветовая гамма?',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 8, minutes: 45)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 8, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_8',
           'senderName': 'Игорь Лебедев',
           'content': '17 октября, белые и розовые розы, классический стиль.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 8, minutes: 30)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 8, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_8',
           'senderName': 'Татьяна Соколова',
-          'content': 'Отлично! Мой тариф 12 000 ₽ за полное цветочное оформление.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 8, minutes: 15)),
+          'content':
+              'Отлично! Мой тариф 12 000 ₽ за полное цветочное оформление.',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 8, minutes: 15)),
           'type': 'text',
         },
       ],
@@ -792,22 +862,26 @@ class TestDataService {
         {
           'senderId': 'specialist_9',
           'senderName': 'Андрей Федоров',
-          'content': 'Здравствуйте! Сколько человек и какие предпочтения по меню?',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 9, minutes: 45)),
+          'content':
+              'Здравствуйте! Сколько человек и какие предпочтения по меню?',
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 9, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_9',
           'senderName': 'Наталья Козлова',
           'content': '18 октября, 100 человек, европейская кухня, фуршет.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 9, minutes: 30)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 9, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_9',
           'senderName': 'Андрей Федоров',
           'content': 'Понятно! Мой тариф 50 000 ₽ за фуршет на 100 человек.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 9, minutes: 15)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 9, minutes: 15)),
           'type': 'text',
         },
       ],
@@ -829,21 +903,24 @@ class TestDataService {
           'senderId': 'specialist_10',
           'senderName': 'Мария Кузнецова',
           'content': 'Здравствуйте! Какой стиль макияжа предпочитаете?',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 10, minutes: 45)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 10, minutes: 45)),
           'type': 'text',
         },
         {
           'senderId': 'customer_10',
           'senderName': 'Владимир Петров',
           'content': '19 октября, натуральный макияж для свадьбы.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 10, minutes: 30)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 10, minutes: 30)),
           'type': 'text',
         },
         {
           'senderId': 'specialist_10',
           'senderName': 'Мария Кузнецова',
           'content': 'Отлично! Мой тариф 18 000 ₽ за свадебный макияж.',
-          'timestamp': DateTime.now().subtract(const Duration(hours: 10, minutes: 15)),
+          'timestamp':
+              DateTime.now().subtract(const Duration(hours: 10, minutes: 15)),
           'type': 'text',
         },
       ],
@@ -861,7 +938,8 @@ class TestDataService {
       'customerId': 'customer_1',
       'customerName': 'Ольга Иванова',
       'status': 'Ожидает подтверждения',
-      'description': 'Свадьба на 80 человек в загородном клубе. Нужен ведущий на 6 часов.',
+      'description':
+          'Свадьба на 80 человек в загородном клубе. Нужен ведущий на 6 часов.',
       'createdAt': DateTime.now().subtract(const Duration(days: 2)),
     },
     {
@@ -897,7 +975,8 @@ class TestDataService {
       'customerId': 'customer_4',
       'customerName': 'Александр Козлов',
       'status': 'Ожидает подтверждения',
-      'description': 'Корпоративное мероприятие в конференц-зале на 80 человек.',
+      'description':
+          'Корпоративное мероприятие в конференц-зале на 80 человек.',
       'createdAt': DateTime.now().subtract(const Duration(days: 4)),
     },
     {
@@ -909,7 +988,8 @@ class TestDataService {
       'customerId': 'customer_5',
       'customerName': 'Екатерина Морозова',
       'status': 'Подтверждено',
-      'description': 'Свадьба в загородном клубе. Нужно оформить зал и фотозону в стиле прованс.',
+      'description':
+          'Свадьба в загородном клубе. Нужно оформить зал и фотозону в стиле прованс.',
       'createdAt': DateTime.now().subtract(const Duration(days: 5)),
     },
     {
@@ -921,7 +1001,8 @@ class TestDataService {
       'customerId': 'customer_6',
       'customerName': 'Дмитрий Соколов',
       'status': 'Ожидает подтверждения',
-      'description': 'Детский день рождения для 20 детей 5-7 лет. Тема: пиратская вечеринка.',
+      'description':
+          'Детский день рождения для 20 детей 5-7 лет. Тема: пиратская вечеринка.',
       'createdAt': DateTime.now().subtract(const Duration(days: 6)),
     },
     {
@@ -933,7 +1014,8 @@ class TestDataService {
       'customerId': 'customer_7',
       'customerName': 'Анна Федорова',
       'status': 'Подтверждено',
-      'description': 'Романтический ужин с живой музыкой. Романтические баллады и джаз на 2 часа.',
+      'description':
+          'Романтический ужин с живой музыкой. Романтические баллады и джаз на 2 часа.',
       'createdAt': DateTime.now().subtract(const Duration(days: 7)),
     },
     {
@@ -1002,7 +1084,8 @@ class TestDataService {
       'authorName': 'Дмитрий Козлов',
       'authorAvatar': 'https://picsum.photos/200?random=3',
       'imageUrl': 'https://picsum.photos/400?random=32',
-      'caption': 'Отличная свадьба вчера! 🎵 Музыка играла всю ночь, гости танцевали до утра!',
+      'caption':
+          'Отличная свадьба вчера! 🎵 Музыка играла всю ночь, гости танцевали до утра!',
       'timestamp': DateTime.now().subtract(const Duration(days: 3)),
       'likes': 31,
       'comments': 7,
@@ -1012,7 +1095,8 @@ class TestDataService {
       'authorName': 'Елена Петрова',
       'authorAvatar': 'https://picsum.photos/200?random=4',
       'imageUrl': 'https://picsum.photos/400?random=33',
-      'caption': 'Корпоративная видеосъемка 📹 Создаем крутой ролик для компании!',
+      'caption':
+          'Корпоративная видеосъемка 📹 Создаем крутой ролик для компании!',
       'timestamp': DateTime.now().subtract(const Duration(days: 4)),
       'likes': 19,
       'comments': 4,
@@ -1022,7 +1106,8 @@ class TestDataService {
       'authorName': 'Михаил Волков',
       'authorAvatar': 'https://picsum.photos/200?random=5',
       'imageUrl': 'https://picsum.photos/400?random=34',
-      'caption': 'Свадьба в стиле прованс 🌸 Французская романтика в каждом элементе!',
+      'caption':
+          'Свадьба в стиле прованс 🌸 Французская романтика в каждом элементе!',
       'timestamp': DateTime.now().subtract(const Duration(days: 5)),
       'likes': 42,
       'comments': 9,
@@ -1032,7 +1117,8 @@ class TestDataService {
       'authorName': 'Ольга Морозова',
       'authorAvatar': 'https://picsum.photos/200?random=6',
       'imageUrl': 'https://picsum.photos/400?random=35',
-      'caption': 'Пиратская вечеринка для детей 🏴‍☠️ Дети были в восторге от приключений!',
+      'caption':
+          'Пиратская вечеринка для детей 🏴‍☠️ Дети были в восторге от приключений!',
       'timestamp': DateTime.now().subtract(const Duration(days: 6)),
       'likes': 28,
       'comments': 6,
@@ -1042,7 +1128,8 @@ class TestDataService {
       'authorName': 'Сергей Новиков',
       'authorAvatar': 'https://picsum.photos/200?random=7',
       'imageUrl': 'https://picsum.photos/400?random=36',
-      'caption': 'Романтический вечер 🎸 Джаз и баллады создали незабываемую атмосферу!',
+      'caption':
+          'Романтический вечер 🎸 Джаз и баллады создали незабываемую атмосферу!',
       'timestamp': DateTime.now().subtract(const Duration(days: 7)),
       'likes': 35,
       'comments': 8,
@@ -1052,7 +1139,8 @@ class TestDataService {
       'authorName': 'Татьяна Соколова',
       'authorAvatar': 'https://picsum.photos/200?random=8',
       'imageUrl': 'https://picsum.photos/400?random=37',
-      'caption': 'Цветочное оформление свадьбы 🌹 Белые и розовые розы - классика жанра!',
+      'caption':
+          'Цветочное оформление свадьбы 🌹 Белые и розовые розы - классика жанра!',
       'timestamp': DateTime.now().subtract(const Duration(days: 8)),
       'likes': 26,
       'comments': 5,
@@ -1072,7 +1160,8 @@ class TestDataService {
       'authorName': 'Мария Кузнецова',
       'authorAvatar': 'https://picsum.photos/200?random=10',
       'imageUrl': 'https://picsum.photos/400?random=39',
-      'caption': 'Свадебный макияж 💄 Натуральная красота - лучший выбор для невесты!',
+      'caption':
+          'Свадебный макияж 💄 Натуральная красота - лучший выбор для невесты!',
       'timestamp': DateTime.now().subtract(const Duration(days: 10)),
       'likes': 29,
       'comments': 6,
@@ -1093,14 +1182,17 @@ class TestDataService {
       }
 
       // Заполняем данные параллельно где возможно
-      await Future.wait([_populateSpecialists(), _populateChats(), _populateBookings()]);
+      await Future.wait(
+          [_populateSpecialists(), _populateChats(), _populateBookings()]);
 
-      await Future.wait([_populatePosts(), _populateIdeas(), _populateNotifications()]);
+      await Future.wait(
+          [_populatePosts(), _populateIdeas(), _populateNotifications()]);
 
       await Future.wait([createTestPromotions(), _populateReviews()]);
 
       stopwatch.stop();
-      debugPrint('✅ Тестовые данные успешно созданы за ${stopwatch.elapsedMilliseconds}ms');
+      debugPrint(
+          '✅ Тестовые данные успешно созданы за ${stopwatch.elapsedMilliseconds}ms');
     } on FirebaseException catch (e) {
       debugPrint('❌ Ошибка Firebase при заполнении данных: ${e.message}');
       rethrow;
@@ -1122,7 +1214,8 @@ class TestDataService {
 
       for (var i = 0; i < _testSpecialists.length; i++) {
         final specialist = _testSpecialists[i];
-        final docRef = _firestore.collection('specialists').doc('specialist_${i + 1}');
+        final docRef =
+            _firestore.collection('specialists').doc('specialist_${i + 1}');
 
         currentBatch!.set(docRef, {
           ...specialist,
@@ -1181,7 +1274,11 @@ class TestDataService {
       final messages = chat['messages'] as List;
       for (var j = 0; j < messages.length; j++) {
         final message = messages[j];
-        await _firestore.collection('chats').doc(chatId).collection('messages').add({
+        await _firestore
+            .collection('chats')
+            .doc(chatId)
+            .collection('messages')
+            .add({
           'senderId': message['senderId'],
           'senderName': message['senderName'],
           'content': message['content'],
@@ -1513,7 +1610,8 @@ class TestDataService {
       },
       {
         'title': 'Фотосессия -20%',
-        'description': 'Скидка на все виды фотосессий. Студийная, выездная, свадебная фотография.',
+        'description':
+            'Скидка на все виды фотосессий. Студийная, выездная, свадебная фотография.',
         'category': 'photographer',
         'discount': 20,
         'startDate': DateTime.now().subtract(const Duration(days: 3)),
@@ -1528,7 +1626,8 @@ class TestDataService {
       },
       {
         'title': 'Новогодние праздники -25%',
-        'description': 'Сезонное предложение на новогодние корпоративы и частные вечеринки.',
+        'description':
+            'Сезонное предложение на новогодние корпоративы и частные вечеринки.',
         'category': 'seasonal',
         'discount': 25,
         'startDate': DateTime.now().subtract(const Duration(days: 1)),
@@ -1591,7 +1690,8 @@ class TestDataService {
       },
       {
         'title': 'Декорации -18%',
-        'description': 'Скидка на оформление залов и создание праздничной атмосферы.',
+        'description':
+            'Скидка на оформление залов и создание праздничной атмосферы.',
         'category': 'decorator',
         'discount': 18,
         'startDate': DateTime.now().subtract(const Duration(days: 4)),
@@ -1606,7 +1706,8 @@ class TestDataService {
       },
       {
         'title': 'Кейтеринг -12%',
-        'description': 'Специальные цены на организацию питания для ваших мероприятий.',
+        'description':
+            'Специальные цены на организацию питания для ваших мероприятий.',
         'category': 'caterer',
         'discount': 12,
         'startDate': DateTime.now().subtract(const Duration(days: 6)),
@@ -1689,7 +1790,8 @@ class TestDataService {
             }
 
             totalDeleted += snapshot.docs.length;
-            debugPrint('  ✅ Удалено ${snapshot.docs.length} документов из $collection');
+            debugPrint(
+                '  ✅ Удалено ${snapshot.docs.length} документов из $collection');
           }
         } on FirebaseException catch (e) {
           debugPrint('  ⚠️ Ошибка при удалении из $collection: ${e.message}');
@@ -1709,7 +1811,8 @@ class TestDataService {
   /// Проверить, есть ли уже тестовые данные
   Future<bool> hasTestData() async {
     try {
-      final specialistsSnapshot = await _firestore.collection('specialists').limit(1).get();
+      final specialistsSnapshot =
+          await _firestore.collection('specialists').limit(1).get();
       return specialistsSnapshot.docs.isNotEmpty;
     } on Exception {
       return false;
@@ -1739,7 +1842,8 @@ class TestDataService {
           final snapshot = await _firestore.collection(collection).get();
           stats[collection] = snapshot.docs.length;
         } on FirebaseException catch (e) {
-          debugPrint('⚠️ Ошибка при получении статистики для $collection: ${e.message}');
+          debugPrint(
+              '⚠️ Ошибка при получении статистики для $collection: ${e.message}');
           stats[collection] = 0;
         }
       }
@@ -1767,13 +1871,17 @@ class TestDataService {
         'text':
             'Алексей - потрясающий ведущий! Наша свадьба прошла на высшем уровне. Он создал незабываемую атмосферу, все гости были в восторге. Очень рекомендую!',
         'date': DateTime.now().subtract(const Duration(days: 5)),
-        'photos': ['https://picsum.photos/400?random=201', 'https://picsum.photos/400?random=202'],
+        'photos': [
+          'https://picsum.photos/400?random=201',
+          'https://picsum.photos/400?random=202'
+        ],
         'likes': 12,
         'responses': [
           {
             'authorId': 'specialist_1',
             'authorName': 'Алексей Смирнов',
-            'text': 'Спасибо большое за отзыв! Было очень приятно работать с вами!',
+            'text':
+                'Спасибо большое за отзыв! Было очень приятно работать с вами!',
             'date': DateTime.now().subtract(const Duration(days: 4)),
           },
         ],
@@ -1838,7 +1946,10 @@ class TestDataService {
         'text':
             'Неплохой ведущий, но ожидала больше интерактива. В целом справился со своей задачей.',
         'date': DateTime.now().subtract(const Duration(days: 20)),
-        'photos': ['https://picsum.photos/400?random=204', 'https://picsum.photos/400?random=205'],
+        'photos': [
+          'https://picsum.photos/400?random=204',
+          'https://picsum.photos/400?random=205'
+        ],
         'likes': 3,
         'responses': <String>[],
         'bookingId': 'booking_4',
@@ -1863,7 +1974,8 @@ class TestDataService {
           {
             'authorId': 'specialist_1',
             'authorName': 'Алексей Смирнов',
-            'text': 'Спасибо за теплые слова! Было очень приятно работать с вами!',
+            'text':
+                'Спасибо за теплые слова! Было очень приятно работать с вами!',
             'date': DateTime.now().subtract(const Duration(days: 24)),
           },
         ],
@@ -1885,7 +1997,10 @@ class TestDataService {
         'text':
             'Анна - талантливый фотограф! Снимки получились просто потрясающие. Очень внимательная к деталям, профессиональный подход.',
         'date': DateTime.now().subtract(const Duration(days: 3)),
-        'photos': ['https://picsum.photos/400?random=207', 'https://picsum.photos/400?random=208'],
+        'photos': [
+          'https://picsum.photos/400?random=207',
+          'https://picsum.photos/400?random=208'
+        ],
         'likes': 18,
         'responses': [
           {
@@ -1930,13 +2045,17 @@ class TestDataService {
         'text':
             'Анна - профессионал высшего класса! Создала невероятные снимки нашей свадьбы. Каждый кадр - произведение искусства!',
         'date': DateTime.now().subtract(const Duration(days: 12)),
-        'photos': ['https://picsum.photos/400?random=210', 'https://picsum.photos/400?random=211'],
+        'photos': [
+          'https://picsum.photos/400?random=210',
+          'https://picsum.photos/400?random=211'
+        ],
         'likes': 22,
         'responses': [
           {
             'authorId': 'specialist_2',
             'authorName': 'Анна Лебедева',
-            'text': 'Благодарю за такие теплые слова! Было очень приятно работать с вами!',
+            'text':
+                'Благодарю за такие теплые слова! Было очень приятно работать с вами!',
             'date': DateTime.now().subtract(const Duration(days: 11)),
           },
         ],
@@ -2107,7 +2226,10 @@ class TestDataService {
     ];
 
     for (final transaction in testTransactions) {
-      await _firestore.collection('transactions').doc(transaction['id']! as String).set({
+      await _firestore
+          .collection('transactions')
+          .doc(transaction['id']! as String)
+          .set({
         ...transaction,
         'timestamp': Timestamp.fromDate(transaction['timestamp']! as DateTime),
         'createdAt': FieldValue.serverTimestamp(),
@@ -2139,7 +2261,10 @@ class TestDataService {
     ];
 
     for (final profile in testPremiumProfiles) {
-      await _firestore.collection('premiumProfiles').doc(profile['userId']! as String).set({
+      await _firestore
+          .collection('premiumProfiles')
+          .doc(profile['userId']! as String)
+          .set({
         ...profile,
         'activeUntil': Timestamp.fromDate(profile['activeUntil']! as DateTime),
         'createdAt': Timestamp.fromDate(profile['createdAt']! as DateTime),
@@ -2173,7 +2298,10 @@ class TestDataService {
     ];
 
     for (final subscription in testSubscriptions) {
-      await _firestore.collection('subscriptions').doc(subscription['userId']! as String).set({
+      await _firestore
+          .collection('subscriptions')
+          .doc(subscription['userId']! as String)
+          .set({
         ...subscription,
         'startedAt': Timestamp.fromDate(subscription['startedAt']! as DateTime),
         'expiresAt': Timestamp.fromDate(subscription['expiresAt']! as DateTime),
@@ -2214,7 +2342,10 @@ class TestDataService {
     ];
 
     for (final post in testPromotedPosts) {
-      await _firestore.collection('promotedPosts').doc(post['postId']! as String).set({
+      await _firestore
+          .collection('promotedPosts')
+          .doc(post['postId']! as String)
+          .set({
         ...post,
         'startDate': Timestamp.fromDate(post['startDate']! as DateTime),
         'endDate': Timestamp.fromDate(post['endDate']! as DateTime),
@@ -2269,7 +2400,8 @@ class TestDataService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
     }
-    debugPrint('Добавлено ${monetizationUsers.length} пользователей с монетизацией');
+    debugPrint(
+        'Добавлено ${monetizationUsers.length} пользователей с монетизацией');
   }
 
   /// Получить тестовые промоакции
@@ -2340,7 +2472,10 @@ class TestDataService {
     ];
 
     for (final user in users) {
-      await _firestore.collection('users').doc(user['uid']! as String).set(user);
+      await _firestore
+          .collection('users')
+          .doc(user['uid']! as String)
+          .set(user);
       debugPrint('  ✅ Пользователь ${user['name']} добавлен');
     }
   }
@@ -2468,7 +2603,8 @@ class TestDataService {
         'customerId': 'user_2',
         'specialistId': 'user_1',
         'title': 'Свадьба 14 октября',
-        'description': 'Нужен ведущий с юмором и диджей на свадьбу на 40 человек.',
+        'description':
+            'Нужен ведущий с юмором и диджей на свадьбу на 40 человек.',
         'status': 'pending',
         'isTest': true,
         'createdAt': FieldValue.serverTimestamp(),
@@ -2478,7 +2614,8 @@ class TestDataService {
         'customerId': 'user_4',
         'specialistId': 'user_3',
         'title': 'Детский день рождения',
-        'description': 'Организация праздника для 8-летнего ребенка. Нужны аниматоры и фотограф.',
+        'description':
+            'Организация праздника для 8-летнего ребенка. Нужны аниматоры и фотограф.',
         'status': 'accepted',
         'isTest': true,
         'createdAt': FieldValue.serverTimestamp(),
@@ -2499,7 +2636,8 @@ class TestDataService {
         'customerId': 'user_4',
         'specialistId': 'user_1',
         'title': 'Фотосессия для пары',
-        'description': 'Романтическая фотосессия в парке. Нужен профессиональный фотограф.',
+        'description':
+            'Романтическая фотосессия в парке. Нужен профессиональный фотограф.',
         'status': 'pending',
         'isTest': true,
         'createdAt': FieldValue.serverTimestamp(),
@@ -2509,7 +2647,8 @@ class TestDataService {
         'customerId': 'user_2',
         'specialistId': 'user_3',
         'title': 'Выпускной вечер',
-        'description': 'Организация выпускного для 11 класса. Нужен ведущий и диджей.',
+        'description':
+            'Организация выпускного для 11 класса. Нужен ведущий и диджей.',
         'status': 'accepted',
         'isTest': true,
         'createdAt': FieldValue.serverTimestamp(),
@@ -2519,7 +2658,8 @@ class TestDataService {
         'customerId': 'user_4',
         'specialistId': 'user_5',
         'title': 'Семейная фотосессия',
-        'description': 'Фотосессия семьи из 4 человек. Нужен фотограф с опытом работы с детьми.',
+        'description':
+            'Фотосессия семьи из 4 человек. Нужен фотограф с опытом работы с детьми.',
         'status': 'completed',
         'isTest': true,
         'createdAt': FieldValue.serverTimestamp(),
@@ -2529,7 +2669,8 @@ class TestDataService {
         'customerId': 'user_2',
         'specialistId': 'user_1',
         'title': 'Юбилей бабушки',
-        'description': 'Празднование 70-летия. Нужен ведущий и музыкальное сопровождение.',
+        'description':
+            'Празднование 70-летия. Нужен ведущий и музыкальное сопровождение.',
         'status': 'canceled',
         'isTest': true,
         'createdAt': FieldValue.serverTimestamp(),
@@ -2539,7 +2680,8 @@ class TestDataService {
         'customerId': 'user_4',
         'specialistId': 'user_3',
         'title': 'День рождения ребенка',
-        'description': 'Праздник для 5-летней девочки. Нужны аниматоры в костюмах принцесс.',
+        'description':
+            'Праздник для 5-летней девочки. Нужны аниматоры в костюмах принцесс.',
         'status': 'pending',
         'isTest': true,
         'createdAt': FieldValue.serverTimestamp(),
@@ -2547,7 +2689,10 @@ class TestDataService {
     ];
 
     for (final order in orders) {
-      await _firestore.collection('orders').doc(order['id']! as String).set(order);
+      await _firestore
+          .collection('orders')
+          .doc(order['id']! as String)
+          .set(order);
       debugPrint('  ✅ Заявка ${order['id']} добавлена');
     }
   }
@@ -2750,14 +2895,14 @@ class TestDataService {
   Future<void> createAllTestData() async {
     try {
       debugPrint('🚀 Начинаем создание всех тестовых данных...');
-      
+
       await createTestCategories();
       await createTestTariffs();
       await createTestSpecialists();
       await createTestPosts();
       await createTestIdeas();
       await createTestPromotions();
-      
+
       debugPrint('✅ Все тестовые данные созданы успешно!');
     } catch (e) {
       debugPrint('❌ Ошибка создания тестовых данных: $e');
@@ -2822,7 +2967,8 @@ class TestDataService {
         'authorId': 'user_1',
         'imageUrl': 'https://picsum.photos/400/400?random=25',
         'title': 'Семейная фотосессия в парке 👨‍👩‍👧‍👦',
-        'description': 'Запечатлейте счастливые моменты семьи на фоне красивой природы.',
+        'description':
+            'Запечатлейте счастливые моменты семьи на фоне красивой природы.',
         'likesCount': 24,
         'commentsCount': 6,
         'isTest': true,
@@ -2833,7 +2979,8 @@ class TestDataService {
         'authorId': 'user_5',
         'imageUrl': 'https://picsum.photos/400/400?random=26',
         'title': 'Корпоратив в стиле 80-х 🕺',
-        'description': 'Вернитесь в эпоху диско с яркими костюмами и зажигательной музыкой.',
+        'description':
+            'Вернитесь в эпоху диско с яркими костюмами и зажигательной музыкой.',
         'likesCount': 21,
         'commentsCount': 8,
         'isTest': true,
@@ -2844,7 +2991,8 @@ class TestDataService {
         'authorId': 'user_3',
         'imageUrl': 'https://picsum.photos/400/400?random=27',
         'title': 'Романтический ужин при свечах 🕯️',
-        'description': 'Создайте интимную атмосферу с красивой сервировкой и мягким освещением.',
+        'description':
+            'Создайте интимную атмосферу с красивой сервировкой и мягким освещением.',
         'likesCount': 17,
         'commentsCount': 3,
         'isTest': true,
@@ -2855,7 +3003,8 @@ class TestDataService {
         'authorId': 'user_1',
         'imageUrl': 'https://picsum.photos/400/400?random=28',
         'title': 'Выпускной в стиле Гарри Поттера 🧙‍♂️',
-        'description': 'Окунитесь в мир магии с тематическими декорациями и костюмами.',
+        'description':
+            'Окунитесь в мир магии с тематическими декорациями и костюмами.',
         'likesCount': 31,
         'commentsCount': 9,
         'isTest': true,
@@ -2904,7 +3053,8 @@ class TestDataService {
         for (final doc in querySnapshot.docs) {
           if (collection == 'chats') {
             // Для чатов удаляем также сообщения
-            final messagesSnapshot = await doc.reference.collection('messages').get();
+            final messagesSnapshot =
+                await doc.reference.collection('messages').get();
 
             for (final messageDoc in messagesSnapshot.docs) {
               await messageDoc.reference.delete();

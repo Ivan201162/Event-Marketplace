@@ -47,7 +47,8 @@ class RequestCard extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Description
-              if (request.description != null && request.description!.isNotEmpty) ...[
+              if (request.description != null &&
+                  request.description!.isNotEmpty) ...[
                 Text(
                   request.description!,
                   style: const TextStyle(fontSize: 14),
@@ -90,9 +91,11 @@ class RequestCard extends StatelessWidget {
             children: [
               Text(
                 request.category,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              Text(request.city, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              Text(request.city,
+                  style: TextStyle(fontSize: 14, color: Colors.grey[600])),
             ],
           ),
         ),
@@ -102,7 +105,8 @@ class RequestCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: _getStatusColor(request.status).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: _getStatusColor(request.status).withValues(alpha: 0.3)),
+            border: Border.all(
+                color: _getStatusColor(request.status).withValues(alpha: 0.3)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -144,9 +148,11 @@ class RequestCard extends StatelessWidget {
             children: [
               Text(
                 request.fromUserName ?? 'Неизвестный пользователь',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
-              Text(request.timeAgo, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+              Text(request.timeAgo,
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12)),
             ],
           ),
         ),
@@ -228,7 +234,10 @@ class RequestCard extends StatelessWidget {
       children: [
         Text(
           'Требования:',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.grey[700]),
+          style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[700]),
         ),
         const SizedBox(height: 8),
         Wrap(
@@ -294,7 +303,10 @@ class RequestCard extends StatelessWidget {
       children: [
         Text(
           request.formattedDate,
-          style: TextStyle(color: Colors.grey[600], fontSize: 12, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 12,
+              fontWeight: FontWeight.w500),
         ),
         const Spacer(),
         if (request.eventType != null && request.eventType!.isNotEmpty)

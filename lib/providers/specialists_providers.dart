@@ -62,15 +62,16 @@ class SpecialistFilters {
     String? city,
     DateTime? availableDate,
     String? searchQuery,
-  }) => SpecialistFilters(
-    minPrice: minPrice ?? this.minPrice,
-    maxPrice: maxPrice ?? this.maxPrice,
-    minRating: minRating ?? this.minRating,
-    maxRating: maxRating ?? this.maxRating,
-    city: city ?? this.city,
-    availableDate: availableDate ?? this.availableDate,
-    searchQuery: searchQuery ?? this.searchQuery,
-  );
+  }) =>
+      SpecialistFilters(
+        minPrice: minPrice ?? this.minPrice,
+        maxPrice: maxPrice ?? this.maxPrice,
+        minRating: minRating ?? this.minRating,
+        maxRating: maxRating ?? this.maxRating,
+        city: city ?? this.city,
+        availableDate: availableDate ?? this.availableDate,
+        searchQuery: searchQuery ?? this.searchQuery,
+      );
 
   bool get hasActiveFilters =>
       minPrice != null ||
@@ -95,8 +96,8 @@ class SpecialistFilters {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(minPrice, maxPrice, minRating, maxRating, city, availableDate, searchQuery);
+  int get hashCode => Object.hash(minPrice, maxPrice, minRating, maxRating,
+      city, availableDate, searchQuery);
 }
 
 /// Провайдер фильтров для специалистов
@@ -108,20 +109,23 @@ final specialistFiltersProvider = StateProvider<SpecialistFilters>(
 final specialistsProvider = FutureProvider.family<List<Specialist>, String>(
   (ref, category) async {
     if (FeatureFlags.useRealSpecialists) {
-      return ref.read(RealSpecialistsProviders.specialistsByCategoryProvider(category).future);
+      return ref.read(
+          RealSpecialistsProviders.specialistsByCategoryProvider(category)
+              .future);
     }
     return MockDataService.getSpecialistsByCategory(category);
   },
 );
 
 /// Провайдер для пагинированной загрузки специалистов (мигрирован с StateNotifierProvider)
-final paginatedSpecialistsProvider =
-    NotifierProvider.family<PaginatedSpecialistsNotifier, AsyncValue<List<Specialist>>, String>(
-      () => PaginatedSpecialistsNotifier(),
-    );
+final paginatedSpecialistsProvider = NotifierProvider.family<
+    PaginatedSpecialistsNotifier, AsyncValue<List<Specialist>>, String>(
+  () => PaginatedSpecialistsNotifier(),
+);
 
 /// Провайдер для получения уникальных городов специалистов по категории
-final specialistCitiesProvider = FutureProvider.family<List<String>, String>((ref, category) async {
+final specialistCitiesProvider =
+    FutureProvider.family<List<String>, String>((ref, category) async {
   final specialists = MockDataService.getSpecialistsByCategory(category);
   final cities = specialists
       .map((specialist) => specialist.city)
@@ -134,7 +138,8 @@ final specialistCitiesProvider = FutureProvider.family<List<String>, String>((re
 });
 
 /// Провайдер для получения ценового диапазона специалистов по категории
-final specialistPriceRangeProvider = FutureProvider.family<Map<String, double>, String>((
+final specialistPriceRangeProvider =
+    FutureProvider.family<Map<String, double>, String>((
   ref,
   category,
 ) async {
@@ -152,10 +157,12 @@ final specialistPriceRangeProvider = FutureProvider.family<Map<String, double>, 
 });
 
 /// Провайдер для поиска специалистов
-final searchSpecialistsProvider = FutureProvider.family<List<Specialist>, String>(
+final searchSpecialistsProvider =
+    FutureProvider.family<List<Specialist>, String>(
   (ref, query) async {
     if (FeatureFlags.useRealSpecialists) {
-      return ref.read(RealSpecialistsProviders.searchSpecialistsProvider(query).future);
+      return ref.read(
+          RealSpecialistsProviders.searchSpecialistsProvider(query).future);
     }
     return MockDataService.searchSpecialists(query);
   },
@@ -191,7 +198,8 @@ Future<List<Specialist>> _loadSpecialistsByCategory(String category) async {
 }
 
 /// Notifier для пагинированной загрузки специалистов (мигрирован с StateNotifier)
-class PaginatedSpecialistsNotifier extends FamilyNotifier<AsyncValue<List<Specialist>>, String> {
+class PaginatedSpecialistsNotifier
+    extends FamilyNotifier<AsyncValue<List<Specialist>>, String> {
   @override
   AsyncValue<List<Specialist>> build(String category) {
     loadSpecialists();
@@ -225,8 +233,10 @@ class PaginatedSpecialistsNotifier extends FamilyNotifier<AsyncValue<List<Specia
           .toList();
 
       // Пагинация
-      final startIndex = (_lastDocument != null ? _getCurrentPage() : 0) * _pageSize;
-      final endIndex = (startIndex + _pageSize).clamp(0, filteredSpecialists.length);
+      final startIndex =
+          (_lastDocument != null ? _getCurrentPage() : 0) * _pageSize;
+      final endIndex =
+          (startIndex + _pageSize).clamp(0, filteredSpecialists.length);
 
       if (startIndex >= filteredSpecialists.length) {
         _hasMore = false;
@@ -239,7 +249,8 @@ class PaginatedSpecialistsNotifier extends FamilyNotifier<AsyncValue<List<Specia
       _lastDocument ??= _createMockDocument();
 
       final currentList = state.valueOrNull ?? <Specialist>[];
-      final updatedList = refresh ? newSpecialists : [...currentList, ...newSpecialists];
+      final updatedList =
+          refresh ? newSpecialists : [...currentList, ...newSpecialists];
 
       state = AsyncValue.data(updatedList);
     } on Exception catch (e) {
@@ -340,7 +351,8 @@ class MockDocumentSnapshot implements DocumentSnapshot<Map<String, dynamic>> {
   bool get exists => true;
 
   @override
-  DocumentReference<Map<String, dynamic>> get reference => throw UnimplementedError();
+  DocumentReference<Map<String, dynamic>> get reference =>
+      throw UnimplementedError();
 
   @override
   SnapshotMetadata get metadata => throw UnimplementedError();
@@ -401,7 +413,8 @@ List<Specialist> _generateMockSpecialistsForCategory(String category) {
       rating: rating,
       pricePerHour: priceRange.minPrice.toInt(),
       category: _getSpecialistCategoryFromString(categoryEnum.displayName),
-      experienceLevel: ExperienceLevel.values[index % ExperienceLevel.values.length],
+      experienceLevel:
+          ExperienceLevel.values[index % ExperienceLevel.values.length],
       yearsOfExperience: 1 + (index % 10),
       description: _getDescriptionForCategory(categoryEnum, index),
       avatarUrl:
@@ -464,28 +477,36 @@ PriceRange _getPriceRangeForCategory(SpecialistCategory category, int index) {
   switch (category) {
     case SpecialistCategory.host:
       final minPrice = 10000 + (index % 10) * 5000;
-      return PriceRange(min: minPrice.toDouble(), max: (minPrice + 20000).toDouble());
+      return PriceRange(
+          min: minPrice.toDouble(), max: (minPrice + 20000).toDouble());
     case SpecialistCategory.dj:
       final minPrice = 8000 + (index % 8) * 3000;
-      return PriceRange(min: minPrice.toDouble(), max: (minPrice + 15000).toDouble());
+      return PriceRange(
+          min: minPrice.toDouble(), max: (minPrice + 15000).toDouble());
     case SpecialistCategory.photographer:
       final minPrice = 15000 + (index % 12) * 4000;
-      return PriceRange(min: minPrice.toDouble(), max: (minPrice + 25000).toDouble());
+      return PriceRange(
+          min: minPrice.toDouble(), max: (minPrice + 25000).toDouble());
     case SpecialistCategory.animator:
       final minPrice = 5000 + (index % 6) * 2000;
-      return PriceRange(min: minPrice.toDouble(), max: (minPrice + 10000).toDouble());
+      return PriceRange(
+          min: minPrice.toDouble(), max: (minPrice + 10000).toDouble());
     case SpecialistCategory.videographer:
       final minPrice = 20000 + (index % 8) * 5000;
-      return PriceRange(min: minPrice.toDouble(), max: (minPrice + 30000).toDouble());
+      return PriceRange(
+          min: minPrice.toDouble(), max: (minPrice + 30000).toDouble());
     case SpecialistCategory.decorator:
       final minPrice = 12000 + (index % 5) * 4000;
-      return PriceRange(min: minPrice.toDouble(), max: (minPrice + 18000).toDouble());
+      return PriceRange(
+          min: minPrice.toDouble(), max: (minPrice + 18000).toDouble());
     case SpecialistCategory.musician:
       final minPrice = 6000 + (index % 7) * 2000;
-      return PriceRange(min: minPrice.toDouble(), max: (minPrice + 12000).toDouble());
+      return PriceRange(
+          min: minPrice.toDouble(), max: (minPrice + 12000).toDouble());
     case SpecialistCategory.makeup:
       final minPrice = 3000 + (index % 6) * 1500;
-      return PriceRange(min: minPrice.toDouble(), max: (minPrice + 8000).toDouble());
+      return PriceRange(
+          min: minPrice.toDouble(), max: (minPrice + 8000).toDouble());
   }
 }
 

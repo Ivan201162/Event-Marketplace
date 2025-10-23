@@ -72,7 +72,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   void _setupRealtimeSubscription() {
-    _realtimeChannel = SupabaseService.subscribeToMessages(widget.chatId, (newMessageData) {
+    _realtimeChannel =
+        SupabaseService.subscribeToMessages(widget.chatId, (newMessageData) {
       // Добавляем новое сообщение
       final newMessage = Message.fromJson(newMessageData);
       setState(() {
@@ -103,13 +104,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       if (!success) {
         // Показываем ошибку
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Ошибка отправки сообщения'), backgroundColor: Colors.red),
+          const SnackBar(
+              content: Text('Ошибка отправки сообщения'),
+              backgroundColor: Colors.red),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 
@@ -130,7 +134,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         ? NetworkImage(_otherUser!.avatarUrl!)
                         : null,
                     child: _otherUser!.avatarUrl == null
-                        ? Icon(Icons.person, size: 16, color: theme.primaryColor)
+                        ? Icon(Icons.person,
+                            size: 16, color: theme.primaryColor)
                         : null,
                   ),
                   const SizedBox(width: 12),
@@ -184,7 +189,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadMessages, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadMessages, child: const Text('Повторить')),
           ],
         ),
       );
@@ -197,9 +203,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           children: [
             Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Начните общение', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Начните общение',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
-            Text('Отправьте первое сообщение', style: TextStyle(color: Colors.grey[500])),
+            Text('Отправьте первое сообщение',
+                style: TextStyle(color: Colors.grey[500])),
           ],
         ),
       );
@@ -224,7 +232,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Row(
-        mainAxisAlignment: isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isFromCurrentUser) ...[
@@ -242,10 +251,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ],
           Flexible(
             child: Container(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isFromCurrentUser ? theme.primaryColor : Colors.grey[200],
+                color:
+                    isFromCurrentUser ? theme.primaryColor : Colors.grey[200],
                 borderRadius: BorderRadius.circular(20).copyWith(
                   bottomLeft: isFromCurrentUser
                       ? const Radius.circular(20)
@@ -284,10 +295,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             CircleAvatar(
               radius: 16,
               backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
-              backgroundImage: SupabaseService.currentUser?.userMetadata?['avatar_url'] != null
-                  ? NetworkImage(SupabaseService.currentUser!.userMetadata!['avatar_url'])
+              backgroundImage: SupabaseService
+                          .currentUser?.userMetadata?['avatar_url'] !=
+                      null
+                  ? NetworkImage(
+                      SupabaseService.currentUser!.userMetadata!['avatar_url'])
                   : null,
-              child: SupabaseService.currentUser?.userMetadata?['avatar_url'] == null
+              child: SupabaseService.currentUser?.userMetadata?['avatar_url'] ==
+                      null
                   ? Icon(Icons.person, size: 16, color: theme.primaryColor)
                   : null,
             ),
@@ -323,7 +338,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   borderRadius: BorderRadius.circular(24),
                   borderSide: BorderSide(color: Colors.grey[300]!),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
               maxLines: null,
               textInputAction: TextInputAction.send,
@@ -332,7 +348,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           const SizedBox(width: 8),
           Container(
-            decoration: BoxDecoration(color: theme.primaryColor, shape: BoxShape.circle),
+            decoration: BoxDecoration(
+                color: theme.primaryColor, shape: BoxShape.circle),
             child: IconButton(
               icon: const Icon(Icons.send, color: Colors.white),
               onPressed: _sendMessage,

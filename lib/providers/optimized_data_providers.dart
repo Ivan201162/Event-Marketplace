@@ -25,7 +25,8 @@ final optimizedIdeasServiceProvider = Provider<OptimizedIdeasService>((ref) {
   return OptimizedIdeasService();
 });
 
-final optimizedApplicationsServiceProvider = Provider<OptimizedApplicationsService>((ref) {
+final optimizedApplicationsServiceProvider =
+    Provider<OptimizedApplicationsService>((ref) {
   return OptimizedApplicationsService();
 });
 
@@ -41,7 +42,9 @@ final categoryStatsProvider = FutureProvider<Map<String, int>>((ref) async {
 });
 
 // Провайдеры для специалистов
-final popularSpecialistsProvider = FutureProvider.family<List<Specialist>, Map<String, dynamic>>((ref, params) async {
+final popularSpecialistsProvider =
+    FutureProvider.family<List<Specialist>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(optimizedDataServiceProvider);
   return await service.getPopularSpecialists(
     city: params['city'],
@@ -50,7 +53,9 @@ final popularSpecialistsProvider = FutureProvider.family<List<Specialist>, Map<S
   );
 });
 
-final specialistsByCityProvider = FutureProvider.family<List<Specialist>, Map<String, dynamic>>((ref, params) async {
+final specialistsByCityProvider =
+    FutureProvider.family<List<Specialist>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(optimizedDataServiceProvider);
   return await service.getSpecialistsByCity(
     city: params['city'] as String,
@@ -61,7 +66,8 @@ final specialistsByCityProvider = FutureProvider.family<List<Specialist>, Map<St
 });
 
 // Провайдеры для ленты
-final feedProvider = FutureProvider.family<FeedState, Map<String, dynamic>>((ref, params) async {
+final feedProvider =
+    FutureProvider.family<FeedState, Map<String, dynamic>>((ref, params) async {
   final service = ref.read(optimizedFeedServiceProvider);
   return await service.getPosts(
     limit: params['limit'] as int? ?? 20,
@@ -70,29 +76,34 @@ final feedProvider = FutureProvider.family<FeedState, Map<String, dynamic>>((ref
   );
 });
 
-final userPostsProvider = FutureProvider.family<List<EnhancedFeedPost>, String>((ref, userId) async {
+final userPostsProvider =
+    FutureProvider.family<List<EnhancedFeedPost>, String>((ref, userId) async {
   final service = ref.read(optimizedFeedServiceProvider);
   return await service.getUserPosts(userId);
 });
 
 // Провайдеры для чатов
-final userChatsProvider = StreamProvider.family<List<EnhancedChat>, String>((ref, userId) {
+final userChatsProvider =
+    StreamProvider.family<List<EnhancedChat>, String>((ref, userId) {
   final service = ref.read(optimizedChatServiceProvider);
   return service.getUserChatsStream(userId);
 });
 
-final chatMessagesProvider = StreamProvider.family<List<EnhancedMessage>, String>((ref, chatId) {
+final chatMessagesProvider =
+    StreamProvider.family<List<EnhancedMessage>, String>((ref, chatId) {
   final service = ref.read(optimizedChatServiceProvider);
   return service.getChatMessagesStream(chatId);
 });
 
-final unreadMessagesCountProvider = FutureProvider.family<int, String>((ref, userId) async {
+final unreadMessagesCountProvider =
+    FutureProvider.family<int, String>((ref, userId) async {
   final service = ref.read(optimizedChatServiceProvider);
   return await service.getUnreadMessagesCount(userId);
 });
 
 // Провайдеры для идей
-final ideasProvider = FutureProvider.family<IdeasState, Map<String, dynamic>>((ref, params) async {
+final ideasProvider = FutureProvider.family<IdeasState, Map<String, dynamic>>(
+    (ref, params) async {
   final service = ref.read(optimizedIdeasServiceProvider);
   return await service.getIdeas(
     limit: params['limit'] as int? ?? 20,
@@ -102,12 +113,14 @@ final ideasProvider = FutureProvider.family<IdeasState, Map<String, dynamic>>((r
   );
 });
 
-final userIdeasProvider = FutureProvider.family<List<Idea>, String>((ref, userId) async {
+final userIdeasProvider =
+    FutureProvider.family<List<Idea>, String>((ref, userId) async {
   final service = ref.read(optimizedIdeasServiceProvider);
   return await service.getUserIdeas(userId);
 });
 
-final savedIdeasProvider = FutureProvider.family<List<Idea>, String>((ref, userId) async {
+final savedIdeasProvider =
+    FutureProvider.family<List<Idea>, String>((ref, userId) async {
   final service = ref.read(optimizedIdeasServiceProvider);
   return await service.getSavedIdeas(userId);
 });
@@ -118,7 +131,8 @@ final popularIdeasProvider = FutureProvider<List<Idea>>((ref) async {
 });
 
 // Провайдеры для заявок
-final userBookingsProvider = StreamProvider.family<List<Booking>, Map<String, dynamic>>((ref, params) {
+final userBookingsProvider =
+    StreamProvider.family<List<Booking>, Map<String, dynamic>>((ref, params) {
   final service = ref.read(optimizedApplicationsServiceProvider);
   return service.getUserBookingsStream(
     params['userId'] as String,
@@ -126,7 +140,9 @@ final userBookingsProvider = StreamProvider.family<List<Booking>, Map<String, dy
   );
 });
 
-final bookingStatsProvider = FutureProvider.family<Map<String, int>, Map<String, dynamic>>((ref, params) async {
+final bookingStatsProvider =
+    FutureProvider.family<Map<String, int>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(optimizedApplicationsServiceProvider);
   return await service.getBookingStats(
     params['userId'] as String,
@@ -134,7 +150,9 @@ final bookingStatsProvider = FutureProvider.family<Map<String, int>, Map<String,
   );
 });
 
-final bookingsByStatusProvider = FutureProvider.family<List<Booking>, Map<String, dynamic>>((ref, params) async {
+final bookingsByStatusProvider =
+    FutureProvider.family<List<Booking>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(optimizedApplicationsServiceProvider);
   return await service.getBookingsByStatus(
     params['userId'] as String,
@@ -144,7 +162,8 @@ final bookingsByStatusProvider = FutureProvider.family<List<Booking>, Map<String
 });
 
 // Провайдеры для обновления данных
-final refreshDataProvider = Provider.family<void Function(), String>((ref, dataType) {
+final refreshDataProvider =
+    Provider.family<void Function(), String>((ref, dataType) {
   return () {
     switch (dataType) {
       case 'categories':
@@ -178,13 +197,13 @@ final clearCacheProvider = Provider<void Function()>((ref) {
     final chatService = ref.read(optimizedChatServiceProvider);
     final ideasService = ref.read(optimizedIdeasServiceProvider);
     final applicationsService = ref.read(optimizedApplicationsServiceProvider);
-    
+
     dataService.clearCache();
     feedService.clearCache();
     chatService.clearCache();
     ideasService.clearCache();
     applicationsService.clearCache();
-    
+
     // Инвалидируем все провайдеры
     ref.invalidate(categoriesProvider);
     ref.invalidate(popularSpecialistsProvider);

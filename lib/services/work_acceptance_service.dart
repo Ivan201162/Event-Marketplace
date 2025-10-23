@@ -69,7 +69,8 @@ class WorkAcceptanceService {
       );
 
       // Сохраняем в Firestore
-      final docRef = await _firestore.collection('work_acceptance_acts').add(act.toMap());
+      final docRef =
+          await _firestore.collection('work_acceptance_acts').add(act.toMap());
 
       return act.copyWith(id: docRef.id);
     } catch (e) {
@@ -224,7 +225,8 @@ class WorkAcceptanceService {
 
   Future<Contract?> _getContract(String contractId) async {
     try {
-      final doc = await _firestore.collection('contracts').doc(contractId).get();
+      final doc =
+          await _firestore.collection('contracts').doc(contractId).get();
       if (doc.exists) {
         return Contract.fromDocument(doc);
       }
@@ -236,7 +238,8 @@ class WorkAcceptanceService {
 
   Future<WorkAcceptanceAct?> _getAct(String actId) async {
     try {
-      final doc = await _firestore.collection('work_acceptance_acts').doc(actId).get();
+      final doc =
+          await _firestore.collection('work_acceptance_acts').doc(actId).get();
       if (doc.exists) {
         return WorkAcceptanceAct.fromDocument(doc);
       }
@@ -262,16 +265,17 @@ class WorkAcceptanceService {
     final year = now.year;
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');
-    final random = (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
+    final random =
+        (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
 
     return 'АВР-$year$month$day-$random';
   }
 
   List<String> _getDefaultServices(Booking booking) => [
-    'Организация мероприятия: ${booking.eventTitle}',
-    'Проведение мероприятия ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
-    'Обслуживание ${booking.participantsCount} участников',
-  ];
+        'Организация мероприятия: ${booking.eventTitle}',
+        'Проведение мероприятия ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
+        'Обслуживание ${booking.participantsCount} участников',
+      ];
 }
 
 /// Модель акта выполненных работ
@@ -320,7 +324,9 @@ class WorkAcceptanceAct {
       finalAmount: (data['finalAmount'] as num?)?.toDouble() ?? 0.0,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      signedAt: data['signedAt'] != null ? (data['signedAt'] as Timestamp).toDate() : null,
+      signedAt: data['signedAt'] != null
+          ? (data['signedAt'] as Timestamp).toDate()
+          : null,
       specialistSignedAt: data['specialistSignedAt'] != null
           ? (data['specialistSignedAt'] as Timestamp).toDate()
           : null,
@@ -352,27 +358,29 @@ class WorkAcceptanceAct {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'actNumber': actNumber,
-    'bookingId': bookingId,
-    'contractId': contractId,
-    'specialistId': specialistId,
-    'customerId': customerId,
-    'status': status.name,
-    'completedServices': completedServices,
-    'notes': notes,
-    'attachments': attachments,
-    'totalAmount': totalAmount,
-    'advanceAmount': advanceAmount,
-    'finalAmount': finalAmount,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
-    'specialistSignedAt': specialistSignedAt != null
-        ? Timestamp.fromDate(specialistSignedAt!)
-        : null,
-    'customerSignedAt': customerSignedAt != null ? Timestamp.fromDate(customerSignedAt!) : null,
-    'metadata': metadata,
-  };
+        'actNumber': actNumber,
+        'bookingId': bookingId,
+        'contractId': contractId,
+        'specialistId': specialistId,
+        'customerId': customerId,
+        'status': status.name,
+        'completedServices': completedServices,
+        'notes': notes,
+        'attachments': attachments,
+        'totalAmount': totalAmount,
+        'advanceAmount': advanceAmount,
+        'finalAmount': finalAmount,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
+        'specialistSignedAt': specialistSignedAt != null
+            ? Timestamp.fromDate(specialistSignedAt!)
+            : null,
+        'customerSignedAt': customerSignedAt != null
+            ? Timestamp.fromDate(customerSignedAt!)
+            : null,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   WorkAcceptanceAct copyWith({
@@ -395,27 +403,28 @@ class WorkAcceptanceAct {
     DateTime? specialistSignedAt,
     DateTime? customerSignedAt,
     Map<String, dynamic>? metadata,
-  }) => WorkAcceptanceAct(
-    id: id ?? this.id,
-    actNumber: actNumber ?? this.actNumber,
-    bookingId: bookingId ?? this.bookingId,
-    contractId: contractId ?? this.contractId,
-    specialistId: specialistId ?? this.specialistId,
-    customerId: customerId ?? this.customerId,
-    status: status ?? this.status,
-    completedServices: completedServices ?? this.completedServices,
-    notes: notes ?? this.notes,
-    attachments: attachments ?? this.attachments,
-    totalAmount: totalAmount ?? this.totalAmount,
-    advanceAmount: advanceAmount ?? this.advanceAmount,
-    finalAmount: finalAmount ?? this.finalAmount,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    signedAt: signedAt ?? this.signedAt,
-    specialistSignedAt: specialistSignedAt ?? this.specialistSignedAt,
-    customerSignedAt: customerSignedAt ?? this.customerSignedAt,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      WorkAcceptanceAct(
+        id: id ?? this.id,
+        actNumber: actNumber ?? this.actNumber,
+        bookingId: bookingId ?? this.bookingId,
+        contractId: contractId ?? this.contractId,
+        specialistId: specialistId ?? this.specialistId,
+        customerId: customerId ?? this.customerId,
+        status: status ?? this.status,
+        completedServices: completedServices ?? this.completedServices,
+        notes: notes ?? this.notes,
+        attachments: attachments ?? this.attachments,
+        totalAmount: totalAmount ?? this.totalAmount,
+        advanceAmount: advanceAmount ?? this.advanceAmount,
+        finalAmount: finalAmount ?? this.finalAmount,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        signedAt: signedAt ?? this.signedAt,
+        specialistSignedAt: specialistSignedAt ?? this.specialistSignedAt,
+        customerSignedAt: customerSignedAt ?? this.customerSignedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Статусы актов выполненных работ

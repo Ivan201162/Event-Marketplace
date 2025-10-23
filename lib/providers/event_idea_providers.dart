@@ -3,10 +3,12 @@ import '../models/event_idea.dart';
 import '../services/event_idea_service.dart';
 
 /// Провайдер сервиса идей мероприятий
-final eventIdeaServiceProvider = Provider<EventIdeaService>((ref) => EventIdeaService());
+final eventIdeaServiceProvider =
+    Provider<EventIdeaService>((ref) => EventIdeaService());
 
 /// Провайдер всех идей мероприятий
-final allEventIdeasProvider = FutureProvider.family<List<EventIdea>, EventIdeasParams>((
+final allEventIdeasProvider =
+    FutureProvider.family<List<EventIdea>, EventIdeasParams>((
   ref,
   params,
 ) async {
@@ -20,19 +22,22 @@ final allEventIdeasProvider = FutureProvider.family<List<EventIdea>, EventIdeasP
 });
 
 /// Провайдер идей пользователя
-final userEventIdeasProvider = FutureProvider.family<List<EventIdea>, String>((ref, userId) async {
+final userEventIdeasProvider =
+    FutureProvider.family<List<EventIdea>, String>((ref, userId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.getUserIdeas(userId);
 });
 
 /// Провайдер идеи по ID
-final eventIdeaByIdProvider = FutureProvider.family<EventIdea?, String>((ref, ideaId) async {
+final eventIdeaByIdProvider =
+    FutureProvider.family<EventIdea?, String>((ref, ideaId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.getIdeaById(ideaId);
 });
 
 /// Провайдер комментариев к идее
-final ideaCommentsProvider = FutureProvider.family<List<IdeaComment>, String>((ref, ideaId) async {
+final ideaCommentsProvider =
+    FutureProvider.family<List<IdeaComment>, String>((ref, ideaId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.getIdeaComments(ideaId);
 });
@@ -53,28 +58,33 @@ final createEventIdeaProvider = FutureProvider.family<String, CreateEventIdea>((
 });
 
 /// Провайдер для загрузки изображений идеи
-final uploadIdeaImagesProvider = FutureProvider.family<List<String>, UploadIdeaImagesParams>((
+final uploadIdeaImagesProvider =
+    FutureProvider.family<List<String>, UploadIdeaImagesParams>((
   ref,
   params,
 ) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
-  return ideaService.uploadIdeaImages(authorId: params.authorId, imageFiles: params.imageFiles);
+  return ideaService.uploadIdeaImages(
+      authorId: params.authorId, imageFiles: params.imageFiles);
 });
 
 /// Провайдер для лайка идеи
-final likeIdeaProvider = FutureProvider.family<void, String>((ref, ideaId) async {
+final likeIdeaProvider =
+    FutureProvider.family<void, String>((ref, ideaId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.likeIdea(ideaId);
 });
 
 /// Провайдер для удаления лайка идеи
-final unlikeIdeaProvider = FutureProvider.family<void, String>((ref, ideaId) async {
+final unlikeIdeaProvider =
+    FutureProvider.family<void, String>((ref, ideaId) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.unlikeIdea(ideaId);
 });
 
 /// Провайдер для добавления комментария
-final addCommentProvider = FutureProvider.family<String, AddCommentParams>((ref, params) async {
+final addCommentProvider =
+    FutureProvider.family<String, AddCommentParams>((ref, params) async {
   final ideaService = ref.read(eventIdeaServiceProvider);
   return ideaService.addComment(
     ideaId: params.ideaId,
@@ -88,7 +98,8 @@ final addCommentProvider = FutureProvider.family<String, AddCommentParams>((ref,
 
 /// Параметры для получения идей
 class EventIdeasParams {
-  const EventIdeasParams({this.limit = 20, this.category, this.tags, this.searchQuery});
+  const EventIdeasParams(
+      {this.limit = 20, this.category, this.tags, this.searchQuery});
 
   final int limit;
   final String? category;
@@ -98,7 +109,8 @@ class EventIdeasParams {
 
 /// Параметры для загрузки изображений идеи
 class UploadIdeaImagesParams {
-  const UploadIdeaImagesParams({required this.authorId, required this.imageFiles});
+  const UploadIdeaImagesParams(
+      {required this.authorId, required this.imageFiles});
 
   final String authorId;
   final List<dynamic> imageFiles; // List<XFile>

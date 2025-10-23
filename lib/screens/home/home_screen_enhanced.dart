@@ -22,9 +22,16 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
   late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
-  
+
   String _selectedCategory = 'Все';
-  final List<String> _categories = ['Все', 'Ведущие', 'Фотографы', 'Кейтеринг', 'Музыканты', 'Декораторы'];
+  final List<String> _categories = [
+    'Все',
+    'Ведущие',
+    'Фотографы',
+    'Кейтеринг',
+    'Музыканты',
+    'Декораторы'
+  ];
 
   @override
   void initState() {
@@ -92,7 +99,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
             children: [
               // Заголовок
               _buildHeader(user),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -183,9 +190,9 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // Приветствие
           Expanded(
             child: Column(
@@ -193,7 +200,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
               children: [
                 user.when(
                   data: (userData) => Text(
-                    userData != null 
+                    userData != null
                         ? '${_getGreetingByTime()}, ${_getUserDisplayName(userData)}!'
                         : '${_getGreetingByTime()}!',
                     style: const TextStyle(
@@ -241,7 +248,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
               ],
             ),
           ),
-          
+
           // Уведомления
           _buildNotificationsButton(user),
         ],
@@ -258,27 +265,27 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
         children: [
           // Поисковая строка
           _buildSearchBar(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Категории
           _buildCategoriesSection(),
-          
+
           const SizedBox(height: 24),
-          
+
           // ТОП специалисты
           _buildTopSpecialists(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Быстрые действия
           _buildQuickActions(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Статистика
           _buildStatistics(),
-          
+
           const SizedBox(height: 20),
         ],
       ),
@@ -316,7 +323,8 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
             },
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
@@ -335,9 +343,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
             color: Color(0xFF1E3A8A),
           ),
         ),
-        
         const SizedBox(height: 16),
-        
         SizedBox(
           height: 40,
           child: ListView.builder(
@@ -346,7 +352,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
             itemBuilder: (context, index) {
               final category = _categories[index];
               final isSelected = category == _selectedCategory;
-              
+
               return Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: GestureDetector(
@@ -357,9 +363,10 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected 
+                      color: isSelected
                           ? const Color(0xFF1E3A8A)
                           : Colors.grey[100],
                       borderRadius: BorderRadius.circular(20),
@@ -371,7 +378,8 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
                       category,
                       style: TextStyle(
                         color: isSelected ? Colors.white : Colors.grey[600],
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.w500,
                         fontSize: 14,
                       ),
                     ),
@@ -429,9 +437,9 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Заглушка для специалистов
         Container(
           width: double.infinity,
@@ -486,9 +494,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
             color: Color(0xFF1E3A8A),
           ),
         ),
-        
         const SizedBox(height: 16),
-        
         Row(
           children: [
             Expanded(
@@ -533,9 +539,7 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
             color: Color(0xFF1E3A8A),
           ),
         ),
-        
         const SizedBox(height: 16),
-        
         Row(
           children: [
             Expanded(
@@ -581,7 +585,8 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
-              onPressed: () => NavigationService.safeGo(context, '/notifications'),
+              onPressed: () =>
+                  NavigationService.safeGo(context, '/notifications'),
               icon: const Icon(
                 Icons.notifications_outlined,
                 color: Colors.white,
@@ -590,13 +595,12 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
             ),
           );
         }
-        
+
         return Consumer(
           builder: (context, ref, child) {
-            final unreadCountAsync = ref.watch(
-              NotificationProviders.unreadCountProvider(userData.uid)
-            );
-            
+            final unreadCountAsync = ref
+                .watch(NotificationProviders.unreadCountProvider(userData.uid));
+
             return Stack(
               children: [
                 Container(
@@ -605,7 +609,8 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
-                    onPressed: () => NavigationService.safeGo(context, '/notifications'),
+                    onPressed: () =>
+                        NavigationService.safeGo(context, '/notifications'),
                     icon: const Icon(
                       Icons.notifications_outlined,
                       color: Colors.white,

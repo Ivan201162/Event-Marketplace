@@ -23,7 +23,8 @@ class FadeInWidget extends StatefulWidget {
   State<FadeInWidget> createState() => _FadeInWidgetState();
 }
 
-class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderStateMixin {
+class _FadeInWidgetState extends State<FadeInWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -54,7 +55,8 @@ class _FadeInWidgetState extends State<FadeInWidget> with SingleTickerProviderSt
   }
 
   @override
-  Widget build(BuildContext context) => FadeTransition(opacity: _animation, child: widget.child);
+  Widget build(BuildContext context) =>
+      FadeTransition(opacity: _animation, child: widget.child);
 }
 
 /// Виджет для плавного появления с масштабированием
@@ -80,7 +82,8 @@ class ScaleInWidget extends StatefulWidget {
   State<ScaleInWidget> createState() => _ScaleInWidgetState();
 }
 
-class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProviderStateMixin {
+class _ScaleInWidgetState extends State<ScaleInWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -111,7 +114,8 @@ class _ScaleInWidgetState extends State<ScaleInWidget> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => ScaleTransition(scale: _animation, child: widget.child);
+  Widget build(BuildContext context) =>
+      ScaleTransition(scale: _animation, child: widget.child);
 }
 
 /// Виджет для плавного появления с движением
@@ -137,7 +141,8 @@ class SlideInWidget extends StatefulWidget {
   State<SlideInWidget> createState() => _SlideInWidgetState();
 }
 
-class _SlideInWidgetState extends State<SlideInWidget> with SingleTickerProviderStateMixin {
+class _SlideInWidgetState extends State<SlideInWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
 
@@ -183,7 +188,8 @@ class _SlideInWidgetState extends State<SlideInWidget> with SingleTickerProvider
   }
 
   @override
-  Widget build(BuildContext context) => SlideTransition(position: _animation, child: widget.child);
+  Widget build(BuildContext context) =>
+      SlideTransition(position: _animation, child: widget.child);
 }
 
 /// Направления для анимации слайда
@@ -282,13 +288,16 @@ class _AnimatedEntranceWidgetState extends State<AnimatedEntranceWidget>
 
     switch (widget.animationType) {
       case AnimationType.fadeIn:
-        animatedChild = FadeTransition(opacity: _fadeAnimation, child: animatedChild);
+        animatedChild =
+            FadeTransition(opacity: _fadeAnimation, child: animatedChild);
         break;
       case AnimationType.scaleIn:
-        animatedChild = ScaleTransition(scale: _scaleAnimation, child: animatedChild);
+        animatedChild =
+            ScaleTransition(scale: _scaleAnimation, child: animatedChild);
         break;
       case AnimationType.slideIn:
-        animatedChild = SlideTransition(position: _slideAnimation, child: animatedChild);
+        animatedChild =
+            SlideTransition(position: _slideAnimation, child: animatedChild);
         break;
       case AnimationType.fadeScaleIn:
         animatedChild = FadeTransition(
@@ -299,13 +308,15 @@ class _AnimatedEntranceWidgetState extends State<AnimatedEntranceWidget>
       case AnimationType.fadeSlideIn:
         animatedChild = FadeTransition(
           opacity: _fadeAnimation,
-          child: SlideTransition(position: _slideAnimation, child: animatedChild),
+          child:
+              SlideTransition(position: _slideAnimation, child: animatedChild),
         );
         break;
       case AnimationType.scaleSlideIn:
         animatedChild = ScaleTransition(
           scale: _scaleAnimation,
-          child: SlideTransition(position: _slideAnimation, child: animatedChild),
+          child:
+              SlideTransition(position: _slideAnimation, child: animatedChild),
         );
         break;
       case AnimationType.allIn:
@@ -313,7 +324,8 @@ class _AnimatedEntranceWidgetState extends State<AnimatedEntranceWidget>
           opacity: _fadeAnimation,
           child: ScaleTransition(
             scale: _scaleAnimation,
-            child: SlideTransition(position: _slideAnimation, child: animatedChild),
+            child: SlideTransition(
+                position: _slideAnimation, child: animatedChild),
           ),
         );
         break;
@@ -324,7 +336,15 @@ class _AnimatedEntranceWidgetState extends State<AnimatedEntranceWidget>
 }
 
 /// Типы анимаций
-enum AnimationType { fadeIn, scaleIn, slideIn, fadeScaleIn, fadeSlideIn, scaleSlideIn, allIn }
+enum AnimationType {
+  fadeIn,
+  scaleIn,
+  slideIn,
+  fadeScaleIn,
+  fadeSlideIn,
+  scaleSlideIn,
+  allIn
+}
 
 /// Виджет для анимации появления списка элементов
 class AnimatedListWidget extends StatefulWidget {
@@ -392,7 +412,8 @@ class AnimatedButton extends StatefulWidget {
   State<AnimatedButton> createState() => _AnimatedButtonState();
 }
 
-class _AnimatedButtonState extends State<AnimatedButton> with SingleTickerProviderStateMixin {
+class _AnimatedButtonState extends State<AnimatedButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -456,7 +477,8 @@ class StaggeredAnimationWidget extends StatefulWidget {
   final double slideOffset;
 
   @override
-  State<StaggeredAnimationWidget> createState() => _StaggeredAnimationWidgetState();
+  State<StaggeredAnimationWidget> createState() =>
+      _StaggeredAnimationWidgetState();
 }
 
 class _StaggeredAnimationWidgetState extends State<StaggeredAnimationWidget> {

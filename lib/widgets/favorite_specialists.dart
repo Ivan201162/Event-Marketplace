@@ -36,7 +36,9 @@ class FavoriteSpecialists extends ConsumerWidget {
     );
   }
 
-  Widget _buildSpecialistItem(BuildContext context, Map<String, dynamic> specialist) => Container(
+  Widget _buildSpecialistItem(
+          BuildContext context, Map<String, dynamic> specialist) =>
+      Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -62,8 +64,9 @@ class FavoriteSpecialists extends ConsumerWidget {
                   backgroundImage: specialist['avatarUrl'] != null
                       ? CachedNetworkImageProvider(specialist['avatarUrl'])
                       : null,
-                  child:
-                      specialist['avatarUrl'] == null ? const Icon(Icons.person, size: 30) : null,
+                  child: specialist['avatarUrl'] == null
+                      ? const Icon(Icons.person, size: 30)
+                      : null,
                 ),
                 if (specialist['isVerified'])
                   Positioned(
@@ -77,7 +80,8 @@ class FavoriteSpecialists extends ConsumerWidget {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 2),
                       ),
-                      child: const Icon(Icons.verified, color: Colors.white, size: 12),
+                      child: const Icon(Icons.verified,
+                          color: Colors.white, size: 12),
                     ),
                   ),
               ],
@@ -95,12 +99,16 @@ class FavoriteSpecialists extends ConsumerWidget {
                           specialist['name'],
                           style: Theme.of(
                             context,
-                          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                          )
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.favorite, color: Colors.red),
-                        onPressed: () => _removeFromFavorites(context, specialist['id']),
+                        onPressed: () =>
+                            _removeFromFavorites(context, specialist['id']),
                       ),
                     ],
                   ),
@@ -109,7 +117,10 @@ class FavoriteSpecialists extends ConsumerWidget {
                     specialist['specialization'],
                     style: Theme.of(
                       context,
-                    ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).primaryColor),
+                    )
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Theme.of(context).primaryColor),
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -120,7 +131,10 @@ class FavoriteSpecialists extends ConsumerWidget {
                         specialist['rating'].toString(),
                         style: Theme.of(
                           context,
-                        ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
+                        )
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -135,14 +149,18 @@ class FavoriteSpecialists extends ConsumerWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(Icons.location_on, size: 16, color: Colors.grey[600]),
+                      Icon(Icons.location_on,
+                          size: 16, color: Colors.grey[600]),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           specialist['city'],
                           style: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                          )
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                       ),
                     ],
@@ -151,7 +169,8 @@ class FavoriteSpecialists extends ConsumerWidget {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: specialist['isAvailable']
                               ? Colors.green.withValues(alpha: 0.1)
@@ -161,7 +180,9 @@ class FavoriteSpecialists extends ConsumerWidget {
                         child: Text(
                           specialist['isAvailable'] ? 'Доступен' : 'Занят',
                           style: TextStyle(
-                            color: specialist['isAvailable'] ? Colors.green : Colors.red,
+                            color: specialist['isAvailable']
+                                ? Colors.green
+                                : Colors.red,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -192,12 +213,18 @@ class FavoriteSpecialists extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'Нет избранных специалистов',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Добавьте специалистов в избранное,\nчтобы быстро найти их позже',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -215,16 +242,20 @@ class FavoriteSpecialists extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить из избранного'),
-        content: const Text('Вы уверены, что хотите удалить этого специалиста из избранного?'),
+        content: const Text(
+            'Вы уверены, что хотите удалить этого специалиста из избранного?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               // TODO(developer): Удалить из избранного
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(const SnackBar(content: Text('Удалено из избранного')));
+              ).showSnackBar(
+                  const SnackBar(content: Text('Удалено из избранного')));
             },
             child: const Text('Удалить'),
           ),
@@ -235,7 +266,8 @@ class FavoriteSpecialists extends ConsumerWidget {
 
   void _findSpecialists(BuildContext context) {
     // TODO(developer): Навигация к поиску специалистов
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Поиск специалистов')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Поиск специалистов')));
   }
 
   List<Map<String, dynamic>> _getMockSpecialists() => [

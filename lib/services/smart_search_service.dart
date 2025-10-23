@@ -137,35 +137,35 @@ class SmartSearchService {
 
   /// Получить популярные подсказки
   List<SearchSuggestion> _getPopularSuggestions() => [
-    SearchSuggestion(
-      text: 'Ведущие',
-      type: SuggestionType.category,
-      icon: Icons.category,
-      subtitle: 'Популярная категория',
-      data: {'category': 'Ведущие'},
-    ),
-    SearchSuggestion(
-      text: 'Фотографы',
-      type: SuggestionType.category,
-      icon: Icons.category,
-      subtitle: 'Популярная категория',
-      data: {'category': 'Фотографы'},
-    ),
-    SearchSuggestion(
-      text: 'Москва',
-      type: SuggestionType.location,
-      icon: Icons.location_on,
-      subtitle: 'Популярный город',
-      data: {'city': 'Москва'},
-    ),
-    SearchSuggestion(
-      text: 'Свадьба',
-      type: SuggestionType.service,
-      icon: Icons.event,
-      subtitle: 'Популярная услуга',
-      data: {'service': 'Свадьба'},
-    ),
-  ];
+        SearchSuggestion(
+          text: 'Ведущие',
+          type: SuggestionType.category,
+          icon: Icons.category,
+          subtitle: 'Популярная категория',
+          data: {'category': 'Ведущие'},
+        ),
+        SearchSuggestion(
+          text: 'Фотографы',
+          type: SuggestionType.category,
+          icon: Icons.category,
+          subtitle: 'Популярная категория',
+          data: {'category': 'Фотографы'},
+        ),
+        SearchSuggestion(
+          text: 'Москва',
+          type: SuggestionType.location,
+          icon: Icons.location_on,
+          subtitle: 'Популярный город',
+          data: {'city': 'Москва'},
+        ),
+        SearchSuggestion(
+          text: 'Свадьба',
+          type: SuggestionType.service,
+          icon: Icons.event,
+          subtitle: 'Популярная услуга',
+          data: {'service': 'Свадьба'},
+        ),
+      ];
 
   /// Получить специалистов с фильтрами
   Future<List<Map<String, dynamic>>> searchSpecialists({
@@ -193,15 +193,18 @@ class SmartSearchService {
 
       // Фильтр по цене
       if (minPrice != null) {
-        queryBuilder = queryBuilder.where('price', isGreaterThanOrEqualTo: minPrice);
+        queryBuilder =
+            queryBuilder.where('price', isGreaterThanOrEqualTo: minPrice);
       }
       if (maxPrice != null) {
-        queryBuilder = queryBuilder.where('price', isLessThanOrEqualTo: maxPrice);
+        queryBuilder =
+            queryBuilder.where('price', isLessThanOrEqualTo: maxPrice);
       }
 
       // Фильтр по рейтингу
       if (minRating != null) {
-        queryBuilder = queryBuilder.where('rating', isGreaterThanOrEqualTo: minRating);
+        queryBuilder =
+            queryBuilder.where('rating', isGreaterThanOrEqualTo: minRating);
       }
 
       // Сортировка
@@ -234,8 +237,10 @@ class SmartSearchService {
         if (query != null && query.isNotEmpty) {
           final searchLower = query.toLowerCase();
           final name = ((data['name'] as String?) ?? '').toLowerCase();
-          final description = ((data['description'] as String?) ?? '').toLowerCase();
-          final categoryName = ((data['category'] as String?) ?? '').toLowerCase();
+          final description =
+              ((data['description'] as String?) ?? '').toLowerCase();
+          final categoryName =
+              ((data['category'] as String?) ?? '').toLowerCase();
 
           if (!name.contains(searchLower) &&
               !description.contains(searchLower) &&
@@ -313,7 +318,8 @@ class SmartSearchService {
 
       // Получаем текущую позицию
       _currentPosition = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
+        locationSettings:
+            const LocationSettings(accuracy: LocationAccuracy.high),
       );
 
       return _currentPosition;
@@ -345,7 +351,8 @@ class SmartSearchService {
 
       for (final entry in cities.entries) {
         final cityData = entry.value;
-        final distance = _calculateDistance(lat, lng, cityData['lat']!, cityData['lng']!);
+        final distance =
+            _calculateDistance(lat, lng, cityData['lat']!, cityData['lng']!);
 
         if (distance < minDistance) {
           minDistance = distance;
@@ -362,7 +369,8 @@ class SmartSearchService {
   }
 
   /// Вычислить расстояние между двумя точками
-  double _calculateDistance(double lat1, double lng1, double lat2, double lng2) =>
+  double _calculateDistance(
+          double lat1, double lng1, double lat2, double lng2) =>
       Geolocator.distanceBetween(lat1, lng1, lat2, lng2);
 
   /// Получить популярные города для автозаполнения
@@ -482,87 +490,87 @@ class SmartSearchService {
 
   /// Тестовые данные для популярных специалистов недели
   List<Map<String, dynamic>> _getTestWeeklyPopularSpecialists() => [
-    {
-      'id': 'specialist_1',
-      'name': 'Анна Петрова',
-      'category': 'Фотограф',
-      'rating': 4.9,
-      'price': 15000,
-      'city': 'Москва',
-      'avatarUrl': 'https://picsum.photos/200/200?random=1',
-      'reviewsCount': 127,
-      'isVerified': true,
-      'avgResponseTime': 15,
-      'isOnline': true,
-      'hasDiscount': false,
-      'isPremium': true,
-      'viewsCount': 1250,
-    },
-    {
-      'id': 'specialist_2',
-      'name': 'Дмитрий Смирнов',
-      'category': 'DJ',
-      'rating': 4.8,
-      'price': 25000,
-      'city': 'Санкт-Петербург',
-      'avatarUrl': 'https://picsum.photos/200/200?random=2',
-      'reviewsCount': 89,
-      'isVerified': true,
-      'avgResponseTime': 25,
-      'isOnline': true,
-      'hasDiscount': true,
-      'isPremium': false,
-      'viewsCount': 980,
-    },
-    {
-      'id': 'specialist_3',
-      'name': 'Елена Козлова',
-      'category': 'Ведущая',
-      'rating': 4.7,
-      'price': 20000,
-      'city': 'Москва',
-      'avatarUrl': 'https://picsum.photos/200/200?random=3',
-      'reviewsCount': 156,
-      'isVerified': true,
-      'avgResponseTime': 20,
-      'isOnline': false,
-      'hasDiscount': false,
-      'isPremium': true,
-      'viewsCount': 1100,
-    },
-    {
-      'id': 'specialist_4',
-      'name': 'Михаил Волков',
-      'category': 'Видеограф',
-      'rating': 4.6,
-      'price': 30000,
-      'city': 'Новосибирск',
-      'avatarUrl': 'https://picsum.photos/200/200?random=4',
-      'reviewsCount': 67,
-      'isVerified': false,
-      'avgResponseTime': 45,
-      'isOnline': true,
-      'hasDiscount': false,
-      'isPremium': false,
-      'viewsCount': 750,
-    },
-    {
-      'id': 'specialist_5',
-      'name': 'Ольга Морозова',
-      'category': 'Декоратор',
-      'rating': 4.5,
-      'price': 18000,
-      'city': 'Екатеринбург',
-      'avatarUrl': 'https://picsum.photos/200/200?random=5',
-      'reviewsCount': 43,
-      'isVerified': true,
-      'avgResponseTime': 30,
-      'isOnline': false,
-      'hasDiscount': true,
-      'isPremium': false,
-      'viewsCount': 620,
-    },
-  ];
+        {
+          'id': 'specialist_1',
+          'name': 'Анна Петрова',
+          'category': 'Фотограф',
+          'rating': 4.9,
+          'price': 15000,
+          'city': 'Москва',
+          'avatarUrl': 'https://picsum.photos/200/200?random=1',
+          'reviewsCount': 127,
+          'isVerified': true,
+          'avgResponseTime': 15,
+          'isOnline': true,
+          'hasDiscount': false,
+          'isPremium': true,
+          'viewsCount': 1250,
+        },
+        {
+          'id': 'specialist_2',
+          'name': 'Дмитрий Смирнов',
+          'category': 'DJ',
+          'rating': 4.8,
+          'price': 25000,
+          'city': 'Санкт-Петербург',
+          'avatarUrl': 'https://picsum.photos/200/200?random=2',
+          'reviewsCount': 89,
+          'isVerified': true,
+          'avgResponseTime': 25,
+          'isOnline': true,
+          'hasDiscount': true,
+          'isPremium': false,
+          'viewsCount': 980,
+        },
+        {
+          'id': 'specialist_3',
+          'name': 'Елена Козлова',
+          'category': 'Ведущая',
+          'rating': 4.7,
+          'price': 20000,
+          'city': 'Москва',
+          'avatarUrl': 'https://picsum.photos/200/200?random=3',
+          'reviewsCount': 156,
+          'isVerified': true,
+          'avgResponseTime': 20,
+          'isOnline': false,
+          'hasDiscount': false,
+          'isPremium': true,
+          'viewsCount': 1100,
+        },
+        {
+          'id': 'specialist_4',
+          'name': 'Михаил Волков',
+          'category': 'Видеограф',
+          'rating': 4.6,
+          'price': 30000,
+          'city': 'Новосибирск',
+          'avatarUrl': 'https://picsum.photos/200/200?random=4',
+          'reviewsCount': 67,
+          'isVerified': false,
+          'avgResponseTime': 45,
+          'isOnline': true,
+          'hasDiscount': false,
+          'isPremium': false,
+          'viewsCount': 750,
+        },
+        {
+          'id': 'specialist_5',
+          'name': 'Ольга Морозова',
+          'category': 'Декоратор',
+          'rating': 4.5,
+          'price': 18000,
+          'city': 'Екатеринбург',
+          'avatarUrl': 'https://picsum.photos/200/200?random=5',
+          'reviewsCount': 43,
+          'isVerified': true,
+          'avgResponseTime': 30,
+          'isOnline': false,
+          'hasDiscount': true,
+          'isPremium': false,
+          'viewsCount': 620,
+        },
+      ];
 }
 
 /// Подсказка для поиска

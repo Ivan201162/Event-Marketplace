@@ -2,7 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/specialist_report_service.dart';
 
 /// Провайдер сервиса отчетов
-final specialistReportServiceProvider = Provider((ref) => SpecialistReportService());
+final specialistReportServiceProvider =
+    Provider((ref) => SpecialistReportService());
 
 /// Провайдер для получения общего отчета по специалистам
 final specialistReportProvider = FutureProvider((ref) async {
@@ -35,7 +36,8 @@ final activityReportProvider = FutureProvider((ref) async {
 });
 
 /// Провайдер для получения детального отчета по специалисту
-final specialistDetailReportProvider = FutureProvider.family<SpecialistDetailReport, String>((
+final specialistDetailReportProvider =
+    FutureProvider.family<SpecialistDetailReport, String>((
   ref,
   specialistId,
 ) async {

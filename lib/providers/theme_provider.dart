@@ -73,7 +73,9 @@ class ThemeNotifier extends Notifier<ThemeMode> {
         return AppTheme.darkTheme;
       case ThemeMode.system:
         final brightness = MediaQuery.of(context).platformBrightness;
-        return brightness == Brightness.light ? AppTheme.lightTheme : AppTheme.darkTheme;
+        return brightness == Brightness.light
+            ? AppTheme.lightTheme
+            : AppTheme.darkTheme;
     }
   }
 
@@ -91,7 +93,9 @@ class ThemeNotifier extends Notifier<ThemeMode> {
 }
 
 /// Провайдер для управления темами
-final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(ThemeNotifier.new);
+final themeProvider =
+    NotifierProvider<ThemeNotifier, ThemeMode>(ThemeNotifier.new);
 
 /// Провайдер для получения текущего режима темы
-final themeModeProvider = Provider<ThemeMode>((ref) => ref.watch(themeProvider));
+final themeModeProvider =
+    Provider<ThemeMode>((ref) => ref.watch(themeProvider));

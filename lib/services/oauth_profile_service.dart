@@ -202,7 +202,8 @@ class OAuthProfileService {
   }
 
   /// Обновляет профиль пользователя
-  Future<void> updateProfile(String userId, Map<String, dynamic> updates) async {
+  Future<void> updateProfile(
+      String userId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = FieldValue.serverTimestamp();
       await _firestore.collection('users').doc(userId).update(updates);

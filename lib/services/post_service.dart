@@ -11,7 +11,8 @@ class PostService {
   static const String _collection = 'posts';
 
   /// Get all posts with pagination
-  Future<List<Post>> getPosts({int limit = 20, DocumentSnapshot? lastDocument}) async {
+  Future<List<Post>> getPosts(
+      {int limit = 20, DocumentSnapshot? lastDocument}) async {
     try {
       Query query = _firestore
           .collection(_collection)
@@ -48,7 +49,8 @@ class PostService {
   }
 
   /// Get posts by specialist
-  Future<List<Post>> getPostsBySpecialist(String specialistId, {int limit = 20}) async {
+  Future<List<Post>> getPostsBySpecialist(String specialistId,
+      {int limit = 20}) async {
     try {
       final snapshot = await _firestore
           .collection(_collection)
@@ -107,7 +109,8 @@ class PostService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef = await _firestore.collection(_collection).add(post.toFirestore());
+      final docRef =
+          await _firestore.collection(_collection).add(post.toFirestore());
       return docRef.id;
     } catch (e) {
       debugPrint('Error creating post: $e');
@@ -223,7 +226,8 @@ class PostService {
     }
     try {
       final ref = _storage.ref().child('posts/$fileName');
-      final uploadTask = await ref.putFile(filePath as dynamic); // In real app, use File
+      final uploadTask =
+          await ref.putFile(filePath as dynamic); // In real app, use File
       final downloadUrl = await uploadTask.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
@@ -280,7 +284,8 @@ class PostService {
           .limit(limit)
           .get();
 
-      final posts = snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+      final posts =
+          snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
 
       // Filter posts that contain the query in text or tags
       return posts.where((post) {
@@ -301,7 +306,8 @@ class PostService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
   }
 
   /// Stream of posts by user
@@ -312,7 +318,8 @@ class PostService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList());
   }
 
   /// Get post statistics
@@ -321,7 +328,10 @@ class PostService {
       final doc = await _firestore.collection(_collection).doc(postId).get();
       if (doc.exists) {
         final data = doc.data()!;
-        return {'likes': data['likesCount'] ?? 0, 'comments': data['commentsCount'] ?? 0};
+        return {
+          'likes': data['likesCount'] ?? 0,
+          'comments': data['commentsCount'] ?? 0
+        };
       }
       return {'likes': 0, 'comments': 0};
     } catch (e) {

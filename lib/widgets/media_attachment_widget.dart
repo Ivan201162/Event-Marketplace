@@ -4,7 +4,8 @@ import '../services/media_upload_service.dart';
 
 /// Виджет для прикрепления медиафайлов к сообщению
 class MediaAttachmentWidget extends StatefulWidget {
-  const MediaAttachmentWidget({super.key, required this.onMediaSelected, required this.onError});
+  const MediaAttachmentWidget(
+      {super.key, required this.onMediaSelected, required this.onError});
   final Function(MediaUploadResult) onMediaSelected;
   final Function(String) onError;
 
@@ -50,7 +51,8 @@ class _MediaAttachmentWidgetState extends State<MediaAttachmentWidget> {
 
           Text(
             'Прикрепить файл',
-            style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: theme.textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 20),
@@ -149,7 +151,8 @@ class _MediaAttachmentWidgetState extends State<MediaAttachmentWidget> {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(
-              onPressed: _isUploading ? null : () => Navigator.of(context).pop(),
+              onPressed:
+                  _isUploading ? null : () => Navigator.of(context).pop(),
               child: const Text('Отмена'),
             ),
           ),
@@ -173,7 +176,8 @@ class _MediaAttachmentWidgetState extends State<MediaAttachmentWidget> {
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+          border: Border.all(
+              color: theme.colorScheme.outline.withValues(alpha: 0.2)),
         ),
         child: Column(
           children: [
@@ -181,7 +185,8 @@ class _MediaAttachmentWidgetState extends State<MediaAttachmentWidget> {
             const SizedBox(height: 8),
             Text(
               label,
-              style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
             ),
           ],

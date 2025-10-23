@@ -70,7 +70,8 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
             hintText: 'Поиск по имени или городу...',
             prefixIcon: const Icon(Icons.search),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
           onChanged: (value) => _applyFilters(),
         ),
@@ -157,7 +158,8 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
         ],
       );
 
-  Widget _buildPriceFilter(ThemeData theme, AsyncValue<Map<String, double>> priceRangeAsync) =>
+  Widget _buildPriceFilter(
+          ThemeData theme, AsyncValue<Map<String, double>> priceRangeAsync) =>
       priceRangeAsync.when(
         data: (priceRange) {
           final minPrice = priceRange['min'] ?? 0;
@@ -168,7 +170,8 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
             children: [
               Text(
                 'Цена: ${_priceRange.start.round()}-${_priceRange.end.round()} ₽',
-                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
               RangeSlider(
@@ -195,7 +198,8 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
         children: [
           Text(
             'Рейтинг: ${_ratingRange.start.toStringAsFixed(1)}-${_ratingRange.end.toStringAsFixed(1)}',
-            style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            style: theme.textTheme.bodyMedium
+                ?.copyWith(fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
           RangeSlider(
@@ -213,23 +217,29 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
         ],
       );
 
-  Widget _buildCityFilter(ThemeData theme, AsyncValue<List<String>> citiesAsync) =>
+  Widget _buildCityFilter(
+          ThemeData theme, AsyncValue<List<String>> citiesAsync) =>
       citiesAsync.when(
         data: (cities) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Город', style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+            Text('Город',
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w500)),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               initialValue: _selectedCity,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               hint: const Text('Все города'),
               items: [
                 const DropdownMenuItem<String>(child: Text('Все города')),
-                ...cities.map((city) => DropdownMenuItem<String>(value: city, child: Text(city))),
+                ...cities.map((city) =>
+                    DropdownMenuItem<String>(value: city, child: Text(city))),
               ],
               onChanged: (value) {
                 setState(() {
@@ -249,7 +259,8 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
         children: [
           Text(
             'Доступная дата',
-            style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+            style: theme.textTheme.bodyMedium
+                ?.copyWith(fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
           InkWell(
@@ -257,7 +268,8 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               decoration: BoxDecoration(
-                border: Border.all(color: theme.colorScheme.outline.withValues(alpha: 0.5)),
+                border: Border.all(
+                    color: theme.colorScheme.outline.withValues(alpha: 0.5)),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -276,7 +288,8 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: _selectedDate != null
                             ? theme.colorScheme.onSurface
-                            : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            : theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                       ),
                     ),
                   ),
@@ -321,7 +334,9 @@ class _HostFiltersWidgetState extends ConsumerState<HostFiltersWidget> {
       maxRating: _ratingRange.end,
       city: _selectedCity,
       availableDate: _selectedDate,
-      searchQuery: _searchController.text.trim().isEmpty ? null : _searchController.text.trim(),
+      searchQuery: _searchController.text.trim().isEmpty
+          ? null
+          : _searchController.text.trim(),
     );
 
     widget.onFiltersChanged(filters);

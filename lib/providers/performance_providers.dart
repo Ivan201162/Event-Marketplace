@@ -23,13 +23,14 @@ class PerformanceState {
     int? cpuUsage,
     bool? isOptimized,
     List<String>? optimizations,
-  }) => PerformanceState(
-    fps: fps ?? this.fps,
-    memoryUsage: memoryUsage ?? this.memoryUsage,
-    cpuUsage: cpuUsage ?? this.cpuUsage,
-    isOptimized: isOptimized ?? this.isOptimized,
-    optimizations: optimizations ?? this.optimizations,
-  );
+  }) =>
+      PerformanceState(
+        fps: fps ?? this.fps,
+        memoryUsage: memoryUsage ?? this.memoryUsage,
+        cpuUsage: cpuUsage ?? this.cpuUsage,
+        isOptimized: isOptimized ?? this.isOptimized,
+        optimizations: optimizations ?? this.optimizations,
+      );
 }
 
 /// Провайдер производительности
@@ -71,6 +72,7 @@ class PerformanceNotifier extends Notifier<PerformanceState> {
 }
 
 /// Провайдер производительности
-final performanceProvider = NotifierProvider<PerformanceNotifier, PerformanceState>(
+final performanceProvider =
+    NotifierProvider<PerformanceNotifier, PerformanceState>(
   (ref) => PerformanceNotifier(),
 );

@@ -8,19 +8,23 @@ import '../../../core/utils/debug_utils.dart';
 class FeedNotificationService {
   factory FeedNotificationService() => _instance;
   FeedNotificationService._internal();
-  static final FeedNotificationService _instance = FeedNotificationService._internal();
+  static final FeedNotificationService _instance =
+      FeedNotificationService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
   /// Инициализация сервиса уведомлений
   Future<void> initialize() async {
     // Инициализация локальных уведомлений
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings();
 
-    const initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
+    const initSettings =
+        InitializationSettings(android: androidSettings, iOS: iosSettings);
 
     await _localNotifications.initialize(
       initSettings,
@@ -38,12 +42,14 @@ class FeedNotificationService {
   Future<void> _requestPermissions() async {
     // Android
     await _localNotifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
 
     // iOS
     await _localNotifications
-        .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(alert: true, badge: true, sound: true);
 
     // Firebase Messaging
@@ -51,10 +57,13 @@ class FeedNotificationService {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       debugPrint('Пользователь предоставил разрешение на уведомления');
-    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
-      debugPrint('Пользователь предоставил временное разрешение на уведомления');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      debugPrint(
+          'Пользователь предоставил временное разрешение на уведомления');
     } else {
-      debugPrint('Пользователь отклонил или не предоставил разрешение на уведомления');
+      debugPrint(
+          'Пользователь отклонил или не предоставил разрешение на уведомления');
     }
   }
 
@@ -122,7 +131,8 @@ class FeedNotificationService {
       presentSound: true,
     );
 
-    const details = NotificationDetails(android: androidDetails, iOS: iosDetails);
+    const details =
+        NotificationDetails(android: androidDetails, iOS: iosDetails);
 
     await _localNotifications.show(
       DateTime.now().millisecondsSinceEpoch.remainder(100000),
@@ -221,7 +231,8 @@ class FeedNotificationService {
 
       if (userDoc.exists) {
         final userData = userDoc.data()!;
-        return List<String>.from((userData['followers'] as List<dynamic>?) ?? []);
+        return List<String>.from(
+            (userData['followers'] as List<dynamic>?) ?? []);
       }
 
       return [];

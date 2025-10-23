@@ -9,7 +9,8 @@ class SignatureService {
   /// Создать подпись из виджета
   static Future<String> captureSignature(GlobalKey key) async {
     try {
-      final boundary = key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
+      final boundary =
+          key.currentContext!.findRenderObject()! as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: 3);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       final pngBytes = byteData!.buffer.asUint8List();
@@ -25,7 +26,8 @@ class SignatureService {
     required String userId,
     required String documentId,
     required String timestamp,
-    required String privateKey, // В реальном приложении это должен быть настоящий приватный ключ
+    required String
+        privateKey, // В реальном приложении это должен быть настоящий приватный ключ
   }) {
     // В реальном приложении здесь должна быть криптографическая подпись
     // Пока что создаем простую хеш-подпись
@@ -41,7 +43,8 @@ class SignatureService {
     required String userId,
     required String documentId,
     required String timestamp,
-    required String publicKey, // В реальном приложении это должен быть настоящий публичный ключ
+    required String
+        publicKey, // В реальном приложении это должен быть настоящий публичный ключ
   }) {
     try {
       // В реальном приложении здесь должна быть проверка криптографической подписи
@@ -49,7 +52,8 @@ class SignatureService {
         userId: userId,
         documentId: documentId,
         timestamp: timestamp,
-        privateKey: publicKey, // В реальном приложении это должно быть по-другому
+        privateKey:
+            publicKey, // В реальном приложении это должно быть по-другому
       );
 
       return signature == expectedSignature;
@@ -80,7 +84,8 @@ class SignatureService {
         signature = digitalSignature;
         signatureType = 'digital';
       } else {
-        throw Exception('Необходимо предоставить либо подпись от руки, либо цифровую подпись');
+        throw Exception(
+            'Необходимо предоставить либо подпись от руки, либо цифровую подпись');
       }
 
       return {
@@ -167,41 +172,41 @@ class _SignaturePadState extends State<SignaturePad> {
 
   @override
   Widget build(BuildContext context) => RepaintBoundary(
-    key: _signatureKey,
-    child: Container(
-      width: widget.width ?? 300,
-      height: widget.height ?? 200,
-      decoration: BoxDecoration(
-        color: widget.backgroundColor ?? Colors.white,
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: GestureDetector(
-        onPanStart: (details) {
-          setState(() {
-            _points.add(details.localPosition);
-          });
-        },
-        onPanUpdate: (details) {
-          setState(() {
-            _points.add(details.localPosition);
-          });
-        },
-        onPanEnd: (details) {
-          setState(() {
-            _points.add(Offset.infinite);
-          });
-        },
-        child: CustomPaint(
-          painter: SignaturePainter(
-            points: _points,
-            penColor: widget.penColor ?? Colors.black,
-            penWidth: widget.penWidth ?? 2.0,
+        key: _signatureKey,
+        child: Container(
+          width: widget.width ?? 300,
+          height: widget.height ?? 200,
+          decoration: BoxDecoration(
+            color: widget.backgroundColor ?? Colors.white,
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: GestureDetector(
+            onPanStart: (details) {
+              setState(() {
+                _points.add(details.localPosition);
+              });
+            },
+            onPanUpdate: (details) {
+              setState(() {
+                _points.add(details.localPosition);
+              });
+            },
+            onPanEnd: (details) {
+              setState(() {
+                _points.add(Offset.infinite);
+              });
+            },
+            child: CustomPaint(
+              painter: SignaturePainter(
+                points: _points,
+                penColor: widget.penColor ?? Colors.black,
+                penWidth: widget.penWidth ?? 2.0,
+              ),
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   /// Очистить подпись
   void clear() {
@@ -217,7 +222,8 @@ class _SignaturePadState extends State<SignaturePad> {
 
 /// Художник для отрисовки подписи
 class SignaturePainter extends CustomPainter {
-  const SignaturePainter({required this.points, required this.penColor, required this.penWidth});
+  const SignaturePainter(
+      {required this.points, required this.penColor, required this.penWidth});
 
   final List<Offset> points;
   final Color penColor;

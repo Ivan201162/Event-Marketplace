@@ -5,7 +5,8 @@ import '../services/favorites_service.dart';
 import 'auth_providers.dart';
 
 /// Провайдер сервиса избранного
-final favoritesServiceProvider = Provider<FavoritesService>((ref) => FavoritesService());
+final favoritesServiceProvider =
+    Provider<FavoritesService>((ref) => FavoritesService());
 
 /// Провайдер избранных специалистов
 final favoriteSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
@@ -32,7 +33,8 @@ final favoritesCountProvider = FutureProvider<int>((ref) {
 });
 
 /// Провайдер для проверки, является ли специалист избранным
-final isFavoriteProvider = FutureProvider.family<bool, String>((ref, specialistId) {
+final isFavoriteProvider =
+    FutureProvider.family<bool, String>((ref, specialistId) {
   final favoritesService = ref.watch(favoritesServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 
@@ -40,11 +42,13 @@ final isFavoriteProvider = FutureProvider.family<bool, String>((ref, specialistI
     return Future.value(false);
   }
 
-  return favoritesService.isFavorite(userId: currentUser.value!.uid, specialistId: specialistId);
+  return favoritesService.isFavorite(
+      userId: currentUser.value!.uid, specialistId: specialistId);
 });
 
 /// Провайдер для переключения статуса избранного
-final toggleFavoriteProvider = FutureProvider.family<bool, String>((ref, specialistId) {
+final toggleFavoriteProvider =
+    FutureProvider.family<bool, String>((ref, specialistId) {
   final favoritesService = ref.watch(favoritesServiceProvider);
   final currentUser = ref.watch(currentUserProvider);
 

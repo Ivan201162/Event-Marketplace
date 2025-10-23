@@ -33,7 +33,8 @@ class AnimatedBottomNavigation extends StatefulWidget {
   final TextStyle? labelStyle;
 
   @override
-  State<AnimatedBottomNavigation> createState() => _AnimatedBottomNavigationState();
+  State<AnimatedBottomNavigation> createState() =>
+      _AnimatedBottomNavigationState();
 }
 
 class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
@@ -45,7 +46,8 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
+    _controller =
+        AnimationController(duration: widget.animationDuration, vsync: this);
 
     _scaleAnimation = Tween<double>(
       begin: 1,
@@ -78,8 +80,8 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
     final theme = Theme.of(context);
     final backgroundColor = widget.backgroundColor ?? theme.primaryColor;
     final activeColor = widget.activeColor ?? theme.colorScheme.onPrimary;
-    final inactiveColor =
-        widget.inactiveColor ?? theme.colorScheme.onPrimary.withValues(alpha: 0.6);
+    final inactiveColor = widget.inactiveColor ??
+        theme.colorScheme.onPrimary.withValues(alpha: 0.6);
 
     return Container(
       height: widget.height + MediaQuery.of(context).padding.bottom,
@@ -134,9 +136,13 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
                           const SizedBox(height: 4),
                           AnimatedDefaultTextStyle(
                             duration: widget.animationDuration,
-                            style: (widget.labelStyle ?? theme.textTheme.labelSmall)!.copyWith(
+                            style: (widget.labelStyle ??
+                                    theme.textTheme.labelSmall)!
+                                .copyWith(
                               color: isSelected ? activeColor : inactiveColor,
-                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
                             ),
                             child: Text(item.label),
                           ),
@@ -156,7 +162,8 @@ class _AnimatedBottomNavigationState extends State<AnimatedBottomNavigation>
 
 /// Элемент нижнего меню
 class BottomNavigationItem {
-  const BottomNavigationItem({required this.icon, required this.activeIcon, required this.label});
+  const BottomNavigationItem(
+      {required this.icon, required this.activeIcon, required this.label});
 
   final IconData icon;
   final IconData activeIcon;
@@ -198,11 +205,13 @@ class _CurvedBottomNavigationState extends State<CurvedBottomNavigation> {
     final theme = Theme.of(context);
     final backgroundColor = widget.backgroundColor ?? theme.primaryColor;
     final activeColor = widget.activeColor ?? theme.colorScheme.onPrimary;
-    final inactiveColor =
-        widget.inactiveColor ?? theme.colorScheme.onPrimary.withValues(alpha: 0.6);
+    final inactiveColor = widget.inactiveColor ??
+        theme.colorScheme.onPrimary.withValues(alpha: 0.6);
 
     return CurvedNavigationBar(
-      items: widget.items.map((icon) => Icon(icon, size: widget.iconSize)).toList(),
+      items: widget.items
+          .map((icon) => Icon(icon, size: widget.iconSize))
+          .toList(),
       onTap: widget.onTap,
       index: widget.currentIndex,
       height: widget.height,
@@ -245,7 +254,8 @@ class FloatingBottomNavigation extends StatefulWidget {
   final TextStyle? labelStyle;
 
   @override
-  State<FloatingBottomNavigation> createState() => _FloatingBottomNavigationState();
+  State<FloatingBottomNavigation> createState() =>
+      _FloatingBottomNavigationState();
 }
 
 class _FloatingBottomNavigationState extends State<FloatingBottomNavigation>
@@ -256,7 +266,8 @@ class _FloatingBottomNavigationState extends State<FloatingBottomNavigation>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
+    _controller =
+        AnimationController(duration: widget.animationDuration, vsync: this);
 
     _scaleAnimation = Tween<double>(
       begin: 1,
@@ -284,8 +295,8 @@ class _FloatingBottomNavigationState extends State<FloatingBottomNavigation>
     final theme = Theme.of(context);
     final backgroundColor = widget.backgroundColor ?? theme.cardColor;
     final activeColor = widget.activeColor ?? theme.primaryColor;
-    final inactiveColor =
-        widget.inactiveColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.6);
+    final inactiveColor = widget.inactiveColor ??
+        theme.colorScheme.onSurface.withValues(alpha: 0.6);
 
     return Container(
       margin: const EdgeInsets.all(16),
@@ -342,9 +353,13 @@ class _FloatingBottomNavigationState extends State<FloatingBottomNavigation>
                           const SizedBox(height: 2),
                           AnimatedDefaultTextStyle(
                             duration: widget.animationDuration,
-                            style: (widget.labelStyle ?? theme.textTheme.labelSmall)!.copyWith(
+                            style: (widget.labelStyle ??
+                                    theme.textTheme.labelSmall)!
+                                .copyWith(
                               color: isSelected ? activeColor : inactiveColor,
-                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
                               fontSize: 10,
                             ),
                             child: Text(item.label),

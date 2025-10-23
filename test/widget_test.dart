@@ -26,12 +26,13 @@ void main() {
       expect(find.text('Создать заявку'), findsOneWidget);
       expect(find.text('Поделиться идеей'), findsOneWidget);
       expect(find.text('Ваша статистика'), findsOneWidget);
-      
+
       // Проверяем наличие кнопки уведомлений
       expect(find.byIcon(Icons.notifications_outlined), findsOneWidget);
     });
 
-    testWidgets('Create request screen form validation', (WidgetTester tester) async {
+    testWidgets('Create request screen form validation',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -44,18 +45,19 @@ void main() {
 
       // Проверяем наличие формы
       expect(find.byType(Form), findsOneWidget);
-      
+
       // Проверяем обязательные поля
       expect(find.text('Название события'), findsOneWidget);
       expect(find.text('Описание'), findsOneWidget);
       expect(find.text('Бюджет (руб.)'), findsOneWidget);
       expect(find.text('Город'), findsOneWidget);
-      
+
       // Проверяем кнопку создания
       expect(find.text('Создать'), findsOneWidget);
     });
 
-    testWidgets('Create idea screen form validation', (WidgetTester tester) async {
+    testWidgets('Create idea screen form validation',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -68,16 +70,16 @@ void main() {
 
       // Проверяем наличие формы
       expect(find.byType(Form), findsOneWidget);
-      
+
       // Проверяем обязательные поля
       expect(find.text('Название идеи'), findsOneWidget);
       expect(find.text('Описание'), findsOneWidget);
       expect(find.text('Теги'), findsOneWidget);
-      
+
       // Проверяем кнопки медиа
       expect(find.text('Фото'), findsOneWidget);
       expect(find.text('Видео'), findsOneWidget);
-      
+
       // Проверяем кнопку публикации
       expect(find.text('Опубликовать'), findsOneWidget);
     });
@@ -180,12 +182,13 @@ void main() {
       // Проверяем кнопки быстрых действий
       expect(find.text('Создать заявку'), findsOneWidget);
       expect(find.text('Поделиться идеей'), findsOneWidget);
-      
+
       // Проверяем кнопку уведомлений
       expect(find.byIcon(Icons.notifications_outlined), findsOneWidget);
     });
 
-    testWidgets('Loading states display correctly', (WidgetTester tester) async {
+    testWidgets('Loading states display correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(

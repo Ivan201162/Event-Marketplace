@@ -134,7 +134,8 @@ class SecurityService {
   }
 
   /// Применить политику безопасности
-  Future<void> _enforcePolicy(SecurityPolicy policy, SecurityAudit audit) async {
+  Future<void> _enforcePolicy(
+      SecurityPolicy policy, SecurityAudit audit) async {
     try {
       final action = policy.rules['action'] as String?;
 
@@ -188,7 +189,8 @@ class SecurityService {
   }
 
   /// Отправить алерт безопасности
-  Future<void> _sendSecurityAlert(SecurityPolicy policy, SecurityAudit audit) async {
+  Future<void> _sendSecurityAlert(
+      SecurityPolicy policy, SecurityAudit audit) async {
     try {
       // TODO(developer): Интеграция с системой уведомлений
       if (kDebugMode) {
@@ -202,7 +204,8 @@ class SecurityService {
   }
 
   /// Применить ограничение скорости
-  Future<void> _applyRateLimit(String? userId, Map<String, dynamic> rules) async {
+  Future<void> _applyRateLimit(
+      String? userId, Map<String, dynamic> rules) async {
     if (userId == null) return;
 
     try {
@@ -230,7 +233,8 @@ class SecurityService {
       final dataBytes = utf8.encode(data);
 
       // Используем AES-256-CBC
-      final cipher = PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()));
+      final cipher =
+          PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()));
 
       final keyParam = KeyParameter(keyBytes);
       final iv = _generateIV();
@@ -265,7 +269,8 @@ class SecurityService {
       final encrypted = dataBytes.sublist(16);
 
       // Используем AES-256-CBC
-      final cipher = PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()));
+      final cipher =
+          PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()));
 
       final keyParam = KeyParameter(keyBytes);
       final ivParam = ParametersWithIV(keyParam, iv);
@@ -316,14 +321,16 @@ class SecurityService {
 
   /// Сгенерировать случайную строку
   String generateRandomString(int length, {bool includeSpecialChars = false}) {
-    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const chars =
+        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const specialChars = r'!@#$%^&*()_+-=[]{}|;:,.<>?';
 
     final charSet = includeSpecialChars ? chars + specialChars : chars;
     final random = Random.secure();
 
     return String.fromCharCodes(
-      Iterable.generate(length, (_) => charSet.codeUnitAt(random.nextInt(charSet.length))),
+      Iterable.generate(
+          length, (_) => charSet.codeUnitAt(random.nextInt(charSet.length))),
     );
   }
 
@@ -400,10 +407,12 @@ class SecurityService {
     int limit = 100,
   }) async {
     try {
-      Query<Map<String, dynamic>> query = _firestore.collection('securityAudits');
+      Query<Map<String, dynamic>> query =
+          _firestore.collection('securityAudits');
 
       if (level != null) {
-        query = query.where('level', isEqualTo: level.toString().split('.').last);
+        query =
+            query.where('level', isEqualTo: level.toString().split('.').last);
       }
       if (eventType != null) {
         query = query.where('eventType', isEqualTo: eventType);
@@ -412,13 +421,16 @@ class SecurityService {
         query = query.where('userId', isEqualTo: userId);
       }
       if (startDate != null) {
-        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('timestamp',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('timestamp',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
-      final snapshot = await query.orderBy('timestamp', descending: true).limit(limit).get();
+      final snapshot =
+          await query.orderBy('timestamp', descending: true).limit(limit).get();
 
       return snapshot.docs.map(SecurityAudit.fromDocument).toList();
     } catch (e) {
@@ -469,7 +481,10 @@ class SecurityService {
         updatedAt: now,
       );
 
-      await _firestore.collection('securityPolicies').doc(policyId).set(policy.toMap());
+      await _firestore
+          .collection('securityPolicies')
+          .doc(policyId)
+          .set(policy.toMap());
       _policies[policyId] = policy;
 
       await logSecurityEvent(
@@ -490,7 +505,8 @@ class SecurityService {
   }
 
   /// Обновить политику безопасности
-  Future<void> updateSecurityPolicy(String policyId, SecurityPolicy updatedPolicy) async {
+  Future<void> updateSecurityPolicy(
+      String policyId, SecurityPolicy updatedPolicy) async {
     try {
       await _firestore.collection('securityPolicies').doc(policyId).update({
         ...updatedPolicy.toMap(),
@@ -680,11 +696,13 @@ class SecurityService {
           .limit(limit);
 
       if (fromDate != null) {
-        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
+        query = query.where('timestamp',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
       }
 
       if (toDate != null) {
-        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(toDate));
+        query = query.where('timestamp',
+            isLessThanOrEqualTo: Timestamp.fromDate(toDate));
       }
 
       final snapshot = await query.get();
@@ -901,14 +919,15 @@ class SecurityService {
   Future<Map<String, dynamic>> checkPasswordStrength(String password) async {
     try {
       // Заглушка для проверки силы пароля
-      final score = password.length >= 8 ? 100 : (password.length * 12.5).round();
+      final score =
+          password.length >= 8 ? 100 : (password.length * 12.5).round();
       return {
         'score': score,
         'strength': score >= 80
             ? 'strong'
             : score >= 60
-            ? 'medium'
-            : 'weak',
+                ? 'medium'
+                : 'weak',
         'suggestions': password.length < 8 ? ['Use at least 8 characters'] : [],
       };
     } catch (e) {
@@ -1064,11 +1083,13 @@ class SecurityService {
           .limit(limit);
 
       if (fromDate != null) {
-        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
+        query = query.where('timestamp',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
       }
 
       if (toDate != null) {
-        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(toDate));
+        query = query.where('timestamp',
+            isLessThanOrEqualTo: Timestamp.fromDate(toDate));
       }
 
       final snapshot = await query.get();

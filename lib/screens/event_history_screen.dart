@@ -15,7 +15,8 @@ class EventHistoryScreen extends StatefulWidget {
   State<EventHistoryScreen> createState() => _EventHistoryScreenState();
 }
 
-class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProviderStateMixin {
+class _EventHistoryScreenState extends State<EventHistoryScreen>
+    with TickerProviderStateMixin {
   final FirestoreService _firestoreService = FirestoreService();
 
   late TabController _tabController;
@@ -38,143 +39,154 @@ class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProv
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('История мероприятий'),
-      bottom: TabBar(
-        controller: _tabController,
-        tabs: const [
-          Tab(text: 'Все', icon: Icon(Icons.history)),
-          Tab(text: 'Завершенные', icon: Icon(Icons.done_all)),
-          Tab(text: 'Отмененные', icon: Icon(Icons.cancel)),
-        ],
-      ),
-      actions: [
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.filter_list),
-          onSelected: (value) {
-            if (value == 'date_range') {
-              _showDateRangePicker();
-            } else {
-              setState(() {
-                _selectedFilter = value;
-              });
-            }
-          },
-          itemBuilder: (context) => [
-            const PopupMenuItem(value: 'all', child: Text('Все мероприятия')),
-            const PopupMenuItem(value: 'this_month', child: Text('Этот месяц')),
-            const PopupMenuItem(value: 'last_month', child: Text('Прошлый месяц')),
-            const PopupMenuItem(value: 'this_year', child: Text('Этот год')),
-            const PopupMenuItem(value: 'date_range', child: Text('Выбрать период')),
-          ],
-        ),
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.sort),
-          onSelected: (value) {
-            setState(() {
-              _selectedSortOption = value;
-            });
-          },
-          itemBuilder: (context) => [
-            const PopupMenuItem(value: 'date_desc', child: Text('По дате (новые)')),
-            const PopupMenuItem(value: 'date_asc', child: Text('По дате (старые)')),
-            const PopupMenuItem(value: 'price_desc', child: Text('По цене (убывание)')),
-            const PopupMenuItem(value: 'price_asc', child: Text('По цене (возрастание)')),
-          ],
-        ),
-      ],
-    ),
-    body: Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
-        if (authProvider.user == null) {
-          return const Center(child: Text('Необходимо войти в систему'));
-        }
-
-        return TabBarView(
-          controller: _tabController,
-          children: [
-            _buildHistoryList(authProvider.user!.id, 'all'),
-            _buildHistoryList(authProvider.user!.id, 'completed'),
-            _buildHistoryList(authProvider.user!.id, 'cancelled'),
-          ],
-        );
-      },
-    ),
-  );
-
-  Widget _buildHistoryList(String userId, String statusFilter) => StreamBuilder<List<Booking>>(
-    stream: _firestoreService.bookingsByCustomerStream(userId),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const LoadingWidget();
-      }
-
-      if (snapshot.hasError) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text(
-                'Ошибка загрузки истории: ${snapshot.error}',
-                style: const TextStyle(fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {});
-                },
-                child: const Text('Повторить'),
-              ),
+        appBar: AppBar(
+          title: const Text('История мероприятий'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Все', icon: Icon(Icons.history)),
+              Tab(text: 'Завершенные', icon: Icon(Icons.done_all)),
+              Tab(text: 'Отмененные', icon: Icon(Icons.cancel)),
             ],
           ),
-        );
-      }
+          actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.filter_list),
+              onSelected: (value) {
+                if (value == 'date_range') {
+                  _showDateRangePicker();
+                } else {
+                  setState(() {
+                    _selectedFilter = value;
+                  });
+                }
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                    value: 'all', child: Text('Все мероприятия')),
+                const PopupMenuItem(
+                    value: 'this_month', child: Text('Этот месяц')),
+                const PopupMenuItem(
+                    value: 'last_month', child: Text('Прошлый месяц')),
+                const PopupMenuItem(
+                    value: 'this_year', child: Text('Этот год')),
+                const PopupMenuItem(
+                    value: 'date_range', child: Text('Выбрать период')),
+              ],
+            ),
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.sort),
+              onSelected: (value) {
+                setState(() {
+                  _selectedSortOption = value;
+                });
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                    value: 'date_desc', child: Text('По дате (новые)')),
+                const PopupMenuItem(
+                    value: 'date_asc', child: Text('По дате (старые)')),
+                const PopupMenuItem(
+                    value: 'price_desc', child: Text('По цене (убывание)')),
+                const PopupMenuItem(
+                    value: 'price_asc', child: Text('По цене (возрастание)')),
+              ],
+            ),
+          ],
+        ),
+        body: Consumer<AuthProvider>(
+          builder: (context, authProvider, child) {
+            if (authProvider.user == null) {
+              return const Center(child: Text('Необходимо войти в систему'));
+            }
 
-      var bookings = snapshot.data ?? [];
-
-      // Фильтрация по статусу
-      if (statusFilter != 'all') {
-        bookings = bookings.where((booking) {
-          switch (statusFilter) {
-            case 'completed':
-              return booking.status == BookingStatus.completed;
-            case 'cancelled':
-              return booking.status == BookingStatus.cancelled ||
-                  booking.status == BookingStatus.rejected;
-            default:
-              return true;
-          }
-        }).toList();
-      }
-
-      // Фильтрация по дате
-      bookings = _filterByDate(bookings);
-
-      // Сортировка
-      bookings = _sortBookings(bookings, _selectedSortOption);
-
-      if (bookings.isEmpty) {
-        return _buildEmptyState(statusFilter);
-      }
-
-      return RefreshIndicator(
-        onRefresh: () async {
-          setState(() {});
-        },
-        child: ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: bookings.length,
-          itemBuilder: (context, index) {
-            final booking = bookings[index];
-            return BookingCard(booking: booking, onTap: () => _showEventDetails(booking));
+            return TabBarView(
+              controller: _tabController,
+              children: [
+                _buildHistoryList(authProvider.user!.id, 'all'),
+                _buildHistoryList(authProvider.user!.id, 'completed'),
+                _buildHistoryList(authProvider.user!.id, 'cancelled'),
+              ],
+            );
           },
         ),
       );
-    },
-  );
+
+  Widget _buildHistoryList(String userId, String statusFilter) =>
+      StreamBuilder<List<Booking>>(
+        stream: _firestoreService.bookingsByCustomerStream(userId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const LoadingWidget();
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Ошибка загрузки истории: ${snapshot.error}',
+                    style: const TextStyle(fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {});
+                    },
+                    child: const Text('Повторить'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          var bookings = snapshot.data ?? [];
+
+          // Фильтрация по статусу
+          if (statusFilter != 'all') {
+            bookings = bookings.where((booking) {
+              switch (statusFilter) {
+                case 'completed':
+                  return booking.status == BookingStatus.completed;
+                case 'cancelled':
+                  return booking.status == BookingStatus.cancelled ||
+                      booking.status == BookingStatus.rejected;
+                default:
+                  return true;
+              }
+            }).toList();
+          }
+
+          // Фильтрация по дате
+          bookings = _filterByDate(bookings);
+
+          // Сортировка
+          bookings = _sortBookings(bookings, _selectedSortOption);
+
+          if (bookings.isEmpty) {
+            return _buildEmptyState(statusFilter);
+          }
+
+          return RefreshIndicator(
+            onRefresh: () async {
+              setState(() {});
+            },
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: bookings.length,
+              itemBuilder: (context, index) {
+                final booking = bookings[index];
+                return BookingCard(
+                    booking: booking, onTap: () => _showEventDetails(booking));
+              },
+            ),
+          );
+        },
+      );
 
   Widget _buildEmptyState(String statusFilter) {
     String message;
@@ -200,7 +212,8 @@ class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProv
         children: [
           Icon(icon, size: 64, color: Colors.grey),
           const SizedBox(height: 16),
-          Text(message, style: const TextStyle(fontSize: 18, color: Colors.grey)),
+          Text(message,
+              style: const TextStyle(fontSize: 18, color: Colors.grey)),
           const SizedBox(height: 16),
           ElevatedButton.icon(
             onPressed: () {
@@ -315,13 +328,15 @@ class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProv
               const SizedBox(height: 16),
               Text(
                 booking.title ?? booking.eventTitle,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: booking.status.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -329,13 +344,16 @@ class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProv
                     ),
                     child: Text(
                       booking.status.name,
-                      style: TextStyle(color: booking.status.color, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          color: booking.status.color,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              _buildDetailRow(Icons.person, 'Специалист', booking.specialistName ?? 'Не указан'),
+              _buildDetailRow(Icons.person, 'Специалист',
+                  booking.specialistName ?? 'Не указан'),
               _buildDetailRow(
                 Icons.calendar_today,
                 'Дата',
@@ -353,7 +371,8 @@ class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProv
                 'Сумма',
                 '${booking.totalPrice.toStringAsFixed(0)} ₽',
               ),
-              _buildDetailRow(Icons.payment, 'Аванс', '${booking.prepayment.toStringAsFixed(0)} ₽'),
+              _buildDetailRow(Icons.payment, 'Аванс',
+                  '${booking.prepayment.toStringAsFixed(0)} ₽'),
               _buildDetailRow(
                 Icons.schedule,
                 'Создано',
@@ -361,7 +380,9 @@ class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProv
               ),
               if (booking.description != null) ...[
                 const SizedBox(height: 16),
-                const Text('Описание', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                const Text('Описание',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
                 Text(booking.description!),
               ],
@@ -381,7 +402,8 @@ class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProv
                       SizedBox(width: 8),
                       Text(
                         'Мероприятие успешно завершено',
-                        style: TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            color: Colors.green, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -402,7 +424,8 @@ class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProv
                       SizedBox(width: 8),
                       Text(
                         'Мероприятие отменено',
-                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -415,14 +438,15 @@ class _EventHistoryScreenState extends State<EventHistoryScreen> with TickerProv
   }
 
   Widget _buildDetailRow(IconData icon, String label, String value) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      children: [
-        Icon(icon, size: 20, color: Colors.grey[600]),
-        const SizedBox(width: 12),
-        Text('$label: ', style: const TextStyle(fontWeight: FontWeight.w500)),
-        Expanded(child: Text(value)),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: Colors.grey[600]),
+            const SizedBox(width: 12),
+            Text('$label: ',
+                style: const TextStyle(fontWeight: FontWeight.w500)),
+            Expanded(child: Text(value)),
+          ],
+        ),
+      );
 }

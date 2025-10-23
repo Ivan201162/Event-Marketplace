@@ -11,7 +11,8 @@ class SpecialistTipsWidget extends ConsumerStatefulWidget {
   final VoidCallback? onTipTap;
 
   @override
-  ConsumerState<SpecialistTipsWidget> createState() => _SpecialistTipsWidgetState();
+  ConsumerState<SpecialistTipsWidget> createState() =>
+      _SpecialistTipsWidgetState();
 }
 
 class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
@@ -34,7 +35,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
     _fadeAnimation = Tween<double>(
       begin: 0,
       end: 1,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _loadTips();
   }
@@ -107,7 +109,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb_outline, color: Colors.amber.shade600, size: 24),
+                Icon(Icons.lightbulb_outline,
+                    color: Colors.amber.shade600, size: 24),
                 const SizedBox(width: 8),
                 Text(
                   'Рекомендации по улучшению профиля',
@@ -131,7 +134,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
           children: [
             Row(
               children: [
-                Icon(Icons.lightbulb_outline, color: Colors.amber.shade600, size: 24),
+                Icon(Icons.lightbulb_outline,
+                    color: Colors.amber.shade600, size: 24),
                 const SizedBox(width: 8),
                 Text(
                   'Рекомендации по улучшению профиля',
@@ -152,7 +156,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
               ),
               child: Row(
                 children: [
-                  Icon(Icons.check_circle, color: Colors.green.shade600, size: 24),
+                  Icon(Icons.check_circle,
+                      color: Colors.green.shade600, size: 24),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -160,16 +165,20 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                       children: [
                         Text(
                           'Отличная работа!',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green.shade800,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.green.shade800,
+                                  ),
                         ),
                         Text(
                           'Ваш профиль полностью заполнен и оптимизирован',
                           style: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.green.shade700),
+                          )
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.green.shade700),
                         ),
                       ],
                     ),
@@ -198,8 +207,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color:
-                    _getProgressColor(_profileStats!.completionPercentage).withValues(alpha: 0.1),
+                color: _getProgressColor(_profileStats!.completionPercentage)
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -219,7 +228,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
         margin: const EdgeInsets.only(bottom: 12),
         child: Card(
           elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: InkWell(
             onTap: () {
               widget.onTipTap?.call();
@@ -230,7 +240,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: tip.priority.color.withValues(alpha: 0.3)),
+                border: Border.all(
+                    color: tip.priority.color.withValues(alpha: 0.3)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,20 +255,23 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                           color: tip.priority.color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(tip.priority.icon, color: tip.priority.color, size: 16),
+                        child: Icon(tip.priority.icon,
+                            color: tip.priority.color, size: 16),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           tip.title,
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: tip.priority.color,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: tip.priority.color,
+                                  ),
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: tip.priority.color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -281,7 +295,10 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                     tip.message,
                     style: Theme.of(
                       context,
-                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
+                    )
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Colors.grey.shade700),
                   ),
 
                   const SizedBox(height: 12),
@@ -295,22 +312,26 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
                             widget.onTipTap?.call();
                             // TODO: Переход к соответствующему экрану
                           },
-                          icon: Icon(Icons.edit, size: 16, color: tip.priority.color),
+                          icon: Icon(Icons.edit,
+                              size: 16, color: tip.priority.color),
                           label: Text(
                             tip.action,
-                            style:
-                                TextStyle(color: tip.priority.color, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                                color: tip.priority.color,
+                                fontWeight: FontWeight.w600),
                           ),
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(color: tip.priority.color),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
                           ),
                         ),
                       ),
                       const SizedBox(width: 8),
                       IconButton(
                         onPressed: () => _markAsCompleted(tip),
-                        icon: Icon(Icons.check_circle_outline, color: Colors.green.shade600),
+                        icon: Icon(Icons.check_circle_outline,
+                            color: Colors.green.shade600),
                         tooltip: 'Отметить как выполненное',
                       ),
                     ],
@@ -340,7 +361,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Рекомендация "${tip.title}" отмечена как выполненная'),
+              content:
+                  Text('Рекомендация "${tip.title}" отмечена как выполненная'),
               backgroundColor: Colors.green.shade600,
             ),
           );
@@ -350,7 +372,8 @@ class _SpecialistTipsWidgetState extends ConsumerState<SpecialistTipsWidget>
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red.shade600));
+        ).showSnackBar(SnackBar(
+            content: Text('Ошибка: $e'), backgroundColor: Colors.red.shade600));
       }
     }
   }
@@ -366,7 +389,10 @@ class ProfileProgressWidget extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade50, Colors.blue.shade100.withValues(alpha: 0.3)],
+            colors: [
+              Colors.blue.shade50,
+              Colors.blue.shade100.withValues(alpha: 0.3)
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -407,13 +433,19 @@ class ProfileProgressWidget extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               '${stats.completedFields} из ${stats.totalFields} полей заполнено',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.blue.shade700),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: Colors.blue.shade700),
             ),
             if (stats.missingFields.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
                 'Не заполнено: ${stats.missingFields.join(', ')}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.red.shade600),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.red.shade600),
               ),
             ],
           ],

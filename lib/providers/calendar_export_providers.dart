@@ -3,7 +3,8 @@ import '../calendar/ics_export.dart';
 import '../core/feature_flags.dart';
 
 /// Провайдер для проверки доступности экспорта календаря
-final calendarExportAvailableProvider = Provider<bool>((ref) => FeatureFlags.calendarExportEnabled);
+final calendarExportAvailableProvider =
+    Provider<bool>((ref) => FeatureFlags.calendarExportEnabled);
 
 /// Провайдер для получения информации о поддерживаемых форматах
 final supportedCalendarFormatsProvider = Provider<List<String>>(
@@ -11,7 +12,8 @@ final supportedCalendarFormatsProvider = Provider<List<String>>(
 );
 
 /// Провайдер для получения максимального количества событий для экспорта
-final maxEventsPerExportProvider = Provider<int>((ref) => IcsExportService.maxEventsPerExport);
+final maxEventsPerExportProvider =
+    Provider<int>((ref) => IcsExportService.maxEventsPerExport);
 
 /// Провайдер для проверки возможности экспорта
 final canExportEventsProvider = Provider.family<bool, int>(
@@ -19,21 +21,24 @@ final canExportEventsProvider = Provider.family<bool, int>(
 );
 
 /// Провайдер для экспорта одного события
-final exportEventProvider = FutureProvider.family<String?, String>((ref, eventId) async {
+final exportEventProvider =
+    FutureProvider.family<String?, String>((ref, eventId) async {
   // Здесь можно добавить логику получения события по ID
   // Пока возвращаем null, так как нужен объект Event
   return null;
 });
 
 /// Провайдер для экспорта одного бронирования
-final exportBookingProvider = FutureProvider.family<String?, String>((ref, bookingId) async {
+final exportBookingProvider =
+    FutureProvider.family<String?, String>((ref, bookingId) async {
   // Здесь можно добавить логику получения бронирования по ID
   // Пока возвращаем null, так как нужен объект Booking
   return null;
 });
 
 /// Провайдер для экспорта нескольких событий
-final exportEventsProvider = FutureProvider.family<String?, List<String>>((ref, eventIds) async {
+final exportEventsProvider =
+    FutureProvider.family<String?, List<String>>((ref, eventIds) async {
   // Здесь можно добавить логику получения событий по ID
   // Пока возвращаем null, так как нужны объекты Event
   return null;
@@ -90,7 +95,8 @@ class ExportErrorNotifier extends Notifier<String?> {
 }
 
 /// Провайдер для последней ошибки экспорта
-final exportErrorProvider = NotifierProvider<ExportErrorNotifier, String?>(ExportErrorNotifier.new);
+final exportErrorProvider =
+    NotifierProvider<ExportErrorNotifier, String?>(ExportErrorNotifier.new);
 
 /// Нотификатор для истории экспорта
 class ExportHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -107,12 +113,14 @@ class ExportHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
 }
 
 /// Провайдер для истории экспорта
-final exportHistoryProvider = NotifierProvider<ExportHistoryNotifier, List<Map<String, dynamic>>>(
+final exportHistoryProvider =
+    NotifierProvider<ExportHistoryNotifier, List<Map<String, dynamic>>>(
   ExportHistoryNotifier.new,
 );
 
 /// Провайдер для настроек экспорта
-final exportSettingsProvider = NotifierProvider<ExportSettingsNotifier, ExportSettings>(
+final exportSettingsProvider =
+    NotifierProvider<ExportSettingsNotifier, ExportSettings>(
   ExportSettingsNotifier.new,
 );
 
@@ -143,15 +151,16 @@ class ExportSettings {
     int? reminderMinutes,
     String? defaultDuration,
     bool? autoShare,
-  }) => ExportSettings(
-    includeDescription: includeDescription ?? this.includeDescription,
-    includeLocation: includeLocation ?? this.includeLocation,
-    includeAttendees: includeAttendees ?? this.includeAttendees,
-    includeReminders: includeReminders ?? this.includeReminders,
-    reminderMinutes: reminderMinutes ?? this.reminderMinutes,
-    defaultDuration: defaultDuration ?? this.defaultDuration,
-    autoShare: autoShare ?? this.autoShare,
-  );
+  }) =>
+      ExportSettings(
+        includeDescription: includeDescription ?? this.includeDescription,
+        includeLocation: includeLocation ?? this.includeLocation,
+        includeAttendees: includeAttendees ?? this.includeAttendees,
+        includeReminders: includeReminders ?? this.includeReminders,
+        reminderMinutes: reminderMinutes ?? this.reminderMinutes,
+        defaultDuration: defaultDuration ?? this.defaultDuration,
+        autoShare: autoShare ?? this.autoShare,
+      );
 }
 
 /// Нотификатор для настроек экспорта
@@ -196,12 +205,12 @@ class ExportSettingsNotifier extends Notifier<ExportSettings> {
 class ExportStatsNotifier extends Notifier<Map<String, int>> {
   @override
   Map<String, int> build() => {
-    'totalExports': 0,
-    'successfulExports': 0,
-    'failedExports': 0,
-    'eventsExported': 0,
-    'bookingsExported': 0,
-  };
+        'totalExports': 0,
+        'successfulExports': 0,
+        'failedExports': 0,
+        'eventsExported': 0,
+        'bookingsExported': 0,
+      };
 
   void incrementStat(String key) {
     state = {...state, key: (state[key] ?? 0) + 1};
@@ -219,7 +228,8 @@ class ExportStatsNotifier extends Notifier<Map<String, int>> {
 }
 
 /// Провайдер для статистики экспорта
-final exportStatsProvider = NotifierProvider<ExportStatsNotifier, Map<String, int>>(
+final exportStatsProvider =
+    NotifierProvider<ExportStatsNotifier, Map<String, int>>(
   ExportStatsNotifier.new,
 );
 
@@ -234,7 +244,8 @@ class LastExportNotifier extends Notifier<Map<String, dynamic>?> {
 }
 
 /// Провайдер для последнего экспорта
-final lastExportProvider = NotifierProvider<LastExportNotifier, Map<String, dynamic>?>(
+final lastExportProvider =
+    NotifierProvider<LastExportNotifier, Map<String, dynamic>?>(
   LastExportNotifier.new,
 );
 
@@ -257,7 +268,8 @@ class ActiveExportsNotifier extends Notifier<Set<String>> {
 }
 
 /// Провайдер для активных экспортов
-final activeExportsProvider = NotifierProvider<ActiveExportsNotifier, Set<String>>(
+final activeExportsProvider =
+    NotifierProvider<ActiveExportsNotifier, Set<String>>(
   ActiveExportsNotifier.new,
 );
 
@@ -280,7 +292,8 @@ class ExportQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
 }
 
 /// Провайдер для очереди экспорта
-final exportQueueProvider = NotifierProvider<ExportQueueNotifier, List<Map<String, dynamic>>>(
+final exportQueueProvider =
+    NotifierProvider<ExportQueueNotifier, List<Map<String, dynamic>>>(
   ExportQueueNotifier.new,
 );
 

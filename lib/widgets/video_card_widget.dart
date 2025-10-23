@@ -43,7 +43,8 @@ class VideoCardWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         video.title,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -69,7 +70,8 @@ class VideoCardWidget extends StatelessWidget {
                             children: [
                               Icon(
                                 video.isPublic ? Icons.lock : Icons.public,
-                                color: video.isPublic ? Colors.grey : Colors.green,
+                                color:
+                                    video.isPublic ? Colors.grey : Colors.green,
                               ),
                               const SizedBox(width: 8),
                               Text(video.isPublic ? 'Скрыть' : 'Опубликовать'),
@@ -79,7 +81,11 @@ class VideoCardWidget extends StatelessWidget {
                         const PopupMenuItem(
                           value: 'edit',
                           child: Row(
-                            children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')],
+                            children: [
+                              Icon(Icons.edit),
+                              SizedBox(width: 8),
+                              Text('Редактировать')
+                            ],
                           ),
                         ),
                         const PopupMenuItem(
@@ -88,7 +94,8 @@ class VideoCardWidget extends StatelessWidget {
                             children: [
                               Icon(Icons.delete, color: Colors.red),
                               SizedBox(width: 8),
-                              Text('Удалить', style: TextStyle(color: Colors.red)),
+                              Text('Удалить',
+                                  style: TextStyle(color: Colors.red)),
                             ],
                           ),
                         ),
@@ -118,17 +125,20 @@ class VideoCardWidget extends StatelessWidget {
                           height: double.infinity,
                           placeholder: (context, url) => Container(
                             color: Colors.grey[300],
-                            child: const Center(child: CircularProgressIndicator()),
+                            child: const Center(
+                                child: CircularProgressIndicator()),
                           ),
                           errorWidget: (context, url, error) => Container(
                             color: Colors.grey[300],
-                            child: const Icon(Icons.video_library, size: 48, color: Colors.grey),
+                            child: const Icon(Icons.video_library,
+                                size: 48, color: Colors.grey),
                           ),
                         ),
 
                         // Иконка воспроизведения
                         const Center(
-                          child: Icon(Icons.play_circle_filled, size: 48, color: Colors.white),
+                          child: Icon(Icons.play_circle_filled,
+                              size: 48, color: Colors.white),
                         ),
 
                         // Длительность
@@ -136,7 +146,8 @@ class VideoCardWidget extends StatelessWidget {
                           bottom: 8,
                           right: 8,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
                               color: Colors.black54,
                               borderRadius: BorderRadius.circular(4),
@@ -185,7 +196,8 @@ class VideoCardWidget extends StatelessWidget {
                       Expanded(
                         child: Text(
                           'Теги: ${video.tags.take(2).join(', ')}${video.tags.length > 2 ? '...' : ''}',
-                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                          style:
+                              const TextStyle(fontSize: 12, color: Colors.grey),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

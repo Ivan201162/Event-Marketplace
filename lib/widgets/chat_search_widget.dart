@@ -26,7 +26,8 @@ class _ChatSearchWidgetState extends State<ChatSearchWidget> {
           hintText: 'Поиск в чатах...',
           prefixIcon: const Icon(Icons.search),
           suffixIcon: _controller.text.isNotEmpty
-              ? IconButton(icon: const Icon(Icons.clear), onPressed: _clearSearch)
+              ? IconButton(
+                  icon: const Icon(Icons.clear), onPressed: _clearSearch)
               : null,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           filled: true,

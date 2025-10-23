@@ -9,7 +9,8 @@ class NavigationService {
   static final int _maxHistorySize = 50;
 
   /// Логировать переход
-  static void logNavigation(String from, String to, {Map<String, dynamic>? data}) {
+  static void logNavigation(String from, String to,
+      {Map<String, dynamic>? data}) {
     try {
       final timestamp = DateTime.now().toIso8601String();
       final logEntry = {
@@ -18,20 +19,21 @@ class NavigationService {
         'to': to,
         'data': data,
       };
-      
+
       debugPrint('🧭 Navigation: $from → $to');
-      
+
       // Добавляем в историю
       _navigationHistory.add('$timestamp: $from → $to');
       if (_navigationHistory.length > _maxHistorySize) {
         _navigationHistory.removeAt(0);
       }
-      
+
       // Отправляем в Crashlytics для аналитики
       FirebaseCrashlytics.instance.log('Navigation: $from → $to');
-      
+
       if (data != null) {
-        FirebaseCrashlytics.instance.setCustomKey('last_navigation_data', data.toString());
+        FirebaseCrashlytics.instance
+            .setCustomKey('last_navigation_data', data.toString());
       }
     } catch (e) {
       debugPrint('❌ Error logging navigation: $e');
@@ -39,16 +41,18 @@ class NavigationService {
   }
 
   /// Безопасный переход с обработкой ошибок
-  static Future<void> safeGo(BuildContext context, String path, {Object? extra}) async {
+  static Future<void> safeGo(BuildContext context, String path,
+      {Object? extra}) async {
     try {
       final currentPath = GoRouterState.of(context).uri.path;
-      logNavigation(currentPath, path, data: extra != null ? {'extra': extra.toString()} : null);
-      
+      logNavigation(currentPath, path,
+          data: extra != null ? {'extra': extra.toString()} : null);
+
       context.go(path, extra: extra);
     } catch (e) {
       debugPrint('❌ Navigation error: $e');
       FirebaseCrashlytics.instance.recordError(e, StackTrace.current);
-      
+
       // Fallback к главной странице
       try {
         context.go('/main');
@@ -59,11 +63,13 @@ class NavigationService {
   }
 
   /// Безопасный push с обработкой ошибок
-  static Future<void> safePush(BuildContext context, String path, {Object? extra}) async {
+  static Future<void> safePush(BuildContext context, String path,
+      {Object? extra}) async {
     try {
       final currentPath = GoRouterState.of(context).uri.path;
-      logNavigation(currentPath, path, data: {'action': 'push', 'extra': extra?.toString()});
-      
+      logNavigation(currentPath, path,
+          data: {'action': 'push', 'extra': extra?.toString()});
+
       context.push(path, extra: extra);
     } catch (e) {
       debugPrint('❌ Push navigation error: $e');
@@ -122,12 +128,13 @@ class NavigationService {
   static bool hasNavigationCycles() {
     try {
       if (_navigationHistory.length < 3) return false;
-      
-      final recent = _navigationHistory.length > 10 
+
+      final recent = _navigationHistory.length > 10
           ? _navigationHistory.sublist(_navigationHistory.length - 10)
           : _navigationHistory;
-      final uniquePaths = recent.map((entry) => entry.split(' → ').last).toSet();
-      
+      final uniquePaths =
+          recent.map((entry) => entry.split(' → ').last).toSet();
+
       // Если в последних 10 переходах много повторений, возможен цикл
       return uniquePaths.length < 3;
     } catch (e) {
@@ -140,7 +147,7 @@ class NavigationService {
   static Future<bool> handleSystemBack(BuildContext context) async {
     try {
       final currentPath = getCurrentPath(context);
-      
+
       // Если мы на главной странице, показываем диалог выхода
       if (currentPath == '/main' || currentPath == '/') {
         final shouldExit = await _showExitDialog(context);
@@ -149,7 +156,7 @@ class NavigationService {
         }
         return false; // Отменяем выход
       }
-      
+
       // Иначе просто возвращаемся назад
       safePop(context);
       return false;
@@ -199,10 +206,10 @@ class NavigationService {
       '/create-idea',
       '/notifications',
     ];
-    
+
     // Проверяем точное совпадение или параметризованные маршруты
     if (validRoutes.contains(route)) return true;
-    
+
     // Проверяем параметризованные маршруты
     for (final validRoute in validRoutes) {
       if (validRoute.contains(':')) {
@@ -212,7 +219,7 @@ class NavigationService {
         }
       }
     }
-    
+
     return false;
   }
 
@@ -224,12 +231,13 @@ class NavigationService {
           .map((entry) => entry.split(' → ').last)
           .toSet()
           .length;
-      
+
       return {
         'totalNavigations': totalNavigations,
         'uniquePaths': uniquePaths,
         'hasCycles': hasNavigationCycles(),
-        'lastNavigation': _navigationHistory.isNotEmpty ? _navigationHistory.last : null,
+        'lastNavigation':
+            _navigationHistory.isNotEmpty ? _navigationHistory.last : null,
       };
     } catch (e) {
       debugPrint('❌ Error getting navigation stats: $e');
@@ -242,4 +250,3 @@ class NavigationService {
     }
   }
 }
-

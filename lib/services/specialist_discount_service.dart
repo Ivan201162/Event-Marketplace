@@ -30,7 +30,9 @@ class SpecialistDiscountService {
         expiresAt: discountExpiresAt,
       );
 
-      final docRef = await _firestore.collection('specialist_discounts').add(discount.toMap());
+      final docRef = await _firestore
+          .collection('specialist_discounts')
+          .add(discount.toMap());
 
       // Отправляем уведомление заказчику
       await _sendDiscountNotification(bookingId, docRef.id);
@@ -43,7 +45,8 @@ class SpecialistDiscountService {
   }
 
   /// Получить скидки для заказа
-  Future<List<SpecialistDiscount>> getDiscountsForBooking(String bookingId) async {
+  Future<List<SpecialistDiscount>> getDiscountsForBooking(
+      String bookingId) async {
     try {
       final snapshot = await _firestore
           .collection('specialist_discounts')
@@ -60,7 +63,8 @@ class SpecialistDiscountService {
   }
 
   /// Получить активные скидки специалиста
-  Future<List<SpecialistDiscount>> getActiveDiscountsForSpecialist(String specialistId) async {
+  Future<List<SpecialistDiscount>> getActiveDiscountsForSpecialist(
+      String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('specialist_discounts')
@@ -81,14 +85,20 @@ class SpecialistDiscountService {
   /// Принять скидку
   Future<void> acceptDiscount(String discountId) async {
     try {
-      await _firestore.collection('specialist_discounts').doc(discountId).update({
+      await _firestore
+          .collection('specialist_discounts')
+          .doc(discountId)
+          .update({
         'isAccepted': true,
         'acceptedAt': FieldValue.serverTimestamp(),
         'isActive': false,
       });
 
       // Получаем информацию о скидке для обновления заказа
-      final discountDoc = await _firestore.collection('specialist_discounts').doc(discountId).get();
+      final discountDoc = await _firestore
+          .collection('specialist_discounts')
+          .doc(discountId)
+          .get();
 
       if (discountDoc.exists) {
         final discount = SpecialistDiscount.fromDocument(discountDoc);
@@ -103,7 +113,10 @@ class SpecialistDiscountService {
   /// Отклонить скидку
   Future<void> rejectDiscount(String discountId) async {
     try {
-      await _firestore.collection('specialist_discounts').doc(discountId).update({
+      await _firestore
+          .collection('specialist_discounts')
+          .doc(discountId)
+          .update({
         'isRejected': true,
         'rejectedAt': FieldValue.serverTimestamp(),
         'isActive': false,
@@ -117,7 +130,10 @@ class SpecialistDiscountService {
   /// Отменить скидку (специалистом)
   Future<void> cancelDiscount(String discountId) async {
     try {
-      await _firestore.collection('specialist_discounts').doc(discountId).update({
+      await _firestore
+          .collection('specialist_discounts')
+          .doc(discountId)
+          .update({
         'isCancelled': true,
         'cancelledAt': FieldValue.serverTimestamp(),
         'isActive': false,
@@ -129,24 +145,30 @@ class SpecialistDiscountService {
   }
 
   /// Получить статистику скидок специалиста
-  Future<SpecialistDiscountStats> getSpecialistDiscountStats(String specialistId) async {
+  Future<SpecialistDiscountStats> getSpecialistDiscountStats(
+      String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('specialist_discounts')
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      final discounts = snapshot.docs.map(SpecialistDiscount.fromDocument).toList();
+      final discounts =
+          snapshot.docs.map(SpecialistDiscount.fromDocument).toList();
 
       final totalOffers = discounts.length;
       final acceptedOffers = discounts.where((d) => d.isAccepted).length;
       final rejectedOffers = discounts.where((d) => d.isRejected).length;
       final expiredOffers = discounts
-          .where((d) => d.expiresAt.isBefore(DateTime.now()) && !d.isAccepted && !d.isRejected)
+          .where((d) =>
+              d.expiresAt.isBefore(DateTime.now()) &&
+              !d.isAccepted &&
+              !d.isRejected)
           .length;
 
       final averageDiscount = discounts.isNotEmpty
-          ? discounts.fold<double>(0, (sum, d) => sum + d.discountPercent) / discounts.length
+          ? discounts.fold<double>(0, (sum, d) => sum + d.discountPercent) /
+              discounts.length
           : 0.0;
 
       return SpecialistDiscountStats(
@@ -186,10 +208,12 @@ class SpecialistDiscountService {
   // ========== ПРИВАТНЫЕ МЕТОДЫ ==========
 
   /// Отправить уведомление о скидке
-  Future<void> _sendDiscountNotification(String bookingId, String discountId) async {
+  Future<void> _sendDiscountNotification(
+      String bookingId, String discountId) async {
     try {
       // Получаем информацию о заказе
-      final bookingDoc = await _firestore.collection('bookings').doc(bookingId).get();
+      final bookingDoc =
+          await _firestore.collection('bookings').doc(bookingId).get();
 
       if (!bookingDoc.exists) return;
 
@@ -214,12 +238,14 @@ class SpecialistDiscountService {
   Future<void> _updateBookingWithDiscount(SpecialistDiscount discount) async {
     try {
       // Получаем заказ
-      final bookingDoc = await _firestore.collection('bookings').doc(discount.bookingId).get();
+      final bookingDoc =
+          await _firestore.collection('bookings').doc(discount.bookingId).get();
 
       if (!bookingDoc.exists) return;
 
       final booking = Booking.fromDocument(bookingDoc);
-      final discountAmount = booking.totalPrice * (discount.discountPercent / 100);
+      final discountAmount =
+          booking.totalPrice * (discount.discountPercent / 100);
       final finalPrice = booking.totalPrice - discountAmount;
 
       // Обновляем заказ
@@ -273,9 +299,15 @@ class SpecialistDiscount {
           : DateTime.now(),
       isRejected: data['isRejected'] as bool? ?? false,
       isCancelled: data['isCancelled'] as bool? ?? false,
-      acceptedAt: data['acceptedAt'] != null ? (data['acceptedAt'] as Timestamp).toDate() : null,
-      rejectedAt: data['rejectedAt'] != null ? (data['rejectedAt'] as Timestamp).toDate() : null,
-      cancelledAt: data['cancelledAt'] != null ? (data['cancelledAt'] as Timestamp).toDate() : null,
+      acceptedAt: data['acceptedAt'] != null
+          ? (data['acceptedAt'] as Timestamp).toDate()
+          : null,
+      rejectedAt: data['rejectedAt'] != null
+          ? (data['rejectedAt'] as Timestamp).toDate()
+          : null,
+      cancelledAt: data['cancelledAt'] != null
+          ? (data['cancelledAt'] as Timestamp).toDate()
+          : null,
     );
   }
 
@@ -295,20 +327,23 @@ class SpecialistDiscount {
   final DateTime? cancelledAt;
 
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'bookingId': bookingId,
-    'discountPercent': discountPercent,
-    'message': message,
-    'isActive': isActive,
-    'isAccepted': isAccepted,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'expiresAt': Timestamp.fromDate(expiresAt),
-    'isRejected': isRejected,
-    'isCancelled': isCancelled,
-    'acceptedAt': acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
-    'rejectedAt': rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
-    'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
-  };
+        'specialistId': specialistId,
+        'bookingId': bookingId,
+        'discountPercent': discountPercent,
+        'message': message,
+        'isActive': isActive,
+        'isAccepted': isAccepted,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'isRejected': isRejected,
+        'isCancelled': isCancelled,
+        'acceptedAt':
+            acceptedAt != null ? Timestamp.fromDate(acceptedAt!) : null,
+        'rejectedAt':
+            rejectedAt != null ? Timestamp.fromDate(rejectedAt!) : null,
+        'cancelledAt':
+            cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+      };
 }
 
 /// Статистика скидок специалиста
@@ -324,14 +359,14 @@ class SpecialistDiscountStats {
   });
 
   factory SpecialistDiscountStats.empty() => SpecialistDiscountStats(
-    specialistId: '',
-    totalOffers: 0,
-    acceptedOffers: 0,
-    rejectedOffers: 0,
-    expiredOffers: 0,
-    averageDiscount: 0,
-    lastUpdated: DateTime.now(),
-  );
+        specialistId: '',
+        totalOffers: 0,
+        acceptedOffers: 0,
+        rejectedOffers: 0,
+        expiredOffers: 0,
+        averageDiscount: 0,
+        lastUpdated: DateTime.now(),
+      );
 
   final String specialistId;
   final int totalOffers;
@@ -341,5 +376,6 @@ class SpecialistDiscountStats {
   final double averageDiscount;
   final DateTime lastUpdated;
 
-  double get acceptanceRate => totalOffers > 0 ? acceptedOffers / totalOffers : 0.0;
+  double get acceptanceRate =>
+      totalOffers > 0 ? acceptedOffers / totalOffers : 0.0;
 }

@@ -6,16 +6,19 @@ import '../models/subscription_notification.dart';
 import '../services/subscription_service.dart';
 
 /// Провайдер сервиса подписок
-final subscriptionServiceProvider = Provider<SubscriptionService>((ref) => SubscriptionService());
+final subscriptionServiceProvider =
+    Provider<SubscriptionService>((ref) => SubscriptionService());
 
 /// Провайдер для подписок пользователя
-final userSubscriptionsProvider = StreamProvider.family<List<Subscription>, String>((ref, userId) {
+final userSubscriptionsProvider =
+    StreamProvider.family<List<Subscription>, String>((ref, userId) {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.getUserSubscriptions(userId);
 });
 
 /// Провайдер для проверки подписки
-final isSubscribedProvider = FutureProvider.family<bool, IsSubscribedParams>((ref, params) async {
+final isSubscribedProvider =
+    FutureProvider.family<bool, IsSubscribedParams>((ref, params) async {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.isSubscribed(params.userId, params.specialistId);
 });
@@ -28,7 +31,8 @@ class IsSubscribedParams {
 }
 
 /// Провайдер для подписчиков специалиста
-final specialistSubscribersProvider = StreamProvider.family<List<Subscription>, String>((
+final specialistSubscribersProvider =
+    StreamProvider.family<List<Subscription>, String>((
   ref,
   specialistId,
 ) {
@@ -37,7 +41,8 @@ final specialistSubscribersProvider = StreamProvider.family<List<Subscription>, 
 });
 
 /// Провайдер для состояния подписок
-final subscriptionStateProvider = NotifierProvider<SubscriptionStateNotifier, SubscriptionState>(
+final subscriptionStateProvider =
+    NotifierProvider<SubscriptionStateNotifier, SubscriptionState>(
   SubscriptionStateNotifier.new,
 );
 
@@ -59,12 +64,13 @@ class SubscriptionState {
     bool? isLoading,
     String? error,
     Map<String, bool>? subscriptionStatus,
-  }) => SubscriptionState(
-    subscriptions: subscriptions ?? this.subscriptions,
-    isLoading: isLoading ?? this.isLoading,
-    error: error ?? this.error,
-    subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
-  );
+  }) =>
+      SubscriptionState(
+        subscriptions: subscriptions ?? this.subscriptions,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
+      );
 }
 
 /// Нотификатор для состояния подписок
@@ -82,7 +88,8 @@ class SubscriptionStateNotifier extends Notifier<SubscriptionState> {
   }
 
   void removeSubscription(String subscriptionId) {
-    final updatedSubscriptions = state.subscriptions.where((s) => s.id != subscriptionId).toList();
+    final updatedSubscriptions =
+        state.subscriptions.where((s) => s.id != subscriptionId).toList();
     state = state.copyWith(subscriptions: updatedSubscriptions);
   }
 
@@ -102,7 +109,8 @@ class SubscriptionStateNotifier extends Notifier<SubscriptionState> {
 }
 
 /// Провайдер для уведомлений подписок
-final userNotificationsProvider = StreamProvider.family<List<SubscriptionNotification>, String>((
+final userNotificationsProvider =
+    StreamProvider.family<List<SubscriptionNotification>, String>((
   ref,
   userId,
 ) {
@@ -112,7 +120,8 @@ final userNotificationsProvider = StreamProvider.family<List<SubscriptionNotific
 
 /// Провайдер для похожих специалистов
 final similarSpecialistsRecommendationsProvider =
-    FutureProvider.family<List<SpecialistRecommendation>, String>((ref, specialistId) async {
-      final subscriptionService = ref.read(subscriptionServiceProvider);
-      return subscriptionService.getSimilarSpecialists(specialistId);
-    });
+    FutureProvider.family<List<SpecialistRecommendation>, String>(
+        (ref, specialistId) async {
+  final subscriptionService = ref.read(subscriptionServiceProvider);
+  return subscriptionService.getSimilarSpecialists(specialistId);
+});

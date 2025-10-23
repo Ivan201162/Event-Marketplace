@@ -17,7 +17,8 @@ class ContentManagementService {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final Uuid _uuid = const Uuid();
 
-  static final ContentManagementService _instance = ContentManagementService._internal();
+  static final ContentManagementService _instance =
+      ContentManagementService._internal();
 
   final Map<String, MediaContent> _mediaCache = {};
   final Map<String, ContentGallery> _galleryCache = {};
@@ -30,9 +31,11 @@ class ContentManagementService {
       await _loadGalleryCache();
       await _loadProcessingCache();
 
-      AppLogger.logI('Content management service initialized', 'content_management');
+      AppLogger.logI(
+          'Content management service initialized', 'content_management');
     } catch (e) {
-      AppLogger.logE('Ошибка инициализации сервиса управления контентом', 'content_management', e);
+      AppLogger.logE('Ошибка инициализации сервиса управления контентом',
+          'content_management', e);
     }
   }
 
@@ -94,7 +97,10 @@ class ContentManagementService {
         uploadedAt: DateTime.now(),
       );
 
-      await _firestore.collection('mediaContent').doc(mediaId).set(mediaContent.toMap());
+      await _firestore
+          .collection('mediaContent')
+          .doc(mediaId)
+          .set(mediaContent.toMap());
       _mediaCache[mediaId] = mediaContent;
 
       // Запускаем обработку медиа
@@ -159,7 +165,10 @@ class ContentManagementService {
         uploadedAt: DateTime.now(),
       );
 
-      await _firestore.collection('mediaContent').doc(mediaId).set(mediaContent.toMap());
+      await _firestore
+          .collection('mediaContent')
+          .doc(mediaId)
+          .set(mediaContent.toMap());
       _mediaCache[mediaId] = mediaContent;
 
       await _startMediaProcessing(mediaContent);
@@ -185,7 +194,8 @@ class ContentManagementService {
         'status': ContentStatus.processing.toString().split('.').last,
       });
 
-      _mediaCache[mediaContent.id] = mediaContent.copyWith(status: ContentStatus.processing);
+      _mediaCache[mediaContent.id] =
+          mediaContent.copyWith(status: ContentStatus.processing);
 
       // Создаем задачи обработки в зависимости от типа
       final processingTasks = <ProcessingType>[];
@@ -199,7 +209,8 @@ class ContentManagementService {
           ]);
           break;
         case MediaType.video:
-          processingTasks.addAll([ProcessingType.thumbnail, ProcessingType.compress]);
+          processingTasks
+              .addAll([ProcessingType.thumbnail, ProcessingType.compress]);
           break;
         case MediaType.audio:
           processingTasks.add(ProcessingType.compress);
@@ -229,12 +240,14 @@ class ContentManagementService {
         'status': ContentStatus.error.toString().split('.').last,
       });
 
-      _mediaCache[mediaContent.id] = mediaContent.copyWith(status: ContentStatus.error);
+      _mediaCache[mediaContent.id] =
+          mediaContent.copyWith(status: ContentStatus.error);
     }
   }
 
   /// Создать задачу обработки
-  Future<void> _createProcessingTask(String mediaId, ProcessingType type) async {
+  Future<void> _createProcessingTask(
+      String mediaId, ProcessingType type) async {
     try {
       final processingId = _uuid.v4();
       final processing = MediaProcessing(
@@ -244,7 +257,10 @@ class ContentManagementService {
         startedAt: DateTime.now(),
       );
 
-      await _firestore.collection('mediaProcessing').doc(processingId).set(processing.toMap());
+      await _firestore
+          .collection('mediaProcessing')
+          .doc(processingId)
+          .set(processing.toMap());
       _processingCache[processingId] = processing;
 
       // Запускаем обработку
@@ -264,7 +280,8 @@ class ContentManagementService {
         'status': ProcessingStatus.inProgress.toString().split('.').last,
       });
 
-      _processingCache[processing.id] = processing.copyWith(status: ProcessingStatus.inProgress);
+      _processingCache[processing.id] =
+          processing.copyWith(status: ProcessingStatus.inProgress);
 
       // Получаем медиа контент
       final mediaContent = _mediaCache[processing.mediaId];
@@ -339,7 +356,8 @@ class ContentManagementService {
   /// Генерировать миниатюру
   Future<String?> _generateThumbnail(MediaContent mediaContent) async {
     try {
-      if (mediaContent.type != MediaType.image && mediaContent.type != MediaType.video) {
+      if (mediaContent.type != MediaType.image &&
+          mediaContent.type != MediaType.video) {
         return null;
       }
 
@@ -348,11 +366,15 @@ class ContentManagementService {
         final thumbnailUrl = await _createImageThumbnail(mediaContent.url);
 
         // Обновляем медиа контент с URL миниатюры
-        await _firestore.collection('mediaContent').doc(mediaContent.id).update({
+        await _firestore
+            .collection('mediaContent')
+            .doc(mediaContent.id)
+            .update({
           'thumbnailUrl': thumbnailUrl,
         });
 
-        _mediaCache[mediaContent.id] = mediaContent.copyWith(thumbnailUrl: thumbnailUrl);
+        _mediaCache[mediaContent.id] =
+            mediaContent.copyWith(thumbnailUrl: thumbnailUrl);
 
         return thumbnailUrl;
       }
@@ -387,7 +409,8 @@ class ContentManagementService {
   }
 
   /// Изменить размер изображения
-  Future<String?> _resizeImage(MediaContent mediaContent, Map<String, dynamic> parameters) async {
+  Future<String?> _resizeImage(
+      MediaContent mediaContent, Map<String, dynamic> parameters) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -405,7 +428,8 @@ class ContentManagementService {
   }
 
   /// Сжать медиа
-  Future<String?> _compressMedia(MediaContent mediaContent, Map<String, dynamic> parameters) async {
+  Future<String?> _compressMedia(
+      MediaContent mediaContent, Map<String, dynamic> parameters) async {
     try {
       final quality = parameters['quality'] as int? ?? 80;
 
@@ -420,7 +444,8 @@ class ContentManagementService {
   }
 
   /// Добавить водяной знак
-  Future<String?> _addWatermark(MediaContent mediaContent, Map<String, dynamic> parameters) async {
+  Future<String?> _addWatermark(
+      MediaContent mediaContent, Map<String, dynamic> parameters) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -435,7 +460,8 @@ class ContentManagementService {
   }
 
   /// Применить фильтр
-  Future<String?> _applyFilter(MediaContent mediaContent, Map<String, dynamic> parameters) async {
+  Future<String?> _applyFilter(
+      MediaContent mediaContent, Map<String, dynamic> parameters) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -450,7 +476,8 @@ class ContentManagementService {
   }
 
   /// Обрезать изображение
-  Future<String?> _cropImage(MediaContent mediaContent, Map<String, dynamic> parameters) async {
+  Future<String?> _cropImage(
+      MediaContent mediaContent, Map<String, dynamic> parameters) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -465,7 +492,8 @@ class ContentManagementService {
   }
 
   /// Повернуть изображение
-  Future<String?> _rotateImage(MediaContent mediaContent, Map<String, dynamic> parameters) async {
+  Future<String?> _rotateImage(
+      MediaContent mediaContent, Map<String, dynamic> parameters) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -480,7 +508,8 @@ class ContentManagementService {
   }
 
   /// Конвертировать медиа
-  Future<String?> _convertMedia(MediaContent mediaContent, Map<String, dynamic> parameters) async {
+  Future<String?> _convertMedia(
+      MediaContent mediaContent, Map<String, dynamic> parameters) async {
     try {
       // TODO(developer): Реализовать конвертацию медиа
       return mediaContent.url; // Временная заглушка
@@ -495,7 +524,8 @@ class ContentManagementService {
   /// Проверить завершение обработки
   Future<void> _checkProcessingCompletion(String mediaId) async {
     try {
-      final processingTasks = _processingCache.values.where((p) => p.mediaId == mediaId).toList();
+      final processingTasks =
+          _processingCache.values.where((p) => p.mediaId == mediaId).toList();
 
       final completedTasks = processingTasks.where((p) => p.isCompleted).length;
 
@@ -507,7 +537,8 @@ class ContentManagementService {
           'status': ContentStatus.error.toString().split('.').last,
         });
 
-        _mediaCache[mediaId] = _mediaCache[mediaId]!.copyWith(status: ContentStatus.error);
+        _mediaCache[mediaId] =
+            _mediaCache[mediaId]!.copyWith(status: ContentStatus.error);
       } else if (completedTasks == processingTasks.length) {
         // Все задачи завершены
         await _completeMediaProcessing(mediaId);
@@ -571,7 +602,10 @@ class ContentManagementService {
         updatedAt: now,
       );
 
-      await _firestore.collection('contentGalleries').doc(galleryId).set(gallery.toMap());
+      await _firestore
+          .collection('contentGalleries')
+          .doc(galleryId)
+          .set(gallery.toMap());
       _galleryCache[galleryId] = gallery;
 
       if (kDebugMode) {
@@ -630,7 +664,8 @@ class ContentManagementService {
         throw Exception('Галерея не найдена');
       }
 
-      final updatedMediaIds = gallery.mediaIds.where((id) => id != mediaId).toList();
+      final updatedMediaIds =
+          gallery.mediaIds.where((id) => id != mediaId).toList();
 
       await _firestore.collection('contentGalleries').doc(galleryId).update({
         'mediaIds': updatedMediaIds,
@@ -678,7 +713,8 @@ class ContentManagementService {
   }
 
   /// Получить галереи по специалисту
-  Future<List<ContentGallery>> getGalleriesBySpecialist(String specialistId) async {
+  Future<List<ContentGallery>> getGalleriesBySpecialist(
+      String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('contentGalleries')
@@ -797,7 +833,8 @@ class ContentManagementService {
   /// Загрузить кэш медиа
   Future<void> _loadMediaCache() async {
     try {
-      final snapshot = await _firestore.collection('mediaContent').limit(100).get();
+      final snapshot =
+          await _firestore.collection('mediaContent').limit(100).get();
 
       for (final doc in snapshot.docs) {
         final mediaContent = MediaContent.fromDocument(doc);
@@ -817,7 +854,8 @@ class ContentManagementService {
   /// Загрузить кэш галерей
   Future<void> _loadGalleryCache() async {
     try {
-      final snapshot = await _firestore.collection('contentGalleries').limit(100).get();
+      final snapshot =
+          await _firestore.collection('contentGalleries').limit(100).get();
 
       for (final doc in snapshot.docs) {
         final gallery = ContentGallery.fromDocument(doc);
@@ -837,7 +875,8 @@ class ContentManagementService {
   /// Загрузить кэш обработки
   Future<void> _loadProcessingCache() async {
     try {
-      final snapshot = await _firestore.collection('mediaProcessing').limit(100).get();
+      final snapshot =
+          await _firestore.collection('mediaProcessing').limit(100).get();
 
       for (final doc in snapshot.docs) {
         final processing = MediaProcessing.fromDocument(doc);

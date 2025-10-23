@@ -93,7 +93,8 @@ class PriceReminderWidget extends ConsumerWidget {
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Напоминание скрыто на 7 дней')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Напоминание скрыто на 7 дней')));
   }
 }
 
@@ -121,11 +122,12 @@ class PriceReminderAdminWidget extends ConsumerWidget {
 
             // Статистика
             Consumer(
-              builder: (context, ref, child) => ref.watch(priceReminderStatsProvider).when(
-                    data: _buildStatsWidget,
-                    loading: () => const CircularProgressIndicator(),
-                    error: (error, stack) => Text('Ошибка: $error'),
-                  ),
+              builder: (context, ref, child) =>
+                  ref.watch(priceReminderStatsProvider).when(
+                        data: _buildStatsWidget,
+                        loading: () => const CircularProgressIndicator(),
+                        error: (error, stack) => Text('Ошибка: $error'),
+                      ),
             ),
 
             const SizedBox(height: 16),
@@ -164,8 +166,10 @@ class PriceReminderAdminWidget extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatItem('Нужно напомнить', stats['needReminder'] ?? 0, Colors.orange),
-                _buildStatItem('Уже напомнили', stats['reminded'] ?? 0, Colors.green),
+                _buildStatItem('Нужно напомнить', stats['needReminder'] ?? 0,
+                    Colors.orange),
+                _buildStatItem(
+                    'Уже напомнили', stats['reminded'] ?? 0, Colors.green),
                 _buildStatItem('Всего', stats['total'] ?? 0, Colors.blue),
               ],
             ),
@@ -177,9 +181,12 @@ class PriceReminderAdminWidget extends ConsumerWidget {
         children: [
           Text(
             value.toString(),
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 24, fontWeight: FontWeight.bold, color: color),
           ),
-          Text(label, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+          Text(label,
+              style: const TextStyle(fontSize: 12),
+              textAlign: TextAlign.center),
         ],
       );
 
@@ -198,7 +205,8 @@ class PriceReminderAdminWidget extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
       }
     }
   }
@@ -212,29 +220,35 @@ class PriceReminderAdminWidget extends ConsumerWidget {
           width: double.maxFinite,
           height: 400,
           child: Consumer(
-            builder: (context, ref, child) => ref.watch(specialistsWithOutdatedPricesProvider).when(
+            builder: (context, ref, child) => ref
+                .watch(specialistsWithOutdatedPricesProvider)
+                .when(
                   data: (specialists) => ListView.builder(
                     itemCount: specialists.length,
                     itemBuilder: (context, index) {
                       final specialist = specialists[index];
                       return ListTile(
                         title: Text(specialist['name'] as String? ?? ''),
-                        subtitle: Text('${specialist['daysSinceUpdate']} дней назад'),
+                        subtitle:
+                            Text('${specialist['daysSinceUpdate']} дней назад'),
                         trailing: ElevatedButton(
-                          onPressed: () =>
-                              _sendReminderToSpecialist(context, ref, specialist['id'] as String),
+                          onPressed: () => _sendReminderToSpecialist(
+                              context, ref, specialist['id'] as String),
                           child: const Text('Напомнить'),
                         ),
                       );
                     },
                   ),
-                  loading: () => const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   error: (error, stack) => Text('Ошибка: $error'),
                 ),
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -259,7 +273,8 @@ class PriceReminderAdminWidget extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
       }
     }
   }

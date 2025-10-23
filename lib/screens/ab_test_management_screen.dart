@@ -11,10 +11,12 @@ class ABTestManagementScreen extends ConsumerStatefulWidget {
   const ABTestManagementScreen({super.key});
 
   @override
-  ConsumerState<ABTestManagementScreen> createState() => _ABTestManagementScreenState();
+  ConsumerState<ABTestManagementScreen> createState() =>
+      _ABTestManagementScreenState();
 }
 
-class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen> {
+class _ABTestManagementScreenState
+    extends ConsumerState<ABTestManagementScreen> {
   final ABTestService _abTestService = ABTestService();
   List<ABTest> _tests = [];
   bool _isLoading = true;
@@ -28,35 +30,37 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-    appBar: AppBar(title: const Text('Управление A/B тестами')),
-    body: Column(
-      children: [
-        // Вкладки
-        _buildTabs(),
+        appBar: AppBar(title: const Text('Управление A/B тестами')),
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-        // Контент
-        Expanded(
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _selectedTab == 'tests'
-              ? _buildTestsTab()
-              : _selectedTab == 'create'
-              ? _buildCreateTab()
-              : _buildStatisticsTab(),
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'tests'
+                      ? _buildTestsTab()
+                      : _selectedTab == 'create'
+                          ? _buildCreateTab()
+                          : _buildStatisticsTab(),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildTabs() => ResponsiveCard(
-    child: Row(
-      children: [
-        Expanded(child: _buildTabButton('tests', 'Тесты', Icons.science)),
-        Expanded(child: _buildTabButton('create', 'Создать', Icons.add)),
-        Expanded(child: _buildTabButton('statistics', 'Статистика', Icons.analytics)),
-      ],
-    ),
-  );
+        child: Row(
+          children: [
+            Expanded(child: _buildTabButton('tests', 'Тесты', Icons.science)),
+            Expanded(child: _buildTabButton('create', 'Создать', Icons.add)),
+            Expanded(
+                child: _buildTabButton(
+                    'statistics', 'Статистика', Icons.analytics)),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -72,9 +76,14 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? Colors.blue.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
+          border: Border.all(
+              color: isSelected
+                  ? Colors.blue
+                  : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -94,46 +103,47 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
   }
 
   Widget _buildTestsTab() => Column(
-    children: [
-      // Заголовок с кнопками
-      ResponsiveCard(
-        child: Row(
-          children: [
-            Text('A/B тесты', style: Theme.of(context).textTheme.headlineSmall),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: _loadTests,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Обновить'),
+        children: [
+          // Заголовок с кнопками
+          ResponsiveCard(
+            child: Row(
+              children: [
+                Text('A/B тесты',
+                    style: Theme.of(context).textTheme.headlineSmall),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadTests,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      _selectedTab = 'create';
+                    });
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать тест'),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            ElevatedButton.icon(
-              onPressed: () {
-                setState(() {
-                  _selectedTab = 'create';
-                });
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Создать тест'),
-            ),
-          ],
-        ),
-      ),
+          ),
 
-      // Список тестов
-      Expanded(
-        child: _tests.isEmpty
-            ? const Center(child: Text('A/B тесты не найдены'))
-            : ListView.builder(
-                itemCount: _tests.length,
-                itemBuilder: (context, index) {
-                  final test = _tests[index];
-                  return _buildTestCard(test);
-                },
-              ),
-      ),
-    ],
-  );
+          // Список тестов
+          Expanded(
+            child: _tests.isEmpty
+                ? const Center(child: Text('A/B тесты не найдены'))
+                : ListView.builder(
+                    itemCount: _tests.length,
+                    itemBuilder: (context, index) {
+                      final test = _tests[index];
+                      return _buildTestCard(test);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildTestCard(ABTest test) {
     final statusColor = _getStatusColor(test.status);
@@ -147,7 +157,9 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
             children: [
               Icon(_getStatusIcon(test.status), color: statusColor, size: 24),
               const SizedBox(width: 8),
-              Expanded(child: Text(test.name, style: Theme.of(context).textTheme.titleMedium)),
+              Expanded(
+                  child: Text(test.name,
+                      style: Theme.of(context).textTheme.titleMedium)),
               _buildStatusChip(test.status),
               PopupMenuButton<String>(
                 onSelected: (value) => _handleTestAction(value, test),
@@ -155,26 +167,34 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
                   if (test.canStart) ...[
                     const PopupMenuItem(
                       value: 'start',
-                      child: ListTile(leading: Icon(Icons.play_arrow), title: Text('Запустить')),
+                      child: ListTile(
+                          leading: Icon(Icons.play_arrow),
+                          title: Text('Запустить')),
                     ),
                   ],
                   if (test.isActive) ...[
                     const PopupMenuItem(
                       value: 'stop',
-                      child: ListTile(leading: Icon(Icons.stop), title: Text('Остановить')),
+                      child: ListTile(
+                          leading: Icon(Icons.stop), title: Text('Остановить')),
                     ),
                     const PopupMenuItem(
                       value: 'statistics',
-                      child: ListTile(leading: Icon(Icons.analytics), title: Text('Статистика')),
+                      child: ListTile(
+                          leading: Icon(Icons.analytics),
+                          title: Text('Статистика')),
                     ),
                   ],
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
+                    child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Редактировать')),
                   ),
                   const PopupMenuItem(
                     value: 'delete',
-                    child: ListTile(leading: Icon(Icons.delete), title: Text('Удалить')),
+                    child: ListTile(
+                        leading: Icon(Icons.delete), title: Text('Удалить')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -192,7 +212,8 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
           // Варианты
           Text(
             'Варианты:',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[600]),
+            style:
+                TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[600]),
           ),
           const SizedBox(height: 4),
           Wrap(
@@ -227,7 +248,8 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
                 Colors.blue,
               ),
               const SizedBox(width: 8),
-              _buildInfoChip('Метрика', test.metrics.primaryMetric, Colors.green),
+              _buildInfoChip(
+                  'Метрика', test.metrics.primaryMetric, Colors.green),
             ],
           ),
 
@@ -272,20 +294,21 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
   }
 
   Widget _buildCreateTab() => SingleChildScrollView(
-    child: ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Создать A/B тест', style: Theme.of(context).textTheme.titleMedium),
+        child: ResponsiveCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Создать A/B тест',
+                  style: Theme.of(context).textTheme.titleMedium),
 
-          const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-          // Форма создания теста
-          _buildCreateTestForm(),
-        ],
-      ),
-    ),
-  );
+              // Форма создания теста
+              _buildCreateTestForm(),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildCreateTestForm() {
     final nameController = TextEditingController();
@@ -308,7 +331,8 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
 
         TextField(
           controller: descriptionController,
-          decoration: const InputDecoration(labelText: 'Описание', border: OutlineInputBorder()),
+          decoration: const InputDecoration(
+              labelText: 'Описание', border: OutlineInputBorder()),
           maxLines: 3,
         ),
 
@@ -356,169 +380,184 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
   }
 
   Widget _buildStatisticsTab() => FutureBuilder<List<ABTestStatistics>>(
-    future: _loadAllStatistics(),
-    builder: (context, snapshot) {
-      if (!snapshot.hasData) {
-        return const Center(child: CircularProgressIndicator());
-      }
+        future: _loadAllStatistics(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-      final statistics = snapshot.data!;
+          final statistics = snapshot.data!;
 
-      return SingleChildScrollView(
-        child: Column(children: statistics.map(_buildStatisticsCard).toList()),
+          return SingleChildScrollView(
+            child:
+                Column(children: statistics.map(_buildStatisticsCard).toList()),
+          );
+        },
       );
-    },
-  );
 
   Widget _buildStatisticsCard(ABTestStatistics stats) => ResponsiveCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Статистика: ${stats.testName}', style: Theme.of(context).textTheme.titleMedium),
-
-        const SizedBox(height: 16),
-
-        // Основные метрики
-        Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: _buildStatCard(
-                'Участники',
-                '${stats.totalParticipants}',
-                Colors.blue,
-                Icons.people,
-              ),
-            ),
-            Expanded(
-              child: _buildStatCard(
-                'Конверсии',
-                '${stats.totalConversions}',
-                Colors.green,
-                Icons.trending_up,
-              ),
-            ),
-            Expanded(
-              child: _buildStatCard(
-                'Конверсия',
-                '${(stats.overallConversionRate * 100).toStringAsFixed(2)}%',
-                Colors.orange,
-                Icons.percent,
-              ),
-            ),
-          ],
-        ),
+            Text('Статистика: ${stats.testName}',
+                style: Theme.of(context).textTheme.titleMedium),
 
-        const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-        // Статистика по вариантам
-        Text(
-          'Результаты по вариантам:',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[600]),
-        ),
-
-        const SizedBox(height: 8),
-
-        ...stats.variantStatistics.values.map(
-          (variantStats) => Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-            ),
-            child: Row(
+            // Основные метрики
+            Row(
               children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        variantStats.variantName,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        '${variantStats.participants} участников, ${variantStats.conversions} конверсий',
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
+                  child: _buildStatCard(
+                    'Участники',
+                    '${stats.totalParticipants}',
+                    Colors.blue,
+                    Icons.people,
                   ),
                 ),
-                Text(
-                  '${(variantStats.conversionRate * 100).toStringAsFixed(2)}%',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                Expanded(
+                  child: _buildStatCard(
+                    'Конверсии',
+                    '${stats.totalConversions}',
+                    Colors.green,
+                    Icons.trending_up,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatCard(
+                    'Конверсия',
+                    '${(stats.overallConversionRate * 100).toStringAsFixed(2)}%',
+                    Colors.orange,
+                    Icons.percent,
                   ),
                 ),
               ],
             ),
-          ),
-        ),
 
-        const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-        // Статистическая значимость
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: stats.isStatisticallySignificant
-                ? Colors.green.withValues(alpha: 0.1)
-                : Colors.orange.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: stats.isStatisticallySignificant ? Colors.green : Colors.orange,
+            // Статистика по вариантам
+            Text(
+              'Результаты по вариантам:',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.grey[600]),
             ),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                stats.isStatisticallySignificant ? Icons.check_circle : Icons.warning,
-                color: stats.isStatisticallySignificant ? Colors.green : Colors.orange,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  stats.isStatisticallySignificant
-                      ? 'Результаты статистически значимы (${(stats.confidenceLevel * 100).toStringAsFixed(0)}% доверия)'
-                      : 'Результаты не статистически значимы',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: stats.isStatisticallySignificant ? Colors.green : Colors.orange,
-                  ),
+
+            const SizedBox(height: 8),
+
+            ...stats.variantStatistics.values.map(
+              (variantStats) => Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            variantStats.variantName,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '${variantStats.participants} участников, ${variantStats.conversions} конверсий',
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '${(variantStats.conversionRate * 100).toStringAsFixed(2)}%',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
+            ),
 
-  Widget _buildStatCard(String title, String value, Color color, IconData icon) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: color),
-    ),
-    child: Column(
-      children: [
-        Icon(icon, color: color, size: 24),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+            const SizedBox(height: 16),
+
+            // Статистическая значимость
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: stats.isStatisticallySignificant
+                    ? Colors.green.withValues(alpha: 0.1)
+                    : Colors.orange.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: stats.isStatisticallySignificant
+                      ? Colors.green
+                      : Colors.orange,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    stats.isStatisticallySignificant
+                        ? Icons.check_circle
+                        : Icons.warning,
+                    color: stats.isStatisticallySignificant
+                        ? Colors.green
+                        : Colors.orange,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      stats.isStatisticallySignificant
+                          ? 'Результаты статистически значимы (${(stats.confidenceLevel * 100).toStringAsFixed(0)}% доверия)'
+                          : 'Результаты не статистически значимы',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: stats.isStatisticallySignificant
+                            ? Colors.green
+                            : Colors.orange,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        Text(
-          title,
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
-          textAlign: TextAlign.center,
+      );
+
+  Widget _buildStatCard(
+          String title, String value, Color color, IconData icon) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
         ),
-      ],
-    ),
-  );
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
+            ),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
 
   Widget _buildStatusChip(ABTestStatus status) {
     final color = _getStatusColor(status);
@@ -533,23 +572,25 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
       ),
       child: Text(
         text,
-        style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
+        style:
+            TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
       ),
     );
   }
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: color),
-    ),
-    child: Text(
-      '$label: $value',
-      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
+        ),
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+        ),
+      );
 
   Color _getStatusColor(ABTestStatus status) {
     switch (status) {
@@ -596,7 +637,9 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка загрузки A/B тестов: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка загрузки A/B тестов: $e'),
+            backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -611,7 +654,8 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
 
   Future<List<ABTestStatistics>> _loadAllStatistics() async {
     try {
-      final activeTests = _tests.where((test) => test.isActive || test.isCompleted).toList();
+      final activeTests =
+          _tests.where((test) => test.isActive || test.isCompleted).toList();
       final statistics = <ABTestStatistics>[];
 
       for (final test in activeTests) {
@@ -659,11 +703,15 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
       await _abTestService.startABTest(test.id);
       unawaited(_loadTests());
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('A/B тест "${test.name}" запущен'), backgroundColor: Colors.green),
+        SnackBar(
+            content: Text('A/B тест "${test.name}" запущен'),
+            backgroundColor: Colors.green),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка запуска теста: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка запуска теста: $e'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -680,7 +728,9 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка остановки теста: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка остановки теста: $e'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -689,13 +739,16 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
     // TODO(developer): Показать детальную статистику теста
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Статистика для теста "${test.name}" будет показана')));
+    ).showSnackBar(SnackBar(
+        content: Text('Статистика для теста "${test.name}" будет показана')));
   }
 
   void _editTest(ABTest test) {
     // TODO(developer): Реализовать редактирование теста
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Редактирование теста "${test.name}" будет реализовано')),
+      SnackBar(
+          content:
+              Text('Редактирование теста "${test.name}" будет реализовано')),
     );
   }
 
@@ -706,7 +759,9 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
         title: const Text('Удалить A/B тест'),
         content: Text('Вы уверены, что хотите удалить тест "${test.name}"?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -714,11 +769,15 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
                 await _abTestService.deleteABTest(test.id);
                 unawaited(_loadTests());
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('A/B тест удален'), backgroundColor: Colors.green),
+                  const SnackBar(
+                      content: Text('A/B тест удален'),
+                      backgroundColor: Colors.green),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Ошибка удаления теста: $e'), backgroundColor: Colors.red),
+                  SnackBar(
+                      content: Text('Ошибка удаления теста: $e'),
+                      backgroundColor: Colors.red),
                 );
               }
             },
@@ -787,11 +846,15 @@ class _ABTestManagementScreenState extends ConsumerState<ABTestManagementScreen>
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('A/B тест "$name" создан'), backgroundColor: Colors.green),
+        SnackBar(
+            content: Text('A/B тест "$name" создан'),
+            backgroundColor: Colors.green),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка создания теста: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка создания теста: $e'),
+            backgroundColor: Colors.red),
       );
     }
   }

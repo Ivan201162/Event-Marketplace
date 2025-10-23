@@ -19,7 +19,9 @@ class CategoryService {
           .orderBy('sortOrder')
           .get();
 
-      return snapshot.docs.map((doc) => IdeaCategory.fromFirestore(doc)).toList();
+      return snapshot.docs
+          .map((doc) => IdeaCategory.fromFirestore(doc))
+          .toList();
     } catch (e) {
       debugPrint('Error getting idea categories: $e');
       return [];
@@ -36,7 +38,9 @@ class CategoryService {
           .orderBy('sortOrder')
           .get();
 
-      return snapshot.docs.map((doc) => IdeaCategory.fromFirestore(doc)).toList();
+      return snapshot.docs
+          .map((doc) => IdeaCategory.fromFirestore(doc))
+          .toList();
     } catch (e) {
       debugPrint('Error getting featured idea categories: $e');
       return [];
@@ -81,7 +85,8 @@ class CategoryService {
   }
 
   /// Get specialist category by ID
-  Future<SpecialistCategory?> getSpecialistCategoryById(String categoryId) async {
+  Future<SpecialistCategory?> getSpecialistCategoryById(
+      String categoryId) async {
     try {
       final doc = await _firestore
           .collection(_specialistCategoriesCollection)
@@ -126,7 +131,8 @@ class CategoryService {
   }
 
   /// Update idea category (admin only)
-  Future<bool> updateIdeaCategory(String categoryId, Map<String, dynamic> updates) async {
+  Future<bool> updateIdeaCategory(
+      String categoryId, Map<String, dynamic> updates) async {
     try {
       await _firestore
           .collection(_ideaCategoriesCollection)
@@ -143,7 +149,8 @@ class CategoryService {
   }
 
   /// Update specialist category (admin only)
-  Future<bool> updateSpecialistCategory(String categoryId, Map<String, dynamic> updates) async {
+  Future<bool> updateSpecialistCategory(
+      String categoryId, Map<String, dynamic> updates) async {
     try {
       await _firestore
           .collection(_specialistCategoriesCollection)
@@ -194,7 +201,9 @@ class CategoryService {
         .where('isActive', isEqualTo: true)
         .orderBy('sortOrder')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => IdeaCategory.fromFirestore(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => IdeaCategory.fromFirestore(doc))
+            .toList());
   }
 
   /// Stream of specialist categories
@@ -205,9 +214,9 @@ class CategoryService {
         .orderBy('sortOrder')
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
-          final data = doc.data();
-          return SpecialistCategory.fromMap({'id': doc.id, ...data});
-        }).toList());
+              final data = doc.data();
+              return SpecialistCategory.fromMap({'id': doc.id, ...data});
+            }).toList());
   }
 
   /// Search categories by name
@@ -220,7 +229,9 @@ class CategoryService {
           .where('name', isLessThan: query + 'z')
           .get();
 
-      return snapshot.docs.map((doc) => IdeaCategory.fromFirestore(doc)).toList();
+      return snapshot.docs
+          .map((doc) => IdeaCategory.fromFirestore(doc))
+          .toList();
     } catch (e) {
       debugPrint('Error searching idea categories: $e');
       return [];
@@ -228,7 +239,8 @@ class CategoryService {
   }
 
   /// Search specialist categories by name
-  Future<List<SpecialistCategory>> searchSpecialistCategories(String query) async {
+  Future<List<SpecialistCategory>> searchSpecialistCategories(
+      String query) async {
     try {
       final snapshot = await _firestore
           .collection(_specialistCategoriesCollection)

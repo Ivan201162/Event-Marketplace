@@ -12,7 +12,8 @@ class SearchScreenEnhanced extends ConsumerStatefulWidget {
   const SearchScreenEnhanced({super.key});
 
   @override
-  ConsumerState<SearchScreenEnhanced> createState() => _SearchScreenEnhancedState();
+  ConsumerState<SearchScreenEnhanced> createState() =>
+      _SearchScreenEnhancedState();
 }
 
 class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
@@ -23,7 +24,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
 
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
+
   bool _showFilters = false;
   String _selectedSortBy = 'rating';
 
@@ -96,10 +97,10 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
         children: [
           // Поисковая строка
           _buildSearchBar(),
-          
+
           // Фильтры
           if (_showFilters) _buildFiltersPanel(currentFilters),
-          
+
           // Результаты поиска
           Expanded(
             child: FadeTransition(
@@ -148,7 +149,8 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
             borderRadius: BorderRadius.circular(25),
             borderSide: BorderSide.none,
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         ),
       ),
     );
@@ -185,7 +187,9 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
               const Spacer(),
               TextButton(
                 onPressed: () {
-                  ref.read(currentSearchFiltersProvider.notifier).clearFilters();
+                  ref
+                      .read(currentSearchFiltersProvider.notifier)
+                      .clearFilters();
                 },
                 child: const Text(
                   'Сбросить',
@@ -194,29 +198,29 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Категории
           _buildCategoryFilters(currentFilters),
-          
+
           const SizedBox(height: 16),
-          
+
           // Рейтинг
           _buildRatingFilter(currentFilters),
-          
+
           const SizedBox(height: 16),
-          
+
           // Ценовой диапазон
           _buildPriceFilter(currentFilters),
-          
+
           const SizedBox(height: 16),
-          
+
           // Сортировка
           _buildSortFilter(),
-          
+
           const SizedBox(height: 16),
-          
+
           // Кнопки
           Row(
             children: [
@@ -267,18 +271,23 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
           spacing: 8,
           runSpacing: 8,
           children: SpecialistCategory.values.map((category) {
-            final isSelected = currentFilters.categories.contains(category.name);
+            final isSelected =
+                currentFilters.categories.contains(category.name);
             return GestureDetector(
               onTap: () {
                 _toggleCategory(category.name);
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isSelected ? const Color(0xFF1E3A8A) : Colors.grey[100],
+                  color:
+                      isSelected ? const Color(0xFF1E3A8A) : Colors.grey[100],
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isSelected ? const Color(0xFF1E3A8A) : Colors.grey[300]!,
+                    color: isSelected
+                        ? const Color(0xFF1E3A8A)
+                        : Colors.grey[300]!,
                   ),
                 ),
                 child: Row(
@@ -293,7 +302,8 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
                       category.name,
                       style: TextStyle(
                         color: isSelected ? Colors.white : Colors.black87,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                         fontSize: 12,
                       ),
                     ),
@@ -431,9 +441,11 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
           ),
           items: const [
             DropdownMenuItem(value: 'rating', child: Text('По рейтингу')),
-            DropdownMenuItem(value: 'orders', child: Text('По количеству заказов')),
+            DropdownMenuItem(
+                value: 'orders', child: Text('По количеству заказов')),
             DropdownMenuItem(value: 'price', child: Text('По цене')),
-            DropdownMenuItem(value: 'newest', child: Text('По дате регистрации')),
+            DropdownMenuItem(
+                value: 'newest', child: Text('По дате регистрации')),
           ],
           onChanged: (value) {
             setState(() {
@@ -446,13 +458,14 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
   }
 
   /// Результаты поиска
-  Widget _buildSearchResults(AsyncValue<List<SpecialistEnhanced>> searchResults) {
+  Widget _buildSearchResults(
+      AsyncValue<List<SpecialistEnhanced>> searchResults) {
     return searchResults.when(
       data: (specialists) {
         if (specialists.isEmpty) {
           return _buildEmptyState();
         }
-        
+
         return Column(
           children: [
             // Информация о результатах
@@ -471,7 +484,8 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
                   const Spacer(),
                   if (ref.read(currentSearchFiltersProvider).hasActiveFilters)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: const Color(0xFF1E3A8A).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -488,7 +502,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
                 ],
               ),
             ),
-            
+
             // Список специалистов
             Expanded(
               child: ListView.builder(
@@ -555,9 +569,9 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
                           ),
                   ),
                 ),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // Информация
                 Expanded(
                   child: Column(
@@ -580,9 +594,9 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
                           color: Colors.grey[600],
                         ),
                       ),
-                      
+
                       const SizedBox(height: 8),
-                      
+
                       // Рейтинг и заказы
                       Row(
                         children: [
@@ -609,16 +623,17 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 8),
-                      
+
                       // Бейджи
                       if (specialist.badges.isNotEmpty)
                         Wrap(
                           spacing: 4,
                           children: specialist.badges.take(3).map((badge) {
                             return Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Color(badge.color).withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(12),
@@ -637,19 +652,25 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
                     ],
                   ),
                 ),
-                
+
                 // Кнопка избранного
                 IconButton(
                   icon: Icon(
-                    ref.watch(favoriteSpecialistsProvider).contains(specialist.id)
+                    ref
+                            .watch(favoriteSpecialistsProvider)
+                            .contains(specialist.id)
                         ? Icons.favorite
                         : Icons.favorite_border,
-                    color: ref.watch(favoriteSpecialistsProvider).contains(specialist.id)
+                    color: ref
+                            .watch(favoriteSpecialistsProvider)
+                            .contains(specialist.id)
                         ? Colors.red
                         : Colors.grey,
                   ),
                   onPressed: () {
-                    ref.read(favoriteSpecialistsProvider.notifier).toggleFavorite(specialist.id);
+                    ref
+                        .read(favoriteSpecialistsProvider.notifier)
+                        .toggleFavorite(specialist.id);
                   },
                 ),
               ],
@@ -770,7 +791,7 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
   /// Выполнить поиск
   void _performSearch(String query) {
     if (query.isEmpty) return;
-    
+
     // Здесь можно добавить логику поиска по тексту
     // Пока просто обновляем результаты
     ref.invalidate(searchSpecialistsProvider);
@@ -786,48 +807,48 @@ class _SearchScreenEnhancedState extends ConsumerState<SearchScreenEnhanced>
   void _toggleCategory(String category) {
     final currentFilters = ref.read(currentSearchFiltersProvider);
     final categories = currentFilters.categories;
-    
+
     List<String> newCategories;
     if (categories.contains(category)) {
       newCategories = categories.where((c) => c != category).toList();
     } else {
       newCategories = [...categories, category];
     }
-    
+
     ref.read(currentSearchFiltersProvider.notifier).updateFilters(
-      currentFilters.copyWith(categories: newCategories),
-    );
+          currentFilters.copyWith(categories: newCategories),
+        );
   }
 
   /// Обновить фильтр рейтинга
   void _updateRatingFilter(double? minRating, double? maxRating) {
     final currentFilters = ref.read(currentSearchFiltersProvider);
     ref.read(currentSearchFiltersProvider.notifier).updateFilters(
-      currentFilters.copyWith(
-        minRating: minRating,
-        maxRating: maxRating,
-      ),
-    );
+          currentFilters.copyWith(
+            minRating: minRating,
+            maxRating: maxRating,
+          ),
+        );
   }
 
   /// Обновить фильтр цены
   void _updatePriceFilter(double? minPrice, double? maxPrice) {
     final currentFilters = ref.read(currentSearchFiltersProvider);
     ref.read(currentSearchFiltersProvider.notifier).updateFilters(
-      currentFilters.copyWith(
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-      ),
-    );
+          currentFilters.copyWith(
+            minPrice: minPrice,
+            maxPrice: maxPrice,
+          ),
+        );
   }
 
   /// Применить фильтры
   void _applyFilters() {
     final currentFilters = ref.read(currentSearchFiltersProvider);
     ref.read(currentSearchFiltersProvider.notifier).updateFilters(
-      currentFilters.copyWith(sortBy: _selectedSortBy),
-    );
-    
+          currentFilters.copyWith(sortBy: _selectedSortBy),
+        );
+
     setState(() {
       _showFilters = false;
     });

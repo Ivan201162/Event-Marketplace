@@ -17,7 +17,8 @@ class SpecialistCalendarWidget extends StatefulWidget {
   final void Function(DateTime)? onDateTapped;
 
   @override
-  State<SpecialistCalendarWidget> createState() => _SpecialistCalendarWidgetState();
+  State<SpecialistCalendarWidget> createState() =>
+      _SpecialistCalendarWidgetState();
 }
 
 class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
@@ -57,7 +58,10 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                     'Доступность специалиста',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -84,14 +88,16 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                     color: Theme.of(context).primaryColor,
                     shape: BoxShape.circle,
                   ),
-                  todayDecoration:
-                      const BoxDecoration(color: Colors.orange, shape: BoxShape.circle),
-                  markerDecoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                  todayDecoration: const BoxDecoration(
+                      color: Colors.orange, shape: BoxShape.circle),
+                  markerDecoration: const BoxDecoration(
+                      color: Colors.red, shape: BoxShape.circle),
                   markersMaxCount: 1,
                   markerSize: 6,
                   markerMargin: const EdgeInsets.symmetric(horizontal: 1),
                 ),
-                headerStyle: const HeaderStyle(formatButtonVisible: false, titleCentered: true),
+                headerStyle: const HeaderStyle(
+                    formatButtonVisible: false, titleCentered: true),
                 onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDay, selectedDay)) {
                     setState(() {
@@ -106,7 +112,8 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                   _focusedDay = focusedDay;
                 },
                 calendarBuilders: CalendarBuilders(
-                  defaultBuilder: (context, day, focusedDay) => _buildDayCell(day, focusedDay),
+                  defaultBuilder: (context, day, focusedDay) =>
+                      _buildDayCell(day, focusedDay),
                   todayBuilder: (context, day, focusedDay) =>
                       _buildDayCell(day, focusedDay, isToday: true),
                   selectedBuilder: (context, day, focusedDay) =>
@@ -118,8 +125,8 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                         child: Container(
                           width: 6,
                           height: 6,
-                          decoration:
-                              const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                          decoration: const BoxDecoration(
+                              color: Colors.red, shape: BoxShape.circle),
                         ),
                       );
                     }
@@ -140,13 +147,19 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
   Widget _buildLegend() => Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildLegendItem(color: Colors.green, label: 'Свободно', icon: Icons.check_circle),
-          _buildLegendItem(color: Colors.red, label: 'Занято', icon: Icons.cancel),
-          _buildLegendItem(color: Colors.orange, label: 'Сегодня', icon: Icons.today),
+          _buildLegendItem(
+              color: Colors.green, label: 'Свободно', icon: Icons.check_circle),
+          _buildLegendItem(
+              color: Colors.red, label: 'Занято', icon: Icons.cancel),
+          _buildLegendItem(
+              color: Colors.orange, label: 'Сегодня', icon: Icons.today),
         ],
       );
 
-  Widget _buildLegendItem({required Color color, required String label, required IconData icon}) =>
+  Widget _buildLegendItem(
+          {required Color color,
+          required String label,
+          required IconData icon}) =>
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -154,7 +167,8 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
           const SizedBox(width: 4),
           Text(
             label,
-            style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                color: color, fontSize: 12, fontWeight: FontWeight.w500),
           ),
         ],
       );
@@ -166,7 +180,8 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
     bool isSelected = false,
   }) {
     final isBusy = widget.specialist.isDateBusy(day);
-    final isPast = day.isBefore(DateTime.now().subtract(const Duration(days: 1)));
+    final isPast =
+        day.isBefore(DateTime.now().subtract(const Duration(days: 1)));
 
     var backgroundColor = Colors.transparent;
     var textColor = Colors.black;
@@ -215,12 +230,15 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
 
   Widget _buildSelectedDateInfo() {
     final isBusy = widget.specialist.isDateBusy(_selectedDay!);
-    final isPast = _selectedDay!.isBefore(DateTime.now().subtract(const Duration(days: 1)));
+    final isPast = _selectedDay!
+        .isBefore(DateTime.now().subtract(const Duration(days: 1)));
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isBusy ? Colors.red.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
+        color: isBusy
+            ? Colors.red.withValues(alpha: 0.1)
+            : Colors.green.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: isBusy ? Colors.red : Colors.green),
       ),
@@ -237,7 +255,8 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
               children: [
                 Text(
                   _formatDate(_selectedDay!),
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -246,7 +265,8 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
                       : isBusy
                           ? 'Специалист занят в этот день'
                           : 'Специалист доступен для бронирования',
-                  style: TextStyle(color: isBusy ? Colors.red : Colors.green, fontSize: 14),
+                  style: TextStyle(
+                      color: isBusy ? Colors.red : Colors.green, fontSize: 14),
                 ),
               ],
             ),
@@ -257,7 +277,8 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
               child: const Text('Забронировать'),
             ),
@@ -288,7 +309,8 @@ class _SpecialistCalendarWidgetState extends State<SpecialistCalendarWidget> {
 
 /// Упрощенный виджет календаря для быстрого просмотра
 class CompactSpecialistCalendarWidget extends StatelessWidget {
-  const CompactSpecialistCalendarWidget({super.key, required this.specialist, this.onDateSelected});
+  const CompactSpecialistCalendarWidget(
+      {super.key, required this.specialist, this.onDateSelected});
 
   final Specialist specialist;
   final void Function(DateTime)? onDateSelected;
@@ -303,13 +325,17 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.calendar_today, size: 20, color: Colors.blue),
+                  const Icon(Icons.calendar_today,
+                      size: 20, color: Colors.blue),
                   const SizedBox(width: 8),
                   Text(
                     'Доступность',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -352,7 +378,8 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
                   child: Text(
                     day,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
               )
@@ -399,7 +426,8 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
                             : isBusy
                                 ? Colors.red
                                 : Colors.green,
-                        fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isToday ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                   ),
@@ -434,7 +462,8 @@ class CompactSpecialistCalendarWidget extends StatelessWidget {
         children: [
           Text(
             '$count',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: color),
           ),
           Text(label, style: TextStyle(fontSize: 12, color: color)),
         ],

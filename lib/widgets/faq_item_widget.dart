@@ -41,7 +41,8 @@ class FAQItemWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         faqItem.question,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -67,17 +68,25 @@ class FAQItemWidget extends StatelessWidget {
                             children: [
                               Icon(
                                 faqItem.isPublished ? Icons.lock : Icons.public,
-                                color: faqItem.isPublished ? Colors.grey : Colors.green,
+                                color: faqItem.isPublished
+                                    ? Colors.grey
+                                    : Colors.green,
                               ),
                               const SizedBox(width: 8),
-                              Text(faqItem.isPublished ? 'Скрыть' : 'Опубликовать'),
+                              Text(faqItem.isPublished
+                                  ? 'Скрыть'
+                                  : 'Опубликовать'),
                             ],
                           ),
                         ),
                         const PopupMenuItem(
                           value: 'edit',
                           child: Row(
-                            children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')],
+                            children: [
+                              Icon(Icons.edit),
+                              SizedBox(width: 8),
+                              Text('Редактировать')
+                            ],
                           ),
                         ),
                         const PopupMenuItem(
@@ -86,7 +95,8 @@ class FAQItemWidget extends StatelessWidget {
                             children: [
                               Icon(Icons.delete, color: Colors.red),
                               SizedBox(width: 8),
-                              Text('Удалить', style: TextStyle(color: Colors.red)),
+                              Text('Удалить',
+                                  style: TextStyle(color: Colors.red)),
                             ],
                           ),
                         ),

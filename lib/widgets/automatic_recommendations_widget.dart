@@ -16,11 +16,14 @@ class AutomaticRecommendationsWidget extends StatefulWidget {
   final void Function(Specialist)? onSpecialistSelected;
 
   @override
-  State<AutomaticRecommendationsWidget> createState() => _AutomaticRecommendationsWidgetState();
+  State<AutomaticRecommendationsWidget> createState() =>
+      _AutomaticRecommendationsWidgetState();
 }
 
-class _AutomaticRecommendationsWidgetState extends State<AutomaticRecommendationsWidget> {
-  final AutomaticRecommendationService _service = AutomaticRecommendationService();
+class _AutomaticRecommendationsWidgetState
+    extends State<AutomaticRecommendationsWidget> {
+  final AutomaticRecommendationService _service =
+      AutomaticRecommendationService();
   List<SpecialistRecommendation> _recommendations = [];
   bool _isLoading = false;
   String? _error;
@@ -54,7 +57,8 @@ class _AutomaticRecommendationsWidgetState extends State<AutomaticRecommendation
     });
 
     try {
-      final recommendations = await _service.getRecommendationsForSelectedSpecialists(
+      final recommendations =
+          await _service.getRecommendationsForSelectedSpecialists(
         selectedSpecialistIds: widget.selectedSpecialistIds,
         userId: widget.userId,
       );
@@ -114,7 +118,10 @@ class _LoadingWidget extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: const Row(
           children: [
-            SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2)),
             SizedBox(width: 12),
             Text('Загружаем рекомендации...'),
           ],
@@ -204,7 +211,8 @@ class _RecommendationsList extends StatelessWidget {
 
 /// Карточка рекомендации
 class _RecommendationCard extends StatelessWidget {
-  const _RecommendationCard({required this.recommendation, required this.onTap});
+  const _RecommendationCard(
+      {required this.recommendation, required this.onTap});
 
   final SpecialistRecommendation recommendation;
   final VoidCallback onTap;
@@ -227,13 +235,15 @@ class _RecommendationCard extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundImage: recommendation.specialist.avatarUrl != null
+                        backgroundImage: recommendation.specialist.avatarUrl !=
+                                null
                             ? NetworkImage(recommendation.specialist.avatarUrl!)
                             : null,
                         child: recommendation.specialist.avatarUrl == null
                             ? Text(
                                 recommendation.specialist.name.isNotEmpty
-                                    ? recommendation.specialist.name[0].toUpperCase()
+                                    ? recommendation.specialist.name[0]
+                                        .toUpperCase()
                                     : '?',
                                 style: const TextStyle(fontSize: 12),
                               )
@@ -243,7 +253,8 @@ class _RecommendationCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           recommendation.specialist.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -264,7 +275,8 @@ class _RecommendationCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         recommendation.specialist.rating.toStringAsFixed(1),
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 11, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       Text(

@@ -16,7 +16,8 @@ class SearchFiltersWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SearchFiltersWidget> createState() => _SearchFiltersWidgetState();
+  ConsumerState<SearchFiltersWidget> createState() =>
+      _SearchFiltersWidgetState();
 }
 
 class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
@@ -37,7 +38,9 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Фильтры поиска'),
-        actions: [TextButton(onPressed: _resetFilters, child: const Text('Сбросить'))],
+        actions: [
+          TextButton(onPressed: _resetFilters, child: const Text('Сбросить'))
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -56,7 +59,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
             // Specialization filter
             _buildSectionTitle('Специализация'),
             specializationsAsync.when(
-              data: (specializations) => _buildSpecializationFilter(specializations),
+              data: (specializations) =>
+                  _buildSpecializationFilter(specializations),
               loading: () => const CircularProgressIndicator(),
               error: (_, __) => const Text('Ошибка загрузки специализаций'),
             ),
@@ -116,7 +120,10 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       padding: const EdgeInsets.only(bottom: 10),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        style: Theme.of(context)
+            .textTheme
+            .titleMedium
+            ?.copyWith(fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -124,10 +131,12 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
   Widget _buildCityFilter(List<String> cities) {
     return DropdownButtonFormField<String>(
       initialValue: _currentFilters.city,
-      decoration: const InputDecoration(border: OutlineInputBorder(), labelText: 'Выберите город'),
+      decoration: const InputDecoration(
+          border: OutlineInputBorder(), labelText: 'Выберите город'),
       items: [
         const DropdownMenuItem(child: Text('Любой город')),
-        ...cities.map((city) => DropdownMenuItem(value: city, child: Text(city))),
+        ...cities
+            .map((city) => DropdownMenuItem(value: city, child: Text(city))),
       ],
       onChanged: (value) {
         setState(() {
@@ -147,7 +156,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       items: [
         const DropdownMenuItem(child: Text('Любая специализация')),
         ...specializations.map(
-          (specialization) => DropdownMenuItem(value: specialization, child: Text(specialization)),
+          (specialization) => DropdownMenuItem(
+              value: specialization, child: Text(specialization)),
         ),
       ],
       onChanged: (value) {
@@ -168,7 +178,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           label: (_currentFilters.minRating ?? 0.0).toStringAsFixed(1),
           onChanged: (value) {
             setState(() {
-              _currentFilters = _currentFilters.copyWith(minRating: value == 0 ? null : value);
+              _currentFilters = _currentFilters.copyWith(
+                  minRating: value == 0 ? null : value);
             });
           },
         ),
@@ -241,7 +252,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
                     );
                   } else {
                     _currentFilters = _currentFilters.copyWith(
-                      services: currentServices.where((s) => s != service).toList(),
+                      services:
+                          currentServices.where((s) => s != service).toList(),
                     );
                   }
                 });
@@ -269,7 +281,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
       selected: {_currentFilters.isAvailable},
       onSelectionChanged: (Set<bool?> selection) {
         setState(() {
-          _currentFilters = _currentFilters.copyWith(isAvailable: selection.first);
+          _currentFilters =
+              _currentFilters.copyWith(isAvailable: selection.first);
         });
       },
     );
@@ -313,7 +326,8 @@ class _SearchFiltersWidgetState extends ConsumerState<SearchFiltersWidget> {
           selected: {_currentFilters.sortAscending ?? true},
           onSelectionChanged: (Set<bool> selection) {
             setState(() {
-              _currentFilters = _currentFilters.copyWith(sortAscending: selection.first);
+              _currentFilters =
+                  _currentFilters.copyWith(sortAscending: selection.first);
             });
           },
         ),

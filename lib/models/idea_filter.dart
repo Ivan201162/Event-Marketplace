@@ -10,7 +10,8 @@ class IdeaFilter {
   });
 
   /// Создать фильтр для публичных идей
-  factory IdeaFilter.public({int? limit}) => IdeaFilter(isPublic: true, limit: limit);
+  factory IdeaFilter.public({int? limit}) =>
+      IdeaFilter(isPublic: true, limit: limit);
 
   /// Создать фильтр по категории
   factory IdeaFilter.byCategory(String category, {int? limit}) =>
@@ -42,14 +43,15 @@ class IdeaFilter {
     bool? isPublic,
     int? limit,
     String? searchQuery,
-  }) => IdeaFilter(
-    category: category ?? this.category,
-    authorId: authorId ?? this.authorId,
-    tags: tags ?? this.tags,
-    isPublic: isPublic ?? this.isPublic,
-    limit: limit ?? this.limit,
-    searchQuery: searchQuery ?? this.searchQuery,
-  );
+  }) =>
+      IdeaFilter(
+        category: category ?? this.category,
+        authorId: authorId ?? this.authorId,
+        tags: tags ?? this.tags,
+        isPublic: isPublic ?? this.isPublic,
+        limit: limit ?? this.limit,
+        searchQuery: searchQuery ?? this.searchQuery,
+      );
 
   @override
   bool operator ==(Object other) {

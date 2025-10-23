@@ -76,16 +76,16 @@ class Badge {
 
   /// Преобразует бейдж в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'type': type.name,
-    'title': title,
-    'description': description,
-    'icon': icon,
-    'color': color,
-    'earnedAt': Timestamp.fromDate(earnedAt),
-    'isVisible': isVisible,
-    'metadata': metadata,
-  };
+        'userId': userId,
+        'type': type.name,
+        'title': title,
+        'description': description,
+        'icon': icon,
+        'color': color,
+        'earnedAt': Timestamp.fromDate(earnedAt),
+        'isVisible': isVisible,
+        'metadata': metadata,
+      };
 
   /// Создаёт копию бейджа с обновлёнными полями
   Badge copyWith({
@@ -99,18 +99,19 @@ class Badge {
     DateTime? earnedAt,
     bool? isVisible,
     Map<String, dynamic>? metadata,
-  }) => Badge(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    type: type ?? this.type,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    icon: icon ?? this.icon,
-    color: color ?? this.color,
-    earnedAt: earnedAt ?? this.earnedAt,
-    isVisible: isVisible ?? this.isVisible,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      Badge(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        icon: icon ?? this.icon,
+        color: color ?? this.color,
+        earnedAt: earnedAt ?? this.earnedAt,
+        isVisible: isVisible ?? this.isVisible,
+        metadata: metadata ?? this.metadata,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -383,7 +384,8 @@ extension BadgeListExtension on List<Badge> {
       where((badge) => badge.type.info.category == category).toList();
 
   /// Получает последние бейджи
-  List<Badge> get recent => toList()..sort((a, b) => b.earnedAt.compareTo(a.earnedAt));
+  List<Badge> get recent =>
+      toList()..sort((a, b) => b.earnedAt.compareTo(a.earnedAt));
 
   /// Получает видимые бейджи
   List<Badge> get visible => where((badge) => badge.isVisible).toList();

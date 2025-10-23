@@ -19,7 +19,8 @@ class FirestoreTestService {
   /// Test Firestore permissions for authenticated users
   Future<bool> testAuthenticatedUserPermissions() async {
     try {
-      debugPrint('🔐 Тестирование прав доступа для авторизованных пользователей...');
+      debugPrint(
+          '🔐 Тестирование прав доступа для авторизованных пользователей...');
 
       // Test reading posts (feed)
       final posts = await _postService.getPosts(limit: 5);
@@ -27,11 +28,13 @@ class FirestoreTestService {
 
       // Test reading categories
       final categories = await _categoryService.getIdeaCategories();
-      debugPrint('✅ Чтение категорий: ${categories.length} категорий загружено');
+      debugPrint(
+          '✅ Чтение категорий: ${categories.length} категорий загружено');
 
       // Test reading specialists
       final specialists = await _testDataService.getTestSpecialists();
-      debugPrint('✅ Чтение специалистов: ${specialists.length} специалистов загружено');
+      debugPrint(
+          '✅ Чтение специалистов: ${specialists.length} специалистов загружено');
 
       // Test reading tariffs
       final tariffs = await _tariffService.getTariffs();
@@ -47,30 +50,36 @@ class FirestoreTestService {
   /// Test Firestore permissions for unauthenticated users
   Future<bool> testUnauthenticatedUserPermissions() async {
     try {
-      debugPrint('🔓 Тестирование прав доступа для неавторизованных пользователей...');
+      debugPrint(
+          '🔓 Тестирование прав доступа для неавторизованных пользователей...');
 
       // Sign out first
       await _authService.signOut();
 
       // Test reading posts (should work for unauthenticated users)
       final posts = await _postService.getPosts(limit: 5);
-      debugPrint('✅ Чтение ленты (неавторизованный): ${posts.length} постов загружено');
+      debugPrint(
+          '✅ Чтение ленты (неавторизованный): ${posts.length} постов загружено');
 
       // Test reading categories (should work for unauthenticated users)
       final categories = await _categoryService.getIdeaCategories();
-      debugPrint('✅ Чтение категорий (неавторизованный): ${categories.length} категорий загружено');
+      debugPrint(
+          '✅ Чтение категорий (неавторизованный): ${categories.length} категорий загружено');
 
       // Test reading specialists (should work for unauthenticated users)
       final specialists = await _testDataService.getTestSpecialists();
-      debugPrint('✅ Чтение специалистов (неавторизованный): ${specialists.length} специалистов загружено');
+      debugPrint(
+          '✅ Чтение специалистов (неавторизованный): ${specialists.length} специалистов загружено');
 
       // Test reading tariffs (should work for unauthenticated users)
       final tariffs = await _tariffService.getTariffs();
-      debugPrint('✅ Чтение тарифов (неавторизованный): ${tariffs.length} тарифов загружено');
+      debugPrint(
+          '✅ Чтение тарифов (неавторизованный): ${tariffs.length} тарифов загружено');
 
       return true;
     } catch (e) {
-      debugPrint('❌ Ошибка тестирования прав неавторизованного пользователя: $e');
+      debugPrint(
+          '❌ Ошибка тестирования прав неавторизованного пользователя: $e');
       return false;
     }
   }
@@ -128,13 +137,15 @@ class FirestoreTestService {
       debugPrint('👤 Тестирование прав доступа к профилю пользователя...');
 
       // Test reading user profile
-      final userDoc = await _firestore.collection('users').doc('test_user_id').get();
-      
+      final userDoc =
+          await _firestore.collection('users').doc('test_user_id').get();
+
       if (userDoc.exists) {
         debugPrint('✅ Чтение профиля пользователя: успешно');
         return true;
       } else {
-        debugPrint('⚠️ Профиль пользователя не найден (это нормально для тестов)');
+        debugPrint(
+            '⚠️ Профиль пользователя не найден (это нормально для тестов)');
         return true;
       }
     } catch (e) {
@@ -150,7 +161,8 @@ class FirestoreTestService {
     final results = <String, bool>{};
 
     // Test unauthenticated permissions
-    results['unauthenticated_read'] = await testUnauthenticatedUserPermissions();
+    results['unauthenticated_read'] =
+        await testUnauthenticatedUserPermissions();
 
     // Test authenticated permissions
     results['authenticated_read'] = await testAuthenticatedUserPermissions();
@@ -167,7 +179,8 @@ class FirestoreTestService {
     // Print summary
     debugPrint('\n📊 Результаты тестирования:');
     results.forEach((test, result) {
-      debugPrint('${result ? '✅' : '❌'} $test: ${result ? 'ПРОЙДЕН' : 'ПРОВАЛЕН'}');
+      debugPrint(
+          '${result ? '✅' : '❌'} $test: ${result ? 'ПРОЙДЕН' : 'ПРОВАЛЕН'}');
     });
 
     final passedTests = results.values.where((result) => result).length;
@@ -181,16 +194,15 @@ class FirestoreTestService {
   Future<void> initializeAndTest() async {
     try {
       debugPrint('🔧 Инициализация тестовых данных...');
-      
+
       // Create test data
       await _testDataService.createAllTestData();
-      
+
       debugPrint('⏳ Ожидание 3 секунды для синхронизации данных...');
       await Future.delayed(const Duration(seconds: 3));
-      
+
       // Run comprehensive test
       await runComprehensiveTest();
-      
     } catch (e) {
       debugPrint('❌ Ошибка инициализации и тестирования: $e');
     }

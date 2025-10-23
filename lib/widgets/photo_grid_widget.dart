@@ -66,7 +66,8 @@ class PhotoGridWidget extends StatelessWidget {
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.public, color: Colors.white, size: 16),
+                  child:
+                      const Icon(Icons.public, color: Colors.white, size: 16),
                 ),
               ),
 
@@ -77,7 +78,8 @@ class PhotoGridWidget extends StatelessWidget {
                 left: 8,
                 right: 8,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.black54,
                     borderRadius: BorderRadius.circular(12),
@@ -106,7 +108,8 @@ class PhotoGridWidget extends StatelessWidget {
                     color: Colors.black54,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(Icons.more_vert, color: Colors.white, size: 16),
+                  child: const Icon(Icons.more_vert,
+                      color: Colors.white, size: 16),
                 ),
                 onSelected: (value) {
                   switch (value) {
@@ -121,8 +124,11 @@ class PhotoGridWidget extends StatelessWidget {
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'edit',
-                    child: Row(
-                        children: [Icon(Icons.edit), SizedBox(width: 8), Text('Редактировать')]),
+                    child: Row(children: [
+                      Icon(Icons.edit),
+                      SizedBox(width: 8),
+                      Text('Редактировать')
+                    ]),
                   ),
                   const PopupMenuItem(
                     value: 'delete',

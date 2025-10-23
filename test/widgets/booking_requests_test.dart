@@ -15,7 +15,8 @@ void main() {
 
       // Assert
       expect(find.text('Заявки на бронирование'), findsOneWidget);
-      expect(find.text('У вас пока нет заявок на бронирование'), findsOneWidget);
+      expect(
+          find.text('У вас пока нет заявок на бронирование'), findsOneWidget);
       expect(find.byIcon(Icons.event_available), findsOneWidget);
     });
 
@@ -43,7 +44,8 @@ void main() {
       expect(find.text('Повторить'), findsOneWidget);
     });
 
-    testWidgets('should display booking requests when available', (tester) async {
+    testWidgets('should display booking requests when available',
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
@@ -67,7 +69,8 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('should show filter dialog when filter button tapped', (tester) async {
+    testWidgets('should show filter dialog when filter button tapped',
+        (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
@@ -87,7 +90,8 @@ void main() {
       expect(find.text('Отклонены'), findsOneWidget);
     });
 
-    testWidgets('should show booking details when booking card tapped', (tester) async {
+    testWidgets('should show booking details when booking card tapped',
+        (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
@@ -106,7 +110,8 @@ void main() {
       }
     });
 
-    testWidgets('should show confirm dialog when confirm button tapped', (tester) async {
+    testWidgets('should show confirm dialog when confirm button tapped',
+        (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
@@ -122,13 +127,15 @@ void main() {
 
         // Assert
         expect(find.text('Подтвердить заявку'), findsOneWidget);
-        expect(find.text('Вы уверены, что хотите подтвердить эту заявку?'), findsOneWidget);
+        expect(find.text('Вы уверены, что хотите подтвердить эту заявку?'),
+            findsOneWidget);
         expect(find.text('Подтвердить'), findsOneWidget);
         expect(find.text('Отмена'), findsOneWidget);
       }
     });
 
-    testWidgets('should show reject dialog when reject button tapped', (tester) async {
+    testWidgets('should show reject dialog when reject button tapped',
+        (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
@@ -144,7 +151,8 @@ void main() {
 
         // Assert
         expect(find.text('Отклонить заявку'), findsOneWidget);
-        expect(find.text('Вы уверены, что хотите отклонить эту заявку?'), findsOneWidget);
+        expect(find.text('Вы уверены, что хотите отклонить эту заявку?'),
+            findsOneWidget);
         expect(find.text('Отклонить'), findsOneWidget);
         expect(find.text('Отмена'), findsOneWidget);
       }
@@ -174,7 +182,8 @@ void main() {
       expect(find.text('Заявки на бронирование'), findsOneWidget);
     });
 
-    testWidgets('should display customer information correctly', (tester) async {
+    testWidgets('should display customer information correctly',
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),
@@ -222,7 +231,8 @@ void main() {
       expect(find.text('Заявки на бронирование'), findsOneWidget);
     });
 
-    testWidgets('should handle booking status updates correctly', (tester) async {
+    testWidgets('should handle booking status updates correctly',
+        (tester) async {
       // Arrange
       await tester.pumpWidget(
         const ProviderScope(child: MaterialApp(home: BookingRequestsScreen())),

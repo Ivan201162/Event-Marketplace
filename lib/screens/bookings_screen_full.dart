@@ -111,10 +111,12 @@ class _MyBookingsTab extends ConsumerWidget {
     );
   }
 
-  void _navigateToBookingDetails(BuildContext context, Map<String, dynamic> booking) {
+  void _navigateToBookingDetails(
+      BuildContext context, Map<String, dynamic> booking) {
     Navigator.push(
       context,
-      MaterialPageRoute<void>(builder: (context) => BookingDetailsScreen(booking: booking)),
+      MaterialPageRoute<void>(
+          builder: (context) => BookingDetailsScreen(booking: booking)),
     );
   }
 
@@ -123,7 +125,8 @@ class _MyBookingsTab extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          chatId:
+              '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
           otherParticipantId: booking['specialistId'] ?? '',
           otherParticipantName: booking['specialistName'] ?? 'Специалист',
         ),
@@ -160,7 +163,8 @@ class _IncomingBookingsTab extends ConsumerWidget {
                   style: TextStyle(fontSize: 18, color: Colors.grey),
                 ),
                 SizedBox(height: 10),
-                Text('Заявки от заказчиков появятся здесь', style: TextStyle(color: Colors.grey)),
+                Text('Заявки от заказчиков появятся здесь',
+                    style: TextStyle(color: Colors.grey)),
               ],
             ),
           );
@@ -187,10 +191,12 @@ class _IncomingBookingsTab extends ConsumerWidget {
     );
   }
 
-  void _navigateToBookingDetails(BuildContext context, Map<String, dynamic> booking) {
+  void _navigateToBookingDetails(
+      BuildContext context, Map<String, dynamic> booking) {
     Navigator.push(
       context,
-      MaterialPageRoute<void>(builder: (context) => BookingDetailsScreen(booking: booking)),
+      MaterialPageRoute<void>(
+          builder: (context) => BookingDetailsScreen(booking: booking)),
     );
   }
 
@@ -199,7 +205,8 @@ class _IncomingBookingsTab extends ConsumerWidget {
       context,
       MaterialPageRoute<void>(
         builder: (context) => ChatScreen(
-          chatId: '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
+          chatId:
+              '${booking['customerId'] ?? ''}_${booking['specialistId'] ?? ''}',
           otherParticipantId: booking['customerId'] ?? '',
           otherParticipantName: booking['customerName'] ?? 'Заказчик',
         ),
@@ -207,9 +214,11 @@ class _IncomingBookingsTab extends ConsumerWidget {
     );
   }
 
-  Future<void> _confirmBooking(BuildContext context, Map<String, dynamic> booking) async {
+  Future<void> _confirmBooking(
+      BuildContext context, Map<String, dynamic> booking) async {
     try {
-      await BookingService().updateBookingStatus(booking['id'] ?? '', 'Подтверждено');
+      await BookingService()
+          .updateBookingStatus(booking['id'] ?? '', 'Подтверждено');
 
       // Отправляем уведомление заказчику
       // await NotificationService().sendNotification(
@@ -220,21 +229,26 @@ class _IncomingBookingsTab extends ConsumerWidget {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Заявка подтверждена'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Заявка подтверждена'),
+              backgroundColor: Colors.green),
         );
       }
     } on Exception catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     }
   }
 
-  Future<void> _rejectBooking(BuildContext context, Map<String, dynamic> booking) async {
+  Future<void> _rejectBooking(
+      BuildContext context, Map<String, dynamic> booking) async {
     try {
-      await BookingService().updateBookingStatus(booking['id'] ?? '', 'Отклонено');
+      await BookingService()
+          .updateBookingStatus(booking['id'] ?? '', 'Отклонено');
 
       // Отправляем уведомление заказчику
       // await NotificationService().sendNotification(
@@ -245,14 +259,17 @@ class _IncomingBookingsTab extends ConsumerWidget {
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Заявка отклонена'), backgroundColor: Colors.orange),
+          const SnackBar(
+              content: Text('Заявка отклонена'),
+              backgroundColor: Colors.orange),
         );
       }
     } on Exception catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -277,110 +294,113 @@ class _BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    margin: const EdgeInsets.only(bottom: 12),
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        booking['eventType'] ?? 'Заявка на мероприятие',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        booking['eventDate'] ?? 'Дата не указана',
-                        style: const TextStyle(fontSize: 14, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ),
-                _StatusChip(status: booking['status'] ?? 'Неизвестно'),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Icon(Icons.attach_money, size: 16, color: Colors.green[700]),
-                const SizedBox(width: 4),
-                Text(
-                  '${(booking['totalPrice'] ?? 0.0).toStringAsFixed(0)} ₽',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green[700],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Icon(Icons.payment, size: 16, color: Colors.blue[700]),
-                const SizedBox(width: 4),
-                Text(
-                  'Аванс: ${(booking['prepayment'] ?? 0.0).toStringAsFixed(0)} ₽',
-                  style: TextStyle(fontSize: 14, color: Colors.blue[700]),
-                ),
-              ],
-            ),
-            if ((booking['message'] ?? '').isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(
-                booking['message'] ?? '',
-                style: const TextStyle(fontSize: 14),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: onChatTap,
-                    icon: const Icon(Icons.chat, size: 16),
-                    label: const Text('Чат'),
-                  ),
-                ),
-                if (showActions && booking['status'] == 'В обработке') ...[
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: onConfirm,
-                      icon: const Icon(Icons.check, size: 16),
-                      label: const Text('Подтвердить'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            booking['eventType'] ?? 'Заявка на мероприятие',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            booking['eventDate'] ?? 'Дата не указана',
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.grey),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: onReject,
-                      icon: const Icon(Icons.close, size: 16),
-                      label: const Text('Отклонить'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        side: const BorderSide(color: Colors.red),
+                    _StatusChip(status: booking['status'] ?? 'Неизвестно'),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Icon(Icons.attach_money,
+                        size: 16, color: Colors.green[700]),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${(booking['totalPrice'] ?? 0.0).toStringAsFixed(0)} ₽',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.green[700],
                       ),
                     ),
+                    const SizedBox(width: 16),
+                    Icon(Icons.payment, size: 16, color: Colors.blue[700]),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Аванс: ${(booking['prepayment'] ?? 0.0).toStringAsFixed(0)} ₽',
+                      style: TextStyle(fontSize: 14, color: Colors.blue[700]),
+                    ),
+                  ],
+                ),
+                if ((booking['message'] ?? '').isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    booking['message'] ?? '',
+                    style: const TextStyle(fontSize: 14),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: onChatTap,
+                        icon: const Icon(Icons.chat, size: 16),
+                        label: const Text('Чат'),
+                      ),
+                    ),
+                    if (showActions && booking['status'] == 'В обработке') ...[
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: onConfirm,
+                          icon: const Icon(Icons.check, size: 16),
+                          label: const Text('Подтвердить'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: onReject,
+                          icon: const Icon(Icons.close, size: 16),
+                          label: const Text('Отклонить'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.red,
+                            side: const BorderSide(color: Colors.red),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 /// Чип статуса заявки
@@ -424,10 +444,12 @@ class _StatusChip extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: backgroundColor, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+          color: backgroundColor, borderRadius: BorderRadius.circular(12)),
       child: Text(
         text,
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: textColor),
+        style: TextStyle(
+            fontSize: 12, fontWeight: FontWeight.w500, color: textColor),
       ),
     );
   }

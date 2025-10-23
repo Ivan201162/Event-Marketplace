@@ -22,8 +22,10 @@ class ChatTestDataGenerator {
       await _createTestUsers(customerId, specialist1Id, specialist2Id);
 
       // Создаем чаты
-      final chat1Id = await _createTestChat(customerId, specialist1Id, 'Ведущий');
-      final chat2Id = await _createTestChat(customerId, specialist2Id, 'Фотограф');
+      final chat1Id =
+          await _createTestChat(customerId, specialist1Id, 'Ведущий');
+      final chat2Id =
+          await _createTestChat(customerId, specialist2Id, 'Фотограф');
 
       // Создаем сообщения для первого чата (с ведущим)
       await _createMessagesForChat1(chat1Id, customerId, specialist1Id);
@@ -89,7 +91,8 @@ class ChatTestDataGenerator {
       'participants': [customerId, specialistId],
       'participantNames': {
         customerId: 'Анна Петрова',
-        specialistId: specialistType == 'Ведущий' ? 'Михаил Ведущий' : 'Елена Фотограф',
+        specialistId:
+            specialistType == 'Ведущий' ? 'Михаил Ведущий' : 'Елена Фотограф',
       },
       'participantAvatars': {
         customerId: 'https://via.placeholder.com/150/FF6B6B/FFFFFF?text=AP',
@@ -120,9 +123,11 @@ class ChatTestDataGenerator {
         'senderName': 'Анна Петрова',
         'senderAvatar': 'https://via.placeholder.com/150/FF6B6B/FFFFFF?text=AP',
         'type': 'text',
-        'content': 'Здравствуйте! Меня интересует проведение свадьбы на 50 человек.',
+        'content':
+            'Здравствуйте! Меня интересует проведение свадьбы на 50 человек.',
         'status': 'read',
-        'timestamp': Timestamp.fromDate(DateTime.now().subtract(const Duration(hours: 2))),
+        'timestamp': Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(hours: 2))),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -147,7 +152,8 @@ class ChatTestDataGenerator {
         'senderName': 'Анна Петрова',
         'senderAvatar': 'https://via.placeholder.com/150/FF6B6B/FFFFFF?text=AP',
         'type': 'text',
-        'content': 'Свадьба планируется на 15 июня. Хотелось бы обсудить программу и стоимость.',
+        'content':
+            'Свадьба планируется на 15 июня. Хотелось бы обсудить программу и стоимость.',
         'status': 'read',
         'timestamp': Timestamp.fromDate(
           DateTime.now().subtract(const Duration(hours: 1, minutes: 30)),
@@ -163,7 +169,8 @@ class ChatTestDataGenerator {
         'senderAvatar': 'https://via.placeholder.com/150/4ECDC4/FFFFFF?text=MV',
         'type': 'image',
         'content': 'Примеры моих работ',
-        'fileUrl': 'https://via.placeholder.com/400x300/4ECDC4/FFFFFF?text=Wedding+Photo',
+        'fileUrl':
+            'https://via.placeholder.com/400x300/4ECDC4/FFFFFF?text=Wedding+Photo',
         'fileName': 'wedding_example.jpg',
         'fileSize': 1024000,
         'status': 'read',
@@ -181,12 +188,15 @@ class ChatTestDataGenerator {
         'senderAvatar': 'https://via.placeholder.com/150/4ECDC4/FFFFFF?text=MV',
         'type': 'video',
         'content': 'Видео с предыдущей свадьбы',
-        'fileUrl': 'https://via.placeholder.com/400x300/FF6B6B/FFFFFF?text=Wedding+Video',
+        'fileUrl':
+            'https://via.placeholder.com/400x300/FF6B6B/FFFFFF?text=Wedding+Video',
         'fileName': 'wedding_video.mp4',
         'fileSize': 15728640, // 15 MB
-        'thumbnailUrl': 'https://via.placeholder.com/200x150/FF6B6B/FFFFFF?text=Video+Thumb',
+        'thumbnailUrl':
+            'https://via.placeholder.com/200x150/FF6B6B/FFFFFF?text=Video+Thumb',
         'status': 'read',
-        'timestamp': Timestamp.fromDate(DateTime.now().subtract(const Duration(minutes: 45))),
+        'timestamp': Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(minutes: 45))),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -201,7 +211,8 @@ class ChatTestDataGenerator {
     await _firestore.collection('chats').doc(chatId).update({
       'lastMessageContent': 'Видео с предыдущей свадьбы',
       'lastMessageType': 'video',
-      'lastMessageTime': Timestamp.fromDate(DateTime.now().subtract(const Duration(minutes: 45))),
+      'lastMessageTime': Timestamp.fromDate(
+          DateTime.now().subtract(const Duration(minutes: 45))),
       'lastMessageSenderId': specialistId,
       'updatedAt': FieldValue.serverTimestamp(),
     });
@@ -223,7 +234,8 @@ class ChatTestDataGenerator {
         'type': 'text',
         'content': 'Привет! Нужен фотограф на свадьбу 15 июня.',
         'status': 'read',
-        'timestamp': Timestamp.fromDate(DateTime.now().subtract(const Duration(hours: 3))),
+        'timestamp': Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(hours: 3))),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -265,7 +277,8 @@ class ChatTestDataGenerator {
         'senderAvatar': 'https://via.placeholder.com/150/45B7D1/FFFFFF?text=EF',
         'type': 'image',
         'content': 'Мое портфолио',
-        'fileUrl': 'https://via.placeholder.com/400x300/45B7D1/FFFFFF?text=Portfolio+Photo',
+        'fileUrl':
+            'https://via.placeholder.com/400x300/45B7D1/FFFFFF?text=Portfolio+Photo',
         'fileName': 'portfolio.jpg',
         'fileSize': 2048000,
         'status': 'read',
@@ -283,12 +296,15 @@ class ChatTestDataGenerator {
         'senderAvatar': 'https://via.placeholder.com/150/45B7D1/FFFFFF?text=EF',
         'type': 'video',
         'content': 'Свадебная съемка - пример',
-        'fileUrl': 'https://via.placeholder.com/400x300/96CEB4/FFFFFF?text=Wedding+Shooting',
+        'fileUrl':
+            'https://via.placeholder.com/400x300/96CEB4/FFFFFF?text=Wedding+Shooting',
         'fileName': 'wedding_shooting.mp4',
         'fileSize': 25165824, // 24 MB
-        'thumbnailUrl': 'https://via.placeholder.com/200x150/96CEB4/FFFFFF?text=Shooting+Thumb',
+        'thumbnailUrl':
+            'https://via.placeholder.com/200x150/96CEB4/FFFFFF?text=Shooting+Thumb',
         'status': 'read',
-        'timestamp': Timestamp.fromDate(DateTime.now().subtract(const Duration(minutes: 30))),
+        'timestamp': Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(minutes: 30))),
         'readBy': [customerId, specialistId],
         'isDeleted': false,
       },
@@ -303,7 +319,8 @@ class ChatTestDataGenerator {
     await _firestore.collection('chats').doc(chatId).update({
       'lastMessageContent': 'Свадебная съемка - пример',
       'lastMessageType': 'video',
-      'lastMessageTime': Timestamp.fromDate(DateTime.now().subtract(const Duration(minutes: 30))),
+      'lastMessageTime': Timestamp.fromDate(
+          DateTime.now().subtract(const Duration(minutes: 30))),
       'lastMessageSenderId': specialistId,
       'updatedAt': FieldValue.serverTimestamp(),
     });
@@ -336,7 +353,11 @@ class ChatTestDataGenerator {
       }
 
       // Удаляем тестовых пользователей
-      final testUserIds = ['test_customer_001', 'test_specialist_001', 'test_specialist_002'];
+      final testUserIds = [
+        'test_customer_001',
+        'test_specialist_001',
+        'test_specialist_002'
+      ];
       for (final userId in testUserIds) {
         await _firestore.collection('users').doc(userId).delete();
       }
@@ -348,7 +369,8 @@ class ChatTestDataGenerator {
   }
 
   /// Создать дополнительные тестовые сообщения
-  Future<void> addMoreTestMessages(String chatId, String senderId, String senderName) async {
+  Future<void> addMoreTestMessages(
+      String chatId, String senderId, String senderName) async {
     final additionalMessages = [
       {
         'chatId': chatId,
@@ -368,7 +390,8 @@ class ChatTestDataGenerator {
         'type': 'text',
         'content': 'Можете ли вы отправить мне прайс-лист?',
         'status': 'sent',
-        'timestamp': Timestamp.fromDate(DateTime.now().add(const Duration(minutes: 1))),
+        'timestamp':
+            Timestamp.fromDate(DateTime.now().add(const Duration(minutes: 1))),
         'readBy': [senderId],
         'isDeleted': false,
       },
@@ -378,11 +401,13 @@ class ChatTestDataGenerator {
         'senderName': senderName,
         'type': 'document',
         'content': 'Документ с требованиями',
-        'fileUrl': 'https://via.placeholder.com/300x400/FFEAA7/000000?text=PDF+Document',
+        'fileUrl':
+            'https://via.placeholder.com/300x400/FFEAA7/000000?text=PDF+Document',
         'fileName': 'requirements.pdf',
         'fileSize': 512000,
         'status': 'sent',
-        'timestamp': Timestamp.fromDate(DateTime.now().add(const Duration(minutes: 2))),
+        'timestamp':
+            Timestamp.fromDate(DateTime.now().add(const Duration(minutes: 2))),
         'readBy': [senderId],
         'isDeleted': false,
       },

@@ -24,18 +24,21 @@ class SupportTicketWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         ticket.subject,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: ticket.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: ticket.statusColor.withValues(alpha: 0.3)),
+                        border: Border.all(
+                            color: ticket.statusColor.withValues(alpha: 0.3)),
                       ),
                       child: Text(
                         ticket.statusText,
@@ -64,20 +67,23 @@ class SupportTicketWidget extends StatelessWidget {
                 // Категория и приоритет
                 Row(
                   children: [
-                    Icon(ticket.categoryIcon, size: 16, color: Colors.grey[600]),
+                    Icon(ticket.categoryIcon,
+                        size: 16, color: Colors.grey[600]),
                     const SizedBox(width: 4),
                     Text(ticket.categoryText,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                        style:
+                            TextStyle(fontSize: 12, color: Colors.grey[600])),
                     const SizedBox(width: 16),
                     Container(
                       width: 8,
                       height: 8,
-                      decoration:
-                          BoxDecoration(color: ticket.priorityColor, shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                          color: ticket.priorityColor, shape: BoxShape.circle),
                     ),
                     const SizedBox(width: 4),
                     Text(ticket.priorityText,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                        style:
+                            TextStyle(fontSize: 12, color: Colors.grey[600])),
                   ],
                 ),
 
@@ -144,7 +150,9 @@ class SupportTicketListTile extends StatelessWidget {
           ),
           child: Icon(
             ticket.categoryIcon,
-            color: ticket.categoryIcon == Icons.help_outline ? Colors.blue : Colors.green,
+            color: ticket.categoryIcon == Icons.help_outline
+                ? Colors.blue
+                : Colors.green,
             size: 24,
           ),
         ),
@@ -157,12 +165,14 @@ class SupportTicketListTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(ticket.description, maxLines: 2, overflow: TextOverflow.ellipsis),
+            Text(ticket.description,
+                maxLines: 2, overflow: TextOverflow.ellipsis),
             const SizedBox(height: 4),
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: ticket.statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
@@ -180,10 +190,12 @@ class SupportTicketListTile extends StatelessWidget {
                 Container(
                   width: 6,
                   height: 6,
-                  decoration: BoxDecoration(color: ticket.priorityColor, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                      color: ticket.priorityColor, shape: BoxShape.circle),
                 ),
                 const SizedBox(width: 4),
-                Text(ticket.priorityText, style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+                Text(ticket.priorityText,
+                    style: TextStyle(fontSize: 10, color: Colors.grey[600])),
                 const Spacer(),
                 Text(
                   _formatDate(ticket.createdAt),
@@ -246,11 +258,14 @@ class SupportTicketGridTile extends StatelessWidget {
                     Icon(
                       ticket.categoryIcon,
                       size: 20,
-                      color: ticket.categoryIcon == Icons.help_outline ? Colors.blue : Colors.green,
+                      color: ticket.categoryIcon == Icons.help_outline
+                          ? Colors.blue
+                          : Colors.green,
                     ),
                     const Spacer(),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: ticket.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -272,7 +287,8 @@ class SupportTicketGridTile extends StatelessWidget {
                 // Тема
                 Text(
                   ticket.subject,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.bold),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -295,12 +311,13 @@ class SupportTicketGridTile extends StatelessWidget {
                     Container(
                       width: 6,
                       height: 6,
-                      decoration:
-                          BoxDecoration(color: ticket.priorityColor, shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                          color: ticket.priorityColor, shape: BoxShape.circle),
                     ),
                     const SizedBox(width: 4),
                     Text(ticket.priorityText,
-                        style: TextStyle(fontSize: 10, color: Colors.grey[600])),
+                        style:
+                            TextStyle(fontSize: 10, color: Colors.grey[600])),
                     const Spacer(),
                     Text(
                       _formatDate(ticket.createdAt),

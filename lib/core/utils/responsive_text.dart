@@ -29,9 +29,14 @@ class ResponsiveText extends StatelessWidget {
 
     return Text(
       text,
-      style:
-          style?.copyWith(fontSize: responsiveFontSize, fontWeight: fontWeight, color: color) ??
-          TextStyle(fontSize: responsiveFontSize, fontWeight: fontWeight, color: color),
+      style: style?.copyWith(
+              fontSize: responsiveFontSize,
+              fontWeight: fontWeight,
+              color: color) ??
+          TextStyle(
+              fontSize: responsiveFontSize,
+              fontWeight: fontWeight,
+              color: color),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,

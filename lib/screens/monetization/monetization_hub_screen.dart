@@ -19,7 +19,8 @@ class MonetizationHubScreen extends ConsumerStatefulWidget {
   const MonetizationHubScreen({super.key});
 
   @override
-  ConsumerState<MonetizationHubScreen> createState() => _MonetizationHubScreenState();
+  ConsumerState<MonetizationHubScreen> createState() =>
+      _MonetizationHubScreenState();
 }
 
 class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
@@ -51,9 +52,12 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
     currentUserAsync.whenData((user) async {
       if (user != null) {
         try {
-          final subscription = await _subscriptionService.getActiveSubscription(user.id);
-          final promotions = await _promotionService.getActivePromotions(user.id);
-          final advertisements = await _advertisementService.getActiveAdvertisements(
+          final subscription =
+              await _subscriptionService.getActiveSubscription(user.id);
+          final promotions =
+              await _promotionService.getActivePromotions(user.id);
+          final advertisements =
+              await _advertisementService.getActiveAdvertisements(
             type: AdType.banner,
             limit: 5,
           );
@@ -94,7 +98,11 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [_buildSubscriptionsTab(), _buildPromotionsTab(), _buildAdvertisementsTab()],
+        children: [
+          _buildSubscriptionsTab(),
+          _buildPromotionsTab(),
+          _buildAdvertisementsTab()
+        ],
       ),
     );
   }
@@ -237,16 +245,19 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                 Text(
                   'Активная подписка',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
             Text(
               'Осталось дней: ${plan.daysRemaining}',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(color: Colors.white),
             ),
             const SizedBox(height: 8),
             LinearProgressIndicator(
@@ -260,16 +271,21 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
               children: [
                 Text(
                   'Автопродление: ${plan.autoRenew ? "Включено" : "Выключено"}',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: Colors.white),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const MySubscriptionsScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const MySubscriptionsScreen()),
                     );
                   },
-                  child: const Text('Управлять', style: TextStyle(color: Colors.white)),
+                  child: const Text('Управлять',
+                      style: TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -302,16 +318,14 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                 Text(
                   'Активные продвижения (${_activePromotions.length})',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            ..._activePromotions
-                .take(3)
-                .map(
+            ..._activePromotions.take(3).map(
                   (promotion) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
@@ -336,17 +350,22 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
             if (_activePromotions.length > 3)
               Text(
                 'И еще ${_activePromotions.length - 3}...',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.white70),
               ),
             const SizedBox(height: 12),
             TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MyPromotionsScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const MyPromotionsScreen()),
                 );
               },
-              child: const Text('Посмотреть все', style: TextStyle(color: Colors.white)),
+              child: const Text('Посмотреть все',
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -377,16 +396,14 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                 Text(
                   'Активная реклама (${_activeAdvertisements.length})',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            ..._activeAdvertisements
-                .take(3)
-                .map(
+            ..._activeAdvertisements.take(3).map(
                   (ad) => Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
@@ -411,17 +428,22 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
             if (_activeAdvertisements.length > 3)
               Text(
                 'И еще ${_activeAdvertisements.length - 3}...',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white70),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.white70),
               ),
             const SizedBox(height: 12),
             TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MyAdvertisementsScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const MyAdvertisementsScreen()),
                 );
               },
-              child: const Text('Посмотреть все', style: TextStyle(color: Colors.white)),
+              child: const Text('Посмотреть все',
+                  style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -429,7 +451,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
     );
   }
 
-  Widget _buildSectionHeader(String title, String subtitle, IconData icon, Color color) {
+  Widget _buildSectionHeader(
+      String title, String subtitle, IconData icon, Color color) {
     return Row(
       children: [
         Container(
@@ -453,7 +476,10 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
               ),
               Text(
                 subtitle,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
@@ -481,7 +507,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
           () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SubscriptionPlansScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const SubscriptionPlansScreen()),
             );
           },
         ),
@@ -495,7 +522,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
           () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SubscriptionPlansScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const SubscriptionPlansScreen()),
             );
           },
         ),
@@ -522,7 +550,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
           () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const PromotionPackagesScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const PromotionPackagesScreen()),
             );
           },
         ),
@@ -536,7 +565,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
           () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const PromotionPackagesScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const PromotionPackagesScreen()),
             );
           },
         ),
@@ -563,7 +593,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
           () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AdvertisementCampaignsScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const AdvertisementCampaignsScreen()),
             );
           },
         ),
@@ -577,7 +608,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
           () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const AdvertisementCampaignsScreen()),
+              MaterialPageRoute(
+                  builder: (context) => const AdvertisementCampaignsScreen()),
             );
           },
         ),
@@ -622,23 +654,30 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
               const Spacer(),
               Text(
                 price,
                 style: Theme.of(
                   context,
-                ).textTheme.titleLarge?.copyWith(color: color, fontWeight: FontWeight.bold),
+                )
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: color, fontWeight: FontWeight.bold),
               ),
               Text(
                 duration,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 8),
-              ...features
-                  .take(2)
-                  .map(
+              ...features.take(2).map(
                     (feature) => Padding(
                       padding: const EdgeInsets.only(bottom: 2),
                       child: Row(
@@ -646,7 +685,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                           Icon(Icons.check, color: color, size: 16),
                           const SizedBox(width: 4),
                           Expanded(
-                            child: Text(feature, style: Theme.of(context).textTheme.bodySmall),
+                            child: Text(feature,
+                                style: Theme.of(context).textTheme.bodySmall),
                           ),
                         ],
                       ),
@@ -696,23 +736,30 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
               const Spacer(),
               Text(
                 price,
                 style: Theme.of(
                   context,
-                ).textTheme.titleLarge?.copyWith(color: color, fontWeight: FontWeight.bold),
+                )
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: color, fontWeight: FontWeight.bold),
               ),
               Text(
                 duration,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 8),
-              ...features
-                  .take(2)
-                  .map(
+              ...features.take(2).map(
                     (feature) => Padding(
                       padding: const EdgeInsets.only(bottom: 2),
                       child: Row(
@@ -720,7 +767,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                           Icon(Icons.check, color: color, size: 16),
                           const SizedBox(width: 4),
                           Expanded(
-                            child: Text(feature, style: Theme.of(context).textTheme.bodySmall),
+                            child: Text(feature,
+                                style: Theme.of(context).textTheme.bodySmall),
                           ),
                         ],
                       ),
@@ -770,23 +818,30 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
               const Spacer(),
               Text(
                 price,
                 style: Theme.of(
                   context,
-                ).textTheme.titleLarge?.copyWith(color: color, fontWeight: FontWeight.bold),
+                )
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(color: color, fontWeight: FontWeight.bold),
               ),
               Text(
                 duration,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 8),
-              ...features
-                  .take(2)
-                  .map(
+              ...features.take(2).map(
                     (feature) => Padding(
                       padding: const EdgeInsets.only(bottom: 2),
                       child: Row(
@@ -794,7 +849,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
                           Icon(Icons.check, color: color, size: 16),
                           const SizedBox(width: 4),
                           Expanded(
-                            child: Text(feature, style: Theme.of(context).textTheme.bodySmall),
+                            child: Text(feature,
+                                style: Theme.of(context).textTheme.bodySmall),
                           ),
                         ],
                       ),
@@ -817,7 +873,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const MySubscriptionsScreen()),
+            MaterialPageRoute(
+                builder: (context) => const MySubscriptionsScreen()),
           );
         },
       ),
@@ -851,7 +908,8 @@ class _MonetizationHubScreenState extends ConsumerState<MonetizationHubScreen>
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const MyAdvertisementsScreen()),
+            MaterialPageRoute(
+                builder: (context) => const MyAdvertisementsScreen()),
           );
         },
       ),

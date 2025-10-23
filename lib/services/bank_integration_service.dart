@@ -243,7 +243,8 @@ class BankIntegrationService {
       return QRCodeResult(
         qrCode:
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
-        qrData: 't=20240101T120000&s=1000.00&fn=1234567890&i=1&fp=1234567890&n=1',
+        qrData:
+            't=20240101T120000&s=1000.00&fn=1234567890&i=1&fp=1234567890&n=1',
         expiresAt: DateTime.now().add(const Duration(minutes: 15)),
         bankInfo: bank,
       );
@@ -358,4 +359,11 @@ class QRCodeResult {
 }
 
 /// Статусы платежа
-enum PaymentStatus { pending, processing, completed, failed, cancelled, refunded }
+enum PaymentStatus {
+  pending,
+  processing,
+  completed,
+  failed,
+  cancelled,
+  refunded
+}

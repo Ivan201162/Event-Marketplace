@@ -42,7 +42,8 @@ class ServicesList extends ConsumerWidget {
     );
   }
 
-  Widget _buildServiceItem(BuildContext context, ServicePrice service) => Container(
+  Widget _buildServiceItem(BuildContext context, ServicePrice service) =>
+      Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -79,7 +80,8 @@ class ServicesList extends ConsumerWidget {
                 ),
                 // Статус активности
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: service.isActive
                         ? Colors.green.withValues(alpha: 0.1)
@@ -104,7 +106,8 @@ class ServicesList extends ConsumerWidget {
                 service.description,
                 style: Theme.of(
                   context,
-                ).textTheme.bodyMedium?.copyWith(color: service.isActive ? null : Colors.grey[600]),
+                ).textTheme.bodyMedium?.copyWith(
+                    color: service.isActive ? null : Colors.grey[600]),
               ),
             const SizedBox(height: 12),
             // Цена и длительность
@@ -112,9 +115,11 @@ class ServicesList extends ConsumerWidget {
               children: [
                 // Цена
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -129,7 +134,8 @@ class ServicesList extends ConsumerWidget {
                 // Длительность
                 if (service.duration != null)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.blue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -137,11 +143,14 @@ class ServicesList extends ConsumerWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.access_time, size: 16, color: Colors.blue[700]),
+                        Icon(Icons.access_time,
+                            size: 16, color: Colors.blue[700]),
                         const SizedBox(width: 4),
                         Text(
                           _formatDuration(service.duration!),
-                          style: TextStyle(color: Colors.blue[700], fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                              color: Colors.blue[700],
+                              fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
@@ -179,14 +188,18 @@ class ServicesList extends ConsumerWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Container(width: double.infinity, height: 20, color: Colors.white),
+                      child: Container(
+                          width: double.infinity,
+                          height: 20,
+                          color: Colors.white),
                     ),
                     const SizedBox(width: 12),
                     Container(width: 60, height: 20, color: Colors.white),
                   ],
                 ),
                 const SizedBox(height: 8),
-                Container(width: double.infinity, height: 16, color: Colors.white),
+                Container(
+                    width: double.infinity, height: 16, color: Colors.white),
                 const SizedBox(height: 4),
                 Container(width: 200, height: 16, color: Colors.white),
                 const SizedBox(height: 12),
@@ -211,12 +224,18 @@ class ServicesList extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'Прайс-лист пуст',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               'Специалист еще не добавил\nсвои услуги и цены',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],
@@ -231,12 +250,18 @@ class ServicesList extends ConsumerWidget {
             const SizedBox(height: 16),
             Text(
               'Ошибка загрузки прайс-листа',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.grey[600]),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall
+                  ?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 8),
             Text(
               error,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[500]),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.grey[500]),
               textAlign: TextAlign.center,
             ),
           ],

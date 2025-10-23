@@ -40,7 +40,8 @@ class RatingService {
   }
 
   /// Получение отзывов специалиста
-  Future<List<Map<String, dynamic>>> getSpecialistReviews(String specialistId) async {
+  Future<List<Map<String, dynamic>>> getSpecialistReviews(
+      String specialistId) async {
     try {
       final querySnapshot = await _firestore
           .collection('reviews')
@@ -65,7 +66,7 @@ class RatingService {
   Future<Map<String, dynamic>> getSpecialistRating(String specialistId) async {
     try {
       final reviews = await getSpecialistReviews(specialistId);
-      
+
       if (reviews.isEmpty) {
         return {
           'averageRating': 0.0,
@@ -80,9 +81,10 @@ class RatingService {
       for (final review in reviews) {
         final rating = review['rating'] as double;
         totalRating += rating;
-        
+
         final ratingInt = rating.round();
-        ratingDistribution[ratingInt] = (ratingDistribution[ratingInt] ?? 0) + 1;
+        ratingDistribution[ratingInt] =
+            (ratingDistribution[ratingInt] ?? 0) + 1;
       }
 
       final averageRating = totalRating / reviews.length;
@@ -106,7 +108,7 @@ class RatingService {
   Future<void> _updateSpecialistRating(String specialistId) async {
     try {
       final rating = await getSpecialistRating(specialistId);
-      
+
       await _firestore.collection('profiles').doc(specialistId).update({
         'rating': rating['averageRating'],
         'totalReviews': rating['totalReviews'],
@@ -168,7 +170,8 @@ class RatingService {
       final user = _auth.currentUser;
       if (user == null) return false;
 
-      final reviewDoc = await _firestore.collection('reviews').doc(reviewId).get();
+      final reviewDoc =
+          await _firestore.collection('reviews').doc(reviewId).get();
       if (!reviewDoc.exists) return false;
 
       final reviewData = reviewDoc.data()!;
@@ -189,16 +192,14 @@ class RatingService {
   /// Получение популярных тегов
   Future<List<String>> getPopularTags() async {
     try {
-      final querySnapshot = await _firestore
-          .collection('reviews')
-          .get();
+      final querySnapshot = await _firestore.collection('reviews').get();
 
       Map<String, int> tagCounts = {};
-      
+
       for (final doc in querySnapshot.docs) {
         final data = doc.data();
         final tags = List<String>.from(data['tags'] ?? []);
-        
+
         for (final tag in tags) {
           tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
         }
@@ -217,9 +218,7 @@ class RatingService {
   /// Получение статистики рейтингов
   Future<Map<String, dynamic>> getRatingStatistics() async {
     try {
-      final querySnapshot = await _firestore
-          .collection('reviews')
-          .get();
+      final querySnapshot = await _firestore.collection('reviews').get();
 
       if (querySnapshot.docs.isEmpty) {
         return {
@@ -236,9 +235,10 @@ class RatingService {
         final data = doc.data();
         final rating = data['rating'] as double;
         totalRating += rating;
-        
+
         final ratingInt = rating.round();
-        ratingDistribution[ratingInt] = (ratingDistribution[ratingInt] ?? 0) + 1;
+        ratingDistribution[ratingInt] =
+            (ratingDistribution[ratingInt] ?? 0) + 1;
       }
 
       final averageRating = totalRating / querySnapshot.docs.length;

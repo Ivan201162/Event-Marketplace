@@ -36,7 +36,9 @@ class ImprovementSuggestionsService {
         metadata: {},
       );
 
-      final docRef = await _firestore.collection('improvement_suggestions').add(suggestion.toMap());
+      final docRef = await _firestore
+          .collection('improvement_suggestions')
+          .add(suggestion.toMap());
 
       return suggestion.copyWith(id: docRef.id);
     } on Exception catch (e) {
@@ -52,7 +54,8 @@ class ImprovementSuggestionsService {
     String? lastDocumentId,
   }) async {
     try {
-      Query<Map<String, dynamic>> query = _firestore.collection('improvement_suggestions');
+      Query<Map<String, dynamic>> query =
+          _firestore.collection('improvement_suggestions');
 
       if (status != null) {
         query = query.where('status', isEqualTo: status.name);
@@ -116,7 +119,10 @@ class ImprovementSuggestionsService {
 
       // Обновляем счетчик голосов
       final voteChange = isUpvote ? 1 : -1;
-      await _firestore.collection('improvement_suggestions').doc(suggestionId).update({
+      await _firestore
+          .collection('improvement_suggestions')
+          .doc(suggestionId)
+          .update({
         'votes': FieldValue.increment(voteChange),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
@@ -132,7 +138,10 @@ class ImprovementSuggestionsService {
     String? adminComment,
   }) async {
     try {
-      final updateData = {'status': status.name, 'updatedAt': Timestamp.fromDate(DateTime.now())};
+      final updateData = {
+        'status': status.name,
+        'updatedAt': Timestamp.fromDate(DateTime.now())
+      };
 
       if (status == SuggestionStatus.reviewed) {
         updateData['reviewedAt'] = Timestamp.fromDate(DateTime.now());
@@ -144,7 +153,10 @@ class ImprovementSuggestionsService {
         updateData['adminComment'] = adminComment;
       }
 
-      await _firestore.collection('improvement_suggestions').doc(suggestionId).update(updateData);
+      await _firestore
+          .collection('improvement_suggestions')
+          .doc(suggestionId)
+          .update(updateData);
     } on Exception catch (e) {
       throw Exception('Ошибка обновления статуса предложения: $e');
     }
@@ -166,7 +178,8 @@ class ImprovementSuggestionsService {
   }
 
   /// Получить популярные предложения
-  Future<List<ImprovementSuggestion>> getPopularSuggestions({int limit = 10}) async {
+  Future<List<ImprovementSuggestion>> getPopularSuggestions(
+      {int limit = 10}) async {
     try {
       final snapshot = await _firestore
           .collection('improvement_suggestions')
@@ -184,8 +197,10 @@ class ImprovementSuggestionsService {
   /// Получить статистику предложений
   Future<SuggestionStatistics> getSuggestionStatistics() async {
     try {
-      final snapshot = await _firestore.collection('improvement_suggestions').get();
-      final suggestions = snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
+      final snapshot =
+          await _firestore.collection('improvement_suggestions').get();
+      final suggestions =
+          snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
 
       final totalSuggestions = suggestions.length;
       final implementedSuggestions = suggestions
@@ -200,7 +215,8 @@ class ImprovementSuggestionsService {
 
       final categoryStats = <SuggestionCategory, int>{};
       for (final category in SuggestionCategory.values) {
-        categoryStats[category] = suggestions.where((s) => s.category == category).length;
+        categoryStats[category] =
+            suggestions.where((s) => s.category == category).length;
       }
 
       return SuggestionStatistics(
@@ -219,7 +235,10 @@ class ImprovementSuggestionsService {
 
   Future<ImprovementSuggestion?> _getSuggestion(String suggestionId) async {
     try {
-      final doc = await _firestore.collection('improvement_suggestions').doc(suggestionId).get();
+      final doc = await _firestore
+          .collection('improvement_suggestions')
+          .doc(suggestionId)
+          .get();
       if (doc.exists) {
         return ImprovementSuggestion.fromDocument(doc);
       }
@@ -275,7 +294,9 @@ class ImprovementSuggestion {
       votes: data['votes'] ?? 0,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      reviewedAt: data['reviewedAt'] != null ? (data['reviewedAt'] as Timestamp).toDate() : null,
+      reviewedAt: data['reviewedAt'] != null
+          ? (data['reviewedAt'] as Timestamp).toDate()
+          : null,
       implementedAt: data['implementedAt'] != null
           ? (data['implementedAt'] as Timestamp).toDate()
           : null,
@@ -300,21 +321,23 @@ class ImprovementSuggestion {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'title': title,
-    'description': description,
-    'category': category.name,
-    'priority': priority.name,
-    'status': status.name,
-    'tags': tags,
-    'contactEmail': contactEmail,
-    'votes': votes,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'reviewedAt': reviewedAt != null ? Timestamp.fromDate(reviewedAt!) : null,
-    'implementedAt': implementedAt != null ? Timestamp.fromDate(implementedAt!) : null,
-    'metadata': metadata,
-  };
+        'userId': userId,
+        'title': title,
+        'description': description,
+        'category': category.name,
+        'priority': priority.name,
+        'status': status.name,
+        'tags': tags,
+        'contactEmail': contactEmail,
+        'votes': votes,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'reviewedAt':
+            reviewedAt != null ? Timestamp.fromDate(reviewedAt!) : null,
+        'implementedAt':
+            implementedAt != null ? Timestamp.fromDate(implementedAt!) : null,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   ImprovementSuggestion copyWith({
@@ -333,23 +356,24 @@ class ImprovementSuggestion {
     DateTime? reviewedAt,
     DateTime? implementedAt,
     Map<String, dynamic>? metadata,
-  }) => ImprovementSuggestion(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    category: category ?? this.category,
-    priority: priority ?? this.priority,
-    status: status ?? this.status,
-    tags: tags ?? this.tags,
-    contactEmail: contactEmail ?? this.contactEmail,
-    votes: votes ?? this.votes,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    reviewedAt: reviewedAt ?? this.reviewedAt,
-    implementedAt: implementedAt ?? this.implementedAt,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      ImprovementSuggestion(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        priority: priority ?? this.priority,
+        status: status ?? this.status,
+        tags: tags ?? this.tags,
+        contactEmail: contactEmail ?? this.contactEmail,
+        votes: votes ?? this.votes,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        reviewedAt: reviewedAt ?? this.reviewedAt,
+        implementedAt: implementedAt ?? this.implementedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Статистика предложений

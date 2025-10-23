@@ -44,7 +44,8 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
   int _currentPage = 0;
   String? _errorMessage;
 
-  ScrollController get _effectiveScrollController => widget.scrollController ?? _scrollController;
+  ScrollController get _effectiveScrollController =>
+      widget.scrollController ?? _scrollController;
 
   @override
   void initState() {
@@ -139,14 +140,15 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
             (index) => Container(
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               height: 100,
-              decoration:
-                  BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(12)),
             ),
           ),
         ),
       );
 
-  Widget _buildLoadingWidget() => widget.loadingWidget ?? _buildShimmerLoading();
+  Widget _buildLoadingWidget() =>
+      widget.loadingWidget ?? _buildShimmerLoading();
 
   Widget _buildErrorWidget() =>
       widget.errorWidget ??
@@ -156,7 +158,8 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
           children: [
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки данных', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Ошибка загрузки данных',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             if (_errorMessage != null) ...[
               const SizedBox(height: 8),
               Text(
@@ -166,7 +169,8 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
               ),
             ],
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadInitialData, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadInitialData, child: const Text('Повторить')),
           ],
         ),
       );
@@ -179,7 +183,8 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
           children: [
             Icon(Icons.inbox_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Нет данных', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Нет данных',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Попробуйте обновить страницу',
@@ -215,7 +220,8 @@ class _LazyLoadingWidgetState<T> extends State<LazyLoadingWidget<T>> {
     Widget listView = ListView.separated(
       controller: _effectiveScrollController,
       itemCount: _items.length + (_hasMoreData ? 1 : 0),
-      separatorBuilder: widget.separatorBuilder ?? (context, index) => const SizedBox(height: 8),
+      separatorBuilder: widget.separatorBuilder ??
+          (context, index) => const SizedBox(height: 8),
       itemBuilder: (context, index) {
         if (index >= _items.length) {
           return _buildLoadMoreIndicator();
@@ -281,7 +287,8 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
   int _currentPage = 0;
   String? _errorMessage;
 
-  ScrollController get _effectiveScrollController => widget.scrollController ?? _scrollController;
+  ScrollController get _effectiveScrollController =>
+      widget.scrollController ?? _scrollController;
 
   @override
   void initState() {
@@ -381,12 +388,14 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
           ),
           itemCount: 6,
           itemBuilder: (context, index) => Container(
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(12)),
           ),
         ),
       );
 
-  Widget _buildLoadingWidget() => widget.loadingWidget ?? _buildShimmerLoading();
+  Widget _buildLoadingWidget() =>
+      widget.loadingWidget ?? _buildShimmerLoading();
 
   Widget _buildErrorWidget() =>
       widget.errorWidget ??
@@ -396,7 +405,8 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
           children: [
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки данных', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Ошибка загрузки данных',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             if (_errorMessage != null) ...[
               const SizedBox(height: 8),
               Text(
@@ -406,7 +416,8 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
               ),
             ],
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadInitialData, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadInitialData, child: const Text('Повторить')),
           ],
         ),
       );
@@ -419,7 +430,8 @@ class _LazyLoadingGridState<T> extends State<LazyLoadingGrid<T>> {
           children: [
             Icon(Icons.inbox_outlined, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Нет данных', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Нет данных',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Попробуйте обновить страницу',

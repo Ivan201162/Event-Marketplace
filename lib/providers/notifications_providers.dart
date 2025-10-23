@@ -9,7 +9,8 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 });
 
 /// User's notifications provider
-final userNotificationsProvider = FutureProvider.family<List<AppNotification>, String>((
+final userNotificationsProvider =
+    FutureProvider.family<List<AppNotification>, String>((
   ref,
   userId,
 ) async {
@@ -18,7 +19,8 @@ final userNotificationsProvider = FutureProvider.family<List<AppNotification>, S
 });
 
 /// Unread notifications provider
-final unreadNotificationsProvider = FutureProvider.family<List<AppNotification>, String>((
+final unreadNotificationsProvider =
+    FutureProvider.family<List<AppNotification>, String>((
   ref,
   userId,
 ) async {
@@ -27,17 +29,18 @@ final unreadNotificationsProvider = FutureProvider.family<List<AppNotification>,
 });
 
 /// Notifications by type provider
-final notificationsByTypeProvider =
-    FutureProvider.family<List<AppNotification>, ({String userId, NotificationType type})>((
-      ref,
-      params,
-    ) async {
-      final service = ref.read(notificationServiceProvider);
-      return await service.getNotificationsByType(params.userId, params.type);
-    });
+final notificationsByTypeProvider = FutureProvider.family<List<AppNotification>,
+    ({String userId, NotificationType type})>((
+  ref,
+  params,
+) async {
+  final service = ref.read(notificationServiceProvider);
+  return await service.getNotificationsByType(params.userId, params.type);
+});
 
 /// Notification by ID provider
-final notificationByIdProvider = FutureProvider.family<AppNotification?, String>((
+final notificationByIdProvider =
+    FutureProvider.family<AppNotification?, String>((
   ref,
   notificationId,
 ) async {
@@ -46,7 +49,8 @@ final notificationByIdProvider = FutureProvider.family<AppNotification?, String>
 });
 
 /// Stream of user's notifications provider
-final userNotificationsStreamProvider = StreamProvider.family<List<AppNotification>, String>((
+final userNotificationsStreamProvider =
+    StreamProvider.family<List<AppNotification>, String>((
   ref,
   userId,
 ) {
@@ -55,7 +59,8 @@ final userNotificationsStreamProvider = StreamProvider.family<List<AppNotificati
 });
 
 /// Stream of unread notifications provider
-final unreadNotificationsStreamProvider = StreamProvider.family<List<AppNotification>, String>((
+final unreadNotificationsStreamProvider =
+    StreamProvider.family<List<AppNotification>, String>((
   ref,
   userId,
 ) {
@@ -64,13 +69,15 @@ final unreadNotificationsStreamProvider = StreamProvider.family<List<AppNotifica
 });
 
 /// Unread count provider
-final unreadCountProvider = FutureProvider.family<int, String>((ref, userId) async {
+final unreadCountProvider =
+    FutureProvider.family<int, String>((ref, userId) async {
   final service = ref.read(notificationServiceProvider);
   return await service.getUnreadCount(userId);
 });
 
 /// Stream of unread count provider
-final unreadCountStreamProvider = StreamProvider.family<int, String>((ref, userId) {
+final unreadCountStreamProvider =
+    StreamProvider.family<int, String>((ref, userId) {
   final service = ref.read(notificationServiceProvider);
   return service.getUnreadCountStream(userId);
 });

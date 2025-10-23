@@ -29,34 +29,38 @@ class PromotionBoost {
   });
 
   factory PromotionBoost.fromMap(Map<String, dynamic> map) => PromotionBoost(
-    id: map['id'] ?? '',
-    userId: map['userId'] ?? '',
-    type: PromotionType.values.firstWhere(
-      (e) => e.toString() == 'PromotionType.${map['type']}',
-      orElse: () => PromotionType.profileBoost,
-    ),
-    startDate: (map['startDate'] as Timestamp).toDate(),
-    endDate: (map['endDate'] as Timestamp).toDate(),
-    status: PromotionStatus.values.firstWhere(
-      (e) => e.toString() == 'PromotionStatus.${map['status']}',
-      orElse: () => PromotionStatus.pending,
-    ),
-    priorityLevel: PromotionPriority.values.firstWhere(
-      (e) => e.toString() == 'PromotionPriority.${map['priorityLevel']}',
-      orElse: () => PromotionPriority.medium,
-    ),
-    price: (map['price'] ?? 0.0).toDouble(),
-    targetId: map['targetId'],
-    region: map['region'],
-    city: map['city'],
-    category: map['category'],
-    impressions: map['impressions'] ?? 0,
-    clicks: map['clicks'] ?? 0,
-    ctr: (map['ctr'] ?? 0.0).toDouble(),
-    createdAt: map['createdAt'] != null ? (map['createdAt'] as Timestamp).toDate() : DateTime.now(),
-    updatedAt: map['updatedAt'] != null ? (map['updatedAt'] as Timestamp).toDate() : DateTime.now(),
-    metadata: map['metadata'],
-  );
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        type: PromotionType.values.firstWhere(
+          (e) => e.toString() == 'PromotionType.${map['type']}',
+          orElse: () => PromotionType.profileBoost,
+        ),
+        startDate: (map['startDate'] as Timestamp).toDate(),
+        endDate: (map['endDate'] as Timestamp).toDate(),
+        status: PromotionStatus.values.firstWhere(
+          (e) => e.toString() == 'PromotionStatus.${map['status']}',
+          orElse: () => PromotionStatus.pending,
+        ),
+        priorityLevel: PromotionPriority.values.firstWhere(
+          (e) => e.toString() == 'PromotionPriority.${map['priorityLevel']}',
+          orElse: () => PromotionPriority.medium,
+        ),
+        price: (map['price'] ?? 0.0).toDouble(),
+        targetId: map['targetId'],
+        region: map['region'],
+        city: map['city'],
+        category: map['category'],
+        impressions: map['impressions'] ?? 0,
+        clicks: map['clicks'] ?? 0,
+        ctr: (map['ctr'] ?? 0.0).toDouble(),
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        metadata: map['metadata'],
+      );
 
   final String id;
   final String userId;
@@ -78,29 +82,30 @@ class PromotionBoost {
   final Map<String, dynamic>? metadata;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'userId': userId,
-    'type': type.toString().split('.').last,
-    'startDate': Timestamp.fromDate(startDate),
-    'endDate': Timestamp.fromDate(endDate),
-    'status': status.toString().split('.').last,
-    'priorityLevel': priorityLevel.toString().split('.').last,
-    'price': price,
-    'targetId': targetId,
-    'region': region,
-    'city': city,
-    'category': category,
-    'impressions': impressions,
-    'clicks': clicks,
-    'ctr': ctr,
-    'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-    'metadata': metadata,
-  };
+        'id': id,
+        'userId': userId,
+        'type': type.toString().split('.').last,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'status': status.toString().split('.').last,
+        'priorityLevel': priorityLevel.toString().split('.').last,
+        'price': price,
+        'targetId': targetId,
+        'region': region,
+        'city': city,
+        'category': category,
+        'impressions': impressions,
+        'clicks': clicks,
+        'ctr': ctr,
+        'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+        'metadata': metadata,
+      };
 
   bool get isActive => status == PromotionStatus.active && !isExpired;
   bool get isExpired => DateTime.now().isAfter(endDate);
-  bool get isExpiringSoon => DateTime.now().add(const Duration(days: 1)).isAfter(endDate);
+  bool get isExpiringSoon =>
+      DateTime.now().add(const Duration(days: 1)).isAfter(endDate);
 
   int get daysRemaining => endDate.difference(DateTime.now()).inDays;
 
@@ -135,26 +140,27 @@ class PromotionBoost {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
-  }) => PromotionBoost(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    type: type ?? this.type,
-    startDate: startDate ?? this.startDate,
-    endDate: endDate ?? this.endDate,
-    status: status ?? this.status,
-    priorityLevel: priorityLevel ?? this.priorityLevel,
-    price: price ?? this.price,
-    targetId: targetId ?? this.targetId,
-    region: region ?? this.region,
-    city: city ?? this.city,
-    category: category ?? this.category,
-    impressions: impressions ?? this.impressions,
-    clicks: clicks ?? this.clicks,
-    ctr: ctr ?? this.ctr,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      PromotionBoost(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        status: status ?? this.status,
+        priorityLevel: priorityLevel ?? this.priorityLevel,
+        price: price ?? this.price,
+        targetId: targetId ?? this.targetId,
+        region: region ?? this.region,
+        city: city ?? this.city,
+        category: category ?? this.category,
+        impressions: impressions ?? this.impressions,
+        clicks: clicks ?? this.clicks,
+        ctr: ctr ?? this.ctr,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 class PromotionPackage {
@@ -174,27 +180,32 @@ class PromotionPackage {
     this.updatedAt,
   });
 
-  factory PromotionPackage.fromMap(Map<String, dynamic> map) => PromotionPackage(
-    id: map['id'] ?? '',
-    name: map['name'] ?? '',
-    type: PromotionType.values.firstWhere(
-      (e) => e.toString() == 'PromotionType.${map['type']}',
-      orElse: () => PromotionType.profileBoost,
-    ),
-    durationDays: map['durationDays'] ?? 7,
-    price: (map['price'] ?? 0.0).toDouble(),
-    priorityLevel: PromotionPriority.values.firstWhere(
-      (e) => e.toString() == 'PromotionPriority.${map['priorityLevel']}',
-      orElse: () => PromotionPriority.medium,
-    ),
-    isActive: map['isActive'] ?? true,
-    description: map['description'],
-    features: List<String>.from(map['features'] ?? []),
-    originalPrice: map['originalPrice']?.toDouble(),
-    discountPercentage: map['discountPercentage']?.toDouble(),
-    createdAt: map['createdAt'] != null ? (map['createdAt'] as Timestamp).toDate() : DateTime.now(),
-    updatedAt: map['updatedAt'] != null ? (map['updatedAt'] as Timestamp).toDate() : DateTime.now(),
-  );
+  factory PromotionPackage.fromMap(Map<String, dynamic> map) =>
+      PromotionPackage(
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        type: PromotionType.values.firstWhere(
+          (e) => e.toString() == 'PromotionType.${map['type']}',
+          orElse: () => PromotionType.profileBoost,
+        ),
+        durationDays: map['durationDays'] ?? 7,
+        price: (map['price'] ?? 0.0).toDouble(),
+        priorityLevel: PromotionPriority.values.firstWhere(
+          (e) => e.toString() == 'PromotionPriority.${map['priorityLevel']}',
+          orElse: () => PromotionPriority.medium,
+        ),
+        isActive: map['isActive'] ?? true,
+        description: map['description'],
+        features: List<String>.from(map['features'] ?? []),
+        originalPrice: map['originalPrice']?.toDouble(),
+        discountPercentage: map['discountPercentage']?.toDouble(),
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
+            : DateTime.now(),
+      );
 
   final String id;
   final String name;
@@ -211,24 +222,25 @@ class PromotionPackage {
   final DateTime? updatedAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'type': type.toString().split('.').last,
-    'durationDays': durationDays,
-    'price': price,
-    'priorityLevel': priorityLevel.toString().split('.').last,
-    'isActive': isActive,
-    'description': description,
-    'features': features,
-    'originalPrice': originalPrice,
-    'discountPercentage': discountPercentage,
-    'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-  };
+        'id': id,
+        'name': name,
+        'type': type.toString().split('.').last,
+        'durationDays': durationDays,
+        'price': price,
+        'priorityLevel': priorityLevel.toString().split('.').last,
+        'isActive': isActive,
+        'description': description,
+        'features': features,
+        'originalPrice': originalPrice,
+        'discountPercentage': discountPercentage,
+        'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      };
 
   bool get hasDiscount => originalPrice != null && originalPrice! > price;
 
-  double get discountAmount => originalPrice != null ? originalPrice! - price : 0.0;
+  double get discountAmount =>
+      originalPrice != null ? originalPrice! - price : 0.0;
 
   PromotionPackage copyWith({
     String? id,
@@ -244,19 +256,20 @@ class PromotionPackage {
     double? discountPercentage,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => PromotionPackage(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    type: type ?? this.type,
-    durationDays: durationDays ?? this.durationDays,
-    price: price ?? this.price,
-    priorityLevel: priorityLevel ?? this.priorityLevel,
-    isActive: isActive ?? this.isActive,
-    description: description ?? this.description,
-    features: features ?? this.features,
-    originalPrice: originalPrice ?? this.originalPrice,
-    discountPercentage: discountPercentage ?? this.discountPercentage,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      PromotionPackage(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        type: type ?? this.type,
+        durationDays: durationDays ?? this.durationDays,
+        price: price ?? this.price,
+        priorityLevel: priorityLevel ?? this.priorityLevel,
+        isActive: isActive ?? this.isActive,
+        description: description ?? this.description,
+        features: features ?? this.features,
+        originalPrice: originalPrice ?? this.originalPrice,
+        discountPercentage: discountPercentage ?? this.discountPercentage,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }

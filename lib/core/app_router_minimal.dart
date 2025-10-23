@@ -28,7 +28,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'main',
         builder: (context, state) => const MainNavigationScreen(),
       ),
-      
+
       // Аутентификация
       GoRoute(
         path: '/login',
@@ -45,7 +45,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'onboarding',
         builder: (context, state) => const OnboardingScreen(),
       ),
-      
+
       // Профиль
       GoRoute(
         path: '/profile',
@@ -57,7 +57,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'edit-profile',
         builder: (context, state) => const EditProfileScreen(),
       ),
-      
+
       // Лента и идеи
       GoRoute(
         path: '/feed',
@@ -79,7 +79,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'create-post',
         builder: (context, state) => const CreatePostScreen(),
       ),
-      
+
       // Настройки и помощь
       GoRoute(
         path: '/settings',
@@ -104,8 +104,3 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
-
-
-
-
-

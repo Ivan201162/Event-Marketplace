@@ -24,8 +24,10 @@ class SmartAdvertisingService {
           .collection('smart_advertisements')
           .where('status', isEqualTo: 'active')
           .where('placements', arrayContains: placement)
-          .where('startDate', isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
-          .where('endDate', isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
+          .where('startDate',
+              isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
+          .where('endDate',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
           .get();
 
       if (snapshot.docs.isEmpty) {
@@ -34,7 +36,8 @@ class SmartAdvertisingService {
 
       // Преобразуем в объекты и рассчитываем релевантность
       final List<SmartAdvertisement> ads = snapshot.docs
-          .map((doc) => SmartAdvertisement.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) =>
+              SmartAdvertisement.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
       // Рассчитываем релевантность для каждого объявления
@@ -67,8 +70,13 @@ class SmartAdvertisingService {
           adId: ad.id,
           userId: userId,
           placement: placement,
-          relevanceScore: adsWithRelevance.firstWhere((entry) => entry.key.id == ad.id).value,
-          userContext: {'userProfile': userProfile, 'userBehavior': userBehavior},
+          relevanceScore: adsWithRelevance
+              .firstWhere((entry) => entry.key.id == ad.id)
+              .value,
+          userContext: {
+            'userProfile': userProfile,
+            'userBehavior': userBehavior
+          },
         );
       }
 
@@ -77,7 +85,8 @@ class SmartAdvertisingService {
       );
       return relevantAds;
     } catch (e) {
-      debugPrint('ERROR: [SmartAdvertisingService] Failed to get relevant ads: $e');
+      debugPrint(
+          'ERROR: [SmartAdvertisingService] Failed to get relevant ads: $e');
       return [];
     }
   }
@@ -101,7 +110,10 @@ class SmartAdvertisingService {
         userContext: userContext,
       );
 
-      await _firestore.collection('ad_impressions').doc(impression.id).set(impression.toMap());
+      await _firestore
+          .collection('ad_impressions')
+          .doc(impression.id)
+          .set(impression.toMap());
 
       // Обновляем счетчики в объявлении
       await _firestore.collection('smart_advertisements').doc(adId).update({
@@ -109,9 +121,11 @@ class SmartAdvertisingService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [SmartAdvertisingService] Impression recorded for ad $adId');
+      debugPrint(
+          'INFO: [SmartAdvertisingService] Impression recorded for ad $adId');
     } catch (e) {
-      debugPrint('ERROR: [SmartAdvertisingService] Failed to record impression: $e');
+      debugPrint(
+          'ERROR: [SmartAdvertisingService] Failed to record impression: $e');
     }
   }
 
@@ -134,7 +148,10 @@ class SmartAdvertisingService {
 
       if (impressionSnapshot.docs.isNotEmpty) {
         final String impressionId = impressionSnapshot.docs.first.id;
-        await _firestore.collection('ad_impressions').doc(impressionId).update({'isClicked': true});
+        await _firestore
+            .collection('ad_impressions')
+            .doc(impressionId)
+            .update({'isClicked': true});
       }
 
       // Обновляем счетчики в объявлении
@@ -187,19 +204,19 @@ class SmartAdvertisingService {
       // Пересчитываем метрики
       await _updateAdMetrics(adId);
 
-      debugPrint('INFO: [SmartAdvertisingService] Conversion recorded for ad $adId');
+      debugPrint(
+          'INFO: [SmartAdvertisingService] Conversion recorded for ad $adId');
     } catch (e) {
-      debugPrint('ERROR: [SmartAdvertisingService] Failed to record conversion: $e');
+      debugPrint(
+          'ERROR: [SmartAdvertisingService] Failed to record conversion: $e');
     }
   }
 
   /// Обновление метрик объявления
   Future<void> _updateAdMetrics(String adId) async {
     try {
-      final DocumentSnapshot adDoc = await _firestore
-          .collection('smart_advertisements')
-          .doc(adId)
-          .get();
+      final DocumentSnapshot adDoc =
+          await _firestore.collection('smart_advertisements').doc(adId).get();
 
       if (!adDoc.exists) return;
 
@@ -208,13 +225,15 @@ class SmartAdvertisingService {
       );
 
       // Рассчитываем CTR
-      final double ctr = ad.impressions > 0 ? (ad.clicks / ad.impressions) * 100 : 0.0;
+      final double ctr =
+          ad.impressions > 0 ? (ad.clicks / ad.impressions) * 100 : 0.0;
 
       // Рассчитываем CPC
       final double cpc = ad.clicks > 0 ? ad.spentAmount / ad.clicks : 0.0;
 
       // Рассчитываем CPM
-      final double cpm = ad.impressions > 0 ? (ad.spentAmount / ad.impressions) * 1000 : 0.0;
+      final double cpm =
+          ad.impressions > 0 ? (ad.spentAmount / ad.impressions) * 1000 : 0.0;
 
       // Обновляем метрики
       await _firestore.collection('smart_advertisements').doc(adId).update({
@@ -224,9 +243,11 @@ class SmartAdvertisingService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      debugPrint('INFO: [SmartAdvertisingService] Metrics updated for ad $adId');
+      debugPrint(
+          'INFO: [SmartAdvertisingService] Metrics updated for ad $adId');
     } catch (e) {
-      debugPrint('ERROR: [SmartAdvertisingService] Failed to update ad metrics: $e');
+      debugPrint(
+          'ERROR: [SmartAdvertisingService] Failed to update ad metrics: $e');
     }
   }
 
@@ -263,12 +284,16 @@ class SmartAdvertisingService {
         metadata: ad.metadata,
       );
 
-      await _firestore.collection('smart_advertisements').doc(adId).set(newAd.toMap());
+      await _firestore
+          .collection('smart_advertisements')
+          .doc(adId)
+          .set(newAd.toMap());
 
       debugPrint('INFO: [SmartAdvertisingService] Smart ad created: $adId');
       return adId;
     } catch (e) {
-      debugPrint('ERROR: [SmartAdvertisingService] Failed to create smart ad: $e');
+      debugPrint(
+          'ERROR: [SmartAdvertisingService] Failed to create smart ad: $e');
       rethrow;
     }
   }
@@ -276,10 +301,8 @@ class SmartAdvertisingService {
   /// Автоматическая оптимизация объявления
   Future<void> optimizeAd(String adId) async {
     try {
-      final DocumentSnapshot adDoc = await _firestore
-          .collection('smart_advertisements')
-          .doc(adId)
-          .get();
+      final DocumentSnapshot adDoc =
+          await _firestore.collection('smart_advertisements').doc(adId).get();
 
       if (!adDoc.exists) return;
 
@@ -290,10 +313,12 @@ class SmartAdvertisingService {
       if (!ad.isAutoOptimized) return;
 
       // Анализируем производительность
-      final Map<String, dynamic> performance = await _analyzeAdPerformance(adId);
+      final Map<String, dynamic> performance =
+          await _analyzeAdPerformance(adId);
 
       // Применяем оптимизации
-      final Map<String, dynamic> optimizations = await _applyOptimizations(ad, performance);
+      final Map<String, dynamic> optimizations =
+          await _applyOptimizations(ad, performance);
 
       // Сохраняем результаты оптимизации
       final AdOptimization optimization = AdOptimization(
@@ -335,15 +360,19 @@ class SmartAdvertisingService {
       }
 
       final List<AdImpression> impressions = impressionsSnapshot.docs
-          .map((doc) => AdImpression.fromMap(doc.data() as Map<String, dynamic>))
+          .map(
+              (doc) => AdImpression.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
       final int totalImpressions = impressions.length;
       final int totalClicks = impressions.where((i) => i.isClicked).length;
-      final int totalConversions = impressions.where((i) => i.isConverted).length;
+      final int totalConversions =
+          impressions.where((i) => i.isConverted).length;
 
-      final double ctr = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
-      final double conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0.0;
+      final double ctr =
+          totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0.0;
+      final double conversionRate =
+          totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0.0;
 
       // Анализ по размещениям
       final Map<String, int> placementImpressions = {};
@@ -353,7 +382,8 @@ class SmartAdvertisingService {
         placementImpressions[impression.placement] =
             (placementImpressions[impression.placement] ?? 0) + 1;
         if (impression.isClicked) {
-          placementClicks[impression.placement] = (placementClicks[impression.placement] ?? 0) + 1;
+          placementClicks[impression.placement] =
+              (placementClicks[impression.placement] ?? 0) + 1;
         }
       }
 
@@ -367,13 +397,16 @@ class SmartAdvertisingService {
           (placement, impressions) => MapEntry(placement, {
             'impressions': impressions,
             'clicks': placementClicks[placement] ?? 0,
-            'ctr': impressions > 0 ? ((placementClicks[placement] ?? 0) / impressions) * 100 : 0.0,
+            'ctr': impressions > 0
+                ? ((placementClicks[placement] ?? 0) / impressions) * 100
+                : 0.0,
           }),
         ),
         'status': 'analyzed',
       };
     } catch (e) {
-      debugPrint('ERROR: [SmartAdvertisingService] Failed to analyze ad performance: $e');
+      debugPrint(
+          'ERROR: [SmartAdvertisingService] Failed to analyze ad performance: $e');
       return {'status': 'error'};
     }
   }
@@ -402,7 +435,8 @@ class SmartAdvertisingService {
     }
 
     // Оптимизация размещений
-    final Map<String, dynamic> placementPerformance = performance['placementPerformance'] ?? {};
+    final Map<String, dynamic> placementPerformance =
+        performance['placementPerformance'] ?? {};
 
     final List<String> bestPlacements = [];
     final List<String> worstPlacements = [];
@@ -439,10 +473,8 @@ class SmartAdvertisingService {
   /// Получение статистики объявления
   Future<Map<String, dynamic>> getAdStats(String adId) async {
     try {
-      final DocumentSnapshot adDoc = await _firestore
-          .collection('smart_advertisements')
-          .doc(adId)
-          .get();
+      final DocumentSnapshot adDoc =
+          await _firestore.collection('smart_advertisements').doc(adId).get();
 
       if (!adDoc.exists) {
         return {};
@@ -459,17 +491,20 @@ class SmartAdvertisingService {
           .get();
 
       final List<AdImpression> impressions = impressionsSnapshot.docs
-          .map((doc) => AdImpression.fromMap(doc.data() as Map<String, dynamic>))
+          .map(
+              (doc) => AdImpression.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
 
       // Рассчитываем дополнительные метрики
       final double averageRelevance = impressions.isNotEmpty
-          ? impressions.map((i) => i.relevanceScore).reduce((a, b) => a + b) / impressions.length
+          ? impressions.map((i) => i.relevanceScore).reduce((a, b) => a + b) /
+              impressions.length
           : 0.0;
 
       final Map<String, int> dailyImpressions = {};
       for (final impression in impressions) {
-        final String date = impression.timestamp.toIso8601String().split('T')[0];
+        final String date =
+            impression.timestamp.toIso8601String().split('T')[0];
         dailyImpressions[date] = (dailyImpressions[date] ?? 0) + 1;
       }
 
@@ -506,7 +541,8 @@ class SmartAdvertisingService {
           .get();
 
       return snapshot.docs
-          .map((doc) => SmartAdvertisement.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) =>
+              SmartAdvertisement.fromMap(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
       debugPrint('ERROR: [SmartAdvertisingService] Failed to get user ads: $e');

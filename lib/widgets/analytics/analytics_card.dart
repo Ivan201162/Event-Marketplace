@@ -46,10 +46,12 @@ class AnalyticsCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               value,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
+              style: TextStyle(
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
             ),
             const SizedBox(height: 4),
-            Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+            Text(title,
+                style: TextStyle(color: Colors.grey[600], fontSize: 14)),
           ],
         ),
       );

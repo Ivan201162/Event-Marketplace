@@ -76,7 +76,8 @@ class ArPreviewService {
   }
 
   /// Запустить AR-просмотр
-  Future<void> launchArViewer({required String arModelUrl, required String eventTitle}) async {
+  Future<void> launchArViewer(
+      {required String arModelUrl, required String eventTitle}) async {
     if (!FeatureFlags.arPreviewEnabled) {
       throw Exception('AR-превью отключено');
     }

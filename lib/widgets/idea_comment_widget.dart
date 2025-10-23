@@ -32,8 +32,9 @@ class IdeaCommentWidget extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundImage:
-                        comment.authorAvatar != null ? NetworkImage(comment.authorAvatar!) : null,
+                    backgroundImage: comment.authorAvatar != null
+                        ? NetworkImage(comment.authorAvatar!)
+                        : null,
                     child: comment.authorAvatar == null
                         ? Text(
                             comment.authorName.isNotEmpty
@@ -51,13 +52,19 @@ class IdeaCommentWidget extends StatelessWidget {
                           comment.authorName,
                           style: Theme.of(
                             context,
-                          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+                          )
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
                         Text(
                           _formatDate(comment.createdAt),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
                         ),
                       ],
                     ),
@@ -74,7 +81,8 @@ class IdeaCommentWidget extends StatelessWidget {
               const SizedBox(height: 8),
 
               // Содержимое комментария
-              Text(comment.content, style: Theme.of(context).textTheme.bodyMedium),
+              Text(comment.content,
+                  style: Theme.of(context).textTheme.bodyMedium),
 
               const SizedBox(height: 8),
 
@@ -95,11 +103,14 @@ class IdeaCommentWidget extends StatelessWidget {
                         const SizedBox(width: 4),
                         Text(
                           comment.likesCount.toString(),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: comment.likesCount > 0
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.onSurfaceVariant,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: comment.likesCount > 0
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                  ),
                         ),
                       ],
                     ),
@@ -113,14 +124,18 @@ class IdeaCommentWidget extends StatelessWidget {
                           Icon(
                             Icons.reply,
                             size: 16,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             'Ответить',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
                           ),
                         ],
                       ),
@@ -130,7 +145,8 @@ class IdeaCommentWidget extends StatelessWidget {
                     Text(
                       'изменено',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                             fontStyle: FontStyle.italic,
                           ),
                     ),
@@ -207,8 +223,10 @@ class _AddCommentWidgetState extends State<AddCommentWidget> {
                       controller: _controller,
                       decoration: InputDecoration(
                         hintText: widget.hintText,
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                       ),
                       maxLines: null,
                       textInputAction: TextInputAction.newline,
@@ -308,7 +326,8 @@ class CommentsListWidget extends StatelessWidget {
     return Column(
       children: [
         // Поле для добавления комментария
-        if (onAddComment != null) AddCommentWidget(onCommentAdded: onAddComment!),
+        if (onAddComment != null)
+          AddCommentWidget(onCommentAdded: onAddComment!),
 
         const SizedBox(height: 16),
 
@@ -320,9 +339,15 @@ class CommentsListWidget extends StatelessWidget {
               final comment = comments[index];
               return IdeaCommentWidget(
                 comment: comment,
-                onLike: onCommentLike != null ? () => onCommentLike!(comment) : null,
-                onReply: onCommentReply != null ? () => onCommentReply!(comment) : null,
-                onDelete: onCommentDelete != null ? () => onCommentDelete!(comment) : null,
+                onLike: onCommentLike != null
+                    ? () => onCommentLike!(comment)
+                    : null,
+                onReply: onCommentReply != null
+                    ? () => onCommentReply!(comment)
+                    : null,
+                onDelete: onCommentDelete != null
+                    ? () => onCommentDelete!(comment)
+                    : null,
               );
             },
           ),

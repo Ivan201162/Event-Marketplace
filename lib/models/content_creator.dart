@@ -26,13 +26,11 @@ class ContentCreator {
       name: data['name'] as String? ?? '',
       description: data['description'] as String? ?? '',
       categories: List<String>.from(data['categories'] as List<dynamic>? ?? []),
-      formats:
-          (data['formats'] as List<dynamic>?)
+      formats: (data['formats'] as List<dynamic>?)
               ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
               .toList() ??
           [],
-      mediaShowcase:
-          (data['mediaShowcase'] as List<dynamic>?)
+      mediaShowcase: (data['mediaShowcase'] as List<dynamic>?)
               ?.map((m) => MediaShowcase.fromMap(m as Map<String, dynamic>))
               .toList() ??
           [],
@@ -50,30 +48,30 @@ class ContentCreator {
 
   /// Создать из Map
   factory ContentCreator.fromMap(Map<String, dynamic> data) => ContentCreator(
-    id: data['id'] as String? ?? '',
-    name: data['name'] as String? ?? '',
-    description: data['description'] as String? ?? '',
-    categories: List<String>.from(data['categories'] as List<dynamic>? ?? []),
-    formats:
-        (data['formats'] as List<dynamic>?)
-            ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
-            .toList() ??
-        [],
-    mediaShowcase:
-        (data['mediaShowcase'] as List<dynamic>?)
-            ?.map((m) => MediaShowcase.fromMap(m as Map<String, dynamic>))
-            .toList() ??
-        [],
-    pricing: data['pricing'] != null
-        ? Map<String, dynamic>.from(data['pricing'] as Map<dynamic, dynamic>)
-        : null,
-    location: data['location'] as String?,
-    rating: data['rating'] as double?,
-    reviewCount: data['reviewCount'] as int?,
-    isActive: data['isActive'] as bool? ?? true,
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-  );
+        id: data['id'] as String? ?? '',
+        name: data['name'] as String? ?? '',
+        description: data['description'] as String? ?? '',
+        categories:
+            List<String>.from(data['categories'] as List<dynamic>? ?? []),
+        formats: (data['formats'] as List<dynamic>?)
+                ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
+                .toList() ??
+            [],
+        mediaShowcase: (data['mediaShowcase'] as List<dynamic>?)
+                ?.map((m) => MediaShowcase.fromMap(m as Map<String, dynamic>))
+                .toList() ??
+            [],
+        pricing: data['pricing'] != null
+            ? Map<String, dynamic>.from(
+                data['pricing'] as Map<dynamic, dynamic>)
+            : null,
+        location: data['location'] as String?,
+        rating: data['rating'] as double?,
+        reviewCount: data['reviewCount'] as int?,
+        isActive: data['isActive'] as bool? ?? true,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
   final String id;
   final String name;
   final String description;
@@ -90,19 +88,19 @@ class ContentCreator {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'description': description,
-    'categories': categories,
-    'formats': formats.map((f) => f.toMap()).toList(),
-    'mediaShowcase': mediaShowcase.map((m) => m.toMap()).toList(),
-    'pricing': pricing,
-    'location': location,
-    'rating': rating,
-    'reviewCount': reviewCount,
-    'isActive': isActive,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'name': name,
+        'description': description,
+        'categories': categories,
+        'formats': formats.map((f) => f.toMap()).toList(),
+        'mediaShowcase': mediaShowcase.map((m) => m.toMap()).toList(),
+        'pricing': pricing,
+        'location': location,
+        'rating': rating,
+        'reviewCount': reviewCount,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Создать копию с изменениями
   ContentCreator copyWith({
@@ -119,21 +117,22 @@ class ContentCreator {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => ContentCreator(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    categories: categories ?? this.categories,
-    formats: formats ?? this.formats,
-    mediaShowcase: mediaShowcase ?? this.mediaShowcase,
-    pricing: pricing ?? this.pricing,
-    location: location ?? this.location,
-    rating: rating ?? this.rating,
-    reviewCount: reviewCount ?? this.reviewCount,
-    isActive: isActive ?? this.isActive,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      ContentCreator(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        categories: categories ?? this.categories,
+        formats: formats ?? this.formats,
+        mediaShowcase: mediaShowcase ?? this.mediaShowcase,
+        pricing: pricing ?? this.pricing,
+        location: location ?? this.location,
+        rating: rating ?? this.rating,
+        reviewCount: reviewCount ?? this.reviewCount,
+        isActive: isActive ?? this.isActive,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить диапазон цен
   String? get priceRange {
@@ -177,23 +176,24 @@ class ContentCreator {
 
   @override
   int get hashCode => Object.hash(
-    id,
-    name,
-    description,
-    categories,
-    formats,
-    mediaShowcase,
-    pricing,
-    location,
-    rating,
-    reviewCount,
-    isActive,
-    createdAt,
-    updatedAt,
-  );
+        id,
+        name,
+        description,
+        categories,
+        formats,
+        mediaShowcase,
+        pricing,
+        location,
+        rating,
+        reviewCount,
+        isActive,
+        createdAt,
+        updatedAt,
+      );
 
   @override
-  String toString() => 'ContentCreator(id: $id, name: $name, formats: ${supportedFormats.length})';
+  String toString() =>
+      'ContentCreator(id: $id, name: $name, formats: ${supportedFormats.length})';
 }
 
 /// Формат контента
@@ -207,13 +207,14 @@ class ContentFormat {
 
   /// Создать из Map
   factory ContentFormat.fromMap(Map<String, dynamic> data) => ContentFormat(
-    name: data['name'] as String? ?? '',
-    description: data['description'] as String? ?? '',
-    platforms: List<String>.from(data['platforms'] as List<dynamic>? ?? []),
-    specifications: data['specifications'] != null
-        ? Map<String, dynamic>.from(data['specifications'] as Map<dynamic, dynamic>)
-        : null,
-  );
+        name: data['name'] as String? ?? '',
+        description: data['description'] as String? ?? '',
+        platforms: List<String>.from(data['platforms'] as List<dynamic>? ?? []),
+        specifications: data['specifications'] != null
+            ? Map<String, dynamic>.from(
+                data['specifications'] as Map<dynamic, dynamic>)
+            : null,
+      );
   final String name;
   final String description;
   final List<String> platforms;
@@ -221,11 +222,11 @@ class ContentFormat {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'description': description,
-    'platforms': platforms,
-    'specifications': specifications,
-  };
+        'name': name,
+        'description': description,
+        'platforms': platforms,
+        'specifications': specifications,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -259,17 +260,19 @@ class MediaShowcase {
 
   /// Создать из Map
   factory MediaShowcase.fromMap(Map<String, dynamic> data) => MediaShowcase(
-    id: data['id'] as String? ?? '',
-    type: MediaType.values.firstWhere((e) => e.name == data['type'], orElse: () => MediaType.image),
-    url: data['url'] as String? ?? '',
-    coverUrl: data['coverUrl'] as String?,
-    title: data['title'] as String?,
-    description: data['description'] as String?,
-    metadata: data['metadata'] != null
-        ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
-        : null,
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-  );
+        id: data['id'] as String? ?? '',
+        type: MediaType.values.firstWhere((e) => e.name == data['type'],
+            orElse: () => MediaType.image),
+        url: data['url'] as String? ?? '',
+        coverUrl: data['coverUrl'] as String?,
+        title: data['title'] as String?,
+        description: data['description'] as String?,
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(
+                data['metadata'] as Map<dynamic, dynamic>)
+            : null,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+      );
   final String id;
   final MediaType type;
   final String url;
@@ -281,15 +284,15 @@ class MediaShowcase {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'type': type.name,
-    'url': url,
-    'coverUrl': coverUrl,
-    'title': title,
-    'description': description,
-    'metadata': metadata,
-    'createdAt': Timestamp.fromDate(createdAt),
-  };
+        'id': id,
+        'type': type.name,
+        'url': url,
+        'coverUrl': coverUrl,
+        'title': title,
+        'description': description,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+      };
 
   @override
   bool operator ==(Object other) {
@@ -306,14 +309,25 @@ class MediaShowcase {
   }
 
   @override
-  int get hashCode => Object.hash(id, type, url, coverUrl, title, description, metadata, createdAt);
+  int get hashCode => Object.hash(
+      id, type, url, coverUrl, title, description, metadata, createdAt);
 
   @override
   String toString() => 'MediaShowcase(id: $id, type: $type, title: $title)';
 }
 
 /// Тип медиа
-enum MediaType { image, video, gif, story, reel, tiktok, youtube, instagram, other }
+enum MediaType {
+  image,
+  video,
+  gif,
+  story,
+  reel,
+  tiktok,
+  youtube,
+  instagram,
+  other
+}
 
 /// Расширение для типа медиа
 extension MediaTypeExtension on MediaType {

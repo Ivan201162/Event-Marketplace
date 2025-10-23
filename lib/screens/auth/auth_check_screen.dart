@@ -104,7 +104,10 @@ class _AuthCheckScreenState extends ConsumerState<AuthCheckScreen> {
               // App name
               Text(
                 'Event Marketplace',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               SizedBox(height: 8),
 

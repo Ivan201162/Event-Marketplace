@@ -39,7 +39,8 @@ class ThemeSwitch extends ConsumerWidget {
           const SizedBox(height: 8),
         ],
         Container(
-          padding: padding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: padding ??
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: backgroundColor ?? Theme.of(context).cardColor,
             borderRadius: borderRadius ?? BorderRadius.circular(12),
@@ -58,7 +59,8 @@ class ThemeSwitch extends ConsumerWidget {
                       }
                     },
                     style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
-                    icon: Icon(Icons.arrow_drop_down, color: Theme.of(context).iconTheme.color),
+                    icon: Icon(Icons.arrow_drop_down,
+                        color: Theme.of(context).iconTheme.color),
                   ),
                 )
               : InkWell(
@@ -67,10 +69,14 @@ class ThemeSwitch extends ConsumerWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (showIcon) ...[_buildThemeIcon(themeMode), const SizedBox(width: 8)],
+                      if (showIcon) ...[
+                        _buildThemeIcon(themeMode),
+                        const SizedBox(width: 8)
+                      ],
                       Text(
                         _getThemeName(themeMode),
-                        style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
+                        style:
+                            textStyle ?? Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(width: 4),
                       Icon(
@@ -87,9 +93,12 @@ class ThemeSwitch extends ConsumerWidget {
   }
 
   List<DropdownMenuItem<ThemeMode>> _buildThemeItems(BuildContext context) => [
-        DropdownMenuItem(value: ThemeMode.light, child: _buildThemeItem(ThemeMode.light)),
-        DropdownMenuItem(value: ThemeMode.dark, child: _buildThemeItem(ThemeMode.dark)),
-        DropdownMenuItem(value: ThemeMode.system, child: _buildThemeItem(ThemeMode.system)),
+        DropdownMenuItem(
+            value: ThemeMode.light, child: _buildThemeItem(ThemeMode.light)),
+        DropdownMenuItem(
+            value: ThemeMode.dark, child: _buildThemeItem(ThemeMode.dark)),
+        DropdownMenuItem(
+            value: ThemeMode.system, child: _buildThemeItem(ThemeMode.system)),
       ];
 
   Widget _buildThemeItem(ThemeMode themeMode) => Row(
@@ -241,7 +250,10 @@ class CompactThemeSwitch extends ConsumerWidget {
       icon: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (showIcon) ...[_buildThemeIcon(themeMode), if (showText) const SizedBox(width: 4)],
+          if (showIcon) ...[
+            _buildThemeIcon(themeMode),
+            if (showText) const SizedBox(width: 4)
+          ],
           if (showText) ...[
             Text(
               _getThemeCode(themeMode),
@@ -290,9 +302,11 @@ class CompactThemeSwitch extends ConsumerWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildThemeOption(dialogContext, ref, ThemeMode.light, Icons.light_mode, 'Светлая'),
+            _buildThemeOption(dialogContext, ref, ThemeMode.light,
+                Icons.light_mode, 'Светлая'),
             const SizedBox(height: 8),
-            _buildThemeOption(dialogContext, ref, ThemeMode.dark, Icons.dark_mode, 'Темная'),
+            _buildThemeOption(
+                dialogContext, ref, ThemeMode.dark, Icons.dark_mode, 'Темная'),
             const SizedBox(height: 8),
             _buildThemeOption(
               dialogContext,
@@ -424,7 +438,8 @@ class CurrentThemeDisplay extends ConsumerWidget {
 
 /// Виджет для быстрого переключения между светлой и темной темой
 class QuickThemeToggle extends ConsumerWidget {
-  const QuickThemeToggle({super.key, this.showTooltip = true, this.iconColor, this.onChanged});
+  const QuickThemeToggle(
+      {super.key, this.showTooltip = true, this.iconColor, this.onChanged});
   final bool showTooltip;
   final Color? iconColor;
   final VoidCallback? onChanged;
@@ -444,7 +459,9 @@ class QuickThemeToggle extends ConsumerWidget {
         color: Theme.of(context).iconTheme.color,
       ),
       tooltip: showTooltip
-          ? (isDark ? 'Переключить на светлую тему' : 'Переключить на темную тему')
+          ? (isDark
+              ? 'Переключить на светлую тему'
+              : 'Переключить на темную тему')
           : null,
     );
   }

@@ -147,7 +147,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       if (e is FirebaseAuthException) {
         switch (e.code) {
           case 'account-exists-with-different-credential':
-            errorMessage = 'Аккаунт с таким email уже существует с другим способом входа';
+            errorMessage =
+                'Аккаунт с таким email уже существует с другим способом входа';
             break;
           case 'invalid-credential':
             errorMessage = 'Неверные учетные данные Google';
@@ -177,7 +178,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             errorMessage = 'Ошибка Google Sign-In: ${e.message ?? e.code}';
         }
       } else if (e.toString().contains('ApiException: 10')) {
-        errorMessage = 'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
+        errorMessage =
+            'Ошибка конфигурации Google Sign-In. Обратитесь к разработчику';
       } else {
         errorMessage = 'Ошибка входа через Google: ${e.toString()}';
       }
@@ -232,7 +234,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           'Этот email уже зарегистрирован через Google. Хотите войти через Google?',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -273,7 +277,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           color: theme.primaryColor,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Icon(Icons.event, size: 40, color: Colors.white),
+                        child: const Icon(Icons.event,
+                            size: 40, color: Colors.white),
                       ),
 
                       const SizedBox(height: 24),
@@ -291,7 +296,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
                       Text(
                         'Найдите идеального специалиста для вашего события',
-                        style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                        style: theme.textTheme.bodyMedium
+                            ?.copyWith(color: Colors.grey[600]),
                         textAlign: TextAlign.center,
                       ),
 
@@ -307,17 +313,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           children: [
                             Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _isLoginMode = true),
+                                onTap: () =>
+                                    setState(() => _isLoginMode = true),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
                                   decoration: BoxDecoration(
-                                    color: _isLoginMode ? theme.primaryColor : Colors.transparent,
+                                    color: _isLoginMode
+                                        ? theme.primaryColor
+                                        : Colors.transparent,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     'Вход',
                                     style: TextStyle(
-                                      color: _isLoginMode ? Colors.white : Colors.grey[600],
+                                      color: _isLoginMode
+                                          ? Colors.white
+                                          : Colors.grey[600],
                                       fontWeight: FontWeight.w600,
                                     ),
                                     textAlign: TextAlign.center,
@@ -327,17 +339,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             ),
                             Expanded(
                               child: GestureDetector(
-                                onTap: () => setState(() => _isLoginMode = false),
+                                onTap: () =>
+                                    setState(() => _isLoginMode = false),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 12),
                                   decoration: BoxDecoration(
-                                    color: !_isLoginMode ? theme.primaryColor : Colors.transparent,
+                                    color: !_isLoginMode
+                                        ? theme.primaryColor
+                                        : Colors.transparent,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     'Регистрация',
                                     style: TextStyle(
-                                      color: !_isLoginMode ? Colors.white : Colors.grey[600],
+                                      color: !_isLoginMode
+                                          ? Colors.white
+                                          : Colors.grey[600],
                                       fontWeight: FontWeight.w600,
                                     ),
                                     textAlign: TextAlign.center,
@@ -388,7 +406,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                               ? const SizedBox(
                                   height: 20,
                                   width: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child:
+                                      CircularProgressIndicator(strokeWidth: 2),
                                 )
                               : const Text('Войти'),
                         ),
@@ -450,7 +469,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                               ? const SizedBox(
                                   height: 20,
                                   width: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                  child:
+                                      CircularProgressIndicator(strokeWidth: 2),
                                 )
                               : const Text('Зарегистрироваться'),
                         ),
@@ -482,7 +502,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           const Expanded(child: Divider()),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('или', style: TextStyle(color: Colors.grey[600])),
+                            child: Text('или',
+                                style: TextStyle(color: Colors.grey[600])),
                           ),
                           const Expanded(child: Divider()),
                         ],
@@ -511,7 +532,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                             'assets/icons/google_logo.png',
                             height: 24.0,
                             width: 24.0,
-                            errorBuilder: (context, error, stackTrace) => const Icon(Icons.login),
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.login),
                           ),
                           label: const Text('Войти через Google'),
                           style: OutlinedButton.styleFrom(

@@ -22,19 +22,20 @@ class GroupChatParticipant {
   });
 
   /// Создать из Map
-  factory GroupChatParticipant.fromMap(Map<String, dynamic> data) => GroupChatParticipant(
-    userId: data['userId'] as String? ?? '',
-    userName: data['userName'] as String? ?? '',
-    userPhoto: data['userPhoto'] as String?,
-    type: GroupChatParticipantType.values.firstWhere(
-      (e) => e.name == data['type'] as String?,
-      orElse: () => GroupChatParticipantType.guest,
-    ),
-    joinedAt: (data['joinedAt'] as Timestamp).toDate(),
-    isActive: data['isActive'] as bool? ?? true,
-    canSendMessages: data['canSendMessages'] as bool? ?? true,
-    canUploadFiles: data['canUploadFiles'] as bool? ?? true,
-  );
+  factory GroupChatParticipant.fromMap(Map<String, dynamic> data) =>
+      GroupChatParticipant(
+        userId: data['userId'] as String? ?? '',
+        userName: data['userName'] as String? ?? '',
+        userPhoto: data['userPhoto'] as String?,
+        type: GroupChatParticipantType.values.firstWhere(
+          (e) => e.name == data['type'] as String?,
+          orElse: () => GroupChatParticipantType.guest,
+        ),
+        joinedAt: (data['joinedAt'] as Timestamp).toDate(),
+        isActive: data['isActive'] as bool? ?? true,
+        canSendMessages: data['canSendMessages'] as bool? ?? true,
+        canUploadFiles: data['canUploadFiles'] as bool? ?? true,
+      );
   final String userId;
   final String userName;
   final String? userPhoto;
@@ -46,15 +47,15 @@ class GroupChatParticipant {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'userName': userName,
-    'userPhoto': userPhoto,
-    'type': type.name,
-    'joinedAt': Timestamp.fromDate(joinedAt),
-    'isActive': isActive,
-    'canSendMessages': canSendMessages,
-    'canUploadFiles': canUploadFiles,
-  };
+        'userId': userId,
+        'userName': userName,
+        'userPhoto': userPhoto,
+        'type': type.name,
+        'joinedAt': Timestamp.fromDate(joinedAt),
+        'isActive': isActive,
+        'canSendMessages': canSendMessages,
+        'canUploadFiles': canUploadFiles,
+      };
 
   /// Создать копию с изменениями
   GroupChatParticipant copyWith({
@@ -66,16 +67,17 @@ class GroupChatParticipant {
     bool? isActive,
     bool? canSendMessages,
     bool? canUploadFiles,
-  }) => GroupChatParticipant(
-    userId: userId ?? this.userId,
-    userName: userName ?? this.userName,
-    userPhoto: userPhoto ?? this.userPhoto,
-    type: type ?? this.type,
-    joinedAt: joinedAt ?? this.joinedAt,
-    isActive: isActive ?? this.isActive,
-    canSendMessages: canSendMessages ?? this.canSendMessages,
-    canUploadFiles: canUploadFiles ?? this.canUploadFiles,
-  );
+  }) =>
+      GroupChatParticipant(
+        userId: userId ?? this.userId,
+        userName: userName ?? this.userName,
+        userPhoto: userPhoto ?? this.userPhoto,
+        type: type ?? this.type,
+        joinedAt: joinedAt ?? this.joinedAt,
+        isActive: isActive ?? this.isActive,
+        canSendMessages: canSendMessages ?? this.canSendMessages,
+        canUploadFiles: canUploadFiles ?? this.canUploadFiles,
+      );
 }
 
 /// Тип сообщения в групповом чате
@@ -110,25 +112,28 @@ class GroupChatMessage {
   });
 
   /// Создать из Map
-  factory GroupChatMessage.fromMap(Map<String, dynamic> data) => GroupChatMessage(
-    id: data['id'] as String? ?? '',
-    chatId: data['chatId'] as String? ?? '',
-    senderId: data['senderId'] as String? ?? '',
-    senderName: data['senderName'] as String? ?? '',
-    senderPhoto: data['senderPhoto'] as String?,
-    content: data['content'] as String? ?? '',
-    type: GroupChatMessageType.values.firstWhere(
-      (e) => e.name == data['type'] as String?,
-      orElse: () => GroupChatMessageType.text,
-    ),
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-    editedAt: data['editedAt'] != null ? (data['editedAt'] as Timestamp).toDate() : null,
-    isEdited: data['isEdited'] as bool? ?? false,
-    replyToMessageId: data['replyToMessageId'] as String?,
-    metadata: data['metadata'] as Map<String, dynamic>?,
-    readBy: List<String>.from((data['readBy'] as List<dynamic>?) ?? []),
-    isPinned: data['isPinned'] as bool? ?? false,
-  );
+  factory GroupChatMessage.fromMap(Map<String, dynamic> data) =>
+      GroupChatMessage(
+        id: data['id'] as String? ?? '',
+        chatId: data['chatId'] as String? ?? '',
+        senderId: data['senderId'] as String? ?? '',
+        senderName: data['senderName'] as String? ?? '',
+        senderPhoto: data['senderPhoto'] as String?,
+        content: data['content'] as String? ?? '',
+        type: GroupChatMessageType.values.firstWhere(
+          (e) => e.name == data['type'] as String?,
+          orElse: () => GroupChatMessageType.text,
+        ),
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        editedAt: data['editedAt'] != null
+            ? (data['editedAt'] as Timestamp).toDate()
+            : null,
+        isEdited: data['isEdited'] as bool? ?? false,
+        replyToMessageId: data['replyToMessageId'] as String?,
+        metadata: data['metadata'] as Map<String, dynamic>?,
+        readBy: List<String>.from((data['readBy'] as List<dynamic>?) ?? []),
+        isPinned: data['isPinned'] as bool? ?? false,
+      );
   final String id;
   final String chatId;
   final String senderId;
@@ -146,21 +151,21 @@ class GroupChatMessage {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'chatId': chatId,
-    'senderId': senderId,
-    'senderName': senderName,
-    'senderPhoto': senderPhoto,
-    'content': content,
-    'type': type.name,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
-    'isEdited': isEdited,
-    'replyToMessageId': replyToMessageId,
-    'metadata': metadata,
-    'readBy': readBy,
-    'isPinned': isPinned,
-  };
+        'id': id,
+        'chatId': chatId,
+        'senderId': senderId,
+        'senderName': senderName,
+        'senderPhoto': senderPhoto,
+        'content': content,
+        'type': type.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
+        'isEdited': isEdited,
+        'replyToMessageId': replyToMessageId,
+        'metadata': metadata,
+        'readBy': readBy,
+        'isPinned': isPinned,
+      };
 
   /// Создать копию с изменениями
   GroupChatMessage copyWith({
@@ -178,22 +183,23 @@ class GroupChatMessage {
     Map<String, dynamic>? metadata,
     List<String>? readBy,
     bool? isPinned,
-  }) => GroupChatMessage(
-    id: id ?? this.id,
-    chatId: chatId ?? this.chatId,
-    senderId: senderId ?? this.senderId,
-    senderName: senderName ?? this.senderName,
-    senderPhoto: senderPhoto ?? this.senderPhoto,
-    content: content ?? this.content,
-    type: type ?? this.type,
-    createdAt: createdAt ?? this.createdAt,
-    editedAt: editedAt ?? this.editedAt,
-    isEdited: isEdited ?? this.isEdited,
-    replyToMessageId: replyToMessageId ?? this.replyToMessageId,
-    metadata: metadata ?? this.metadata,
-    readBy: readBy ?? this.readBy,
-    isPinned: isPinned ?? this.isPinned,
-  );
+  }) =>
+      GroupChatMessage(
+        id: id ?? this.id,
+        chatId: chatId ?? this.chatId,
+        senderId: senderId ?? this.senderId,
+        senderName: senderName ?? this.senderName,
+        senderPhoto: senderPhoto ?? this.senderPhoto,
+        content: content ?? this.content,
+        type: type ?? this.type,
+        createdAt: createdAt ?? this.createdAt,
+        editedAt: editedAt ?? this.editedAt,
+        isEdited: isEdited ?? this.isEdited,
+        replyToMessageId: replyToMessageId ?? this.replyToMessageId,
+        metadata: metadata ?? this.metadata,
+        readBy: readBy ?? this.readBy,
+        isPinned: isPinned ?? this.isPinned,
+      );
 }
 
 /// Групповой чат для мероприятия
@@ -218,28 +224,29 @@ class GroupChat {
 
   /// Создать из Map
   factory GroupChat.fromMap(Map<String, dynamic> data) => GroupChat(
-    id: data['id'] as String? ?? '',
-    eventId: data['eventId'] as String? ?? '',
-    eventTitle: data['eventTitle'] as String? ?? '',
-    organizerId: data['organizerId'] as String? ?? '',
-    organizerName: data['organizerName'] as String? ?? '',
-    participants:
-        (data['participants'] as List<dynamic>?)
-            ?.map((p) => GroupChatParticipant.fromMap(p as Map<String, dynamic>))
-            .toList() ??
-        [],
-    lastMessage: data['lastMessage'] != null
-        ? GroupChatMessage.fromMap(data['lastMessage'] as Map<String, dynamic>)
-        : null,
-    lastActivityAt: (data['lastActivityAt'] as Timestamp).toDate(),
-    unreadCount: data['unreadCount'] as int? ?? 0,
-    isActive: data['isActive'] as bool? ?? true,
-    allowGuestUploads: data['allowGuestUploads'] as bool? ?? true,
-    allowGuestMessages: data['allowGuestMessages'] as bool? ?? true,
-    createdAt: (data['createdAt'] as Timestamp).toDate(),
-    updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-    settings: data['settings'] as Map<String, dynamic>?,
-  );
+        id: data['id'] as String? ?? '',
+        eventId: data['eventId'] as String? ?? '',
+        eventTitle: data['eventTitle'] as String? ?? '',
+        organizerId: data['organizerId'] as String? ?? '',
+        organizerName: data['organizerName'] as String? ?? '',
+        participants: (data['participants'] as List<dynamic>?)
+                ?.map((p) =>
+                    GroupChatParticipant.fromMap(p as Map<String, dynamic>))
+                .toList() ??
+            [],
+        lastMessage: data['lastMessage'] != null
+            ? GroupChatMessage.fromMap(
+                data['lastMessage'] as Map<String, dynamic>)
+            : null,
+        lastActivityAt: (data['lastActivityAt'] as Timestamp).toDate(),
+        unreadCount: data['unreadCount'] as int? ?? 0,
+        isActive: data['isActive'] as bool? ?? true,
+        allowGuestUploads: data['allowGuestUploads'] as bool? ?? true,
+        allowGuestMessages: data['allowGuestMessages'] as bool? ?? true,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        settings: data['settings'] as Map<String, dynamic>?,
+      );
   final String id;
   final String eventId;
   final String eventTitle;
@@ -258,22 +265,22 @@ class GroupChat {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'eventId': eventId,
-    'eventTitle': eventTitle,
-    'organizerId': organizerId,
-    'organizerName': organizerName,
-    'participants': participants.map((p) => p.toMap()).toList(),
-    'lastMessage': lastMessage?.toMap(),
-    'lastActivityAt': Timestamp.fromDate(lastActivityAt),
-    'unreadCount': unreadCount,
-    'isActive': isActive,
-    'allowGuestUploads': allowGuestUploads,
-    'allowGuestMessages': allowGuestMessages,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'settings': settings,
-  };
+        'id': id,
+        'eventId': eventId,
+        'eventTitle': eventTitle,
+        'organizerId': organizerId,
+        'organizerName': organizerName,
+        'participants': participants.map((p) => p.toMap()).toList(),
+        'lastMessage': lastMessage?.toMap(),
+        'lastActivityAt': Timestamp.fromDate(lastActivityAt),
+        'unreadCount': unreadCount,
+        'isActive': isActive,
+        'allowGuestUploads': allowGuestUploads,
+        'allowGuestMessages': allowGuestMessages,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'settings': settings,
+      };
 
   /// Создать копию с изменениями
   GroupChat copyWith({
@@ -292,23 +299,24 @@ class GroupChat {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? settings,
-  }) => GroupChat(
-    id: id ?? this.id,
-    eventId: eventId ?? this.eventId,
-    eventTitle: eventTitle ?? this.eventTitle,
-    organizerId: organizerId ?? this.organizerId,
-    organizerName: organizerName ?? this.organizerName,
-    participants: participants ?? this.participants,
-    lastMessage: lastMessage ?? this.lastMessage,
-    lastActivityAt: lastActivityAt ?? this.lastActivityAt,
-    unreadCount: unreadCount ?? this.unreadCount,
-    isActive: isActive ?? this.isActive,
-    allowGuestUploads: allowGuestUploads ?? this.allowGuestUploads,
-    allowGuestMessages: allowGuestMessages ?? this.allowGuestMessages,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    settings: settings ?? this.settings,
-  );
+  }) =>
+      GroupChat(
+        id: id ?? this.id,
+        eventId: eventId ?? this.eventId,
+        eventTitle: eventTitle ?? this.eventTitle,
+        organizerId: organizerId ?? this.organizerId,
+        organizerName: organizerName ?? this.organizerName,
+        participants: participants ?? this.participants,
+        lastMessage: lastMessage ?? this.lastMessage,
+        lastActivityAt: lastActivityAt ?? this.lastActivityAt,
+        unreadCount: unreadCount ?? this.unreadCount,
+        isActive: isActive ?? this.isActive,
+        allowGuestUploads: allowGuestUploads ?? this.allowGuestUploads,
+        allowGuestMessages: allowGuestMessages ?? this.allowGuestMessages,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        settings: settings ?? this.settings,
+      );
 
   /// Получить количество участников
   int get participantsCount => participants.length;
@@ -318,7 +326,8 @@ class GroupChat {
       participants.where((p) => p.isActive).toList();
 
   /// Проверить, является ли пользователь участником
-  bool isParticipant(String userId) => participants.any((p) => p.userId == userId && p.isActive);
+  bool isParticipant(String userId) =>
+      participants.any((p) => p.userId == userId && p.isActive);
 
   /// Получить тип участника
   GroupChatParticipantType? getParticipantType(String userId) {

@@ -6,7 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 /// Сервис для работы с push-уведомлениями
 class PushNotificationService {
   static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
-  static final FlutterLocalNotificationsPlugin _localNotifications = 
+  static final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
 
   static bool _isInitialized = false;
@@ -27,7 +27,8 @@ class PushNotificationService {
         sound: true,
       );
 
-      debugPrint('✅ Push notification permission status: ${settings.authorizationStatus}');
+      debugPrint(
+          '✅ Push notification permission status: ${settings.authorizationStatus}');
 
       // Инициализируем локальные уведомления
       await _initializeLocalNotifications();
@@ -45,7 +46,8 @@ class PushNotificationService {
 
   /// Инициализация локальных уведомлений
   static Future<void> _initializeLocalNotifications() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -72,7 +74,8 @@ class PushNotificationService {
     );
 
     await _localNotifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(androidChannel);
   }
 
@@ -91,7 +94,7 @@ class PushNotificationService {
   /// Обработка сообщений в foreground
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
     debugPrint('📱 Received foreground message: ${message.messageId}');
-    
+
     // Показываем локальное уведомление
     await _showLocalNotification(message);
   }
@@ -99,7 +102,7 @@ class PushNotificationService {
   /// Обработка нажатий на уведомления
   static void _handleNotificationTap(RemoteMessage message) {
     debugPrint('📱 Notification tapped: ${message.messageId}');
-    
+
     // TODO: Navigate to specific chat
     final chatId = message.data['chatId'];
     if (chatId != null) {
@@ -111,7 +114,7 @@ class PushNotificationService {
   /// Обработка сообщений в background
   static Future<void> _handleBackgroundMessage(RemoteMessage message) async {
     debugPrint('📱 Received background message: ${message.messageId}');
-    
+
     // В background мы не можем показать UI, только обработать данные
     // Здесь можно сохранить данные в локальную базу или отправить аналитику
   }
@@ -154,7 +157,7 @@ class PushNotificationService {
   /// Обработчик нажатий на локальные уведомления
   static void _onNotificationTapped(NotificationResponse response) {
     debugPrint('📱 Local notification tapped: ${response.payload}');
-    
+
     // TODO: Parse payload and navigate to specific chat
     if (response.payload != null) {
       // Parse payload and navigate
@@ -203,7 +206,8 @@ class PushNotificationService {
     try {
       // В реальном приложении это должно отправляться через Cloud Functions
       // или серверный API, а не из клиентского приложения
-      debugPrint('📱 Would send notification to $receiverToken: $messageContent');
+      debugPrint(
+          '📱 Would send notification to $receiverToken: $messageContent');
     } catch (e) {
       debugPrint('❌ Error sending chat notification: $e');
     }
@@ -235,7 +239,7 @@ class PushNotificationService {
 @pragma('vm:entry-point')
 Future<void> _handleBackgroundMessage(RemoteMessage message) async {
   debugPrint('📱 Background message received: ${message.messageId}');
-  
+
   // Здесь можно обработать сообщение в background
   // Например, сохранить в локальную базу данных
 }

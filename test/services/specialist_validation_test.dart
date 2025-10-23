@@ -49,7 +49,13 @@ void main() {
 
     group('Service Offering Validation', () {
       test('should validate service categories', () {
-        final validCategories = ['photography', 'videography', 'music', 'catering', 'decoration'];
+        final validCategories = [
+          'photography',
+          'videography',
+          'music',
+          'catering',
+          'decoration'
+        ];
         final invalidCategories = ['', 'invalid-category', null];
 
         for (final category in validCategories) {
@@ -101,7 +107,12 @@ void main() {
           'https://example.com/image3.jpeg',
         ];
 
-        final invalidImages = ['invalid-url', 'https://example.com/image1.txt', '', null];
+        final invalidImages = [
+          'invalid-url',
+          'https://example.com/image1.txt',
+          '',
+          null
+        ];
 
         for (final image in validImages) {
           expect(_isValidPortfolioImage(image), isTrue);
@@ -119,7 +130,12 @@ void main() {
           'https://youtube.com/watch?v=123',
         ];
 
-        final invalidVideos = ['invalid-url', 'https://example.com/video1.txt', '', null];
+        final invalidVideos = [
+          'invalid-url',
+          'https://example.com/video1.txt',
+          '',
+          null
+        ];
 
         for (final video in validVideos) {
           expect(_isValidPortfolioVideo(video), isTrue);
@@ -131,7 +147,8 @@ void main() {
       });
 
       test('should validate portfolio descriptions', () {
-        const validDescription = 'This is a detailed description of the work performed.';
+        const validDescription =
+            'This is a detailed description of the work performed.';
         const invalidDescription = 'Short';
 
         expect(_isValidPortfolioDescription(validDescription), isTrue);
@@ -164,7 +181,10 @@ void main() {
 
       test('should validate schedule conflicts', () {
         final existingBookings = [
-          {'startTime': DateTime(2024, 1, 1, 14), 'endTime': DateTime(2024, 1, 1, 16)},
+          {
+            'startTime': DateTime(2024, 1, 1, 14),
+            'endTime': DateTime(2024, 1, 1, 16)
+          },
         ];
 
         final newBooking = {
@@ -209,10 +229,15 @@ void main() {
         const customerLocation = 'Moscow';
         const maxDistance = 50; // km
 
-        expect(_isWithinServiceArea(specialistLocation, customerLocation, maxDistance), isTrue);
+        expect(
+            _isWithinServiceArea(
+                specialistLocation, customerLocation, maxDistance),
+            isTrue);
 
         const farLocation = 'St. Petersburg';
-        expect(_isWithinServiceArea(specialistLocation, farLocation, maxDistance), isFalse);
+        expect(
+            _isWithinServiceArea(specialistLocation, farLocation, maxDistance),
+            isFalse);
       });
 
       test('should validate travel fees', () {
@@ -230,7 +255,8 @@ void main() {
         const commissionRate = 0.1; // 10%
         const expectedCommission = 100.0;
 
-        expect(_calculateCommission(servicePrice, commissionRate), equals(expectedCommission));
+        expect(_calculateCommission(servicePrice, commissionRate),
+            equals(expectedCommission));
       });
 
       test('should validate payout eligibility', () {
@@ -276,7 +302,14 @@ void main() {
 bool _isProfileComplete(Map<String, dynamic>? profile) {
   if (profile == null) return false;
 
-  final requiredFields = ['name', 'email', 'phone', 'bio', 'skills', 'experience'];
+  final requiredFields = [
+    'name',
+    'email',
+    'phone',
+    'bio',
+    'skills',
+    'experience'
+  ];
   for (final field in requiredFields) {
     if (!profile.containsKey(field) || profile[field] == null) {
       return false;
@@ -373,7 +406,8 @@ bool _isValidPortfolioImage(String? imageUrl) {
   if (imageUrl == null || imageUrl.isEmpty) return false;
 
   final validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-  final hasValidExtension = validExtensions.any((ext) => imageUrl.toLowerCase().endsWith(ext));
+  final hasValidExtension =
+      validExtensions.any((ext) => imageUrl.toLowerCase().endsWith(ext));
 
   return imageUrl.startsWith('http') && hasValidExtension;
 }
@@ -383,8 +417,10 @@ bool _isValidPortfolioVideo(String? videoUrl) {
   if (videoUrl == null || videoUrl.isEmpty) return false;
 
   final validExtensions = ['.mp4', '.mov', '.avi', '.webm'];
-  final hasValidExtension = validExtensions.any((ext) => videoUrl.toLowerCase().endsWith(ext));
-  final isYouTubeUrl = videoUrl.contains('youtube.com') || videoUrl.contains('youtu.be');
+  final hasValidExtension =
+      validExtensions.any((ext) => videoUrl.toLowerCase().endsWith(ext));
+  final isYouTubeUrl =
+      videoUrl.contains('youtube.com') || videoUrl.contains('youtu.be');
 
   return (videoUrl.startsWith('http') && hasValidExtension) || isYouTubeUrl;
 }
@@ -444,17 +480,20 @@ bool _isValidRatingValue(int? rating) {
 /// Helper function to check review submission timing
 bool _canSubmitReview(DateTime? bookingDate, DateTime? serviceDate) {
   if (bookingDate == null || serviceDate == null) return false;
-  return bookingDate.isAfter(serviceDate) && DateTime.now().difference(serviceDate).inDays <= 30;
+  return bookingDate.isAfter(serviceDate) &&
+      DateTime.now().difference(serviceDate).inDays <= 30;
 }
 
 /// Helper function to check service area
-bool _isWithinServiceArea(String specialistLocation, String customerLocation, int maxDistance) {
+bool _isWithinServiceArea(
+    String specialistLocation, String customerLocation, int maxDistance) {
   // Mock implementation - in real app would calculate actual distance
   return specialistLocation == customerLocation;
 }
 
 /// Helper function to calculate travel fee
-double _calculateTravelFee(double distance, double baseRate) => distance * baseRate;
+double _calculateTravelFee(double distance, double baseRate) =>
+    distance * baseRate;
 
 /// Helper function to calculate commission
 double _calculateCommission(double servicePrice, double commissionRate) =>

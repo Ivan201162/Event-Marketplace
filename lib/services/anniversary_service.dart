@@ -32,9 +32,12 @@ class Anniversary {
       ),
       description: data['description'] as String?,
       isRecurring: data['isRecurring'] as bool? ?? true,
-      reminderDays: List<int>.from(data['reminderDays'] as List<dynamic>? ?? [7, 1]),
+      reminderDays:
+          List<int>.from(data['reminderDays'] as List<dynamic>? ?? [7, 1]),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : null,
     );
   }
 
@@ -51,16 +54,16 @@ class Anniversary {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'title': title,
-    'date': Timestamp.fromDate(date),
-    'type': type.name,
-    'description': description,
-    'isRecurring': isRecurring,
-    'reminderDays': reminderDays,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-  };
+        'userId': userId,
+        'title': title,
+        'date': Timestamp.fromDate(date),
+        'type': type.name,
+        'description': description,
+        'isRecurring': isRecurring,
+        'reminderDays': reminderDays,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      };
 
   /// Создать копию с изменениями
   Anniversary copyWith({
@@ -74,21 +77,23 @@ class Anniversary {
     List<int>? reminderDays,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => Anniversary(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    title: title ?? this.title,
-    date: date ?? this.date,
-    type: type ?? this.type,
-    description: description ?? this.description,
-    isRecurring: isRecurring ?? this.isRecurring,
-    reminderDays: reminderDays ?? this.reminderDays,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      Anniversary(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        date: date ?? this.date,
+        type: type ?? this.type,
+        description: description ?? this.description,
+        isRecurring: isRecurring ?? this.isRecurring,
+        reminderDays: reminderDays ?? this.reminderDays,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить дату годовщины в текущем году
-  DateTime getAnniversaryDateForYear(int year) => DateTime(year, date.month, date.day);
+  DateTime getAnniversaryDateForYear(int year) =>
+      DateTime(year, date.month, date.day);
 
   /// Проверить, является ли дата годовщиной
   bool isAnniversaryDate(DateTime checkDate) =>
@@ -148,7 +153,8 @@ class AnniversaryService {
         createdAt: DateTime.now(),
       );
 
-      final docRef = await _firestore.collection('anniversaries').add(anniversary.toMap());
+      final docRef =
+          await _firestore.collection('anniversaries').add(anniversary.toMap());
 
       // Создаем напоминания для текущего года
       await _createAnniversaryReminders(anniversary.copyWith(id: docRef.id));
@@ -194,7 +200,8 @@ class AnniversaryService {
   }
 
   /// Получить предстоящие годовщины
-  Future<List<Anniversary>> getUpcomingAnniversaries(String userId, {int daysAhead = 30}) async {
+  Future<List<Anniversary>> getUpcomingAnniversaries(String userId,
+      {int daysAhead = 30}) async {
     try {
       final now = DateTime.now();
       final endDate = now.add(Duration(days: daysAhead));
@@ -213,7 +220,8 @@ class AnniversaryService {
 
         // Проверяем годовщины в следующем году (если текущая дата близко к концу года)
         if (now.month == 12 && now.day > 25) {
-          final nextYearDate = anniversary.getAnniversaryDateForYear(now.year + 1);
+          final nextYearDate =
+              anniversary.getAnniversaryDateForYear(now.year + 1);
           if (nextYearDate.isBefore(endDate)) {
             upcoming.add(anniversary);
           }
@@ -234,12 +242,11 @@ class AnniversaryService {
   }
 
   /// Обновить годовщину
-  Future<void> updateAnniversary(String anniversaryId, Anniversary updatedAnniversary) async {
+  Future<void> updateAnniversary(
+      String anniversaryId, Anniversary updatedAnniversary) async {
     try {
-      await _firestore
-          .collection('anniversaries')
-          .doc(anniversaryId)
-          .update(updatedAnniversary.copyWith(updatedAt: DateTime.now()).toMap());
+      await _firestore.collection('anniversaries').doc(anniversaryId).update(
+          updatedAnniversary.copyWith(updatedAt: DateTime.now()).toMap());
 
       // Обновляем напоминания
       await _updateAnniversaryReminders(updatedAnniversary);
@@ -252,7 +259,8 @@ class AnniversaryService {
   Future<void> deleteAnniversary(String anniversaryId) async {
     try {
       // Получаем годовщину для удаления связанных напоминаний
-      final doc = await _firestore.collection('anniversaries').doc(anniversaryId).get();
+      final doc =
+          await _firestore.collection('anniversaries').doc(anniversaryId).get();
       if (doc.exists) {
         final anniversary = Anniversary.fromDocument(doc);
 
@@ -283,8 +291,10 @@ class AnniversaryService {
 
         // Создаем напоминания на следующий год
         if (anniversary.isRecurring) {
-          final nextYearDate = anniversary.getAnniversaryDateForYear(today.year + 1);
-          await _createAnniversaryReminders(anniversary, targetDate: nextYearDate);
+          final nextYearDate =
+              anniversary.getAnniversaryDateForYear(today.year + 1);
+          await _createAnniversaryReminders(anniversary,
+              targetDate: nextYearDate);
         }
       }
     } on Exception catch (e) {
@@ -293,13 +303,15 @@ class AnniversaryService {
   }
 
   /// Создать напоминания для годовщины
-  Future<void> _createAnniversaryReminders(Anniversary anniversary, {DateTime? targetDate}) async {
+  Future<void> _createAnniversaryReminders(Anniversary anniversary,
+      {DateTime? targetDate}) async {
     try {
-      final anniversaryDate =
-          targetDate ?? anniversary.getAnniversaryDateForYear(DateTime.now().year);
+      final anniversaryDate = targetDate ??
+          anniversary.getAnniversaryDateForYear(DateTime.now().year);
 
       for (final daysBefore in anniversary.reminderDays) {
-        final reminderDate = anniversaryDate.subtract(Duration(days: daysBefore));
+        final reminderDate =
+            anniversaryDate.subtract(Duration(days: daysBefore));
 
         // Создаем напоминание только если дата в будущем
         if (reminderDate.isAfter(DateTime.now())) {
@@ -337,7 +349,8 @@ class AnniversaryService {
           .collection('reminders')
           .where('userId', isEqualTo: anniversary.userId)
           .where('type', isEqualTo: ReminderType.anniversary.name)
-          .where('anniversaryDate', isEqualTo: Timestamp.fromDate(anniversary.date))
+          .where('anniversaryDate',
+              isEqualTo: Timestamp.fromDate(anniversary.date))
           .get();
 
       for (final doc in querySnapshot.docs) {
@@ -370,7 +383,8 @@ class AnniversaryService {
 
         // Проверяем, есть ли годовщина в ближайший месяц
         final currentYearDate = anniversary.getAnniversaryDateForYear(now.year);
-        if (currentYearDate.isAfter(now) && currentYearDate.isBefore(nextMonth)) {
+        if (currentYearDate.isAfter(now) &&
+            currentYearDate.isBefore(nextMonth)) {
           upcoming++;
         }
 

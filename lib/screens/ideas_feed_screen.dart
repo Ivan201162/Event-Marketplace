@@ -36,7 +36,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       _loadMoreIdeas();
     }
   }
@@ -49,7 +50,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         _offset = 0;
       });
 
-      final ideas = await SupabaseService.getIdeas(limit: _limit, offset: _offset);
+      final ideas =
+          await SupabaseService.getIdeas(limit: _limit, offset: _offset);
 
       setState(() {
         _ideas = ideas;
@@ -72,7 +74,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         _isLoadingMore = true;
       });
 
-      final ideas = await SupabaseService.getIdeas(limit: _limit, offset: _offset);
+      final ideas =
+          await SupabaseService.getIdeas(limit: _limit, offset: _offset);
 
       setState(() {
         _ideas.addAll(ideas);
@@ -100,7 +103,9 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
         backgroundColor: theme.primaryColor,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(icon: const Icon(Icons.add), onPressed: () => context.push('/ideas/create')),
+          IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () => context.push('/ideas/create')),
         ],
       ),
       body: RefreshIndicator(onRefresh: _refreshIdeas, child: _buildBody()),
@@ -119,7 +124,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
           children: [
             Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки идей', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Ошибка загрузки идей',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               _error!,
@@ -127,7 +133,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton(onPressed: _loadIdeas, child: const Text('Повторить')),
+            ElevatedButton(
+                onPressed: _loadIdeas, child: const Text('Повторить')),
           ],
         ),
       );
@@ -140,7 +147,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
           children: [
             Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 16),
-            Text('Нет идей', style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+            Text('Нет идей',
+                style: TextStyle(fontSize: 18, color: Colors.grey[600])),
             const SizedBox(height: 8),
             Text(
               'Будьте первым, кто поделится идеей!',
@@ -163,7 +171,9 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
       itemBuilder: (context, index) {
         if (index == _ideas.length) {
           return const Center(
-            child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator()),
+            child: Padding(
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator()),
           );
         }
 
@@ -202,7 +212,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
             ),
             trailing: PopupMenuButton(
               itemBuilder: (context) => [
-                const PopupMenuItem(value: 'report', child: Text('Пожаловаться')),
+                const PopupMenuItem(
+                    value: 'report', child: Text('Пожаловаться')),
               ],
             ),
           ),
@@ -322,7 +333,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       color: Colors.grey[200],
-                      child: const Center(child: Icon(Icons.broken_image, size: 48)),
+                      child: const Center(
+                          child: Icon(Icons.broken_image, size: 48)),
                     );
                   },
                 ),
@@ -377,7 +389,8 @@ class _IdeasFeedScreenState extends ConsumerState<IdeasFeedScreen> {
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+      ).showSnackBar(
+          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
     }
   }
 

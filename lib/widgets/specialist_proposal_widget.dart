@@ -26,14 +26,17 @@ class SpecialistProposalWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        mainAxisAlignment: isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isFromCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isFromCurrentUser) ...[
             CircleAvatar(
               radius: 16,
               backgroundColor: Theme.of(context).colorScheme.primary,
               child: Text(
-                message.senderName.isNotEmpty ? message.senderName[0].toUpperCase() : '?',
+                message.senderName.isNotEmpty
+                    ? message.senderName[0].toUpperCase()
+                    : '?',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
@@ -45,14 +48,16 @@ class SpecialistProposalWidget extends StatelessWidget {
           ],
           Flexible(
             child: Container(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.8),
               decoration: BoxDecoration(
                 color: isFromCurrentUser
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
-                border:
-                    !isFromCurrentUser ? Border.all(color: Theme.of(context).dividerColor) : null,
+                border: !isFromCurrentUser
+                    ? Border.all(color: Theme.of(context).dividerColor)
+                    : null,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -112,7 +117,8 @@ class SpecialistProposalWidget extends StatelessWidget {
                               child: proposal.specialistPhoto == null
                                   ? Icon(
                                       Icons.person,
-                                      color: Theme.of(context).colorScheme.primary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       size: 30,
                                     )
                                   : null,
@@ -136,14 +142,16 @@ class SpecialistProposalWidget extends StatelessWidget {
                                   Text(
                                     proposal.specialistCategory,
                                     style: TextStyle(
-                                      color: Theme.of(context).colorScheme.primary,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                       fontSize: 14,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Row(
                                     children: [
-                                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                                      const Icon(Icons.star,
+                                          color: Colors.amber, size: 16),
                                       const SizedBox(width: 4),
                                       Text(
                                         '${proposal.rating.toStringAsFixed(1)} (${proposal.reviewCount})',
@@ -164,7 +172,8 @@ class SpecialistProposalWidget extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: Colors.green.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
@@ -180,7 +189,8 @@ class SpecialistProposalWidget extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: proposal.isAvailable
                                     ? Colors.green.withValues(alpha: 0.1)
@@ -190,7 +200,9 @@ class SpecialistProposalWidget extends StatelessWidget {
                               child: Text(
                                 proposal.isAvailable ? 'Доступен' : 'Занят',
                                 style: TextStyle(
-                                  color: proposal.isAvailable ? Colors.green : Colors.red,
+                                  color: proposal.isAvailable
+                                      ? Colors.green
+                                      : Colors.red,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
                                 ),
@@ -200,12 +212,16 @@ class SpecialistProposalWidget extends StatelessWidget {
                         ),
 
                         // Описание
-                        if (proposal.description != null && proposal.description!.isNotEmpty) ...[
+                        if (proposal.description != null &&
+                            proposal.description!.isNotEmpty) ...[
                           const SizedBox(height: 8),
                           Text(
                             proposal.description!,
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.7),
                               fontSize: 12,
                             ),
                             maxLines: 2,
@@ -223,18 +239,24 @@ class SpecialistProposalWidget extends StatelessWidget {
                                 .take(3)
                                 .map(
                                   (service) => Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: Theme.of(
                                         context,
-                                      ).colorScheme.primary.withValues(alpha: 0.1),
+                                      )
+                                          .colorScheme
+                                          .primary
+                                          .withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
                                       service,
                                       style: TextStyle(
                                         fontSize: 10,
-                                        color: Theme.of(context).colorScheme.primary,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       ),
                                     ),
                                   ),
@@ -251,10 +273,14 @@ class SpecialistProposalWidget extends StatelessWidget {
                             width: double.infinity,
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surface
+                                  .withValues(alpha: 0.5),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text(message.text, style: const TextStyle(fontSize: 14)),
+                            child: Text(message.text,
+                                style: const TextStyle(fontSize: 14)),
                           ),
                           const SizedBox(height: 12),
                         ],
@@ -277,7 +303,8 @@ class SpecialistProposalWidget extends StatelessWidget {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: ElevatedButton.icon(
-                                  onPressed: proposal.isAvailable ? onAccept : null,
+                                  onPressed:
+                                      proposal.isAvailable ? onAccept : null,
                                   icon: const Icon(Icons.check, size: 16),
                                   label: const Text('Принять'),
                                   style: ElevatedButton.styleFrom(
@@ -302,7 +329,10 @@ class SpecialistProposalWidget extends StatelessWidget {
                         Text(
                           _formatTime(message.createdAt),
                           style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.5),
                             fontSize: 10,
                           ),
                         ),
@@ -319,7 +349,9 @@ class SpecialistProposalWidget extends StatelessWidget {
               radius: 16,
               backgroundColor: Theme.of(context).colorScheme.primary,
               child: Text(
-                message.senderName.isNotEmpty ? message.senderName[0].toUpperCase() : '?',
+                message.senderName.isNotEmpty
+                    ? message.senderName[0].toUpperCase()
+                    : '?',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,

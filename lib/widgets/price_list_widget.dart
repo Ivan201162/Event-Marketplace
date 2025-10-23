@@ -63,14 +63,16 @@ class PriceListWidget extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
-            ...servicesWithPrices.entries.map((entry) => _buildServiceItem(entry.key, entry.value)),
+            ...servicesWithPrices.entries
+                .map((entry) => _buildServiceItem(entry.key, entry.value)),
           ] else ...[
             const Center(
               child: Column(
                 children: [
                   Icon(Icons.list_alt, size: 48, color: Colors.grey),
                   SizedBox(height: 12),
-                  Text('Дополнительные услуги не указаны', style: TextStyle(color: Colors.grey)),
+                  Text('Дополнительные услуги не указаны',
+                      style: TextStyle(color: Colors.grey)),
                   SizedBox(height: 4),
                   Text(
                     'Специалист может добавить услуги с ценами',
@@ -119,7 +121,8 @@ class PriceListWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: isMain ? Colors.green.shade50 : Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isMain ? Colors.green.shade200 : Colors.grey.shade300),
+          border: Border.all(
+              color: isMain ? Colors.green.shade200 : Colors.grey.shade300),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withValues(alpha: 0.1),
@@ -144,7 +147,9 @@ class PriceListWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(description, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                  Text(description,
+                      style:
+                          TextStyle(fontSize: 12, color: Colors.grey.shade600)),
                 ],
               ),
             ),
@@ -173,13 +178,16 @@ class PriceListWidget extends StatelessWidget {
             Expanded(
               child: Text(
                 serviceName,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ),
             Text(
               '${price.toInt()}₽',
-              style:
-                  const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
+              style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green),
             ),
           ],
         ),

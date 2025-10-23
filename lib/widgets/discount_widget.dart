@@ -33,7 +33,8 @@ class DiscountWidget extends ConsumerWidget {
             children: [
               Icon(_getDiscountIcon(), color: _getDiscountColor()),
               const SizedBox(width: 8),
-              const Expanded(child: ResponsiveText('Предложение скидки', isTitle: true)),
+              const Expanded(
+                  child: ResponsiveText('Предложение скидки', isTitle: true)),
               _buildStatusChip(),
             ],
           ),
@@ -86,7 +87,8 @@ class DiscountWidget extends ConsumerWidget {
                     const ResponsiveText('Экономия:', isSubtitle: true),
                     ResponsiveText(
                       '${discount!.savings?.toStringAsFixed(0)} ₽ (${discount!.discountPercent?.toStringAsFixed(0)}%)',
-                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -134,7 +136,8 @@ class DiscountWidget extends ConsumerWidget {
                     onPressed: () => _rejectDiscount(context, ref),
                     icon: const Icon(Icons.close),
                     label: const Text('Отклонить'),
-                    style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
+                    style:
+                        OutlinedButton.styleFrom(foregroundColor: Colors.red),
                   ),
                 ),
               ],
@@ -178,7 +181,8 @@ class DiscountWidget extends ConsumerWidget {
       ),
       child: Text(
         chipText,
-        style: TextStyle(color: chipColor, fontSize: 12, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: chipColor, fontSize: 12, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -238,11 +242,13 @@ class DiscountWidget extends ConsumerWidget {
         customerId: 'current_user_id', // TODO(developer): Получить из контекста
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Скидка принята')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Скидка принята')));
 
       onDiscountChanged?.call();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     }
   }
 
@@ -261,7 +267,8 @@ class DiscountWidget extends ConsumerWidget {
 
 /// Диалог для отклонения скидки
 class _RejectDiscountDialog extends StatefulWidget {
-  const _RejectDiscountDialog({required this.bookingId, required this.onRejected});
+  const _RejectDiscountDialog(
+      {required this.bookingId, required this.onRejected});
   final String bookingId;
   final VoidCallback onRejected;
 
@@ -327,15 +334,19 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
       await service.rejectDiscount(
         bookingId: widget.bookingId,
         customerId: 'current_user_id', // TODO(developer): Получить из контекста
-        reason: _reasonController.text.trim().isEmpty ? null : _reasonController.text.trim(),
+        reason: _reasonController.text.trim().isEmpty
+            ? null
+            : _reasonController.text.trim(),
       );
 
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Скидка отклонена')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Скидка отклонена')));
 
       widget.onRejected();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {
       setState(() {
         _isLoading = false;
@@ -369,7 +380,8 @@ class OfferDiscountWidget extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 12),
-            const Text('Предложите клиенту скидку для увеличения шансов на бронирование.'),
+            const Text(
+                'Предложите клиенту скидку для увеличения шансов на бронирование.'),
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () => _showOfferDiscountDialog(context, ref),
@@ -430,8 +442,10 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final newPrice = double.tryParse(_newPriceController.text) ?? widget.currentPrice;
-    final discountPercent = ((widget.currentPrice - newPrice) / widget.currentPrice) * 100;
+    final newPrice =
+        double.tryParse(_newPriceController.text) ?? widget.currentPrice;
+    final discountPercent =
+        ((widget.currentPrice - newPrice) / widget.currentPrice) * 100;
     final savings = widget.currentPrice - newPrice;
 
     return AlertDialog(
@@ -498,7 +512,10 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
                   const SizedBox(height: 4),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [const Text('Новая цена:'), Text('${newPrice.toStringAsFixed(0)} ₽')],
+                    children: [
+                      const Text('Новая цена:'),
+                      Text('${newPrice.toStringAsFixed(0)} ₽')
+                    ],
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -507,7 +524,8 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
                       const Text('Скидка:'),
                       Text(
                         '${discountPercent.toStringAsFixed(0)}% (${savings.toStringAsFixed(0)} ₽)',
-                        style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            color: Colors.green, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -549,9 +567,13 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
         bookingId: widget.bookingId,
         oldPrice: widget.currentPrice,
         newPrice: double.parse(_newPriceController.text),
-        specialistId: 'current_specialist_id', // TODO(developer): Получить из контекста
-        customerId: 'current_customer_id', // TODO(developer): Получить из контекста
-        reason: _reasonController.text.trim().isEmpty ? null : _reasonController.text.trim(),
+        specialistId:
+            'current_specialist_id', // TODO(developer): Получить из контекста
+        customerId:
+            'current_customer_id', // TODO(developer): Получить из контекста
+        reason: _reasonController.text.trim().isEmpty
+            ? null
+            : _reasonController.text.trim(),
       );
 
       Navigator.pop(context);
@@ -561,7 +583,8 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
 
       widget.onOffered();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка: $e')));
     } finally {
       setState(() {
         _isLoading = false;

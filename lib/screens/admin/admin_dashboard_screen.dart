@@ -64,11 +64,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadDashboardData),
+          IconButton(
+              icon: const Icon(Icons.refresh), onPressed: _loadDashboardData),
           IconButton(
             icon: const Icon(Icons.history),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminLogsScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => const AdminLogsScreen()));
             },
           ),
         ],
@@ -175,7 +177,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -189,7 +192,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           const SizedBox(height: 8),
           Text(
             value,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: color),
           ),
           Text(
             label,
@@ -227,7 +231,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.blue,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminSubscriptionManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const AdminSubscriptionManagementScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -236,7 +242,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.orange,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminAdvertisementManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const AdminAdvertisementManagementScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -245,7 +253,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.green,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminPromotionsManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const AdminPromotionsManagementScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -254,7 +264,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.purple,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminReferralManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) => const AdminReferralManagementScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -263,7 +274,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.red,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminAnalyticsScreen()),
+                    MaterialPageRoute(
+                        builder: (_) => const AdminAnalyticsScreen()),
                   ),
                 ),
                 _buildActionCard(
@@ -272,7 +284,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   Colors.teal,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AdminNewsletterManagementScreen()),
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            const AdminNewsletterManagementScreen()),
                   ),
                 ),
               ],
@@ -283,7 +297,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  Widget _buildActionCard(String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionCard(
+      String title, IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -300,7 +315,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             const SizedBox(height: 8),
             Text(
               title,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
+              style: TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.bold, color: color),
               textAlign: TextAlign.center,
             ),
           ],

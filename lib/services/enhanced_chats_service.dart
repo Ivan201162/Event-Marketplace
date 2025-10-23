@@ -46,8 +46,8 @@ class EnhancedChatsService {
 
       return snapshot.docs
           .map(
-            (doc) =>
-                EnhancedMessage.fromMap({'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
+            (doc) => EnhancedMessage.fromMap(
+                {'id': doc.id, ...(doc.data()! as Map<String, dynamic>)}),
           )
           .toList();
     } on Exception catch (e) {
@@ -198,9 +198,15 @@ class EnhancedChatsService {
   }
 
   /// Редактировать сообщение
-  Future<void> editMessage(String chatId, String messageId, String newText) async {
+  Future<void> editMessage(
+      String chatId, String messageId, String newText) async {
     try {
-      await _firestore.collection('chats').doc(chatId).collection('messages').doc(messageId).update(
+      await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId)
+          .update(
         {'text': newText, 'editedAt': FieldValue.serverTimestamp()},
       );
     } on Exception catch (e) {
@@ -212,8 +218,16 @@ class EnhancedChatsService {
   /// Удалить сообщение
   Future<void> deleteMessage(String chatId, String messageId) async {
     try {
-      await _firestore.collection('chats').doc(chatId).collection('messages').doc(messageId).update(
-        {'deletedAt': FieldValue.serverTimestamp(), 'text': 'Сообщение удалено'},
+      await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId)
+          .update(
+        {
+          'deletedAt': FieldValue.serverTimestamp(),
+          'text': 'Сообщение удалено'
+        },
       );
     } on Exception catch (e) {
       debugPrint('Ошибка удаления сообщения: $e');
@@ -222,9 +236,15 @@ class EnhancedChatsService {
   }
 
   /// Добавить реакцию на сообщение
-  Future<void> addReaction(String chatId, String messageId, String userId, String emoji) async {
+  Future<void> addReaction(
+      String chatId, String messageId, String userId, String emoji) async {
     try {
-      await _firestore.collection('chats').doc(chatId).collection('messages').doc(messageId).update(
+      await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId)
+          .update(
         {
           'reactions.$emoji': FieldValue.arrayUnion([userId]),
         },
@@ -236,9 +256,15 @@ class EnhancedChatsService {
   }
 
   /// Удалить реакцию с сообщения
-  Future<void> removeReaction(String chatId, String messageId, String userId, String emoji) async {
+  Future<void> removeReaction(
+      String chatId, String messageId, String userId, String emoji) async {
     try {
-      await _firestore.collection('chats').doc(chatId).collection('messages').doc(messageId).update(
+      await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId)
+          .update(
         {
           'reactions.$emoji': FieldValue.arrayRemove([userId]),
         },
@@ -250,7 +276,8 @@ class EnhancedChatsService {
   }
 
   /// Отметить сообщения как прочитанные
-  Future<void> markMessagesAsRead(String chatId, String userId, List<String> messageIds) async {
+  Future<void> markMessagesAsRead(
+      String chatId, String userId, List<String> messageIds) async {
     try {
       final batch = _firestore.batch();
       final now = DateTime.now();
@@ -262,7 +289,8 @@ class EnhancedChatsService {
             .collection('messages')
             .doc(messageId);
 
-        batch.update(messageRef, {'readBy.$userId': now.millisecondsSinceEpoch});
+        batch
+            .update(messageRef, {'readBy.$userId': now.millisecondsSinceEpoch});
       }
 
       await batch.commit();
@@ -306,8 +334,14 @@ class EnhancedChatsService {
         id: '', // Будет установлен при создании
         type: ChatType.direct,
         members: [
-          ChatMember(userId: userId1, role: ChatMemberRole.member, joinedAt: DateTime.now()),
-          ChatMember(userId: userId2, role: ChatMemberRole.member, joinedAt: DateTime.now()),
+          ChatMember(
+              userId: userId1,
+              role: ChatMemberRole.member,
+              joinedAt: DateTime.now()),
+          ChatMember(
+              userId: userId2,
+              role: ChatMemberRole.member,
+              joinedAt: DateTime.now()),
         ],
         createdAt: DateTime.now(),
       );
@@ -329,10 +363,15 @@ class EnhancedChatsService {
   }) async {
     try {
       final members = <ChatMember>[
-        ChatMember(userId: creatorId, role: ChatMemberRole.owner, joinedAt: DateTime.now()),
+        ChatMember(
+            userId: creatorId,
+            role: ChatMemberRole.owner,
+            joinedAt: DateTime.now()),
         ...memberIds.map(
-          (userId) =>
-              ChatMember(userId: userId, role: ChatMemberRole.member, joinedAt: DateTime.now()),
+          (userId) => ChatMember(
+              userId: userId,
+              role: ChatMemberRole.member,
+              joinedAt: DateTime.now()),
         ),
       ];
 
@@ -445,9 +484,12 @@ class EnhancedChatsService {
 
       // Фильтрация по названию и последнему сообщению
       return chats.where((chat) {
-        final nameMatch = chat.name?.toLowerCase().contains(query.toLowerCase()) ?? false;
-        final lastMessageMatch =
-            chat.lastMessage?.text.toLowerCase().contains(query.toLowerCase()) ?? false;
+        final nameMatch =
+            chat.name?.toLowerCase().contains(query.toLowerCase()) ?? false;
+        final lastMessageMatch = chat.lastMessage?.text
+                .toLowerCase()
+                .contains(query.toLowerCase()) ??
+            false;
         return nameMatch || lastMessageMatch;
       }).toList();
     } on Exception catch (e) {
@@ -457,7 +499,8 @@ class EnhancedChatsService {
   }
 
   /// Поиск по сообщениям в чате
-  Future<List<EnhancedMessage>> searchMessages(String chatId, String query) async {
+  Future<List<EnhancedMessage>> searchMessages(
+      String chatId, String query) async {
     try {
       final snapshot = await _firestore
           .collection('chats')
@@ -477,7 +520,8 @@ class EnhancedChatsService {
   }
 
   /// Получить тип сообщения на основе вложений
-  MessageType _getMessageTypeFromAttachments(List<MessageAttachment> attachments) {
+  MessageType _getMessageTypeFromAttachments(
+      List<MessageAttachment> attachments) {
     if (attachments.isEmpty) return MessageType.text;
 
     final firstAttachment = attachments.first;

@@ -36,7 +36,8 @@ class OrderCardWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         order.title,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                     _buildStatusChip(),
@@ -66,7 +67,9 @@ class OrderCardWidget extends StatelessWidget {
                     const SizedBox(width: 8),
                     _buildDetailChip(
                       icon: Icons.schedule,
-                      text: order.deadline != null ? _formatDate(order.deadline!) : 'Не указан',
+                      text: order.deadline != null
+                          ? _formatDate(order.deadline!)
+                          : 'Не указан',
                       color: Colors.blue,
                     ),
                     const SizedBox(width: 8),
@@ -95,7 +98,10 @@ class OrderCardWidget extends StatelessWidget {
                 ),
 
                 // Действия
-                if (_shouldShowActions()) ...[const SizedBox(height: 12), _buildActionButtons()],
+                if (_shouldShowActions()) ...[
+                  const SizedBox(height: 12),
+                  _buildActionButtons()
+                ],
               ],
             ),
           ),
@@ -137,12 +143,16 @@ class OrderCardWidget extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
+        style:
+            TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  Widget _buildDetailChip({required IconData icon, required String text, required Color color}) =>
+  Widget _buildDetailChip(
+          {required IconData icon,
+          required String text,
+          required Color color}) =>
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
@@ -156,7 +166,8 @@ class OrderCardWidget extends StatelessWidget {
             const SizedBox(width: 4),
             Text(
               text,
-              style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  color: color, fontSize: 12, fontWeight: FontWeight.w500),
             ),
           ],
         ),
@@ -193,7 +204,8 @@ class OrderCardWidget extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+        style:
+            TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -206,7 +218,8 @@ class OrderCardWidget extends StatelessWidget {
         ),
         child: Text(
           order.category ?? 'Не указана',
-          style: const TextStyle(color: Colors.blue, fontSize: 10, fontWeight: FontWeight.w500),
+          style: const TextStyle(
+              color: Colors.blue, fontSize: 10, fontWeight: FontWeight.w500),
         ),
       );
 
@@ -219,7 +232,8 @@ class OrderCardWidget extends StatelessWidget {
               label: const Text('Редактировать'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               ),
             ),
             const SizedBox(width: 8),
@@ -229,7 +243,8 @@ class OrderCardWidget extends StatelessWidget {
               label: const Text('Отменить'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.red,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               ),
             ),
           ],
@@ -240,7 +255,8 @@ class OrderCardWidget extends StatelessWidget {
               label: const Text('Завершить'),
               style: TextButton.styleFrom(
                 foregroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               ),
             ),
           ],
@@ -248,7 +264,8 @@ class OrderCardWidget extends StatelessWidget {
       );
 
   bool _shouldShowActions() =>
-      order.status == OrderStatus.pending || order.status == OrderStatus.inProgress;
+      order.status == OrderStatus.pending ||
+      order.status == OrderStatus.inProgress;
 
   String _formatDate(DateTime date) => DateFormat('dd.MM.yyyy').format(date);
 

@@ -121,7 +121,8 @@ class CustomerProfileExtendedService {
   }) async {
     try {
       // Загружаем изображение в Firebase Storage
-      final fileName = 'inspiration_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName =
+          'inspiration_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = _storage.ref().child('inspiration_photos/$userId/$fileName');
 
       final uploadTask = await ref.putFile(imageFile);
@@ -232,8 +233,9 @@ class CustomerProfileExtendedService {
 
       final updatedNotes = profile.notes
           .map(
-            (note) =>
-                note.id == updatedNote.id ? updatedNote.copyWith(updatedAt: DateTime.now()) : note,
+            (note) => note.id == updatedNote.id
+                ? updatedNote.copyWith(updatedAt: DateTime.now())
+                : note,
           )
           .toList();
 
@@ -250,7 +252,8 @@ class CustomerProfileExtendedService {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
 
-      final updatedNotes = profile.notes.where((note) => note.id != noteId).toList();
+      final updatedNotes =
+          profile.notes.where((note) => note.id != noteId).toList();
 
       final updatedProfile = profile.copyWith(notes: updatedNotes);
       await updateExtendedProfile(updatedProfile);
@@ -268,7 +271,8 @@ class CustomerProfileExtendedService {
       if (profile.favoriteSpecialists.contains(specialistId)) return;
 
       final updatedFavorites = [...profile.favoriteSpecialists, specialistId];
-      final updatedProfile = profile.copyWith(favoriteSpecialists: updatedFavorites);
+      final updatedProfile =
+          profile.copyWith(favoriteSpecialists: updatedFavorites);
 
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
@@ -286,7 +290,8 @@ class CustomerProfileExtendedService {
           .where((id) => id != specialistId)
           .toList();
 
-      final updatedProfile = profile.copyWith(favoriteSpecialists: updatedFavorites);
+      final updatedProfile =
+          profile.copyWith(favoriteSpecialists: updatedFavorites);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
       debugPrint('Error removing from favorites: $e');
@@ -316,7 +321,8 @@ class CustomerProfileExtendedService {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
 
-      final updatedSavedEvents = profile.savedEvents.where((id) => id != eventId).toList();
+      final updatedSavedEvents =
+          profile.savedEvents.where((id) => id != eventId).toList();
 
       final updatedProfile = profile.copyWith(savedEvents: updatedSavedEvents);
       await updateExtendedProfile(updatedProfile);
@@ -326,7 +332,8 @@ class CustomerProfileExtendedService {
   }
 
   /// Обновить предпочтения
-  Future<void> updatePreferences(String userId, CustomerPreferences preferences) async {
+  Future<void> updatePreferences(
+      String userId, CustomerPreferences preferences) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
@@ -362,7 +369,8 @@ class CustomerProfileExtendedService {
   }
 
   /// Получить фото по тегу
-  Future<List<InspirationPhoto>> getPhotosByTag(String userId, String tag) async {
+  Future<List<InspirationPhoto>> getPhotosByTag(
+      String userId, String tag) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];
@@ -386,7 +394,8 @@ class CustomerProfileExtendedService {
             (note) =>
                 note.title.toLowerCase().contains(lowercaseQuery) ||
                 note.content.toLowerCase().contains(lowercaseQuery) ||
-                note.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
+                note.tags
+                    .any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
           )
           .toList();
     } catch (e) {
@@ -396,7 +405,8 @@ class CustomerProfileExtendedService {
   }
 
   /// Поиск по фото
-  Future<List<InspirationPhoto>> searchPhotos(String userId, String query) async {
+  Future<List<InspirationPhoto>> searchPhotos(
+      String userId, String query) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];
@@ -405,8 +415,10 @@ class CustomerProfileExtendedService {
       return profile.inspirationPhotos
           .where(
             (photo) =>
-                (photo.caption?.toLowerCase().contains(lowercaseQuery) ?? false) ||
-                photo.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
+                (photo.caption?.toLowerCase().contains(lowercaseQuery) ??
+                    false) ||
+                photo.tags
+                    .any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
           )
           .toList();
     } catch (e) {
@@ -454,15 +466,15 @@ class CustomerProfileStats {
   });
 
   factory CustomerProfileStats.empty() => CustomerProfileStats(
-    totalPhotos: 0,
-    publicPhotos: 0,
-    totalNotes: 0,
-    pinnedNotes: 0,
-    favoriteSpecialists: 0,
-    savedEvents: 0,
-    totalTags: 0,
-    lastActivity: DateTime.now(),
-  );
+        totalPhotos: 0,
+        publicPhotos: 0,
+        totalNotes: 0,
+        pinnedNotes: 0,
+        favoriteSpecialists: 0,
+        savedEvents: 0,
+        totalTags: 0,
+        lastActivity: DateTime.now(),
+      );
   final int totalPhotos;
   final int publicPhotos;
   final int totalNotes;

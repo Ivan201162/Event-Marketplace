@@ -88,7 +88,8 @@ class SpecialistTestData {
         id: 'photographer_2',
         userId: 'user_2',
         name: 'Михаил Соколов',
-        description: 'Фотограф-документалист, работаю в жанре репортажной и событийной фотографии.',
+        description:
+            'Фотограф-документалист, работаю в жанре репортажной и событийной фотографии.',
         category: SpecialistCategory.photographer,
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 5,
@@ -98,8 +99,16 @@ class SpecialistTestData {
         reviewCount: 89,
         city: 'Санкт-Петербург',
         location: 'Санкт-Петербург, Центральный район',
-        services: const ['Репортажная фотосъемка', 'Событийная фотосъемка', 'Уличная фотография'],
-        equipment: const ['Sony A7R IV', 'Sony FE 24-70mm f/2.8 GM', 'Sony FE 70-200mm f/2.8 GM'],
+        services: const [
+          'Репортажная фотосъемка',
+          'Событийная фотосъемка',
+          'Уличная фотография'
+        ],
+        equipment: const [
+          'Sony A7R IV',
+          'Sony FE 24-70mm f/2.8 GM',
+          'Sony FE 70-200mm f/2.8 GM'
+        ],
         isVerified: true,
         isOnline: false,
         createdAt: now.subtract(const Duration(days: 25)),
@@ -124,7 +133,8 @@ class SpecialistTestData {
         id: 'videographer_1',
         userId: 'user_3',
         name: 'Елена Волкова',
-        description: 'Видеограф и монтажер. Создаю качественные видеоролики для любых мероприятий.',
+        description:
+            'Видеограф и монтажер. Создаю качественные видеоролики для любых мероприятий.',
         category: SpecialistCategory.videographer,
         experienceLevel: ExperienceLevel.expert,
         yearsOfExperience: 10,
@@ -140,7 +150,12 @@ class SpecialistTestData {
           'Промо-ролики',
           'Монтаж видео',
         ],
-        equipment: const ['Sony FX6', 'Canon C70', 'DJI Ronin 4D', 'Профессиональное освещение'],
+        equipment: const [
+          'Sony FX6',
+          'Canon C70',
+          'DJI Ronin 4D',
+          'Профессиональное освещение'
+        ],
         languages: const ['Русский', 'Английский', 'Французский'],
         isVerified: true,
         isOnline: true,
@@ -220,7 +235,11 @@ class SpecialistTestData {
           'Дни рождения',
           'Юбилеи',
         ],
-        equipment: const ['Микрофонная система', 'Музыкальное оборудование', 'Декорации'],
+        equipment: const [
+          'Микрофонная система',
+          'Музыкальное оборудование',
+          'Декорации'
+        ],
         languages: const ['Русский', 'Английский'],
         isVerified: true,
         isOnline: false,
@@ -234,7 +253,8 @@ class SpecialistTestData {
         id: 'decorator_1',
         userId: 'user_6',
         name: 'Мария Иванова',
-        description: 'Декоратор и флорист. Создаю уникальные декорации для любых мероприятий.',
+        description:
+            'Декоратор и флорист. Создаю уникальные декорации для любых мероприятий.',
         category: SpecialistCategory.decorator,
         experienceLevel: ExperienceLevel.expert,
         yearsOfExperience: 9,
@@ -284,7 +304,11 @@ class SpecialistTestData {
           'Аккомпанемент',
           'Музыкальное оформление',
         ],
-        equipment: const ['Цифровое пианино', 'Микрофонная система', 'Звуковое оборудование'],
+        equipment: const [
+          'Цифровое пианино',
+          'Микрофонная система',
+          'Звуковое оборудование'
+        ],
         languages: const ['Русский', 'Английский'],
         isVerified: true,
         isOnline: false,
@@ -298,7 +322,8 @@ class SpecialistTestData {
         id: 'caterer_1',
         userId: 'user_8',
         name: 'ООО "Вкусные решения"',
-        description: 'Кейтеринговая компания. Организуем питание для любых мероприятий.',
+        description:
+            'Кейтеринговая компания. Организуем питание для любых мероприятий.',
         category: SpecialistCategory.caterer,
         experienceLevel: ExperienceLevel.expert,
         yearsOfExperience: 15,
@@ -314,7 +339,11 @@ class SpecialistTestData {
           'Фуршеты',
           'Детские праздники',
         ],
-        equipment: const ['Кухонное оборудование', 'Посуда', 'Сервировочные принадлежности'],
+        equipment: const [
+          'Кухонное оборудование',
+          'Посуда',
+          'Сервировочные принадлежности'
+        ],
         languages: const ['Русский', 'Английский'],
         isVerified: true,
         isOnline: true,
@@ -345,7 +374,11 @@ class SpecialistTestData {
           'Мастер-классы',
           'Игровые программы',
         ],
-        equipment: const ['Костюмы персонажей', 'Реквизит для игр', 'Музыкальное оборудование'],
+        equipment: const [
+          'Костюмы персонажей',
+          'Реквизит для игр',
+          'Музыкальное оборудование'
+        ],
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 10)),
         updatedAt: now,
@@ -374,7 +407,11 @@ class SpecialistTestData {
           'Декорации из цветов',
           'Корпоративные заказы',
         ],
-        equipment: const ['Свежие цветы', 'Флористические инструменты', 'Декоративные материалы'],
+        equipment: const [
+          'Свежие цветы',
+          'Флористические инструменты',
+          'Декоративные материалы'
+        ],
         languages: const ['Русский', 'Французский'],
         isVerified: true,
         isOnline: false,
@@ -399,8 +436,16 @@ class SpecialistTestData {
         reviewCount: 45,
         city: 'Казань',
         location: 'Казань, Центр',
-        services: const ['Портретная фотосъемка', 'Студийная съемка', 'Уличная фотография'],
-        equipment: const ['Canon EOS 6D', 'Canon EF 50mm f/1.4', 'Студийное освещение'],
+        services: const [
+          'Портретная фотосъемка',
+          'Студийная съемка',
+          'Уличная фотография'
+        ],
+        equipment: const [
+          'Canon EOS 6D',
+          'Canon EF 50mm f/1.4',
+          'Студийное освещение'
+        ],
         languages: const ['Русский', 'Татарский'],
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 5)),
@@ -412,7 +457,8 @@ class SpecialistTestData {
         id: 'dj_2',
         userId: 'user_12',
         name: 'Максим Петров',
-        description: 'DJ и звукорежиссер. Работаю в различных жанрах электронной музыки.',
+        description:
+            'DJ и звукорежиссер. Работаю в различных жанрах электронной музыки.',
         category: SpecialistCategory.dj,
         experienceLevel: ExperienceLevel.intermediate,
         yearsOfExperience: 4,
@@ -422,8 +468,16 @@ class SpecialistTestData {
         reviewCount: 52,
         city: 'Екатеринбург',
         location: 'Екатеринбург, Центр',
-        services: const ['Клубные выступления', 'Частные вечеринки', 'Корпоративные мероприятия'],
-        equipment: const ['Pioneer DDJ-1000', 'JBL EON615', 'Профессиональные наушники'],
+        services: const [
+          'Клубные выступления',
+          'Частные вечеринки',
+          'Корпоративные мероприятия'
+        ],
+        equipment: const [
+          'Pioneer DDJ-1000',
+          'JBL EON615',
+          'Профессиональные наушники'
+        ],
         isOnline: false,
         createdAt: now.subtract(const Duration(days: 8)),
         updatedAt: now,
@@ -434,7 +488,8 @@ class SpecialistTestData {
         id: 'host_2',
         userId: 'user_13',
         name: 'Наталья Козлова',
-        description: 'Ведущая мероприятий и тамада. Создаю незабываемые праздники.',
+        description:
+            'Ведущая мероприятий и тамада. Создаю незабываемые праздники.',
         category: SpecialistCategory.host,
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 8,
@@ -444,8 +499,17 @@ class SpecialistTestData {
         reviewCount: 112,
         city: 'Новосибирск',
         location: 'Новосибирск, Центральный район',
-        services: const ['Свадебные церемонии', 'Дни рождения', 'Юбилеи', 'Корпоративы'],
-        equipment: const ['Микрофонная система', 'Музыкальное оборудование', 'Игровой реквизит'],
+        services: const [
+          'Свадебные церемонии',
+          'Дни рождения',
+          'Юбилеи',
+          'Корпоративы'
+        ],
+        equipment: const [
+          'Микрофонная система',
+          'Музыкальное оборудование',
+          'Игровой реквизит'
+        ],
         isVerified: true,
         isOnline: true,
         createdAt: now.subtract(const Duration(days: 50)),
@@ -494,7 +558,8 @@ class SpecialistTestData {
         for (final specialist in specialists) {
           // Категории
           final category = specialist.category.displayName;
-          stats['categories'][category] = (stats['categories'][category] ?? 0) + 1;
+          stats['categories'][category] =
+              (stats['categories'][category] ?? 0) + 1;
 
           // Города
           final city = specialist.city ?? 'Не указан';

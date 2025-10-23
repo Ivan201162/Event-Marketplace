@@ -38,7 +38,8 @@ void main() {
       );
     });
 
-    testWidgets('Main navigation screen loads correctly', (WidgetTester tester) async {
+    testWidgets('Main navigation screen loads correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp.router(
@@ -51,14 +52,14 @@ void main() {
 
       // Проверяем, что главный экран загрузился
       expect(find.byType(MainNavigationScreen), findsOneWidget);
-      
+
       // Проверяем наличие основных вкладок
       expect(find.text('Главная'), findsOneWidget);
       expect(find.text('Лента'), findsOneWidget);
       expect(find.text('Заявки'), findsOneWidget);
       expect(find.text('Чаты'), findsOneWidget);
       expect(find.text('Идеи'), findsOneWidget);
-      
+
       // Проверяем, что уведомления НЕ в нижнем меню
       expect(find.text('Уведомления'), findsNothing);
     });
@@ -89,7 +90,8 @@ void main() {
       expect(find.byType(MainNavigationScreen), findsOneWidget);
     });
 
-    testWidgets('Create request screen navigation', (WidgetTester tester) async {
+    testWidgets('Create request screen navigation',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         ProviderScope(
           child: MaterialApp.router(
@@ -106,7 +108,7 @@ void main() {
 
       // Проверяем, что экран создания заявки загрузился
       expect(find.byType(CreateRequestScreen), findsOneWidget);
-      
+
       // Проверяем наличие основных полей
       expect(find.text('Создать заявку'), findsOneWidget);
       expect(find.text('Название события'), findsOneWidget);
@@ -132,7 +134,7 @@ void main() {
 
       // Проверяем, что экран создания идеи загрузился
       expect(find.byType(CreateIdeaScreen), findsOneWidget);
-      
+
       // Проверяем наличие основных полей
       expect(find.text('Поделиться идеей'), findsOneWidget);
       expect(find.text('Название идеи'), findsOneWidget);
@@ -157,7 +159,7 @@ void main() {
 
       // Проверяем, что экран уведомлений загрузился
       expect(find.byType(NotificationsScreen), findsOneWidget);
-      
+
       // Проверяем наличие основных элементов
       expect(find.text('Уведомления'), findsOneWidget);
     });
@@ -209,7 +211,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // Проверяем, что экран загрузился без ошибок
-        expect(tester.takeException(), isNull, reason: 'Route $route should not throw exception');
+        expect(tester.takeException(), isNull,
+            reason: 'Route $route should not throw exception');
       }
     });
   });

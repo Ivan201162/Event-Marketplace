@@ -10,7 +10,8 @@ class AnimatedSearchBar extends StatefulWidget {
   State<AnimatedSearchBar> createState() => _AnimatedSearchBarState();
 }
 
-class _AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTickerProviderStateMixin {
+class _AnimatedSearchBarState extends State<AnimatedSearchBar>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
@@ -28,12 +29,14 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTicker
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 1.02,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _animationController.forward();
   }
@@ -52,7 +55,8 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTicker
       builder: (context, child) {
         return FadeTransition(
           opacity: _fadeAnimation,
-          child: ScaleTransition(scale: _scaleAnimation, child: _buildSearchField()),
+          child: ScaleTransition(
+              scale: _scaleAnimation, child: _buildSearchField()),
         );
       },
     );
@@ -65,7 +69,10 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTicker
           children: [
             Text(
               'Найти специалиста',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Focus(
@@ -85,7 +92,9 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTicker
                   hintText: 'Найти специалиста…',
                   prefixIcon: Icon(
                     Icons.search,
-                    color: _isFocused ? Theme.of(context).primaryColor : Colors.grey[600],
+                    color: _isFocused
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey[600],
                   ),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
@@ -106,7 +115,9 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTicker
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide(
-                      color: _isFocused ? Theme.of(context).primaryColor : Colors.grey[300]!,
+                      color: _isFocused
+                          ? Theme.of(context).primaryColor
+                          : Colors.grey[300]!,
                       width: _isFocused ? 2 : 1,
                     ),
                   ),
@@ -116,7 +127,8 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> with SingleTicker
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+                    borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor, width: 2),
                   ),
                   filled: true,
                   fillColor: _isFocused

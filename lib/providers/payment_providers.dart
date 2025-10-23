@@ -10,13 +10,15 @@ final paymentServiceProvider = Provider<PaymentService>((ref) {
 });
 
 /// User payments provider
-final userPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, userId) async {
+final userPaymentsProvider =
+    FutureProvider.family<List<Payment>, String>((ref, userId) async {
   final paymentService = ref.read(paymentServiceProvider);
   return paymentService.getUserPayments(userId);
 });
 
 /// Specialist payments provider
-final specialistPaymentsProvider = FutureProvider.family<List<Payment>, String>((
+final specialistPaymentsProvider =
+    FutureProvider.family<List<Payment>, String>((
   ref,
   specialistId,
 ) async {
@@ -25,13 +27,15 @@ final specialistPaymentsProvider = FutureProvider.family<List<Payment>, String>(
 });
 
 /// Payment by ID provider
-final paymentByIdProvider = FutureProvider.family<Payment?, String>((ref, paymentId) async {
+final paymentByIdProvider =
+    FutureProvider.family<Payment?, String>((ref, paymentId) async {
   final paymentService = ref.read(paymentServiceProvider);
   return paymentService.getPaymentById(paymentId);
 });
 
 /// User transactions provider
-final userTransactionsProvider = FutureProvider.family<List<Transaction>, String>((
+final userTransactionsProvider =
+    FutureProvider.family<List<Transaction>, String>((
   ref,
   userId,
 ) async {
@@ -40,7 +44,8 @@ final userTransactionsProvider = FutureProvider.family<List<Transaction>, String
 });
 
 /// User balance provider
-final userBalanceProvider = FutureProvider.family<int, String>((ref, userId) async {
+final userBalanceProvider =
+    FutureProvider.family<int, String>((ref, userId) async {
   final paymentService = ref.read(paymentServiceProvider);
   return paymentService.getUserBalance(userId);
 });
@@ -55,7 +60,8 @@ final bookingPaymentsProvider = FutureProvider.family<List<Payment>, String>((
 });
 
 /// Payment statistics provider
-final paymentStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((
+final paymentStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((
   ref,
   userId,
 ) async {
@@ -64,13 +70,15 @@ final paymentStatsProvider = FutureProvider.family<Map<String, dynamic>, String>
 });
 
 /// User payments stream provider
-final userPaymentsStreamProvider = StreamProvider.family<List<Payment>, String>((ref, userId) {
+final userPaymentsStreamProvider =
+    StreamProvider.family<List<Payment>, String>((ref, userId) {
   final paymentService = ref.read(paymentServiceProvider);
   return paymentService.getUserPaymentsStream(userId);
 });
 
 /// User transactions stream provider
-final userTransactionsStreamProvider = StreamProvider.family<List<Transaction>, String>((
+final userTransactionsStreamProvider =
+    StreamProvider.family<List<Transaction>, String>((
   ref,
   userId,
 ) {
@@ -79,14 +87,16 @@ final userTransactionsStreamProvider = StreamProvider.family<List<Transaction>, 
 });
 
 /// Recent payments provider
-final recentPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, userId) async {
+final recentPaymentsProvider =
+    FutureProvider.family<List<Payment>, String>((ref, userId) async {
   final paymentService = ref.read(paymentServiceProvider);
   final payments = await paymentService.getUserPayments(userId);
   return payments.take(10).toList();
 });
 
 /// Recent transactions provider
-final recentTransactionsProvider = FutureProvider.family<List<Transaction>, String>((
+final recentTransactionsProvider =
+    FutureProvider.family<List<Transaction>, String>((
   ref,
   userId,
 ) async {
@@ -96,7 +106,8 @@ final recentTransactionsProvider = FutureProvider.family<List<Transaction>, Stri
 });
 
 /// Successful payments provider
-final successfulPaymentsProvider = FutureProvider.family<List<Payment>, String>((
+final successfulPaymentsProvider =
+    FutureProvider.family<List<Payment>, String>((
   ref,
   userId,
 ) async {
@@ -106,21 +117,24 @@ final successfulPaymentsProvider = FutureProvider.family<List<Payment>, String>(
 });
 
 /// Failed payments provider
-final failedPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, userId) async {
+final failedPaymentsProvider =
+    FutureProvider.family<List<Payment>, String>((ref, userId) async {
   final paymentService = ref.read(paymentServiceProvider);
   final payments = await paymentService.getUserPayments(userId);
   return payments.where((payment) => payment.isFailed).toList();
 });
 
 /// Pending payments provider
-final pendingPaymentsProvider = FutureProvider.family<List<Payment>, String>((ref, userId) async {
+final pendingPaymentsProvider =
+    FutureProvider.family<List<Payment>, String>((ref, userId) async {
   final paymentService = ref.read(paymentServiceProvider);
   final payments = await paymentService.getUserPayments(userId);
   return payments.where((payment) => payment.isPending).toList();
 });
 
 /// Income transactions provider
-final incomeTransactionsProvider = FutureProvider.family<List<Transaction>, String>((
+final incomeTransactionsProvider =
+    FutureProvider.family<List<Transaction>, String>((
   ref,
   userId,
 ) async {
@@ -130,7 +144,8 @@ final incomeTransactionsProvider = FutureProvider.family<List<Transaction>, Stri
 });
 
 /// Expense transactions provider
-final expenseTransactionsProvider = FutureProvider.family<List<Transaction>, String>((
+final expenseTransactionsProvider =
+    FutureProvider.family<List<Transaction>, String>((
   ref,
   userId,
 ) async {
@@ -140,7 +155,8 @@ final expenseTransactionsProvider = FutureProvider.family<List<Transaction>, Str
 });
 
 /// Monthly income provider
-final monthlyIncomeProvider = FutureProvider.family<int, String>((ref, userId) async {
+final monthlyIncomeProvider =
+    FutureProvider.family<int, String>((ref, userId) async {
   final paymentService = ref.read(paymentServiceProvider);
   final transactions = await paymentService.getUserTransactions(userId);
 
@@ -151,11 +167,13 @@ final monthlyIncomeProvider = FutureProvider.family<int, String>((ref, userId) a
     return transaction.isIncome && transaction.createdAt.isAfter(startOfMonth);
   }).toList();
 
-  return monthlyTransactions.fold(0, (sum, transaction) => sum + transaction.amount);
+  return monthlyTransactions.fold(
+      0, (sum, transaction) => sum + transaction.amount);
 });
 
 /// Monthly expense provider
-final monthlyExpenseProvider = FutureProvider.family<int, String>((ref, userId) async {
+final monthlyExpenseProvider =
+    FutureProvider.family<int, String>((ref, userId) async {
   final paymentService = ref.read(paymentServiceProvider);
   final transactions = await paymentService.getUserTransactions(userId);
 
@@ -166,25 +184,32 @@ final monthlyExpenseProvider = FutureProvider.family<int, String>((ref, userId) 
     return transaction.isExpense && transaction.createdAt.isAfter(startOfMonth);
   }).toList();
 
-  return monthlyTransactions.fold(0, (sum, transaction) => sum + transaction.amount);
+  return monthlyTransactions.fold(
+      0, (sum, transaction) => sum + transaction.amount);
 });
 
 /// Total income provider
-final totalIncomeProvider = FutureProvider.family<int, String>((ref, userId) async {
+final totalIncomeProvider =
+    FutureProvider.family<int, String>((ref, userId) async {
   final paymentService = ref.read(paymentServiceProvider);
   final transactions = await paymentService.getUserTransactions(userId);
 
-  final incomeTransactions = transactions.where((transaction) => transaction.isIncome).toList();
-  return incomeTransactions.fold(0, (sum, transaction) => sum + transaction.amount);
+  final incomeTransactions =
+      transactions.where((transaction) => transaction.isIncome).toList();
+  return incomeTransactions.fold(
+      0, (sum, transaction) => sum + transaction.amount);
 });
 
 /// Total expense provider
-final totalExpenseProvider = FutureProvider.family<int, String>((ref, userId) async {
+final totalExpenseProvider =
+    FutureProvider.family<int, String>((ref, userId) async {
   final paymentService = ref.read(paymentServiceProvider);
   final transactions = await paymentService.getUserTransactions(userId);
 
-  final expenseTransactions = transactions.where((transaction) => transaction.isExpense).toList();
-  return expenseTransactions.fold(0, (sum, transaction) => sum + transaction.amount);
+  final expenseTransactions =
+      transactions.where((transaction) => transaction.isExpense).toList();
+  return expenseTransactions.fold(
+      0, (sum, transaction) => sum + transaction.amount);
 });
 
 /// Payment methods provider
@@ -208,7 +233,8 @@ final paymentStatusesProvider = Provider<List<PaymentStatus>>((ref) {
 });
 
 /// Today's transactions provider
-final todaysTransactionsProvider = FutureProvider.family<List<Transaction>, String>((
+final todaysTransactionsProvider =
+    FutureProvider.family<List<Transaction>, String>((
   ref,
   userId,
 ) async {
@@ -220,12 +246,14 @@ final todaysTransactionsProvider = FutureProvider.family<List<Transaction>, Stri
   final endOfDay = startOfDay.add(const Duration(days: 1));
 
   return transactions.where((transaction) {
-    return transaction.createdAt.isAfter(startOfDay) && transaction.createdAt.isBefore(endOfDay);
+    return transaction.createdAt.isAfter(startOfDay) &&
+        transaction.createdAt.isBefore(endOfDay);
   }).toList();
 });
 
 /// This week's transactions provider
-final thisWeekTransactionsProvider = FutureProvider.family<List<Transaction>, String>((
+final thisWeekTransactionsProvider =
+    FutureProvider.family<List<Transaction>, String>((
   ref,
   userId,
 ) async {
@@ -234,7 +262,8 @@ final thisWeekTransactionsProvider = FutureProvider.family<List<Transaction>, St
 
   final now = DateTime.now();
   final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-  final startOfWeekDay = DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
+  final startOfWeekDay =
+      DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
 
   return transactions.where((transaction) {
     return transaction.createdAt.isAfter(startOfWeekDay);
@@ -242,7 +271,8 @@ final thisWeekTransactionsProvider = FutureProvider.family<List<Transaction>, St
 });
 
 /// This month's transactions provider
-final thisMonthTransactionsProvider = FutureProvider.family<List<Transaction>, String>((
+final thisMonthTransactionsProvider =
+    FutureProvider.family<List<Transaction>, String>((
   ref,
   userId,
 ) async {

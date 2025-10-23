@@ -15,7 +15,8 @@ class EnhancedHomeScreenV2 extends ConsumerStatefulWidget {
   const EnhancedHomeScreenV2({super.key});
 
   @override
-  ConsumerState<EnhancedHomeScreenV2> createState() => _EnhancedHomeScreenV2State();
+  ConsumerState<EnhancedHomeScreenV2> createState() =>
+      _EnhancedHomeScreenV2State();
 }
 
 class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
@@ -40,7 +41,8 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
     _appBarOpacityAnimation = Tween<double>(
       begin: 1.0,
       end: 0.0,
-    ).animate(CurvedAnimation(parent: _appBarAnimationController, curve: Curves.easeInOut));
+    ).animate(CurvedAnimation(
+        parent: _appBarAnimationController, curve: Curves.easeInOut));
 
     _scrollController.addListener(_onScroll);
   }
@@ -110,7 +112,8 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).primaryColor.withOpacity(0.3),
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.3),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -118,7 +121,8 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                     ),
                     child: SafeArea(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -144,16 +148,23 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                                   children: [
                                     Text(
                                       'Event Marketplace',
-                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                     ),
                                     Text(
                                       'Найди идеального специалиста',
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: Colors.white.withOpacity(0.8),
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color:
+                                                Colors.white.withOpacity(0.8),
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -170,8 +181,11 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: IconButton(
-                                        icon: const Icon(Icons.notifications_outlined, color: Colors.white),
-                                        onPressed: () => context.push('/notifications'),
+                                        icon: const Icon(
+                                            Icons.notifications_outlined,
+                                            color: Colors.white),
+                                        onPressed: () =>
+                                            context.push('/notifications'),
                                       ),
                                     ),
                                     Positioned(
@@ -195,7 +209,8 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: IconButton(
-                                    icon: const Icon(Icons.settings_outlined, color: Colors.white),
+                                    icon: const Icon(Icons.settings_outlined,
+                                        color: Colors.white),
                                     onPressed: () => context.push('/settings'),
                                   ),
                                 ),
@@ -214,9 +229,12 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
           // Плашка пользователя с анимацией
           SliverToBoxAdapter(
             child: currentUserAsync.when(
-              data: (user) => AnimatedUserHeader(user: user, isVisible: _isUserHeaderVisible),
-              loading: () => AnimatedUserHeader(user: null, isVisible: _isUserHeaderVisible),
-              error: (_, __) => AnimatedUserHeader(user: null, isVisible: _isUserHeaderVisible),
+              data: (user) => AnimatedUserHeader(
+                  user: user, isVisible: _isUserHeaderVisible),
+              loading: () => AnimatedUserHeader(
+                  user: null, isVisible: _isUserHeaderVisible),
+              error: (_, __) => AnimatedUserHeader(
+                  user: null, isVisible: _isUserHeaderVisible),
             ),
           ),
 
@@ -227,7 +245,8 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
           SliverToBoxAdapter(
             child: AnimatedCategories(
               onCategorySelected: (category) {
-                context.push('/search?category=${Uri.encodeComponent(category)}');
+                context
+                    .push('/search?category=${Uri.encodeComponent(category)}');
               },
             ),
           ),
@@ -247,31 +266,31 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
 
   /// Поиск с фильтрами
   Widget _buildSearchWithFilters() => Container(
-    margin: const EdgeInsets.all(16),
-    child: Row(
-      children: [
-        Expanded(
-          child: AnimatedSearchBar(
-            onSearch: (query) {
-              _performSearch(query);
-            },
-          ),
+        margin: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: AnimatedSearchBar(
+                onSearch: (query) {
+                  _performSearch(query);
+                },
+              ),
+            ),
+            const SizedBox(width: 12),
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.tune, color: Colors.white),
+                onPressed: _showFiltersDialog,
+                tooltip: 'Фильтры',
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 12),
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.tune, color: Colors.white),
-            onPressed: _showFiltersDialog,
-            tooltip: 'Фильтры',
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 
   /// Показать диалог фильтров
   void _showFiltersDialog() {

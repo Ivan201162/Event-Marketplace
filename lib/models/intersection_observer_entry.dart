@@ -61,7 +61,8 @@ class IntersectionObserverEntry extends Equatable {
   }
 
   @override
-  List<Object?> get props => [targetId, isIntersecting, intersectionRatio, timestamp, metadata];
+  List<Object?> get props =>
+      [targetId, isIntersecting, intersectionRatio, timestamp, metadata];
 
   @override
   String toString() {

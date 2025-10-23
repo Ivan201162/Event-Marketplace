@@ -113,7 +113,9 @@ class _SafeIconButtonState extends State<SafeIconButton> {
         onPressed: _getOnPressed(),
         icon: widget.isLoading
             ? const SizedBox(
-                width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2))
             : widget.icon,
         tooltip: widget.tooltip,
         style: widget.style,

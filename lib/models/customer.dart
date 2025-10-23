@@ -29,59 +29,60 @@ class Customer {
 
   /// Создать заказчика из Map
   factory Customer.fromMap(Map<String, dynamic> data, [String? id]) => Customer(
-    id: id ?? data['id'] ?? '',
-    name: data['name'] ?? '',
-    email: data['email'] ?? '',
-    avatarUrl: data['avatarUrl'],
-    phoneNumber: data['phoneNumber'],
-    maritalStatus: data['maritalStatus'] != null
-        ? MaritalStatus.values.firstWhere(
-            (e) => e.name == data['maritalStatus'],
-            orElse: () => MaritalStatus.single,
-          )
-        : MaritalStatus.single,
-    weddingDate: data['weddingDate'] != null
-        ? (data['weddingDate'] is Timestamp
-              ? (data['weddingDate'] as Timestamp).toDate()
-              : DateTime.parse(data['weddingDate'].toString()))
-        : null,
-    partnerName: data['partnerName'],
-    favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
-    ordersHistory: List<String>.from(data['ordersHistory'] ?? []),
-    anniversaries:
-        (data['anniversaries'] as List<dynamic>?)
-            ?.map((e) => Map<String, dynamic>.from(e))
-            .toList() ??
-        [],
-    anniversaryRemindersEnabled: data['anniversaryRemindersEnabled'] as bool? ?? false,
-    createdAt: data['createdAt'] != null
-        ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
-        : DateTime.now(),
-    lastLoginAt: data['lastLoginAt'] != null
-        ? (data['lastLoginAt'] is Timestamp
-              ? (data['lastLoginAt'] as Timestamp).toDate()
-              : DateTime.parse(data['lastLoginAt'].toString()))
-        : null,
-    additionalData: data['additionalData'],
-  );
+        id: id ?? data['id'] ?? '',
+        name: data['name'] ?? '',
+        email: data['email'] ?? '',
+        avatarUrl: data['avatarUrl'],
+        phoneNumber: data['phoneNumber'],
+        maritalStatus: data['maritalStatus'] != null
+            ? MaritalStatus.values.firstWhere(
+                (e) => e.name == data['maritalStatus'],
+                orElse: () => MaritalStatus.single,
+              )
+            : MaritalStatus.single,
+        weddingDate: data['weddingDate'] != null
+            ? (data['weddingDate'] is Timestamp
+                ? (data['weddingDate'] as Timestamp).toDate()
+                : DateTime.parse(data['weddingDate'].toString()))
+            : null,
+        partnerName: data['partnerName'],
+        favoriteSpecialists:
+            List<String>.from(data['favoriteSpecialists'] ?? []),
+        ordersHistory: List<String>.from(data['ordersHistory'] ?? []),
+        anniversaries: (data['anniversaries'] as List<dynamic>?)
+                ?.map((e) => Map<String, dynamic>.from(e))
+                .toList() ??
+            [],
+        anniversaryRemindersEnabled:
+            data['anniversaryRemindersEnabled'] as bool? ?? false,
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] is Timestamp
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
+            : DateTime.now(),
+        lastLoginAt: data['lastLoginAt'] != null
+            ? (data['lastLoginAt'] is Timestamp
+                ? (data['lastLoginAt'] as Timestamp).toDate()
+                : DateTime.parse(data['lastLoginAt'].toString()))
+            : null,
+        additionalData: data['additionalData'],
+      );
 
   /// Создать заказчика из AppUser
   factory Customer.fromAppUser(AppUser user) => Customer(
-    id: user.id,
-    name: user.displayName ?? user.email.split('@').first,
-    email: user.email,
-    avatarUrl: user.photoURL,
-    phoneNumber: user.phoneNumber,
-    maritalStatus: user.maritalStatus ?? MaritalStatus.single,
-    weddingDate: user.weddingDate,
-    partnerName: user.partnerName,
-    anniversaryRemindersEnabled: user.anniversaryRemindersEnabled,
-    createdAt: user.createdAt,
-    lastLoginAt: user.lastLoginAt,
-    additionalData: user.additionalData,
-  );
+        id: user.id,
+        name: user.displayName ?? user.email.split('@').first,
+        email: user.email,
+        avatarUrl: user.photoURL,
+        phoneNumber: user.phoneNumber,
+        maritalStatus: user.maritalStatus ?? MaritalStatus.single,
+        weddingDate: user.weddingDate,
+        partnerName: user.partnerName,
+        anniversaryRemindersEnabled: user.anniversaryRemindersEnabled,
+        createdAt: user.createdAt,
+        lastLoginAt: user.lastLoginAt,
+        additionalData: user.additionalData,
+      );
   final String id;
   final String name;
   final String email;
@@ -126,25 +127,28 @@ class Customer {
   }
 
   /// Проверить, является ли специалист в избранном
-  bool isFavoriteSpecialist(String specialistId) => favoriteSpecialists.contains(specialistId);
+  bool isFavoriteSpecialist(String specialistId) =>
+      favoriteSpecialists.contains(specialistId);
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'email': email,
-    'avatarUrl': avatarUrl,
-    'phoneNumber': phoneNumber,
-    'maritalStatus': maritalStatus.name,
-    'weddingDate': weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
-    'partnerName': partnerName,
-    'favoriteSpecialists': favoriteSpecialists,
-    'ordersHistory': ordersHistory,
-    'anniversaries': anniversaries,
-    'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'lastLoginAt': lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
-    'additionalData': additionalData,
-  };
+        'name': name,
+        'email': email,
+        'avatarUrl': avatarUrl,
+        'phoneNumber': phoneNumber,
+        'maritalStatus': maritalStatus.name,
+        'weddingDate':
+            weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
+        'partnerName': partnerName,
+        'favoriteSpecialists': favoriteSpecialists,
+        'ordersHistory': ordersHistory,
+        'anniversaries': anniversaries,
+        'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'lastLoginAt':
+            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+        'additionalData': additionalData,
+      };
 
   /// Копировать с изменениями
   Customer copyWith({
@@ -163,23 +167,25 @@ class Customer {
     DateTime? createdAt,
     DateTime? lastLoginAt,
     Map<String, dynamic>? additionalData,
-  }) => Customer(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    email: email ?? this.email,
-    avatarUrl: avatarUrl ?? this.avatarUrl,
-    phoneNumber: phoneNumber ?? this.phoneNumber,
-    maritalStatus: maritalStatus ?? this.maritalStatus,
-    weddingDate: weddingDate ?? this.weddingDate,
-    partnerName: partnerName ?? this.partnerName,
-    favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
-    ordersHistory: ordersHistory ?? this.ordersHistory,
-    anniversaries: anniversaries ?? this.anniversaries,
-    anniversaryRemindersEnabled: anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
-    createdAt: createdAt ?? this.createdAt,
-    lastLoginAt: lastLoginAt ?? this.lastLoginAt,
-    additionalData: additionalData ?? this.additionalData,
-  );
+  }) =>
+      Customer(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        email: email ?? this.email,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        maritalStatus: maritalStatus ?? this.maritalStatus,
+        weddingDate: weddingDate ?? this.weddingDate,
+        partnerName: partnerName ?? this.partnerName,
+        favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
+        ordersHistory: ordersHistory ?? this.ordersHistory,
+        anniversaries: anniversaries ?? this.anniversaries,
+        anniversaryRemindersEnabled:
+            anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
+        createdAt: createdAt ?? this.createdAt,
+        lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+        additionalData: additionalData ?? this.additionalData,
+      );
 
   @override
   bool operator ==(Object other) {

@@ -35,8 +35,10 @@ class Integration {
         (s) => s.name == data['status'],
         orElse: () => IntegrationStatus.disconnected,
       ),
-      config: Map<String, dynamic>.from((data['config'] as Map<dynamic, dynamic>?) ?? {}),
-      permissions: List<String>.from((data['permissions'] as List<dynamic>?) ?? []),
+      config: Map<String, dynamic>.from(
+          (data['config'] as Map<dynamic, dynamic>?) ?? {}),
+      permissions:
+          List<String>.from((data['permissions'] as List<dynamic>?) ?? []),
       iconUrl: data['iconUrl'] as String?,
       websiteUrl: data['websiteUrl'] as String?,
       documentationUrl: data['documentationUrl'] as String?,
@@ -62,21 +64,21 @@ class Integration {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'name': name,
-    'description': description,
-    'type': type.name,
-    'status': status.name,
-    'config': config,
-    'permissions': permissions,
-    'iconUrl': iconUrl,
-    'websiteUrl': websiteUrl,
-    'documentationUrl': documentationUrl,
-    'isEnabled': isEnabled,
-    'isRequired': isRequired,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'id': id,
+        'name': name,
+        'description': description,
+        'type': type.name,
+        'status': status.name,
+        'config': config,
+        'permissions': permissions,
+        'iconUrl': iconUrl,
+        'websiteUrl': websiteUrl,
+        'documentationUrl': documentationUrl,
+        'isEnabled': isEnabled,
+        'isRequired': isRequired,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   Integration copyWith({
     String? id,
@@ -93,22 +95,23 @@ class Integration {
     bool? isRequired,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => Integration(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    type: type ?? this.type,
-    status: status ?? this.status,
-    config: config ?? this.config,
-    permissions: permissions ?? this.permissions,
-    iconUrl: iconUrl ?? this.iconUrl,
-    websiteUrl: websiteUrl ?? this.websiteUrl,
-    documentationUrl: documentationUrl ?? this.documentationUrl,
-    isEnabled: isEnabled ?? this.isEnabled,
-    isRequired: isRequired ?? this.isRequired,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      Integration(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        config: config ?? this.config,
+        permissions: permissions ?? this.permissions,
+        iconUrl: iconUrl ?? this.iconUrl,
+        websiteUrl: websiteUrl ?? this.websiteUrl,
+        documentationUrl: documentationUrl ?? this.documentationUrl,
+        isEnabled: isEnabled ?? this.isEnabled,
+        isRequired: isRequired ?? this.isRequired,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить цвет статуса
   Color get statusColor {
@@ -188,7 +191,17 @@ class Integration {
 }
 
 /// Типы интеграций
-enum IntegrationType { maps, social, payment, calendar, email, sms, analytics, storage, other }
+enum IntegrationType {
+  maps,
+  social,
+  payment,
+  calendar,
+  email,
+  sms,
+  analytics,
+  storage,
+  other
+}
 
 /// Статусы интеграций
 enum IntegrationStatus { connected, disconnected, error, pending }
@@ -210,7 +223,8 @@ class IntegrationSettings {
     return IntegrationSettings(
       integrationId: data['integrationId'] as String? ?? '',
       userId: data['userId'] as String? ?? '',
-      settings: Map<String, dynamic>.from((data['settings'] as Map<dynamic, dynamic>?) ?? {}),
+      settings: Map<String, dynamic>.from(
+          (data['settings'] as Map<dynamic, dynamic>?) ?? {}),
       isEnabled: data['isEnabled'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -224,13 +238,13 @@ class IntegrationSettings {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-    'integrationId': integrationId,
-    'userId': userId,
-    'settings': settings,
-    'isEnabled': isEnabled,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'integrationId': integrationId,
+        'userId': userId,
+        'settings': settings,
+        'isEnabled': isEnabled,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   IntegrationSettings copyWith({
     String? integrationId,
@@ -239,14 +253,15 @@ class IntegrationSettings {
     bool? isEnabled,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => IntegrationSettings(
-    integrationId: integrationId ?? this.integrationId,
-    userId: userId ?? this.userId,
-    settings: settings ?? this.settings,
-    isEnabled: isEnabled ?? this.isEnabled,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      IntegrationSettings(
+        integrationId: integrationId ?? this.integrationId,
+        userId: userId ?? this.userId,
+        settings: settings ?? this.settings,
+        isEnabled: isEnabled ?? this.isEnabled,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }
 
 /// Модель события интеграции
@@ -274,7 +289,8 @@ class IntegrationEvent {
         (t) => t.name == data['type'],
         orElse: () => IntegrationEventType.other,
       ),
-      data: Map<String, dynamic>.from((data['data'] as Map<dynamic, dynamic>?) ?? {}),
+      data: Map<String, dynamic>.from(
+          (data['data'] as Map<dynamic, dynamic>?) ?? {}),
       status: IntegrationEventStatus.values.firstWhere(
         (s) => s.name == data['status'],
         orElse: () => IntegrationEventStatus.pending,
@@ -295,16 +311,16 @@ class IntegrationEvent {
   final DateTime updatedAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'integrationId': integrationId,
-    'userId': userId,
-    'type': type.name,
-    'data': data,
-    'status': status.name,
-    'errorMessage': errorMessage,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'id': id,
+        'integrationId': integrationId,
+        'userId': userId,
+        'type': type.name,
+        'data': data,
+        'status': status.name,
+        'errorMessage': errorMessage,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   IntegrationEvent copyWith({
     String? id,
@@ -316,17 +332,18 @@ class IntegrationEvent {
     String? errorMessage,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => IntegrationEvent(
-    id: id ?? this.id,
-    integrationId: integrationId ?? this.integrationId,
-    userId: userId ?? this.userId,
-    type: type ?? this.type,
-    data: data ?? this.data,
-    status: status ?? this.status,
-    errorMessage: errorMessage ?? this.errorMessage,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      IntegrationEvent(
+        id: id ?? this.id,
+        integrationId: integrationId ?? this.integrationId,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        data: data ?? this.data,
+        status: status ?? this.status,
+        errorMessage: errorMessage ?? this.errorMessage,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }
 
 /// Типы событий интеграции
@@ -347,13 +364,14 @@ class LocationData {
   });
 
   factory LocationData.fromMap(Map<String, dynamic> map) => LocationData(
-    latitude: (map['latitude'] as num?)?.toDouble() ?? 0.0,
-    longitude: (map['longitude'] as num?)?.toDouble() ?? 0.0,
-    accuracy: (map['accuracy'] as num?)?.toDouble(),
-    altitude: (map['altitude'] as num?)?.toDouble(),
-    speed: (map['speed'] as num?)?.toDouble(),
-    timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int? ?? 0),
-  );
+        latitude: (map['latitude'] as num?)?.toDouble() ?? 0.0,
+        longitude: (map['longitude'] as num?)?.toDouble() ?? 0.0,
+        accuracy: (map['accuracy'] as num?)?.toDouble(),
+        altitude: (map['altitude'] as num?)?.toDouble(),
+        speed: (map['speed'] as num?)?.toDouble(),
+        timestamp:
+            DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int? ?? 0),
+      );
   final double latitude;
   final double longitude;
   final double? accuracy;
@@ -362,13 +380,13 @@ class LocationData {
   final DateTime timestamp;
 
   Map<String, dynamic> toMap() => {
-    'latitude': latitude,
-    'longitude': longitude,
-    'accuracy': accuracy,
-    'altitude': altitude,
-    'speed': speed,
-    'timestamp': timestamp.millisecondsSinceEpoch,
-  };
+        'latitude': latitude,
+        'longitude': longitude,
+        'accuracy': accuracy,
+        'altitude': altitude,
+        'speed': speed,
+        'timestamp': timestamp.millisecondsSinceEpoch,
+      };
 }
 
 /// Модель адреса
@@ -383,13 +401,13 @@ class AddressData {
   });
 
   factory AddressData.fromMap(Map<String, dynamic> map) => AddressData(
-    street: map['street'] as String?,
-    city: map['city'] as String?,
-    state: map['state'] as String?,
-    country: map['country'] as String?,
-    postalCode: map['postalCode'] as String?,
-    formattedAddress: map['formattedAddress'] as String?,
-  );
+        street: map['street'] as String?,
+        city: map['city'] as String?,
+        state: map['state'] as String?,
+        country: map['country'] as String?,
+        postalCode: map['postalCode'] as String?,
+        formattedAddress: map['formattedAddress'] as String?,
+      );
   final String? street;
   final String? city;
   final String? state;
@@ -398,11 +416,11 @@ class AddressData {
   final String? formattedAddress;
 
   Map<String, dynamic> toMap() => {
-    'street': street,
-    'city': city,
-    'state': state,
-    'country': country,
-    'postalCode': postalCode,
-    'formattedAddress': formattedAddress,
-  };
+        'street': street,
+        'city': city,
+        'state': state,
+        'country': country,
+        'postalCode': postalCode,
+        'formattedAddress': formattedAddress,
+      };
 }

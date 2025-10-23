@@ -30,11 +30,13 @@ class HostCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
                   color: theme.colorScheme.surface,
                 ),
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
                   child: specialist.avatarUrl != null
                       ? CachedNetworkImage(
                           imageUrl: specialist.avatarUrl!,
@@ -44,7 +46,8 @@ class HostCard extends StatelessWidget {
                             child: Center(
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    theme.primaryColor),
                               ),
                             ),
                           ),
@@ -92,7 +95,8 @@ class HostCard extends StatelessWidget {
                           ),
                         ),
                         if (specialist.isVerified)
-                          Icon(Icons.verified, size: isMobile ? 14 : 16, color: Colors.green),
+                          Icon(Icons.verified,
+                              size: isMobile ? 14 : 16, color: Colors.green),
                       ],
                     ),
 
@@ -104,14 +108,16 @@ class HostCard extends StatelessWidget {
                         Icon(
                           Icons.location_on,
                           size: isMobile ? 12 : 14,
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                         const SizedBox(width: 2),
                         Expanded(
                           child: Text(
                             specialist.city,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.6),
                               fontSize: isMobile ? 10 : 12,
                             ),
                             maxLines: 1,
@@ -126,7 +132,8 @@ class HostCard extends StatelessWidget {
                     // Рейтинг
                     Row(
                       children: [
-                        Icon(Icons.star, size: isMobile ? 12 : 14, color: Colors.amber),
+                        Icon(Icons.star,
+                            size: isMobile ? 12 : 14, color: Colors.amber),
                         const SizedBox(width: 2),
                         Text(
                           specialist.rating.toStringAsFixed(1),
@@ -139,7 +146,8 @@ class HostCard extends StatelessWidget {
                         Text(
                           '(${specialist.totalReviews})',
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.6),
                             fontSize: isMobile ? 9 : 11,
                           ),
                         ),

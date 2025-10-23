@@ -56,90 +56,99 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Тест финансового модуля'),
-      actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData)],
-    ),
-    body: _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : _error != null
-        ? _buildErrorWidget()
-        : _buildContent(),
-  );
+        appBar: AppBar(
+          title: const Text('Тест финансового модуля'),
+          actions: [
+            IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData)
+          ],
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _error != null
+                ? _buildErrorWidget()
+                : _buildContent(),
+      );
 
   Widget _buildErrorWidget() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.error, size: 64, color: Colors.red),
-        const SizedBox(height: 16),
-        Text('Ошибка: $_error'),
-        const SizedBox(height: 16),
-        ElevatedButton(onPressed: _loadData, child: const Text('Повторить')),
-      ],
-    ),
-  );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Ошибка: $_error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+                onPressed: _loadData, child: const Text('Повторить')),
+          ],
+        ),
+      );
 
   Widget _buildContent() => SingleChildScrollView(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildTestActions(),
-        const SizedBox(height: 24),
-        _buildStatistics(),
-        const SizedBox(height: 24),
-        _buildPaymentsList(),
-        const SizedBox(height: 24),
-        _buildBookingsList(),
-      ],
-    ),
-  );
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTestActions(),
+            const SizedBox(height: 24),
+            _buildStatistics(),
+            const SizedBox(height: 24),
+            _buildPaymentsList(),
+            const SizedBox(height: 24),
+            _buildBookingsList(),
+          ],
+        ),
+      );
 
   Widget _buildTestActions() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Тестовые действия',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton(
-                onPressed: _createTestDepositPayment,
-                child: const Text('Создать предоплату'),
+              const Text(
+                'Тестовые действия',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              ElevatedButton(
-                onPressed: _createTestFinalPayment,
-                child: const Text('Создать окончательный платеж'),
-              ),
-              ElevatedButton(onPressed: _createTestRefund, child: const Text('Создать возврат')),
-              ElevatedButton(onPressed: _updatePaymentStatus, child: const Text('Обновить статус')),
-              ElevatedButton(
-                onPressed: _generateFinancialReport,
-                child: const Text('Создать отчет'),
-              ),
-              ElevatedButton(onPressed: _showPaymentHistory, child: const Text('История платежей')),
-              ElevatedButton(
-                onPressed: _showSpecialistPayments,
-                child: const Text('Платежи специалиста'),
-              ),
-              ElevatedButton(
-                onPressed: _testBookingWithPayments,
-                child: const Text('Тест бронирования'),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ElevatedButton(
+                    onPressed: _createTestDepositPayment,
+                    child: const Text('Создать предоплату'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _createTestFinalPayment,
+                    child: const Text('Создать окончательный платеж'),
+                  ),
+                  ElevatedButton(
+                      onPressed: _createTestRefund,
+                      child: const Text('Создать возврат')),
+                  ElevatedButton(
+                      onPressed: _updatePaymentStatus,
+                      child: const Text('Обновить статус')),
+                  ElevatedButton(
+                    onPressed: _generateFinancialReport,
+                    child: const Text('Создать отчет'),
+                  ),
+                  ElevatedButton(
+                      onPressed: _showPaymentHistory,
+                      child: const Text('История платежей')),
+                  ElevatedButton(
+                    onPressed: _showSpecialistPayments,
+                    child: const Text('Платежи специалиста'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _testBookingWithPayments,
+                    child: const Text('Тест бронирования'),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildStatistics() {
     final completedPayments = _payments.where((p) => p.isCompleted).length;
@@ -154,7 +163,8 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Статистика', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Статистика',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -206,51 +216,50 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
   }
 
   Widget _buildPaymentsList() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Последние платежи',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Последние платежи',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              if (_payments.isEmpty)
+                const Text('Платежи не найдены')
+              else
+                ..._payments.take(5).map(
+                      (payment) => _PaymentListItem(
+                          payment: payment,
+                          onTap: () => _showPaymentDetails(payment)),
+                    ),
+            ],
           ),
-          const SizedBox(height: 16),
-          if (_payments.isEmpty)
-            const Text('Платежи не найдены')
-          else
-            ..._payments
-                .take(5)
-                .map(
-                  (payment) =>
-                      _PaymentListItem(payment: payment, onTap: () => _showPaymentDetails(payment)),
-                ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildBookingsList() => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Бронирования', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 16),
-          if (_bookings.isEmpty)
-            const Text('Бронирования не найдены')
-          else
-            ..._bookings
-                .take(3)
-                .map(
-                  (booking) =>
-                      _BookingListItem(booking: booking, onTap: () => _showBookingDetails(booking)),
-                ),
-        ],
-      ),
-    ),
-  );
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Бронирования',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 16),
+              if (_bookings.isEmpty)
+                const Text('Бронирования не найдены')
+              else
+                ..._bookings.take(3).map(
+                      (booking) => _BookingListItem(
+                          booking: booking,
+                          onTap: () => _showBookingDetails(booking)),
+                    ),
+            ],
+          ),
+        ),
+      );
 
   Future<void> _createTestDepositPayment() async {
     try {
@@ -283,7 +292,8 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
         dueDate: DateTime.now().add(const Duration(days: 7)),
       );
 
-      _showSuccessMessage('Окончательный платеж создан: ${payment.formattedAmount}');
+      _showSuccessMessage(
+          'Окончательный платеж создан: ${payment.formattedAmount}');
       _loadData();
     } on Exception catch (e) {
       _showErrorMessage('Ошибка создания окончательного платежа: $e');
@@ -360,15 +370,16 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
 
   void _showPaymentHistory() {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (context) => PaymentHistoryScreen(userId: _selectedUserId)),
+      MaterialPageRoute<void>(
+          builder: (context) => PaymentHistoryScreen(userId: _selectedUserId)),
     );
   }
 
   void _showSpecialistPayments() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) =>
-            PaymentHistoryScreen(userId: _selectedSpecialistId, isSpecialist: true),
+        builder: (context) => PaymentHistoryScreen(
+            userId: _selectedSpecialistId, isSpecialist: true),
       ),
     );
   }
@@ -409,14 +420,18 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
               Text('Статус: ${payment.statusName}'),
               Text('Метод: ${payment.methodName}'),
               Text('Описание: ${payment.description}'),
-              if (payment.transactionId != null) Text('Транзакция: ${payment.transactionId}'),
+              if (payment.transactionId != null)
+                Text('Транзакция: ${payment.transactionId}'),
               Text('Создан: ${_formatDate(payment.createdAt)}'),
-              if (payment.dueDate != null) Text('Срок: ${_formatDate(payment.dueDate!)}'),
+              if (payment.dueDate != null)
+                Text('Срок: ${_formatDate(payment.dueDate!)}'),
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -442,7 +457,9 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -451,13 +468,15 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
   void _showSuccessMessage(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   String _formatDate(DateTime date) =>
@@ -480,24 +499,27 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: color.withValues(alpha: 0.3)),
-    ),
-    child: Column(
-      children: [
-        Icon(icon, color: color, size: 32),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
-        Text(title, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
-      ],
-    ),
-  );
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, color: color),
+            ),
+            Text(title,
+                style: const TextStyle(fontSize: 12),
+                textAlign: TextAlign.center),
+          ],
+        ),
+      );
 }
 
 /// Элемент списка платежей
@@ -509,15 +531,15 @@ class _PaymentListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: CircleAvatar(
-      backgroundColor: _getStatusColor(payment.status),
-      child: Text(payment.typeIcon, style: const TextStyle(fontSize: 16)),
-    ),
-    title: Text(payment.typeName),
-    subtitle: Text('${payment.formattedAmount} • ${payment.statusName}'),
-    trailing: Text(_formatDate(payment.createdAt)),
-    onTap: onTap,
-  );
+        leading: CircleAvatar(
+          backgroundColor: _getStatusColor(payment.status),
+          child: Text(payment.typeIcon, style: const TextStyle(fontSize: 16)),
+        ),
+        title: Text(payment.typeName),
+        subtitle: Text('${payment.formattedAmount} • ${payment.statusName}'),
+        trailing: Text(_formatDate(payment.createdAt)),
+        onTap: onTap,
+      );
 
   Color _getStatusColor(PaymentStatus status) {
     switch (status) {
@@ -549,18 +571,20 @@ class _BookingListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: CircleAvatar(
-      backgroundColor: _getStatusColor(booking.status),
-      child: Text(
-        booking.status.name[0].toUpperCase(),
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      ),
-    ),
-    title: Text(booking.eventTitle),
-    subtitle: Text('${booking.participantsCount} участников • ${booking.totalPrice} ₽'),
-    trailing: Text(_formatDate(booking.bookingDate)),
-    onTap: onTap,
-  );
+        leading: CircleAvatar(
+          backgroundColor: _getStatusColor(booking.status),
+          child: Text(
+            booking.status.name[0].toUpperCase(),
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        title: Text(booking.eventTitle),
+        subtitle: Text(
+            '${booking.participantsCount} участников • ${booking.totalPrice} ₽'),
+        trailing: Text(_formatDate(booking.bookingDate)),
+        onTap: onTap,
+      );
 
   Color _getStatusColor(BookingStatus status) {
     switch (status) {

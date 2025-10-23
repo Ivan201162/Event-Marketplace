@@ -25,7 +25,9 @@ class AdvertisementWidget extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             // Зафиксировать клик
-            ref.read(advertisingStateProvider.notifier).recordClick(advertisement.id);
+            ref
+                .read(advertisingStateProvider.notifier)
+                .recordClick(advertisement.id);
 
             // Выполнить действие
             onTap?.call();
@@ -45,7 +47,8 @@ class AdvertisementWidget extends ConsumerWidget {
                     // Заголовок
                     Text(
                       advertisement.title,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
 
                     const SizedBox(height: 4),
@@ -62,11 +65,13 @@ class AdvertisementWidget extends ConsumerWidget {
 
                     // Метка "Реклама"
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.orange.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                        border: Border.all(
+                            color: Colors.orange.withValues(alpha: 0.3)),
                       ),
                       child: const Text(
                         'Реклама',
@@ -91,7 +96,9 @@ class AdvertisementWidget extends ConsumerWidget {
         aspectRatio: 16 / 9,
         child: Container(
           color: Colors.grey.shade200,
-          child: const Center(child: Icon(Icons.play_circle_outline, size: 48, color: Colors.grey)),
+          child: const Center(
+              child: Icon(Icons.play_circle_outline,
+                  size: 48, color: Colors.grey)),
         ),
       );
     } else {
@@ -103,7 +110,8 @@ class AdvertisementWidget extends ConsumerWidget {
           errorBuilder: (context, error, stackTrace) => Container(
             color: Colors.grey.shade200,
             child: const Center(
-              child: Icon(Icons.image_not_supported, size: 48, color: Colors.grey),
+              child:
+                  Icon(Icons.image_not_supported, size: 48, color: Colors.grey),
             ),
           ),
         ),
@@ -130,7 +138,9 @@ class AdvertisementBannerWidget extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             // Зафиксировать клик
-            ref.read(advertisingStateProvider.notifier).recordClick(advertisement.id);
+            ref
+                .read(advertisingStateProvider.notifier)
+                .recordClick(advertisement.id);
           },
           child: Container(
             height: 100,
@@ -151,7 +161,8 @@ class AdvertisementBannerWidget extends ConsumerWidget {
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.grey.shade200,
                       child: const Center(
-                        child: Icon(Icons.image_not_supported, size: 32, color: Colors.grey),
+                        child: Icon(Icons.image_not_supported,
+                            size: 32, color: Colors.grey),
                       ),
                     ),
                   ),
@@ -164,7 +175,10 @@ class AdvertisementBannerWidget extends ConsumerWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.7)
+                      ],
                     ),
                   ),
                 ),
@@ -190,7 +204,8 @@ class AdvertisementBannerWidget extends ConsumerWidget {
                       const SizedBox(height: 2),
                       Text(
                         advertisement.description,
-                        style: const TextStyle(color: Colors.white70, fontSize: 12),
+                        style: const TextStyle(
+                            color: Colors.white70, fontSize: 12),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -203,15 +218,18 @@ class AdvertisementBannerWidget extends ConsumerWidget {
                   top: 8,
                   right: 8,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: Colors.orange,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
                       'Реклама',
-                      style:
-                          TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -224,15 +242,18 @@ class AdvertisementBannerWidget extends ConsumerWidget {
 
 /// Виджет создания рекламы
 class CreateAdvertisementWidget extends ConsumerStatefulWidget {
-  const CreateAdvertisementWidget({super.key, required this.advertiserId, this.onCreated});
+  const CreateAdvertisementWidget(
+      {super.key, required this.advertiserId, this.onCreated});
   final String advertiserId;
   final VoidCallback? onCreated;
 
   @override
-  ConsumerState<CreateAdvertisementWidget> createState() => _CreateAdvertisementWidgetState();
+  ConsumerState<CreateAdvertisementWidget> createState() =>
+      _CreateAdvertisementWidgetState();
 }
 
-class _CreateAdvertisementWidgetState extends ConsumerState<CreateAdvertisementWidget> {
+class _CreateAdvertisementWidgetState
+    extends ConsumerState<CreateAdvertisementWidget> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -280,7 +301,8 @@ class _CreateAdvertisementWidgetState extends ConsumerState<CreateAdvertisementW
               border: OutlineInputBorder(),
             ),
             items: AdvertisementType.values
-                .map((type) => DropdownMenuItem(value: type, child: Text(type.displayName)))
+                .map((type) => DropdownMenuItem(
+                    value: type, child: Text(type.displayName)))
                 .toList(),
             onChanged: (value) {
               setState(() {
@@ -294,7 +316,8 @@ class _CreateAdvertisementWidgetState extends ConsumerState<CreateAdvertisementW
           // Заголовок
           TextFormField(
             controller: _titleController,
-            decoration: const InputDecoration(labelText: 'Заголовок', border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+                labelText: 'Заголовок', border: OutlineInputBorder()),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Введите заголовок';
@@ -308,7 +331,8 @@ class _CreateAdvertisementWidgetState extends ConsumerState<CreateAdvertisementW
           // Описание
           TextFormField(
             controller: _descriptionController,
-            decoration: const InputDecoration(labelText: 'Описание', border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+                labelText: 'Описание', border: OutlineInputBorder()),
             maxLines: 3,
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
@@ -415,7 +439,8 @@ class _CreateAdvertisementWidgetState extends ConsumerState<CreateAdvertisementW
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: advertisingState.isLoading ? null : _createAdvertisement,
+              onPressed:
+                  advertisingState.isLoading ? null : _createAdvertisement,
               child: advertisingState.isLoading
                   ? const CircularProgressIndicator()
                   : const Text('Создать рекламу'),
@@ -425,7 +450,8 @@ class _CreateAdvertisementWidgetState extends ConsumerState<CreateAdvertisementW
           if (advertisingState.error != null)
             Padding(
               padding: const EdgeInsets.only(top: 16),
-              child: Text(advertisingState.error!, style: const TextStyle(color: Colors.red)),
+              child: Text(advertisingState.error!,
+                  style: const TextStyle(color: Colors.red)),
             ),
         ],
       ),
@@ -470,8 +496,9 @@ class _CreateAdvertisementWidgetState extends ConsumerState<CreateAdvertisementW
           startDate: _startDate,
           endDate: _endDate,
           targetAudience: _targetAudience,
-          videoUrl:
-              _videoUrlController.text.trim().isNotEmpty ? _videoUrlController.text.trim() : null,
+          videoUrl: _videoUrlController.text.trim().isNotEmpty
+              ? _videoUrlController.text.trim()
+              : null,
         );
 
     widget.onCreated?.call();
@@ -501,12 +528,18 @@ class AdvertisementStatsWidget extends ConsumerWidget {
             statsAsync.when(
               data: (stats) => Column(
                 children: [
-                  _buildStatRow('Показы', stats['impressions'].toString(), Icons.visibility),
-                  _buildStatRow('Клики', stats['clicks'].toString(), Icons.mouse),
-                  _buildStatRow('Конверсии', stats['conversions'].toString(), Icons.trending_up),
-                  _buildStatRow('CTR', '${stats['ctr'].toStringAsFixed(2)}%', Icons.percent),
-                  _buildStatRow('CPM', '${stats['cpm'].toStringAsFixed(2)}₽', Icons.attach_money),
-                  _buildStatRow('CPC', '${stats['cpc'].toStringAsFixed(2)}₽', Icons.mouse),
+                  _buildStatRow('Показы', stats['impressions'].toString(),
+                      Icons.visibility),
+                  _buildStatRow(
+                      'Клики', stats['clicks'].toString(), Icons.mouse),
+                  _buildStatRow('Конверсии', stats['conversions'].toString(),
+                      Icons.trending_up),
+                  _buildStatRow('CTR', '${stats['ctr'].toStringAsFixed(2)}%',
+                      Icons.percent),
+                  _buildStatRow('CPM', '${stats['cpm'].toStringAsFixed(2)}₽',
+                      Icons.attach_money),
+                  _buildStatRow('CPC', '${stats['cpc'].toStringAsFixed(2)}₽',
+                      Icons.mouse),
                   _buildStatRow(
                     'Бюджет',
                     NumberFormat.currency(
@@ -552,9 +585,12 @@ class AdvertisementStatsWidget extends ConsumerWidget {
             Icon(icon, color: Colors.grey, size: 20),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+              child: Text(label,
+                  style: const TextStyle(fontSize: 14, color: Colors.grey)),
             ),
-            Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            Text(value,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           ],
         ),
       );

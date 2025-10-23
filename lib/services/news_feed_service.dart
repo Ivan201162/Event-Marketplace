@@ -27,7 +27,8 @@ class NewsFeedService {
       if (userId != null) {
         final subscriptions = await _getUserSubscriptions(userId);
         return newsItems
-            .where((item) => item.isPublic || subscriptions.contains(item.authorId))
+            .where((item) =>
+                item.isPublic || subscriptions.contains(item.authorId))
             .toList();
       }
 
@@ -94,7 +95,8 @@ class NewsFeedService {
         updatedAt: DateTime.now(),
       );
 
-      final docRef = await _firestore.collection('news_items').add(newsItem.toMap());
+      final docRef =
+          await _firestore.collection('news_items').add(newsItem.toMap());
 
       return newsItem.copyWith(id: docRef.id);
     } on Exception catch (e) {
@@ -113,7 +115,9 @@ class NewsFeedService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      final updateData = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
+      final updateData = <String, dynamic>{
+        'updatedAt': FieldValue.serverTimestamp()
+      };
 
       if (title != null) updateData['title'] = title;
       if (content != null) updateData['content'] = content;
@@ -121,7 +125,10 @@ class NewsFeedService {
       if (linkUrl != null) updateData['linkUrl'] = linkUrl;
       if (metadata != null) updateData['metadata'] = metadata;
 
-      await _firestore.collection('news_items').doc(newsItemId).update(updateData);
+      await _firestore
+          .collection('news_items')
+          .doc(newsItemId)
+          .update(updateData);
     } on Exception catch (e) {
       debugPrint('Ошибка обновления новости: $e');
       rethrow;
@@ -144,7 +151,8 @@ class NewsFeedService {
       final batch = _firestore.batch();
 
       // Добавляем лайк в коллекцию лайков
-      batch.set(_firestore.collection('news_likes').doc('${newsItemId}_$userId'), {
+      batch.set(
+          _firestore.collection('news_likes').doc('${newsItemId}_$userId'), {
         'newsItemId': newsItemId,
         'userId': userId,
         'createdAt': FieldValue.serverTimestamp(),
@@ -169,7 +177,8 @@ class NewsFeedService {
       final batch = _firestore.batch();
 
       // Удаляем лайк из коллекции лайков
-      batch.delete(_firestore.collection('news_likes').doc('${newsItemId}_$userId'));
+      batch.delete(
+          _firestore.collection('news_likes').doc('${newsItemId}_$userId'));
 
       // Уменьшаем счетчик лайков
       batch.update(_firestore.collection('news_items').doc(newsItemId), {
@@ -200,7 +209,10 @@ class NewsFeedService {
   /// Отметить новость как просмотренную
   Future<void> markAsViewed(String newsItemId, String userId) async {
     try {
-      await _firestore.collection('news_views').doc('${newsItemId}_$userId').set({
+      await _firestore
+          .collection('news_views')
+          .doc('${newsItemId}_$userId')
+          .set({
         'newsItemId': newsItemId,
         'userId': userId,
         'viewedAt': FieldValue.serverTimestamp(),
@@ -219,7 +231,10 @@ class NewsFeedService {
   /// Подписаться на специалиста
   Future<void> subscribeToSpecialist(String userId, String specialistId) async {
     try {
-      await _firestore.collection('subscriptions').doc('${userId}_$specialistId').set({
+      await _firestore
+          .collection('subscriptions')
+          .doc('${userId}_$specialistId')
+          .set({
         'userId': userId,
         'specialistId': specialistId,
         'subscribedAt': FieldValue.serverTimestamp(),
@@ -231,9 +246,13 @@ class NewsFeedService {
   }
 
   /// Отписаться от специалиста
-  Future<void> unsubscribeFromSpecialist(String userId, String specialistId) async {
+  Future<void> unsubscribeFromSpecialist(
+      String userId, String specialistId) async {
     try {
-      await _firestore.collection('subscriptions').doc('${userId}_$specialistId').delete();
+      await _firestore
+          .collection('subscriptions')
+          .doc('${userId}_$specialistId')
+          .delete();
     } on Exception catch (e) {
       debugPrint('Ошибка отписки от специалиста: $e');
       rethrow;
@@ -248,7 +267,9 @@ class NewsFeedService {
           .where('userId', isEqualTo: userId)
           .get();
 
-      return snapshot.docs.map((doc) => doc.data()['specialistId'] as String).toList();
+      return snapshot.docs
+          .map((doc) => doc.data()['specialistId'] as String)
+          .toList();
     } on Exception catch (e) {
       debugPrint('Ошибка получения подписок: $e');
       return [];
@@ -256,12 +277,16 @@ class NewsFeedService {
   }
 
   /// Получить подписки пользователя
-  Future<List<String>> getUserSubscriptions(String userId) async => _getUserSubscriptions(userId);
+  Future<List<String>> getUserSubscriptions(String userId) async =>
+      _getUserSubscriptions(userId);
 
   /// Проверить, подписан ли пользователь на специалиста
   Future<bool> isSubscribed(String userId, String specialistId) async {
     try {
-      final doc = await _firestore.collection('subscriptions').doc('${userId}_$specialistId').get();
+      final doc = await _firestore
+          .collection('subscriptions')
+          .doc('${userId}_$specialistId')
+          .get();
 
       return doc.exists;
     } on Exception catch (e) {
@@ -281,9 +306,12 @@ class NewsFeedService {
       final newsItems = snapshot.docs.map(NewsItem.fromDocument).toList();
 
       final totalNews = newsItems.length;
-      final totalLikes = newsItems.fold<int>(0, (sum, item) => sum + item.likes);
-      final totalShares = newsItems.fold<int>(0, (sum, item) => sum + item.shares);
-      final totalViews = newsItems.fold<int>(0, (sum, item) => sum + item.views);
+      final totalLikes =
+          newsItems.fold<int>(0, (sum, item) => sum + item.likes);
+      final totalShares =
+          newsItems.fold<int>(0, (sum, item) => sum + item.shares);
+      final totalViews =
+          newsItems.fold<int>(0, (sum, item) => sum + item.views);
 
       // Получаем количество подписчиков
       final subscribersSnapshot = await _firestore
@@ -443,40 +471,41 @@ class NewsItem {
     int? views,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => NewsItem(
-    id: id ?? this.id,
-    authorId: authorId ?? this.authorId,
-    authorName: authorName ?? this.authorName,
-    type: type ?? this.type,
-    title: title ?? this.title,
-    content: content ?? this.content,
-    imageUrl: imageUrl ?? this.imageUrl,
-    linkUrl: linkUrl ?? this.linkUrl,
-    metadata: metadata ?? this.metadata,
-    isPublic: isPublic ?? this.isPublic,
-    likes: likes ?? this.likes,
-    shares: shares ?? this.shares,
-    views: views ?? this.views,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      NewsItem(
+        id: id ?? this.id,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
+        type: type ?? this.type,
+        title: title ?? this.title,
+        content: content ?? this.content,
+        imageUrl: imageUrl ?? this.imageUrl,
+        linkUrl: linkUrl ?? this.linkUrl,
+        metadata: metadata ?? this.metadata,
+        isPublic: isPublic ?? this.isPublic,
+        likes: likes ?? this.likes,
+        shares: shares ?? this.shares,
+        views: views ?? this.views,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   Map<String, dynamic> toMap() => {
-    'authorId': authorId,
-    'authorName': authorName,
-    'type': type.name,
-    'title': title,
-    'content': content,
-    'imageUrl': imageUrl,
-    'linkUrl': linkUrl,
-    'metadata': metadata,
-    'isPublic': isPublic,
-    'likes': likes,
-    'shares': shares,
-    'views': views,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'authorId': authorId,
+        'authorName': authorName,
+        'type': type.name,
+        'title': title,
+        'content': content,
+        'imageUrl': imageUrl,
+        'linkUrl': linkUrl,
+        'metadata': metadata,
+        'isPublic': isPublic,
+        'likes': likes,
+        'shares': shares,
+        'views': views,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   String get typeDisplayName {
     switch (type) {
@@ -522,14 +551,14 @@ class NewsStats {
   });
 
   factory NewsStats.empty() => NewsStats(
-    specialistId: '',
-    totalNews: 0,
-    totalLikes: 0,
-    totalShares: 0,
-    totalViews: 0,
-    subscribersCount: 0,
-    lastUpdated: DateTime.now(),
-  );
+        specialistId: '',
+        totalNews: 0,
+        totalLikes: 0,
+        totalShares: 0,
+        totalViews: 0,
+        subscribersCount: 0,
+        lastUpdated: DateTime.now(),
+      );
 
   final String specialistId;
   final int totalNews;

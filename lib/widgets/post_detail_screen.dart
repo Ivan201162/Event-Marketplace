@@ -33,7 +33,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   }
 
   void _initializeVideo() {
-    _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.post.videoUrl!));
+    _videoController =
+        VideoPlayerController.networkUrl(Uri.parse(widget.post.videoUrl!));
     _videoController!.initialize().then((_) {
       setState(() {
         _isVideoInitialized = true;
@@ -80,7 +81,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     } else {
       return Container(
         color: Colors.grey[800],
-        child: const Center(child: Icon(Icons.image, color: Colors.white, size: 64)),
+        child: const Center(
+            child: Icon(Icons.image, color: Colors.white, size: 64)),
       );
     }
   }
@@ -89,7 +91,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     if (!_isVideoInitialized || _videoController == null) {
       return Container(
         color: Colors.black,
-        child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+        child:
+            const Center(child: CircularProgressIndicator(color: Colors.white)),
       );
     }
 
@@ -102,7 +105,9 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
             Center(
               child: IconButton(
                 icon: Icon(
-                  _videoController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                  _videoController!.value.isPlaying
+                      ? Icons.pause
+                      : Icons.play_arrow,
                   color: Colors.white,
                   size: 64,
                 ),
@@ -129,11 +134,13 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           fit: BoxFit.contain,
           placeholder: (context, url) => Container(
             color: Colors.grey[800],
-            child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+            child: const Center(
+                child: CircularProgressIndicator(color: Colors.white)),
           ),
           errorWidget: (context, url, error) => Container(
             color: Colors.grey[800],
-            child: const Center(child: Icon(Icons.error, color: Colors.white, size: 64)),
+            child: const Center(
+                child: Icon(Icons.error, color: Colors.white, size: 64)),
           ),
         ),
       );
@@ -167,14 +174,20 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                 ) // TODO(developer): Получить ID текущего пользователя
                     ? Icons.favorite
                     : Icons.favorite_border,
-                color: widget.post.likedBy.contains('current_user_id') ? Colors.red : Colors.black,
+                color: widget.post.likedBy.contains('current_user_id')
+                    ? Colors.red
+                    : Colors.black,
               ),
               onPressed: _toggleLike,
             ),
-            IconButton(icon: const Icon(Icons.comment_outlined), onPressed: _showComments),
-            IconButton(icon: const Icon(Icons.share_outlined), onPressed: _sharePost),
+            IconButton(
+                icon: const Icon(Icons.comment_outlined),
+                onPressed: _showComments),
+            IconButton(
+                icon: const Icon(Icons.share_outlined), onPressed: _sharePost),
             const Spacer(),
-            IconButton(icon: const Icon(Icons.bookmark_border), onPressed: _savePost),
+            IconButton(
+                icon: const Icon(Icons.bookmark_border), onPressed: _savePost),
           ],
         ),
       );
@@ -260,22 +273,26 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
 
   void _toggleLike() {
     // TODO(developer): Реализовать лайк/дизлайк
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Лайк/дизлайк')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Лайк/дизлайк')));
   }
 
   void _showComments() {
     // TODO(developer): Показать экран комментариев
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Комментарии')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Комментарии')));
   }
 
   void _sharePost() {
     // TODO(developer): Реализовать шаринг поста
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Поделиться постом')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Поделиться постом')));
   }
 
   void _savePost() {
     // TODO(developer): Реализовать сохранение поста
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Сохранить пост')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Сохранить пост')));
   }
 
   void _showPostMenu() {

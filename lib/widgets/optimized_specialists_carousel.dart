@@ -72,13 +72,18 @@ class OptimizedSpecialistsCarousel extends ConsumerWidget {
                       children: [
                         CircleAvatar(
                           radius: 24,
-                          backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                          backgroundColor: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1),
                           backgroundImage: specialist.avatarUrl != null
-                              ? CachedNetworkImageProvider(specialist.avatarUrl!)
+                              ? CachedNetworkImageProvider(
+                                  specialist.avatarUrl!)
                               : null,
                           child: specialist.avatarUrl == null
                               ? Text(
-                                  specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
+                                  specialist.name.isNotEmpty
+                                      ? specialist.name[0].toUpperCase()
+                                      : '?',
                                   style: TextStyle(
                                     color: Theme.of(context).primaryColor,
                                     fontWeight: FontWeight.bold,
@@ -96,7 +101,8 @@ class OptimizedSpecialistsCarousel extends ConsumerWidget {
                               decoration: BoxDecoration(
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.white, width: 1),
+                                border:
+                                    Border.all(color: Colors.white, width: 1),
                               ),
                               child: const Icon(
                                 Icons.check,
@@ -110,7 +116,8 @@ class OptimizedSpecialistsCarousel extends ConsumerWidget {
                     const Spacer(),
                     if (specialist.isAvailable)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(8),

@@ -108,7 +108,8 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
                       border: OutlineInputBorder(),
                     ),
                     items: _categories
-                        .map((category) => DropdownMenuItem(value: category, child: Text(category)))
+                        .map((category) => DropdownMenuItem(
+                            value: category, child: Text(category)))
                         .toList(),
                     onChanged: (value) {
                       setState(() {
@@ -151,7 +152,8 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
                           Icon(Icons.error_outline, color: Colors.red[600]),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: Text(_error!, style: TextStyle(color: Colors.red[600])),
+                            child: Text(_error!,
+                                style: TextStyle(color: Colors.red[600])),
                           ),
                         ],
                       ),
@@ -184,7 +186,8 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
   Widget _buildImageSelector() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Изображения', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('Изображения',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           if (_selectedImages.isEmpty) ...[
             Row(
@@ -244,7 +247,8 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
                                 color: Colors.red,
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.close, color: Colors.white, size: 12),
+                              child: const Icon(Icons.close,
+                                  color: Colors.white, size: 12),
                             ),
                           ),
                         ),
@@ -276,7 +280,8 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
   Widget _buildAdditionalFields() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Дополнительная информация', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('Дополнительная информация',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -326,8 +331,8 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
               Expanded(
                 child: TextFormField(
                   controller: _locationController,
-                  decoration:
-                      const InputDecoration(labelText: 'Место', border: OutlineInputBorder()),
+                  decoration: const InputDecoration(
+                      labelText: 'Место', border: OutlineInputBorder()),
                 ),
               ),
             ],
@@ -337,7 +342,8 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
 
   Future<void> _pickImages() async {
     try {
-      final images = await _ideaService.pickImages(maxImages: 5 - _selectedImages.length);
+      final images =
+          await _ideaService.pickImages(maxImages: 5 - _selectedImages.length);
       setState(() {
         _selectedImages.addAll(images);
         _error = null;
@@ -427,7 +433,9 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
         budget: budget,
         duration: duration,
         guests: guests,
-        location: _locationController.text.trim().isEmpty ? null : _locationController.text.trim(),
+        location: _locationController.text.trim().isEmpty
+            ? null
+            : _locationController.text.trim(),
       );
 
       await _ideaService.createIdea(createIdea);
@@ -435,7 +443,8 @@ class _CreateIdeaDialogState extends ConsumerState<CreateIdeaDialog> {
       if (mounted) {
         Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Идея создана'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Идея создана'), backgroundColor: Colors.green),
         );
       }
     } catch (e) {

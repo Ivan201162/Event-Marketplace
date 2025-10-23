@@ -31,7 +31,7 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat();
-    
+
     _shimmerAnimation = Tween<double>(
       begin: -1.0,
       end: 2.0,
@@ -50,7 +50,7 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(authStateProvider);
-    
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -101,7 +101,8 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                                     child: Image.network(
                                       userData.avatarUrl!,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
                                         return const Icon(
                                           Icons.person,
                                           color: Colors.white,
@@ -129,9 +130,9 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(width: 16),
-                    
+
                     // Приветствие
                     Expanded(
                       child: Column(
@@ -139,7 +140,7 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                         children: [
                           user.when(
                             data: (userData) => Text(
-                              userData != null 
+                              userData != null
                                   ? '${_getGreetingByTime()}, ${_getUserDisplayName(userData)}!'
                                   : '${_getGreetingByTime()}!',
                               style: const TextStyle(
@@ -189,13 +190,13 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                         ],
                       ),
                     ),
-                    
+
                     // Уведомления с индикатором
                     _buildNotificationsButton(),
                   ],
                 ),
               ),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -213,7 +214,7 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 20),
-                        
+
                         // Быстрые действия
                         const Text(
                           'Быстрые действия',
@@ -223,9 +224,9 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                             color: Color(0xFF1E3A8A),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         Row(
                           children: [
                             Expanded(
@@ -253,9 +254,9 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                             ),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 32),
-                        
+
                         // Статистика
                         const Text(
                           'Ваша статистика',
@@ -265,9 +266,9 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                             color: Color(0xFF1E3A8A),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         Row(
                           children: [
                             Expanded(
@@ -298,9 +299,9 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                             ),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 32),
-                        
+
                         // Последние активности
                         const Text(
                           'Последние активности',
@@ -310,9 +311,9 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                             color: Color(0xFF1E3A8A),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Placeholder для последних активностей
                         Container(
                           width: double.infinity,
@@ -350,7 +351,7 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                             ],
                           ),
                         ),
-                        
+
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -400,7 +401,7 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
   /// Кнопка уведомлений с индикатором непрочитанных
   Widget _buildNotificationsButton() {
     final user = ref.watch(authStateProvider);
-    
+
     return user.when(
       data: (userData) {
         if (userData == null) {
@@ -419,13 +420,12 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
             ),
           );
         }
-        
+
         return Consumer(
           builder: (context, ref, child) {
-            final unreadCountAsync = ref.watch(
-              NotificationProviders.unreadCountProvider(userData.uid)
-            );
-            
+            final unreadCountAsync = ref
+                .watch(NotificationProviders.unreadCountProvider(userData.uid));
+
             return Stack(
               children: [
                 Container(

@@ -8,7 +8,8 @@ import '../services/review_service.dart';
 
 /// Диалог для создания отзыва
 class CreateReviewDialog extends ConsumerStatefulWidget {
-  const CreateReviewDialog({super.key, required this.specialistId, required this.specialistName});
+  const CreateReviewDialog(
+      {super.key, required this.specialistId, required this.specialistName});
   final String specialistId;
   final String specialistName;
 
@@ -46,7 +47,10 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
                       'Оставить отзыв',
                       style: Theme.of(
                         context,
-                      ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                      )
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
                   IconButton(
@@ -60,7 +64,10 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
 
               Text(
                 'О специалисте: ${widget.specialistName}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.grey[600]),
               ),
 
               const SizedBox(height: 24),
@@ -68,8 +75,10 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
               // Рейтинг
               Text(
                 'Оценка',
-                style:
-                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
 
               const SizedBox(height: 12),
@@ -81,8 +90,10 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
               // Текст отзыва
               Text(
                 'Комментарий',
-                style:
-                    Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
 
               const SizedBox(height: 12),
@@ -91,8 +102,10 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
                 controller: _textController,
                 maxLines: 4,
                 decoration: InputDecoration(
-                  hintText: 'Расскажите о своем опыте работы с этим специалистом...',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  hintText:
+                      'Расскажите о своем опыте работы с этим специалистом...',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: BrandColors.primary),
@@ -107,7 +120,9 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+                      onPressed: _isSubmitting
+                          ? null
+                          : () => Navigator.of(context).pop(),
                       child: const Text('Отмена'),
                     ),
                   ),
@@ -125,7 +140,8 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
                           : const Text('Отправить'),
@@ -193,16 +209,20 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
         customerId: currentUser.id,
         text: _textController.text.trim(),
         rating: _rating,
-        customerName: currentUser.displayName ?? '${currentUser.firstName} ${currentUser.lastName}',
+        customerName: currentUser.displayName ??
+            '${currentUser.firstName} ${currentUser.lastName}',
         customerAvatar: currentUser.photoURL,
       );
 
       await _reviewService.addReview(createReview);
 
       if (mounted) {
-        Navigator.of(context).pop(true); // Возвращаем true для обновления списка отзывов
+        Navigator.of(context)
+            .pop(true); // Возвращаем true для обновления списка отзывов
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Отзыв успешно добавлен'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Отзыв успешно добавлен'),
+              backgroundColor: Colors.green),
         );
       }
     } catch (e) {
@@ -210,7 +230,8 @@ class _CreateReviewDialogState extends ConsumerState<CreateReviewDialog> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -242,8 +263,8 @@ class CreateReviewButton extends ConsumerWidget {
   Future<void> _showCreateReviewDialog(BuildContext context) async {
     final result = await showDialog<bool>(
       context: context,
-      builder: (context) =>
-          CreateReviewDialog(specialistId: specialistId, specialistName: specialistName),
+      builder: (context) => CreateReviewDialog(
+          specialistId: specialistId, specialistName: specialistName),
     );
 
     if (result ?? false && onReviewAdded != null) {

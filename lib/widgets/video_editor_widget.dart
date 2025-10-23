@@ -64,7 +64,9 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
           child: Column(
             children: [
               AppBar(
-                title: Text(widget.existingVideo == null ? 'Новое видео' : 'Редактировать видео'),
+                title: Text(widget.existingVideo == null
+                    ? 'Новое видео'
+                    : 'Редактировать видео'),
                 actions: [
                   TextButton(
                     onPressed: _isSaving ? null : _saveVideo,
@@ -133,9 +135,13 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
                                 border: OutlineInputBorder(),
                               ),
                               items: const [
-                                DropdownMenuItem(value: 'youtube', child: Text('YouTube')),
-                                DropdownMenuItem(value: 'vimeo', child: Text('Vimeo')),
-                                DropdownMenuItem(value: 'direct', child: Text('Прямая загрузка')),
+                                DropdownMenuItem(
+                                    value: 'youtube', child: Text('YouTube')),
+                                DropdownMenuItem(
+                                    value: 'vimeo', child: Text('Vimeo')),
+                                DropdownMenuItem(
+                                    value: 'direct',
+                                    child: Text('Прямая загрузка')),
                               ],
                               onChanged: (value) {
                                 setState(() {
@@ -195,7 +201,8 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
   Widget _buildTagsSection() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Теги', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Теги',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
 
           // Поле ввода тегов
@@ -213,7 +220,8 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
               ),
               const SizedBox(width: 8),
               IconButton(
-                  onPressed: () => _addTag(_tagsController.text), icon: const Icon(Icons.add)),
+                  onPressed: () => _addTag(_tagsController.text),
+                  icon: const Icon(Icons.add)),
             ],
           ),
           const SizedBox(height: 8),
@@ -262,7 +270,8 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 8),
-        const Text('Предложенные теги:', style: TextStyle(fontSize: 12, color: Colors.grey)),
+        const Text('Предложенные теги:',
+            style: TextStyle(fontSize: 12, color: Colors.grey)),
         const SizedBox(height: 4),
         Wrap(
           spacing: 4,
@@ -285,7 +294,8 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
   Widget _buildSettingsSection() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Настройки', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Настройки',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           SwitchListTile(
             title: const Text('Публичное видео'),
@@ -326,7 +336,8 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
     if (title.isEmpty || description.isEmpty || url.isEmpty) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Заполните обязательные поля')));
+      ).showSnackBar(
+          const SnackBar(content: Text('Заполните обязательные поля')));
       return;
     }
 
@@ -373,11 +384,14 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(widget.existingVideo == null ? 'Видео добавлено' : 'Видео обновлено'),
+          content: Text(widget.existingVideo == null
+              ? 'Видео добавлено'
+              : 'Видео обновлено'),
         ),
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка сохранения: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Ошибка сохранения: $e')));
     } finally {
       setState(() {
         _isSaving = false;

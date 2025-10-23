@@ -47,16 +47,21 @@ class OrganizerProfile {
       location: data['location'] as String?,
       categories: List<String>.from(data['categories'] as List<dynamic>? ?? []),
       pastEvents: List<String>.from(data['pastEvents'] as List<dynamic>? ?? []),
-      teamMembers: List<String>.from(data['teamMembers'] as List<dynamic>? ?? []),
+      teamMembers:
+          List<String>.from(data['teamMembers'] as List<dynamic>? ?? []),
       rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
       reviewCount: data['reviewCount'] as int? ?? 0,
       isVerified: data['isVerified'] as bool? ?? false,
       isActive: data['isActive'] as bool? ?? true,
       experienceYears: data['experienceYears'] as int? ?? 0,
-      specializations: List<String>.from(data['specializations'] as List<dynamic>? ?? []),
-      portfolioImages: List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
-      portfolioVideos: List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
-      socialLinks: Map<String, String>.from(data['socialLinks'] as Map<dynamic, dynamic>? ?? {}),
+      specializations:
+          List<String>.from(data['specializations'] as List<dynamic>? ?? []),
+      portfolioImages:
+          List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
+      portfolioVideos:
+          List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
+      socialLinks: Map<String, String>.from(
+          data['socialLinks'] as Map<dynamic, dynamic>? ?? {}),
       workingHours: data['workingHours'] as Map<String, dynamic>?,
       responseTime: data['responseTime'] as String?,
       minBudget: (data['minBudget'] as num?)?.toDouble(),
@@ -100,33 +105,33 @@ class OrganizerProfile {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'userId': userId,
-    'name': name,
-    'description': description,
-    'logoUrl': logoUrl,
-    'phone': phone,
-    'email': email,
-    'website': website,
-    'location': location,
-    'categories': categories,
-    'pastEvents': pastEvents,
-    'teamMembers': teamMembers,
-    'rating': rating,
-    'reviewCount': reviewCount,
-    'isVerified': isVerified,
-    'isActive': isActive,
-    'experienceYears': experienceYears,
-    'specializations': specializations,
-    'portfolioImages': portfolioImages,
-    'portfolioVideos': portfolioVideos,
-    'socialLinks': socialLinks,
-    'workingHours': workingHours,
-    'responseTime': responseTime,
-    'minBudget': minBudget,
-    'maxBudget': maxBudget,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-  };
+        'userId': userId,
+        'name': name,
+        'description': description,
+        'logoUrl': logoUrl,
+        'phone': phone,
+        'email': email,
+        'website': website,
+        'location': location,
+        'categories': categories,
+        'pastEvents': pastEvents,
+        'teamMembers': teamMembers,
+        'rating': rating,
+        'reviewCount': reviewCount,
+        'isVerified': isVerified,
+        'isActive': isActive,
+        'experienceYears': experienceYears,
+        'specializations': specializations,
+        'portfolioImages': portfolioImages,
+        'portfolioVideos': portfolioVideos,
+        'socialLinks': socialLinks,
+        'workingHours': workingHours,
+        'responseTime': responseTime,
+        'minBudget': minBudget,
+        'maxBudget': maxBudget,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Создать копию с изменениями
   OrganizerProfile copyWith({
@@ -157,35 +162,36 @@ class OrganizerProfile {
     double? maxBudget,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => OrganizerProfile(
-    id: id ?? this.id,
-    userId: userId ?? this.userId,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    logoUrl: logoUrl ?? this.logoUrl,
-    phone: phone ?? this.phone,
-    email: email ?? this.email,
-    website: website ?? this.website,
-    location: location ?? this.location,
-    categories: categories ?? this.categories,
-    pastEvents: pastEvents ?? this.pastEvents,
-    teamMembers: teamMembers ?? this.teamMembers,
-    rating: rating ?? this.rating,
-    reviewCount: reviewCount ?? this.reviewCount,
-    isVerified: isVerified ?? this.isVerified,
-    isActive: isActive ?? this.isActive,
-    experienceYears: experienceYears ?? this.experienceYears,
-    specializations: specializations ?? this.specializations,
-    portfolioImages: portfolioImages ?? this.portfolioImages,
-    portfolioVideos: portfolioVideos ?? this.portfolioVideos,
-    socialLinks: socialLinks ?? this.socialLinks,
-    workingHours: workingHours ?? this.workingHours,
-    responseTime: responseTime ?? this.responseTime,
-    minBudget: minBudget ?? this.minBudget,
-    maxBudget: maxBudget ?? this.maxBudget,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      OrganizerProfile(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        logoUrl: logoUrl ?? this.logoUrl,
+        phone: phone ?? this.phone,
+        email: email ?? this.email,
+        website: website ?? this.website,
+        location: location ?? this.location,
+        categories: categories ?? this.categories,
+        pastEvents: pastEvents ?? this.pastEvents,
+        teamMembers: teamMembers ?? this.teamMembers,
+        rating: rating ?? this.rating,
+        reviewCount: reviewCount ?? this.reviewCount,
+        isVerified: isVerified ?? this.isVerified,
+        isActive: isActive ?? this.isActive,
+        experienceYears: experienceYears ?? this.experienceYears,
+        specializations: specializations ?? this.specializations,
+        portfolioImages: portfolioImages ?? this.portfolioImages,
+        portfolioVideos: portfolioVideos ?? this.portfolioVideos,
+        socialLinks: socialLinks ?? this.socialLinks,
+        workingHours: workingHours ?? this.workingHours,
+        responseTime: responseTime ?? this.responseTime,
+        minBudget: minBudget ?? this.minBudget,
+        maxBudget: maxBudget ?? this.maxBudget,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить отображаемое имя
   String get displayName => name.isNotEmpty ? name : 'Организатор';
@@ -233,7 +239,8 @@ class OrganizerProfile {
   }
 
   /// Проверить, есть ли портфолио
-  bool get hasPortfolio => portfolioImages.isNotEmpty || portfolioVideos.isNotEmpty;
+  bool get hasPortfolio =>
+      portfolioImages.isNotEmpty || portfolioVideos.isNotEmpty;
 
   /// Получить количество проектов
   int get projectCount => pastEvents.length;
@@ -254,7 +261,8 @@ class OrganizerProfile {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'OrganizerProfile(id: $id, name: $name, rating: $rating)';
+  String toString() =>
+      'OrganizerProfile(id: $id, name: $name, rating: $rating)';
 }
 
 /// Категории мероприятий для организаторов

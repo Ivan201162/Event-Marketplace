@@ -149,24 +149,36 @@ class Specialist extends Equatable {
           : null,
       minBookingHours: data['minBookingHours'],
       maxBookingHours: data['maxBookingHours'],
-      serviceAreas: data['serviceAreas'] != null ? List<String>.from(data['serviceAreas']) : null,
-      equipment: data['equipment'] != null ? List<String>.from(data['equipment']) : null,
+      serviceAreas: data['serviceAreas'] != null
+          ? List<String>.from(data['serviceAreas'])
+          : null,
+      equipment: data['equipment'] != null
+          ? List<String>.from(data['equipment'])
+          : null,
       servicesWithPrices: data['servicesWithPrices'] != null
           ? Map<String, double>.from(data['servicesWithPrices'])
           : null,
       availableDates: data['availableDates'] != null
-          ? (data['availableDates'] as List).map((e) => (e as Timestamp).toDate()).toList()
+          ? (data['availableDates'] as List)
+              .map((e) => (e as Timestamp).toDate())
+              .toList()
           : null,
       busyDates: data['busyDates'] != null
-          ? (data['busyDates'] as List).map((e) => (e as Timestamp).toDate()).toList()
+          ? (data['busyDates'] as List)
+              .map((e) => (e as Timestamp).toDate())
+              .toList()
           : null,
       displayName: data['displayName'] ?? data['name'],
-      imageUrlValue: data['imageUrlValue'] ?? data['imageUrl'] ?? data['avatarUrl'],
-      categoryDisplayName: data['categoryDisplayName'] ?? data['specialization'],
-      priceRangeString: data['priceRangeString'] ?? '${data['pricePerHour'] ?? 0} ₽/час',
+      imageUrlValue:
+          data['imageUrlValue'] ?? data['imageUrl'] ?? data['avatarUrl'],
+      categoryDisplayName:
+          data['categoryDisplayName'] ?? data['specialization'],
+      priceRangeString:
+          data['priceRangeString'] ?? '${data['pricePerHour'] ?? 0} ₽/час',
       totalReviews: data['totalReviews'] ?? data['reviewCount'] ?? 0,
       totalBookings: data['totalBookings'] ?? data['completedEvents'] ?? 0,
-      avgRating: data['avgRating']?.toDouble() ?? data['rating']?.toDouble() ?? 0.0,
+      avgRating:
+          data['avgRating']?.toDouble() ?? data['rating']?.toDouble() ?? 0.0,
       categories: data['categories'] != null
           ? List<String>.from(data['categories'])
           : [data['specialization'] ?? ''],
@@ -210,7 +222,8 @@ class Specialist extends Equatable {
       'serviceAreas': serviceAreas,
       'equipment': equipment,
       'servicesWithPrices': servicesWithPrices,
-      'availableDates': availableDates?.map((e) => Timestamp.fromDate(e)).toList(),
+      'availableDates':
+          availableDates?.map((e) => Timestamp.fromDate(e)).toList(),
       'busyDates': busyDates?.map((e) => Timestamp.fromDate(e)).toList(),
       'displayName': displayName,
       'imageUrlValue': imageUrlValue,
@@ -293,8 +306,10 @@ class Specialist extends Equatable {
       isVerified: data['isVerified'] ?? false,
       completedEvents: data['completedEvents'] ?? 0,
       reviewCount: data['reviewCount'] ?? 0,
-      createdAt: data['createdAt'] is DateTime ? data['createdAt'] : DateTime.now(),
-      updatedAt: data['updatedAt'] is DateTime ? data['updatedAt'] : DateTime.now(),
+      createdAt:
+          data['createdAt'] is DateTime ? data['createdAt'] : DateTime.now(),
+      updatedAt:
+          data['updatedAt'] is DateTime ? data['updatedAt'] : DateTime.now(),
       contactInfo: data['contactInfo'] as Map<String, dynamic>?,
       contacts: data['contacts'] as Map<String, dynamic>?,
       languages: List<String>.from(data['languages'] ?? ['Русский']),
@@ -320,22 +335,32 @@ class Specialist extends Equatable {
           : null,
       minBookingHours: data['minBookingHours'],
       maxBookingHours: data['maxBookingHours'],
-      serviceAreas: data['serviceAreas'] != null ? List<String>.from(data['serviceAreas']) : null,
-      equipment: data['equipment'] != null ? List<String>.from(data['equipment']) : null,
+      serviceAreas: data['serviceAreas'] != null
+          ? List<String>.from(data['serviceAreas'])
+          : null,
+      equipment: data['equipment'] != null
+          ? List<String>.from(data['equipment'])
+          : null,
       servicesWithPrices: data['servicesWithPrices'] != null
           ? Map<String, double>.from(data['servicesWithPrices'])
           : null,
       availableDates: data['availableDates'] != null
           ? List<DateTime>.from(data['availableDates'])
           : null,
-      busyDates: data['busyDates'] != null ? List<DateTime>.from(data['busyDates']) : null,
+      busyDates: data['busyDates'] != null
+          ? List<DateTime>.from(data['busyDates'])
+          : null,
       displayName: data['displayName'] ?? data['name'],
-      imageUrlValue: data['imageUrlValue'] ?? data['imageUrl'] ?? data['avatarUrl'],
-      categoryDisplayName: data['categoryDisplayName'] ?? data['specialization'],
-      priceRangeString: data['priceRangeString'] ?? '${data['pricePerHour'] ?? 0} ₽/час',
+      imageUrlValue:
+          data['imageUrlValue'] ?? data['imageUrl'] ?? data['avatarUrl'],
+      categoryDisplayName:
+          data['categoryDisplayName'] ?? data['specialization'],
+      priceRangeString:
+          data['priceRangeString'] ?? '${data['pricePerHour'] ?? 0} ₽/час',
       totalReviews: data['totalReviews'] ?? data['reviewCount'] ?? 0,
       totalBookings: data['totalBookings'] ?? data['completedEvents'] ?? 0,
-      avgRating: data['avgRating']?.toDouble() ?? data['rating']?.toDouble() ?? 0.0,
+      avgRating:
+          data['avgRating']?.toDouble() ?? data['rating']?.toDouble() ?? 0.0,
       categories: data['categories'] != null
           ? List<String>.from(data['categories'])
           : [data['specialization'] ?? ''],
@@ -452,7 +477,8 @@ class Specialist extends Equatable {
   bool get hasPortfolio => portfolio.isNotEmpty;
 
   /// Get first portfolio image
-  String? get firstPortfolioImage => portfolio.isNotEmpty ? portfolio.first : null;
+  String? get firstPortfolioImage =>
+      portfolio.isNotEmpty ? portfolio.first : null;
 
   /// Check if specialist is available on specific date
   bool isAvailableOnDate(DateTime date) {
@@ -470,58 +496,60 @@ class Specialist extends Equatable {
     if (busyDates == null) return false;
     return busyDates!.any(
       (busyDate) =>
-          busyDate.year == date.year && busyDate.month == date.month && busyDate.day == date.day,
+          busyDate.year == date.year &&
+          busyDate.month == date.month &&
+          busyDate.day == date.day,
     );
   }
 
   @override
   List<Object?> get props => [
-    id,
-    userId,
-    name,
-    specialization,
-    city,
-    rating,
-    pricePerHour,
-    avatarUrl,
-    imageUrl,
-    portfolio,
-    description,
-    bio,
-    services,
-    isAvailable,
-    isVerified,
-    completedEvents,
-    reviewCount,
-    createdAt,
-    updatedAt,
-    contactInfo,
-    contacts,
-    languages,
-    experience,
-    category,
-    experienceLevel,
-    yearsOfExperience,
-    hourlyRate,
-    price,
-    location,
-    subcategories,
-    minBookingHours,
-    maxBookingHours,
-    serviceAreas,
-    equipment,
-    servicesWithPrices,
-    availableDates,
-    busyDates,
-    displayName,
-    imageUrlValue,
-    categoryDisplayName,
-    priceRangeString,
-    totalReviews,
-    totalBookings,
-    avgRating,
-    categories,
-  ];
+        id,
+        userId,
+        name,
+        specialization,
+        city,
+        rating,
+        pricePerHour,
+        avatarUrl,
+        imageUrl,
+        portfolio,
+        description,
+        bio,
+        services,
+        isAvailable,
+        isVerified,
+        completedEvents,
+        reviewCount,
+        createdAt,
+        updatedAt,
+        contactInfo,
+        contacts,
+        languages,
+        experience,
+        category,
+        experienceLevel,
+        yearsOfExperience,
+        hourlyRate,
+        price,
+        location,
+        subcategories,
+        minBookingHours,
+        maxBookingHours,
+        serviceAreas,
+        equipment,
+        servicesWithPrices,
+        availableDates,
+        busyDates,
+        displayName,
+        imageUrlValue,
+        categoryDisplayName,
+        priceRangeString,
+        totalReviews,
+        totalBookings,
+        avgRating,
+        categories,
+      ];
 
   /// Get formatted price per hour
   String get formattedPricePerHour => '$pricePerHour ₽/час';

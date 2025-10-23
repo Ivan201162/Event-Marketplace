@@ -40,7 +40,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         title: const Text('Оплата'),
         leading: _isProcessing
             ? null
-            : IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+            : IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => Navigator.pop(context)),
       ),
       body: currentUser.when(
         data: (user) {
@@ -89,7 +91,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     'Детали услуги',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -113,7 +118,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                         'Специалист ID: ${widget.specialistId}',
                         style: Theme.of(
                           context,
-                        ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                        )
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -133,18 +141,25 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     'Сумма к оплате',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Стоимость услуги:', style: Theme.of(context).textTheme.bodyLarge),
+                      Text('Стоимость услуги:',
+                          style: Theme.of(context).textTheme.bodyLarge),
                       Text(
                         '${(widget.amount / 100).toStringAsFixed(2)} ₽',
                         style: Theme.of(
                           context,
-                        ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                        )
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -156,13 +171,19 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                         'Комиссия платформы (10%):',
                         style: Theme.of(
                           context,
-                        ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                        )
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Colors.grey[600]),
                       ),
                       Text(
                         '${(widget.amount * 0.1 / 100).toStringAsFixed(2)} ₽',
                         style: Theme.of(
                           context,
-                        ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                        )
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: Colors.grey[600]),
                       ),
                     ],
                   ),
@@ -174,14 +195,17 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                         'Итого к оплате:',
                         style: Theme.of(
                           context,
-                        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                        )
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
                         '${(widget.amount / 100).toStringAsFixed(2)} ₽',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
                       ),
                     ],
                   ),
@@ -201,7 +225,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     'Способ оплаты',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   ...PaymentMethod.values.map(
@@ -238,7 +265,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   const Icon(Icons.error, color: Colors.red),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                    child: Text(_errorMessage!,
+                        style: const TextStyle(color: Colors.red)),
                   ),
                 ],
               ),
@@ -253,7 +281,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
               child: _isProcessing
                   ? const Row(
@@ -264,7 +293,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         ),
                         SizedBox(width: 12),
@@ -273,7 +303,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     )
                   : Text(
                       'Оплатить ${(widget.amount / 100).toStringAsFixed(2)} ₽',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
             ),
           ),

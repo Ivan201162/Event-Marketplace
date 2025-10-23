@@ -43,7 +43,8 @@ void main() {
         expect(taxInfo.taxAmount, 4000.0);
       });
 
-      test('should calculate tax for individual entrepreneur correctly', () async {
+      test('should calculate tax for individual entrepreneur correctly',
+          () async {
         final taxInfo = await taxService.calculateTax(
           userId: 'user-id',
           specialistId: 'specialist-id',
@@ -110,7 +111,8 @@ void main() {
     });
 
     group('getTaxStatistics', () {
-      test('should return empty statistics when no tax records exist', () async {
+      test('should return empty statistics when no tax records exist',
+          () async {
         try {
           final stats = await taxService.getTaxStatistics('non-existent-id');
 

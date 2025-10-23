@@ -14,16 +14,17 @@ class IdeasScreenEnhanced extends ConsumerStatefulWidget {
   const IdeasScreenEnhanced({super.key});
 
   @override
-  ConsumerState<IdeasScreenEnhanced> createState() => _IdeasScreenEnhancedState();
+  ConsumerState<IdeasScreenEnhanced> createState() =>
+      _IdeasScreenEnhancedState();
 }
 
 class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
     with TickerProviderStateMixin {
   final _searchController = TextEditingController();
-  
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   String _selectedFilter = 'all';
   String _selectedSort = 'date';
   bool _isSearching = false;
@@ -92,7 +93,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
             children: [
               // Заголовок
               _buildHeader(),
-              
+
               // Основной контент
               Expanded(
                 child: Container(
@@ -159,7 +160,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
       children: [
         // Поиск и фильтры
         _buildSearchAndFiltersSection(),
-        
+
         // Список идей
         Expanded(
           child: _buildIdeasList(),
@@ -195,7 +196,8 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Поиск идей...',
-                      prefixIcon: const Icon(Icons.search, color: Color(0xFF1E3A8A)),
+                      prefixIcon:
+                          const Icon(Icons.search, color: Color(0xFF1E3A8A)),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
                               onPressed: () {
@@ -206,7 +208,8 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                             )
                           : null,
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -229,9 +232,9 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Фильтры
           SizedBox(
             height: 40,
@@ -241,7 +244,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
               itemBuilder: (context, index) {
                 final filter = _filters[index];
                 final isSelected = filter['value'] == _selectedFilter;
-                
+
                 return Padding(
                   padding: const EdgeInsets.only(right: 12),
                   child: GestureDetector(
@@ -252,11 +255,11 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: isSelected 
-                            ? const Color(0xFF1E3A8A)
-                            : Colors.white,
+                        color:
+                            isSelected ? const Color(0xFF1E3A8A) : Colors.white,
                         borderRadius: BorderRadius.circular(20),
                         border: isSelected
                             ? null
@@ -264,7 +267,8 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: const Color(0xFF1E3A8A).withOpacity(0.3),
+                                  color:
+                                      const Color(0xFF1E3A8A).withOpacity(0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -283,8 +287,11 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                           Text(
                             filter['label'],
                             style: TextStyle(
-                              color: isSelected ? Colors.white : Colors.grey[600],
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                              color:
+                                  isSelected ? Colors.white : Colors.grey[600],
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
                               fontSize: 14,
                             ),
                           ),
@@ -324,7 +331,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
           itemBuilder: (context, index) {
             final doc = snapshot.data!.docs[index];
             final data = doc.data() as Map<String, dynamic>;
-            
+
             return _buildIdeaCard(doc.id, data);
           },
         );
@@ -439,7 +446,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
               ],
             ),
           ),
-          
+
           // Заголовок идеи
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -451,7 +458,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
               ),
             ),
           ),
-          
+
           // Описание идеи
           if (data['description'] != null && data['description'].isNotEmpty)
             Padding(
@@ -466,7 +473,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-          
+
           // Изображение идеи
           if (data['imageUrl'] != null && data['imageUrl'].isNotEmpty)
             Padding(
@@ -495,7 +502,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                 ),
               ),
             ),
-          
+
           // Теги
           if (data['tags'] != null && (data['tags'] as List).isNotEmpty)
             Padding(
@@ -505,7 +512,8 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                 runSpacing: 8,
                 children: (data['tags'] as List).map<Widget>((tag) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: const Color(0xFF1E3A8A).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
@@ -525,7 +533,7 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
                 }).toList(),
               ),
             ),
-          
+
           // Действия
           Padding(
             padding: const EdgeInsets.all(16),
@@ -799,7 +807,8 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
             ),
             ListTile(
               leading: const Icon(Icons.report, color: Colors.red),
-              title: const Text('Пожаловаться', style: TextStyle(color: Colors.red)),
+              title: const Text('Пожаловаться',
+                  style: TextStyle(color: Colors.red)),
               onTap: () {
                 Navigator.pop(context);
                 _reportIdea(ideaId, data);
@@ -891,14 +900,14 @@ class _IdeasScreenEnhancedState extends ConsumerState<IdeasScreenEnhanced>
   /// Форматирование даты
   String _formatDate(dynamic timestamp) {
     if (timestamp == null) return '';
-    
-    final date = timestamp is Timestamp 
-        ? timestamp.toDate() 
+
+    final date = timestamp is Timestamp
+        ? timestamp.toDate()
         : DateTime.parse(timestamp.toString());
-    
+
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays}д назад';
     } else if (difference.inHours > 0) {

@@ -9,130 +9,140 @@ class SpecialistComparisonScreen extends ConsumerStatefulWidget {
   const SpecialistComparisonScreen({super.key});
 
   @override
-  ConsumerState<SpecialistComparisonScreen> createState() => _SpecialistComparisonScreenState();
+  ConsumerState<SpecialistComparisonScreen> createState() =>
+      _SpecialistComparisonScreenState();
 }
 
-class _SpecialistComparisonScreenState extends ConsumerState<SpecialistComparisonScreen> {
+class _SpecialistComparisonScreenState
+    extends ConsumerState<SpecialistComparisonScreen> {
   SpecialistComparison _comparison = SpecialistComparison.empty();
   ComparisonCriteria _sortCriteria = ComparisonCriteria.rating;
   bool _sortAscending = false;
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Сравнение специалистов'),
-      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      actions: [
-        if (!_comparison.isEmpty)
-          IconButton(
-            icon: const Icon(Icons.clear_all),
-            onPressed: _clearComparison,
-            tooltip: 'Очистить сравнение',
-          ),
-      ],
-    ),
-    body: _comparison.isEmpty
-        ? _buildEmptyState()
-        : Column(
-            children: [
-              // Панель управления
-              _buildControlPanel(),
+        appBar: AppBar(
+          title: const Text('Сравнение специалистов'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          actions: [
+            if (!_comparison.isEmpty)
+              IconButton(
+                icon: const Icon(Icons.clear_all),
+                onPressed: _clearComparison,
+                tooltip: 'Очистить сравнение',
+              ),
+          ],
+        ),
+        body: _comparison.isEmpty
+            ? _buildEmptyState()
+            : Column(
+                children: [
+                  // Панель управления
+                  _buildControlPanel(),
 
-              // Статистика
-              _buildStatsPanel(),
+                  // Статистика
+                  _buildStatsPanel(),
 
-              // Список специалистов
-              Expanded(child: _buildComparisonList()),
-            ],
-          ),
-  );
+                  // Список специалистов
+                  Expanded(child: _buildComparisonList()),
+                ],
+              ),
+      );
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.compare_arrows, size: 64, color: Theme.of(context).colorScheme.outline),
-        const SizedBox(height: 16),
-        Text('Нет специалистов для сравнения', style: Theme.of(context).textTheme.headlineSmall),
-        const SizedBox(height: 8),
-        Text(
-          'Добавьте специалистов из списка для сравнения',
-          style: Theme.of(
-            context,
-          ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.compare_arrows,
+                size: 64, color: Theme.of(context).colorScheme.outline),
+            const SizedBox(height: 16),
+            Text('Нет специалистов для сравнения',
+                style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: 8),
+            Text(
+              'Добавьте специалистов из списка для сравнения',
+              style: Theme.of(
+                context,
+              )
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.outline),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () => Navigator.pushNamed(context, '/advanced-search'),
+              icon: const Icon(Icons.search),
+              label: const Text('Найти специалистов'),
+            ),
+          ],
         ),
-        const SizedBox(height: 24),
-        ElevatedButton.icon(
-          onPressed: () => Navigator.pushNamed(context, '/advanced-search'),
-          icon: const Icon(Icons.search),
-          label: const Text('Найти специалистов'),
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildControlPanel() => Card(
-    margin: const EdgeInsets.all(16),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        margin: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Управление сравнением',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  const Text(
+                    'Управление сравнением',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${_comparison.count}/${SpecialistComparison.maxSpecialists}',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
-              const Spacer(),
-              Text(
-                '${_comparison.count}/${SpecialistComparison.maxSpecialists}',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-          // Сортировка
-          Row(
-            children: [
-              const Text('Сортировка:'),
-              const SizedBox(width: 8),
-              DropdownButton<ComparisonCriteria>(
-                value: _sortCriteria,
-                items: ComparisonCriteria.values
-                    .map(
-                      (criteria) => DropdownMenuItem(value: criteria, child: Text(criteria.label)),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _sortCriteria = value;
-                    });
-                  }
-                },
-              ),
-              const Spacer(),
-              IconButton(
-                icon: Icon(_sortAscending ? Icons.arrow_upward : Icons.arrow_downward),
-                onPressed: () {
-                  setState(() {
-                    _sortAscending = !_sortAscending;
-                  });
-                },
-                tooltip: _sortAscending ? 'По возрастанию' : 'По убыванию',
+              // Сортировка
+              Row(
+                children: [
+                  const Text('Сортировка:'),
+                  const SizedBox(width: 8),
+                  DropdownButton<ComparisonCriteria>(
+                    value: _sortCriteria,
+                    items: ComparisonCriteria.values
+                        .map(
+                          (criteria) => DropdownMenuItem(
+                              value: criteria, child: Text(criteria.label)),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          _sortCriteria = value;
+                        });
+                      }
+                    },
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: Icon(_sortAscending
+                        ? Icons.arrow_upward
+                        : Icons.arrow_downward),
+                    onPressed: () {
+                      setState(() {
+                        _sortAscending = !_sortAscending;
+                      });
+                    },
+                    tooltip: _sortAscending ? 'По возрастанию' : 'По убыванию',
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _buildStatsPanel() {
     final stats = _comparison.stats;
@@ -196,25 +206,29 @@ class _SpecialistComparisonScreenState extends ConsumerState<SpecialistCompariso
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) => Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: color.withValues(alpha: 0.3)),
-    ),
-    child: Column(
-      children: [
-        Icon(icon, color: color, size: 20),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(fontWeight: FontWeight.bold, color: color),
+  Widget _buildStatItem(
+          String label, String value, IconData icon, Color color) =>
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
-        Text(label, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
-      ],
-    ),
-  );
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: TextStyle(fontWeight: FontWeight.bold, color: color),
+            ),
+            Text(label,
+                style: const TextStyle(fontSize: 12),
+                textAlign: TextAlign.center),
+          ],
+        ),
+      );
 
   Widget _buildComparisonList() {
     final sortedSpecialists = _getSortedSpecialists();
@@ -260,7 +274,8 @@ class _SpecialistComparisonScreenState extends ConsumerState<SpecialistCompariso
           comparison = a.reviewCount.compareTo(b.reviewCount);
           break;
         case ComparisonCriteria.availability:
-          comparison = a.isAvailable.toString().compareTo(b.isAvailable.toString());
+          comparison =
+              a.isAvailable.toString().compareTo(b.isAvailable.toString());
           break;
         case ComparisonCriteria.location:
           comparison = (a.location ?? '').compareTo(b.location ?? '');
@@ -277,16 +292,24 @@ class _SpecialistComparisonScreenState extends ConsumerState<SpecialistCompariso
     switch (_sortCriteria) {
       case ComparisonCriteria.rating:
         return specialist.rating ==
-            _comparison.specialists.map((s) => s.rating).reduce((a, b) => a > b ? a : b);
+            _comparison.specialists
+                .map((s) => s.rating)
+                .reduce((a, b) => a > b ? a : b);
       case ComparisonCriteria.price:
         return specialist.hourlyRate ==
-            _comparison.specialists.map((s) => s.hourlyRate).reduce((a, b) => a < b ? a : b);
+            _comparison.specialists
+                .map((s) => s.hourlyRate)
+                .reduce((a, b) => a < b ? a : b);
       case ComparisonCriteria.experience:
         return specialist.yearsOfExperience ==
-            _comparison.specialists.map((s) => s.yearsOfExperience).reduce((a, b) => a > b ? a : b);
+            _comparison.specialists
+                .map((s) => s.yearsOfExperience)
+                .reduce((a, b) => a > b ? a : b);
       case ComparisonCriteria.reviews:
         return specialist.reviewCount ==
-            _comparison.specialists.map((s) => s.reviewCount).reduce((a, b) => a > b ? a : b);
+            _comparison.specialists
+                .map((s) => s.reviewCount)
+                .reduce((a, b) => a > b ? a : b);
       case ComparisonCriteria.availability:
         return specialist.isAvailable;
       case ComparisonCriteria.location:
@@ -299,7 +322,8 @@ class _SpecialistComparisonScreenState extends ConsumerState<SpecialistCompariso
       _comparison = SpecialistComparison.empty();
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Сравнение очищено')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Сравнение очищено')));
   }
 
   void _removeSpecialist(String specialistId) {
@@ -309,11 +333,13 @@ class _SpecialistComparisonScreenState extends ConsumerState<SpecialistCompariso
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Специалист удален из сравнения')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Специалист удален из сравнения')));
   }
 
   void _viewSpecialistProfile(Specialist specialist) {
-    Navigator.pushNamed(context, '/specialist-profile', arguments: specialist.id);
+    Navigator.pushNamed(context, '/specialist-profile',
+        arguments: specialist.id);
   }
 
   void _bookSpecialist(Specialist specialist) {
@@ -324,7 +350,8 @@ class _SpecialistComparisonScreenState extends ConsumerState<SpecialistCompariso
   void addSpecialist(Specialist specialist) {
     if (!_comparison.canAddSpecialist(specialist)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Нельзя добавить этого специалиста для сравнения')),
+        const SnackBar(
+            content: Text('Нельзя добавить этого специалиста для сравнения')),
       );
       return;
     }
@@ -335,6 +362,7 @@ class _SpecialistComparisonScreenState extends ConsumerState<SpecialistCompariso
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('${specialist.name} добавлен для сравнения')));
+    ).showSnackBar(
+        SnackBar(content: Text('${specialist.name} добавлен для сравнения')));
   }
 }

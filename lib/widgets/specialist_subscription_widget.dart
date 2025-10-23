@@ -3,16 +3,19 @@ import '../services/news_feed_service.dart';
 
 /// Виджет для управления подписками на специалистов
 class SpecialistSubscriptionWidget extends StatefulWidget {
-  const SpecialistSubscriptionWidget({super.key, required this.userId, this.onSubscriptionChanged});
+  const SpecialistSubscriptionWidget(
+      {super.key, required this.userId, this.onSubscriptionChanged});
 
   final String userId;
   final VoidCallback? onSubscriptionChanged;
 
   @override
-  State<SpecialistSubscriptionWidget> createState() => _SpecialistSubscriptionWidgetState();
+  State<SpecialistSubscriptionWidget> createState() =>
+      _SpecialistSubscriptionWidgetState();
 }
 
-class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWidget> {
+class _SpecialistSubscriptionWidgetState
+    extends State<SpecialistSubscriptionWidget> {
   final NewsFeedService _newsService = NewsFeedService();
 
   List<String> _subscriptions = [];
@@ -61,7 +64,8 @@ class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWid
       );
 
   Widget _buildLoading() => const Center(
-        child: Padding(padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
+        child: Padding(
+            padding: EdgeInsets.all(32), child: CircularProgressIndicator()),
       );
 
   Widget _buildError() => Container(
@@ -76,9 +80,11 @@ class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWid
             Icon(Icons.error, color: Colors.red.shade700),
             const SizedBox(width: 8),
             Expanded(
-              child: Text(_error!, style: TextStyle(color: Colors.red.shade700)),
+              child:
+                  Text(_error!, style: TextStyle(color: Colors.red.shade700)),
             ),
-            TextButton(onPressed: _loadSubscriptions, child: const Text('Повторить')),
+            TextButton(
+                onPressed: _loadSubscriptions, child: const Text('Повторить')),
           ],
         ),
       );
@@ -106,12 +112,15 @@ class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWid
         ),
         child: Column(
           children: [
-            Icon(Icons.subscriptions_outlined, size: 64, color: Colors.grey.shade400),
+            Icon(Icons.subscriptions_outlined,
+                size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
             Text(
               'Нет подписок',
-              style:
-                  TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
             Text(
@@ -128,7 +137,8 @@ class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWid
   Widget _buildSubscriptionsList() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Ваши подписки:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Ваши подписки:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           ...(_subscriptions.map(_buildSubscriptionItem)),
         ],
@@ -141,11 +151,12 @@ class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWid
             backgroundColor: Colors.blue.shade100,
             child: Text(
               specialistId.isNotEmpty ? specialistId[0].toUpperCase() : '?',
-              style: TextStyle(color: Colors.blue.shade700, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  color: Colors.blue.shade700, fontWeight: FontWeight.bold),
             ),
           ),
-          title:
-              Text('Специалист $specialistId', style: const TextStyle(fontWeight: FontWeight.bold)),
+          title: Text('Специалист $specialistId',
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           subtitle: const Text('Подписан'),
           trailing: IconButton(
             onPressed: () => _unsubscribeFromSpecialist(specialistId),
@@ -173,7 +184,8 @@ class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWid
     });
 
     try {
-      final subscriptions = await _newsService.getUserSubscriptions(widget.userId);
+      final subscriptions =
+          await _newsService.getUserSubscriptions(widget.userId);
       setState(() {
         _subscriptions = subscriptions;
         _isLoading = false;
@@ -210,7 +222,8 @@ class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWid
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка отписки: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(SnackBar(
+            content: Text('Ошибка отписки: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -238,7 +251,9 @@ class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWid
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               final specialistId = controller.text.trim();
@@ -280,7 +295,8 @@ class _SpecialistSubscriptionWidgetState extends State<SpecialistSubscriptionWid
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка подписки: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(SnackBar(
+            content: Text('Ошибка подписки: $e'), backgroundColor: Colors.red));
       }
     }
   }

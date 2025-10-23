@@ -65,7 +65,8 @@ class GroupChatService {
   }
 
   /// Добавить участника в групповой чат
-  Future<void> addParticipantToChat(String chatId, GroupChatParticipant participant) async {
+  Future<void> addParticipantToChat(
+      String chatId, GroupChatParticipant participant) async {
     try {
       await _firestore.collection('group_chats').doc(chatId).update({
         'participants': FieldValue.arrayUnion([participant.toMap()]),
@@ -82,7 +83,8 @@ class GroupChatService {
   /// Удалить участника из группового чата
   Future<void> removeParticipantFromChat(String chatId, String userId) async {
     try {
-      final chatDoc = await _firestore.collection('group_chats').doc(chatId).get();
+      final chatDoc =
+          await _firestore.collection('group_chats').doc(chatId).get();
       if (!chatDoc.exists) {
         throw Exception('Чат не найден');
       }
@@ -140,7 +142,8 @@ class GroupChatService {
       .snapshots()
       .map(
         (snapshot) => snapshot.docs
-            .map((doc) => GroupChatMessage.fromMap({'id': doc.id, ...doc.data()}))
+            .map((doc) =>
+                GroupChatMessage.fromMap({'id': doc.id, ...doc.data()}))
             .toList(),
       );
 
@@ -183,16 +186,19 @@ class GroupChatService {
   /// Получить все групповые чаты пользователя
   Stream<List<GroupChat>> getUserGroupChats(String userId) => _firestore
       .collection('group_chats')
-      .where('participants', arrayContains: {'userId': userId, 'isActive': true})
+      .where('participants',
+          arrayContains: {'userId': userId, 'isActive': true})
       .orderBy('lastActivityAt', descending: true)
       .snapshots()
       .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => GroupChat.fromMap({'id': doc.id, ...doc.data()})).toList(),
+        (snapshot) => snapshot.docs
+            .map((doc) => GroupChat.fromMap({'id': doc.id, ...doc.data()}))
+            .toList(),
       );
 
   /// Добавить гостя в чат по ссылке
-  Future<void> addGuestToChat(String chatId, String guestName, String? guestPhoto) async {
+  Future<void> addGuestToChat(
+      String chatId, String guestName, String? guestPhoto) async {
     try {
       final guestId = 'guest_${DateTime.now().millisecondsSinceEpoch}';
       final guest = GroupChatParticipant(
@@ -270,7 +276,8 @@ class GroupChatService {
   }
 
   /// Обновить настройки чата
-  Future<void> updateChatSettings(String chatId, Map<String, dynamic> settings) async {
+  Future<void> updateChatSettings(
+      String chatId, Map<String, dynamic> settings) async {
     try {
       await _firestore.collection('group_chats').doc(chatId).update({
         'settings': settings,
@@ -327,7 +334,8 @@ class GroupChatService {
         'totalMessages': totalMessages,
         'uniqueParticipants': participants.length,
         'messageTypes': messageTypes,
-        'lastActivity': messages.isNotEmpty ? messages.first.data()['createdAt'] : null,
+        'lastActivity':
+            messages.isNotEmpty ? messages.first.data()['createdAt'] : null,
       };
     } catch (e) {
       debugPrint('Error getting chat stats: $e');

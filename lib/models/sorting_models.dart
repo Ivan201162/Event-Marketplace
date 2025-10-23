@@ -1,5 +1,15 @@
 /// Тип сортировки специалистов
-enum SortBy { rating, price, distance, availability, experience, reviews, popularity, newest, name }
+enum SortBy {
+  rating,
+  price,
+  distance,
+  availability,
+  experience,
+  reviews,
+  popularity,
+  newest,
+  name
+}
 
 /// Порядок сортировки
 enum SortOrder { ascending, descending }
@@ -101,13 +111,14 @@ class SortingSettings {
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
-    'sortBy': sortBy.name,
-    'sortOrder': sortOrder.name,
-    'isCustom': isCustom,
-  };
+        'sortBy': sortBy.name,
+        'sortOrder': sortOrder.name,
+        'isCustom': isCustom,
+      };
 
   /// Копировать с изменениями
-  SortingSettings copyWith({SortBy? sortBy, SortOrder? sortOrder, bool? isCustom}) =>
+  SortingSettings copyWith(
+          {SortBy? sortBy, SortOrder? sortOrder, bool? isCustom}) =>
       SortingSettings(
         sortBy: sortBy ?? this.sortBy,
         sortOrder: sortOrder ?? this.sortOrder,
@@ -159,6 +170,8 @@ class SortingSettings {
 
   /// Проверить, является ли сортировка по умолчанию
   bool get isDefault {
-    return sortBy == SortBy.rating && sortOrder == SortOrder.descending && !isCustom;
+    return sortBy == SortBy.rating &&
+        sortOrder == SortOrder.descending &&
+        !isCustom;
   }
 }

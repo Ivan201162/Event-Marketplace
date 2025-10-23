@@ -41,7 +41,8 @@ class SearchFilters extends Equatable {
       minPrice: map['minPrice'] as int?,
       maxPrice: map['maxPrice'] as int?,
       isAvailable: map['isAvailable'] as bool?,
-      services: map['services'] != null ? List<String>.from(map['services']) : null,
+      services:
+          map['services'] != null ? List<String>.from(map['services']) : null,
       sortBy: map['sortBy'] as String?,
       sortAscending: map['sortAscending'] as bool?,
     );
@@ -127,17 +128,17 @@ class SearchFilters extends Equatable {
 
   @override
   List<Object?> get props => [
-    query,
-    city,
-    specialization,
-    minRating,
-    minPrice,
-    maxPrice,
-    isAvailable,
-    services,
-    sortBy,
-    sortAscending,
-  ];
+        query,
+        city,
+        specialization,
+        minRating,
+        minPrice,
+        maxPrice,
+        isAvailable,
+        services,
+        sortBy,
+        sortAscending,
+      ];
 
   @override
   String toString() {

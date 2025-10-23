@@ -9,43 +9,50 @@ class FollowProviders {
   });
 
   /// Подписчики пользователя
-  static final followersProvider = StreamProvider.family<List<FollowUser>, String>((ref, userId) {
+  static final followersProvider =
+      StreamProvider.family<List<FollowUser>, String>((ref, userId) {
     final service = ref.watch(followServiceProvider);
     return service.getFollowers(userId);
   });
 
   /// Подписки пользователя
-  static final followingProvider = StreamProvider.family<List<FollowUser>, String>((ref, userId) {
+  static final followingProvider =
+      StreamProvider.family<List<FollowUser>, String>((ref, userId) {
     final service = ref.watch(followServiceProvider);
     return service.getFollowing(userId);
   });
 
   /// Количество подписчиков
-  static final followersCountProvider = StreamProvider.family<int, String>((ref, userId) {
+  static final followersCountProvider =
+      StreamProvider.family<int, String>((ref, userId) {
     final service = ref.watch(followServiceProvider);
     return service.getFollowersCount(userId);
   });
 
   /// Количество подписок
-  static final followingCountProvider = StreamProvider.family<int, String>((ref, userId) {
+  static final followingCountProvider =
+      StreamProvider.family<int, String>((ref, userId) {
     final service = ref.watch(followServiceProvider);
     return service.getFollowingCount(userId);
   });
 
   /// Рекомендуемые пользователи
-  static final recommendedUsersProvider = FutureProvider.family<List<FollowUser>, String>((ref, userId) {
+  static final recommendedUsersProvider =
+      FutureProvider.family<List<FollowUser>, String>((ref, userId) {
     final service = ref.watch(followServiceProvider);
     return service.getRecommendedUsers(userId);
   });
 
   /// Поиск пользователей
-  static final searchUsersProvider = FutureProvider.family<List<FollowUser>, String>((ref, query) {
+  static final searchUsersProvider =
+      FutureProvider.family<List<FollowUser>, String>((ref, query) {
     final service = ref.watch(followServiceProvider);
     return service.searchUsers(query);
   });
 
   /// Статус подписки (подписан ли текущий пользователь на целевого)
-  static final isFollowingProvider = FutureProvider.family<bool, String>((ref, targetUserId) {
+  static final isFollowingProvider =
+      FutureProvider.family<bool, String>((ref, targetUserId) {
     final service = ref.watch(followServiceProvider);
     return service.isFollowing(targetUserId);
   });

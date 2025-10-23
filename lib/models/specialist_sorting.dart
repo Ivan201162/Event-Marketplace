@@ -44,40 +44,44 @@ enum SpecialistSortOption {
   /// Получить опцию по значению
   static SpecialistSortOption? fromValue(String value) {
     try {
-      return SpecialistSortOption.values.firstWhere((option) => option.value == value);
+      return SpecialistSortOption.values
+          .firstWhere((option) => option.value == value);
     } catch (e) {
       return null;
     }
   }
 
   /// Получить все опции сортировки
-  static List<SpecialistSortOption> get allOptions => SpecialistSortOption.values;
+  static List<SpecialistSortOption> get allOptions =>
+      SpecialistSortOption.values;
 
   /// Получить популярные опции сортировки
   static List<SpecialistSortOption> get popularOptions => [
-    SpecialistSortOption.priceAsc,
-    SpecialistSortOption.priceDesc,
-    SpecialistSortOption.rating,
-    SpecialistSortOption.popularity,
-  ];
+        SpecialistSortOption.priceAsc,
+        SpecialistSortOption.priceDesc,
+        SpecialistSortOption.rating,
+        SpecialistSortOption.popularity,
+      ];
 
   /// Получить расширенные опции сортировки
   static List<SpecialistSortOption> get extendedOptions => [
-    SpecialistSortOption.nameAsc,
-    SpecialistSortOption.nameDesc,
-    SpecialistSortOption.dateNewest,
-    SpecialistSortOption.dateOldest,
-  ];
+        SpecialistSortOption.nameAsc,
+        SpecialistSortOption.nameDesc,
+        SpecialistSortOption.dateNewest,
+        SpecialistSortOption.dateOldest,
+      ];
 }
 
 /// Класс для управления сортировкой специалистов
 class SpecialistSorting {
-  const SpecialistSorting({this.sortOption = SpecialistSortOption.none, this.isAscending = true});
+  const SpecialistSorting(
+      {this.sortOption = SpecialistSortOption.none, this.isAscending = true});
   final SpecialistSortOption sortOption;
   final bool isAscending;
 
   /// Создать копию с изменениями
-  SpecialistSorting copyWith({SpecialistSortOption? sortOption, bool? isAscending}) =>
+  SpecialistSorting copyWith(
+          {SpecialistSortOption? sortOption, bool? isAscending}) =>
       SpecialistSorting(
         sortOption: sortOption ?? this.sortOption,
         isAscending: isAscending ?? this.isAscending,
@@ -104,13 +108,15 @@ class SpecialistSorting {
   int get hashCode => Object.hash(sortOption, isAscending);
 
   @override
-  String toString() => 'SpecialistSorting(sortOption: $sortOption, isAscending: $isAscending)';
+  String toString() =>
+      'SpecialistSorting(sortOption: $sortOption, isAscending: $isAscending)';
 }
 
 /// Утилиты для сортировки специалистов
 class SpecialistSortingUtils {
   /// Сортировать список специалистов
-  static List<Specialist> sortSpecialists(List<Specialist> specialists, SpecialistSorting sorting) {
+  static List<Specialist> sortSpecialists(
+      List<Specialist> specialists, SpecialistSorting sorting) {
     if (!sorting.isActive) {
       return specialists;
     }
@@ -204,9 +210,11 @@ class SpecialistSortingUtils {
   }
 
   /// Получить статистику сортировки
-  static SortStats getSortStats(List<Specialist> specialists, SpecialistSorting sorting) {
+  static SortStats getSortStats(
+      List<Specialist> specialists, SpecialistSorting sorting) {
     if (specialists.isEmpty) {
-      return const SortStats(totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0);
+      return const SortStats(
+          totalCount: 0, priceRange: null, averageRating: 0, averageReviews: 0);
     }
 
     var minPrice = double.infinity;

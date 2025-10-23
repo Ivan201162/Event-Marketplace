@@ -13,8 +13,10 @@ class DocumentationManagementScreen extends ConsumerStatefulWidget {
       _DocumentationManagementScreenState();
 }
 
-class _DocumentationManagementScreenState extends ConsumerState<DocumentationManagementScreen> {
-  final DocumentationManagementService _docService = DocumentationManagementService();
+class _DocumentationManagementScreenState
+    extends ConsumerState<DocumentationManagementScreen> {
+  final DocumentationManagementService _docService =
+      DocumentationManagementService();
   List<Documentation> _documents = [];
   List<DocumentTemplate> _templates = [];
   List<DocumentComment> _comments = [];
@@ -37,41 +39,47 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-    appBar: AppBar(title: const Text('Управление документацией')),
-    body: Column(
-      children: [
-        // Вкладки
-        _buildTabs(),
+        appBar: AppBar(title: const Text('Управление документацией')),
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-        // Поиск и фильтры
-        _buildSearchAndFilters(),
+            // Поиск и фильтры
+            _buildSearchAndFilters(),
 
-        // Анализ
-        _buildAnalysis(),
+            // Анализ
+            _buildAnalysis(),
 
-        // Контент
-        Expanded(
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _selectedTab == 'documents'
-              ? _buildDocumentsTab()
-              : _selectedTab == 'templates'
-              ? _buildTemplatesTab()
-              : _buildCommentsTab(),
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'documents'
+                      ? _buildDocumentsTab()
+                      : _selectedTab == 'templates'
+                          ? _buildTemplatesTab()
+                          : _buildCommentsTab(),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildTabs() => ResponsiveCard(
-    child: Row(
-      children: [
-        Expanded(child: _buildTabButton('documents', 'Документы', Icons.description)),
-        Expanded(child: _buildTabButton('templates', 'Шаблоны', Icons.content_copy)),
-        Expanded(child: _buildTabButton('comments', 'Комментарии', Icons.comment)),
-      ],
-    ),
-  );
+        child: Row(
+          children: [
+            Expanded(
+                child: _buildTabButton(
+                    'documents', 'Документы', Icons.description)),
+            Expanded(
+                child: _buildTabButton(
+                    'templates', 'Шаблоны', Icons.content_copy)),
+            Expanded(
+                child:
+                    _buildTabButton('comments', 'Комментарии', Icons.comment)),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -84,9 +92,14 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? Colors.blue.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
+          border: Border.all(
+              color: isSelected
+                  ? Colors.blue
+                  : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -106,104 +119,108 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
   }
 
   Widget _buildSearchAndFilters() => ResponsiveCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Поиск и фильтры', style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 16),
-
-        // Поиск
-        TextField(
-          decoration: const InputDecoration(
-            hintText: 'Поиск по названию, содержанию или тегам...',
-            prefixIcon: Icon(Icons.search),
-            border: OutlineInputBorder(),
-          ),
-          onChanged: (value) {
-            setState(() {
-              _searchQuery = value;
-            });
-          },
-        ),
-
-        const SizedBox(height: 16),
-
-        // Фильтры
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Фильтр по типу
-            DropdownButton<DocumentType?>(
-              value: _selectedType,
-              hint: const Text('Все типы'),
-              items: [
-                const DropdownMenuItem<DocumentType?>(child: Text('Все типы')),
-                ...DocumentType.values.map(
-                  (type) => DropdownMenuItem<DocumentType?>(
-                    value: type,
-                    child: Text('${type.icon} ${type.displayName}'),
-                  ),
-                ),
-              ],
+            Text('Поиск и фильтры',
+                style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 16),
+
+            // Поиск
+            TextField(
+              decoration: const InputDecoration(
+                hintText: 'Поиск по названию, содержанию или тегам...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
+              ),
               onChanged: (value) {
                 setState(() {
-                  _selectedType = value;
+                  _searchQuery = value;
                 });
               },
             ),
 
-            // Фильтр по категории
-            DropdownButton<DocumentCategory?>(
-              value: _selectedCategory,
-              hint: const Text('Все категории'),
-              items: [
-                const DropdownMenuItem<DocumentCategory?>(child: Text('Все категории')),
-                ...DocumentCategory.values.map(
-                  (category) => DropdownMenuItem<DocumentCategory?>(
-                    value: category,
-                    child: Text('${category.icon} ${category.displayName}'),
-                  ),
+            const SizedBox(height: 16),
+
+            // Фильтры
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                // Фильтр по типу
+                DropdownButton<DocumentType?>(
+                  value: _selectedType,
+                  hint: const Text('Все типы'),
+                  items: [
+                    const DropdownMenuItem<DocumentType?>(
+                        child: Text('Все типы')),
+                    ...DocumentType.values.map(
+                      (type) => DropdownMenuItem<DocumentType?>(
+                        value: type,
+                        child: Text('${type.icon} ${type.displayName}'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedType = value;
+                    });
+                  },
+                ),
+
+                // Фильтр по категории
+                DropdownButton<DocumentCategory?>(
+                  value: _selectedCategory,
+                  hint: const Text('Все категории'),
+                  items: [
+                    const DropdownMenuItem<DocumentCategory?>(
+                        child: Text('Все категории')),
+                    ...DocumentCategory.values.map(
+                      (category) => DropdownMenuItem<DocumentCategory?>(
+                        value: category,
+                        child: Text('${category.icon} ${category.displayName}'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                  },
+                ),
+
+                // Фильтр по статусу
+                DropdownButton<DocumentStatus?>(
+                  value: _selectedStatus,
+                  hint: const Text('Все статусы'),
+                  items: [
+                    const DropdownMenuItem<DocumentStatus?>(
+                        child: Text('Все статусы')),
+                    ...DocumentStatus.values.map(
+                      (status) => DropdownMenuItem<DocumentStatus?>(
+                        value: status,
+                        child: Text('${status.icon} ${status.displayName}'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedStatus = value;
+                    });
+                  },
+                ),
+
+                // Кнопка сброса фильтров
+                ElevatedButton.icon(
+                  onPressed: _resetFilters,
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Сбросить'),
                 ),
               ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedCategory = value;
-                });
-              },
-            ),
-
-            // Фильтр по статусу
-            DropdownButton<DocumentStatus?>(
-              value: _selectedStatus,
-              hint: const Text('Все статусы'),
-              items: [
-                const DropdownMenuItem<DocumentStatus?>(child: Text('Все статусы')),
-                ...DocumentStatus.values.map(
-                  (status) => DropdownMenuItem<DocumentStatus?>(
-                    value: status,
-                    child: Text('${status.icon} ${status.displayName}'),
-                  ),
-                ),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedStatus = value;
-                });
-              },
-            ),
-
-            // Кнопка сброса фильтров
-            ElevatedButton.icon(
-              onPressed: _resetFilters,
-              icon: const Icon(Icons.clear),
-              label: const Text('Сбросить'),
             ),
           ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildAnalysis() {
     if (_analysis.isEmpty) return const SizedBox.shrink();
@@ -212,7 +229,8 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Анализ документации', style: Theme.of(context).textTheme.titleMedium),
+          Text('Анализ документации',
+              style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 16),
           Row(
             children: [
@@ -258,64 +276,70 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
     );
   }
 
-  Widget _buildAnalysisCard(String title, String value, IconData icon, Color color) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(color: color),
-    ),
-    child: Column(
-      children: [
-        Icon(icon, color: color, size: 32),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
+  Widget _buildAnalysisCard(
+          String title, String value, IconData icon, Color color) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
         ),
-        const SizedBox(height: 4),
-        Text(title, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
-      ],
-    ),
-  );
-
-  Widget _buildDocumentsTab() => Column(
-    children: [
-      // Заголовок
-      ResponsiveCard(
-        child: Row(
+        child: Column(
           children: [
-            Text('Документы', style: Theme.of(context).textTheme.titleMedium),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: _showAddDocumentDialog,
-              icon: const Icon(Icons.add),
-              label: const Text('Добавить'),
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                  fontSize: 24, fontWeight: FontWeight.bold, color: color),
             ),
-            const SizedBox(width: 8),
-            ElevatedButton.icon(
-              onPressed: _loadData,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Обновить'),
-            ),
+            const SizedBox(height: 4),
+            Text(title,
+                style: const TextStyle(fontSize: 12),
+                textAlign: TextAlign.center),
           ],
         ),
-      ),
+      );
 
-      // Список документов
-      Expanded(
-        child: _getFilteredDocuments().isEmpty
-            ? const Center(child: Text('Документы не найдены'))
-            : ListView.builder(
-                itemCount: _getFilteredDocuments().length,
-                itemBuilder: (context, index) {
-                  final document = _getFilteredDocuments()[index];
-                  return _buildDocumentCard(document);
-                },
-              ),
-      ),
-    ],
-  );
+  Widget _buildDocumentsTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                Text('Документы',
+                    style: Theme.of(context).textTheme.titleMedium),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showAddDocumentDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Добавить'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список документов
+          Expanded(
+            child: _getFilteredDocuments().isEmpty
+                ? const Center(child: Text('Документы не найдены'))
+                : ListView.builder(
+                    itemCount: _getFilteredDocuments().length,
+                    itemBuilder: (context, index) {
+                      final document = _getFilteredDocuments()[index];
+                      return _buildDocumentCard(document);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildDocumentCard(Documentation document) {
     final typeColor = _getTypeColor(document.type);
@@ -337,7 +361,8 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                   children: [
                     Text(
                       document.title,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     if (document.summary != null)
                       Text(
@@ -358,7 +383,10 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                 ),
                 child: Text(
                   document.type.displayName,
-                  style: TextStyle(fontSize: 12, color: typeColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: typeColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 8),
@@ -371,7 +399,10 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                 ),
                 child: Text(
                   document.category.displayName,
-                  style: TextStyle(fontSize: 12, color: categoryColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: categoryColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 8),
@@ -384,7 +415,10 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                 ),
                 child: Text(
                   document.status.displayName,
-                  style: TextStyle(fontSize: 12, color: statusColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: statusColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -392,15 +426,21 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
+                    child: ListTile(
+                        leading: Icon(Icons.visibility),
+                        title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
+                    child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Редактировать')),
                   ),
                   const PopupMenuItem(
                     value: 'comments',
-                    child: ListTile(leading: Icon(Icons.comment), title: Text('Комментарии')),
+                    child: ListTile(
+                        leading: Icon(Icons.comment),
+                        title: Text('Комментарии')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -431,7 +471,8 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
               children: document.tags
                   .map(
                     (tag) => Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.grey.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
@@ -468,42 +509,43 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
   }
 
   Widget _buildTemplatesTab() => Column(
-    children: [
-      // Заголовок
-      ResponsiveCard(
-        child: Row(
-          children: [
-            Text('Шаблоны документов', style: Theme.of(context).textTheme.titleMedium),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: _showAddTemplateDialog,
-              icon: const Icon(Icons.add),
-              label: const Text('Добавить'),
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                Text('Шаблоны документов',
+                    style: Theme.of(context).textTheme.titleMedium),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showAddTemplateDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Добавить'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            ElevatedButton.icon(
-              onPressed: _loadData,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Обновить'),
-            ),
-          ],
-        ),
-      ),
+          ),
 
-      // Список шаблонов
-      Expanded(
-        child: _templates.isEmpty
-            ? const Center(child: Text('Шаблоны не найдены'))
-            : ListView.builder(
-                itemCount: _templates.length,
-                itemBuilder: (context, index) {
-                  final template = _templates[index];
-                  return _buildTemplateCard(template);
-                },
-              ),
-      ),
-    ],
-  );
+          // Список шаблонов
+          Expanded(
+            child: _templates.isEmpty
+                ? const Center(child: Text('Шаблоны не найдены'))
+                : ListView.builder(
+                    itemCount: _templates.length,
+                    itemBuilder: (context, index) {
+                      final template = _templates[index];
+                      return _buildTemplateCard(template);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildTemplateCard(DocumentTemplate template) {
     final typeColor = _getTypeColor(template.type);
@@ -524,9 +566,11 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                   children: [
                     Text(
                       template.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                    Text(template.description, style: const TextStyle(fontSize: 14)),
+                    Text(template.description,
+                        style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ),
@@ -539,7 +583,10 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                 ),
                 child: Text(
                   template.type.displayName,
-                  style: TextStyle(fontSize: 12, color: typeColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: typeColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 8),
@@ -552,7 +599,10 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                 ),
                 child: Text(
                   template.category.displayName,
-                  style: TextStyle(fontSize: 12, color: categoryColor, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: categoryColor,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               PopupMenuButton<String>(
@@ -560,15 +610,21 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
+                    child: ListTile(
+                        leading: Icon(Icons.visibility),
+                        title: Text('Просмотр')),
                   ),
                   const PopupMenuItem(
                     value: 'edit',
-                    child: ListTile(leading: Icon(Icons.edit), title: Text('Редактировать')),
+                    child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Редактировать')),
                   ),
                   const PopupMenuItem(
                     value: 'use',
-                    child: ListTile(leading: Icon(Icons.play_arrow), title: Text('Использовать')),
+                    child: ListTile(
+                        leading: Icon(Icons.play_arrow),
+                        title: Text('Использовать')),
                   ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -581,7 +637,8 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
           // Метаданные
           Row(
             children: [
-              _buildInfoChip('Использований', '${template.usageCount}', Colors.blue),
+              _buildInfoChip(
+                  'Использований', '${template.usageCount}', Colors.blue),
               const SizedBox(width: 8),
               _buildInfoChip('Теги', '${template.tags.length}', Colors.green),
             ],
@@ -606,36 +663,37 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
   }
 
   Widget _buildCommentsTab() => Column(
-    children: [
-      // Заголовок
-      ResponsiveCard(
-        child: Row(
-          children: [
-            Text('Комментарии к документам', style: Theme.of(context).textTheme.titleMedium),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: _loadData,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Обновить'),
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                Text('Комментарии к документам',
+                    style: Theme.of(context).textTheme.titleMedium),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
 
-      // Список комментариев
-      Expanded(
-        child: _comments.isEmpty
-            ? const Center(child: Text('Комментарии не найдены'))
-            : ListView.builder(
-                itemCount: _comments.length,
-                itemBuilder: (context, index) {
-                  final comment = _comments[index];
-                  return _buildCommentCard(comment);
-                },
-              ),
-      ),
-    ],
-  );
+          // Список комментариев
+          Expanded(
+            child: _comments.isEmpty
+                ? const Center(child: Text('Комментарии не найдены'))
+                : ListView.builder(
+                    itemCount: _comments.length,
+                    itemBuilder: (context, index) {
+                      final comment = _comments[index];
+                      return _buildCommentCard(comment);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildCommentCard(DocumentComment comment) {
     final document = _docService.getDocument(comment.documentId);
@@ -655,12 +713,14 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                   children: [
                     Text(
                       comment.authorName,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 14),
                     ),
                     if (document != null)
                       Text(
                         'К документу: ${document.title}',
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                   ],
                 ),
@@ -672,7 +732,8 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                       ? Colors.green.withValues(alpha: 0.2)
                       : Colors.orange.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: comment.isResolved ? Colors.green : Colors.orange),
+                  border: Border.all(
+                      color: comment.isResolved ? Colors.green : Colors.orange),
                 ),
                 child: Text(
                   comment.isResolved ? 'Решен' : 'Открыт',
@@ -688,12 +749,15 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'view',
-                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотр')),
+                    child: ListTile(
+                        leading: Icon(Icons.visibility),
+                        title: Text('Просмотр')),
                   ),
                   if (!comment.isResolved)
                     const PopupMenuItem(
                       value: 'resolve',
-                      child: ListTile(leading: Icon(Icons.check), title: Text('Решить')),
+                      child: ListTile(
+                          leading: Icon(Icons.check), title: Text('Решить')),
                     ),
                 ],
                 child: const Icon(Icons.more_vert),
@@ -727,17 +791,18 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
   }
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: color),
-    ),
-    child: Text(
-      '$label: $value',
-      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
+        ),
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+        ),
+      );
 
   Color _getTypeColor(DocumentType type) {
     switch (type) {
@@ -823,11 +888,13 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
     }
 
     if (_selectedCategory != null) {
-      filtered = filtered.where((doc) => doc.category == _selectedCategory).toList();
+      filtered =
+          filtered.where((doc) => doc.category == _selectedCategory).toList();
     }
 
     if (_selectedStatus != null) {
-      filtered = filtered.where((doc) => doc.status == _selectedStatus).toList();
+      filtered =
+          filtered.where((doc) => doc.status == _selectedStatus).toList();
     }
 
     return filtered;
@@ -849,7 +916,9 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
       _analysis = await _docService.analyzeDocumentation();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка загрузки данных: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка загрузки данных: $e'),
+            backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -944,21 +1013,27 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
   void _viewDocument(Documentation document) {
     // TODO(developer): Реализовать просмотр документа
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Просмотр документа "${document.title}" будет реализован')),
+      SnackBar(
+          content:
+              Text('Просмотр документа "${document.title}" будет реализован')),
     );
   }
 
   void _editDocument(Documentation document) {
     // TODO(developer): Реализовать редактирование документа
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Редактирование документа "${document.title}" будет реализовано')),
+      SnackBar(
+          content: Text(
+              'Редактирование документа "${document.title}" будет реализовано')),
     );
   }
 
   void _viewDocumentComments(Documentation document) {
     // TODO(developer): Реализовать просмотр комментариев к документу
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Комментарии к документу "${document.title}" будут реализованы')),
+      SnackBar(
+          content: Text(
+              'Комментарии к документу "${document.title}" будут реализованы')),
     );
   }
 
@@ -966,13 +1041,16 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
     // TODO(developer): Реализовать просмотр шаблона
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Просмотр шаблона "${template.name}" будет реализован')));
+    ).showSnackBar(SnackBar(
+        content: Text('Просмотр шаблона "${template.name}" будет реализован')));
   }
 
   void _editTemplate(DocumentTemplate template) {
     // TODO(developer): Реализовать редактирование шаблона
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Редактирование шаблона "${template.name}" будет реализовано')),
+      SnackBar(
+          content: Text(
+              'Редактирование шаблона "${template.name}" будет реализовано')),
     );
   }
 
@@ -988,7 +1066,9 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
       _loadData();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка использования шаблона: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка использования шаблона: $e'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -997,19 +1077,23 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
     // TODO(developer): Реализовать просмотр комментария
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Просмотр комментария будет реализован')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Просмотр комментария будет реализован')));
   }
 
   Future<void> _resolveComment(DocumentComment comment) async {
     try {
       await _docService.updateComment(id: comment.id, isResolved: true);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Комментарий решен'), backgroundColor: Colors.green),
+        const SnackBar(
+            content: Text('Комментарий решен'), backgroundColor: Colors.green),
       );
       _loadData();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка решения комментария: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка решения комментария: $e'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -1018,13 +1102,15 @@ class _DocumentationManagementScreenState extends ConsumerState<DocumentationMan
     // TODO(developer): Реализовать диалог добавления документа
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Добавление документа будет реализовано')));
+    ).showSnackBar(const SnackBar(
+        content: Text('Добавление документа будет реализовано')));
   }
 
   void _showAddTemplateDialog() {
     // TODO(developer): Реализовать диалог добавления шаблона
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Добавление шаблона будет реализовано')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Добавление шаблона будет реализовано')));
   }
 }

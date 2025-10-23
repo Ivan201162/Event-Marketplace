@@ -59,7 +59,8 @@ class RefundService {
       await _firestore.collection('refunds').doc(refundId).set(refund.toMap());
 
       // Update payment status
-      await _paymentService.updatePaymentStatus(paymentId, PaymentStatus.refunded);
+      await _paymentService.updatePaymentStatus(
+          paymentId, PaymentStatus.refunded);
 
       debugPrint('Refund created: $refundId');
       return refund;
@@ -72,7 +73,8 @@ class RefundService {
   /// Processes a refund through the appropriate payment gateway
   Future<void> processRefund(String refundId) async {
     try {
-      final refundDoc = await _firestore.collection('refunds').doc(refundId).get();
+      final refundDoc =
+          await _firestore.collection('refunds').doc(refundId).get();
       if (!refundDoc.exists) {
         throw Exception('Возврат не найден');
       }
@@ -133,7 +135,8 @@ class RefundService {
       }
     } catch (e) {
       debugPrint('Error processing refund: $e');
-      await _updateRefundStatus(refundId, RefundStatus.failed, failureReason: e.toString());
+      await _updateRefundStatus(refundId, RefundStatus.failed,
+          failureReason: e.toString());
       throw Exception('Ошибка обработки возврата: $e');
     }
   }
@@ -141,7 +144,8 @@ class RefundService {
   /// Cancels a refund request
   Future<void> cancelRefund(String refundId, String reason) async {
     try {
-      await _updateRefundStatus(refundId, RefundStatus.cancelled, failureReason: reason);
+      await _updateRefundStatus(refundId, RefundStatus.cancelled,
+          failureReason: reason);
       debugPrint('Refund cancelled: $refundId');
     } catch (e) {
       debugPrint('Error cancelling refund: $e');
@@ -228,7 +232,8 @@ class RefundService {
     }
 
     // Check if payment is within refund window (typically 30 days)
-    final daysSincePayment = DateTime.now().difference(payment.completedAt!).inDays;
+    final daysSincePayment =
+        DateTime.now().difference(payment.completedAt!).inDays;
     if (daysSincePayment > 30) {
       return false;
     }
@@ -317,7 +322,8 @@ class RefundService {
   }
 
   /// Processes bank transfer refund
-  Future<bool> _processBankTransferRefund(Refund refund, Payment payment) async {
+  Future<bool> _processBankTransferRefund(
+      Refund refund, Payment payment) async {
     try {
       // Bank transfer refunds are handled manually
       // This would typically involve notifying the specialist
@@ -349,24 +355,24 @@ class Refund {
   });
 
   factory Refund.fromMap(Map<String, dynamic> map) => Refund(
-    id: map['id'] as String,
-    paymentId: map['paymentId'] as String,
-    amount: (map['amount'] as num).toDouble(),
-    reason: map['reason'] as String,
-    type: RefundType.values.firstWhere(
-      (e) => e.toString().split('.').last == map['type'] as String,
-    ),
-    status: RefundStatus.values.firstWhere(
-      (e) => e.toString().split('.').last == map['status'] as String,
-    ),
-    requestedBy: map['requestedBy'] as String,
-    description: map['description'] as String?,
-    gatewayRefundId: map['gatewayRefundId'] as String?,
-    failureReason: map['failureReason'] as String?,
-    createdAt: (map['createdAt'] as Timestamp).toDate(),
-    updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    completedAt: (map['completedAt'] as Timestamp?)?.toDate(),
-  );
+        id: map['id'] as String,
+        paymentId: map['paymentId'] as String,
+        amount: (map['amount'] as num).toDouble(),
+        reason: map['reason'] as String,
+        type: RefundType.values.firstWhere(
+          (e) => e.toString().split('.').last == map['type'] as String,
+        ),
+        status: RefundStatus.values.firstWhere(
+          (e) => e.toString().split('.').last == map['status'] as String,
+        ),
+        requestedBy: map['requestedBy'] as String,
+        description: map['description'] as String?,
+        gatewayRefundId: map['gatewayRefundId'] as String?,
+        failureReason: map['failureReason'] as String?,
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        completedAt: (map['completedAt'] as Timestamp?)?.toDate(),
+      );
   final String id;
   final String paymentId;
   final double amount;
@@ -382,20 +388,21 @@ class Refund {
   final DateTime? completedAt;
 
   Map<String, dynamic> toMap() => {
-    'id': id,
-    'paymentId': paymentId,
-    'amount': amount,
-    'reason': reason,
-    'type': type.toString().split('.').last,
-    'status': status.toString().split('.').last,
-    'requestedBy': requestedBy,
-    'description': description,
-    'gatewayRefundId': gatewayRefundId,
-    'failureReason': failureReason,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': Timestamp.fromDate(updatedAt),
-    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-  };
+        'id': id,
+        'paymentId': paymentId,
+        'amount': amount,
+        'reason': reason,
+        'type': type.toString().split('.').last,
+        'status': status.toString().split('.').last,
+        'requestedBy': requestedBy,
+        'description': description,
+        'gatewayRefundId': gatewayRefundId,
+        'failureReason': failureReason,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      };
 }
 
 /// Refund types

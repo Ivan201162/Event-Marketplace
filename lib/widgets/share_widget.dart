@@ -85,25 +85,33 @@ class ShareWidget extends ConsumerWidget {
       var success = false;
 
       if (event != null) {
-        success = await ShareService.shareEvent(event!, customMessage: customMessage);
+        success =
+            await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
-        success = await ShareService.shareProfile(user!, customMessage: customMessage);
+        success = await ShareService.shareProfile(user!,
+            customMessage: customMessage);
       } else if (booking != null) {
-        success = await ShareService.shareBooking(booking!, customMessage: customMessage);
+        success = await ShareService.shareBooking(booking!,
+            customMessage: customMessage);
       } else if (text != null) {
         success = await ShareService.shareText(text!, subject: title);
       } else if (filePath != null) {
-        success = await ShareService.shareFile(filePath!, text: customMessage, subject: title);
+        success = await ShareService.shareFile(filePath!,
+            text: customMessage, subject: title);
       } else if (filePaths != null) {
-        success = await ShareService.shareFiles(filePaths!, text: customMessage, subject: title);
+        success = await ShareService.shareFiles(filePaths!,
+            text: customMessage, subject: title);
       } else if (url != null) {
-        success = await ShareService.shareLink(url!, title: title, description: customMessage);
+        success = await ShareService.shareLink(url!,
+            title: title, description: customMessage);
       }
 
       if (success) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Контент успешно поделен'), backgroundColor: Colors.green),
+            const SnackBar(
+                content: Text('Контент успешно поделен'),
+                backgroundColor: Colors.green),
           );
         }
         onSuccess?.call();
@@ -124,7 +132,8 @@ class ShareWidget extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
       onError?.call();
     }
@@ -319,7 +328,9 @@ class ShareDialog extends StatelessWidget {
         title: const Text('Поделиться'),
         content: const Text('Функция шаринга временно отключена'),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('ОК')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('ОК')),
         ],
       );
     }
@@ -349,7 +360,10 @@ class ShareDialog extends StatelessWidget {
               onTap: () => _copyLink(context),
             ),
           ],
-          if (text != null || event != null || user != null || booking != null) ...[
+          if (text != null ||
+              event != null ||
+              user != null ||
+              booking != null) ...[
             const SizedBox(height: 8),
             _buildShareOption(
               context,
@@ -362,7 +376,9 @@ class ShareDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Отмена')),
+        TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Отмена')),
       ],
     );
   }
@@ -389,25 +405,33 @@ class ShareDialog extends StatelessWidget {
       var success = false;
 
       if (event != null) {
-        success = await ShareService.shareEvent(event!, customMessage: customMessage);
+        success =
+            await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
-        success = await ShareService.shareProfile(user!, customMessage: customMessage);
+        success = await ShareService.shareProfile(user!,
+            customMessage: customMessage);
       } else if (booking != null) {
-        success = await ShareService.shareBooking(booking!, customMessage: customMessage);
+        success = await ShareService.shareBooking(booking!,
+            customMessage: customMessage);
       } else if (text != null) {
         success = await ShareService.shareText(text!, subject: title);
       } else if (filePath != null) {
-        success = await ShareService.shareFile(filePath!, text: customMessage, subject: title);
+        success = await ShareService.shareFile(filePath!,
+            text: customMessage, subject: title);
       } else if (filePaths != null) {
-        success = await ShareService.shareFiles(filePaths!, text: customMessage, subject: title);
+        success = await ShareService.shareFiles(filePaths!,
+            text: customMessage, subject: title);
       } else if (url != null) {
-        success = await ShareService.shareLink(url!, title: title, description: customMessage);
+        success = await ShareService.shareLink(url!,
+            title: title, description: customMessage);
       }
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(success ? 'Контент успешно поделен' : 'Ошибка при попытке поделиться'),
+            content: Text(success
+                ? 'Контент успешно поделен'
+                : 'Ошибка при попытке поделиться'),
             backgroundColor: success ? Colors.green : Colors.red,
           ),
         );
@@ -418,7 +442,8 @@ class ShareDialog extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     }
   }
@@ -511,24 +536,29 @@ class ShareUtils {
   }) {
     showDialog<void>(
       context: context,
-      builder: (context) => ShareDialog(url: url, title: title, customMessage: description),
+      builder: (context) =>
+          ShareDialog(url: url, title: title, customMessage: description),
     );
   }
 
   /// Быстрый шаринг события
-  static Future<bool> quickShare(Event event) async => ShareService.shareEvent(event);
+  static Future<bool> quickShare(Event event) async =>
+      ShareService.shareEvent(event);
 
   /// Быстрый шаринг профиля
-  static Future<bool> quickShareProfile(AppUser user) async => ShareService.shareProfile(user);
+  static Future<bool> quickShareProfile(AppUser user) async =>
+      ShareService.shareProfile(user);
 
   /// Быстрый шаринг бронирования
   static Future<bool> quickShareBooking(Booking booking) async =>
       ShareService.shareBooking(booking);
 
   /// Быстрый шаринг текста
-  static Future<bool> quickShareText(String text) async => ShareService.shareText(text);
+  static Future<bool> quickShareText(String text) async =>
+      ShareService.shareText(text);
 
   /// Быстрый шаринг ссылки
-  static Future<bool> quickShareLink(String url, {String? title, String? description}) async =>
+  static Future<bool> quickShareLink(String url,
+          {String? title, String? description}) async =>
       ShareService.shareLink(url, title: title, description: description);
 }

@@ -25,7 +25,8 @@ void main() {
       container.dispose();
     });
 
-    testWidgets('Main navigation screen loads correctly', (WidgetTester tester) async {
+    testWidgets('Main navigation screen loads correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         ProviderScope(
           parent: container,
@@ -41,7 +42,8 @@ void main() {
       expect(find.byType(MainNavigationScreen), findsOneWidget);
     });
 
-    testWidgets('Bottom navigation works correctly', (WidgetTester tester) async {
+    testWidgets('Bottom navigation works correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         ProviderScope(
           parent: container,
@@ -125,7 +127,8 @@ void main() {
       expect(find.byType(MainNavigationScreen), findsOneWidget);
     });
 
-    testWidgets('Error handling for invalid routes', (WidgetTester tester) async {
+    testWidgets('Error handling for invalid routes',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         ProviderScope(
           parent: container,
@@ -145,7 +148,8 @@ void main() {
       expect(find.text('Страница не найдена'), findsOneWidget);
     });
 
-    testWidgets('Navigation animations work correctly', (WidgetTester tester) async {
+    testWidgets('Navigation animations work correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         ProviderScope(
           parent: container,
@@ -167,7 +171,8 @@ void main() {
   });
 
   group('Screen Loading Tests', () {
-    testWidgets('Home screen loads with skeleton animation', (WidgetTester tester) async {
+    testWidgets('Home screen loads with skeleton animation',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(

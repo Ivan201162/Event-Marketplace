@@ -6,7 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Profile Forms Widget Tests', () {
-    testWidgets('EditSpecialistProfileScreen should render correctly', (tester) async {
+    testWidgets('EditSpecialistProfileScreen should render correctly',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -25,11 +26,13 @@ void main() {
       expect(find.text('Создать профиль'), findsOneWidget);
     });
 
-    testWidgets('EditCustomerProfileScreen should render correctly', (tester) async {
+    testWidgets('EditCustomerProfileScreen should render correctly',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: EditCustomerProfileScreen(customerId: 'test_customer_id', isCreating: true),
+            home: EditCustomerProfileScreen(
+                customerId: 'test_customer_id', isCreating: true),
           ),
         ),
       );
@@ -43,11 +46,13 @@ void main() {
       expect(find.text('Создать профиль'), findsOneWidget);
     });
 
-    testWidgets('Specialist profile form validation should work correctly', (tester) async {
+    testWidgets('Specialist profile form validation should work correctly',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: EditSpecialistProfileScreen(specialistId: 'test_specialist_id', isCreating: true),
+            home: EditSpecialistProfileScreen(
+                specialistId: 'test_specialist_id', isCreating: true),
           ),
         ),
       );
@@ -66,11 +71,13 @@ void main() {
       expect(find.text('Телефон обязателен'), findsOneWidget);
     });
 
-    testWidgets('Customer profile form validation should work correctly', (tester) async {
+    testWidgets('Customer profile form validation should work correctly',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: EditCustomerProfileScreen(customerId: 'test_customer_id', isCreating: true),
+            home: EditCustomerProfileScreen(
+                customerId: 'test_customer_id', isCreating: true),
           ),
         ),
       );
@@ -89,22 +96,29 @@ void main() {
       expect(find.text('Телефон обязателен'), findsOneWidget);
     });
 
-    testWidgets('Specialist profile form should accept valid input', (tester) async {
+    testWidgets('Specialist profile form should accept valid input',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: EditSpecialistProfileScreen(specialistId: 'test_specialist_id', isCreating: true),
+            home: EditSpecialistProfileScreen(
+                specialistId: 'test_specialist_id', isCreating: true),
           ),
         ),
       );
 
       // Заполняем обязательные поля
-      await tester.enterText(find.byType(TextFormField).at(0), 'Тест Специалист');
-      await tester.enterText(find.byType(TextFormField).at(1), 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).at(2), '+7 (999) 123-45-67');
+      await tester.enterText(
+          find.byType(TextFormField).at(0), 'Тест Специалист');
+      await tester.enterText(
+          find.byType(TextFormField).at(1), 'test@example.com');
+      await tester.enterText(
+          find.byType(TextFormField).at(2), '+7 (999) 123-45-67');
       await tester.enterText(find.byType(TextFormField).at(3), 'Москва');
-      await tester.enterText(find.byType(TextFormField).at(4), 'Краткое описание');
-      await tester.enterText(find.byType(TextFormField).at(5), 'Подробное описание специалиста');
+      await tester.enterText(
+          find.byType(TextFormField).at(4), 'Краткое описание');
+      await tester.enterText(
+          find.byType(TextFormField).at(5), 'Подробное описание специалиста');
 
       // Выбираем категорию
       await tester.tap(find.text('Фотограф'));
@@ -115,21 +129,26 @@ void main() {
       expect(saveButton, findsOneWidget);
     });
 
-    testWidgets('Customer profile form should accept valid input', (tester) async {
+    testWidgets('Customer profile form should accept valid input',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: EditCustomerProfileScreen(customerId: 'test_customer_id', isCreating: true),
+            home: EditCustomerProfileScreen(
+                customerId: 'test_customer_id', isCreating: true),
           ),
         ),
       );
 
       // Заполняем обязательные поля
       await tester.enterText(find.byType(TextFormField).at(0), 'Тест Заказчик');
-      await tester.enterText(find.byType(TextFormField).at(1), 'test@example.com');
-      await tester.enterText(find.byType(TextFormField).at(2), '+7 (999) 123-45-67');
+      await tester.enterText(
+          find.byType(TextFormField).at(1), 'test@example.com');
+      await tester.enterText(
+          find.byType(TextFormField).at(2), '+7 (999) 123-45-67');
       await tester.enterText(find.byType(TextFormField).at(3), 'Москва');
-      await tester.enterText(find.byType(TextFormField).at(4), 'Описание заказчика');
+      await tester.enterText(
+          find.byType(TextFormField).at(4), 'Описание заказчика');
 
       // Проверяем, что кнопка сохранения активна
       final saveButton = find.text('Создать профиль');
@@ -138,13 +157,16 @@ void main() {
 
     testWidgets('Form validators should work correctly', (tester) async {
       // Тестируем валидаторы
-      expect(FormValidators.required(''), equals('Это поле обязательно для заполнения'));
+      expect(FormValidators.required(''),
+          equals('Это поле обязательно для заполнения'));
       expect(FormValidators.required('test'), isNull);
 
-      expect(FormValidators.email('invalid'), equals('Введите корректный email'));
+      expect(
+          FormValidators.email('invalid'), equals('Введите корректный email'));
       expect(FormValidators.email('test@example.com'), isNull);
 
-      expect(FormValidators.phone('123'), equals('Введите корректный номер телефона'));
+      expect(FormValidators.phone('123'),
+          equals('Введите корректный номер телефона'));
       expect(FormValidators.phone('+7 (999) 123-45-67'), isNull);
 
       expect(FormValidators.minLength('test', 5), equals('Минимум 5 символов'));
@@ -153,15 +175,18 @@ void main() {
       expect(FormValidators.number('abc'), equals('Введите корректное число'));
       expect(FormValidators.number('123'), isNull);
 
-      expect(FormValidators.positiveNumber('-1'), equals('Введите положительное число'));
+      expect(FormValidators.positiveNumber('-1'),
+          equals('Введите положительное число'));
       expect(FormValidators.positiveNumber('123'), isNull);
     });
 
-    testWidgets('Specialist profile categories should be selectable', (tester) async {
+    testWidgets('Specialist profile categories should be selectable',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: EditSpecialistProfileScreen(specialistId: 'test_specialist_id', isCreating: true),
+            home: EditSpecialistProfileScreen(
+                specialistId: 'test_specialist_id', isCreating: true),
           ),
         ),
       );
@@ -179,16 +204,20 @@ void main() {
 
       // Проверяем, что категория выбрана
       final photographerChip = find.byWidgetPredicate(
-        (widget) => widget is FilterChip && widget.label.toString().contains('Фотограф'),
+        (widget) =>
+            widget is FilterChip &&
+            widget.label.toString().contains('Фотограф'),
       );
       expect(photographerChip, findsOneWidget);
     });
 
-    testWidgets('Contact fields should be addable and removable', (tester) async {
+    testWidgets('Contact fields should be addable and removable',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
-            home: EditSpecialistProfileScreen(specialistId: 'test_specialist_id', isCreating: true),
+            home: EditSpecialistProfileScreen(
+                specialistId: 'test_specialist_id', isCreating: true),
           ),
         ),
       );

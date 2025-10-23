@@ -28,9 +28,13 @@ class SignatureWidget extends StatelessWidget {
                     'Электронная подпись',
                     style: Theme.of(
                       context,
-                    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                    )
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  IconButton(icon: const Icon(Icons.close), onPressed: onCancel),
+                  IconButton(
+                      icon: const Icon(Icons.close), onPressed: onCancel),
                 ],
               ),
               const Divider(),
@@ -50,7 +54,8 @@ class SignatureWidget extends StatelessWidget {
                     Expanded(
                       child: Text(
                         'Поставьте свою подпись в поле ниже. Подпись будет прикреплена к договору.',
-                        style: TextStyle(color: Colors.blue.shade700, fontSize: 14),
+                        style: TextStyle(
+                            color: Colors.blue.shade700, fontSize: 14),
                       ),
                     ),
                   ],
@@ -65,7 +70,9 @@ class SignatureWidget extends StatelessWidget {
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Signature(controller: signatureController, backgroundColor: Colors.white),
+                  child: Signature(
+                      controller: signatureController,
+                      backgroundColor: Colors.white),
                 ),
               ),
               const SizedBox(height: 16),
@@ -79,7 +86,8 @@ class SignatureWidget extends StatelessWidget {
                       icon: const Icon(Icons.clear),
                       label: const Text('Очистить'),
                       style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
                       ),
                     ),
                   ),
@@ -92,7 +100,8 @@ class SignatureWidget extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
                       ),
                     ),
                   ),

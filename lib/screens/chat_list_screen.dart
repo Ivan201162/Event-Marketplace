@@ -26,7 +26,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
     return authState.when(
       data: (user) {
         if (user == null) {
-          return const Scaffold(body: Center(child: Text('Необходимо войти в систему')));
+          return const Scaffold(
+              body: Center(child: Text('Необходимо войти в систему')));
         }
 
         return PopScope(
@@ -42,8 +43,12 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
               backgroundColor: Colors.transparent,
               elevation: 0,
               actions: [
-                IconButton(icon: const Icon(Icons.search), onPressed: _showSearchDialog),
-                IconButton(icon: const Icon(Icons.more_vert), onPressed: _showOptionsMenu),
+                IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: _showSearchDialog),
+                IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: _showOptionsMenu),
               ],
             ),
             body: _buildChatList(user.uid),
@@ -54,61 +59,66 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
           ),
         );
       },
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (error, stack) => Scaffold(body: Center(child: Text('Ошибка: $error'))),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
+      error: (error, stack) =>
+          Scaffold(body: Center(child: Text('Ошибка: $error'))),
     );
   }
 
   Widget _buildChatList(String currentUserId) => StreamBuilder<List<Chat>>(
-    stream: _chatService.getUserChatsStream(currentUserId),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
+        stream: _chatService.getUserChatsStream(currentUserId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-      if (snapshot.hasError) {
-        return Center(child: Text('Ошибка: ${snapshot.error}'));
-      }
+          if (snapshot.hasError) {
+            return Center(child: Text('Ошибка: ${snapshot.error}'));
+          }
 
-      final chats = snapshot.data ?? [];
-      if (chats.isEmpty) {
-        return _buildEmptyState();
-      }
+          final chats = snapshot.data ?? [];
+          if (chats.isEmpty) {
+            return _buildEmptyState();
+          }
 
-      return ListView.builder(
-        itemCount: chats.length,
-        itemBuilder: (context, index) {
-          final chat = chats[index];
-          return _buildChatItem(chat, currentUserId);
+          return ListView.builder(
+            itemCount: chats.length,
+            itemBuilder: (context, index) {
+              final chat = chats[index];
+              return _buildChatItem(chat, currentUserId);
+            },
+          );
         },
       );
-    },
-  );
 
   Widget _buildEmptyState() => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.chat_bubble_outline, size: 80, color: Colors.grey[400]),
-        const SizedBox(height: 16),
-        Text(
-          'У вас пока нет сообщений',
-          style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.chat_bubble_outline, size: 80, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              'У вас пока нет сообщений',
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Начните общение с другими пользователями',
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: _createNewChat,
+              icon: const Icon(Icons.message),
+              label: const Text('Начать чат'),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Начните общение с другими пользователями',
-          style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-        ),
-        const SizedBox(height: 24),
-        ElevatedButton.icon(
-          onPressed: _createNewChat,
-          icon: const Icon(Icons.message),
-          label: const Text('Начать чат'),
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildChatItem(Chat chat, String currentUserId) {
     final otherParticipantName = chat.getDisplayName(currentUserId);
@@ -140,8 +150,11 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
                   : null,
               child: otherParticipantAvatar == null
                   ? Text(
-                      otherParticipantName.isNotEmpty ? otherParticipantName[0].toUpperCase() : '?',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      otherParticipantName.isNotEmpty
+                          ? otherParticipantName[0].toUpperCase()
+                          : '?',
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     )
                   : null,
             ),
@@ -156,7 +169,8 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.white, width: 2),
                   ),
-                  constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+                  constraints:
+                      const BoxConstraints(minWidth: 20, minHeight: 20),
                   child: Text(
                     unreadCount > 99 ? '99+' : unreadCount.toString(),
                     style: const TextStyle(
@@ -237,7 +251,9 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
   void _createNewChat() {
     // TODO: Открыть экран создания нового чата
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Создание нового чата будет доступно в следующей версии')),
+      const SnackBar(
+          content:
+              Text('Создание нового чата будет доступно в следующей версии')),
     );
   }
 
@@ -253,7 +269,9 @@ class _ChatListScreenState extends ConsumerState<ChatListScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           TextButton(
             onPressed: () {
               Navigator.pop(context);

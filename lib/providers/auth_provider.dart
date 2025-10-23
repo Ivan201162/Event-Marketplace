@@ -2,16 +2,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Модель состояния аутентификации
 class AuthState {
-  const AuthState({this.currentUserId, this.isAuthenticated = false, this.isLoading = false});
+  const AuthState(
+      {this.currentUserId,
+      this.isAuthenticated = false,
+      this.isLoading = false});
 
   final String? currentUserId;
   final bool isAuthenticated;
   final bool isLoading;
 
   /// Для совместимости с существующим кодом
-  Map<String, dynamic>? get currentUser => currentUserId != null ? {'id': currentUserId} : null;
+  Map<String, dynamic>? get currentUser =>
+      currentUserId != null ? {'id': currentUserId} : null;
 
-  AuthState copyWith({String? currentUserId, bool? isAuthenticated, bool? isLoading}) {
+  AuthState copyWith(
+      {String? currentUserId, bool? isAuthenticated, bool? isLoading}) {
     return AuthState(
       currentUserId: currentUserId ?? this.currentUserId,
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
@@ -34,7 +39,8 @@ class AuthNotifier extends Notifier<AuthState> {
     // Симуляция входа
     await Future.delayed(const Duration(seconds: 1));
 
-    state = state.copyWith(currentUserId: userId, isAuthenticated: true, isLoading: false);
+    state = state.copyWith(
+        currentUserId: userId, isAuthenticated: true, isLoading: false);
   }
 
   /// Выйти из системы
@@ -54,7 +60,8 @@ class AuthNotifier extends Notifier<AuthState> {
 }
 
 /// Провайдер для управления аутентификацией
-final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
+final authProvider =
+    NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
 
 /// Провайдер для получения текущего пользователя
 final currentUserProvider = Provider<Map<String, dynamic>?>((ref) {

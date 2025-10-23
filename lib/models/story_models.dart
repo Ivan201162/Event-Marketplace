@@ -63,7 +63,9 @@ class Story {
       description: data['description'] as String?,
       mediaUrl: data['mediaUrl'] as String?,
       thumbnailUrl: data['thumbnailUrl'] as String?,
-      duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
+      duration: data['duration'] != null
+          ? Duration(milliseconds: data['duration'] as int)
+          : null,
       text: data['text'] as String?,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       views: data['views'] as int? ?? 0,
@@ -75,18 +77,18 @@ class Story {
       isShared: data['isShared'] as bool? ?? false,
       expiresAt: data['expiresAt'] != null
           ? (data['expiresAt'] is Timestamp
-                ? (data['expiresAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['expiresAt'].toString()))
+              ? (data['expiresAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['expiresAt'].toString()))
           : null,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] is Timestamp
-                ? (data['createdAt'] as Timestamp).toDate()
-                : DateTime.parse(data['createdAt'].toString()))
+              ? (data['createdAt'] as Timestamp).toDate()
+              : DateTime.parse(data['createdAt'].toString()))
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] is Timestamp
-                ? (data['updatedAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['updatedAt'].toString()))
+              ? (data['updatedAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['updatedAt'].toString()))
           : null,
     );
   }
@@ -103,27 +105,27 @@ class Story {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'contentType': contentType.name,
-    'status': status.name,
-    'title': title,
-    'description': description,
-    'mediaUrl': mediaUrl,
-    'thumbnailUrl': thumbnailUrl,
-    'duration': duration?.inMilliseconds,
-    'text': text,
-    'metadata': metadata,
-    'views': views,
-    'likes': likes,
-    'comments': comments,
-    'shares': shares,
-    'isLiked': isLiked,
-    'isViewed': isViewed,
-    'isShared': isShared,
-    'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-  };
+        'specialistId': specialistId,
+        'contentType': contentType.name,
+        'status': status.name,
+        'title': title,
+        'description': description,
+        'mediaUrl': mediaUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'duration': duration?.inMilliseconds,
+        'text': text,
+        'metadata': metadata,
+        'views': views,
+        'likes': likes,
+        'comments': comments,
+        'shares': shares,
+        'isLiked': isLiked,
+        'isViewed': isViewed,
+        'isShared': isShared,
+        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      };
 
   /// Копировать с изменениями
   Story copyWith({
@@ -148,29 +150,30 @@ class Story {
     DateTime? expiresAt,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) => Story(
-    id: id ?? this.id,
-    specialistId: specialistId ?? this.specialistId,
-    contentType: contentType ?? this.contentType,
-    status: status ?? this.status,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    mediaUrl: mediaUrl ?? this.mediaUrl,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-    duration: duration ?? this.duration,
-    text: text ?? this.text,
-    metadata: metadata ?? this.metadata,
-    views: views ?? this.views,
-    likes: likes ?? this.likes,
-    comments: comments ?? this.comments,
-    shares: shares ?? this.shares,
-    isLiked: isLiked ?? this.isLiked,
-    isViewed: isViewed ?? this.isViewed,
-    isShared: isShared ?? this.isShared,
-    expiresAt: expiresAt ?? this.expiresAt,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) =>
+      Story(
+        id: id ?? this.id,
+        specialistId: specialistId ?? this.specialistId,
+        contentType: contentType ?? this.contentType,
+        status: status ?? this.status,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        mediaUrl: mediaUrl ?? this.mediaUrl,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        duration: duration ?? this.duration,
+        text: text ?? this.text,
+        metadata: metadata ?? this.metadata,
+        views: views ?? this.views,
+        likes: likes ?? this.likes,
+        comments: comments ?? this.comments,
+        shares: shares ?? this.shares,
+        isLiked: isLiked ?? this.isLiked,
+        isViewed: isViewed ?? this.isViewed,
+        isShared: isShared ?? this.isShared,
+        expiresAt: expiresAt ?? this.expiresAt,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Парсинг типа контента из строки
   static StoryContentType _parseContentType(String? contentType) {
@@ -327,10 +330,12 @@ class StoryView {
       userId: data['userId'] as String? ?? '',
       viewedAt: data['viewedAt'] != null
           ? (data['viewedAt'] is Timestamp
-                ? (data['viewedAt'] as Timestamp).toDate()
-                : DateTime.parse(data['viewedAt'].toString()))
+              ? (data['viewedAt'] as Timestamp).toDate()
+              : DateTime.parse(data['viewedAt'].toString()))
           : DateTime.now(),
-      duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
+      duration: data['duration'] != null
+          ? Duration(milliseconds: data['duration'] as int)
+          : null,
       isCompleted: data['isCompleted'] as bool? ?? false,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
@@ -348,13 +353,13 @@ class StoryView {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'storyId': storyId,
-    'userId': userId,
-    'viewedAt': Timestamp.fromDate(viewedAt),
-    'duration': duration?.inMilliseconds,
-    'isCompleted': isCompleted,
-    'metadata': metadata,
-  };
+        'storyId': storyId,
+        'userId': userId,
+        'viewedAt': Timestamp.fromDate(viewedAt),
+        'duration': duration?.inMilliseconds,
+        'isCompleted': isCompleted,
+        'metadata': metadata,
+      };
 
   /// Копировать с изменениями
   StoryView copyWith({
@@ -365,15 +370,16 @@ class StoryView {
     Duration? duration,
     bool? isCompleted,
     Map<String, dynamic>? metadata,
-  }) => StoryView(
-    id: id ?? this.id,
-    storyId: storyId ?? this.storyId,
-    userId: userId ?? this.userId,
-    viewedAt: viewedAt ?? this.viewedAt,
-    duration: duration ?? this.duration,
-    isCompleted: isCompleted ?? this.isCompleted,
-    metadata: metadata ?? this.metadata,
-  );
+  }) =>
+      StoryView(
+        id: id ?? this.id,
+        storyId: storyId ?? this.storyId,
+        userId: userId ?? this.userId,
+        viewedAt: viewedAt ?? this.viewedAt,
+        duration: duration ?? this.duration,
+        isCompleted: isCompleted ?? this.isCompleted,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Получить отформатированную длительность просмотра
   String get formattedDuration {
@@ -425,30 +431,32 @@ class CreateStory {
       description: data['description'] as String?,
       mediaUrl: data['mediaUrl'] as String?,
       thumbnailUrl: data['thumbnailUrl'] as String?,
-      duration: data['duration'] != null ? Duration(milliseconds: data['duration'] as int) : null,
+      duration: data['duration'] != null
+          ? Duration(milliseconds: data['duration'] as int)
+          : null,
       text: data['text'] as String?,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       expiresAt: data['expiresAt'] != null
           ? (data['expiresAt'] is Timestamp
-                ? (data['expiresAt'] as Timestamp).toDate()
-                : DateTime.tryParse(data['expiresAt'].toString()))
+              ? (data['expiresAt'] as Timestamp).toDate()
+              : DateTime.tryParse(data['expiresAt'].toString()))
           : null,
     );
   }
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'contentType': contentType.name,
-    'title': title,
-    'description': description,
-    'mediaUrl': mediaUrl,
-    'thumbnailUrl': thumbnailUrl,
-    'duration': duration?.inMilliseconds,
-    'text': text,
-    'metadata': metadata,
-    'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-  };
+        'specialistId': specialistId,
+        'contentType': contentType.name,
+        'title': title,
+        'description': description,
+        'mediaUrl': mediaUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'duration': duration?.inMilliseconds,
+        'text': text,
+        'metadata': metadata,
+        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+      };
 
   /// Копировать с изменениями
   CreateStory copyWith({
@@ -462,18 +470,19 @@ class CreateStory {
     String? text,
     Map<String, dynamic>? metadata,
     DateTime? expiresAt,
-  }) => CreateStory(
-    specialistId: specialistId ?? this.specialistId,
-    contentType: contentType ?? this.contentType,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    mediaUrl: mediaUrl ?? this.mediaUrl,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-    duration: duration ?? this.duration,
-    text: text ?? this.text,
-    metadata: metadata ?? this.metadata,
-    expiresAt: expiresAt ?? this.expiresAt,
-  );
+  }) =>
+      CreateStory(
+        specialistId: specialistId ?? this.specialistId,
+        contentType: contentType ?? this.contentType,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        mediaUrl: mediaUrl ?? this.mediaUrl,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        duration: duration ?? this.duration,
+        text: text ?? this.text,
+        metadata: metadata ?? this.metadata,
+        expiresAt: expiresAt ?? this.expiresAt,
+      );
 
   /// Парсинг типа контента из строки
   static StoryContentType _parseContentType(String? contentType) {
@@ -498,7 +507,8 @@ class CreateStory {
   /// Проверить, валидна ли история для создания
   bool get isValid {
     if (specialistId.isEmpty) return false;
-    if (contentType == StoryContentType.text && (text?.isEmpty ?? true)) return false;
+    if (contentType == StoryContentType.text && (text?.isEmpty ?? true))
+      return false;
     if (contentType.isMedia && (mediaUrl?.isEmpty ?? true)) return false;
     return true;
   }

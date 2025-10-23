@@ -4,10 +4,12 @@ import '../core/feature_flags.dart';
 import '../services/monitoring_service.dart';
 
 /// Провайдер сервиса мониторинга
-final monitoringServiceProvider = Provider<MonitoringService>((ref) => MonitoringService());
+final monitoringServiceProvider =
+    Provider<MonitoringService>((ref) => MonitoringService());
 
 /// Провайдер состояния мониторинга
-final monitoringStateProvider = NotifierProvider<MonitoringStateNotifier, MonitoringState>(
+final monitoringStateProvider =
+    NotifierProvider<MonitoringStateNotifier, MonitoringState>(
   MonitoringStateNotifier.new,
 );
 
@@ -35,14 +37,15 @@ class MonitoringState {
     List<String>? activeTraces,
     String? lastError,
     DateTime? lastErrorTime,
-  }) => MonitoringState(
-    isInitialized: isInitialized ?? this.isInitialized,
-    isEnabled: isEnabled ?? this.isEnabled,
-    metrics: metrics ?? this.metrics,
-    activeTraces: activeTraces ?? this.activeTraces,
-    lastError: lastError ?? this.lastError,
-    lastErrorTime: lastErrorTime ?? this.lastErrorTime,
-  );
+  }) =>
+      MonitoringState(
+        isInitialized: isInitialized ?? this.isInitialized,
+        isEnabled: isEnabled ?? this.isEnabled,
+        metrics: metrics ?? this.metrics,
+        activeTraces: activeTraces ?? this.activeTraces,
+        lastError: lastError ?? this.lastError,
+        lastErrorTime: lastErrorTime ?? this.lastErrorTime,
+      );
 }
 
 /// Нотификатор состояния мониторинга
@@ -64,7 +67,8 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
         isEnabled: monitoringService.isAvailable,
       );
     } catch (e) {
-      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
+      state = state.copyWith(
+          lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -80,19 +84,23 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final monitoringService = ref.read(monitoringServiceProvider);
       await monitoringService.recordError(error, stackTrace, context: reason);
 
-      state = state.copyWith(lastError: error.toString(), lastErrorTime: DateTime.now());
+      state = state.copyWith(
+          lastError: error.toString(), lastErrorTime: DateTime.now());
     } catch (e) {
-      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
+      state = state.copyWith(
+          lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
   /// Запись пользовательского действия
-  Future<void> logUserAction(String action, {Map<String, dynamic>? parameters}) async {
+  Future<void> logUserAction(String action,
+      {Map<String, dynamic>? parameters}) async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
       await monitoringService.logUserAction('', action, parameters);
     } catch (e) {
-      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
+      state = state.copyWith(
+          lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -102,10 +110,12 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final monitoringService = ref.read(monitoringServiceProvider);
       monitoringService.startTrace(traceName);
 
-      final updatedTraces = List<String>.from(state.activeTraces)..add(traceName);
+      final updatedTraces = List<String>.from(state.activeTraces)
+        ..add(traceName);
       state = state.copyWith(activeTraces: updatedTraces);
     } catch (e) {
-      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
+      state = state.copyWith(
+          lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -115,10 +125,12 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final monitoringService = ref.read(monitoringServiceProvider);
       monitoringService.stopTrace(traceName);
 
-      final updatedTraces = List<String>.from(state.activeTraces)..remove(traceName);
+      final updatedTraces = List<String>.from(state.activeTraces)
+        ..remove(traceName);
       state = state.copyWith(activeTraces: updatedTraces);
     } catch (e) {
-      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
+      state = state.copyWith(
+          lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -129,7 +141,8 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final metrics = await monitoringService.getAppMetrics();
       state = state.copyWith(metrics: metrics);
     } catch (e) {
-      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
+      state = state.copyWith(
+          lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -139,7 +152,8 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       final monitoringService = ref.read(monitoringServiceProvider);
       monitoringService.setUserId(userId);
     } catch (e) {
-      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
+      state = state.copyWith(
+          lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 
@@ -151,14 +165,17 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
 
       state = state.copyWith(metrics: {}, activeTraces: []);
     } catch (e) {
-      state = state.copyWith(lastError: e.toString(), lastErrorTime: DateTime.now());
+      state = state.copyWith(
+          lastError: e.toString(), lastErrorTime: DateTime.now());
     }
   }
 }
 
 /// Провайдер для проверки доступности мониторинга
 final monitoringAvailableProvider = Provider<bool>(
-  (ref) => FeatureFlags.crashlyticsEnabled || FeatureFlags.performanceMonitoringEnabled,
+  (ref) =>
+      FeatureFlags.crashlyticsEnabled ||
+      FeatureFlags.performanceMonitoringEnabled,
 );
 
 /// Провайдер для получения метрик приложения

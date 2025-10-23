@@ -46,17 +46,18 @@ class BookingPayment {
 }
 
 /// Провайдер для получения данных о платеже по ID бронирования
-final bookingPaymentsProvider = FutureProvider.family<BookingPayment?, String>((ref, bookingId) async {
+final bookingPaymentsProvider =
+    FutureProvider.family<BookingPayment?, String>((ref, bookingId) async {
   try {
     final doc = await FirebaseFirestore.instance
         .collection('payments')
         .doc(bookingId)
         .get();
-    
+
     if (doc.exists && doc.data() != null) {
       return BookingPayment.fromJson(doc.data()!);
     }
-    
+
     return null;
   } catch (e) {
     // В случае ошибки возвращаем null
@@ -65,14 +66,15 @@ final bookingPaymentsProvider = FutureProvider.family<BookingPayment?, String>((
 });
 
 /// Провайдер для получения всех платежей пользователя
-final userPaymentsProvider = FutureProvider.family<List<BookingPayment>, String>((ref, userId) async {
+final userPaymentsProvider =
+    FutureProvider.family<List<BookingPayment>, String>((ref, userId) async {
   try {
     final querySnapshot = await FirebaseFirestore.instance
         .collection('payments')
         .where('userId', isEqualTo: userId)
         .orderBy('updatedAt', descending: true)
         .get();
-    
+
     return querySnapshot.docs
         .map((doc) => BookingPayment.fromJson(doc.data()))
         .toList();

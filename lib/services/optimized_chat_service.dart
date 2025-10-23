@@ -29,10 +29,11 @@ class OptimizedChatService {
   }
 
   /// Получить чаты пользователя (одноразово)
-  Future<List<EnhancedChat>> getUserChats(String userId, {bool forceRefresh = false}) async {
+  Future<List<EnhancedChat>> getUserChats(String userId,
+      {bool forceRefresh = false}) async {
     try {
       // Проверяем кэш
-      if (!forceRefresh && 
+      if (!forceRefresh &&
           _cachedChats.isNotEmpty &&
           _chatsCacheTime != null &&
           DateTime.now().difference(_chatsCacheTime!) < _cacheExpiry) {
@@ -143,7 +144,7 @@ class OptimizedChatService {
       };
 
       final docRef = await _firestore.collection('chats').add(chatData);
-      
+
       debugPrint('✅ Чат создан с ID: ${docRef.id}');
       return docRef.id;
     } catch (e) {
@@ -156,9 +157,9 @@ class OptimizedChatService {
   Future<Map<String, dynamic>?> getUserInfo(String userId) async {
     try {
       final doc = await _firestore.collection('users').doc(userId).get();
-      
+
       if (!doc.exists) return null;
-      
+
       final data = doc.data()!;
       return {
         'id': userId,
@@ -195,7 +196,7 @@ class OptimizedChatService {
       }
 
       await batch.commit();
-      
+
       debugPrint('✅ Сообщения отмечены как прочитанные');
       return true;
     } catch (e) {
@@ -213,7 +214,7 @@ class OptimizedChatService {
           .get();
 
       int totalUnread = 0;
-      
+
       for (final chatDoc in chatsSnapshot.docs) {
         final unreadSnapshot = await _firestore
             .collection('chats')
@@ -222,7 +223,7 @@ class OptimizedChatService {
             .where('senderId', isNotEqualTo: userId)
             .where('isRead', isEqualTo: false)
             .get();
-        
+
         totalUnread += unreadSnapshot.docs.length;
       }
 
@@ -236,13 +237,14 @@ class OptimizedChatService {
   /// Парсинг чата из Firestore
   EnhancedChat _parseChatFromFirestore(String id, Map<String, dynamic> data) {
     final members = (data['members'] as List<dynamic>?)
-        ?.map((memberId) => ChatMember(
-              userId: memberId.toString(),
-              role: ChatMemberRole.member,
-              joinedAt: DateTime.now(),
-              isOnline: false,
-            ))
-        .toList() ?? [];
+            ?.map((memberId) => ChatMember(
+                  userId: memberId.toString(),
+                  role: ChatMemberRole.member,
+                  joinedAt: DateTime.now(),
+                  isOnline: false,
+                ))
+            .toList() ??
+        [];
 
     return EnhancedChat(
       id: id,
@@ -260,7 +262,8 @@ class OptimizedChatService {
         senderId: data['lastMessageSenderId'] ?? '',
         text: data['lastMessage'] ?? '',
         type: MessageType.text,
-        createdAt: (data['lastMessageAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        createdAt:
+            (data['lastMessageAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       ),
       isPinned: data['isPinned'] ?? false,
       isMuted: data['isMuted'] ?? false,
@@ -268,7 +271,8 @@ class OptimizedChatService {
   }
 
   /// Парсинг сообщения из Firestore
-  EnhancedMessage _parseMessageFromFirestore(String id, Map<String, dynamic> data) {
+  EnhancedMessage _parseMessageFromFirestore(
+      String id, Map<String, dynamic> data) {
     return EnhancedMessage(
       id: id,
       senderId: data['senderId'] ?? '',

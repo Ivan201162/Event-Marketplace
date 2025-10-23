@@ -33,8 +33,10 @@ class Category extends Equatable {
       color: map['color'],
       order: map['order'] ?? 0,
       isActive: map['isActive'] ?? true,
-      createdAt: DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
-      updatedAt: DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
+      createdAt:
+          DateTime.parse(map['createdAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt:
+          DateTime.parse(map['updatedAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 
@@ -89,8 +91,3 @@ class Category extends Equatable {
         updatedAt,
       ];
 }
-
-
-
-
-

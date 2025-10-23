@@ -15,7 +15,8 @@ class VersionManagementService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
-  static final VersionManagementService _instance = VersionManagementService._internal();
+  static final VersionManagementService _instance =
+      VersionManagementService._internal();
 
   final Map<String, AppVersion> _versionsCache = {};
   final Map<String, AppUpdate> _updatesCache = {};
@@ -167,7 +168,10 @@ class VersionManagementService {
         releaseDate: now,
       );
 
-      await _firestore.collection('appVersions').doc(versionId).set(appVersion.toMap());
+      await _firestore
+          .collection('appVersions')
+          .doc(versionId)
+          .set(appVersion.toMap());
       _versionsCache[versionId] = appVersion;
 
       if (kDebugMode) {
@@ -184,9 +188,13 @@ class VersionManagementService {
   }
 
   /// Обновить версию
-  Future<void> updateVersion(String versionId, AppVersion updatedVersion) async {
+  Future<void> updateVersion(
+      String versionId, AppVersion updatedVersion) async {
     try {
-      await _firestore.collection('appVersions').doc(versionId).update(updatedVersion.toMap());
+      await _firestore
+          .collection('appVersions')
+          .doc(versionId)
+          .update(updatedVersion.toMap());
       _versionsCache[versionId] = updatedVersion;
 
       if (kDebugMode) {
@@ -210,17 +218,26 @@ class VersionManagementService {
 
       // Деактивируем все версии того же типа и платформы
       final sameTypeVersions = _versionsCache.values
-          .where((v) => v.platform == version.platform && v.type == version.type && v.isAvailable)
+          .where((v) =>
+              v.platform == version.platform &&
+              v.type == version.type &&
+              v.isAvailable)
           .toList();
 
       for (final v in sameTypeVersions) {
-        await _firestore.collection('appVersions').doc(v.id).update({'isAvailable': false});
+        await _firestore
+            .collection('appVersions')
+            .doc(v.id)
+            .update({'isAvailable': false});
 
         _versionsCache[v.id] = v.copyWith(isAvailable: false);
       }
 
       // Активируем выбранную версию
-      await _firestore.collection('appVersions').doc(versionId).update({'isAvailable': true});
+      await _firestore
+          .collection('appVersions')
+          .doc(versionId)
+          .update({'isAvailable': true});
 
       _versionsCache[versionId] = version.copyWith(isAvailable: true);
 
@@ -261,7 +278,10 @@ class VersionManagementService {
         startedAt: now,
       );
 
-      await _firestore.collection('appUpdates').doc(updateId).set(appUpdate.toMap());
+      await _firestore
+          .collection('appUpdates')
+          .doc(updateId)
+          .set(appUpdate.toMap());
       _updatesCache[updateId] = appUpdate;
 
       if (kDebugMode) {
@@ -278,14 +298,16 @@ class VersionManagementService {
   }
 
   /// Обновить прогресс обновления
-  Future<void> updateProgress(String updateId, double progress, {UpdateStatus? status}) async {
+  Future<void> updateProgress(String updateId, double progress,
+      {UpdateStatus? status}) async {
     try {
       final update = _updatesCache[updateId];
       if (update == null) {
         throw Exception('Обновление не найдено');
       }
 
-      final updatedUpdate = update.copyWith(progress: progress, status: status ?? update.status);
+      final updatedUpdate =
+          update.copyWith(progress: progress, status: status ?? update.status);
 
       await _firestore.collection('appUpdates').doc(updateId).update({
         'progress': progress,
@@ -305,7 +327,8 @@ class VersionManagementService {
   }
 
   /// Завершить обновление
-  Future<void> completeUpdate(String updateId, {bool success = true, String? errorMessage}) async {
+  Future<void> completeUpdate(String updateId,
+      {bool success = true, String? errorMessage}) async {
     try {
       final update = _updatesCache[updateId];
       if (update == null) {
@@ -328,7 +351,8 @@ class VersionManagementService {
       _updatesCache[updateId] = updatedUpdate;
 
       if (kDebugMode) {
-        debugPrint('Update completed: $updateId - ${success ? 'success' : 'failed'}');
+        debugPrint(
+            'Update completed: $updateId - ${success ? 'success' : 'failed'}');
       }
     } catch (e) {
       if (kDebugMode) {
@@ -339,7 +363,9 @@ class VersionManagementService {
 
   /// Получить версии по платформе
   List<AppVersion> getVersionsByPlatform(String platform) =>
-      _versionsCache.values.where((version) => version.platform == platform).toList()
+      _versionsCache.values
+          .where((version) => version.platform == platform)
+          .toList()
         ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
 
   /// Получить версии по типу
@@ -348,9 +374,10 @@ class VersionManagementService {
         ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
 
   /// Получить доступные версии
-  List<AppVersion> getAvailableVersions() =>
-      _versionsCache.values.where((version) => version.isCurrentlyAvailable).toList()
-        ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
+  List<AppVersion> getAvailableVersions() => _versionsCache.values
+      .where((version) => version.isCurrentlyAvailable)
+      .toList()
+    ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
 
   /// Получить обновления пользователя
   List<AppUpdate> getUserUpdates(String userId) =>
@@ -390,7 +417,10 @@ class VersionManagementService {
         lastUpdated: now,
       );
 
-      await _firestore.collection('versionStatistics').doc(key).set(statistics.toMap());
+      await _firestore
+          .collection('versionStatistics')
+          .doc(key)
+          .set(statistics.toMap());
       _statisticsCache[key] = statistics;
 
       if (kDebugMode) {
@@ -416,16 +446,16 @@ class VersionManagementService {
   PackageInfo? get packageInfo => _packageInfo;
 
   /// Получить все версии
-  List<AppVersion> getAllVersions() =>
-      _versionsCache.values.toList()..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
+  List<AppVersion> getAllVersions() => _versionsCache.values.toList()
+    ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
 
   /// Получить все обновления
-  List<AppUpdate> getAllUpdates() =>
-      _updatesCache.values.toList()..sort((a, b) => b.startedAt.compareTo(a.startedAt));
+  List<AppUpdate> getAllUpdates() => _updatesCache.values.toList()
+    ..sort((a, b) => b.startedAt.compareTo(a.startedAt));
 
   /// Получить всю статистику
-  List<VersionStatistics> getAllStatistics() =>
-      _statisticsCache.values.toList()..sort((a, b) => b.lastUpdated.compareTo(a.lastUpdated));
+  List<VersionStatistics> getAllStatistics() => _statisticsCache.values.toList()
+    ..sort((a, b) => b.lastUpdated.compareTo(a.lastUpdated));
 
   /// Загрузить кэш версий
   Future<void> _loadVersionsCache() async {
@@ -450,7 +480,8 @@ class VersionManagementService {
   /// Загрузить кэш обновлений
   Future<void> _loadUpdatesCache() async {
     try {
-      final snapshot = await _firestore.collection('appUpdates').limit(1000).get();
+      final snapshot =
+          await _firestore.collection('appUpdates').limit(1000).get();
 
       for (final doc in snapshot.docs) {
         final update = AppUpdate.fromDocument(doc);

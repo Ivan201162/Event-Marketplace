@@ -25,7 +25,8 @@ class ChatListWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chatsAsync = ref.watch(
-      userChatsProvider(UserChatsParams(userId: userId, isSpecialist: isSpecialist)),
+      userChatsProvider(
+          UserChatsParams(userId: userId, isSpecialist: isSpecialist)),
     );
 
     return chatsAsync.when(
@@ -37,9 +38,11 @@ class ChatListWidget extends ConsumerWidget {
               children: [
                 Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
-                Text('Нет активных чатов', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                Text('Нет активных чатов',
+                    style: TextStyle(fontSize: 18, color: Colors.grey)),
                 SizedBox(height: 8),
-                Text('Чаты появятся при создании заявок', style: TextStyle(color: Colors.grey)),
+                Text('Чаты появятся при создании заявок',
+                    style: TextStyle(color: Colors.grey)),
               ],
             ),
           );
@@ -74,7 +77,8 @@ class ChatListWidget extends ConsumerWidget {
 
 /// Элемент списка чатов
 class ChatListItem extends StatelessWidget {
-  const ChatListItem({super.key, required this.chat, required this.currentUserId, this.onTap});
+  const ChatListItem(
+      {super.key, required this.chat, required this.currentUserId, this.onTap});
   final Chat chat;
   final String currentUserId;
   final VoidCallback? onTap;
@@ -101,7 +105,8 @@ class ChatListItem extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 child: Text(
                   _getUserInitials(otherUserId),
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(width: 12),
@@ -118,7 +123,8 @@ class ChatListItem extends StatelessWidget {
                           'Пользователь $otherUserId',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal,
+                            fontWeight:
+                                hasUnread ? FontWeight.bold : FontWeight.normal,
                           ),
                         ),
                         if (chat.lastMessage != null)
@@ -126,7 +132,10 @@ class ChatListItem extends StatelessWidget {
                             _formatTime(chat.lastMessage!.createdAt),
                             style: TextStyle(
                               fontSize: 12,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.6),
                             ),
                           ),
                       ],
@@ -143,7 +152,9 @@ class ChatListItem extends StatelessWidget {
                                 color: Theme.of(
                                   context,
                                 ).colorScheme.onSurface.withValues(alpha: 0.7),
-                                fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
+                                fontWeight: hasUnread
+                                    ? FontWeight.w500
+                                    : FontWeight.normal,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -152,7 +163,8 @@ class ChatListItem extends StatelessWidget {
                           if (hasUnread) ...[
                             const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.primary,
                                 borderRadius: BorderRadius.circular(10),
@@ -174,7 +186,10 @@ class ChatListItem extends StatelessWidget {
                         'Нет сообщений',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.5),
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -257,9 +272,11 @@ class ChatMessagesWidget extends ConsumerWidget {
               children: [
                 Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
-                Text('Начните общение', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                Text('Начните общение',
+                    style: TextStyle(fontSize: 18, color: Colors.grey)),
                 SizedBox(height: 8),
-                Text('Отправьте первое сообщение', style: TextStyle(color: Colors.grey)),
+                Text('Отправьте первое сообщение',
+                    style: TextStyle(color: Colors.grey)),
               ],
             ),
           );
@@ -294,7 +311,8 @@ class ChatMessagesWidget extends ConsumerWidget {
 
 /// Пузырек сообщения
 class MessageBubble extends StatelessWidget {
-  const MessageBubble({super.key, required this.message, required this.isCurrentUser});
+  const MessageBubble(
+      {super.key, required this.message, required this.isCurrentUser});
   final ChatMessage message;
   final bool isCurrentUser;
 
@@ -302,7 +320,8 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
-          mainAxisAlignment: isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisAlignment:
+              isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             if (!isCurrentUser) ...[
               CircleAvatar(
@@ -321,20 +340,26 @@ class MessageBubble extends StatelessWidget {
             ],
             Flexible(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: isCurrentUser
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(20).copyWith(
-                    bottomLeft:
-                        isCurrentUser ? const Radius.circular(20) : const Radius.circular(4),
-                    bottomRight:
-                        isCurrentUser ? const Radius.circular(4) : const Radius.circular(20),
+                    bottomLeft: isCurrentUser
+                        ? const Radius.circular(20)
+                        : const Radius.circular(4),
+                    bottomRight: isCurrentUser
+                        ? const Radius.circular(4)
+                        : const Radius.circular(20),
                   ),
                   border: !isCurrentUser
                       ? Border.all(
-                          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2))
+                          color: Theme.of(context)
+                              .colorScheme
+                              .outline
+                              .withValues(alpha: 0.2))
                       : null,
                 ),
                 child: Column(
@@ -365,8 +390,9 @@ class MessageBubble extends StatelessWidget {
                     Text(
                       message.content,
                       style: TextStyle(
-                        color:
-                            isCurrentUser ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                        color: isCurrentUser
+                            ? Colors.white
+                            : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -379,7 +405,10 @@ class MessageBubble extends StatelessWidget {
                             fontSize: 11,
                             color: isCurrentUser
                                 ? Colors.white.withValues(alpha: 0.7)
-                                : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.5),
                           ),
                         ),
                         if (isCurrentUser) ...[
@@ -387,7 +416,8 @@ class MessageBubble extends StatelessWidget {
                           Icon(
                             _getStatusIcon(message.status),
                             size: 12,
-                            color: _getStatusColor(message.status, isCurrentUser),
+                            color:
+                                _getStatusColor(message.status, isCurrentUser),
                           ),
                         ],
                       ],
@@ -516,7 +546,8 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
 
   /// Загрузка аудио
   Future<void> _pickAudio() async {
-    final result = await FilePicker.platform.pickFiles(type: FileType.audio, allowMultiple: true);
+    final result = await FilePicker.platform
+        .pickFiles(type: FileType.audio, allowMultiple: true);
 
     if (result != null) {
       setState(() {
@@ -551,10 +582,13 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   Future<void> _sendToWhatsApp() async {
     if (_attachments.isEmpty) return;
 
-    final phoneNumber = widget.receiverId; // Предполагаем, что receiverId - это номер телефона
+    final phoneNumber =
+        widget.receiverId; // Предполагаем, что receiverId - это номер телефона
     if (phoneNumber == null) return;
 
-    final message = _controller.text.isNotEmpty ? _controller.text : 'Файлы для мероприятия';
+    final message = _controller.text.isNotEmpty
+        ? _controller.text
+        : 'Файлы для мероприятия';
     final encodedMessage = Uri.encodeComponent(message);
 
     final whatsappUrl = 'https://wa.me/$phoneNumber?text=$encodedMessage';
@@ -574,10 +608,13 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   Future<void> _sendToTelegram() async {
     if (_attachments.isEmpty) return;
 
-    final username = widget.receiverId; // Предполагаем, что receiverId - это username
+    final username =
+        widget.receiverId; // Предполагаем, что receiverId - это username
     if (username == null) return;
 
-    final message = _controller.text.isNotEmpty ? _controller.text : 'Файлы для мероприятия';
+    final message = _controller.text.isNotEmpty
+        ? _controller.text
+        : 'Файлы для мероприятия';
     final encodedMessage = Uri.encodeComponent(message);
 
     final telegramUrl = 'https://t.me/$username?text=$encodedMessage';
@@ -608,7 +645,11 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             border: Border(
-              top: BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+              top: BorderSide(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.2)),
             ),
           ),
           child: Column(
@@ -638,15 +679,20 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
                       focusNode: _focusNode,
                       decoration: InputDecoration(
                         hintText: 'Введите сообщение...',
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24)),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                       maxLines: null,
                       onChanged: (value) {
-                        ref.read(messageFormProvider.notifier).updateContent(value);
+                        ref
+                            .read(messageFormProvider.notifier)
+                            .updateContent(value);
                       },
                       onSubmitted: (value) {
-                        if (value.trim().isNotEmpty || _attachments.isNotEmpty) {
+                        if (value.trim().isNotEmpty ||
+                            _attachments.isNotEmpty) {
                           _sendMessage();
                         }
                       },
@@ -658,7 +704,8 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
                   // Кнопка отправки
                   FloatingActionButton.small(
                     onPressed: formState.isSending ||
-                            (_controller.text.trim().isEmpty && _attachments.isEmpty)
+                            (_controller.text.trim().isEmpty &&
+                                _attachments.isEmpty)
                         ? null
                         : _sendMessage,
                     child: formState.isSending
@@ -711,7 +758,11 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           border: Border(
-            bottom: BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+            bottom: BorderSide(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outline
+                    .withValues(alpha: 0.2)),
           ),
         ),
         child: ListView.builder(
@@ -732,7 +783,8 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(_getFileIcon(file.path), size: 32, color: Colors.grey),
+                        Icon(_getFileIcon(file.path),
+                            size: 32, color: Colors.grey),
                         const SizedBox(height: 4),
                         Text(
                           file.path.split('/').last,
@@ -751,8 +803,10 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
                       onTap: () => _removeAttachment(index),
                       child: Container(
                         padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                        child: const Icon(Icons.close, size: 12, color: Colors.white),
+                        decoration: const BoxDecoration(
+                            color: Colors.red, shape: BoxShape.circle),
+                        child: const Icon(Icons.close,
+                            size: 12, color: Colors.white),
                       ),
                     ),
                   ),
@@ -769,7 +823,11 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           border: Border(
-            bottom: BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+            bottom: BorderSide(
+                color: Theme.of(context)
+                    .colorScheme
+                    .outline
+                    .withValues(alpha: 0.2)),
           ),
         ),
         child: Column(
@@ -777,18 +835,24 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
           children: [
             Text(
               'Прикрепить файлы:',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall
+                  ?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
 
             // Кнопки типов файлов
             Row(
               children: [
-                _buildAttachmentButton(icon: Icons.photo, label: 'Фото', onTap: _pickImages),
+                _buildAttachmentButton(
+                    icon: Icons.photo, label: 'Фото', onTap: _pickImages),
                 const SizedBox(width: 12),
-                _buildAttachmentButton(icon: Icons.videocam, label: 'Видео', onTap: _pickVideo),
+                _buildAttachmentButton(
+                    icon: Icons.videocam, label: 'Видео', onTap: _pickVideo),
                 const SizedBox(width: 12),
-                _buildAttachmentButton(icon: Icons.audiotrack, label: 'Аудио', onTap: _pickAudio),
+                _buildAttachmentButton(
+                    icon: Icons.audiotrack, label: 'Аудио', onTap: _pickAudio),
                 const SizedBox(width: 12),
                 _buildAttachmentButton(
                   icon: Icons.description,
@@ -804,8 +868,10 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
             if (_attachments.isNotEmpty) ...[
               Text(
                 'Отправить через мессенджер:',
-                style:
-                    Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 8),
               Row(
@@ -850,7 +916,9 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
               children: [
                 Icon(icon, size: 24),
                 const SizedBox(height: 4),
-                Text(label, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center),
+                Text(label,
+                    style: const TextStyle(fontSize: 12),
+                    textAlign: TextAlign.center),
               ],
             ),
           ),
@@ -869,7 +937,8 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
           onPressed: onTap,
           icon: Icon(icon, size: 16),
           label: Text(label),
-          style: ElevatedButton.styleFrom(backgroundColor: color, foregroundColor: Colors.white),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: color, foregroundColor: Colors.white),
         ),
       );
 
@@ -906,7 +975,8 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
 
 /// Виджет уведомления
 class NotificationWidget extends StatelessWidget {
-  const NotificationWidget({super.key, required this.notification, this.onTap, this.onDismiss});
+  const NotificationWidget(
+      {super.key, required this.notification, this.onTap, this.onDismiss});
   final AppNotification notification;
   final VoidCallback? onTap;
   final VoidCallback? onDismiss;
@@ -927,11 +997,13 @@ class NotificationWidget extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: _getPriorityColor(notification.priority).withValues(alpha: 0.1),
+                    color: _getPriorityColor(notification.priority)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
-                    child: Text(notification.typeIcon, style: const TextStyle(fontSize: 20)),
+                    child: Text(notification.typeIcon,
+                        style: const TextStyle(fontSize: 20)),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -949,8 +1021,9 @@ class NotificationWidget extends StatelessWidget {
                               notification.title,
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight:
-                                    notification.isUnread ? FontWeight.bold : FontWeight.normal,
+                                fontWeight: notification.isUnread
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                               ),
                             ),
                           ),
@@ -958,7 +1031,10 @@ class NotificationWidget extends StatelessWidget {
                             _formatTime(notification.createdAt),
                             style: TextStyle(
                               fontSize: 12,
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -968,7 +1044,10 @@ class NotificationWidget extends StatelessWidget {
                         notification.body,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.7),
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

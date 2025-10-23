@@ -48,7 +48,9 @@ class FeatureRequestService {
         updatedAt: now,
       );
 
-      final docRef = await _firestore.collection('feature_requests').add(featureRequest.toMap());
+      final docRef = await _firestore
+          .collection('feature_requests')
+          .add(featureRequest.toMap());
 
       return docRef.id;
     } on Exception catch (e) {
@@ -70,7 +72,8 @@ class FeatureRequestService {
       return Stream.value([]);
     }
 
-    Query<Map<String, dynamic>> query = _firestore.collection('feature_requests');
+    Query<Map<String, dynamic>> query =
+        _firestore.collection('feature_requests');
 
     // Применяем фильтры
     if (status != null) {
@@ -105,10 +108,11 @@ class FeatureRequestService {
     query = query.limit(30);
 
     return query.snapshots().map(
-      (snapshot) => snapshot.docs
-          .map((doc) => FeatureRequest.fromMap({'id': doc.id, ...doc.data()}))
-          .toList(),
-    );
+          (snapshot) => snapshot.docs
+              .map((doc) =>
+                  FeatureRequest.fromMap({'id': doc.id, ...doc.data()}))
+              .toList(),
+        );
   }
 
   /// Получить предложения пользователя
@@ -124,7 +128,8 @@ class FeatureRequestService {
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map((doc) => FeatureRequest.fromMap({'id': doc.id, ...doc.data()}))
+              .map((doc) =>
+                  FeatureRequest.fromMap({'id': doc.id, ...doc.data()}))
               .toList(),
         );
   }
@@ -136,7 +141,8 @@ class FeatureRequestService {
     }
 
     try {
-      final doc = await _firestore.collection('feature_requests').doc(requestId).get();
+      final doc =
+          await _firestore.collection('feature_requests').doc(requestId).get();
 
       if (!doc.exists) {
         return null;
@@ -150,7 +156,8 @@ class FeatureRequestService {
   }
 
   /// Обновить предложение
-  Future<void> updateFeatureRequest(String requestId, Map<String, dynamic> updates) async {
+  Future<void> updateFeatureRequest(
+      String requestId, Map<String, dynamic> updates) async {
     if (!FeatureFlags.featureRequestsEnabled) {
       throw Exception('Предложения по функционалу отключены');
     }
@@ -281,10 +288,14 @@ class FeatureRequestService {
         updates['assignedTo'] = assignedTo;
       }
       if (estimatedCompletion != null) {
-        updates['estimatedCompletion'] = Timestamp.fromDate(estimatedCompletion);
+        updates['estimatedCompletion'] =
+            Timestamp.fromDate(estimatedCompletion);
       }
 
-      await _firestore.collection('feature_requests').doc(requestId).update(updates);
+      await _firestore
+          .collection('feature_requests')
+          .doc(requestId)
+          .update(updates);
     } on Exception catch (e) {
       debugPrint('Error updating feature request status: $e');
       throw Exception('Ошибка обновления статуса: $e');
@@ -343,7 +354,8 @@ class FeatureRequestService {
 
       return uniqueDocs.values
           .map(
-            (doc) => FeatureRequest.fromMap({'id': doc.id, ...doc.data()! as Map<String, dynamic>}),
+            (doc) => FeatureRequest.fromMap(
+                {'id': doc.id, ...doc.data()! as Map<String, dynamic>}),
           )
           .toList();
     } on Exception catch (e) {
@@ -394,19 +406,23 @@ class FeatureRequestService {
       }
 
       // Статистика по категориям
-      categoryStats[request.category] = (categoryStats[request.category] ?? 0) + 1;
+      categoryStats[request.category] =
+          (categoryStats[request.category] ?? 0) + 1;
 
       // Статистика по приоритетам
-      priorityStats[request.priority] = (priorityStats[request.priority] ?? 0) + 1;
+      priorityStats[request.priority] =
+          (priorityStats[request.priority] ?? 0) + 1;
 
       // Статистика по типам пользователей
-      userTypeStats[request.userType] = (userTypeStats[request.userType] ?? 0) + 1;
+      userTypeStats[request.userType] =
+          (userTypeStats[request.userType] ?? 0) + 1;
 
       // Общее количество голосов
       totalVotes += request.votes;
     }
 
-    final averageVotesPerRequest = totalRequests > 0 ? totalVotes / totalRequests : 0.0;
+    final averageVotesPerRequest =
+        totalRequests > 0 ? totalVotes / totalRequests : 0.0;
 
     return FeatureRequestStats(
       totalRequests: totalRequests,
@@ -426,28 +442,32 @@ class FeatureRequestService {
 
   /// Создать mock статистику
   FeatureRequestStats _createMockStats() => const FeatureRequestStats(
-    totalRequests: 25,
-    submittedRequests: 8,
-    underReviewRequests: 5,
-    approvedRequests: 4,
-    inDevelopmentRequests: 3,
-    completedRequests: 3,
-    rejectedRequests: 2,
-    categoryStats: {
-      FeatureCategory.ui: 8,
-      FeatureCategory.functionality: 10,
-      FeatureCategory.performance: 3,
-      FeatureCategory.integration: 2,
-      FeatureCategory.other: 2,
-    },
-    priorityStats: {
-      FeaturePriority.low: 5,
-      FeaturePriority.medium: 15,
-      FeaturePriority.high: 4,
-      FeaturePriority.critical: 1,
-    },
-    userTypeStats: {UserType.customer: 18, UserType.specialist: 6, UserType.admin: 1},
-    totalVotes: 156,
-    averageVotesPerRequest: 6.24,
-  );
+        totalRequests: 25,
+        submittedRequests: 8,
+        underReviewRequests: 5,
+        approvedRequests: 4,
+        inDevelopmentRequests: 3,
+        completedRequests: 3,
+        rejectedRequests: 2,
+        categoryStats: {
+          FeatureCategory.ui: 8,
+          FeatureCategory.functionality: 10,
+          FeatureCategory.performance: 3,
+          FeatureCategory.integration: 2,
+          FeatureCategory.other: 2,
+        },
+        priorityStats: {
+          FeaturePriority.low: 5,
+          FeaturePriority.medium: 15,
+          FeaturePriority.high: 4,
+          FeaturePriority.critical: 1,
+        },
+        userTypeStats: {
+          UserType.customer: 18,
+          UserType.specialist: 6,
+          UserType.admin: 1
+        },
+        totalVotes: 156,
+        averageVotesPerRequest: 6.24,
+      );
 }

@@ -27,33 +27,36 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-    appBar: AppBar(title: const Text('Отчеты и аналитика')),
-    body: Column(
-      children: [
-        // Вкладки
-        _buildTabs(),
+        appBar: AppBar(title: const Text('Отчеты и аналитика')),
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-        // Контент
-        Expanded(
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : _selectedTab == 'reports'
-              ? _buildReportsTab()
-              : _buildTemplatesTab(),
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'reports'
+                      ? _buildReportsTab()
+                      : _buildTemplatesTab(),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildTabs() => ResponsiveCard(
-    child: Row(
-      children: [
-        Expanded(child: _buildTabButton('reports', 'Отчеты', Icons.assessment)),
-        Expanded(child: _buildTabButton('templates', 'Шаблоны', Icons.description)),
-        Expanded(child: _buildTabButton('create', 'Создать', Icons.add)),
-      ],
-    ),
-  );
+        child: Row(
+          children: [
+            Expanded(
+                child: _buildTabButton('reports', 'Отчеты', Icons.assessment)),
+            Expanded(
+                child:
+                    _buildTabButton('templates', 'Шаблоны', Icons.description)),
+            Expanded(child: _buildTabButton('create', 'Создать', Icons.add)),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -69,9 +72,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? Colors.blue.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isSelected ? Colors.blue : Colors.grey.withValues(alpha: 0.3)),
+          border: Border.all(
+              color: isSelected
+                  ? Colors.blue
+                  : Colors.grey.withValues(alpha: 0.3)),
         ),
         child: Column(
           children: [
@@ -91,218 +99,232 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   Widget _buildReportsTab() => Column(
-    children: [
-      // Заголовок с фильтрами
-      ResponsiveCard(
-        child: Row(
-          children: [
-            Text('Отчеты', style: Theme.of(context).textTheme.titleMedium),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: _loadReports,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Обновить'),
-            ),
-          ],
-        ),
-      ),
-
-      // Список отчетов
-      Expanded(
-        child: _reports.isEmpty
-            ? const Center(child: Text('Отчеты не найдены'))
-            : ListView.builder(
-                itemCount: _reports.length,
-                itemBuilder: (context, index) {
-                  final report = _reports[index];
-                  return _buildReportCard(report);
-                },
-              ),
-      ),
-    ],
-  );
-
-  Widget _buildReportCard(Report report) => ResponsiveCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Заголовок
-        Row(
-          children: [
-            Icon(_getReportIcon(report.type), color: _getReportColor(report.type), size: 24),
-            const SizedBox(width: 8),
-            Expanded(child: Text(report.name, style: Theme.of(context).textTheme.titleMedium)),
-            _buildStatusChip(report.status),
-            PopupMenuButton<String>(
-              onSelected: (value) => _handleReportAction(value, report),
-              itemBuilder: (context) => [
-                if (report.isReady) ...[
-                  const PopupMenuItem(
-                    value: 'view',
-                    child: ListTile(leading: Icon(Icons.visibility), title: Text('Просмотреть')),
-                  ),
-                  const PopupMenuItem(
-                    value: 'download',
-                    child: ListTile(leading: Icon(Icons.download), title: Text('Скачать')),
-                  ),
-                ],
-                const PopupMenuItem(
-                  value: 'delete',
-                  child: ListTile(leading: Icon(Icons.delete), title: Text('Удалить')),
+        children: [
+          // Заголовок с фильтрами
+          ResponsiveCard(
+            child: Row(
+              children: [
+                Text('Отчеты', style: Theme.of(context).textTheme.titleMedium),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadReports,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
                 ),
               ],
-              child: const Icon(Icons.more_vert),
             ),
-          ],
-        ),
+          ),
 
-        const SizedBox(height: 12),
+          // Список отчетов
+          Expanded(
+            child: _reports.isEmpty
+                ? const Center(child: Text('Отчеты не найдены'))
+                : ListView.builder(
+                    itemCount: _reports.length,
+                    itemBuilder: (context, index) {
+                      final report = _reports[index];
+                      return _buildReportCard(report);
+                    },
+                  ),
+          ),
+        ],
+      );
 
-        // Описание
-        Text(report.description),
-
-        const SizedBox(height: 12),
-
-        // Метаданные
-        Row(
+  Widget _buildReportCard(Report report) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildInfoChip('Тип', report.type.name, Colors.blue),
-            const SizedBox(width: 8),
-            _buildInfoChip('Категория', report.category.name, Colors.green),
-          ],
-        ),
-
-        const SizedBox(height: 12),
-
-        // Время создания
-        Row(
-          children: [
-            const Icon(Icons.access_time, size: 16, color: Colors.grey),
-            const SizedBox(width: 4),
-            Text(
-              'Создан: ${_formatDateTime(report.createdAt)}',
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            // Заголовок
+            Row(
+              children: [
+                Icon(_getReportIcon(report.type),
+                    color: _getReportColor(report.type), size: 24),
+                const SizedBox(width: 8),
+                Expanded(
+                    child: Text(report.name,
+                        style: Theme.of(context).textTheme.titleMedium)),
+                _buildStatusChip(report.status),
+                PopupMenuButton<String>(
+                  onSelected: (value) => _handleReportAction(value, report),
+                  itemBuilder: (context) => [
+                    if (report.isReady) ...[
+                      const PopupMenuItem(
+                        value: 'view',
+                        child: ListTile(
+                            leading: Icon(Icons.visibility),
+                            title: Text('Просмотреть')),
+                      ),
+                      const PopupMenuItem(
+                        value: 'download',
+                        child: ListTile(
+                            leading: Icon(Icons.download),
+                            title: Text('Скачать')),
+                      ),
+                    ],
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: ListTile(
+                          leading: Icon(Icons.delete), title: Text('Удалить')),
+                    ),
+                  ],
+                  child: const Icon(Icons.more_vert),
+                ),
+              ],
             ),
-            if (report.generatedAt != null) ...[
-              const Spacer(),
-              Text(
-                'Сгенерирован: ${_formatDateTime(report.generatedAt!)}',
-                style: const TextStyle(color: Colors.green, fontSize: 12),
+
+            const SizedBox(height: 12),
+
+            // Описание
+            Text(report.description),
+
+            const SizedBox(height: 12),
+
+            // Метаданные
+            Row(
+              children: [
+                _buildInfoChip('Тип', report.type.name, Colors.blue),
+                const SizedBox(width: 8),
+                _buildInfoChip('Категория', report.category.name, Colors.green),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Время создания
+            Row(
+              children: [
+                const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  'Создан: ${_formatDateTime(report.createdAt)}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                if (report.generatedAt != null) ...[
+                  const Spacer(),
+                  Text(
+                    'Сгенерирован: ${_formatDateTime(report.generatedAt!)}',
+                    style: const TextStyle(color: Colors.green, fontSize: 12),
+                  ),
+                ],
+              ],
+            ),
+
+            // Ошибка
+            if (report.hasError && report.errorMessage != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.red),
+                ),
+                child: Text(
+                  'Ошибка: ${report.errorMessage}',
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
               ),
             ],
           ],
         ),
-
-        // Ошибка
-        if (report.hasError && report.errorMessage != null) ...[
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.red.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.red),
-            ),
-            child: Text(
-              'Ошибка: ${report.errorMessage}',
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-            ),
-          ),
-        ],
-      ],
-    ),
-  );
+      );
 
   Widget _buildTemplatesTab() => Column(
-    children: [
-      // Заголовок
-      ResponsiveCard(
-        child: Row(
-          children: [
-            Text('Шаблоны отчетов', style: Theme.of(context).textTheme.titleMedium),
-            const Spacer(),
-            ElevatedButton.icon(
-              onPressed: _loadTemplates,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Обновить'),
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                Text('Шаблоны отчетов',
+                    style: Theme.of(context).textTheme.titleMedium),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadTemplates,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-
-      // Список шаблонов
-      Expanded(
-        child: _templates.isEmpty
-            ? const Center(child: Text('Шаблоны не найдены'))
-            : ListView.builder(
-                itemCount: _templates.length,
-                itemBuilder: (context, index) {
-                  final template = _templates[index];
-                  return _buildTemplateCard(template);
-                },
-              ),
-      ),
-    ],
-  );
-
-  Widget _buildTemplateCard(ReportTemplate template) => ResponsiveCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Заголовок
-        Row(
-          children: [
-            Icon(_getReportIcon(template.type), color: _getReportColor(template.type), size: 24),
-            const SizedBox(width: 8),
-            Expanded(child: Text(template.name, style: Theme.of(context).textTheme.titleMedium)),
-            ElevatedButton(
-              onPressed: () => _createReportFromTemplate(template),
-              child: const Text('Создать отчет'),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 12),
-
-        // Описание
-        Text(template.description),
-
-        const SizedBox(height: 12),
-
-        // Метаданные
-        Row(
-          children: [
-            _buildInfoChip('Тип', template.type.name, Colors.blue),
-            const SizedBox(width: 8),
-            _buildInfoChip('Категория', template.category.name, Colors.green),
-          ],
-        ),
-
-        // Обязательные параметры
-        if (template.requiredParameters.isNotEmpty) ...[
-          const SizedBox(height: 12),
-          Text(
-            'Обязательные параметры:',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[600]),
           ),
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: template.requiredParameters
-                .map(
-                  (param) => Chip(
-                    label: Text(param),
-                    backgroundColor: Colors.orange.withValues(alpha: 0.1),
-                    labelStyle: const TextStyle(fontSize: 12),
+
+          // Список шаблонов
+          Expanded(
+            child: _templates.isEmpty
+                ? const Center(child: Text('Шаблоны не найдены'))
+                : ListView.builder(
+                    itemCount: _templates.length,
+                    itemBuilder: (context, index) {
+                      final template = _templates[index];
+                      return _buildTemplateCard(template);
+                    },
                   ),
-                )
-                .toList(),
           ),
         ],
-      ],
-    ),
-  );
+      );
+
+  Widget _buildTemplateCard(ReportTemplate template) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок
+            Row(
+              children: [
+                Icon(_getReportIcon(template.type),
+                    color: _getReportColor(template.type), size: 24),
+                const SizedBox(width: 8),
+                Expanded(
+                    child: Text(template.name,
+                        style: Theme.of(context).textTheme.titleMedium)),
+                ElevatedButton(
+                  onPressed: () => _createReportFromTemplate(template),
+                  child: const Text('Создать отчет'),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Описание
+            Text(template.description),
+
+            const SizedBox(height: 12),
+
+            // Метаданные
+            Row(
+              children: [
+                _buildInfoChip('Тип', template.type.name, Colors.blue),
+                const SizedBox(width: 8),
+                _buildInfoChip(
+                    'Категория', template.category.name, Colors.green),
+              ],
+            ),
+
+            // Обязательные параметры
+            if (template.requiredParameters.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                'Обязательные параметры:',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: template.requiredParameters
+                    .map(
+                      (param) => Chip(
+                        label: Text(param),
+                        backgroundColor: Colors.orange.withValues(alpha: 0.1),
+                        labelStyle: const TextStyle(fontSize: 12),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ],
+        ),
+      );
 
   Widget _buildStatusChip(ReportStatus status) {
     Color color;
@@ -336,23 +358,25 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       ),
       child: Text(
         text,
-        style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
+        style:
+            TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.bold),
       ),
     );
   }
 
   Widget _buildInfoChip(String label, String value, Color color) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: color),
-    ),
-    child: Text(
-      '$label: $value',
-      style: TextStyle(fontSize: 12, color: color, fontWeight: FontWeight.w500),
-    ),
-  );
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
+        ),
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+              fontSize: 12, color: color, fontWeight: FontWeight.w500),
+        ),
+      );
 
   IconData _getReportIcon(ReportType type) {
     switch (type) {
@@ -425,7 +449,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка загрузки отчетов: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка загрузки отчетов: $e'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -438,7 +464,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка загрузки шаблонов: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Ошибка загрузки шаблонов: $e'),
+            backgroundColor: Colors.red),
       );
     }
   }
@@ -450,7 +478,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         title: const Text('Создать отчет'),
         content: const Text('Выберите тип отчета для создания'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -466,14 +496,18 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   void _createCustomReport() {
     // TODO(developer): Реализовать создание пользовательского отчета
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Функция создания пользовательского отчета будет реализована')),
+      const SnackBar(
+          content: Text(
+              'Функция создания пользовательского отчета будет реализована')),
     );
   }
 
   void _createReportFromTemplate(ReportTemplate template) {
     // TODO(developer): Реализовать создание отчета по шаблону
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Создание отчета по шаблону "${template.name}" будет реализовано')),
+      SnackBar(
+          content: Text(
+              'Создание отчета по шаблону "${template.name}" будет реализовано')),
     );
   }
 
@@ -495,14 +529,16 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     // TODO(developer): Реализовать просмотр отчета
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Просмотр отчета "${report.name}" будет реализован')));
+    ).showSnackBar(SnackBar(
+        content: Text('Просмотр отчета "${report.name}" будет реализован')));
   }
 
   void _downloadReport(Report report) {
     // TODO(developer): Реализовать скачивание отчета
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('Скачивание отчета "${report.name}" будет реализовано')));
+    ).showSnackBar(SnackBar(
+        content: Text('Скачивание отчета "${report.name}" будет реализовано')));
   }
 
   void _deleteReport(Report report) {
@@ -512,7 +548,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
         title: const Text('Удалить отчет'),
         content: Text('Вы уверены, что хотите удалить отчет "${report.name}"?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -520,7 +558,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                 await _reportService.deleteReport(report.id);
                 _loadReports();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Отчет удален'), backgroundColor: Colors.green),
+                  const SnackBar(
+                      content: Text('Отчет удален'),
+                      backgroundColor: Colors.green),
                 );
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(

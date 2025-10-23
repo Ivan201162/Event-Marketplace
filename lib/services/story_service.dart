@@ -115,7 +115,7 @@ class StoryService {
       };
 
       final docRef = await _firestore.collection('stories').add(storyData);
-      
+
       debugPrint('✅ Story created successfully: ${docRef.id}');
       return docRef.id;
     } catch (e) {
@@ -161,7 +161,8 @@ class StoryService {
   }
 
   /// Удалить реакцию с сторис
-  Future<void> removeReaction(String storyId, String userId, String emoji) async {
+  Future<void> removeReaction(
+      String storyId, String userId, String emoji) async {
     try {
       final reaction = {
         'userId': userId,
@@ -247,7 +248,7 @@ class StoryService {
         .snapshots()
         .asyncMap((followingSnapshot) async {
       final followingIds = followingSnapshot.docs.map((doc) => doc.id).toList();
-      
+
       if (followingIds.isEmpty) return <Story>[];
 
       // Получаем активные сторис от подписок
@@ -259,7 +260,9 @@ class StoryService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return storiesSnapshot.docs.map((doc) => Story.fromFirestore(doc)).toList();
+      return storiesSnapshot.docs
+          .map((doc) => Story.fromFirestore(doc))
+          .toList();
     });
   }
 
@@ -279,7 +282,7 @@ class StoryService {
         final story = Story.fromFirestore(doc);
         totalViews += story.viewCount;
         totalReactions += story.reactionCount;
-        
+
         if (!story.isExpired) {
           activeStories++;
         }

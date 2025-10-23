@@ -41,8 +41,12 @@ class GalleryItem {
       title: data['title']?.toString() ?? '',
       description: data['description']?.toString(),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
-      tags: (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : null,
+      tags:
+          (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
+              [],
       isPublic: data['isPublic'] != false,
       isFeatured: data['isFeatured'] == true,
       viewCount: (data['viewCount'] as num?)?.toInt() ?? 0,
@@ -56,30 +60,35 @@ class GalleryItem {
 
   /// Создать из Map
   factory GalleryItem.fromMap(Map<String, dynamic> data) => GalleryItem(
-    id: data['id']?.toString() ?? '',
-    specialistId: data['specialistId']?.toString() ?? '',
-    type: GalleryItemType.values.firstWhere(
-      (e) => e.name == data['type'],
-      orElse: () => GalleryItemType.image,
-    ),
-    url: data['url']?.toString() ?? '',
-    thumbnailUrl: data['thumbnailUrl']?.toString() ?? '',
-    title: data['title']?.toString() ?? '',
-    description: data['description']?.toString(),
-    createdAt: data['createdAt'] != null
-        ? (data['createdAt'] as Timestamp).toDate()
-        : DateTime.now(),
-    updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : null,
-    tags: (data['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-    isPublic: data['isPublic'] != false,
-    isFeatured: data['isFeatured'] == true,
-    viewCount: (data['viewCount'] as num?)?.toInt() ?? 0,
-    likeCount: (data['likeCount'] as num?)?.toInt() ?? 0,
-    fileSize: (data['fileSize'] as num?)?.toInt(),
-    duration: (data['duration'] as num?)?.toDouble(),
-    width: (data['width'] as num?)?.toInt(),
-    height: (data['height'] as num?)?.toInt(),
-  );
+        id: data['id']?.toString() ?? '',
+        specialistId: data['specialistId']?.toString() ?? '',
+        type: GalleryItemType.values.firstWhere(
+          (e) => e.name == data['type'],
+          orElse: () => GalleryItemType.image,
+        ),
+        url: data['url']?.toString() ?? '',
+        thumbnailUrl: data['thumbnailUrl']?.toString() ?? '',
+        title: data['title']?.toString() ?? '',
+        description: data['description']?.toString(),
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: data['updatedAt'] != null
+            ? (data['updatedAt'] as Timestamp).toDate()
+            : null,
+        tags: (data['tags'] as List<dynamic>?)
+                ?.map((e) => e.toString())
+                .toList() ??
+            [],
+        isPublic: data['isPublic'] != false,
+        isFeatured: data['isFeatured'] == true,
+        viewCount: (data['viewCount'] as num?)?.toInt() ?? 0,
+        likeCount: (data['likeCount'] as num?)?.toInt() ?? 0,
+        fileSize: (data['fileSize'] as num?)?.toInt(),
+        duration: (data['duration'] as num?)?.toDouble(),
+        width: (data['width'] as num?)?.toInt(),
+        height: (data['height'] as num?)?.toInt(),
+      );
 
   final String id;
   final String specialistId;
@@ -102,24 +111,24 @@ class GalleryItem {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'type': type.name,
-    'url': url,
-    'thumbnailUrl': thumbnailUrl,
-    'title': title,
-    'description': description,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-    'tags': tags,
-    'isPublic': isPublic,
-    'isFeatured': isFeatured,
-    'viewCount': viewCount,
-    'likeCount': likeCount,
-    'fileSize': fileSize,
-    'duration': duration,
-    'width': width,
-    'height': height,
-  };
+        'specialistId': specialistId,
+        'type': type.name,
+        'url': url,
+        'thumbnailUrl': thumbnailUrl,
+        'title': title,
+        'description': description,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+        'tags': tags,
+        'isPublic': isPublic,
+        'isFeatured': isFeatured,
+        'viewCount': viewCount,
+        'likeCount': likeCount,
+        'fileSize': fileSize,
+        'duration': duration,
+        'width': width,
+        'height': height,
+      };
 
   /// Создать копию с изменениями
   GalleryItem copyWith({
@@ -141,26 +150,27 @@ class GalleryItem {
     double? duration,
     int? width,
     int? height,
-  }) => GalleryItem(
-    id: id ?? this.id,
-    specialistId: specialistId ?? this.specialistId,
-    type: type ?? this.type,
-    url: url ?? this.url,
-    thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-    tags: tags ?? this.tags,
-    isPublic: isPublic ?? this.isPublic,
-    isFeatured: isFeatured ?? this.isFeatured,
-    viewCount: viewCount ?? this.viewCount,
-    likeCount: likeCount ?? this.likeCount,
-    fileSize: fileSize ?? this.fileSize,
-    duration: duration ?? this.duration,
-    width: width ?? this.width,
-    height: height ?? this.height,
-  );
+  }) =>
+      GalleryItem(
+        id: id ?? this.id,
+        specialistId: specialistId ?? this.specialistId,
+        type: type ?? this.type,
+        url: url ?? this.url,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        tags: tags ?? this.tags,
+        isPublic: isPublic ?? this.isPublic,
+        isFeatured: isFeatured ?? this.isFeatured,
+        viewCount: viewCount ?? this.viewCount,
+        likeCount: likeCount ?? this.likeCount,
+        fileSize: fileSize ?? this.fileSize,
+        duration: duration ?? this.duration,
+        width: width ?? this.width,
+        height: height ?? this.height,
+      );
 
   /// Проверить, является ли файл изображением
   bool get isImage => type == GalleryItemType.image;

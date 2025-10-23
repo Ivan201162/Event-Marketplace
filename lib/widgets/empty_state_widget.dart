@@ -26,8 +26,10 @@ class EmptyStateWidget extends StatelessWidget {
               const SizedBox(height: 24),
               Text(
                 title,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey),
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
               if (subtitle != null) ...[

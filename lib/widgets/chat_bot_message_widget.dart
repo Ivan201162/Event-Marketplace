@@ -73,7 +73,8 @@ class ChatBotMessageWidget extends ConsumerWidget {
 
   Widget _buildTextMessage(BuildContext context) => Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+            color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
         child: Text(message.message, style: const TextStyle(fontSize: 14)),
       );
 
@@ -83,8 +84,9 @@ class ChatBotMessageWidget extends ConsumerWidget {
           // Текстовое сообщение
           Container(
             padding: const EdgeInsets.all(12),
-            decoration:
-                BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12)),
             child: Text(message.message, style: const TextStyle(fontSize: 14)),
           ),
           const SizedBox(height: 8),
@@ -98,7 +100,8 @@ class ChatBotMessageWidget extends ConsumerWidget {
                     (reply) => GestureDetector(
                       onTap: () => onQuickReplyTap?.call(reply.payload),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: Colors.blue[50],
                           borderRadius: BorderRadius.circular(20),
@@ -131,12 +134,14 @@ class ChatBotMessageWidget extends ConsumerWidget {
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(message.message, style: const TextStyle(fontSize: 14)),
+              child:
+                  Text(message.message, style: const TextStyle(fontSize: 14)),
             ),
             const SizedBox(height: 8),
           ],
           // Карточки
-          if (message.cards != null) ...message.cards!.map((card) => _buildCard(context, card)),
+          if (message.cards != null)
+            ...message.cards!.map((card) => _buildCard(context, card)),
         ],
       );
 
@@ -151,7 +156,8 @@ class ChatBotMessageWidget extends ConsumerWidget {
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(message.message, style: const TextStyle(fontSize: 14)),
+              child:
+                  Text(message.message, style: const TextStyle(fontSize: 14)),
             ),
             const SizedBox(height: 8),
           ],
@@ -172,7 +178,8 @@ class ChatBotMessageWidget extends ConsumerWidget {
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(message.message, style: const TextStyle(fontSize: 14)),
+              child:
+                  Text(message.message, style: const TextStyle(fontSize: 14)),
             ),
             const SizedBox(height: 8),
           ],
@@ -224,7 +231,8 @@ class ChatBotMessageWidget extends ConsumerWidget {
             // Изображение карточки
             if (card.imageUrl != null)
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Image.network(
                   card.imageUrl!,
                   height: 120,
@@ -244,15 +252,19 @@ class ChatBotMessageWidget extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(card.title,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
                   if (card.subtitle != null) ...[
                     const SizedBox(height: 4),
-                    Text(card.subtitle!, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                    Text(card.subtitle!,
+                        style:
+                            TextStyle(fontSize: 14, color: Colors.grey[600])),
                   ],
                   // Кнопки карточки
                   if (card.buttons != null && card.buttons!.isNotEmpty) ...[
                     const SizedBox(height: 12),
-                    ...card.buttons!.map((button) => _buildButton(context, button)),
+                    ...card.buttons!
+                        .map((button) => _buildButton(context, button)),
                   ],
                 ],
               ),
@@ -275,9 +287,11 @@ class ChatBotMessageWidget extends ConsumerWidget {
             Container(
               width: 40,
               height: 40,
-              decoration:
-                  BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
-              child: Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
+              decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8)),
+              child:
+                  Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
             ),
             const SizedBox(width: 12),
             // Контент элемента
@@ -286,10 +300,13 @@ class ChatBotMessageWidget extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(item.title,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.bold)),
                   if (item.subtitle != null) ...[
                     const SizedBox(height: 2),
-                    Text(item.subtitle!, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                    Text(item.subtitle!,
+                        style:
+                            TextStyle(fontSize: 12, color: Colors.grey[600])),
                   ],
                 ],
               ),

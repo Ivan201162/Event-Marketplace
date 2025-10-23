@@ -21,7 +21,7 @@ class Bootstrap {
   static Future<void> initialize() async {
     try {
       debugPrint('🔄 Bootstrap: Начинаем инициализацию...');
-      
+
       // Set up error handling first
       debugPrint('🔄 Bootstrap: Настройка обработки ошибок...');
       _setupErrorHandling();
@@ -108,7 +108,9 @@ class Bootstrap {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  kDebugMode ? details.exception.toString() : 'Попробуйте перезапустить приложение',
+                  kDebugMode
+                      ? details.exception.toString()
+                      : 'Попробуйте перезапустить приложение',
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 14),
                 ),
@@ -146,7 +148,8 @@ class Bootstrap {
 
       // Initialize Crashlytics
       if (!kDebugMode) {
-        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+        await FirebaseCrashlytics.instance
+            .setCrashlyticsCollectionEnabled(true);
       }
 
       debugPrint('✅ Firebase initialized successfully');
@@ -156,7 +159,8 @@ class Bootstrap {
       // If duplicate app, consider Firebase as already initialized and continue
       if (message.contains('duplicate-app') ||
           message.contains('A Firebase App named "[DEFAULT]" already exists')) {
-        debugPrint('ℹ️ Firebase already initialized (duplicate-app), continuing.');
+        debugPrint(
+            'ℹ️ Firebase already initialized (duplicate-app), continuing.');
         return;
       }
       rethrow;
@@ -168,7 +172,8 @@ class Bootstrap {
     try {
       // Get package info
       final packageInfo = await PackageInfo.fromPlatform();
-      debugPrint('📱 App version: ${packageInfo.version} (${packageInfo.buildNumber})');
+      debugPrint(
+          '📱 App version: ${packageInfo.version} (${packageInfo.buildNumber})');
 
       // Set system UI overlay style
       SystemChrome.setSystemUIOverlayStyle(

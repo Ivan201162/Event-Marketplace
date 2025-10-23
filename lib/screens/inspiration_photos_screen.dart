@@ -16,10 +16,12 @@ class InspirationPhotosScreen extends ConsumerStatefulWidget {
   final String userId;
 
   @override
-  ConsumerState<InspirationPhotosScreen> createState() => _InspirationPhotosScreenState();
+  ConsumerState<InspirationPhotosScreen> createState() =>
+      _InspirationPhotosScreenState();
 }
 
-class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScreen>
+class _InspirationPhotosScreenState
+    extends ConsumerState<InspirationPhotosScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   // final ImagePicker _imagePicker = ImagePicker();
@@ -56,8 +58,11 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
           ],
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: _showSearchDialog),
-          IconButton(icon: const Icon(Icons.filter_list), onPressed: _showFilterDialog),
+          IconButton(
+              icon: const Icon(Icons.search), onPressed: _showSearchDialog),
+          IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog),
         ],
       ),
       body: Column(
@@ -73,7 +78,11 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
           Expanded(
             child: TabBarView(
               controller: _tabController,
-              children: [_buildAllPhotosTab(photosAsync), _buildPublicPhotosTab(), _buildTagsTab()],
+              children: [
+                _buildAllPhotosTab(photosAsync),
+                _buildPublicPhotosTab(),
+                _buildTagsTab()
+              ],
             ),
           ),
         ],
@@ -86,50 +95,54 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
   }
 
   Widget _buildStatsCard(CustomerProfileStats stats) => Card(
-    margin: const EdgeInsets.all(8),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStatItem('Всего фото', stats.totalPhotos, Icons.photo_library),
-          _buildStatItem('Публичных', stats.publicPhotos, Icons.public),
-          _buildStatItem('Тегов', stats.totalTags, Icons.tag),
-        ],
-      ),
-    ),
-  );
+        margin: const EdgeInsets.all(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildStatItem(
+                  'Всего фото', stats.totalPhotos, Icons.photo_library),
+              _buildStatItem('Публичных', stats.publicPhotos, Icons.public),
+              _buildStatItem('Тегов', stats.totalTags, Icons.tag),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildStatItem(String label, int value, IconData icon) => Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(icon, size: 24),
-      const SizedBox(height: 4),
-      Text(value.toString(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-    ],
-  );
-
-  Widget _buildAllPhotosTab(AsyncValue<List<InspirationPhoto>> photosAsync) => photosAsync.when(
-    data: (photos) {
-      if (photos.isEmpty) {
-        return _buildEmptyState(
-          'Нет фото для вдохновения',
-          'Добавьте фото, которые вдохновляют вас на создание мероприятий',
-          Icons.photo_library_outlined,
-        );
-      }
-
-      return PhotoGridWidget(
-        photos: photos,
-        onPhotoTap: _showPhotoDetails,
-        onPhotoEdit: _showEditPhotoDialog,
-        onPhotoDelete: _deletePhoto,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 24),
+          const SizedBox(height: 4),
+          Text(value.toString(),
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        ],
       );
-    },
-    loading: () => const Center(child: CircularProgressIndicator()),
-    error: (error, stack) => _buildErrorState(error.toString()),
-  );
+
+  Widget _buildAllPhotosTab(AsyncValue<List<InspirationPhoto>> photosAsync) =>
+      photosAsync.when(
+        data: (photos) {
+          if (photos.isEmpty) {
+            return _buildEmptyState(
+              'Нет фото для вдохновения',
+              'Добавьте фото, которые вдохновляют вас на создание мероприятий',
+              Icons.photo_library_outlined,
+            );
+          }
+
+          return PhotoGridWidget(
+            photos: photos,
+            onPhotoTap: _showPhotoDetails,
+            onPhotoEdit: _showEditPhotoDialog,
+            onPhotoDelete: _deletePhoto,
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => _buildErrorState(error.toString()),
+      );
 
   Widget _buildPublicPhotosTab() {
     final publicPhotosAsync = ref.watch(publicPhotosProvider(widget.userId));
@@ -184,7 +197,8 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
   }
 
   Widget _buildTagCard(String tag) {
-    final photosByTagAsync = ref.watch(photosByTagProvider((widget.userId, tag)));
+    final photosByTagAsync =
+        ref.watch(photosByTagProvider((widget.userId, tag)));
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -202,38 +216,42 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
     );
   }
 
-  Widget _buildEmptyState(String title, String subtitle, IconData icon) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, size: 64, color: Colors.grey),
-        const SizedBox(height: 16),
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        Text(
-          subtitle,
-          style: const TextStyle(color: Colors.grey),
-          textAlign: TextAlign.center,
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) =>
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(title,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildErrorState(String error) => Center(
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(Icons.error_outline, size: 64, color: Colors.red),
-        const SizedBox(height: 16),
-        Text('Ошибка: $error'),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: () => ref.refresh(inspirationPhotosProvider(widget.userId)),
-          child: const Text('Повторить'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Ошибка: $error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () =>
+                  ref.refresh(inspirationPhotosProvider(widget.userId)),
+              child: const Text('Повторить'),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   void _showAddPhotoDialog() {
     showDialog<void>(
@@ -261,7 +279,9 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () {
               final query = _searchController.text.trim();
@@ -300,7 +320,8 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
               child: CachedNetworkImage(
                 imageUrl: photo.url,
                 fit: BoxFit.contain,
-                placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
@@ -312,7 +333,8 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
                   if (photo.caption != null) ...[
                     Text(
                       photo.caption!,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                   ],
@@ -321,8 +343,9 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
                       spacing: 4,
                       children: photo.tags
                           .map(
-                            (tag) =>
-                                Chip(label: Text(tag), labelStyle: const TextStyle(fontSize: 12)),
+                            (tag) => Chip(
+                                label: Text(tag),
+                                labelStyle: const TextStyle(fontSize: 12)),
                           )
                           .toList(),
                     ),
@@ -338,12 +361,14 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
                       const SizedBox(width: 4),
                       Text(
                         photo.isPublic ? 'Публичное' : 'Приватное',
-                        style: TextStyle(color: photo.isPublic ? Colors.green : Colors.grey),
+                        style: TextStyle(
+                            color: photo.isPublic ? Colors.green : Colors.grey),
                       ),
                       const Spacer(),
                       Text(
                         _formatDate(photo.uploadedAt),
-                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ],
                   ),
@@ -359,7 +384,9 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
   void _showEditPhotoDialog(InspirationPhoto photo) {
     // TODO(developer): Реализовать редактирование фото
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Редактирование фото будет добавлено в следующей версии')),
+      const SnackBar(
+          content:
+              Text('Редактирование фото будет добавлено в следующей версии')),
     );
   }
 
@@ -370,7 +397,9 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
         title: const Text('Удалить фото?'),
         content: const Text('Это действие нельзя отменить.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Отмена')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Отмена')),
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
@@ -391,7 +420,8 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => PhotosByTagScreen(userId: widget.userId, tag: tag),
+        builder: (context) =>
+            PhotosByTagScreen(userId: widget.userId, tag: tag),
       ),
     );
   }
@@ -400,7 +430,8 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
     Navigator.push(
       context,
       MaterialPageRoute<void>(
-        builder: (context) => PhotoSearchResultsScreen(userId: widget.userId, query: query),
+        builder: (context) =>
+            PhotoSearchResultsScreen(userId: widget.userId, query: query),
       ),
     );
   }
@@ -447,14 +478,16 @@ class PhotosByTagScreen extends ConsumerWidget {
     // TODO(developer): Редактировать фото
   }
 
-  void _deletePhoto(BuildContext context, WidgetRef ref, InspirationPhoto photo) {
+  void _deletePhoto(
+      BuildContext context, WidgetRef ref, InspirationPhoto photo) {
     // TODO(developer): Удалить фото
   }
 }
 
 /// Экран результатов поиска фото
 class PhotoSearchResultsScreen extends ConsumerWidget {
-  const PhotoSearchResultsScreen({super.key, required this.userId, required this.query});
+  const PhotoSearchResultsScreen(
+      {super.key, required this.userId, required this.query});
   final String userId;
   final String query;
 
@@ -491,7 +524,8 @@ class PhotoSearchResultsScreen extends ConsumerWidget {
     // TODO(developer): Редактировать фото
   }
 
-  void _deletePhoto(BuildContext context, WidgetRef ref, InspirationPhoto photo) {
+  void _deletePhoto(
+      BuildContext context, WidgetRef ref, InspirationPhoto photo) {
     // TODO(developer): Удалить фото
   }
 }

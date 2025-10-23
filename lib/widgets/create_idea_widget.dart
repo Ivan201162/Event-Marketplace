@@ -9,7 +9,8 @@ import '../providers/enhanced_ideas_providers.dart';
 
 /// Виджет для создания идеи
 class CreateIdeaWidget extends ConsumerStatefulWidget {
-  const CreateIdeaWidget({super.key, required this.authorId, this.onIdeaCreated});
+  const CreateIdeaWidget(
+      {super.key, required this.authorId, this.onIdeaCreated});
 
   final String authorId;
   final VoidCallback? onIdeaCreated;
@@ -95,7 +96,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
   Widget _buildIdeaTypeSelector() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Тип идеи', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Тип идеи',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -108,7 +110,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: isSelected ? Colors.blue : Colors.grey[200],
                     borderRadius: BorderRadius.circular(20),
@@ -122,7 +125,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                         type.displayName,
                         style: TextStyle(
                           color: isSelected ? Colors.white : Colors.black,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
                     ],
@@ -137,7 +141,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
   Widget _buildTitleField() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Заголовок', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Заголовок',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           TextField(
             controller: _titleController,
@@ -152,7 +157,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
   Widget _buildDescriptionField() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Описание', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Описание',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           TextField(
             controller: _descriptionController,
@@ -171,7 +177,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Медиафайлы', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const Text('Медиафайлы',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               Row(
                 children: [
                   IconButton(
@@ -213,8 +220,10 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                     borderRadius: BorderRadius.circular(8),
                     child: file.path.toLowerCase().endsWith('.mp4') ||
                             file.path.toLowerCase().endsWith('.mov')
-                        ? const Center(child: Icon(Icons.play_circle_fill, size: 40))
-                        : Image.file(File(file.path), fit: BoxFit.cover, width: 100, height: 100),
+                        ? const Center(
+                            child: Icon(Icons.play_circle_fill, size: 40))
+                        : Image.file(File(file.path),
+                            fit: BoxFit.cover, width: 100, height: 100),
                   ),
                   Positioned(
                     top: 4,
@@ -227,8 +236,10 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                       },
                       child: Container(
                         padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                        child: const Icon(Icons.close, color: Colors.white, size: 16),
+                        decoration: const BoxDecoration(
+                            color: Colors.red, shape: BoxShape.circle),
+                        child: const Icon(Icons.close,
+                            color: Colors.white, size: 16),
                       ),
                     ),
                   ),
@@ -242,12 +253,14 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
   Widget _buildTagsField() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Теги', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Теги',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           TextField(
             controller: _tagsController,
             decoration: const InputDecoration(
-              hintText: 'Введите теги через пробел (например: #событие #праздник)',
+              hintText:
+                  'Введите теги через пробел (например: #событие #праздник)',
               border: OutlineInputBorder(),
             ),
           ),
@@ -257,12 +270,13 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
   Widget _buildCategoryField() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Категория', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Категория',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           TextField(
             controller: _categoryController,
-            decoration:
-                const InputDecoration(hintText: 'Категория идеи', border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+                hintText: 'Категория идеи', border: OutlineInputBorder()),
           ),
         ],
       );
@@ -270,7 +284,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
   Widget _buildBudgetField() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Бюджет', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Бюджет',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           TextField(
             controller: _budgetController,
@@ -303,7 +318,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
   Widget _buildLocationField() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Местоположение', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('Местоположение',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           TextField(
             controller: _locationController,
@@ -354,7 +370,9 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                     CircleAvatar(
                       radius: 16,
                       child: Text(
-                        widget.authorId.isNotEmpty ? widget.authorId[0].toUpperCase() : 'U',
+                        widget.authorId.isNotEmpty
+                            ? widget.authorId[0].toUpperCase()
+                            : 'U',
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -363,13 +381,16 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
-                    Text('Сейчас', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                    Text('Сейчас',
+                        style:
+                            TextStyle(color: Colors.grey[600], fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Text(_selectedType.icon, style: const TextStyle(fontSize: 14)),
+                    Text(_selectedType.icon,
+                        style: const TextStyle(fontSize: 14)),
                     const SizedBox(width: 4),
                     Text(
                       _selectedType.displayName,
@@ -381,7 +402,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                   const SizedBox(height: 8),
                   Text(
                     _titleController.text,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
                 if (_descriptionController.text.isNotEmpty) ...[
@@ -396,7 +418,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Center(child: Text('Медиафайлы будут отображены здесь')),
+                    child: const Center(
+                        child: Text('Медиафайлы будут отображены здесь')),
                   ),
                 ],
                 if (_tagsController.text.isNotEmpty) ...[
@@ -408,14 +431,16 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                         .where((tag) => tag.trim().isNotEmpty)
                         .map(
                           (tag) => Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.blue[100],
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
                               tag.startsWith('#') ? tag : '#$tag',
-                              style: TextStyle(color: Colors.blue[800], fontSize: 12),
+                              style: TextStyle(
+                                  color: Colors.blue[800], fontSize: 12),
                             ),
                           ),
                         )
@@ -441,7 +466,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
                             '₽ ${_budgetController.text}',
                           ),
                         if (_timelineController.text.isNotEmpty)
-                          _buildPreviewDetailRow(Icons.schedule, 'Сроки', _timelineController.text),
+                          _buildPreviewDetailRow(Icons.schedule, 'Сроки',
+                              _timelineController.text),
                         if (_locationController.text.isNotEmpty)
                           _buildPreviewDetailRow(
                             Icons.location_on,
@@ -460,7 +486,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
     );
   }
 
-  Widget _buildPreviewDetailRow(IconData icon, String label, String value) => Padding(
+  Widget _buildPreviewDetailRow(IconData icon, String label, String value) =>
+      Padding(
         padding: const EdgeInsets.only(bottom: 4),
         child: Row(
           children: [
@@ -468,7 +495,8 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
             const SizedBox(width: 8),
             Text(
               '$label: ',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[700]),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.grey[700]),
             ),
             Expanded(
               child: Text(value, style: TextStyle(color: Colors.grey[600])),
@@ -542,13 +570,16 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
         type: _selectedType,
         media: [], // Будет заполнено в сервисе
         tags: tags,
-        category:
-            _categoryController.text.trim().isNotEmpty ? _categoryController.text.trim() : null,
+        category: _categoryController.text.trim().isNotEmpty
+            ? _categoryController.text.trim()
+            : null,
         budget: budget,
-        timeline:
-            _timelineController.text.trim().isNotEmpty ? _timelineController.text.trim() : null,
-        location:
-            _locationController.text.trim().isNotEmpty ? _locationController.text.trim() : null,
+        timeline: _timelineController.text.trim().isNotEmpty
+            ? _timelineController.text.trim()
+            : null,
+        location: _locationController.text.trim().isNotEmpty
+            ? _locationController.text.trim()
+            : null,
         isPublic: _isPublic,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -575,12 +606,14 @@ class _CreateIdeaWidgetState extends ConsumerState<CreateIdeaWidget> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.green));
   }
 }

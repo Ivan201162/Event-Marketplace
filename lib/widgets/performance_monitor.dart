@@ -16,7 +16,8 @@ class PerformanceMonitor extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final performanceNotifier = ref.watch<PerformanceNotifier>(performanceProvider);
+    final performanceNotifier =
+        ref.watch<PerformanceNotifier>(performanceProvider);
     final state = performanceNotifier.state;
     final needsOptimization = ref.watch<bool>(needsOptimizationProvider);
 
@@ -42,7 +43,8 @@ class PerformanceMonitor extends ConsumerWidget {
               _buildDetailRow('FPS', '${state.fps.toInt()}'),
               _buildDetailRow('Memory', '${state.memoryUsage}%'),
               _buildDetailRow('Battery', '${state.batteryLevel}%'),
-              _buildDetailRow('Connection', _getConnectionSpeedText(state.connectionSpeed)),
+              _buildDetailRow(
+                  'Connection', _getConnectionSpeedText(state.connectionSpeed)),
               const SizedBox(height: 4),
             ],
             _buildStatusIndicator(needsOptimization),
@@ -57,11 +59,14 @@ class PerformanceMonitor extends ConsumerWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('$label: ', style: const TextStyle(color: Colors.white, fontSize: 12)),
+            Text('$label: ',
+                style: const TextStyle(color: Colors.white, fontSize: 12)),
             Text(
               value,
-              style:
-                  const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -138,7 +143,8 @@ class OptimizationControls extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final performanceNotifier = ref.watch<PerformanceNotifier>(performanceProvider);
+    final performanceNotifier =
+        ref.watch<PerformanceNotifier>(performanceProvider);
     final state = performanceNotifier.state;
     final notifier = performanceNotifier;
 
@@ -162,7 +168,8 @@ class OptimizationControls extends ConsumerWidget {
     );
   }
 
-  Widget _buildOptimizationLevelSelector(PerformanceState state, PerformanceNotifier notifier) =>
+  Widget _buildOptimizationLevelSelector(
+          PerformanceState state, PerformanceNotifier notifier) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -177,8 +184,9 @@ class OptimizationControls extends ConsumerWidget {
             },
             items: OptimizationLevel.values
                 .map(
-                  (level) =>
-                      DropdownMenuItem(value: level, child: Text(_getOptimizationLevelText(level))),
+                  (level) => DropdownMenuItem(
+                      value: level,
+                      child: Text(_getOptimizationLevelText(level))),
                 )
                 .toList(),
           ),
@@ -187,7 +195,9 @@ class OptimizationControls extends ConsumerWidget {
 
   Widget _buildActionButtons(PerformanceNotifier notifier) => Row(
         children: [
-          ElevatedButton(onPressed: () => notifier.clearCache(), child: const Text('Очистить кэш')),
+          ElevatedButton(
+              onPressed: () => notifier.clearCache(),
+              child: const Text('Очистить кэш')),
           const SizedBox(width: 8),
           ElevatedButton(
             onPressed: () => notifier.forceCleanup(),
@@ -216,7 +226,8 @@ class PerformanceStats extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final performanceNotifier = ref.watch<PerformanceNotifier>(performanceProvider);
+    final performanceNotifier =
+        ref.watch<PerformanceNotifier>(performanceProvider);
     final state = performanceNotifier.state;
 
     return Card(
@@ -230,8 +241,10 @@ class PerformanceStats extends ConsumerWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _buildStatRow('FPS', '${state.fps.toInt()}', _getFPSColor(state.fps)),
-            _buildStatRow('Память', '${state.memoryUsage}%', _getMemoryColor(state.memoryUsage)),
+            _buildStatRow(
+                'FPS', '${state.fps.toInt()}', _getFPSColor(state.fps)),
+            _buildStatRow('Память', '${state.memoryUsage}%',
+                _getMemoryColor(state.memoryUsage)),
             _buildStatRow(
               'Батарея',
               '${state.batteryLevel}%',

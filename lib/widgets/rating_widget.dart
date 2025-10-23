@@ -68,7 +68,8 @@ class RatingDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final defaultTextStyle = theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
+    final defaultTextStyle =
+        theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -122,7 +123,10 @@ class RatingDistributionWidget extends StatelessWidget {
             children: [
               Text(
                 '$rating',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
                 textWidthBasis: TextWidthBasis.longestLine,
               ),
@@ -140,7 +144,10 @@ class RatingDistributionWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 '$count',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: Colors.grey[600]),
               ),
             ],
           ),
@@ -178,7 +185,8 @@ class RatingSelectorWidget extends StatelessWidget {
             onTap: () => onRatingChanged(starIndex.toDouble()),
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 4),
-              child: Icon(isFilled ? Icons.star : Icons.star_border, size: starSize, color: color),
+              child: Icon(isFilled ? Icons.star : Icons.star_border,
+                  size: starSize, color: color),
             ),
           );
         }),

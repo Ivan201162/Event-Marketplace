@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 class PerformanceOptimizer {
   factory PerformanceOptimizer() => _instance;
   PerformanceOptimizer._internal();
-  static final PerformanceOptimizer _instance = PerformanceOptimizer._internal();
+  static final PerformanceOptimizer _instance =
+      PerformanceOptimizer._internal();
 
   final Map<String, DateTime> _lastRequestTimes = {};
   final Map<String, int> _requestCounts = {};
@@ -45,7 +46,8 @@ class PerformanceOptimizer {
 
     // Обработчик ошибок в изолятах
     PlatformDispatcher.instance.onError = (error, stack) {
-      developer.log('Platform Error: $error', name: 'PERFORMANCE', error: error, stackTrace: stack);
+      developer.log('Platform Error: $error',
+          name: 'PERFORMANCE', error: error, stackTrace: stack);
 
       if (!kDebugMode) {
         try {
@@ -82,7 +84,8 @@ class PerformanceOptimizer {
 
     // Проверка лимита
     if (requestCount >= _maxRequestsPerMinute) {
-      developer.log('Request limit exceeded for $requestType', name: 'PERFORMANCE');
+      developer.log('Request limit exceeded for $requestType',
+          name: 'PERFORMANCE');
       return false;
     }
 
@@ -146,7 +149,8 @@ class PerformanceOptimizer {
   }
 
   /// Измерение производительности
-  Future<T> measurePerformance<T>(String operationName, Future<T> Function() operation) async {
+  Future<T> measurePerformance<T>(
+      String operationName, Future<T> Function() operation) async {
     final stopwatch = Stopwatch()..start();
 
     try {
@@ -173,7 +177,8 @@ class PerformanceOptimizer {
   }
 
   /// Оптимизация Firebase запросов
-  dynamic optimizeFirebaseQuery(dynamic query, {int? limit, bool useCache = true}) {
+  dynamic optimizeFirebaseQuery(dynamic query,
+      {int? limit, bool useCache = true}) {
     // Добавляем лимит если не указан
     if (limit != null && query != null) {
       // query = query.limit(limit);
@@ -185,7 +190,8 @@ class PerformanceOptimizer {
   /// Проверка памяти
   void checkMemoryUsage() {
     if (kDebugMode) {
-      developer.log('Memory: Image cache size: ${_imageCache.length}', name: 'PERFORMANCE');
+      developer.log('Memory: Image cache size: ${_imageCache.length}',
+          name: 'PERFORMANCE');
     }
   }
 }
@@ -197,7 +203,8 @@ extension PerformanceFutureExtension<T> on Future<T> {
       PerformanceOptimizer().measurePerformance(operationName, () => this);
 
   /// Выполнить с дебаунсом
-  Future<T> withDebounce(String key, {Duration delay = const Duration(milliseconds: 300)}) {
+  Future<T> withDebounce(String key,
+      {Duration delay = const Duration(milliseconds: 300)}) {
     final completer = Completer<T>();
 
     PerformanceOptimizer().debounce(key, () {
@@ -219,5 +226,6 @@ extension PerformanceListExtension<T> on List<T> {
 extension PerformanceQueryExtension on dynamic {
   /// Оптимизировать Firebase запрос
   dynamic optimized({int? limit, bool useCache = true}) =>
-      PerformanceOptimizer().optimizeFirebaseQuery(this, limit: limit, useCache: useCache);
+      PerformanceOptimizer()
+          .optimizeFirebaseQuery(this, limit: limit, useCache: useCache);
 }

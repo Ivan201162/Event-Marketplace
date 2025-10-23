@@ -20,13 +20,15 @@ class SpecialistScheduleService {
 
     try {
       // Получаем бронирования специалиста
-      final bookings = await _getSpecialistBookings(specialistId, startDate, endDate);
+      final bookings =
+          await _getSpecialistBookings(specialistId, startDate, endDate);
 
       // Получаем рабочие часы специалиста
       final workingHours = await _getSpecialistWorkingHours(specialistId);
 
       // Получаем исключения (отпуска, больничные и т.д.)
-      final exceptions = await _getSpecialistExceptions(specialistId, startDate, endDate);
+      final exceptions =
+          await _getSpecialistExceptions(specialistId, startDate, endDate);
 
       return SpecialistSchedule(
         specialistId: specialistId,
@@ -68,7 +70,8 @@ class SpecialistScheduleService {
           start1: startTime,
           end1: endTime,
           start2: booking.eventDate,
-          end2: booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)),
+          end2: booking.endDate ??
+              booking.eventDate.add(const Duration(hours: 2)),
         )) {
           return false;
         }
@@ -84,7 +87,8 @@ class SpecialistScheduleService {
       final startHour = startTime.hour + startTime.minute / 60.0;
       final endHour = endTime.hour + endTime.minute / 60.0;
 
-      if (startHour < workingHours.startHour || endHour > workingHours.endHour) {
+      if (startHour < workingHours.startHour ||
+          endHour > workingHours.endHour) {
         return false;
       }
 
@@ -138,9 +142,13 @@ class SpecialistScheduleService {
     required Map<int, WorkingHours> workingHours,
   }) async {
     try {
-      await _firestore.collection('specialist_working_hours').doc(specialistId).set({
+      await _firestore
+          .collection('specialist_working_hours')
+          .doc(specialistId)
+          .set({
         'specialistId': specialistId,
-        'workingHours': workingHours.map((key, value) => MapEntry(key.toString(), value.toMap())),
+        'workingHours': workingHours
+            .map((key, value) => MapEntry(key.toString(), value.toMap())),
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
@@ -161,8 +169,8 @@ class SpecialistScheduleService {
           .where('specialistId', isEqualTo: specialistId)
           .where('eventDate', isGreaterThanOrEqualTo: startDate)
           .where('eventDate', isLessThanOrEqualTo: endDate)
-          .where('status', whereIn: ['confirmed', 'paid', 'advance_paid'])
-          .get();
+          .where('status',
+              whereIn: ['confirmed', 'paid', 'advance_paid']).get();
 
       return snapshot.docs.map(Booking.fromDocument).toList();
     } catch (e) {
@@ -170,16 +178,20 @@ class SpecialistScheduleService {
     }
   }
 
-  Future<Map<int, WorkingHours>> _getSpecialistWorkingHours(String specialistId) async {
+  Future<Map<int, WorkingHours>> _getSpecialistWorkingHours(
+      String specialistId) async {
     try {
-      final doc = await _firestore.collection('specialist_working_hours').doc(specialistId).get();
+      final doc = await _firestore
+          .collection('specialist_working_hours')
+          .doc(specialistId)
+          .get();
       if (doc.exists) {
         final data = doc.data();
         final workingHoursData = data['workingHours'] as Map<String, dynamic>;
 
         return workingHoursData.map(
-          (key, value) =>
-              MapEntry(int.parse(key), WorkingHours.fromMap(Map<String, dynamic>.from(value))),
+          (key, value) => MapEntry(int.parse(key),
+              WorkingHours.fromMap(Map<String, dynamic>.from(value))),
         );
       }
 
@@ -210,21 +222,29 @@ class SpecialistScheduleService {
   }
 
   Map<int, WorkingHours> _getDefaultWorkingHours() => {
-    1: const WorkingHours(isWorking: true, startHour: 9, endHour: 18), // Понедельник
-    2: const WorkingHours(isWorking: true, startHour: 9, endHour: 18), // Вторник
-    3: const WorkingHours(isWorking: true, startHour: 9, endHour: 18), // Среда
-    4: const WorkingHours(isWorking: true, startHour: 9, endHour: 18), // Четверг
-    5: const WorkingHours(isWorking: true, startHour: 9, endHour: 18), // Пятница
-    6: const WorkingHours(isWorking: false, startHour: 0, endHour: 0), // Суббота
-    7: const WorkingHours(isWorking: false, startHour: 0, endHour: 0), // Воскресенье
-  };
+        1: const WorkingHours(
+            isWorking: true, startHour: 9, endHour: 18), // Понедельник
+        2: const WorkingHours(
+            isWorking: true, startHour: 9, endHour: 18), // Вторник
+        3: const WorkingHours(
+            isWorking: true, startHour: 9, endHour: 18), // Среда
+        4: const WorkingHours(
+            isWorking: true, startHour: 9, endHour: 18), // Четверг
+        5: const WorkingHours(
+            isWorking: true, startHour: 9, endHour: 18), // Пятница
+        6: const WorkingHours(
+            isWorking: false, startHour: 0, endHour: 0), // Суббота
+        7: const WorkingHours(
+            isWorking: false, startHour: 0, endHour: 0), // Воскресенье
+      };
 
   bool _isTimeOverlapping({
     required DateTime start1,
     required DateTime end1,
     required DateTime start2,
     required DateTime end2,
-  }) => start1.isBefore(end2) && end1.isAfter(start2);
+  }) =>
+      start1.isBefore(end2) && end1.isAfter(start2);
 
   Map<DateTime, AvailabilityStatus> _calculateAvailability({
     required DateTime startDate,
@@ -246,8 +266,10 @@ class SpecialistScheduleService {
         // Проверяем исключения
         var hasException = false;
         for (final exception in exceptions) {
-          if (currentDate.isAfter(exception.startDate.subtract(const Duration(days: 1))) &&
-              currentDate.isBefore(exception.endDate.add(const Duration(days: 1)))) {
+          if (currentDate.isAfter(
+                  exception.startDate.subtract(const Duration(days: 1))) &&
+              currentDate
+                  .isBefore(exception.endDate.add(const Duration(days: 1)))) {
             availability[currentDate] = AvailabilityStatus.blocked;
             hasException = true;
             break;

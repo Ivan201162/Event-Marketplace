@@ -30,62 +30,67 @@ class CustomerPortfolio {
   }
 
   /// Создать из Map
-  factory CustomerPortfolio.fromMap(Map<String, dynamic> data, [String? id]) => CustomerPortfolio(
-    id: id ?? data['id'] ?? '',
-    name: data['name'] ?? '',
-    email: data['email'] ?? '',
-    avatarUrl: data['avatarUrl'],
-    phoneNumber: data['phoneNumber'],
-    maritalStatus: data['maritalStatus'] != null
-        ? MaritalStatus.values.firstWhere(
-            (e) => e.name == data['maritalStatus'],
-            orElse: () => MaritalStatus.single,
-          )
-        : MaritalStatus.single,
-    weddingDate: data['weddingDate'] != null
-        ? (data['weddingDate'] is Timestamp
-              ? (data['weddingDate'] as Timestamp).toDate()
-              : DateTime.parse(data['weddingDate'].toString()))
-        : null,
-    partnerName: data['partnerName'],
-    favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] ?? []),
-    anniversaries:
-        (data['anniversaries'] as List<dynamic>?)
-            ?.map((e) => e is Timestamp ? e.toDate() : DateTime.parse(e.toString()))
-            .toList() ??
-        [],
-    notes: data['notes'],
-    anniversaryRemindersEnabled: data['anniversaryRemindersEnabled'] as bool? ?? false,
-    createdAt: data['createdAt'] != null
-        ? (data['createdAt'] is Timestamp
-              ? (data['createdAt'] as Timestamp).toDate()
-              : DateTime.parse(data['createdAt'].toString()))
-        : DateTime.now(),
-    lastLoginAt: data['lastLoginAt'] != null
-        ? (data['lastLoginAt'] is Timestamp
-              ? (data['lastLoginAt'] as Timestamp).toDate()
-              : DateTime.parse(data['lastLoginAt'].toString()))
-        : null,
-    additionalData: data['additionalData'],
-  );
+  factory CustomerPortfolio.fromMap(Map<String, dynamic> data, [String? id]) =>
+      CustomerPortfolio(
+        id: id ?? data['id'] ?? '',
+        name: data['name'] ?? '',
+        email: data['email'] ?? '',
+        avatarUrl: data['avatarUrl'],
+        phoneNumber: data['phoneNumber'],
+        maritalStatus: data['maritalStatus'] != null
+            ? MaritalStatus.values.firstWhere(
+                (e) => e.name == data['maritalStatus'],
+                orElse: () => MaritalStatus.single,
+              )
+            : MaritalStatus.single,
+        weddingDate: data['weddingDate'] != null
+            ? (data['weddingDate'] is Timestamp
+                ? (data['weddingDate'] as Timestamp).toDate()
+                : DateTime.parse(data['weddingDate'].toString()))
+            : null,
+        partnerName: data['partnerName'],
+        favoriteSpecialists:
+            List<String>.from(data['favoriteSpecialists'] ?? []),
+        anniversaries: (data['anniversaries'] as List<dynamic>?)
+                ?.map((e) =>
+                    e is Timestamp ? e.toDate() : DateTime.parse(e.toString()))
+                .toList() ??
+            [],
+        notes: data['notes'],
+        anniversaryRemindersEnabled:
+            data['anniversaryRemindersEnabled'] as bool? ?? false,
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] is Timestamp
+                ? (data['createdAt'] as Timestamp).toDate()
+                : DateTime.parse(data['createdAt'].toString()))
+            : DateTime.now(),
+        lastLoginAt: data['lastLoginAt'] != null
+            ? (data['lastLoginAt'] is Timestamp
+                ? (data['lastLoginAt'] as Timestamp).toDate()
+                : DateTime.parse(data['lastLoginAt'].toString()))
+            : null,
+        additionalData: data['additionalData'],
+      );
 
   /// Создать из Customer
-  factory CustomerPortfolio.fromCustomer(Customer customer) => CustomerPortfolio(
-    id: customer.id,
-    name: customer.name,
-    email: customer.email,
-    avatarUrl: customer.avatarUrl,
-    phoneNumber: customer.phoneNumber,
-    maritalStatus: customer.maritalStatus,
-    weddingDate: customer.weddingDate,
-    partnerName: customer.partnerName,
-    favoriteSpecialists: customer.favoriteSpecialists,
-    anniversaries: customer.weddingDate != null ? [customer.weddingDate!] : [],
-    anniversaryRemindersEnabled: customer.anniversaryRemindersEnabled,
-    createdAt: customer.createdAt,
-    lastLoginAt: customer.lastLoginAt,
-    additionalData: customer.additionalData,
-  );
+  factory CustomerPortfolio.fromCustomer(Customer customer) =>
+      CustomerPortfolio(
+        id: customer.id,
+        name: customer.name,
+        email: customer.email,
+        avatarUrl: customer.avatarUrl,
+        phoneNumber: customer.phoneNumber,
+        maritalStatus: customer.maritalStatus,
+        weddingDate: customer.weddingDate,
+        partnerName: customer.partnerName,
+        favoriteSpecialists: customer.favoriteSpecialists,
+        anniversaries:
+            customer.weddingDate != null ? [customer.weddingDate!] : [],
+        anniversaryRemindersEnabled: customer.anniversaryRemindersEnabled,
+        createdAt: customer.createdAt,
+        lastLoginAt: customer.lastLoginAt,
+        additionalData: customer.additionalData,
+      );
   final String id;
   final String name;
   final String email;
@@ -104,21 +109,23 @@ class CustomerPortfolio {
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'email': email,
-    'avatarUrl': avatarUrl,
-    'phoneNumber': phoneNumber,
-    'maritalStatus': maritalStatus.name,
-    'weddingDate': weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
-    'partnerName': partnerName,
-    'favoriteSpecialists': favoriteSpecialists,
-    'anniversaries': anniversaries.map(Timestamp.fromDate).toList(),
-    'notes': notes,
-    'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'lastLoginAt': lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
-    'additionalData': additionalData,
-  };
+        'name': name,
+        'email': email,
+        'avatarUrl': avatarUrl,
+        'phoneNumber': phoneNumber,
+        'maritalStatus': maritalStatus.name,
+        'weddingDate':
+            weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
+        'partnerName': partnerName,
+        'favoriteSpecialists': favoriteSpecialists,
+        'anniversaries': anniversaries.map(Timestamp.fromDate).toList(),
+        'notes': notes,
+        'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'lastLoginAt':
+            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+        'additionalData': additionalData,
+      };
 
   /// Копировать с изменениями
   CustomerPortfolio copyWith({
@@ -137,23 +144,25 @@ class CustomerPortfolio {
     DateTime? createdAt,
     DateTime? lastLoginAt,
     Map<String, dynamic>? additionalData,
-  }) => CustomerPortfolio(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    email: email ?? this.email,
-    avatarUrl: avatarUrl ?? this.avatarUrl,
-    phoneNumber: phoneNumber ?? this.phoneNumber,
-    maritalStatus: maritalStatus ?? this.maritalStatus,
-    weddingDate: weddingDate ?? this.weddingDate,
-    partnerName: partnerName ?? this.partnerName,
-    favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
-    anniversaries: anniversaries ?? this.anniversaries,
-    notes: notes ?? this.notes,
-    anniversaryRemindersEnabled: anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
-    createdAt: createdAt ?? this.createdAt,
-    lastLoginAt: lastLoginAt ?? this.lastLoginAt,
-    additionalData: additionalData ?? this.additionalData,
-  );
+  }) =>
+      CustomerPortfolio(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        email: email ?? this.email,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        maritalStatus: maritalStatus ?? this.maritalStatus,
+        weddingDate: weddingDate ?? this.weddingDate,
+        partnerName: partnerName ?? this.partnerName,
+        favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
+        anniversaries: anniversaries ?? this.anniversaries,
+        notes: notes ?? this.notes,
+        anniversaryRemindersEnabled:
+            anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
+        createdAt: createdAt ?? this.createdAt,
+        lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+        additionalData: additionalData ?? this.additionalData,
+      );
 
   /// Получить количество лет в браке
   int? get yearsMarried {
@@ -183,7 +192,8 @@ class CustomerPortfolio {
   }
 
   /// Проверить, является ли специалист в избранном
-  bool isFavoriteSpecialist(String specialistId) => favoriteSpecialists.contains(specialistId);
+  bool isFavoriteSpecialist(String specialistId) =>
+      favoriteSpecialists.contains(specialistId);
 
   /// Добавить годовщину
   CustomerPortfolio addAnniversary(DateTime anniversary) {
@@ -199,7 +209,8 @@ class CustomerPortfolio {
   /// Удалить годовщину
   CustomerPortfolio removeAnniversary(DateTime anniversary) {
     final newAnniversaries = anniversaries
-        .where((date) => !(date.month == anniversary.month && date.day == anniversary.day))
+        .where((date) =>
+            !(date.month == anniversary.month && date.day == anniversary.day))
         .toList();
     return copyWith(anniversaries: newAnniversaries);
   }
@@ -207,13 +218,15 @@ class CustomerPortfolio {
   /// Добавить специалиста в избранное
   CustomerPortfolio addFavoriteSpecialist(String specialistId) {
     if (favoriteSpecialists.contains(specialistId)) return this;
-    final newFavorites = List<String>.from(favoriteSpecialists)..add(specialistId);
+    final newFavorites = List<String>.from(favoriteSpecialists)
+      ..add(specialistId);
     return copyWith(favoriteSpecialists: newFavorites);
   }
 
   /// Удалить специалиста из избранного
   CustomerPortfolio removeFavoriteSpecialist(String specialistId) {
-    final newFavorites = favoriteSpecialists.where((id) => id != specialistId).toList();
+    final newFavorites =
+        favoriteSpecialists.where((id) => id != specialistId).toList();
     return copyWith(favoriteSpecialists: newFavorites);
   }
 
@@ -224,7 +237,8 @@ class CustomerPortfolio {
 
     for (final anniversary in anniversaries) {
       final thisYear = DateTime(now.year, anniversary.month, anniversary.day);
-      final nextYear = DateTime(now.year + 1, anniversary.month, anniversary.day);
+      final nextYear =
+          DateTime(now.year + 1, anniversary.month, anniversary.day);
 
       if (thisYear.isAfter(now) && thisYear.difference(now).inDays <= 30) {
         upcoming.add(thisYear);
@@ -241,20 +255,21 @@ class CustomerPortfolio {
   List<DateTime> get todayAnniversaries {
     final now = DateTime.now();
     return anniversaries
-        .where((anniversary) => anniversary.month == now.month && anniversary.day == now.day)
+        .where((anniversary) =>
+            anniversary.month == now.month && anniversary.day == now.day)
         .toList();
   }
 
   /// Получить статистику портфолио
   Map<String, dynamic> get portfolioStats => {
-    'favoriteSpecialistsCount': favoriteSpecialists.length,
-    'anniversariesCount': anniversaries.length,
-    'upcomingAnniversariesCount': upcomingAnniversaries.length,
-    'todayAnniversariesCount': todayAnniversaries.length,
-    'yearsMarried': yearsMarried,
-    'hasNotes': notes != null && notes!.isNotEmpty,
-    'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
-  };
+        'favoriteSpecialistsCount': favoriteSpecialists.length,
+        'anniversariesCount': anniversaries.length,
+        'upcomingAnniversariesCount': upcomingAnniversaries.length,
+        'todayAnniversariesCount': todayAnniversaries.length,
+        'yearsMarried': yearsMarried,
+        'hasNotes': notes != null && notes!.isNotEmpty,
+        'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
+      };
 
   @override
   bool operator ==(Object other) {

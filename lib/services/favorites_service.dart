@@ -8,9 +8,13 @@ class FavoritesService {
   static const String _collectionName = 'favorites';
 
   /// Добавить специалиста в избранное
-  Future<void> addToFavorites({required String userId, required String specialistId}) async {
+  Future<void> addToFavorites(
+      {required String userId, required String specialistId}) async {
     try {
-      await _firestore.collection(_collectionName).doc('${userId}_$specialistId').set({
+      await _firestore
+          .collection(_collectionName)
+          .doc('${userId}_$specialistId')
+          .set({
         'userId': userId,
         'specialistId': specialistId,
         'createdAt': FieldValue.serverTimestamp(),
@@ -22,9 +26,13 @@ class FavoritesService {
   }
 
   /// Удалить специалиста из избранного
-  Future<void> removeFromFavorites({required String userId, required String specialistId}) async {
+  Future<void> removeFromFavorites(
+      {required String userId, required String specialistId}) async {
     try {
-      await _firestore.collection(_collectionName).doc('${userId}_$specialistId').delete();
+      await _firestore
+          .collection(_collectionName)
+          .doc('${userId}_$specialistId')
+          .delete();
     } catch (e) {
       debugPrint('Ошибка удаления из избранного: $e');
       throw Exception('Не удалось удалить из избранного');
@@ -32,9 +40,13 @@ class FavoritesService {
   }
 
   /// Проверить, находится ли специалист в избранном
-  Future<bool> isFavorite({required String userId, required String specialistId}) async {
+  Future<bool> isFavorite(
+      {required String userId, required String specialistId}) async {
     try {
-      final doc = await _firestore.collection(_collectionName).doc('${userId}_$specialistId').get();
+      final doc = await _firestore
+          .collection(_collectionName)
+          .doc('${userId}_$specialistId')
+          .get();
       return doc.exists;
     } catch (e) {
       debugPrint('Ошибка проверки избранного: $e');
@@ -71,11 +83,12 @@ class FavoritesService {
   }
 
   /// Получить поток избранных специалистов
-  Stream<List<Specialist>> getFavoriteSpecialistsStream(String userId) => _firestore
-      .collection(_collectionName)
-      .where('userId', isEqualTo: userId)
-      .snapshots()
-      .asyncMap((favoritesSnapshot) async {
+  Stream<List<Specialist>> getFavoriteSpecialistsStream(String userId) =>
+      _firestore
+          .collection(_collectionName)
+          .where('userId', isEqualTo: userId)
+          .snapshots()
+          .asyncMap((favoritesSnapshot) async {
         if (favoritesSnapshot.docs.isEmpty) {
           return <Specialist>[];
         }
@@ -107,9 +120,11 @@ class FavoritesService {
   }
 
   /// Переключить статус избранного
-  Future<bool> toggleFavorite({required String userId, required String specialistId}) async {
+  Future<bool> toggleFavorite(
+      {required String userId, required String specialistId}) async {
     try {
-      final isCurrentlyFavorite = await isFavorite(userId: userId, specialistId: specialistId);
+      final isCurrentlyFavorite =
+          await isFavorite(userId: userId, specialistId: specialistId);
 
       if (isCurrentlyFavorite) {
         await removeFromFavorites(userId: userId, specialistId: specialistId);

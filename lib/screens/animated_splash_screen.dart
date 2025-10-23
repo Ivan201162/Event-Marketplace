@@ -15,7 +15,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
   late AnimationController _logoController;
   late AnimationController _fadeController;
   late AnimationController _textController;
-  
+
   late Animation<double> _logoScaleAnimation;
   late Animation<double> _logoFadeAnimation;
   late Animation<double> _fadeOutAnimation;
@@ -101,7 +101,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
   Future<void> _startInitialization() async {
     // Запускаем анимацию логотипа
     _logoController.forward();
-    
+
     // Запускаем анимацию текста
     _textController.repeat(reverse: true);
 
@@ -147,7 +147,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
         _statusText = 'Ошибка инициализации';
         _progress = 1.0;
       });
-      
+
       // В случае ошибки переходим к экрану авторизации
       await Future.delayed(const Duration(seconds: 2));
       if (mounted) {
@@ -174,7 +174,8 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
     return Scaffold(
       backgroundColor: const Color(0xFF1E3A8A), // Темно-синий фон
       body: AnimatedBuilder(
-        animation: Listenable.merge([_logoController, _fadeController, _textController]),
+        animation: Listenable.merge(
+            [_logoController, _fadeController, _textController]),
         builder: (context, child) {
           return Opacity(
             opacity: _fadeOutAnimation.value,

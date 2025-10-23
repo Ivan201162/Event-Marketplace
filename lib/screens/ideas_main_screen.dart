@@ -26,254 +26,266 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('Идеи'),
-      actions: [
-        IconButton(icon: const Icon(Icons.search), onPressed: _showSearchScreen),
-        IconButton(icon: const Icon(Icons.collections_bookmark), onPressed: _showCollectionsScreen),
-      ],
-    ),
-    body: Column(
-      children: [
-        // Быстрые действия
-        _buildQuickActions(),
+        appBar: AppBar(
+          title: const Text('Идеи'),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.search), onPressed: _showSearchScreen),
+            IconButton(
+                icon: const Icon(Icons.collections_bookmark),
+                onPressed: _showCollectionsScreen),
+          ],
+        ),
+        body: Column(
+          children: [
+            // Быстрые действия
+            _buildQuickActions(),
 
-        // Топ идеи недели
-        _buildTopIdeasSection(),
+            // Топ идеи недели
+            _buildTopIdeasSection(),
 
-        // Категории
-        _buildCategoriesSection(),
+            // Категории
+            _buildCategoriesSection(),
 
-        // Последние идеи
-        Expanded(child: _buildRecentIdeasSection()),
-      ],
-    ),
-    floatingActionButton: FloatingActionButton(
-      onPressed: _createIdea,
-      child: const Icon(Icons.add),
-    ),
-  );
+            // Последние идеи
+            Expanded(child: _buildRecentIdeasSection()),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _createIdea,
+          child: const Icon(Icons.add),
+        ),
+      );
 
   Widget _buildQuickActions() => Container(
-    padding: const EdgeInsets.all(16),
-    child: Row(
-      children: [
-        Expanded(
-          child: _buildQuickActionCard(
-            icon: Icons.trending_up,
-            title: 'Топ идеи',
-            color: Colors.orange,
-            onTap: _showTopIdeasScreen,
-          ),
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.trending_up,
+                title: 'Топ идеи',
+                color: Colors.orange,
+                onTap: _showTopIdeasScreen,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.bookmark,
+                title: 'Сохраненные',
+                color: Colors.blue,
+                onTap: _showSavedIdeasScreen,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.collections_bookmark,
+                title: 'Коллекции',
+                color: Colors.green,
+                onTap: _showCollectionsScreen,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildQuickActionCard(
-            icon: Icons.bookmark,
-            title: 'Сохраненные',
-            color: Colors.blue,
-            onTap: _showSavedIdeasScreen,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildQuickActionCard(
-            icon: Icons.collections_bookmark,
-            title: 'Коллекции',
-            color: Colors.green,
-            onTap: _showCollectionsScreen,
-          ),
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildQuickActionCard({
     required IconData icon,
     required String title,
     required Color color,
     required VoidCallback onTap,
-  }) => Card(
-    child: InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-              textAlign: TextAlign.center,
+  }) =>
+      Card(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Icon(icon, color: color, size: 32),
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
-    ),
-  );
+      );
 
   Widget _buildTopIdeasSection() => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Топ идеи недели',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                const Text(
+                  'Топ идеи недели',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const Spacer(),
+                TextButton(
+                    onPressed: _showTopIdeasScreen, child: const Text('Все')),
+              ],
             ),
-            const Spacer(),
-            TextButton(onPressed: _showTopIdeasScreen, child: const Text('Все')),
-          ],
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 200,
-          child: StreamBuilder<List<Idea>>(
-            stream: _ideaService.getTopIdeasOfWeek(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 200,
+              child: StreamBuilder<List<Idea>>(
+                stream: _ideaService.getTopIdeasOfWeek(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-              final ideas = snapshot.data ?? [];
-              if (ideas.isEmpty) {
-                return const Center(child: Text('Нет топ идей'));
-              }
+                  final ideas = snapshot.data ?? [];
+                  if (ideas.isEmpty) {
+                    return const Center(child: Text('Нет топ идей'));
+                  }
 
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: ideas.length,
-                itemBuilder: (context, index) {
-                  final idea = ideas[index];
-                  return Container(
-                    width: 300,
-                    margin: const EdgeInsets.only(right: 12),
-                    child: IdeaWidget(
-                      idea: idea,
-                      onTap: () => _showIdeaDetail(idea),
-                      onLike: () => _likeIdea(idea),
-                      onSave: () => _saveIdea(idea),
-                      onShare: () => _shareIdea(idea),
-                    ),
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: ideas.length,
+                    itemBuilder: (context, index) {
+                      final idea = ideas[index];
+                      return Container(
+                        width: 300,
+                        margin: const EdgeInsets.only(right: 12),
+                        child: IdeaWidget(
+                          idea: idea,
+                          onTap: () => _showIdeaDetail(idea),
+                          onLike: () => _likeIdea(idea),
+                          onSave: () => _saveIdea(idea),
+                          onShare: () => _shareIdea(idea),
+                        ),
+                      );
+                    },
                   );
                 },
-              );
-            },
-          ),
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
+      );
 
   Widget _buildCategoriesSection() => Container(
-    padding: const EdgeInsets.all(16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text('Категории', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const Spacer(),
-            TextButton(onPressed: _showCategoriesScreen, child: const Text('Все')),
-          ],
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 100,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: _getCategories().length,
-            itemBuilder: (context, index) {
-              final category = _getCategories()[index];
-              return Container(
-                width: 80,
-                margin: const EdgeInsets.only(right: 12),
-                child: _buildCategoryCard(category),
-              );
-            },
-          ),
-        ),
-      ],
-    ),
-  );
-
-  Widget _buildCategoryCard(String category) => Card(
-    child: InkWell(
-      onTap: () => _showCategoryIdeas(category),
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(_getCategoryIcon(category), color: _getCategoryColor(category), size: 24),
-            const SizedBox(height: 4),
-            Text(
-              category,
-              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                const Text('Категории',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Spacer(),
+                TextButton(
+                    onPressed: _showCategoriesScreen, child: const Text('Все')),
+              ],
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 100,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _getCategories().length,
+                itemBuilder: (context, index) {
+                  final category = _getCategories()[index];
+                  return Container(
+                    width: 80,
+                    margin: const EdgeInsets.only(right: 12),
+                    child: _buildCategoryCard(category),
+                  );
+                },
+              ),
             ),
           ],
         ),
-      ),
-    ),
-  );
+      );
 
-  Widget _buildRecentIdeasSection() => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Последние идеи', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        Expanded(
-          child: StreamBuilder<List<Idea>>(
-            stream: _ideaService.getIdeas(const IdeaFilter()),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              final ideas = snapshot.data ?? [];
-              if (ideas.isEmpty) {
-                return const Center(child: Text('Нет идей'));
-              }
-
-              return ListView.builder(
-                itemCount: ideas.length,
-                itemBuilder: (context, index) {
-                  final idea = ideas[index];
-                  return IdeaWidget(
-                    idea: idea,
-                    onTap: () => _showIdeaDetail(idea),
-                    onLike: () => _likeIdea(idea),
-                    onSave: () => _saveIdea(idea),
-                    onShare: () => _shareIdea(idea),
-                  );
-                },
-              );
-            },
+  Widget _buildCategoryCard(String category) => Card(
+        child: InkWell(
+          onTap: () => _showCategoryIdeas(category),
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(_getCategoryIcon(category),
+                    color: _getCategoryColor(category), size: 24),
+                const SizedBox(height: 4),
+                Text(
+                  category,
+                  style: const TextStyle(
+                      fontSize: 10, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ),
-      ],
-    ),
-  );
+      );
+
+  Widget _buildRecentIdeasSection() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Последние идеи',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Expanded(
+              child: StreamBuilder<List<Idea>>(
+                stream: _ideaService.getIdeas(const IdeaFilter()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  final ideas = snapshot.data ?? [];
+                  if (ideas.isEmpty) {
+                    return const Center(child: Text('Нет идей'));
+                  }
+
+                  return ListView.builder(
+                    itemCount: ideas.length,
+                    itemBuilder: (context, index) {
+                      final idea = ideas[index];
+                      return IdeaWidget(
+                        idea: idea,
+                        onTap: () => _showIdeaDetail(idea),
+                        onLike: () => _likeIdea(idea),
+                        onSave: () => _saveIdea(idea),
+                        onShare: () => _shareIdea(idea),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      );
 
   List<String> _getCategories() => [
-    'Декор',
-    'Еда',
-    'Развлечения',
-    'Фото',
-    'Музыка',
-    'Одежда',
-    'Подарки',
-  ];
+        'Декор',
+        'Еда',
+        'Развлечения',
+        'Фото',
+        'Музыка',
+        'Одежда',
+        'Подарки',
+      ];
 
   IconData _getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
@@ -320,7 +332,8 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   void _createIdea() {
     if (widget.userId != null) {
       Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (context) => CreateIdeaScreen(userId: widget.userId!)),
+        MaterialPageRoute<void>(
+            builder: (context) => CreateIdeaScreen(userId: widget.userId!)),
       );
     }
   }
@@ -329,7 +342,8 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
     if (widget.userId != null) {
       Navigator.of(context).push(
         MaterialPageRoute<void>(
-          builder: (context) => IdeaDetailScreen(idea: idea, userId: widget.userId),
+          builder: (context) =>
+              IdeaDetailScreen(idea: idea, userId: widget.userId),
         ),
       );
     }
@@ -351,19 +365,22 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
     // TODO(developer): Реализовать шаринг идеи
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Идея скопирована в буфер обмена')));
+    ).showSnackBar(
+        const SnackBar(content: Text('Идея скопирована в буфер обмена')));
   }
 
   void _showTopIdeasScreen() {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (context) => TopIdeasScreen(userId: widget.userId)));
+    ).push(MaterialPageRoute<void>(
+        builder: (context) => TopIdeasScreen(userId: widget.userId)));
   }
 
   void _showSavedIdeasScreen() {
     if (widget.userId != null) {
       Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (context) => SavedIdeasScreen(userId: widget.userId!)),
+        MaterialPageRoute<void>(
+            builder: (context) => SavedIdeasScreen(userId: widget.userId!)),
       );
     }
   }
@@ -380,14 +397,16 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
 
   void _showCategoriesScreen() {
     Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (context) => IdeaCategoriesScreen(userId: widget.userId)),
+      MaterialPageRoute<void>(
+          builder: (context) => IdeaCategoriesScreen(userId: widget.userId)),
     );
   }
 
   void _showSearchScreen() {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute<void>(builder: (context) => IdeaSearchScreen(userId: widget.userId)));
+    ).push(MaterialPageRoute<void>(
+        builder: (context) => IdeaSearchScreen(userId: widget.userId)));
   }
 
   void _showCategoryIdeas(String category) {

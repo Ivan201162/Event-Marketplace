@@ -33,10 +33,12 @@ class NotificationCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: _getTypeColor(notification.type).withValues(alpha: 0.1),
+                  color:
+                      _getTypeColor(notification.type).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(notification.typeIcon, style: const TextStyle(fontSize: 20)),
+                child: Text(notification.typeIcon,
+                    style: const TextStyle(fontSize: 20)),
               ),
               const SizedBox(width: 12),
               // Content
@@ -49,8 +51,13 @@ class NotificationCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             notification.title,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: notification.read ? FontWeight.w500 : FontWeight.w600,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontWeight: notification.read
+                                      ? FontWeight.w500
+                                      : FontWeight.w600,
                                 ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -80,9 +87,11 @@ class NotificationCard extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: _getTypeColor(notification.type).withValues(alpha: 0.1),
+                            color: _getTypeColor(notification.type)
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -96,9 +105,11 @@ class NotificationCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: _getPriorityColor(notification.priority).withValues(alpha: 0.1),
+                            color: _getPriorityColor(notification.priority)
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -115,20 +126,27 @@ class NotificationCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
+                        Icon(Icons.access_time,
+                            size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Text(
                           notification.formattedDate,
                           style: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                          )
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                         const Spacer(),
                         Text(
                           notification.formattedTime,
                           style: Theme.of(
                             context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                          )
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: Colors.grey[600]),
                         ),
                       ],
                     ),
@@ -143,7 +161,10 @@ class NotificationCard extends StatelessWidget {
                             'От: ${notification.senderName}',
                             style: Theme.of(
                               context,
-                            ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                            )
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                         ],
                       ),
@@ -163,7 +184,8 @@ class NotificationCard extends StatelessWidget {
                     ),
                   if (onDelete != null)
                     IconButton(
-                      icon: const Icon(Icons.delete, size: 20, color: Colors.red),
+                      icon:
+                          const Icon(Icons.delete, size: 20, color: Colors.red),
                       onPressed: onDelete,
                       tooltip: 'Удалить',
                     ),

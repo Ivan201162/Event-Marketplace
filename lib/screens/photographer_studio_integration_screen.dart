@@ -10,7 +10,8 @@ import '../widgets/studio_suggestion_widget.dart';
 
 /// Экран интеграции фотографов и фотостудий
 class PhotographerStudioIntegrationScreen extends ConsumerStatefulWidget {
-  const PhotographerStudioIntegrationScreen({super.key, required this.photographerId});
+  const PhotographerStudioIntegrationScreen(
+      {super.key, required this.photographerId});
 
   final String photographerId;
 
@@ -23,7 +24,8 @@ class _PhotographerStudioIntegrationScreenState
     extends ConsumerState<PhotographerStudioIntegrationScreen>
     with TickerProviderStateMixin {
   final PhotoStudioService _photoStudioService = PhotoStudioService();
-  final PhotographerStudioLinkService _linkService = PhotographerStudioLinkService();
+  final PhotographerStudioLinkService _linkService =
+      PhotographerStudioLinkService();
 
   List<PhotoStudio> _availableStudios = [];
   List<PhotographerStudioLink> _existingLinks = [];
@@ -103,9 +105,12 @@ class _PhotographerStudioIntegrationScreenState
             children: [
               Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
               const SizedBox(height: 16),
-              Text(_error!, style: const TextStyle(fontSize: 18), textAlign: TextAlign.center),
+              Text(_error!,
+                  style: const TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center),
               const SizedBox(height: 16),
-              ElevatedButton(onPressed: _loadData, child: const Text('Повторить')),
+              ElevatedButton(
+                  onPressed: _loadData, child: const Text('Повторить')),
             ],
           ),
         ),
@@ -118,7 +123,10 @@ class _PhotographerStudioIntegrationScreenState
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadData, tooltip: 'Обновить'),
+          IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _loadData,
+              tooltip: 'Обновить'),
         ],
       ),
       body: Column(
@@ -136,18 +144,18 @@ class _PhotographerStudioIntegrationScreenState
   }
 
   Widget _buildTabBar() => Container(
-    color: Theme.of(context).colorScheme.surface,
-    child: TabBar(
-      controller: _tabController,
-      tabs: [
-        Tab(text: 'Доступные студии (${_availableStudios.length})'),
-        Tab(text: 'Мои связки (${_existingLinks.length})'),
-      ],
-      labelColor: Theme.of(context).colorScheme.primary,
-      unselectedLabelColor: Colors.grey,
-      indicatorColor: Theme.of(context).colorScheme.primary,
-    ),
-  );
+        color: Theme.of(context).colorScheme.surface,
+        child: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(text: 'Доступные студии (${_availableStudios.length})'),
+            Tab(text: 'Мои связки (${_existingLinks.length})'),
+          ],
+          labelColor: Theme.of(context).colorScheme.primary,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: Theme.of(context).colorScheme.primary,
+        ),
+      );
 
   Widget _buildAvailableStudiosTab() {
     if (_availableStudios.isEmpty) {
@@ -157,7 +165,8 @@ class _PhotographerStudioIntegrationScreenState
           children: [
             Icon(Icons.photo_camera_outlined, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text('Нет доступных фотостудий', style: TextStyle(fontSize: 18, color: Colors.grey)),
+            Text('Нет доступных фотостудий',
+                style: TextStyle(fontSize: 18, color: Colors.grey)),
           ],
         ),
       );
@@ -169,7 +178,8 @@ class _PhotographerStudioIntegrationScreenState
         itemCount: _availableStudios.length,
         itemBuilder: (context, index) {
           final studio = _availableStudios[index];
-          final isLinked = _existingLinks.any((link) => link.studioId == studio.id);
+          final isLinked =
+              _existingLinks.any((link) => link.studioId == studio.id);
 
           return StudioSuggestionWidget(
             photoStudio: studio,
@@ -235,7 +245,8 @@ class _PhotographerStudioIntegrationScreenState
                 Expanded(
                   child: Text(
                     link.studioName ?? 'Фотостудия',
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
                 _buildStatusChip(link.status),
@@ -248,14 +259,17 @@ class _PhotographerStudioIntegrationScreenState
               children: [
                 const Icon(Icons.access_time, size: 16, color: Colors.grey),
                 const SizedBox(width: 4),
-                Text(link.timeAgo, style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
+                Text(link.timeAgo,
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: Colors.grey)),
                 if (link.commissionRate != null) ...[
                   const SizedBox(width: 16),
                   const Icon(Icons.percent, size: 16, color: Colors.grey),
                   const SizedBox(width: 4),
                   Text(
                     link.formattedCommissionRate,
-                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+                    style:
+                        theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
                   ),
                 ],
               ],
@@ -343,7 +357,8 @@ class _PhotographerStudioIntegrationScreenState
       ),
       child: Text(
         text,
-        style: TextStyle(color: color, fontWeight: FontWeight.w500, fontSize: 12),
+        style:
+            TextStyle(color: color, fontWeight: FontWeight.w500, fontSize: 12),
       ),
     );
   }
@@ -382,7 +397,9 @@ class _PhotographerStudioIntegrationScreenState
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка создания связки: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка создания связки: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -405,13 +422,17 @@ class _PhotographerStudioIntegrationScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Статус: ${_getStatusText(link.status)}'),
-            if (link.commissionRate != null) Text('Комиссия: ${link.formattedCommissionRate}'),
-            if (link.notes != null && link.notes!.isNotEmpty) Text('Заметки: ${link.notes}'),
+            if (link.commissionRate != null)
+              Text('Комиссия: ${link.formattedCommissionRate}'),
+            if (link.notes != null && link.notes!.isNotEmpty)
+              Text('Заметки: ${link.notes}'),
             Text('Создано: ${link.timeAgo}'),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Закрыть')),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Закрыть')),
         ],
       ),
     );
@@ -424,13 +445,16 @@ class _PhotographerStudioIntegrationScreenState
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Связка отменена'), backgroundColor: Colors.orange),
+          const SnackBar(
+              content: Text('Связка отменена'), backgroundColor: Colors.orange),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка отмены связки: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка отмены связки: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -443,13 +467,17 @@ class _PhotographerStudioIntegrationScreenState
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Связка приостановлена'), backgroundColor: Colors.orange),
+          const SnackBar(
+              content: Text('Связка приостановлена'),
+              backgroundColor: Colors.orange),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка приостановки связки: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Ошибка приостановки связки: $e'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -495,46 +523,46 @@ class _CreateLinkDialogState extends State<_CreateLinkDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    title: Text('Создать связку с ${widget.studio.name}'),
-    content: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextField(
-          controller: _notesController,
-          decoration: const InputDecoration(
-            labelText: 'Заметки (необязательно)',
-            hintText: 'Дополнительная информация о связке',
-          ),
-          maxLines: 3,
+        title: Text('Создать связку с ${widget.studio.name}'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _notesController,
+              decoration: const InputDecoration(
+                labelText: 'Заметки (необязательно)',
+                hintText: 'Дополнительная информация о связке',
+              ),
+              maxLines: 3,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _commissionController,
+              decoration: const InputDecoration(
+                labelText: 'Комиссия % (необязательно)',
+                hintText: 'Например: 10',
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        TextField(
-          controller: _commissionController,
-          decoration: const InputDecoration(
-            labelText: 'Комиссия % (необязательно)',
-            hintText: 'Например: 10',
+        actions: [
+          TextButton(
+            onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
+            child: const Text('Отмена'),
           ),
-          keyboardType: TextInputType.number,
-        ),
-      ],
-    ),
-    actions: [
-      TextButton(
-        onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-        child: const Text('Отмена'),
-      ),
-      ElevatedButton(
-        onPressed: _isLoading ? null : _createLink,
-        child: _isLoading
-            ? const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-            : const Text('Создать'),
-      ),
-    ],
-  );
+          ElevatedButton(
+            onPressed: _isLoading ? null : _createLink,
+            child: _isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Создать'),
+          ),
+        ],
+      );
 
   Future<void> _createLink() async {
     setState(() {
@@ -547,7 +575,9 @@ class _CreateLinkDialogState extends State<_CreateLinkDialog> {
           : null;
 
       Navigator.of(context).pop({
-        'notes': _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+        'notes': _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
         'commissionRate': commissionRate,
       });
     } finally {

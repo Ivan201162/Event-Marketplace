@@ -3,15 +3,16 @@ import '../models/specialist.dart';
 import '../services/automatic_recommendation_service.dart';
 
 /// Провайдер сервиса автоматических рекомендаций
-final automaticRecommendationServiceProvider = Provider<AutomaticRecommendationService>(
+final automaticRecommendationServiceProvider =
+    Provider<AutomaticRecommendationService>(
   (ref) => AutomaticRecommendationService(),
 );
 
 /// Провайдер состояния автоматических рекомендаций (мигрирован с StateNotifierProvider)
-final automaticRecommendationsProvider =
-    NotifierProvider<AutomaticRecommendationsNotifier, AutomaticRecommendationsState>(() {
-      return AutomaticRecommendationsNotifier();
-    });
+final automaticRecommendationsProvider = NotifierProvider<
+    AutomaticRecommendationsNotifier, AutomaticRecommendationsState>(() {
+  return AutomaticRecommendationsNotifier();
+});
 
 /// Состояние автоматических рекомендаций
 class AutomaticRecommendationsState {
@@ -32,22 +33,25 @@ class AutomaticRecommendationsState {
     bool? isLoading,
     String? error,
     DateTime? lastUpdated,
-  }) => AutomaticRecommendationsState(
-    recommendations: recommendations ?? this.recommendations,
-    isLoading: isLoading ?? this.isLoading,
-    error: error ?? this.error,
-    lastUpdated: lastUpdated ?? this.lastUpdated,
-  );
+  }) =>
+      AutomaticRecommendationsState(
+        recommendations: recommendations ?? this.recommendations,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+      );
 }
 
 /// Notifier для управления автоматическими рекомендациями (мигрирован с StateNotifier)
-class AutomaticRecommendationsNotifier extends Notifier<AutomaticRecommendationsState> {
+class AutomaticRecommendationsNotifier
+    extends Notifier<AutomaticRecommendationsState> {
   @override
   AutomaticRecommendationsState build() {
     return const AutomaticRecommendationsState();
   }
 
-  AutomaticRecommendationService get _service => ref.read(automaticRecommendationServiceProvider);
+  AutomaticRecommendationService get _service =>
+      ref.read(automaticRecommendationServiceProvider);
 
   /// Загрузить рекомендации для выбранных специалистов
   Future<void> loadRecommendations({
@@ -62,7 +66,8 @@ class AutomaticRecommendationsNotifier extends Notifier<AutomaticRecommendations
     state = state.copyWith(isLoading: true);
 
     try {
-      final recommendations = await _service.getRecommendationsForSelectedSpecialists(
+      final recommendations =
+          await _service.getRecommendationsForSelectedSpecialists(
         selectedSpecialistIds: selectedSpecialistIds,
         userId: userId,
       );
@@ -174,26 +179,27 @@ class AutomaticRecommendationsNotifier extends Notifier<AutomaticRecommendations
 }
 
 /// Провайдер для получения рекомендаций по выбранным специалистам
-final selectedSpecialistsRecommendationsProvider =
-    FutureProvider.family<List<SpecialistRecommendation>, SelectedSpecialistsParams>((
-      ref,
-      params,
-    ) async {
-      final service = ref.watch(automaticRecommendationServiceProvider);
+final selectedSpecialistsRecommendationsProvider = FutureProvider.family<
+    List<SpecialistRecommendation>, SelectedSpecialistsParams>((
+  ref,
+  params,
+) async {
+  final service = ref.watch(automaticRecommendationServiceProvider);
 
-      if (params.selectedSpecialistIds.isEmpty) {
-        return [];
-      }
+  if (params.selectedSpecialistIds.isEmpty) {
+    return [];
+  }
 
-      return service.getRecommendationsForSelectedSpecialists(
-        selectedSpecialistIds: params.selectedSpecialistIds,
-        userId: params.userId,
-      );
-    });
+  return service.getRecommendationsForSelectedSpecialists(
+    selectedSpecialistIds: params.selectedSpecialistIds,
+    userId: params.userId,
+  );
+});
 
 /// Параметры для получения рекомендаций по выбранным специалистам
 class SelectedSpecialistsParams {
-  const SelectedSpecialistsParams({required this.selectedSpecialistIds, required this.userId});
+  const SelectedSpecialistsParams(
+      {required this.selectedSpecialistIds, required this.userId});
 
   final List<String> selectedSpecialistIds;
   final String userId;
@@ -211,19 +217,19 @@ class SelectedSpecialistsParams {
 }
 
 /// Провайдер для получения рекомендаций по категории
-final categoryRecommendationsProvider =
-    FutureProvider.family<List<SpecialistRecommendation>, CategoryRecommendationsParams>((
-      ref,
-      params,
-    ) async {
-      final service = ref.watch(automaticRecommendationServiceProvider);
+final categoryRecommendationsProvider = FutureProvider.family<
+    List<SpecialistRecommendation>, CategoryRecommendationsParams>((
+  ref,
+  params,
+) async {
+  final service = ref.watch(automaticRecommendationServiceProvider);
 
-      return service.getRecommendationsForCategory(
-        category: params.category,
-        userId: params.userId,
-        excludeIds: params.excludeIds,
-      );
-    });
+  return service.getRecommendationsForCategory(
+    category: params.category,
+    userId: params.userId,
+    excludeIds: params.excludeIds,
+  );
+});
 
 /// Параметры для получения рекомендаций по категории
 class CategoryRecommendationsParams {

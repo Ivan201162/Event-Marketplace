@@ -57,7 +57,10 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
                 const SizedBox(height: 16),
 
                 // Поля формы
-                if (_selectedFile != null) ...[_buildFormFields(), const SizedBox(height: 16)],
+                if (_selectedFile != null) ...[
+                  _buildFormFields(),
+                  const SizedBox(height: 16)
+                ],
 
                 // Ошибка
                 if (_error != null) ...[
@@ -73,7 +76,8 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
                         Icon(Icons.error_outline, color: Colors.red[600]),
                         const SizedBox(width: 8),
                         Expanded(
-                          child: Text(_error!, style: TextStyle(color: Colors.red[600])),
+                          child: Text(_error!,
+                              style: TextStyle(color: Colors.red[600])),
                         ),
                       ],
                     ),
@@ -143,7 +147,8 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
   Widget _buildFileSelector() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Выберите файл', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('Выберите файл',
+              style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           if (_selectedFile == null) ...[
             Row(
@@ -175,7 +180,9 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
               child: Row(
                 children: [
                   Icon(
-                    _selectedType == GalleryItemType.image ? Icons.image : Icons.video_library,
+                    _selectedType == GalleryItemType.image
+                        ? Icons.image
+                        : Icons.video_library,
                     color: Colors.grey[600],
                   ),
                   const SizedBox(width: 8),
@@ -190,8 +197,10 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          _formatFileSize(File(_selectedFile!.path).lengthSync()),
-                          style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                          _formatFileSize(
+                              File(_selectedFile!.path).lengthSync()),
+                          style:
+                              TextStyle(color: Colors.grey[600], fontSize: 12),
                         ),
                       ],
                     ),
@@ -217,8 +226,8 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
           // Заголовок
           TextFormField(
             controller: _titleController,
-            decoration:
-                const InputDecoration(labelText: 'Название *', border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+                labelText: 'Название *', border: OutlineInputBorder()),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'Введите название';
@@ -231,7 +240,8 @@ class _UploadMediaDialogState extends ConsumerState<UploadMediaDialog> {
           // Описание
           TextFormField(
             controller: _descriptionController,
-            decoration: const InputDecoration(labelText: 'Описание', border: OutlineInputBorder()),
+            decoration: const InputDecoration(
+                labelText: 'Описание', border: OutlineInputBorder()),
             maxLines: 3,
           ),
           const SizedBox(height: 16),

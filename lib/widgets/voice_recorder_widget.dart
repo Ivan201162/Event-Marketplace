@@ -21,7 +21,8 @@ class VoiceRecorderWidget extends ConsumerStatefulWidget {
   final void Function(ChatMessageExtended) onVoiceMessageSent;
 
   @override
-  ConsumerState<VoiceRecorderWidget> createState() => _VoiceRecorderWidgetState();
+  ConsumerState<VoiceRecorderWidget> createState() =>
+      _VoiceRecorderWidgetState();
 }
 
 class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
@@ -47,12 +48,14 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
     _scaleAnimation = Tween<double>(
       begin: 1,
       end: 1.2,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
 
     _pulseAnimation = Tween<double>(
       begin: 0.5,
       end: 1,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+    ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
   }
 
   @override
@@ -110,7 +113,9 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.red.withValues(alpha: 0.3), blurRadius: 12, spreadRadius: 2),
+                      color: Colors.red.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      spreadRadius: 2),
                 ],
               ),
               child: const Icon(Icons.mic, color: Colors.white, size: 32),
@@ -133,7 +138,8 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.red.withValues(alpha: _pulseAnimation.value * 0.5),
+                      color: Colors.red
+                          .withValues(alpha: _pulseAnimation.value * 0.5),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -146,10 +152,12 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
           const SizedBox(height: 16),
           Text(
             _formatDuration(_recordingDuration),
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red),
+            style: const TextStyle(
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red),
           ),
           const SizedBox(height: 8),
-          const Text('Запись...', style: TextStyle(fontSize: 16, color: Colors.grey)),
+          const Text('Запись...',
+              style: TextStyle(fontSize: 16, color: Colors.grey)),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -190,7 +198,8 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(20)),
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.circular(20)),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -198,7 +207,8 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
               const SizedBox(width: 8),
               Text(
                 label,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -317,7 +327,8 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
       if (_isRecording) {
         await Future<void>.delayed(const Duration(seconds: 1));
         setState(() {
-          _recordingDuration = Duration(seconds: _recordingDuration.inSeconds + 1);
+          _recordingDuration =
+              Duration(seconds: _recordingDuration.inSeconds + 1);
         });
         return true;
       }
@@ -334,6 +345,7 @@ class _VoiceRecorderWidgetState extends ConsumerState<VoiceRecorderWidget>
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+    ).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: Colors.red));
   }
 }

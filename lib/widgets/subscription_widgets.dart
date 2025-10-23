@@ -34,7 +34,8 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
   Widget build(BuildContext context) {
     final isSubscribedAsync = ref.watch(
       isSubscribedProvider(
-        IsSubscribedParams(userId: widget.userId, specialistId: widget.specialistId),
+        IsSubscribedParams(
+            userId: widget.userId, specialistId: widget.specialistId),
       ),
     );
 
@@ -55,8 +56,9 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
         ),
       ),
       loading: () => const CircularProgressIndicator(),
-      error: (error, stack) =>
-          TextButton(onPressed: () => _toggleSubscription(false), child: const Text('Подписаться')),
+      error: (error, stack) => TextButton(
+          onPressed: () => _toggleSubscription(false),
+          child: const Text('Подписаться')),
     );
   }
 
@@ -69,7 +71,8 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
       final service = ref.read(subscriptionServiceProvider);
 
       if (isSubscribed) {
-        await service.unsubscribeFromSpecialist(widget.userId, widget.specialistId);
+        await service.unsubscribeFromSpecialist(
+            widget.userId, widget.specialistId);
       } else {
         await service.subscribeToSpecialist(
           userId: widget.userId,
@@ -82,7 +85,8 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
       // Обновляем состояние
       ref.invalidate(
         isSubscribedProvider(
-          IsSubscribedParams(userId: widget.userId, specialistId: widget.specialistId),
+          IsSubscribedParams(
+              userId: widget.userId, specialistId: widget.specialistId),
         ),
       );
 
@@ -92,7 +96,9 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              isSubscribed ? 'Отписались от специалиста' : 'Подписались на специалиста',
+              isSubscribed
+                  ? 'Отписались от специалиста'
+                  : 'Подписались на специалиста',
             ),
             backgroundColor: Colors.green,
           ),
@@ -102,7 +108,8 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
+        ).showSnackBar(
+            SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red));
       }
     } finally {
       if (mounted) {
@@ -132,7 +139,8 @@ class SubscriptionsListWidget extends ConsumerWidget {
               children: [
                 Icon(Icons.person_add, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
-                Text('Нет подписок', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                Text('Нет подписок',
+                    style: TextStyle(fontSize: 18, color: Colors.grey)),
                 SizedBox(height: 8),
                 Text(
                   'Подпишитесь на специалистов, чтобы видеть их посты',
@@ -162,7 +170,8 @@ class SubscriptionsListWidget extends ConsumerWidget {
           children: [
             const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
-            Text('Ошибка загрузки подписок', style: Theme.of(context).textTheme.headlineSmall),
+            Text('Ошибка загрузки подписок',
+                style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 8),
             Text(
               error.toString(),
@@ -199,7 +208,8 @@ class SubscriptionsListWidget extends ConsumerWidget {
 
 /// Виджет элемента подписки
 class SubscriptionTile extends StatelessWidget {
-  const SubscriptionTile({super.key, required this.subscription, this.onUnsubscribe});
+  const SubscriptionTile(
+      {super.key, required this.subscription, this.onUnsubscribe});
   final Subscription subscription;
   final VoidCallback? onUnsubscribe;
 
@@ -222,8 +232,11 @@ class SubscriptionTile extends StatelessWidget {
           itemBuilder: (context) => [
             const PopupMenuItem(
               value: 'view_profile',
-              child: Row(
-                  children: [Icon(Icons.person, size: 20), SizedBox(width: 8), Text('Профиль')]),
+              child: Row(children: [
+                Icon(Icons.person, size: 20),
+                SizedBox(width: 8),
+                Text('Профиль')
+              ]),
             ),
             const PopupMenuItem(
               value: 'unsubscribe',
@@ -260,7 +273,8 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
               children: [
                 Icon(Icons.notifications_none, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
-                Text('Нет уведомлений', style: TextStyle(fontSize: 18, color: Colors.grey)),
+                Text('Нет уведомлений',
+                    style: TextStyle(fontSize: 18, color: Colors.grey)),
               ],
             ),
           );
@@ -342,7 +356,9 @@ class NotificationTile extends StatelessWidget {
           backgroundImage: notification.specialistPhotoUrl != null
               ? CachedNetworkImageProvider(notification.specialistPhotoUrl!)
               : null,
-          child: notification.specialistPhotoUrl == null ? const Icon(Icons.person) : null,
+          child: notification.specialistPhotoUrl == null
+              ? const Icon(Icons.person)
+              : null,
         ),
         title: Text(notification.title),
         subtitle: Text(notification.body),
@@ -357,7 +373,8 @@ class NotificationTile extends StatelessWidget {
               Container(
                 width: 8,
                 height: 8,
-                decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+                decoration: const BoxDecoration(
+                    color: Colors.blue, shape: BoxShape.circle),
               ),
           ],
         ),

@@ -8,7 +8,8 @@ final specialistProposalServiceProvider = Provider<SpecialistProposalService>(
 );
 
 /// Провайдер для создания предложения
-final createProposalProvider = FutureProvider.family<SpecialistProposal, CreateSpecialistProposal>((
+final createProposalProvider =
+    FutureProvider.family<SpecialistProposal, CreateSpecialistProposal>((
   ref,
   params,
 ) async {
@@ -17,7 +18,8 @@ final createProposalProvider = FutureProvider.family<SpecialistProposal, CreateS
 });
 
 /// Провайдер для получения предложений клиента
-final customerProposalsProvider = StreamProvider.family<List<SpecialistProposal>, String>((
+final customerProposalsProvider =
+    StreamProvider.family<List<SpecialistProposal>, String>((
   ref,
   customerId,
 ) {
@@ -26,7 +28,8 @@ final customerProposalsProvider = StreamProvider.family<List<SpecialistProposal>
 });
 
 /// Провайдер для получения предложений организатора
-final organizerProposalsProvider = StreamProvider.family<List<SpecialistProposal>, String>((
+final organizerProposalsProvider =
+    StreamProvider.family<List<SpecialistProposal>, String>((
   ref,
   organizerId,
 ) {
@@ -35,7 +38,8 @@ final organizerProposalsProvider = StreamProvider.family<List<SpecialistProposal
 });
 
 /// Провайдер для получения активных предложений клиента
-final activeCustomerProposalsProvider = FutureProvider.family<List<SpecialistProposal>, String>((
+final activeCustomerProposalsProvider =
+    FutureProvider.family<List<SpecialistProposal>, String>((
   ref,
   customerId,
 ) async {
@@ -53,7 +57,8 @@ final proposalProvider = FutureProvider.family<SpecialistProposal?, String>((
 });
 
 /// Провайдер для принятия предложения
-final acceptProposalProvider = FutureProvider.family<void, AcceptProposalParams>((
+final acceptProposalProvider =
+    FutureProvider.family<void, AcceptProposalParams>((
   ref,
   params,
 ) async {
@@ -62,13 +67,15 @@ final acceptProposalProvider = FutureProvider.family<void, AcceptProposalParams>
 });
 
 /// Провайдер для отклонения предложения
-final rejectProposalProvider = FutureProvider.family<void, String>((ref, proposalId) async {
+final rejectProposalProvider =
+    FutureProvider.family<void, String>((ref, proposalId) async {
   final service = ref.read(specialistProposalServiceProvider);
   return service.rejectProposal(proposalId);
 });
 
 /// Провайдер для удаления предложения
-final deleteProposalProvider = FutureProvider.family<void, String>((ref, proposalId) async {
+final deleteProposalProvider =
+    FutureProvider.family<void, String>((ref, proposalId) async {
   final service = ref.read(specialistProposalServiceProvider);
   return service.deleteProposal(proposalId);
 });
@@ -84,7 +91,8 @@ final organizerStatsProvider = FutureProvider.family<Map<String, int>, String>((
 
 /// Параметры для принятия предложения
 class AcceptProposalParams {
-  const AcceptProposalParams({required this.proposalId, required this.specialistId});
+  const AcceptProposalParams(
+      {required this.proposalId, required this.specialistId});
 
   final String proposalId;
   final String specialistId;

@@ -4,12 +4,14 @@ import '../models/enhanced_notification.dart';
 import '../services/enhanced_notifications_service.dart';
 
 /// Провайдер сервиса уведомлений
-final enhancedNotificationsServiceProvider = Provider<EnhancedNotificationsService>(
+final enhancedNotificationsServiceProvider =
+    Provider<EnhancedNotificationsService>(
   (ref) => EnhancedNotificationsService(),
 );
 
 /// Провайдер уведомлений пользователя
-final notificationsProvider = FutureProvider.family<List<EnhancedNotification>, String>((
+final notificationsProvider =
+    FutureProvider.family<List<EnhancedNotification>, String>((
   ref,
   userId,
 ) async {
@@ -18,7 +20,8 @@ final notificationsProvider = FutureProvider.family<List<EnhancedNotification>, 
 });
 
 /// Провайдер непрочитанных уведомлений
-final unreadNotificationsProvider = FutureProvider.family<List<EnhancedNotification>, String>((
+final unreadNotificationsProvider =
+    FutureProvider.family<List<EnhancedNotification>, String>((
   ref,
   userId,
 ) async {
@@ -27,7 +30,8 @@ final unreadNotificationsProvider = FutureProvider.family<List<EnhancedNotificat
 });
 
 /// Провайдер архивированных уведомлений
-final archivedNotificationsProvider = FutureProvider.family<List<EnhancedNotification>, String>((
+final archivedNotificationsProvider =
+    FutureProvider.family<List<EnhancedNotification>, String>((
   ref,
   userId,
 ) async {
@@ -36,7 +40,8 @@ final archivedNotificationsProvider = FutureProvider.family<List<EnhancedNotific
 });
 
 /// Провайдер уведомления по ID
-final notificationProvider = FutureProvider.family<EnhancedNotification?, String>((
+final notificationProvider =
+    FutureProvider.family<EnhancedNotification?, String>((
   ref,
   notificationId,
 ) async {
@@ -45,7 +50,8 @@ final notificationProvider = FutureProvider.family<EnhancedNotification?, String
 });
 
 /// Провайдер статистики уведомлений
-final notificationStatsProvider = FutureProvider.family<NotificationStats, String>((
+final notificationStatsProvider =
+    FutureProvider.family<NotificationStats, String>((
   ref,
   userId,
 ) async {
@@ -56,18 +62,20 @@ final notificationStatsProvider = FutureProvider.family<NotificationStats, Strin
 /// Провайдер состояния создания уведомления (мигрирован с StateNotifierProvider)
 final createNotificationStateProvider =
     NotifierProvider<CreateNotificationStateNotifier, CreateNotificationState>(
-      () => CreateNotificationStateNotifier(),
-    );
+  () => CreateNotificationStateNotifier(),
+);
 
 /// Состояние создания уведомления
 class CreateNotificationState {
-  const CreateNotificationState({this.isLoading = false, this.error, this.success = false});
+  const CreateNotificationState(
+      {this.isLoading = false, this.error, this.success = false});
 
   final bool isLoading;
   final String? error;
   final bool success;
 
-  CreateNotificationState copyWith({bool? isLoading, String? error, bool? success}) =>
+  CreateNotificationState copyWith(
+          {bool? isLoading, String? error, bool? success}) =>
       CreateNotificationState(
         isLoading: isLoading ?? this.isLoading,
         error: error ?? this.error,
@@ -76,13 +84,15 @@ class CreateNotificationState {
 }
 
 /// Нотификатор состояния создания уведомления (мигрирован с StateNotifier)
-class CreateNotificationStateNotifier extends Notifier<CreateNotificationState> {
+class CreateNotificationStateNotifier
+    extends Notifier<CreateNotificationState> {
   @override
   CreateNotificationState build() {
     return const CreateNotificationState();
   }
 
-  EnhancedNotificationsService get _service => ref.read(enhancedNotificationsServiceProvider);
+  EnhancedNotificationsService get _service =>
+      ref.read(enhancedNotificationsServiceProvider);
 
   Future<void> createNotification({
     required String userId,
@@ -130,20 +140,22 @@ class CreateNotificationStateNotifier extends Notifier<CreateNotificationState> 
 }
 
 /// Провайдер состояния уведомлений (мигрирован с StateNotifierProvider)
-final notificationStateProvider =
-    NotifierProvider.family<NotificationStateNotifier, NotificationState, String>(
-      (ref, notificationId) => NotificationStateNotifier(notificationId),
-    );
+final notificationStateProvider = NotifierProvider.family<
+    NotificationStateNotifier, NotificationState, String>(
+  (ref, notificationId) => NotificationStateNotifier(notificationId),
+);
 
 /// Состояние уведомления
 class NotificationState {
-  const NotificationState({this.isRead = false, this.isArchived = false, this.isLoading = false});
+  const NotificationState(
+      {this.isRead = false, this.isArchived = false, this.isLoading = false});
 
   final bool isRead;
   final bool isArchived;
   final bool isLoading;
 
-  NotificationState copyWith({bool? isRead, bool? isArchived, bool? isLoading}) =>
+  NotificationState copyWith(
+          {bool? isRead, bool? isArchived, bool? isLoading}) =>
       NotificationState(
         isRead: isRead ?? this.isRead,
         isArchived: isArchived ?? this.isArchived,
@@ -161,7 +173,8 @@ class NotificationStateNotifier extends Notifier<NotificationState> {
   }
 
   final String _notificationId;
-  EnhancedNotificationsService get _service => ref.read(enhancedNotificationsServiceProvider);
+  EnhancedNotificationsService get _service =>
+      ref.read(enhancedNotificationsServiceProvider);
 
   Future<void> markAsRead() async {
     state = state.copyWith(isLoading: true);
@@ -207,8 +220,8 @@ class NotificationStateNotifier extends Notifier<NotificationState> {
 /// Провайдер настроек уведомлений (мигрирован с StateNotifierProvider)
 final notificationSettingsProvider =
     NotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
-      () => NotificationSettingsNotifier(),
-    );
+  () => NotificationSettingsNotifier(),
+);
 
 /// Настройки уведомлений
 class NotificationSettings {
@@ -238,15 +251,16 @@ class NotificationSettings {
     Map<NotificationType, bool>? types,
     NotificationFrequency? frequency,
     QuietHours? quietHours,
-  }) => NotificationSettings(
-    enabled: enabled ?? this.enabled,
-    sound: sound ?? this.sound,
-    vibration: vibration ?? this.vibration,
-    badge: badge ?? this.badge,
-    types: types ?? this.types,
-    frequency: frequency ?? this.frequency,
-    quietHours: quietHours ?? this.quietHours,
-  );
+  }) =>
+      NotificationSettings(
+        enabled: enabled ?? this.enabled,
+        sound: sound ?? this.sound,
+        vibration: vibration ?? this.vibration,
+        badge: badge ?? this.badge,
+        types: types ?? this.types,
+        frequency: frequency ?? this.frequency,
+        quietHours: quietHours ?? this.quietHours,
+      );
 }
 
 /// Частота уведомлений
@@ -305,13 +319,14 @@ class QuietHours {
     int? startMinute,
     int? endHour,
     int? endMinute,
-  }) => QuietHours(
-    enabled: enabled ?? this.enabled,
-    startHour: startHour ?? this.startHour,
-    startMinute: startMinute ?? this.startMinute,
-    endHour: endHour ?? this.endHour,
-    endMinute: endMinute ?? this.endMinute,
-  );
+  }) =>
+      QuietHours(
+        enabled: enabled ?? this.enabled,
+        startHour: startHour ?? this.startHour,
+        startMinute: startMinute ?? this.startMinute,
+        endHour: endHour ?? this.endHour,
+        endMinute: endMinute ?? this.endMinute,
+      );
 }
 
 /// Нотификатор настроек уведомлений (мигрирован с StateNotifier)

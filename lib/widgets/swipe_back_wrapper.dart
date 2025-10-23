@@ -128,7 +128,8 @@ class QuickHomeButton extends StatelessWidget {
 
 /// Виджет для быстрого доступа к профилю
 class QuickProfileButton extends StatelessWidget {
-  const QuickProfileButton({super.key, this.icon = Icons.person, this.tooltip = 'Профиль'});
+  const QuickProfileButton(
+      {super.key, this.icon = Icons.person, this.tooltip = 'Профиль'});
 
   final IconData icon;
   final String tooltip;
@@ -222,10 +223,13 @@ class QuickNavigationBar extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 24, color: Theme.of(context).colorScheme.onSurface),
+            Icon(icon,
+                size: 24, color: Theme.of(context).colorScheme.onSurface),
             const SizedBox(height: 4),
             Text(label,
-                style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface)),
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onSurface)),
           ],
         ),
       );

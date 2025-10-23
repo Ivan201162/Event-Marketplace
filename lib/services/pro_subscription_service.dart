@@ -67,7 +67,10 @@ class ProSubscriptionService {
         features: _getPlanFeatures(plan),
       );
 
-      await _firestore.collection('subscriptions').doc(subscriptionId).set(subscription.toMap());
+      await _firestore
+          .collection('subscriptions')
+          .doc(subscriptionId)
+          .set(subscription.toMap());
 
       return subscription;
     } catch (e) {
@@ -85,7 +88,9 @@ class ProSubscriptionService {
     Map<String, bool>? features,
   }) async {
     try {
-      final updates = <String, dynamic>{'updatedAt': FieldValue.serverTimestamp()};
+      final updates = <String, dynamic>{
+        'updatedAt': FieldValue.serverTimestamp()
+      };
 
       if (plan != null) updates['plan'] = plan.value;
       if (status != null) updates['status'] = status.value;
@@ -93,7 +98,10 @@ class ProSubscriptionService {
       if (autoRenew != null) updates['autoRenew'] = autoRenew;
       if (features != null) updates['features'] = features;
 
-      await _firestore.collection('subscriptions').doc(subscriptionId).update(updates);
+      await _firestore
+          .collection('subscriptions')
+          .doc(subscriptionId)
+          .update(updates);
     } catch (e) {
       throw Exception('Ошибка обновления подписки: $e');
     }
@@ -137,7 +145,10 @@ class ProSubscriptionService {
       );
 
       // Получить обновленную подписку
-      final updatedDoc = await _firestore.collection('subscriptions').doc(subscriptionId).get();
+      final updatedDoc = await _firestore
+          .collection('subscriptions')
+          .doc(subscriptionId)
+          .get();
 
       return ProSubscription.fromMap(updatedDoc.data()!);
     } catch (e) {
@@ -146,7 +157,8 @@ class ProSubscriptionService {
   }
 
   /// Получить историю платежей
-  Future<List<Payment>> getPaymentHistory({required String subscriptionId, int limit = 20}) async {
+  Future<List<Payment>> getPaymentHistory(
+      {required String subscriptionId, int limit = 20}) async {
     try {
       final QuerySnapshot snapshot = await _firestore
           .collection('payments')
@@ -169,7 +181,8 @@ class ProSubscriptionService {
   }
 
   /// Проверить доступность функции
-  Future<bool> hasFeature({required String userId, required String feature}) async {
+  Future<bool> hasFeature(
+      {required String userId, required String feature}) async {
     try {
       final subscription = await getUserSubscription(userId);
       if (subscription == null) return false;
@@ -209,7 +222,10 @@ class ProSubscriptionService {
 
       final payment = paymentIntent;
 
-      await _firestore.collection('payments').doc(paymentId).set(payment.toMap());
+      await _firestore
+          .collection('payments')
+          .doc(paymentId)
+          .set(payment.toMap());
 
       return payment;
     } catch (e) {
@@ -221,7 +237,11 @@ class ProSubscriptionService {
   Map<String, bool> _getPlanFeatures(SubscriptionPlan plan) {
     switch (plan) {
       case SubscriptionPlan.basic:
-        return {'basic_profile': true, 'portfolio_limit_5': true, 'standard_support': true};
+        return {
+          'basic_profile': true,
+          'portfolio_limit_5': true,
+          'standard_support': true
+        };
       case SubscriptionPlan.pro:
         return {
           'basic_profile': true,
@@ -255,7 +275,8 @@ class ProSubscriptionService {
   /// Получить статистику подписок
   Future<Map<String, dynamic>> getSubscriptionStats() async {
     try {
-      final QuerySnapshot snapshot = await _firestore.collection('subscriptions').get();
+      final QuerySnapshot snapshot =
+          await _firestore.collection('subscriptions').get();
 
       var totalSubscriptions = 0;
       var activeSubscriptions = 0;

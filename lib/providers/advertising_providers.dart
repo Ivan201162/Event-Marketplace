@@ -5,10 +5,12 @@ import '../models/advertisement.dart';
 import '../services/advertising_service.dart';
 
 /// Провайдер сервиса рекламы
-final advertisingServiceProvider = Provider<AdvertisingService>((ref) => AdvertisingService());
+final advertisingServiceProvider =
+    Provider<AdvertisingService>((ref) => AdvertisingService());
 
 /// Провайдер рекламных объявлений
-final advertisementsProvider = FutureProvider.family<List<Advertisement>, AdvertisementFilters>((
+final advertisementsProvider =
+    FutureProvider.family<List<Advertisement>, AdvertisementFilters>((
   ref,
   filters,
 ) async {
@@ -22,7 +24,8 @@ final advertisementsProvider = FutureProvider.family<List<Advertisement>, Advert
 });
 
 /// Провайдер рекламы для показа
-final displayAdvertisementsProvider = FutureProvider.family<List<Advertisement>, DisplayAdParams>((
+final displayAdvertisementsProvider =
+    FutureProvider.family<List<Advertisement>, DisplayAdParams>((
   ref,
   params,
 ) async {
@@ -35,7 +38,8 @@ final displayAdvertisementsProvider = FutureProvider.family<List<Advertisement>,
 });
 
 /// Провайдер статистики рекламы
-final advertisementStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((
+final advertisementStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((
   ref,
   adId,
 ) async {
@@ -44,14 +48,16 @@ final advertisementStatsProvider = FutureProvider.family<Map<String, dynamic>, S
 });
 
 /// Провайдер общей статистики рекламы
-final overallAdStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final overallAdStatsProvider =
+    FutureProvider<Map<String, dynamic>>((ref) async {
   final service = ref.read(advertisingServiceProvider);
   return service.getOverallStats();
 });
 
 /// Параметры для фильтрации рекламы
 class AdvertisementFilters {
-  const AdvertisementFilters({this.status, this.type, this.advertiserId, this.limit = 20});
+  const AdvertisementFilters(
+      {this.status, this.type, this.advertiserId, this.limit = 20});
 
   final AdvertisementStatus? status;
   final AdvertisementType? type;
@@ -69,12 +75,14 @@ class AdvertisementFilters {
   }
 
   @override
-  int get hashCode => status.hashCode ^ type.hashCode ^ advertiserId.hashCode ^ limit.hashCode;
+  int get hashCode =>
+      status.hashCode ^ type.hashCode ^ advertiserId.hashCode ^ limit.hashCode;
 }
 
 /// Параметры для показа рекламы
 class DisplayAdParams {
-  const DisplayAdParams({required this.userId, required this.context, this.limit = 5});
+  const DisplayAdParams(
+      {required this.userId, required this.context, this.limit = 5});
 
   final String userId;
   final String context;
@@ -112,12 +120,13 @@ class AdvertisingState {
     bool? isLoading,
     String? error,
     Map<String, dynamic>? stats,
-  }) => AdvertisingState(
-    advertisements: advertisements ?? this.advertisements,
-    isLoading: isLoading ?? this.isLoading,
-    error: error ?? this.error,
-    stats: stats ?? this.stats,
-  );
+  }) =>
+      AdvertisingState(
+        advertisements: advertisements ?? this.advertisements,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        stats: stats ?? this.stats,
+      );
 }
 
 /// Notifier для состояния рекламы (мигрирован с StateNotifier)
@@ -222,7 +231,8 @@ class AdvertisingNotifier extends Notifier<AdvertisingState> {
         return ad;
       }).toList();
 
-      state = state.copyWith(advertisements: updatedAdvertisements, isLoading: false);
+      state = state.copyWith(
+          advertisements: updatedAdvertisements, isLoading: false);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
@@ -236,7 +246,8 @@ class AdvertisingNotifier extends Notifier<AdvertisingState> {
       await _service.deleteAdvertisement(adId);
 
       state = state.copyWith(
-        advertisements: state.advertisements.where((ad) => ad.id != adId).toList(),
+        advertisements:
+            state.advertisements.where((ad) => ad.id != adId).toList(),
         isLoading: false,
       );
     } catch (e) {
@@ -281,6 +292,7 @@ class AdvertisingNotifier extends Notifier<AdvertisingState> {
 }
 
 /// Провайдер состояния рекламы (мигрирован с StateNotifierProvider)
-final advertisingStateProvider = NotifierProvider<AdvertisingNotifier, AdvertisingState>(
+final advertisingStateProvider =
+    NotifierProvider<AdvertisingNotifier, AdvertisingState>(
   AdvertisingNotifier.new,
 );

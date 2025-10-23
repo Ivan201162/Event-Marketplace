@@ -40,7 +40,8 @@ class _FeedVideoPlayerState extends State<FeedVideoPlayer> {
 
   Future<void> _initializeVideo() async {
     try {
-      _videoController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+      _videoController =
+          VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
       await _videoController!.initialize();
 
@@ -68,7 +69,8 @@ class _FeedVideoPlayerState extends State<FeedVideoPlayer> {
               : Container(
                   color: Colors.grey[300],
                   child: const Center(
-                    child: Icon(Icons.play_circle_outline, size: 64, color: Colors.white),
+                    child: Icon(Icons.play_circle_outline,
+                        size: 64, color: Colors.white),
                   ),
                 ),
           autoInitialize: true,
@@ -110,28 +112,30 @@ class _FeedVideoPlayerState extends State<FeedVideoPlayer> {
   }
 
   Widget _buildLoadingWidget() => Container(
-    color: Colors.grey[300],
-    child: const Center(child: CircularProgressIndicator()),
-  );
+        color: Colors.grey[300],
+        child: const Center(child: CircularProgressIndicator()),
+      );
 
   Widget _buildErrorWidget() => Container(
-    color: Colors.grey[300],
-    child: const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 48, color: Colors.red),
-          SizedBox(height: 8),
-          Text('Ошибка загрузки видео', style: TextStyle(color: Colors.red, fontSize: 14)),
-        ],
-      ),
-    ),
-  );
+        color: Colors.grey[300],
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 48, color: Colors.red),
+              SizedBox(height: 8),
+              Text('Ошибка загрузки видео',
+                  style: TextStyle(color: Colors.red, fontSize: 14)),
+            ],
+          ),
+        ),
+      );
 }
 
 /// Видеоплеер с превью для ленты
 class FeedVideoPreview extends StatefulWidget {
-  const FeedVideoPreview({super.key, required this.videoUrl, this.thumbnailUrl});
+  const FeedVideoPreview(
+      {super.key, required this.videoUrl, this.thumbnailUrl});
 
   final String videoUrl;
   final String? thumbnailUrl;
@@ -145,45 +149,50 @@ class _FeedVideoPreviewState extends State<FeedVideoPreview> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: () {
-      setState(() {
-        _isPlaying = !_isPlaying;
-      });
-    },
-    child: Stack(
-      alignment: Alignment.center,
-      children: [
-        // Превью изображение или видео
-        if (_isPlaying)
-          FeedVideoPlayer(
-            videoUrl: widget.videoUrl,
-            thumbnailUrl: widget.thumbnailUrl,
-            autoPlay: true,
-          )
-        else
-          Container(
-            decoration: BoxDecoration(
-              image: widget.thumbnailUrl != null
-                  ? DecorationImage(image: NetworkImage(widget.thumbnailUrl!), fit: BoxFit.cover)
-                  : null,
-              color: widget.thumbnailUrl == null ? Colors.grey[300] : null,
-            ),
-            child: widget.thumbnailUrl == null
-                ? const Center(child: Icon(Icons.videocam, size: 48, color: Colors.grey))
-                : null,
-          ),
+        onTap: () {
+          setState(() {
+            _isPlaying = !_isPlaying;
+          });
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Превью изображение или видео
+            if (_isPlaying)
+              FeedVideoPlayer(
+                videoUrl: widget.videoUrl,
+                thumbnailUrl: widget.thumbnailUrl,
+                autoPlay: true,
+              )
+            else
+              Container(
+                decoration: BoxDecoration(
+                  image: widget.thumbnailUrl != null
+                      ? DecorationImage(
+                          image: NetworkImage(widget.thumbnailUrl!),
+                          fit: BoxFit.cover)
+                      : null,
+                  color: widget.thumbnailUrl == null ? Colors.grey[300] : null,
+                ),
+                child: widget.thumbnailUrl == null
+                    ? const Center(
+                        child:
+                            Icon(Icons.videocam, size: 48, color: Colors.grey))
+                    : null,
+              ),
 
-        // Кнопка воспроизведения
-        if (!_isPlaying)
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.5),
-              shape: BoxShape.circle,
-            ),
-            padding: const EdgeInsets.all(16),
-            child: const Icon(Icons.play_arrow, size: 48, color: Colors.white),
-          ),
-      ],
-    ),
-  );
+            // Кнопка воспроизведения
+            if (!_isPlaying)
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                ),
+                padding: const EdgeInsets.all(16),
+                child:
+                    const Icon(Icons.play_arrow, size: 48, color: Colors.white),
+              ),
+          ],
+        ),
+      );
 }

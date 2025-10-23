@@ -3,7 +3,8 @@ import '../models/support_ticket.dart';
 import '../services/support_service.dart';
 
 /// Провайдер сервиса поддержки
-final supportServiceProvider = Provider<SupportService>((ref) => SupportService());
+final supportServiceProvider =
+    Provider<SupportService>((ref) => SupportService());
 
 /// Провайдер для получения тикетов пользователя
 final userTicketsProvider = StreamProvider.family<List<SupportTicket>, String>(
@@ -21,8 +22,10 @@ final ticketProvider = FutureProvider.family<SupportTicket?, String>(
 );
 
 /// Провайдер для получения сообщений тикета
-final ticketMessagesProvider = StreamProvider.family<List<SupportMessage>, String>(
-  (ref, ticketId) => ref.watch(supportServiceProvider).getTicketMessages(ticketId),
+final ticketMessagesProvider =
+    StreamProvider.family<List<SupportMessage>, String>(
+  (ref, ticketId) =>
+      ref.watch(supportServiceProvider).getTicketMessages(ticketId),
 );
 
 /// Провайдер для получения FAQ

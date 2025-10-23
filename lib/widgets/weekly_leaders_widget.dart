@@ -8,7 +8,8 @@ class WeeklyLeadersWidget extends StatelessWidget {
   final List<WeeklyLeader> leaders;
   final Function(WeeklyLeader)? onLeaderTap;
 
-  const WeeklyLeadersWidget({super.key, required this.leaders, this.onLeaderTap});
+  const WeeklyLeadersWidget(
+      {super.key, required this.leaders, this.onLeaderTap});
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +89,14 @@ class WeeklyLeadersWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: Container(
           decoration: BoxDecoration(
-            color: isTopThree ? positionColor.withValues(alpha: 0.1) : Colors.grey[50],
+            color: isTopThree
+                ? positionColor.withValues(alpha: 0.1)
+                : Colors.grey[50],
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isTopThree ? positionColor.withValues(alpha: 0.3) : Colors.grey[300]!,
+              color: isTopThree
+                  ? positionColor.withValues(alpha: 0.3)
+                  : Colors.grey[300]!,
             ),
           ),
           child: Padding(
@@ -103,7 +108,8 @@ class WeeklyLeadersWidget extends StatelessWidget {
                 Container(
                   width: 24,
                   height: 24,
-                  decoration: BoxDecoration(color: positionColor, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                      color: positionColor, shape: BoxShape.circle),
                   child: Center(
                     child: position <= 3
                         ? Icon(positionIcon, size: 14, color: Colors.white)
@@ -130,7 +136,8 @@ class WeeklyLeadersWidget extends StatelessWidget {
                         ? CachedNetworkImageProvider(leader.avatarUrl!)
                         : null,
                     child: leader.avatarUrl == null
-                        ? Icon(Icons.person, size: 20, color: theme.primaryColor)
+                        ? Icon(Icons.person,
+                            size: 20, color: theme.primaryColor)
                         : null,
                   ),
                 ),
@@ -140,7 +147,8 @@ class WeeklyLeadersWidget extends StatelessWidget {
                 // Имя
                 Text(
                   leader.name,
-                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                      fontSize: 10, fontWeight: FontWeight.w600),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -162,7 +170,8 @@ class WeeklyLeadersWidget extends StatelessWidget {
 
                 // Счет
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   decoration: BoxDecoration(
                     color: positionColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),

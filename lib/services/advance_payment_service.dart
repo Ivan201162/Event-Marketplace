@@ -52,7 +52,8 @@ class AdvancePaymentService {
       );
 
       // Сохраняем в Firestore
-      final docRef = await _firestore.collection('payments').add(payment.toMap());
+      final docRef =
+          await _firestore.collection('payments').add(payment.toMap());
 
       // Обновляем бронирование
       await _updateBookingPaymentStatus(bookingId, advanceAmount, totalAmount);
@@ -118,7 +119,8 @@ class AdvancePaymentService {
       );
 
       // Сохраняем в Firestore
-      final docRef = await _firestore.collection('payments').add(payment.toMap());
+      final docRef =
+          await _firestore.collection('payments').add(payment.toMap());
 
       // Обновляем бронирование
       await _updateBookingPaymentStatus(
@@ -142,8 +144,10 @@ class AdvancePaymentService {
       }
 
       final payments = await _getAllPayments(bookingId);
-      final advancePayments = payments.where((p) => p.type == PaymentType.advance).toList();
-      final finalPayments = payments.where((p) => p.type == PaymentType.finalPayment).toList();
+      final advancePayments =
+          payments.where((p) => p.type == PaymentType.advance).toList();
+      final finalPayments =
+          payments.where((p) => p.type == PaymentType.finalPayment).toList();
 
       final totalAdvancePaid = advancePayments
           .where((p) => p.status == PaymentStatus.completed)
@@ -189,7 +193,8 @@ class AdvancePaymentService {
 
       // Если платеж завершен, обновляем статус бронирования
       if (status == PaymentStatus.completed) {
-        final paymentDoc = await _firestore.collection('payments').doc(paymentId).get();
+        final paymentDoc =
+            await _firestore.collection('payments').doc(paymentId).get();
         if (paymentDoc.exists) {
           final paymentData = paymentDoc.data();
           final bookingId = paymentData?['bookingId'] as String? ?? '';
@@ -295,7 +300,8 @@ class AdvancePaymentService {
     try {
       await _firestore.collection('bookings').doc(bookingId).update({
         'paidAmount': paidAmount,
-        'paymentStatus': paidAmount >= totalAmount ? 'fully_paid' : 'partially_paid',
+        'paymentStatus':
+            paidAmount >= totalAmount ? 'fully_paid' : 'partially_paid',
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {
