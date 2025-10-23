@@ -42,8 +42,8 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
     try {
       await _reviewService.createReview(
         bookingId: widget.booking.id,
-        userId: widget.booking.customerId ?? widget.booking.userId,
-        userName: widget.booking.customerName ?? widget.booking.userName,
+        customerId: widget.booking.customerId ?? widget.booking.userId,
+        customerName: widget.booking.customerName ?? widget.booking.userName,
         specialistId: widget.booking.specialistId ?? '',
         specialistName: widget.booking.specialistName ?? '',
         rating: _rating,

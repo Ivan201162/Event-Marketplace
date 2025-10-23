@@ -41,6 +41,23 @@ class AppNotification extends Equatable {
     );
   }
 
+  /// Создает уведомление из Map
+  factory AppNotification.fromMap(Map<String, dynamic> data) {
+    return AppNotification(
+      id: data['id'] ?? '',
+      title: data['title'] ?? '',
+      message: data['message'] ?? '',
+      type: data['type'] ?? 'system',
+      userId: data['userId'] ?? '',
+      senderId: data['senderId'],
+      isRead: data['isRead'] ?? false,
+      createdAt: data['createdAt'] is Timestamp 
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      data: data['data'] as Map<String, dynamic>?,
+    );
+  }
+
   /// Преобразует уведомление в Map для Firestore
   Map<String, dynamic> toFirestore() {
     return {

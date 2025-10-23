@@ -155,7 +155,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                       }
                     });
                   },
-                  children: const [
+                  children: [
                     RadioListTile<bool>(
                       title: Text('Индивидуальный специалист'),
                       subtitle: Text('Бронирование одного специалиста'),

@@ -351,6 +351,74 @@ class NotificationService {
       print('Ошибка очистки старых уведомлений: $e');
     }
   }
+
+  /// Получение уведомлений для пользователя
+  Future<List<Map<String, dynamic>>> getNotificationsForUser(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('notifications')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+        return data;
+      }).toList();
+    } catch (e) {
+      print('Ошибка получения уведомлений: $e');
+      return [];
+    }
+  }
+
+  /// Получение количества непрочитанных уведомлений
+  Future<int> getUnreadCount(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('notifications')
+          .where('userId', isEqualTo: userId)
+          .where('isRead', isEqualTo: false)
+          .get();
+
+      return snapshot.docs.length;
+    } catch (e) {
+      print('Ошибка получения количества непрочитанных: $e');
+      return 0;
+    }
+  }
+
+  /// Удаление уведомления
+  Future<void> deleteNotification(String notificationId) async {
+    try {
+      await _firestore.collection('notifications').doc(notificationId).delete();
+    } catch (e) {
+      print('Ошибка удаления уведомления: $e');
+    }
+  }
+
+  /// Отметить все уведомления как прочитанные
+  Future<void> markAllNotificationsAsRead() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
+
+      final batch = _firestore.batch();
+      final snapshot = await _firestore
+          .collection('notifications')
+          .where('userId', isEqualTo: user.uid)
+          .where('isRead', isEqualTo: false)
+          .get();
+
+      for (final doc in snapshot.docs) {
+        batch.update(doc.reference, {'isRead': true});
+      }
+
+      await batch.commit();
+    } catch (e) {
+      print('Ошибка отметки уведомлений как прочитанных: $e');
+    }
+  }
 }
 
 /// Обработчик сообщений в фоне

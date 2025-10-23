@@ -12,22 +12,24 @@ class NotificationProviders {
 
   /// Уведомления пользователя
   static final userNotificationsProvider =
-      StreamProvider.family<List<AppNotification>, String>((ref, userId) {
+      FutureProvider.family<List<AppNotification>, String>((ref, userId) async {
     final service = ref.watch(notificationServiceProvider);
-    return service.getNotificationsForUser(userId);
+    final notifications = await service.getNotificationsForUser(userId);
+    return notifications.map((data) => AppNotification.fromMap(data)).toList();
   });
 
   /// Количество непрочитанных уведомлений
   static final unreadCountProvider =
-      StreamProvider.family<int, String>((ref, userId) {
+      FutureProvider.family<int, String>((ref, userId) async {
     final service = ref.watch(notificationServiceProvider);
-    return service.getUnreadCount(userId);
+    return await service.getUnreadCount(userId);
   });
 
   /// Последние уведомления (для бейджа)
   static final recentNotificationsProvider =
-      StreamProvider.family<List<AppNotification>, String>((ref, userId) {
+      FutureProvider.family<List<AppNotification>, String>((ref, userId) async {
     final service = ref.watch(notificationServiceProvider);
-    return service.getNotificationsForUser(userId);
+    final notifications = await service.getNotificationsForUser(userId);
+    return notifications.map((data) => AppNotification.fromMap(data)).toList();
   });
 }

@@ -387,8 +387,6 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
     try {
       await _storyService.createStory(
         specialistId: widget.specialistId,
-        specialistName: widget.specialistName,
-        specialistAvatar: widget.specialistAvatar,
         contentType: _selectedType,
         contentFile: _selectedFile!,
         text: _textController.text.isEmpty ? null : _textController.text,

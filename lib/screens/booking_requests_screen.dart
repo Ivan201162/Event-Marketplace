@@ -40,24 +40,22 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     final testBookings = [
       Booking(
         id: 'request_1',
-        customerId: 'customer_1',
+        clientId: 'customer_1',
         specialistId: 'specialist_1',
         eventDate: DateTime.now().add(const Duration(days: 10)),
         totalPrice: 35000,
-        prepayment: 17500,
         status: BookingStatus.pending,
-        message: 'Свадьба в стиле "Великий Гэтсби"',
+        notes: 'Свадьба в стиле "Великий Гэтсби"',
         createdAt: DateTime.now().subtract(const Duration(hours: 2)),
       ),
       Booking(
         id: 'request_2',
-        customerId: 'customer_2',
+        clientId: 'customer_2',
         specialistId: 'specialist_1',
         eventDate: DateTime.now().add(const Duration(days: 21)),
         totalPrice: 28000,
-        prepayment: 14000,
         status: BookingStatus.pending,
-        message: 'Корпоратив IT-компании',
+        notes: 'Корпоратив IT-компании',
         createdAt: DateTime.now().subtract(const Duration(hours: 5)),
       ),
     ];
