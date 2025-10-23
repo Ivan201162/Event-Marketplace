@@ -275,6 +275,11 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
 
           const SizedBox(height: 24),
 
+          // Сторисы
+          _buildStoriesSection(),
+
+          const SizedBox(height: 24),
+
           // ТОП специалисты
           _buildTopSpecialists(),
 
@@ -1080,6 +1085,115 @@ class _StatCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Секция сторис
+  Widget _buildStoriesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            'Сторисы',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1E3A8A),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: 8, // Заглушка
+            itemBuilder: (context, index) {
+              return _buildStoryItem(index);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Элемент сторис
+  Widget _buildStoryItem(int index) {
+    final isOwnStory = index == 0;
+    
+    return Container(
+      width: 80,
+      margin: const EdgeInsets.only(right: 12),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              if (isOwnStory) {
+                // Создать новую сторис
+                _createNewStory();
+              } else {
+                // Просмотреть сторис
+                _viewStory(index);
+              }
+            },
+            child: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isOwnStory ? Colors.grey[400]! : const Color(0xFF1E3A8A),
+                  width: 2,
+                ),
+                color: Colors.grey[100],
+              ),
+              child: isOwnStory
+                  ? const Icon(Icons.add, color: Colors.grey, size: 30)
+                  : CircleAvatar(
+                      radius: 32,
+                      backgroundColor: Colors.grey[200],
+                      child: const Icon(Icons.person, color: Colors.grey),
+                    ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            isOwnStory ? 'Ваша' : 'Пользователь $index',
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Создать новую сторис
+  void _createNewStory() {
+    // TODO: Реализовать создание сторис
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Создание сторис будет реализовано'),
+        backgroundColor: Colors.blue,
+      ),
+    );
+  }
+
+  /// Просмотреть сторис
+  void _viewStory(int index) {
+    // TODO: Реализовать просмотр сторис
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Просмотр сторис пользователя $index'),
+        backgroundColor: Colors.blue,
       ),
     );
   }
