@@ -27,6 +27,7 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
   late Animation<double> _fadeAnimation;
 
   bool _isSearching = false;
+  String _sortBy = 'time'; // 'time' или 'unread'
 
   @override
   void initState() {
@@ -63,6 +64,60 @@ class _ChatListScreenEnhancedState extends ConsumerState<ChatListScreenEnhanced>
     final user = ref.watch(authStateProvider);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Чаты',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: const Color(0xFF1E3A8A),
+        elevation: 0,
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.sort, color: Colors.white),
+            onSelected: (value) {
+              setState(() {
+                _sortBy = value;
+              });
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'time',
+                child: Row(
+                  children: [
+                    Icon(Icons.access_time, color: Colors.grey),
+                    SizedBox(width: 8),
+                    Text('По времени'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'unread',
+                child: Row(
+                  children: [
+                    Icon(Icons.mark_email_unread, color: Colors.orange),
+                    SizedBox(width: 8),
+                    Text('Непрочитанные'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isSearching = !_isSearching;
+              });
+            },
+            icon: Icon(
+              _isSearching ? Icons.close : Icons.search,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
