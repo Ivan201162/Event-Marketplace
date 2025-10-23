@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:story_view/story_view.dart';
 
 import '../models/user_profile.dart';
+import '../models/advertisement.dart';
 import '../providers/user_profile_provider.dart';
+import '../providers/advertising_providers.dart';
 
 /// Виджет для отображения сторис пользователя
 class StoriesWidget extends ConsumerWidget {
@@ -33,19 +35,36 @@ class StoriesWidget extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    return ListView.builder(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      itemCount: stories.length + (isOwnProfile ? 1 : 0),
-      itemBuilder: (context, index) {
-        if (isOwnProfile && index == 0) {
-          return _buildAddStoryButton(context);
-        }
+    return Consumer(
+      builder: (context, ref, child) {
+        final adsAsync = ref.watch(storyAdsProvider);
+        
+        return ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          itemCount: stories.length + (isOwnProfile ? 1 : 0) + (adsAsync.value?.length ?? 0),
+          itemBuilder: (context, index) {
+            if (isOwnProfile && index == 0) {
+              return _buildAddStoryButton(context);
+            }
 
-        final storyIndex = isOwnProfile ? index - 1 : index;
-        final story = stories[storyIndex];
+            // Показываем рекламу каждые 3 сторис
+            if (index > 0 && (index - (isOwnProfile ? 1 : 0)) % 3 == 0) {
+              final adIndex = ((index - (isOwnProfile ? 1 : 0)) ~/ 3) - 1;
+              if (adsAsync.hasValue && adIndex < adsAsync.value!.length) {
+                return _buildAdStoryItem(context, adsAsync.value![adIndex]);
+              }
+            }
 
-        return _buildStoryItem(context, story);
+            final storyIndex = isOwnProfile ? index - 1 : index;
+            if (storyIndex < stories.length) {
+              final story = stories[storyIndex];
+              return _buildStoryItem(context, story);
+            }
+
+            return const SizedBox.shrink();
+          },
+        );
       },
     );
   }
@@ -277,5 +296,64 @@ class StoriesWidget extends ConsumerWidget {
     } else {
       return '${difference.inDays}д';
     }
+  }
+
+  /// Рекламный элемент сторис
+  Widget _buildAdStoryItem(BuildContext context, Advertisement ad) {
+    return Container(
+      width: 80,
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () => _viewAdStory(context, ad),
+            child: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.orange,
+                  width: 2,
+                ),
+                gradient: const LinearGradient(
+                  colors: [Colors.orange, Colors.red],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: const Icon(
+                Icons.ads_click,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Реклама',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.orange[700],
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Просмотр рекламной сторис
+  void _viewAdStory(BuildContext context, Advertisement ad) {
+    // TODO: Реализовать просмотр рекламной сторис
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Просмотр рекламы: ${ad.title ?? "Без названия"}'),
+        backgroundColor: Colors.orange,
+      ),
+    );
   }
 }

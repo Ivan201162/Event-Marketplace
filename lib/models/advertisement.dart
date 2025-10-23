@@ -6,7 +6,8 @@ enum AdType {
   profileBoost,
   sponsoredPost,
   categoryAd,
-  searchAd
+  searchAd,
+  storyAd
 }
 
 // Алиасы для совместимости с админ-панелью
@@ -23,6 +24,7 @@ enum AdPlacement {
   searchResults,
   categoryList,
   homeFeed,
+  stories,
 }
 
 class Advertisement {

@@ -47,6 +47,16 @@ final advertisementStatsProvider =
   return service.getAdvertisementStats(adId);
 });
 
+/// Провайдер рекламы в сторис
+final storyAdsProvider = FutureProvider<List<Advertisement>>((ref) async {
+  final service = ref.read(advertisingServiceProvider);
+  return service.getAdvertisements(
+    status: AdStatus.active,
+    type: AdType.storyAd,
+    limit: 10,
+  );
+});
+
 /// Провайдер общей статистики рекламы
 final overallAdStatsProvider =
     FutureProvider<Map<String, dynamic>>((ref) async {
