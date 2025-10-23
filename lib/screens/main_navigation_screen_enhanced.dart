@@ -115,6 +115,9 @@ class _MainNavigationScreenEnhancedState
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > 768;
+    
     return Scaffold(
       body: PageView.builder(
         controller: _pageController,
@@ -226,6 +229,51 @@ class _MainNavigationScreenEnhancedState
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// Адаптивная навигация для планшетов
+  Widget _buildTabletDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: Color(0xFF1E3A8A),
+            ),
+            child: Text(
+              'Event Marketplace',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ..._navigationItems.asMap().entries.map((entry) {
+            final index = entry.key;
+            final item = entry.value;
+            final isActive = _currentIndex == index;
+            
+            return ListTile(
+              leading: Icon(
+                isActive ? item.activeIcon : item.icon,
+                color: isActive ? Theme.of(context).primaryColor : Colors.grey[600],
+              ),
+              title: Text(
+                item.label,
+                style: TextStyle(
+                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                  color: isActive ? Theme.of(context).primaryColor : Colors.grey[600],
+                ),
+              ),
+              selected: isActive,
+              onTap: () => _onTabTapped(index),
+            );
+          }).toList(),
+        ],
       ),
     );
   }
