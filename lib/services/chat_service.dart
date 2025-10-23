@@ -24,6 +24,54 @@ class ChatService {
     });
   }
 
+  /// Получить список чатов пользователя (Future)
+  Future<List<Chat>> getUserChatsFuture(String userId) async {
+    final snapshot = await _firestore
+        .collection('chats')
+        .where('participants', arrayContains: userId)
+        .where('isActive', isEqualTo: true)
+        .orderBy('lastMessageAt', descending: true)
+        .get();
+    
+    return snapshot.docs.map((doc) => Chat.fromFirestore(doc)).toList();
+  }
+
+  /// Получить чат по ID
+  Future<Chat?> getChatById(String chatId) async {
+    try {
+      final doc = await _firestore.collection('chats').doc(chatId).get();
+      if (doc.exists) {
+        return Chat.fromFirestore(doc);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Получить сообщения чата (Future)
+  Future<List<ChatMessage>> getChatMessagesFuture(String chatId) async {
+    final snapshot = await _firestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('createdAt', descending: true)
+        .limit(50)
+        .get();
+    
+    return snapshot.docs.map((doc) => ChatMessage.fromFirestore(doc)).toList();
+  }
+
+  /// Получить поток чатов пользователя
+  Stream<List<Chat>> getUserChatsStream(String userId) {
+    return getUserChats(userId);
+  }
+
+  /// Получить поток сообщений чата
+  Stream<List<ChatMessage>> getChatMessagesStream(String chatId) {
+    return getChatMessages(chatId);
+  }
+
   /// Получить сообщения чата
   Stream<List<ChatMessage>> getChatMessages(String chatId) {
     return _firestore

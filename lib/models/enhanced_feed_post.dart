@@ -22,6 +22,8 @@ class EnhancedFeedPost {
     this.isSponsored = false,
     this.isPinned = false,
     this.isArchived = false,
+    this.isLiked = false,
+    this.isSaved = false,
     this.updatedAt,
     this.metadata = const {},
   });
@@ -130,6 +132,12 @@ class EnhancedFeedPost {
   /// Архивированный пост
   final bool isArchived;
 
+  /// Лайкнут ли пост текущим пользователем
+  final bool isLiked;
+
+  /// Сохранён ли пост текущим пользователем
+  final bool isSaved;
+
   /// Дата обновления
   final DateTime? updatedAt;
 
@@ -186,6 +194,8 @@ class EnhancedFeedPost {
     bool? isSponsored,
     bool? isPinned,
     bool? isArchived,
+    bool? isLiked,
+    bool? isSaved,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
   }) => EnhancedFeedPost(
@@ -210,6 +220,8 @@ class EnhancedFeedPost {
     isSponsored: isSponsored ?? this.isSponsored,
     isPinned: isPinned ?? this.isPinned,
     isArchived: isArchived ?? this.isArchived,
+    isLiked: isLiked ?? this.isLiked,
+    isSaved: isSaved ?? this.isSaved,
     updatedAt: updatedAt ?? this.updatedAt,
     metadata: metadata ?? this.metadata,
   );

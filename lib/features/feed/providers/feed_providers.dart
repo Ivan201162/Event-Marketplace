@@ -1,9 +1,28 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/auth_providers.dart';
 import '../data/feed_model.dart';
 import '../data/feed_service.dart';
 import '../data/subscription_service.dart';
+
+/// Нотификатор для фильтра ленты
+class FeedFilterNotifier extends StateNotifier<FeedFilter> {
+  FeedFilterNotifier() : super(FeedFilter.all);
+  
+  void setFilter(FeedFilter filter) {
+    state = filter;
+  }
+}
+
+/// Нотификатор для выбранной категории
+class SelectedCategoryNotifier extends StateNotifier<String?> {
+  SelectedCategoryNotifier() : super(null);
+  
+  void setCategory(String? category) {
+    state = category;
+  }
+}
 
 /// Провайдер сервиса ленты
 final feedServiceProvider = Provider<FeedService>((ref) => FeedService());
@@ -12,10 +31,10 @@ final feedServiceProvider = Provider<FeedService>((ref) => FeedService());
 final subscriptionServiceProvider = Provider<SubscriptionService>((ref) => SubscriptionService());
 
 /// Провайдер текущего фильтра ленты
-final feedFilterProvider = StateProvider<FeedFilter>((ref) => FeedFilter.all);
+final feedFilterProvider = StateNotifierProvider<FeedFilterNotifier, FeedFilter>((ref) => FeedFilterNotifier());
 
 /// Провайдер выбранной категории для фильтрации
-final selectedCategoryProvider = StateProvider<String?>((ref) => null);
+final selectedCategoryProvider = StateNotifierProvider<SelectedCategoryNotifier, String?>((ref) => SelectedCategoryNotifier());
 
 /// Провайдер постов ленты с фильтрацией
 final feedPostsProvider = StreamProvider<List<FeedPost>>((ref) {

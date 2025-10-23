@@ -5,8 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../../providers/auth_providers.dart';
 import '../../providers/real_specialists_providers.dart';
 import '../../providers/real_categories_providers.dart';
+import '../../providers/notification_providers.dart';
 import '../../core/feature_flags.dart';
 import '../../widgets/ui_kit/ui_kit.dart';
+import '../../services/user_cache_service.dart';
+import '../../widgets/animated_skeleton.dart';
 
 /// Улучшенный главный экран с shimmer-анимацией
 class HomeScreenImproved extends ConsumerStatefulWidget {
@@ -187,21 +190,8 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
                       ),
                     ),
                     
-                    // Уведомления
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: IconButton(
-                        onPressed: () => context.go('/notifications'),
-                        icon: const Icon(
-                          Icons.notifications_outlined,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
-                    ),
+                    // Уведомления с индикатором
+                    _buildNotificationsButton(),
                   ],
                 ),
               ),
@@ -405,6 +395,120 @@ class _HomeScreenImprovedState extends ConsumerState<HomeScreenImproved>
       }
     }
     return 'Пользователь';
+  }
+
+  /// Кнопка уведомлений с индикатором непрочитанных
+  Widget _buildNotificationsButton() {
+    final user = ref.watch(authStateProvider);
+    
+    return user.when(
+      data: (userData) {
+        if (userData == null) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              onPressed: () => context.go('/notifications'),
+              icon: const Icon(
+                Icons.notifications_outlined,
+                color: Colors.white,
+                size: 24,
+              ),
+            ),
+          );
+        }
+        
+        return Consumer(
+          builder: (context, ref, child) {
+            final unreadCountAsync = ref.watch(
+              NotificationProviders.unreadCountProvider(userData.uid)
+            );
+            
+            return Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    onPressed: () => context.go('/notifications'),
+                    icon: const Icon(
+                      Icons.notifications_outlined,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ),
+                unreadCountAsync.when(
+                  data: (count) {
+                    if (count > 0) {
+                      return Positioned(
+                        right: 8,
+                        top: 8,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 16,
+                            minHeight: 16,
+                          ),
+                          child: Text(
+                            count > 99 ? '99+' : count.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                  loading: () => const SizedBox.shrink(),
+                  error: (_, __) => const SizedBox.shrink(),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      loading: () => Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const IconButton(
+          onPressed: null,
+          icon: Icon(
+            Icons.notifications_outlined,
+            color: Colors.white,
+            size: 24,
+          ),
+        ),
+      ),
+      error: (_, __) => Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: IconButton(
+          onPressed: () => context.go('/notifications'),
+          icon: const Icon(
+            Icons.notifications_outlined,
+            color: Colors.white,
+            size: 24,
+          ),
+        ),
+      ),
+    );
   }
 }
 

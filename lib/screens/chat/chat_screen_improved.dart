@@ -6,11 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../models/chat.dart';
 import '../../models/chat_message.dart';
 import '../../providers/chat_providers.dart';
 import '../../providers/auth_providers.dart';
-import '../../services/chat_service.dart';
 import '../../services/storage_service.dart';
 
 /// Улучшенный экран чата

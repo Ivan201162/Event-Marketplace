@@ -27,7 +27,7 @@ final ticketMessagesProvider = StreamProvider.family<List<SupportMessage>, Strin
 
 /// Провайдер для получения FAQ
 final faqProvider = StreamProvider.family<List<FAQItem>, SupportCategory?>(
-  (ref, category) => ref.watch(supportServiceProvider).getFAQ(category: category),
+  (ref, category) => ref.watch(supportServiceProvider).getFAQ(category),
 );
 
 /// Провайдер для получения статистики поддержки

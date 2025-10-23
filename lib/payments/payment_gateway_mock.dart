@@ -3,6 +3,50 @@ import '../core/feature_flags.dart';
 import '../core/safe_log.dart';
 import 'payment_gateway.dart';
 
+/// Результат платежа
+class PaymentResult {
+  const PaymentResult({
+    required this.paymentId,
+    required this.status,
+    this.errorMessage,
+    this.transactionId,
+  });
+
+  final String paymentId;
+  final PaymentStatus status;
+  final String? errorMessage;
+  final String? transactionId;
+}
+
+/// Информация о платеже
+class PaymentInfo {
+  const PaymentInfo({
+    required this.paymentId,
+    required this.amount,
+    required this.currency,
+    required this.status,
+    this.description,
+    this.createdAt,
+    this.bookingId,
+    this.type,
+    this.method,
+    this.completedAt,
+    this.metadata,
+  });
+
+  final String paymentId;
+  final double amount;
+  final String currency;
+  final PaymentStatus status;
+  final String? description;
+  final DateTime? createdAt;
+  final String? bookingId;
+  final String? type;
+  final String? method;
+  final DateTime? completedAt;
+  final Map<String, dynamic>? metadata;
+}
+
 /// Mock-реализация платежного шлюза
 class PaymentGatewayMock implements PaymentGateway {
   bool _isInitialized = false;
@@ -99,7 +143,7 @@ class PaymentGatewayMock implements PaymentGateway {
     final status = isSuccess ? PaymentStatus.completed : PaymentStatus.failed;
 
     final paymentInfo = PaymentInfo(
-      id: paymentId,
+      paymentId: paymentId,
       bookingId: bookingId,
       amount: amount,
       currency: currency,
@@ -121,7 +165,6 @@ class PaymentGatewayMock implements PaymentGateway {
       status: status,
       transactionId: isSuccess ? transactionId : null,
       errorMessage: isSuccess ? null : 'Mock ошибка платежа',
-      metadata: {'mock': true, 'processing_time': '${500 + _random.nextInt(1000)}ms'},
     );
   }
 
@@ -163,7 +206,7 @@ class PaymentGatewayMock implements PaymentGateway {
     final newStatus = isSuccess ? PaymentStatus.completed : PaymentStatus.failed;
 
     _payments[paymentId] = PaymentInfo(
-      id: payment.id,
+      paymentId: payment.paymentId,
       bookingId: payment.bookingId,
       amount: payment.amount,
       currency: payment.currency,
@@ -219,7 +262,7 @@ class PaymentGatewayMock implements PaymentGateway {
     await Future.delayed(const Duration(milliseconds: 200));
 
     _payments[paymentId] = PaymentInfo(
-      id: payment.id,
+      paymentId: payment.paymentId,
       bookingId: payment.bookingId,
       amount: payment.amount,
       currency: payment.currency,

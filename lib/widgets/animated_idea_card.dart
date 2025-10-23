@@ -525,3 +525,4 @@ class _AnimatedIdeaCardState extends ConsumerState<AnimatedIdeaCard>
 
 
 
+

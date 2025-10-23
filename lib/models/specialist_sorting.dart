@@ -230,7 +230,7 @@ class SpecialistSortingUtils {
     return SortStats(
       totalCount: specialists.length,
       priceRange: minPrice != double.infinity
-          ? PriceRange(minPrice: minPrice, maxPrice: maxPrice)
+          ? PriceRange(min: minPrice, max: maxPrice)
           : null,
       averageRating: totalRating / specialists.length,
       averageReviews: totalReviews / specialists.length,

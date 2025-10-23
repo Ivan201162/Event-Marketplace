@@ -48,6 +48,34 @@ class ReviewRepository {
     }
   }
 
+  /// Get reviews by specialist as stream
+  Stream<List<Review>> getReviewsBySpecialistStream(String specialistId) {
+    return _firestore
+        .collection(_reviewsCollection)
+        .where('specialistId', isEqualTo: specialistId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => Review.fromFirestore(doc)).toList());
+  }
+
+  /// Get review by booking ID
+  Future<Review?> getReviewByBookingId(String bookingId) async {
+    try {
+      final snapshot = await _firestore
+          .collection(_reviewsCollection)
+          .where('bookingId', isEqualTo: bookingId)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        return Review.fromFirestore(snapshot.docs.first);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   /// Update a review
   Future<bool> updateReview(String reviewId, Map<String, dynamic> updates) async {
     try {

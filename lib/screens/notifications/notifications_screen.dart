@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../models/app_notification.dart';
 import '../../providers/notification_providers.dart';
 import '../../widgets/ui_kit/ui_kit.dart';
+import '../../services/navigation_service.dart';
 
 /// Экран уведомлений
 class NotificationsScreen extends ConsumerStatefulWidget {
@@ -83,7 +84,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () => NavigationService.safePop(context),
         ),
         actions: [
           IconButton(

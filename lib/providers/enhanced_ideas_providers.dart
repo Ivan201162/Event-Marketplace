@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/enhanced_idea.dart';
-import '../core/feature_flags.dart';
-import 'real_ideas_providers.dart';
 // import '../test_data/mock_data.dart';
 
 /// Состояние идей

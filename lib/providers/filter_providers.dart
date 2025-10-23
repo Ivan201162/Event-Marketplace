@@ -246,5 +246,5 @@ PriceRange? _calculatePriceRange(List<Specialist> specialists) {
 
   if (!hasPrice) return null;
 
-  return PriceRange(minPrice: minPrice == double.infinity ? 0 : minPrice, maxPrice: maxPrice);
+  return PriceRange(min: minPrice == double.infinity ? 0 : minPrice, max: maxPrice);
 }

@@ -1,162 +1,388 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 
-import '../models/search_filters.dart';
-import '../models/specialist.dart';
-import '../services/specialist_service.dart';
+import '../models/specialist_enhanced.dart';
 
-/// Search filters notifier
-class SearchFiltersNotifier extends Notifier<SearchFilters> {
-  @override
-  SearchFilters build() => SearchFilters.empty();
-  
-  void updateFilters(SearchFilters filters) {
-    state = filters;
+/// Провайдер для получения ТОП специалистов по городу
+final topSpecialistsByCityProvider = FutureProvider.family<List<SpecialistEnhanced>, String>((ref, city) async {
+  try {
+    final query = FirebaseFirestore.instance
+        .collection('specialists')
+        .where('city', isEqualTo: city)
+        .where('isActive', isEqualTo: true)
+        .orderBy('rating', descending: true)
+        .orderBy('successfulOrders', descending: true)
+        .limit(10);
+
+    final snapshot = await query.get();
+    return snapshot.docs
+        .map((doc) => SpecialistEnhanced.fromFirestore(doc))
+        .toList();
+  } catch (e) {
+    debugPrint('❌ Error fetching top specialists by city: $e');
+    return [];
   }
-  
-  void clearFilters() {
-    state = SearchFilters.empty();
+});
+
+/// Провайдер для получения ТОП специалистов по России
+final topSpecialistsByRussiaProvider = FutureProvider<List<SpecialistEnhanced>>((ref) async {
+  try {
+    final query = FirebaseFirestore.instance
+        .collection('specialists')
+        .where('region', isEqualTo: 'Россия')
+        .where('isActive', isEqualTo: true)
+        .orderBy('rating', descending: true)
+        .orderBy('successfulOrders', descending: true)
+        .limit(10);
+
+    final snapshot = await query.get();
+    return snapshot.docs
+        .map((doc) => SpecialistEnhanced.fromFirestore(doc))
+        .toList();
+  } catch (e) {
+    debugPrint('❌ Error fetching top specialists by Russia: $e');
+    return [];
   }
-}
-
-/// Specialist service provider
-final specialistServiceProvider = Provider<SpecialistService>((ref) {
-  return SpecialistService();
 });
 
-/// All specialists provider
-final specialistsProvider = FutureProvider<List<Specialist>>((ref) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getAllSpecialists();
+/// Провайдер для поиска специалистов с фильтрами
+final searchSpecialistsProvider = FutureProvider.family<List<SpecialistEnhanced>, SearchFilters>((ref, filters) async {
+  try {
+    Query query = FirebaseFirestore.instance.collection('specialists');
+
+    // Фильтр по городу
+    if (filters.city != null) {
+      query = query.where('city', isEqualTo: filters.city);
+    }
+
+    // Фильтр по региону
+    if (filters.region != null) {
+      query = query.where('region', isEqualTo: filters.region);
+    }
+
+    // Фильтр по категориям
+    if (filters.categories.isNotEmpty) {
+      query = query.where('categories', arrayContainsAny: filters.categories);
+    }
+
+    // Фильтр по рейтингу
+    if (filters.minRating != null) {
+      query = query.where('rating', isGreaterThanOrEqualTo: filters.minRating);
+    }
+    if (filters.maxRating != null) {
+      query = query.where('rating', isLessThanOrEqualTo: filters.maxRating);
+    }
+
+    // Фильтр по верификации
+    if (filters.isVerified != null) {
+      query = query.where('isVerified', isEqualTo: filters.isVerified);
+    }
+
+    // Фильтр по ТОП недели
+    if (filters.isTopWeek != null) {
+      query = query.where('isTopWeek', isEqualTo: filters.isTopWeek);
+    }
+
+    // Фильтр по новичкам
+    if (filters.isNewcomer != null) {
+      query = query.where('isNewcomer', isEqualTo: filters.isNewcomer);
+    }
+
+    // Сортировка
+    switch (filters.sortBy) {
+      case 'rating':
+        query = query.orderBy('rating', descending: true);
+        break;
+      case 'orders':
+        query = query.orderBy('successfulOrders', descending: true);
+        break;
+      case 'price':
+        query = query.orderBy('pricing.minPrice', descending: false);
+        break;
+      case 'newest':
+        query = query.orderBy('createdAt', descending: true);
+        break;
+      default:
+        query = query.orderBy('rating', descending: true);
+    }
+
+    // Ограничение результатов
+    query = query.limit(50);
+
+    final snapshot = await query.get();
+    var specialists = snapshot.docs
+        .map((doc) => SpecialistEnhanced.fromFirestore(doc))
+        .toList();
+
+    // Дополнительная фильтрация на клиенте (для сложных фильтров)
+    if (filters.minPrice != null || filters.maxPrice != null) {
+      specialists = specialists.where((specialist) {
+        final minPrice = specialist.minPrice;
+        final maxPrice = specialist.maxPrice;
+        
+        if (filters.minPrice != null && maxPrice < filters.minPrice!) {
+          return false;
+        }
+        if (filters.maxPrice != null && minPrice > filters.maxPrice!) {
+          return false;
+        }
+        return true;
+      }).toList();
+    }
+
+    // Фильтр по языкам
+    if (filters.languages.isNotEmpty) {
+      specialists = specialists.where((specialist) {
+        return filters.languages.any((language) => 
+            specialist.languages.contains(language));
+      }).toList();
+    }
+
+    // Фильтр по доступным датам
+    if (filters.availableDates.isNotEmpty) {
+      specialists = specialists.where((specialist) {
+        return filters.availableDates.any((date) => 
+            specialist.availableDates.contains(date));
+      }).toList();
+    }
+
+    return specialists;
+  } catch (e) {
+    debugPrint('❌ Error searching specialists: $e');
+    return [];
+  }
 });
 
-/// Top specialists provider (by rating)
-final topSpecialistsProvider = FutureProvider<List<Specialist>>((ref) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getTopSpecialists();
+/// Провайдер для получения специалистов рядом с пользователем
+final nearbySpecialistsProvider = FutureProvider.family<List<SpecialistEnhanced>, Position>((ref, position) async {
+  try {
+    // Получаем всех специалистов (пока без геолокации в Firestore)
+    final query = FirebaseFirestore.instance
+        .collection('specialists')
+        .where('isActive', isEqualTo: true)
+        .limit(20);
+
+    final snapshot = await query.get();
+    final specialists = snapshot.docs
+        .map((doc) => SpecialistEnhanced.fromFirestore(doc))
+        .toList();
+
+    // Фильтруем по расстоянию (если есть координаты)
+    final nearbySpecialists = <SpecialistEnhanced>[];
+    
+    for (final specialist in specialists) {
+      if (specialist.location.containsKey('latitude') && 
+          specialist.location.containsKey('longitude')) {
+        final lat = specialist.location['latitude'] as double?;
+        final lng = specialist.location['longitude'] as double?;
+        
+        if (lat != null && lng != null) {
+          final distance = Geolocator.distanceBetween(
+            position.latitude,
+            position.longitude,
+            lat,
+            lng,
+          ) / 1000; // в километрах
+          
+          if (distance <= 50) { // в радиусе 50 км
+            nearbySpecialists.add(specialist);
+          }
+        }
+      }
+    }
+
+    // Сортируем по расстоянию
+    nearbySpecialists.sort((a, b) {
+      final distanceA = _calculateDistance(position, a.location);
+      final distanceB = _calculateDistance(position, b.location);
+      return distanceA.compareTo(distanceB);
+    });
+
+    return nearbySpecialists.take(10).toList();
+  } catch (e) {
+    debugPrint('❌ Error fetching nearby specialists: $e');
+    return [];
+  }
 });
 
-/// Top specialists by Russia provider
-final topSpecialistsRuProvider = FutureProvider<List<Specialist>>((ref) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getTopSpecialists();
+/// Провайдер для получения категорий специалистов
+final specialistCategoriesProvider = FutureProvider<List<SpecialistCategory>>((ref) async {
+  try {
+    // Возвращаем все доступные категории
+    return SpecialistCategory.values;
+  } catch (e) {
+    debugPrint('❌ Error fetching specialist categories: $e');
+    return [];
+  }
 });
 
-/// Top specialists by city provider
-final topSpecialistsCityProvider = FutureProvider.family<List<Specialist>, String>((
-  ref,
-  city,
-) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getTopSpecialistsByCity(city);
+/// Провайдер для получения популярных поисковых запросов
+final popularSearchQueriesProvider = FutureProvider<List<String>>((ref) async {
+  try {
+    // Здесь можно получать из Firestore или возвращать статичные данные
+    return [
+      'Ведущий свадьбы',
+      'Фотограф на мероприятие',
+      'Кейтеринг',
+      'Декор для свадьбы',
+      'Музыканты',
+      'DJ',
+      'Визажист',
+      'Стилист',
+      'Охрана',
+      'Транспорт',
+    ];
+  } catch (e) {
+    debugPrint('❌ Error fetching popular search queries: $e');
+    return [];
+  }
 });
 
-/// Specialists by city provider
-final specialistsByCityProvider = FutureProvider.family<List<Specialist>, String>((
-  ref,
-  city,
-) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getSpecialistsByCity(city);
+/// Провайдер для получения сохраненных фильтров пользователя
+final savedFiltersProvider = NotifierProvider<SavedFiltersNotifier, List<SearchFilters>>(() {
+  return SavedFiltersNotifier();
 });
 
-/// Specialists by specialization provider
-final specialistsBySpecializationProvider = FutureProvider.family<List<Specialist>, String>((
-  ref,
-  specialization,
-) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getSpecialistsBySpecialization(specialization);
-});
-
-/// Search filters provider
-final searchFiltersProvider = NotifierProvider<SearchFiltersNotifier, SearchFilters>(() {
+/// Провайдер для текущих фильтров поиска
+final currentSearchFiltersProvider = NotifierProvider<SearchFiltersNotifier, SearchFilters>(() {
   return SearchFiltersNotifier();
 });
 
-/// Search results provider
-final searchResultsProvider = FutureProvider.family<List<Specialist>, SearchFilters>((
-  ref,
-  filters,
-) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.searchSpecialists(filters);
+/// Провайдер для избранных специалистов
+final favoriteSpecialistsProvider = NotifierProvider<FavoriteSpecialistsNotifier, List<String>>(() {
+  return FavoriteSpecialistsNotifier();
 });
 
-/// Available specializations provider
-final specializationsProvider = FutureProvider<List<String>>((ref) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getSpecializations();
-});
-
-/// Available cities provider
-final citiesProvider = FutureProvider<List<String>>((ref) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getCities();
-});
-
-/// Available services provider
-final servicesProvider = FutureProvider<List<String>>((ref) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getServices();
-});
-
-/// Specialist by ID provider
-final specialistByIdProvider = FutureProvider.family<Specialist?, String>((ref, id) async {
-  final service = ref.read(specialistServiceProvider);
-  return await service.getSpecialistById(id);
-});
-
-/// Stream of all specialists provider
-final specialistsStreamProvider = StreamProvider<List<Specialist>>((ref) {
-  final service = ref.read(specialistServiceProvider);
-  return service.getSpecialistsStream();
-});
-
-/// Stream of specialists by city provider
-final specialistsByCityStreamProvider = StreamProvider.family<List<Specialist>, String>((
-  ref,
-  city,
-) {
-  final service = ref.read(specialistServiceProvider);
-  return service.getSpecialistsByCityStream(city);
-});
-
-/// Popular specializations provider (most used)
-final popularSpecializationsProvider = FutureProvider<List<String>>((ref) async {
-  final specialistsAsync = ref.watch(specialistsProvider);
-  return specialistsAsync.when(
-    data: (specialists) {
-      final specializationCount = <String, int>{};
-      for (final specialist in specialists) {
-        specializationCount[specialist.specialization] =
-            (specializationCount[specialist.specialization] ?? 0) + 1;
+/// Провайдер для получения геолокации пользователя
+final userLocationProvider = FutureProvider<Position?>((ref) async {
+  try {
+    final permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      final requestPermission = await Geolocator.requestPermission();
+      if (requestPermission == LocationPermission.denied) {
+        return null;
       }
+    }
 
-      final sortedSpecializations = specializationCount.entries.toList()
-        ..sort((a, b) => b.value.compareTo(a.value));
+    if (permission == LocationPermission.deniedForever) {
+      return null;
+    }
 
-      return sortedSpecializations.take(8).map((e) => e.key).toList();
-    },
-    loading: () => [],
-    error: (_, __) => [],
-  );
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+  } catch (e) {
+    debugPrint('❌ Error getting user location: $e');
+    return null;
+  }
 });
 
-/// Popular cities provider (most used)
-final popularCitiesProvider = FutureProvider<List<String>>((ref) async {
-  final specialistsAsync = ref.watch(specialistsProvider);
-  return specialistsAsync.when(
-    data: (specialists) {
-      final cityCount = <String, int>{};
-      for (final specialist in specialists) {
-        cityCount[specialist.city] = (cityCount[specialist.city] ?? 0) + 1;
+/// Провайдер для получения города пользователя
+final userCityProvider = FutureProvider<String?>((ref) async {
+  try {
+    final location = await ref.watch(userLocationProvider.future);
+    if (location == null) return null;
+
+    // Здесь можно использовать геокодирование для получения города
+    // Пока возвращаем заглушку
+    return 'Москва';
+  } catch (e) {
+    debugPrint('❌ Error getting user city: $e');
+    return null;
+  }
+});
+
+/// Вспомогательные функции
+
+/// Вычислить расстояние между двумя точками
+double _calculateDistance(Position position, Map<String, dynamic> location) {
+  final lat = location['latitude'] as double?;
+  final lng = location['longitude'] as double?;
+  
+  if (lat == null || lng == null) return double.infinity;
+  
+  return Geolocator.distanceBetween(
+    position.latitude,
+    position.longitude,
+    lat,
+    lng,
+  ) / 1000; // в километрах
+}
+
+/// Нотификатор для сохраненных фильтров
+class SavedFiltersNotifier extends Notifier<List<SearchFilters>> {
+  @override
+  List<SearchFilters> build() => [];
+
+  void addFilter(SearchFilters filter) {
+    state = [...state, filter];
+  }
+
+  void removeFilter(int index) {
+    final newList = <SearchFilters>[];
+    for (int i = 0; i < state.length; i++) {
+      if (i != index) {
+        newList.add(state[i]);
       }
+    }
+    state = newList;
+  }
 
-      final sortedCities = cityCount.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+  void clearAll() {
+    state = [];
+  }
+}
 
-      return sortedCities.take(10).map((e) => e.key).toList();
-    },
-    loading: () => [],
-    error: (_, __) => [],
-  );
-});
+/// Нотификатор для текущих фильтров поиска
+class SearchFiltersNotifier extends Notifier<SearchFilters> {
+  @override
+  SearchFilters build() => const SearchFilters();
+
+  void updateFilters(SearchFilters newFilters) {
+    state = newFilters;
+  }
+
+  void clearFilters() {
+    state = const SearchFilters();
+  }
+
+  void setCity(String? city) {
+    state = state.copyWith(city: city);
+  }
+
+  void setCategories(List<String> categories) {
+    state = state.copyWith(categories: categories);
+  }
+
+  void setRatingRange(double? minRating, double? maxRating) {
+    state = state.copyWith(minRating: minRating, maxRating: maxRating);
+  }
+
+  void setPriceRange(double? minPrice, double? maxPrice) {
+    state = state.copyWith(minPrice: minPrice, maxPrice: maxPrice);
+  }
+}
+
+/// Нотификатор для избранных специалистов
+class FavoriteSpecialistsNotifier extends Notifier<List<String>> {
+  @override
+  List<String> build() => [];
+
+  void toggleFavorite(String specialistId) {
+    if (state.contains(specialistId)) {
+      state = state.where((id) => id != specialistId).toList();
+    } else {
+      state = [...state, specialistId];
+    }
+  }
+
+  bool isFavorite(String specialistId) {
+    return state.contains(specialistId);
+  }
+
+  void clearFavorites() {
+    state = [];
+  }
+}

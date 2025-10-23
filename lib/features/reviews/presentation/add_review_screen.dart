@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../data/models/review.dart';
+import '../../../models/review.dart';
 import '../data/repositories/review_repository.dart';
 
 /// Экран добавления отзыва

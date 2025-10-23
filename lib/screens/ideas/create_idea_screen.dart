@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../services/storage_service.dart';
+import '../../services/navigation_service.dart';
 import '../../widgets/ui_kit/ui_kit.dart';
 
 /// Экран создания идеи
@@ -215,7 +216,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen>
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () => NavigationService.safePop(context),
         ),
         actions: [
           TextButton(

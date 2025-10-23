@@ -21,15 +21,18 @@ void main() {
     late ReviewRepository repository;
     late MockFirebaseFirestore mockFirestore;
     late MockCollectionReference<Map<String, dynamic>> mockReviewsCollection;
-    late MockDocumentReference<Map<String, dynamic>> mockDocumentRef;
-    late MockQuery<Map<String, dynamic>> mockQuery;
+    MockDocumentReference<Map<String, dynamic>>? mockDocumentRef;
+    MockQuery<Map<String, dynamic>>? mockQuery;
 
     setUp(() {
       mockFirestore = MockFirebaseFirestore();
       mockReviewsCollection = MockCollectionReference<Map<String, dynamic>>();
 
+      mockDocumentRef = MockDocumentReference<Map<String, dynamic>>();
+      mockQuery = MockQuery<Map<String, dynamic>>();
+      
       when(mockFirestore.collection('reviews')).thenReturn(mockReviewsCollection);
-      when(mockReviewsCollection.doc(any)).thenReturn(mockDocumentRef);
+      when(mockReviewsCollection.doc(any)).thenReturn(mockDocumentRef!);
 
       repository = ReviewRepository();
     });

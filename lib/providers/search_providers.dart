@@ -239,16 +239,16 @@ final priceRangeProvider = Provider<PriceRange>((ref) {
   return specialistsAsync.when(
     data: (specialists) {
       if (specialists.isEmpty) {
-        return const PriceRange(minPrice: 0, maxPrice: 1000);
+        return const PriceRange(min: 0, max: 1000);
       }
 
       final prices = specialists.map((s) => s.pricePerHour).toList();
       prices.sort();
 
-      return PriceRange(minPrice: prices.first ?? 0.0, maxPrice: prices.last ?? 1000.0);
+      return PriceRange(min: prices.first ?? 0.0, max: prices.last ?? 1000.0);
     },
-    loading: () => const PriceRange(minPrice: 0, maxPrice: 1000),
-    error: (_, __) => const PriceRange(minPrice: 0, maxPrice: 1000),
+    loading: () => const PriceRange(min: 0, max: 1000),
+    error: (_, __) => const PriceRange(min: 0, max: 1000),
   );
 });
 

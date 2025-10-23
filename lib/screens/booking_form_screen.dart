@@ -144,8 +144,9 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
-                child: RadioGroup<bool>(
-                  value: _isTeamBooking,
+                children: [
+                  RadioGroup<bool>(
+                  groupValue: _isTeamBooking,
                   onChanged: (value) {
                     setState(() {
                       _isTeamBooking = value;

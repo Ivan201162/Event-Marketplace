@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/host_profile.dart';
 import '../models/specialist.dart';
+import '../models/smart_specialist.dart';
 import 'real_hosts_providers.dart';
 import '../core/feature_flags.dart';
 
@@ -325,21 +326,18 @@ List<Specialist> _generateMockHosts() {
 
     return Specialist(
       id: 'host_${index + 1}',
-      firstName: name.$1,
-      lastName: name.$2,
-      email: '${name.$1.toLowerCase()}.${name.$2.toLowerCase()}@example.com',
-      phone: '+7 (999) ${100 + index}-${10 + index}-${20 + index}',
+      name: '${name.$1} ${name.$2}',
       city: city,
-      category: 'Ведущие',
+      category: SpecialistCategory.other,
       subcategories: const ['Свадьбы', 'Корпоративы', 'Дни рождения'],
-      priceRange: PriceRange(minPrice: minPrice.toDouble(), maxPrice: maxPrice.toDouble()),
+      priceRangeString: '${minPrice.toInt()}-${maxPrice.toInt()} руб/час',
       rating: rating,
       totalReviews: 10 + (index % 50),
       description:
           'Профессиональный ведущий с ${5 + (index % 10)}-летним опытом работы. '
           'Специализируюсь на ${index % 2 == 0 ? 'свадебных церемониях' : 'корпоративных мероприятиях'}. '
           'Создаю незабываемую атмосферу для вашего праздника.',
-      photoUrl:
+      imageUrl:
           'https://images.unsplash.com/photo-${1500000000000 + index * 1000000}?w=400&h=400&fit=crop&crop=face',
       isVerified: index % 3 == 0,
       createdAt: DateTime.now().subtract(Duration(days: 365 - index * 10)),

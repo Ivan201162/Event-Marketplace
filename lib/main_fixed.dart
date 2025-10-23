@@ -1,23 +1,82 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 
-void main() {
+import 'core/app_router_enhanced.dart';
+import 'services/session_service.dart';
+import 'services/navigation_service.dart';
+import 'services/test_specialists_data.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const EventMarketplaceApp());
+  
+  try {
+    // Инициализация Firebase
+    await Firebase.initializeApp();
+    
+    // Настройка Crashlytics
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+    
+    // Настройка обработки ошибок для платформы
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+    
+    debugPrint('✅ Firebase initialized successfully');
+    
+    // Создание тестовых данных специалистов
+    await TestSpecialistsDataService.createTestSpecialists();
+  } catch (e) {
+    debugPrint('❌ Firebase initialization failed: $e');
+  }
+  
+  runApp(const ProviderScope(child: EventMarketplaceApp()));
 }
 
-class EventMarketplaceApp extends StatelessWidget {
+class EventMarketplaceApp extends ConsumerWidget {
   const EventMarketplaceApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+    
+    return MaterialApp.router(
       title: 'Event Marketplace',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF1E3A8A),
+          brightness: Brightness.light,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF1E3A8A),
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1E3A8A),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+        cardTheme: CardTheme(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
       ),
-      home: const HomeScreen(),
-      debugShowCheckedModeBanner: false,
+      routerConfig: router,
     );
   }
 }
@@ -142,6 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
 
 
 

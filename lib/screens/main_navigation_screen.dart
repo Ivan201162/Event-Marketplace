@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'chat/chat_list_screen_improved.dart';
 import 'feed/feed_screen_improved.dart';
-import 'home/home_screen_improved.dart';
+import 'home/home_screen_simple.dart';
 import 'ideas/ideas_screen.dart';
 import 'monetization/monetization_screen.dart';
 import 'notifications/notifications_screen.dart';
@@ -28,7 +28,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       icon: Icons.home_outlined,
       activeIcon: Icons.home,
       label: 'Главная',
-      screen: HomeScreenImproved(),
+      screen: HomeScreenSimple(),
     ),
     const NavigationItem(
       icon: Icons.dynamic_feed_outlined,
@@ -53,12 +53,6 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen>
       activeIcon: Icons.lightbulb,
       label: 'Идеи',
       screen: IdeasScreen(),
-    ),
-    const NavigationItem(
-      icon: Icons.notifications_outlined,
-      activeIcon: Icons.notifications,
-      label: 'Уведомления',
-      screen: NotificationsScreen(),
     ),
   ];
 

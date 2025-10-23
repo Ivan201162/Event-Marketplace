@@ -1,469 +1,541 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import '../models/advertisement.dart';
-import '../models/promotion_boost.dart';
-import '../models/subscription_plan.dart';
-import '../models/transaction.dart' as transaction_model;
-
+/// Сервис для аналитики
 class AnalyticsService {
-  static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Инициализация сервиса аналитики
-  static Future<void> initialize() async {
-    try {
-      await _analytics.setAnalyticsCollectionEnabled(true);
-      debugPrint('INFO: [AnalyticsService] Initialized successfully');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Initialization failed: $e');
-    }
-  }
-
-  /// Отслеживание события покупки подписки
-  static Future<void> trackSubscriptionPurchase({
-    required String userId,
-    required SubscriptionPlan plan,
-    required transaction_model.Transaction transaction,
+  /// Отслеживание просмотра профиля
+  Future<void> trackProfileView({
+    required String specialistId,
+    String? source, // 'search', 'recommendations', 'direct'
   }) async {
     try {
-      // Firebase Analytics
-      await _analytics.logPurchase(
-        currency: transaction.currency,
-        value: transaction.amount,
-        parameters: {
-          'item_id': plan.id,
-          'item_name': plan.name,
-          'item_category': 'subscription',
-          'subscription_tier': plan.tier.toString(),
-          'duration_days': plan.durationDays,
-          'payment_method': transaction.paymentMethod,
-          'payment_provider': transaction.paymentProvider,
-        },
-      );
+      final user = _auth.currentUser;
+      if (user == null) return;
 
-      // Custom event
-      await _analytics.logEvent(
-        name: 'subscription_purchased',
-        parameters: {
-          'user_id': userId,
-          'plan_id': plan.id,
-          'plan_name': plan.name,
-          'plan_tier': plan.tier.toString(),
-          'amount': transaction.amount,
-          'currency': transaction.currency,
-          'duration_days': plan.durationDays,
-          'payment_method': transaction.paymentMethod,
-          'payment_provider': transaction.paymentProvider,
-          'transaction_id': transaction.id,
-        },
-      );
-
-      // Сохранение в Firestore для детальной аналитики
-      await _saveAnalyticsEvent(
-        userId: userId,
-        eventType: 'subscription_purchased',
-        eventData: {
-          'plan_id': plan.id,
-          'plan_name': plan.name,
-          'plan_tier': plan.tier.toString(),
-          'amount': transaction.amount,
-          'currency': transaction.currency,
-          'duration_days': plan.durationDays,
-          'payment_method': transaction.paymentMethod,
-          'payment_provider': transaction.paymentProvider,
-          'transaction_id': transaction.id,
-        },
-      );
-
-      debugPrint('INFO: [AnalyticsService] Subscription purchase tracked: ${plan.name}');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track subscription purchase: $e');
-    }
-  }
-
-  /// Отслеживание события покупки продвижения
-  static Future<void> trackPromotionPurchase({
-    required String userId,
-    required PromotionBoost promotion,
-    required transaction_model.Transaction transaction,
-  }) async {
-    try {
-      // Firebase Analytics
-      await _analytics.logEvent(
-        name: 'promotion_purchased',
-        parameters: {
-          'user_id': userId,
-          'promotion_id': promotion.id,
-          'target_type': promotion.type.toString(),
-          'priority_level': promotion.priorityLevel,
-          'duration_days': promotion.endDate.difference(promotion.startDate).inDays,
-          'amount': transaction.amount,
-          'currency': transaction.currency,
-          'payment_method': transaction.paymentMethod,
-          'payment_provider': transaction.paymentProvider,
-          'transaction_id': transaction.id,
-        },
-      );
-
-      // Сохранение в Firestore
-      await _saveAnalyticsEvent(
-        userId: userId,
-        eventType: 'promotion_purchased',
-        eventData: {
-          'promotion_id': promotion.id,
-          'target_type': promotion.type.toString(),
-          'priority_level': promotion.priorityLevel,
-          'duration_days': promotion.endDate.difference(promotion.startDate).inDays,
-          'amount': transaction.amount,
-          'currency': transaction.currency,
-          'payment_method': transaction.paymentMethod,
-          'payment_provider': transaction.paymentProvider,
-          'transaction_id': transaction.id,
-        },
-      );
-
-      debugPrint('INFO: [AnalyticsService] Promotion purchase tracked: ${promotion.type}');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track promotion purchase: $e');
-    }
-  }
-
-  /// Отслеживание события создания рекламы
-  static Future<void> trackAdvertisementCreated({
-    required String userId,
-    required Advertisement advertisement,
-  }) async {
-    try {
-      // Firebase Analytics
-      await _analytics.logEvent(
-        name: 'advertisement_created',
-        parameters: {
-          'user_id': userId,
-          'advertisement_id': advertisement.id,
-          'advertisement_type': advertisement.type.toString(),
-          'title': advertisement.title,
-          'duration_days': advertisement.endDate.difference(advertisement.startDate).inDays,
-          'target_audience': advertisement.targetAudience?.toString() ?? 'none',
-        },
-      );
-
-      // Сохранение в Firestore
-      await _saveAnalyticsEvent(
-        userId: userId,
-        eventType: 'advertisement_created',
-        eventData: {
-          'advertisement_id': advertisement.id,
-          'advertisement_type': advertisement.type.toString(),
-          'title': advertisement.title,
-          'duration_days': advertisement.endDate.difference(advertisement.startDate).inDays,
-          'target_audience': advertisement.targetAudience,
-        },
-      );
-
-      debugPrint('INFO: [AnalyticsService] Advertisement created tracked: ${advertisement.type}');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement created: $e');
-    }
-  }
-
-  /// Отслеживание события успешной оплаты
-  static Future<void> trackPaymentSuccess({
-    required String userId,
-    required transaction_model.Transaction transaction,
-  }) async {
-    try {
-      // Firebase Analytics
-      await _analytics.logEvent(
-        name: 'payment_success',
-        parameters: {
-          'user_id': userId,
-          'transaction_id': transaction.id,
-          'amount': transaction.amount,
-          'currency': transaction.currency,
-          'type': transaction.type.toString(),
-          'payment_method': transaction.paymentMethod,
-          'payment_provider': transaction.paymentProvider,
-        },
-      );
-
-      // Сохранение в Firestore
-      await _saveAnalyticsEvent(
-        userId: userId,
-        eventType: 'payment_success',
-        eventData: {
-          'transaction_id': transaction.id,
-          'amount': transaction.amount,
-          'currency': transaction.currency,
-          'type': transaction.type.toString(),
-          'payment_method': transaction.paymentMethod,
-          'payment_provider': transaction.paymentProvider,
-        },
-      );
-
-      debugPrint('INFO: [AnalyticsService] Payment success tracked: ${transaction.type}');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track payment success: $e');
-    }
-  }
-
-  /// Отслеживание события неудачной оплаты
-  static Future<void> trackPaymentFailed({
-    required String userId,
-    required transaction_model.Transaction transaction,
-    required String errorMessage,
-  }) async {
-    try {
-      // Firebase Analytics
-      await _analytics.logEvent(
-        name: 'payment_failed',
-        parameters: {
-          'user_id': userId,
-          'transaction_id': transaction.id,
-          'amount': transaction.amount,
-          'currency': transaction.currency,
-          'type': transaction.type.toString(),
-          'payment_method': transaction.paymentMethod,
-          'payment_provider': transaction.paymentProvider,
-          'error_message': errorMessage,
-        },
-      );
-
-      // Сохранение в Firestore
-      await _saveAnalyticsEvent(
-        userId: userId,
-        eventType: 'payment_failed',
-        eventData: {
-          'transaction_id': transaction.id,
-          'amount': transaction.amount,
-          'currency': transaction.currency,
-          'type': transaction.type.toString(),
-          'payment_method': transaction.paymentMethod,
-          'payment_provider': transaction.paymentProvider,
-          'error_message': errorMessage,
-        },
-      );
-
-      debugPrint('INFO: [AnalyticsService] Payment failed tracked: ${transaction.type}');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track payment failed: $e');
-    }
-  }
-
-  /// Отслеживание просмотра рекламы
-  static Future<void> trackAdvertisementView({
-    required String userId,
-    required String advertisementId,
-    required AdType type,
-  }) async {
-    try {
-      // Firebase Analytics
-      await _analytics.logEvent(
-        name: 'advertisement_view',
-        parameters: {
-          'user_id': userId,
-          'advertisement_id': advertisementId,
-          'advertisement_type': type.toString(),
-        },
-      );
-
-      // Увеличиваем счетчик показов в Firestore
-      await _firestore.collection('advertisements').doc(advertisementId).update({
-        'impressions': FieldValue.increment(1),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-
-      debugPrint('INFO: [AnalyticsService] Advertisement view tracked: $advertisementId');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement view: $e');
-    }
-  }
-
-  /// Отслеживание клика по рекламе
-  static Future<void> trackAdvertisementClick({
-    required String userId,
-    required String advertisementId,
-    required AdType type,
-  }) async {
-    try {
-      // Firebase Analytics
-      await _analytics.logEvent(
-        name: 'advertisement_click',
-        parameters: {
-          'user_id': userId,
-          'advertisement_id': advertisementId,
-          'advertisement_type': type.toString(),
-        },
-      );
-
-      // Увеличиваем счетчик кликов в Firestore
-      await _firestore.collection('advertisements').doc(advertisementId).update({
-        'clicks': FieldValue.increment(1),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-
-      debugPrint('INFO: [AnalyticsService] Advertisement click tracked: $advertisementId');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement click: $e');
-    }
-  }
-
-  /// Отслеживание входа в раздел монетизации
-  static Future<void> trackMonetizationHubView({required String userId}) async {
-    try {
-      await _analytics.logEvent(name: 'monetization_hub_view', parameters: {'user_id': userId});
-
-      debugPrint('INFO: [AnalyticsService] Monetization hub view tracked');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track monetization hub view: $e');
-    }
-  }
-
-  /// Отслеживание просмотра планов подписки
-  static Future<void> trackSubscriptionPlansView({required String userId}) async {
-    try {
-      await _analytics.logEvent(name: 'subscription_plans_view', parameters: {'user_id': userId});
-
-      debugPrint('INFO: [AnalyticsService] Subscription plans view tracked');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track subscription plans view: $e');
-    }
-  }
-
-  /// Отслеживание просмотра пакетов продвижения
-  static Future<void> trackPromotionPackagesView({required String userId}) async {
-    try {
-      await _analytics.logEvent(name: 'promotion_packages_view', parameters: {'user_id': userId});
-
-      debugPrint('INFO: [AnalyticsService] Promotion packages view tracked');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track promotion packages view: $e');
-    }
-  }
-
-  /// Отслеживание просмотра рекламных кампаний
-  static Future<void> trackAdvertisementCampaignsView({required String userId}) async {
-    try {
-      await _analytics.logEvent(
-        name: 'advertisement_campaigns_view',
-        parameters: {'user_id': userId},
-      );
-
-      debugPrint('INFO: [AnalyticsService] Advertisement campaigns view tracked');
-    } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to track advertisement campaigns view: $e');
-    }
-  }
-
-  /// Сохранение события аналитики в Firestore
-  static Future<void> _saveAnalyticsEvent({
-    required String userId,
-    required String eventType,
-    required Map<String, dynamic> eventData,
-  }) async {
-    try {
-      await _firestore.collection('analytics_events').add({
-        'userId': userId,
-        'eventType': eventType,
-        'eventData': eventData,
+      await _firestore.collection('profile_views').add({
+        'specialistId': specialistId,
+        'viewerId': user.uid,
+        'source': source ?? 'unknown',
         'timestamp': FieldValue.serverTimestamp(),
-        'platform': 'mobile',
+        'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to save analytics event: $e');
+      print('Ошибка отслеживания просмотра профиля: $e');
     }
   }
 
-  /// Получение статистики пользователя
-  static Future<Map<String, dynamic>> getUserAnalytics(String userId) async {
+  /// Отслеживание поиска
+  Future<void> trackSearch({
+    required String query,
+    List<String>? filters,
+    int? resultsCount,
+  }) async {
     try {
-      final QuerySnapshot snapshot = await _firestore
-          .collection('analytics_events')
-          .where('userId', isEqualTo: userId)
-          .get();
+      final user = _auth.currentUser;
+      if (user == null) return;
 
-      final Map<String, int> eventCounts = {};
-      double totalSpent = 0.0;
-      int subscriptionPurchases = 0;
-      int promotionPurchases = 0;
-      int advertisementCreates = 0;
+      await _firestore.collection('search_analytics').add({
+        'query': query,
+        'filters': filters ?? [],
+        'resultsCount': resultsCount ?? 0,
+        'userId': user.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка отслеживания поиска: $e');
+    }
+  }
 
-      for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
-        final eventType = data['eventType'] as String;
-        final eventData = data['eventData'] as Map<String, dynamic>;
+  /// Отслеживание создания заявки
+  Future<void> trackRequestCreation({
+    required String requestId,
+    required String specialistId,
+    String? category,
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
 
-        eventCounts[eventType] = (eventCounts[eventType] ?? 0) + 1;
+      await _firestore.collection('request_analytics').add({
+        'requestId': requestId,
+        'specialistId': specialistId,
+        'category': category,
+        'userId': user.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка отслеживания создания заявки: $e');
+    }
+  }
 
-        if (eventType == 'subscription_purchased' || eventType == 'promotion_purchased') {
-          totalSpent += (eventData['amount'] as num).toDouble();
-        }
+  /// Отслеживание отправки сообщения
+  Future<void> trackMessageSent({
+    required String chatId,
+    required String recipientId,
+    String? messageType, // 'text', 'image', 'file'
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
 
-        if (eventType == 'subscription_purchased') subscriptionPurchases++;
-        if (eventType == 'promotion_purchased') promotionPurchases++;
-        if (eventType == 'advertisement_created') advertisementCreates++;
+      await _firestore.collection('message_analytics').add({
+        'chatId': chatId,
+        'recipientId': recipientId,
+        'messageType': messageType ?? 'text',
+        'senderId': user.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка отслеживания отправки сообщения: $e');
+    }
+  }
+
+  /// Отслеживание создания идеи
+  Future<void> trackIdeaCreation({
+    required String ideaId,
+    String? category,
+    List<String>? tags,
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
+
+      await _firestore.collection('idea_analytics').add({
+        'ideaId': ideaId,
+        'category': category,
+        'tags': tags ?? [],
+        'userId': user.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка отслеживания создания идеи: $e');
+    }
+  }
+
+  /// Отслеживание лайка
+  Future<void> trackLike({
+    required String targetId,
+    required String targetType, // 'post', 'idea', 'profile'
+    required bool isLiked,
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
+
+      await _firestore.collection('like_analytics').add({
+        'targetId': targetId,
+        'targetType': targetType,
+        'isLiked': isLiked,
+        'userId': user.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка отслеживания лайка: $e');
+    }
+  }
+
+  /// Отслеживание комментария
+  Future<void> trackComment({
+    required String targetId,
+    required String targetType, // 'post', 'idea'
+    required String commentId,
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
+
+      await _firestore.collection('comment_analytics').add({
+        'targetId': targetId,
+        'targetType': targetType,
+        'commentId': commentId,
+        'userId': user.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка отслеживания комментария: $e');
+    }
+  }
+
+  /// Отслеживание подписки
+  Future<void> trackSubscription({
+    required String targetId,
+    required String targetType, // 'specialist', 'category'
+    required bool isSubscribed,
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return;
+
+      await _firestore.collection('subscription_analytics').add({
+        'targetId': targetId,
+        'targetType': targetType,
+        'isSubscribed': isSubscribed,
+        'userId': user.uid,
+        'timestamp': FieldValue.serverTimestamp(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print('Ошибка отслеживания подписки: $e');
+    }
+  }
+
+  /// Получение аналитики пользователя
+  Future<Map<String, dynamic>> getUserAnalytics({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return {};
+
+      // Аналитика просмотров профилей
+      final viewsQuery = _firestore
+          .collection('profile_views')
+          .where('viewerId', isEqualTo: user.uid);
+
+      if (startDate != null) {
+        viewsQuery.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
+      if (endDate != null) {
+        viewsQuery.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final viewsSnapshot = await viewsQuery.get();
+
+      // Аналитика поиска
+      final searchQuery = _firestore
+          .collection('search_analytics')
+          .where('userId', isEqualTo: user.uid);
+
+      if (startDate != null) {
+        searchQuery.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        searchQuery.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final searchSnapshot = await searchQuery.get();
+
+      // Аналитика заявок
+      final requestsQuery = _firestore
+          .collection('request_analytics')
+          .where('userId', isEqualTo: user.uid);
+
+      if (startDate != null) {
+        requestsQuery.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        requestsQuery.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final requestsSnapshot = await requestsQuery.get();
+
+      // Аналитика сообщений
+      final messagesQuery = _firestore
+          .collection('message_analytics')
+          .where('senderId', isEqualTo: user.uid);
+
+      if (startDate != null) {
+        messagesQuery.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        messagesQuery.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final messagesSnapshot = await messagesQuery.get();
+
+      // Аналитика идей
+      final ideasQuery = _firestore
+          .collection('idea_analytics')
+          .where('userId', isEqualTo: user.uid);
+
+      if (startDate != null) {
+        ideasQuery.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        ideasQuery.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final ideasSnapshot = await ideasQuery.get();
+
+      // Аналитика лайков
+      final likesQuery = _firestore
+          .collection('like_analytics')
+          .where('userId', isEqualTo: user.uid);
+
+      if (startDate != null) {
+        likesQuery.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        likesQuery.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final likesSnapshot = await likesQuery.get();
+
+      // Аналитика комментариев
+      final commentsQuery = _firestore
+          .collection('comment_analytics')
+          .where('userId', isEqualTo: user.uid);
+
+      if (startDate != null) {
+        commentsQuery.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        commentsQuery.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final commentsSnapshot = await commentsQuery.get();
+
+      // Аналитика подписок
+      final subscriptionsQuery = _firestore
+          .collection('subscription_analytics')
+          .where('userId', isEqualTo: user.uid);
+
+      if (startDate != null) {
+        subscriptionsQuery.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        subscriptionsQuery.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final subscriptionsSnapshot = await subscriptionsQuery.get();
+
       return {
-        'totalEvents': snapshot.docs.length,
-        'eventCounts': eventCounts,
-        'totalSpent': totalSpent,
-        'subscriptionPurchases': subscriptionPurchases,
-        'promotionPurchases': promotionPurchases,
-        'advertisementCreates': advertisementCreates,
+        'profileViews': viewsSnapshot.docs.length,
+        'searches': searchSnapshot.docs.length,
+        'requests': requestsSnapshot.docs.length,
+        'messages': messagesSnapshot.docs.length,
+        'ideas': ideasSnapshot.docs.length,
+        'likes': likesSnapshot.docs.length,
+        'comments': commentsSnapshot.docs.length,
+        'subscriptions': subscriptionsSnapshot.docs.length,
       };
     } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to get user analytics: $e');
+      print('Ошибка получения аналитики пользователя: $e');
       return {};
     }
   }
 
-  /// Получение общей статистики платформы
-  static Future<Map<String, dynamic>> getPlatformAnalytics() async {
+  /// Получение популярных поисковых запросов
+  Future<List<Map<String, dynamic>>> getPopularSearches({
+    int limit = 10,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     try {
-      final QuerySnapshot snapshot = await _firestore.collection('analytics_events').get();
+      Query query = _firestore.collection('search_analytics');
 
-      final Map<String, int> eventCounts = {};
-      double totalRevenue = 0.0;
-      const int totalUsers = 0;
-      final Set<String> uniqueUsers = {};
+      if (startDate != null) {
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
 
-      for (final doc in snapshot.docs) {
+      if (endDate != null) {
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final querySnapshot = await query.get();
+
+      Map<String, int> searchCounts = {};
+      for (final doc in querySnapshot.docs) {
         final data = doc.data() as Map<String, dynamic>;
-        final eventType = data['eventType'] as String;
-        final eventData = data['eventData'] as Map<String, dynamic>;
-        final userId = data['userId'] as String;
+        final query = data['query'] as String;
+        searchCounts[query] = (searchCounts[query] ?? 0) + 1;
+      }
 
-        uniqueUsers.add(userId);
-        eventCounts[eventType] = (eventCounts[eventType] ?? 0) + 1;
+      final sortedSearches = searchCounts.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
 
-        if (eventType == 'subscription_purchased' || eventType == 'promotion_purchased') {
-          totalRevenue += (eventData['amount'] as num).toDouble();
+      return sortedSearches.take(limit).map((entry) => {
+        'query': entry.key,
+        'count': entry.value,
+      }).toList();
+    } catch (e) {
+      print('Ошибка получения популярных поисков: $e');
+      return [];
+    }
+  }
+
+  /// Получение статистики по категориям
+  Future<Map<String, dynamic>> getCategoryStatistics({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      Query query = _firestore.collection('request_analytics');
+
+      if (startDate != null) {
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final querySnapshot = await query.get();
+
+      Map<String, int> categoryCounts = {};
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final category = data['category'] as String?;
+        if (category != null) {
+          categoryCounts[category] = (categoryCounts[category] ?? 0) + 1;
         }
       }
 
       return {
-        'totalEvents': snapshot.docs.length,
-        'totalUsers': uniqueUsers.length,
-        'eventCounts': eventCounts,
-        'totalRevenue': totalRevenue,
+        'categoryCounts': categoryCounts,
+        'totalRequests': querySnapshot.docs.length,
       };
     } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to get platform analytics: $e');
+      print('Ошибка получения статистики по категориям: $e');
       return {};
     }
   }
 
-  /// Логирование изменения темы
-  static Future<void> logChangeTheme(String themeName) async {
+  /// Получение статистики по времени
+  Future<Map<String, dynamic>> getTimeStatistics({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     try {
-      await _analytics.logEvent(
-        name: 'theme_changed',
-        parameters: {'theme_name': themeName, 'timestamp': DateTime.now().millisecondsSinceEpoch},
-      );
-      debugPrint('INFO: [AnalyticsService] Theme change logged: $themeName');
+      Query query = _firestore.collection('profile_views');
+
+      if (startDate != null) {
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final querySnapshot = await query.get();
+
+      Map<int, int> hourCounts = {};
+      Map<int, int> dayCounts = {};
+
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final timestamp = (data['timestamp'] as Timestamp).toDate();
+        
+        final hour = timestamp.hour;
+        final day = timestamp.weekday;
+        
+        hourCounts[hour] = (hourCounts[hour] ?? 0) + 1;
+        dayCounts[day] = (dayCounts[day] ?? 0) + 1;
+      }
+
+      return {
+        'hourCounts': hourCounts,
+        'dayCounts': dayCounts,
+        'totalViews': querySnapshot.docs.length,
+      };
     } catch (e) {
-      debugPrint('ERROR: [AnalyticsService] Failed to log theme change: $e');
+      print('Ошибка получения статистики по времени: $e');
+      return {};
+    }
+  }
+
+  /// Получение статистики по источникам
+  Future<Map<String, dynamic>> getSourceStatistics({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      Query query = _firestore.collection('profile_views');
+
+      if (startDate != null) {
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+
+      if (endDate != null) {
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final querySnapshot = await query.get();
+
+      Map<String, int> sourceCounts = {};
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final source = data['source'] as String;
+        sourceCounts[source] = (sourceCounts[source] ?? 0) + 1;
+      }
+
+      return {
+        'sourceCounts': sourceCounts,
+        'totalViews': querySnapshot.docs.length,
+      };
+    } catch (e) {
+      print('Ошибка получения статистики по источникам: $e');
+      return {};
+    }
+  }
+
+  /// Получение общей статистики приложения
+  Future<Map<String, dynamic>> getAppStatistics({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      // Статистика пользователей
+      final usersQuery = _firestore.collection('users');
+      final usersSnapshot = await usersQuery.get();
+
+      // Статистика заявок
+      final requestsQuery = _firestore.collection('requests');
+      if (startDate != null) {
+        requestsQuery.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+      if (endDate != null) {
+        requestsQuery.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+      final requestsSnapshot = await requestsQuery.get();
+
+      // Статистика сообщений
+      final messagesQuery = _firestore.collection('chats');
+      if (startDate != null) {
+        messagesQuery.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+      if (endDate != null) {
+        messagesQuery.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+      final messagesSnapshot = await messagesQuery.get();
+
+      // Статистика идей
+      final ideasQuery = _firestore.collection('ideas');
+      if (startDate != null) {
+        ideasQuery.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+      if (endDate != null) {
+        ideasQuery.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+      final ideasSnapshot = await ideasQuery.get();
+
+      return {
+        'totalUsers': usersSnapshot.docs.length,
+        'totalRequests': requestsSnapshot.docs.length,
+        'totalMessages': messagesSnapshot.docs.length,
+        'totalIdeas': ideasSnapshot.docs.length,
+      };
+    } catch (e) {
+      print('Ошибка получения общей статистики: $e');
+      return {};
     }
   }
 }

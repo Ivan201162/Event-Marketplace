@@ -87,6 +87,7 @@ class SmartSpecialist {
     this.taxType,
     this.contacts = const {},
     this.servicesWithPrices = const {},
+    this.priceRangeString,
     // Новые поля для интеллектуального поиска
     this.styles = const [],
     this.keywords = const [],
@@ -151,7 +152,7 @@ class SmartSpecialist {
         .where((e) => e != null)
         .cast<DateTime>()
         .toList(),
-    pricePerHour: (data['pricePerHour'] as num?)?.toDouble(),
+    priceRangeString: data['priceRangeString'] as String?,
     location: data['location'] as String?,
     city: data['city'] as String?,
     isAvailable: data['isAvailable'] as bool? ?? true,
@@ -229,12 +230,16 @@ class SmartSpecialist {
     lastName: data['lastName'],
     totalReviews: data['totalReviews'],
     priceRange: data['priceRange'] != null
-        ? PriceRange.fromMap(Map<String, dynamic>.from(data['priceRange']))
+        ? PriceRange(
+            min: (data['priceRange']['min'] as num?)?.toDouble(),
+            max: (data['priceRange']['max'] as num?)?.toDouble(),
+          )
         : null,
     contacts: data['contacts'] != null ? Map<String, String>.from(data['contacts']) : const {},
     servicesWithPrices: data['servicesWithPrices'] != null
         ? Map<String, double>.from(data['servicesWithPrices'])
         : const {},
+    priceRangeString: data['priceRangeString'] as String?,
     // Новые поля для интеллектуального поиска
     styles: List<String>.from(data['styles'] ?? []),
     keywords: List<String>.from(data['keywords'] ?? []),
@@ -333,6 +338,7 @@ class SmartSpecialist {
     taxType: specialist.taxType,
     contacts: specialist.contacts,
     servicesWithPrices: specialist.servicesWithPrices,
+    priceRangeString: specialist.priceRangeString,
     // Новые поля для интеллектуального поиска
     styles: _generateStyles(specialist),
     keywords: _generateKeywords(specialist),
@@ -422,6 +428,7 @@ class SmartSpecialist {
   final TaxType? taxType;
   final Map<String, String> contacts;
   final Map<String, double> servicesWithPrices;
+  final String? priceRangeString;
 
   // Новые поля для интеллектуального поиска
   final List<String> styles; // Стили работы (классика, юмор, интерактив и т.д.)
@@ -486,7 +493,10 @@ class SmartSpecialist {
     'lastName': lastName,
     'city': city,
     'totalReviews': totalReviews,
-    'priceRange': priceRange?.toMap(),
+    'priceRange': priceRange != null ? {
+      'min': priceRange!.min,
+      'max': priceRange!.max,
+    } : null,
     'contacts': contacts,
     'servicesWithPrices': servicesWithPrices,
     // Новые поля для интеллектуального поиска
