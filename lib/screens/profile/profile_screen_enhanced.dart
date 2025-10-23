@@ -23,6 +23,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  late TabController _tabController;
 
   bool _isEditing = false;
   final _nameController = TextEditingController();
@@ -41,6 +42,8 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
       vsync: this,
     );
 
+    _tabController = TabController(length: 4, vsync: this);
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -55,6 +58,7 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
   @override
   void dispose() {
     _animationController.dispose();
+    _tabController.dispose();
     _nameController.dispose();
     _bioController.dispose();
     _cityController.dispose();
@@ -198,8 +202,8 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
 
               const SizedBox(height: 24),
 
-              // Контент пользователя
-              _buildUserContent(userData),
+              // Вкладки профиля
+              _buildProfileTabs(userData, isOwnProfile),
 
               const SizedBox(height: 20),
             ],
@@ -882,5 +886,116 @@ class _ProfileScreenEnhancedState extends ConsumerState<ProfileScreenEnhanced>
         ),
       );
     }
+  }
+
+  /// Вкладки профиля в стиле Instagram
+  Widget _buildProfileTabs(dynamic userData, bool isOwnProfile) {
+    return Column(
+      children: [
+        // TabBar
+        TabBar(
+          controller: _tabController,
+          indicatorColor: const Color(0xFF1E3A8A),
+          labelColor: const Color(0xFF1E3A8A),
+          unselectedLabelColor: Colors.grey[600],
+          tabs: const [
+            Tab(icon: Icon(Icons.grid_on)),
+            Tab(icon: Icon(Icons.video_library)),
+            Tab(icon: Icon(Icons.bookmark_border)),
+            Tab(icon: Icon(Icons.emoji_events)),
+          ],
+        ),
+        
+        // TabBarView
+        SizedBox(
+          height: 400,
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildPostsTab(userData),
+              _buildReelsTab(userData),
+              _buildMediaTab(userData),
+              _buildAchievementsTab(userData),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Вкладка постов
+  Widget _buildPostsTab(dynamic userData) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+      ),
+      itemCount: 12, // Заглушка
+      itemBuilder: (context, index) {
+        return Container(
+          color: Colors.grey[200],
+          child: const Icon(Icons.image, color: Colors.grey),
+        );
+      },
+    );
+  }
+
+  /// Вкладка рилсов
+  Widget _buildReelsTab(dynamic userData) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+      ),
+      itemCount: 8, // Заглушка
+      itemBuilder: (context, index) {
+        return Container(
+          color: Colors.grey[200],
+          child: const Icon(Icons.play_circle_outline, color: Colors.grey),
+        );
+      },
+    );
+  }
+
+  /// Вкладка медиа
+  Widget _buildMediaTab(dynamic userData) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 2,
+        mainAxisSpacing: 2,
+      ),
+      itemCount: 6, // Заглушка
+      itemBuilder: (context, index) {
+        return Container(
+          color: Colors.grey[200],
+          child: const Icon(Icons.photo_library, color: Colors.grey),
+        );
+      },
+    );
+  }
+
+  /// Вкладка достижений
+  Widget _buildAchievementsTab(dynamic userData) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: 5, // Заглушка
+      itemBuilder: (context, index) {
+        return Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: ListTile(
+            leading: const Icon(Icons.emoji_events, color: Colors.orange),
+            title: Text('Достижение ${index + 1}'),
+            subtitle: const Text('Описание достижения'),
+            trailing: const Icon(Icons.check_circle, color: Colors.green),
+          ),
+        );
+      },
+    );
   }
 }
