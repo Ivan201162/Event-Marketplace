@@ -511,25 +511,20 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         // Обновляем существующий отзыв
         await _reviewService.updateReview(
           widget.existingReview!.id,
-          rating: _rating,
-          title: _titleController.text.trim(),
-          content: _contentController.text.trim(),
-          images: _images,
-          tags: _tags,
+          _rating,
+          _contentController.text.trim(),
         );
       } else {
         // Создаем новый отзыв
         await _reviewService.createReview(
-          reviewerId: currentUser.uid,
-          reviewerName: currentUser.name,
-          reviewerAvatar: currentUser.photoUrl,
-          targetId: widget.targetId,
-          type: widget.type,
+          specialistId: widget.targetId,
+          clientId: currentUser.uid,
+          clientName: currentUser.name,
+          specialistName: 'Specialist',
           rating: _rating,
-          title: _titleController.text.trim(),
-          content: _contentController.text.trim(),
-          images: _images,
-          tags: _tags,
+          comment: _contentController.text.trim(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
       }
 

@@ -261,14 +261,16 @@ class AdvertisementService {
           type: transaction_model.TransactionType.advertisement,
           amount: ad.price,
           currency: 'RUB',
-          status: transaction_model.TransactionStatus.pending,
-          timestamp: DateTime.now(),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
           description: 'Реклама ${ad.title ?? 'Без названия'}',
-          adId: adId,
-          paymentMethod: paymentMethod.toString().split('.').last,
-          paymentProvider: provider.toString().split('.').last,
-          externalTransactionId: paymentResult.externalTransactionId,
-          metadata: paymentResult.metadata,
+          metadata: {
+            'adId': adId,
+            'paymentMethod': paymentMethod.toString().split('.').last,
+            'paymentProvider': provider.toString().split('.').last,
+            'externalTransactionId': paymentResult.externalTransactionId,
+            ...paymentResult.metadata,
+          },
         );
 
         // Сохраняем транзакцию

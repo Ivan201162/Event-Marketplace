@@ -333,7 +333,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
     if (widget.userId != null) {
       Navigator.of(context).push(
         MaterialPageRoute<void>(
-            builder: (context) => CreateIdeaScreen(userId: widget.userId!)),
+            builder: (context) => CreateIdeaScreen()),
       );
     }
   }
@@ -343,7 +343,7 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
       Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (context) =>
-              IdeaDetailScreen(idea: idea, userId: widget.userId),
+              IdeaDetailScreen(idea: idea),
         ),
       );
     }

@@ -419,6 +419,50 @@ class NotificationService {
       print('Ошибка отметки уведомлений как прочитанных: $e');
     }
   }
+
+  /// Получить поток уведомлений для пользователя
+  Stream<List<AppNotification>> getUserNotificationsStream(String userId) {
+    return _firestore
+        .collection('notifications')
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => AppNotification.fromMap(doc.data()))
+            .toList());
+  }
+
+  /// Отметить уведомление как прочитанное
+  Future<void> markAsRead(String notificationId) async {
+    try {
+      await _firestore
+          .collection('notifications')
+          .doc(notificationId)
+          .update({'isRead': true});
+    } catch (e) {
+      print('Ошибка отметки уведомления как прочитанного: $e');
+    }
+  }
+
+  /// Отметить все уведомления как прочитанные для пользователя
+  Future<void> markAllAsRead(String userId) async {
+    try {
+      final batch = _firestore.batch();
+      final snapshot = await _firestore
+          .collection('notifications')
+          .where('userId', isEqualTo: userId)
+          .where('isRead', isEqualTo: false)
+          .get();
+
+      for (var doc in snapshot.docs) {
+        batch.update(doc.reference, {'isRead': true});
+      }
+
+      await batch.commit();
+    } catch (e) {
+      print('Ошибка отметки всех уведомлений как прочитанных: $e');
+    }
+  }
 }
 
 /// Обработчик сообщений в фоне

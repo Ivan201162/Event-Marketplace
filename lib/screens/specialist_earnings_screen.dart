@@ -44,7 +44,6 @@ class _SpecialistEarningsScreenState
       // Загружаем последние платежи
       final recentPayments = await _paymentService.getSpecialistPayments(
         widget.specialistId,
-        limit: 10,
       );
 
       setState(() {

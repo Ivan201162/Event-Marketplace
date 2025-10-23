@@ -113,7 +113,7 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
         .push(
       MaterialPageRoute<bool>(
         builder: (context) =>
-            IdeaDetailScreen(idea: idea, userId: widget.userId),
+            IdeaDetailScreen(idea: idea),
       ),
     )
         .then((result) {
@@ -285,7 +285,7 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> {
         .push(
       MaterialPageRoute<bool>(
         builder: (context) =>
-            IdeaDetailScreen(idea: idea, userId: widget.userId),
+            IdeaDetailScreen(idea: idea),
       ),
     )
         .then((result) {

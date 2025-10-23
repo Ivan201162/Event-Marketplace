@@ -488,10 +488,6 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
             child: BookingCard(
               booking: booking,
               onTap: () => _showBookingDetails(booking),
-              onCancel: booking.status == BookingStatus.pending ||
-                      booking.status == BookingStatus.confirmed
-                  ? () => _cancelBooking(booking)
-                  : null,
             ),
           );
         },

@@ -34,16 +34,16 @@ class AdvancePaymentService {
       // Создаем платеж
       final payment = Payment(
         id: '',
-        bookingId: bookingId,
         userId: customerId,
-        customerId: customerId,
         specialistId: specialistId,
+        bookingId: bookingId,
         amount: advanceAmount,
+        currency: 'RUB',
+        method: PaymentMethod.bankTransfer,
         status: PaymentStatus.pending,
         type: PaymentType.advance,
-        paymentMethod: 'bank_transfer',
-        description: description ?? 'Авансовый платеж за бронирование',
         createdAt: DateTime.now(),
+        description: description ?? 'Авансовый платеж за бронирование',
         metadata: {
           'totalAmount': totalAmount,
           'remainingAmount': totalAmount - advanceAmount,
@@ -110,7 +110,7 @@ class AdvancePaymentService {
         type: PaymentType.finalPayment,
         description: description ?? 'Финальный платеж за услугу',
         createdAt: DateTime.now(),
-        paymentMethod: 'bank_transfer',
+        method: PaymentMethod.bankTransfer,
         metadata: {
           'totalAmount': booking.totalPrice,
           'advancePaid': totalAdvancePaid,

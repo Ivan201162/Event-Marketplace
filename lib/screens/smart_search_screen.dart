@@ -73,7 +73,7 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
     try {
       // Загружаем популярных специалистов
       final popularSpecialists =
-          await _smartSearchService.getPopularSpecialists(limit: 20);
+          await _smartSearchService.getPopularSpecialists();
       setState(() {
         _specialists = popularSpecialists;
         _isLoading = false;
@@ -300,7 +300,6 @@ class _SmartSearchScreenState extends ConsumerState<SmartSearchScreen> {
                             margin: const EdgeInsets.only(right: 12),
                             child: SpecialistCard(
                               specialist: specialist,
-                              showCompatibility: true,
                               onTap: () => _onSpecialistTap(specialist),
                             ),
                           );

@@ -76,7 +76,7 @@ class _OrganizerProposalsScreenState extends State<OrganizerProposalsScreen>
 
           if (snapshot.hasError) {
             return CustomErrorWidget(
-                error: snapshot.error.toString(),
+                message: snapshot.error.toString(),
                 onRetry: () => setState(() {}));
           }
 

@@ -6,6 +6,7 @@ import '../core/services/error_logger.dart';
 import '../models/tax_info.dart';
 import '../models/user.dart';
 import '../providers/auth_providers.dart';
+import '../widgets/radio_group.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});

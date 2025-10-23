@@ -330,8 +330,7 @@ class _EnhancedChatsListScreenState
   void _openChat(Chat chat) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => EnhancedChatScreen(
-            chatId: chat.id, chatTitle: chat.getDisplayName(_currentUserId!)),
+        builder: (context) => EnhancedChatScreen(chatId: chat.id),
       ),
     );
   }

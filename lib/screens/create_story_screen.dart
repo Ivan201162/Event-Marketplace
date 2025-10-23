@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../models/specialist_story.dart';
+import '../models/story.dart';
 import '../services/story_service.dart';
 
 class CreateStoryScreen extends ConsumerStatefulWidget {
@@ -386,12 +387,9 @@ class _CreateStoryScreenState extends ConsumerState<CreateStoryScreen> {
 
     try {
       await _storyService.createStory(
-        specialistId: widget.specialistId,
-        contentType: _selectedType,
-        contentFile: _selectedFile!,
-        text: _textController.text.isEmpty ? null : _textController.text,
-        caption:
-            _captionController.text.isEmpty ? null : _captionController.text,
+        imageFile: _selectedFile,
+        textContent: _textController.text.isEmpty ? null : _textController.text,
+        privacy: StoryPrivacy.public,
       );
 
       if (mounted) {

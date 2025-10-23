@@ -95,11 +95,11 @@ class FeedPostWidget extends ConsumerWidget {
               const SizedBox(height: 12),
 
               // Содержимое поста
-              if (post.content.isNotEmpty)
+              if (post.content?.isNotEmpty == true)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child:
-                      Text(post.content, style: const TextStyle(fontSize: 16)),
+                      Text(post.content!, style: const TextStyle(fontSize: 16)),
                 ),
 
               // Медиа контент

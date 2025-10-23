@@ -72,10 +72,6 @@ class _ReviewsToWriteScreenState extends State<ReviewsToWriteScreen> {
                         return BookingCard(
                           booking: booking,
                           onTap: () => _writeReview(booking),
-                          trailing: ElevatedButton(
-                            onPressed: () => _writeReview(booking),
-                            child: const Text('Оставить отзыв'),
-                          ),
                         );
                       },
                     ),

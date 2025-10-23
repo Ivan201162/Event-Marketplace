@@ -81,7 +81,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
       );
 
   Widget _buildFAQList() => StreamBuilder<List<FAQItem>>(
-        stream: _supportService.getFAQ(category: _selectedCategory),
+        stream: _supportService.getFAQ(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -117,7 +117,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
             itemBuilder: (context, index) {
               final faqItem = filteredItems[index];
               return FAQWidget(
-                  faqItem: faqItem, onTap: () => _showFAQDetail(faqItem));
+                  onItemTap: (item) => _showFAQDetail(item));
             },
           );
         },

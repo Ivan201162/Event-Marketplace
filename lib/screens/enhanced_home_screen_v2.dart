@@ -296,15 +296,7 @@ class _EnhancedHomeScreenV2State extends ConsumerState<EnhancedHomeScreenV2>
   void _showFiltersDialog() {
     showDialog(
       context: context,
-      builder: (context) => FiltersDialog(
-        initialFilters: _currentFilters,
-        onApplyFilters: (filters) {
-          setState(() {
-            _currentFilters = filters;
-          });
-          _performSearch('');
-        },
-      ),
+      builder: (context) => FiltersDialog(),
     );
   }
 

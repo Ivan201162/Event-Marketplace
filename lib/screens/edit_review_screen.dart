@@ -48,8 +48,8 @@ class _EditReviewScreenState extends ConsumerState<EditReviewScreen> {
     try {
       await _reviewService.updateReview(
         widget.review.id,
-        rating: _rating,
-        comment: _commentController.text.trim(),
+        _rating,
+        _commentController.text.trim(),
       );
 
       if (mounted) {

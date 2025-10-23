@@ -41,13 +41,14 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
 
     try {
       await _reviewService.createReview(
-        bookingId: widget.booking.id,
-        customerId: widget.booking.customerId ?? widget.booking.userId,
-        customerName: widget.booking.customerName ?? widget.booking.userName,
         specialistId: widget.booking.specialistId ?? '',
+        clientId: widget.booking.customerId ?? widget.booking.userId,
+        clientName: widget.booking.customerName ?? widget.booking.userName,
         specialistName: widget.booking.specialistName ?? '',
         rating: _rating,
         comment: _commentController.text.trim(),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
       if (mounted) {

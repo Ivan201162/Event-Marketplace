@@ -109,7 +109,7 @@ class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
       Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (context) =>
-              IdeaDetailScreen(idea: idea, userId: widget.userId),
+              IdeaDetailScreen(idea: idea),
         ),
       );
     }
@@ -358,7 +358,7 @@ class _IdeaSearchScreenState extends ConsumerState<IdeaSearchScreen> {
       Navigator.of(context).push(
         MaterialPageRoute<void>(
           builder: (context) =>
-              IdeaDetailScreen(idea: idea, userId: widget.userId),
+              IdeaDetailScreen(idea: idea),
         ),
       );
     }

@@ -241,8 +241,6 @@ class AnniversaryNotificationService {
       tz.TZDateTime.from(scheduledDate, tz.local),
       details,
       payload: 'scheduled_anniversary_${customer.id}',
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }

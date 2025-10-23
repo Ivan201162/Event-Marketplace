@@ -42,7 +42,7 @@ class _HomeScreenWithSmartSearchState
     try {
       // Загружаем популярных специалистов
       final popularSpecialists =
-          await _smartSearchService.getPopularSpecialists(limit: 6);
+          await _smartSearchService.getPopularSpecialists();
 
       // Загружаем персональные рекомендации если есть userId
       var recommendations = <SmartSpecialist>[];
@@ -317,7 +317,6 @@ class _HomeScreenWithSmartSearchState
             margin: const EdgeInsets.only(right: 12),
             child: SpecialistCard(
               specialist: specialist,
-              showCompatibility: showCompatibility,
               onTap: () => _onSpecialistTap(specialist),
             ),
           );

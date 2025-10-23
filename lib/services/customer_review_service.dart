@@ -29,9 +29,8 @@ class CustomerReviewService {
       final user = _auth.currentUser;
       if (user == null) {
         await _errorLogger.logError(
-          error: 'User not authenticated',
-          stackTrace: StackTrace.current.toString(),
-          action: 'create_review',
+          'User not authenticated',
+          StackTrace.current,
         );
         return null;
       }
@@ -91,14 +90,8 @@ class CustomerReviewService {
       return review;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to create review: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'create_review',
-        additionalData: {
-          'specialistId': specialistId,
-          'orderId': orderId,
-          'rating': rating
-        },
+        'Failed to create review: $e',
+        stackTrace,
       );
       return null;
     }
@@ -125,10 +118,8 @@ class CustomerReviewService {
       return snapshot.docs.map(CustomerReview.fromDoc).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get specialist reviews: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_specialist_reviews',
-        additionalData: {'specialistId': specialistId},
+        'Failed to get specialist reviews: $e',
+        stackTrace,
       );
       return [];
     }
@@ -146,10 +137,8 @@ class CustomerReviewService {
       return null;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get review by ID: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_review_by_id',
-        additionalData: {'reviewId': reviewId},
+        'Failed to get review by ID: $e',
+        stackTrace,
       );
       return null;
     }
@@ -210,10 +199,8 @@ class CustomerReviewService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to update review: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'update_review',
-        additionalData: {'reviewId': reviewId},
+        'Failed to update review: $e',
+        stackTrace,
       );
       return false;
     }
@@ -248,10 +235,8 @@ class CustomerReviewService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to delete review: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'delete_review',
-        additionalData: {'reviewId': reviewId},
+        'Failed to delete review: $e',
+        stackTrace,
       );
       return false;
     }
@@ -279,10 +264,8 @@ class CustomerReviewService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to respond to review: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'respond_to_review',
-        additionalData: {'reviewId': reviewId},
+        'Failed to respond to review: $e',
+        stackTrace,
       );
       return false;
     }
@@ -303,10 +286,8 @@ class CustomerReviewService {
       return await _calculateAndSaveReviewStats(specialistId);
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get specialist review stats: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_specialist_review_stats',
-        additionalData: {'specialistId': specialistId},
+        'Failed to get specialist review stats: $e',
+        stackTrace,
       );
       return null;
     }
@@ -324,10 +305,8 @@ class CustomerReviewService {
       return null;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get detailed rating: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_detailed_rating',
-        additionalData: {'reviewId': reviewId},
+        'Failed to get detailed rating: $e',
+        stackTrace,
       );
       return null;
     }
@@ -424,16 +403,8 @@ class CustomerReviewService {
       return reviews.take(limit).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to search reviews: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'search_reviews',
-        additionalData: {
-          'query': query,
-          'specialistId': specialistId,
-          'minRating': minRating,
-          'maxRating': maxRating,
-          'isVerified': isVerified,
-        },
+        'Failed to search reviews: $e',
+        stackTrace,
       );
       return [];
     }
@@ -445,10 +416,8 @@ class CustomerReviewService {
       await _calculateAndSaveReviewStats(specialistId);
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to update specialist review stats: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'update_specialist_review_stats',
-        additionalData: {'specialistId': specialistId},
+        'Failed to update specialist review stats: $e',
+        stackTrace,
       );
     }
   }

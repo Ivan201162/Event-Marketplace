@@ -74,9 +74,8 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
         // Редактирование существующего отзыва
         await _reviewService.updateReview(
           widget.existingReview!.id,
-          rating: _rating,
-          comment: _commentController.text.trim(),
-          serviceTags: _selectedTags,
+          _rating,
+          _commentController.text.trim(),
         );
 
         ScaffoldMessenger.of(context)
@@ -85,15 +84,14 @@ class _WriteReviewExtendedScreenState extends State<WriteReviewExtendedScreen> {
         // Создание нового отзыва
         await _reviewService.createReview(
           specialistId: widget.specialist.id,
-          customerId: widget.booking?.customerId ??
+          clientId: widget.booking?.customerId ??
               'current_customer_id', // TODO(developer): Получить из AuthService
-          customerName: widget.booking?.customerName ?? 'Заказчик',
+          clientName: widget.booking?.customerName ?? 'Заказчик',
+          specialistName: widget.specialist.name,
           rating: _rating,
           comment: _commentController.text.trim(),
-          bookingId: widget.booking?.id,
-          eventTitle: widget.booking?.eventTitle,
-          specialistName: widget.specialist.name,
-          serviceTags: _selectedTags,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
 
         ScaffoldMessenger.of(context)

@@ -6,6 +6,7 @@ import '../core/app_router.dart';
 import '../core/app_theme.dart';
 import '../models/specialist.dart';
 import '../models/specialist_categories.dart';
+import '../models/search_filters.dart';
 import '../providers/specialist_providers.dart';
 import '../widgets/search_filters_widget.dart';
 import '../widgets/specialist_card.dart';
@@ -266,8 +267,8 @@ class _EnhancedSearchScreenState extends ConsumerState<EnhancedSearchScreen>
           ),
         ),
         child: SearchFiltersWidget(
-          onFiltersChanged: (filters) {
-            ref.read(specialistFiltersProvider.notifier).state = filters;
+          initialFilters: SearchFilters(),
+          onApplyFilters: (filters) {
             _performSearch();
           },
         ),

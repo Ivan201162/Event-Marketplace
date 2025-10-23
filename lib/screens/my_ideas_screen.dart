@@ -135,7 +135,6 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
             idea: idea,
             onTap: () => _navigateToIdeaDetail(idea),
             onLike: () => _toggleLike(idea),
-            onFavorite: () => _toggleFavorite(idea),
           );
         },
       ),
@@ -170,7 +169,6 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen>
             idea: idea,
             onTap: () => _navigateToIdeaDetail(idea),
             onLike: () => _toggleLike(idea),
-            onFavorite: () => _toggleFavorite(idea),
           );
         },
       ),

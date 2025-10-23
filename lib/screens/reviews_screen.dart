@@ -176,9 +176,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                 totalReviews: 0,
                 ratingDistribution: const {},
                 verifiedReviews: 0,
-                helpfulReviews: 0,
-                helpfulPercentage: 0,
-                lastUpdated: DateTime.now(),
+                recentReviews: 0,
               );
 
           return SingleChildScrollView(

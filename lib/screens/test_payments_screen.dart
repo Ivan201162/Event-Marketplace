@@ -387,18 +387,28 @@ class _TestPaymentsScreenState extends ConsumerState<TestPaymentsScreen> {
   Future<void> _testBookingWithPayments() async {
     try {
       // Создаем тестовое бронирование
-      final booking = await _bookingService.createBooking(
-        eventId: 'test_event_${DateTime.now().millisecondsSinceEpoch}',
-        userId: _selectedUserId,
+      final bookingData = Booking(
+        id: 'test_booking_${DateTime.now().millisecondsSinceEpoch}',
         specialistId: _selectedSpecialistId,
-        eventTitle: 'Тестовое событие',
-        bookingDate: DateTime.now().add(const Duration(days: 7)),
-        participantsCount: 10,
+        specialistName: 'Тестовый специалист',
+        clientId: _selectedUserId,
+        clientName: 'Тестовый клиент',
+        service: 'Тестовая услуга',
+        date: DateTime.now().add(const Duration(days: 7)),
+        time: '12:00',
+        duration: 2,
         totalPrice: 50000,
         notes: 'Тестовое бронирование для проверки платежей',
+        status: BookingStatus.pending,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        eventTitle: 'Тестовое событие',
+        participantsCount: 10,
       );
+      
+      final bookingId = await _bookingService.createBooking(bookingData);
 
-      _showSuccessMessage('Бронирование создано: ${booking.id}');
+      _showSuccessMessage('Бронирование создано: $bookingId');
       _loadData();
     } on Exception catch (e) {
       _showErrorMessage('Ошибка создания бронирования: $e');

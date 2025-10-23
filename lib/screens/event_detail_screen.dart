@@ -1008,7 +1008,7 @@ class EventDetailScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute<bool>(
-                      builder: (context) => CreateBookingScreen(event: event),
+                      builder: (context) => CreateBookingScreen(),
                     ),
                   ).then((result) {
                     if (result == true) {

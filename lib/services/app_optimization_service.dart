@@ -35,9 +35,8 @@ class AppOptimizationService {
       };
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get cache size: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_cache_size',
+        'Failed to get cache size: $e',
+        stackTrace,
       );
       return {};
     }
@@ -75,9 +74,8 @@ class AppOptimizationService {
       };
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to clear cache: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'clear_cache',
+        'Failed to clear cache: $e',
+        stackTrace,
       );
       return {'success': false, 'error': e.toString()};
     }
@@ -111,9 +109,8 @@ class AppOptimizationService {
       return {'success': true, 'optimizations': optimizations};
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to optimize app settings: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'optimize_settings',
+        'Failed to optimize app settings: $e',
+        stackTrace,
       );
       return {'success': false, 'error': e.toString()};
     }
@@ -190,9 +187,8 @@ class AppOptimizationService {
       return recommendations;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get optimization recommendations: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_recommendations',
+        'Failed to get optimization recommendations: $e',
+        stackTrace,
       );
       return [];
     }
@@ -220,10 +216,8 @@ class AppOptimizationService {
       }
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to apply optimization recommendation: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'apply_recommendation',
-        additionalData: {'recommendationAction': action},
+        'Failed to apply optimization recommendation: $e',
+        stackTrace,
       );
       return {'success': false, 'error': e.toString()};
     }
@@ -381,9 +375,8 @@ class AppOptimizationService {
       };
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get resource usage stats: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_resource_stats',
+        'Failed to get resource usage stats: $e',
+        stackTrace,
       );
       return {};
     }

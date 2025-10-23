@@ -300,12 +300,14 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
       final reviewService = ref.read(reviewServiceProvider);
 
       final review = reviewService.createReview(
-        bookingId: widget.bookingId,
-        customerId: currentUser.id,
         specialistId: widget.specialistId,
+        clientId: currentUser.id,
+        clientName: currentUser.displayName ?? currentUser.email,
+        specialistName: 'Specialist',
         rating: _rating,
         comment: _commentController.text.trim(),
-        customerName: currentUser.displayName ?? currentUser.email,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
       await reviewService.addReview(review);

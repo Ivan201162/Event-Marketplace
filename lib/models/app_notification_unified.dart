@@ -163,3 +163,6 @@ class AppNotification extends Equatable {
     return 'AppNotification(id: $id, userId: $userId, type: $type, title: $title)';
   }
 }
+
+
+

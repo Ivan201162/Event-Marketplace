@@ -261,7 +261,6 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
                               idea: idea,
                               onTap: () => _navigateToIdeaDetail(idea),
                               onLike: () => _toggleLike(idea),
-                              onFavorite: () => _toggleFavorite(idea),
                             );
                           },
                         ),
@@ -289,7 +288,6 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
                 idea: idea,
                 onTap: () => _navigateToIdeaDetail(idea),
                 onLike: () => _toggleLike(idea),
-                onFavorite: () => _toggleFavorite(idea),
               );
             },
           ),
@@ -314,7 +312,6 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
                 idea: idea,
                 onTap: () => _navigateToIdeaDetail(idea),
                 onLike: () => _toggleLike(idea),
-                onFavorite: () => _toggleFavorite(idea),
               );
             },
           ),

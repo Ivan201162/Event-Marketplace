@@ -50,6 +50,56 @@ class StoryService {
     });
   }
 
+  /// Получить сторис специалиста
+  Stream<List<Story>> getStoriesBySpecialist(String specialistId) {
+    return _firestore
+        .collection('stories')
+        .where('specialistId', isEqualTo: specialistId)
+        .where('expiresAt', isGreaterThan: Timestamp.now())
+        .orderBy('expiresAt')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Story.fromFirestore(doc)).toList();
+    });
+  }
+
+  /// Выбрать изображение
+  Future<File?> pickImage() async {
+    // Implementation for image picking
+    return null;
+  }
+
+  /// Выбрать видео
+  Future<File?> pickVideo() async {
+    // Implementation for video picking
+    return null;
+  }
+
+  /// Сделать фото
+  Future<File?> takePhoto() async {
+    // Implementation for taking photo
+    return null;
+  }
+
+  /// Записать видео
+  Future<File?> recordVideo() async {
+    // Implementation for recording video
+    return null;
+  }
+
+  /// Загрузить изображение сторис
+  Future<String> uploadStoryImage(File imageFile) async {
+    // Implementation for uploading story image
+    return '';
+  }
+
+  /// Загрузить видео сторис
+  Future<String> uploadStoryVideo(File videoFile) async {
+    // Implementation for uploading story video
+    return '';
+  }
+
   /// Лайкнуть сторис
   Future<void> likeStory(String storyId, String userId) async {
     try {

@@ -7,6 +7,7 @@ import '../models/specialist_team.dart';
 import '../providers/booking_providers.dart';
 import '../providers/specialist_providers.dart';
 import '../services/team_service.dart';
+import '../widgets/radio_group.dart';
 import 'team_screen.dart';
 
 /// Экран формы бронирования
@@ -146,28 +147,46 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
               child: Column(
                 children: [
                   RadioGroup<bool>(
-                  groupValue: _isTeamBooking,
-                  onChanged: (value) {
-                    setState(() {
-                      _isTeamBooking = value;
-                      if (!value) {
-                        _selectedTeamId = null;
-                      }
-                    });
-                  },
-                  children: [
-                    RadioListTile<bool>(
-                      title: Text('Индивидуальный специалист'),
-                      subtitle: Text('Бронирование одного специалиста'),
-                      value: false,
-                    ),
-                    RadioListTile<bool>(
-                      title: Text('Команда специалистов'),
-                      subtitle: Text('Бронирование команды специалистов'),
-                      value: true,
-                    ),
-                  ],
-                ),
+                    value: _isTeamBooking,
+                    onChanged: (value) {
+                      setState(() {
+                        _isTeamBooking = value;
+                        if (!value) {
+                          _selectedTeamId = null;
+                        }
+                      });
+                    },
+                    children: [
+                      RadioListTile<bool>(
+                        title: const Text('Индивидуальный специалист'),
+                        subtitle: const Text('Бронирование одного специалиста'),
+                        value: false,
+                        groupValue: _isTeamBooking,
+                        onChanged: (value) {
+                          setState(() {
+                            _isTeamBooking = value;
+                            if (!value) {
+                              _selectedTeamId = null;
+                            }
+                          });
+                        },
+                      ),
+                      RadioListTile<bool>(
+                        title: const Text('Команда специалистов'),
+                        subtitle: const Text('Бронирование команды специалистов'),
+                        value: true,
+                        groupValue: _isTeamBooking,
+                        onChanged: (value) {
+                          setState(() {
+                            _isTeamBooking = value;
+                            if (!value) {
+                              _selectedTeamId = null;
+                            }
+                          });
+                        },
+                      ),
+                    ],
+                  ),
               ),
             ),
           ),

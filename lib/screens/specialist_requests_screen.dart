@@ -154,18 +154,6 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen>
                 return BookingCard(
                   booking: booking,
                   onTap: () => _showBookingDetails(booking),
-                  onApprove: booking.status == BookingStatus.pending
-                      ? () =>
-                          _updateBookingStatus(booking, BookingStatus.confirmed)
-                      : null,
-                  onReject: booking.status == BookingStatus.pending
-                      ? () =>
-                          _updateBookingStatus(booking, BookingStatus.rejected)
-                      : null,
-                  onComplete: booking.status == BookingStatus.confirmed
-                      ? () =>
-                          _updateBookingStatus(booking, BookingStatus.completed)
-                      : null,
                 );
               },
             ),

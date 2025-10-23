@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/responsive_utils.dart';
 import '../models/user_registration_data.dart';
 import '../widgets/responsive_layout.dart';
+import '../widgets/radio_group.dart';
 
 /// Экран улучшенной регистрации
 class EnhancedRegistrationScreen extends ConsumerStatefulWidget {

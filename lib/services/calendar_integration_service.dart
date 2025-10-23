@@ -70,11 +70,8 @@ class CalendarIntegrationService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to create calendar event: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'create_calendar_event',
-        additionalData: {'orderId': orderId, 'title': title},
+        'Failed to create calendar event: $e',
+        stackTrace,
       );
       return false;
     }
@@ -124,16 +121,13 @@ class CalendarIntegrationService {
       await _errorLogger.logInfo(
         message: 'Calendar event updated',
         action: 'update_calendar_event',
-        additionalData: {'eventId': eventId},
       );
 
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to update calendar event: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'update_calendar_event',
-        additionalData: {'eventId': eventId},
+        'Failed to update calendar event: $e',
+        stackTrace,
       );
       return false;
     }
@@ -161,7 +155,6 @@ class CalendarIntegrationService {
         await _errorLogger.logInfo(
           message: 'Calendar event deleted',
           action: 'delete_calendar_event',
-          additionalData: {'eventId': eventId},
         );
 
         return true;
@@ -170,10 +163,8 @@ class CalendarIntegrationService {
       return false;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to delete calendar event: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'delete_calendar_event',
-        additionalData: {'eventId': eventId},
+        'Failed to delete calendar event: $e',
+        stackTrace,
       );
       return false;
     }
@@ -208,10 +199,8 @@ class CalendarIntegrationService {
           .toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get user calendar events: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'get_user_calendar_events',
+        'Failed to get user calendar events: $e',
+        stackTrace,
       );
       return [];
     }
@@ -232,10 +221,8 @@ class CalendarIntegrationService {
           .toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get order calendar events: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_order_calendar_events',
-        additionalData: {'orderId': orderId},
+        'Failed to get order calendar events: $e',
+        stackTrace,
       );
       return [];
     }
@@ -267,7 +254,6 @@ class CalendarIntegrationService {
       await _errorLogger.logInfo(
         message: 'Event synced with external calendar',
         action: 'sync_with_external_calendar',
-        additionalData: {'eventId': eventId},
       );
     } catch (e, stackTrace) {
       // Обновляем статус на ошибку
@@ -279,10 +265,8 @@ class CalendarIntegrationService {
       });
 
       await _errorLogger.logError(
-        error: 'Failed to sync with external calendar: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'sync_with_external_calendar',
-        additionalData: {'eventId': eventId},
+        'Failed to sync with external calendar: $e',
+        stackTrace,
       );
     }
   }
@@ -308,10 +292,8 @@ class CalendarIntegrationService {
       );
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to delete from external calendar: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'delete_from_external_calendar',
-        additionalData: {'externalEventId': externalEventId},
+        'Failed to delete from external calendar: $e',
+        stackTrace,
       );
     }
   }
@@ -342,10 +324,8 @@ class CalendarIntegrationService {
       };
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get calendar settings: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'get_calendar_settings',
+        'Failed to get calendar settings: $e',
+        stackTrace,
       );
       return {};
     }
@@ -371,10 +351,8 @@ class CalendarIntegrationService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to update calendar settings: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'update_calendar_settings',
+        'Failed to update calendar settings: $e',
+        stackTrace,
       );
       return false;
     }
@@ -423,11 +401,8 @@ class CalendarIntegrationService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to create reminder: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'create_reminder',
-        additionalData: {'eventId': eventId},
+        'Failed to create reminder: $e',
+        stackTrace,
       );
       return false;
     }
@@ -465,10 +440,8 @@ class CalendarIntegrationService {
           .toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get user reminders: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'get_user_reminders',
+        'Failed to get user reminders: $e',
+        stackTrace,
       );
       return [];
     }
@@ -498,10 +471,8 @@ class CalendarIntegrationService {
           .toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to check time conflicts: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'check_time_conflicts',
+        'Failed to check time conflicts: $e',
+        stackTrace,
       );
       return [];
     }
@@ -541,10 +512,8 @@ class CalendarIntegrationService {
       };
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get calendar stats: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'get_calendar_stats',
+        'Failed to get calendar stats: $e',
+        stackTrace,
       );
       return {};
     }

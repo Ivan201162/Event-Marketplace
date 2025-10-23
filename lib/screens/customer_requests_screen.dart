@@ -160,13 +160,6 @@ class _CustomerRequestsScreenState extends State<CustomerRequestsScreen>
                 return BookingCard(
                   booking: booking,
                   onTap: () => _showBookingDetails(booking),
-                  onCancel: booking.status == BookingStatus.pending ||
-                          booking.status == BookingStatus.confirmed
-                      ? () => _cancelBooking(booking)
-                      : null,
-                  onReschedule: booking.status == BookingStatus.confirmed
-                      ? () => _rescheduleBooking(booking)
-                      : null,
                 );
               },
             ),

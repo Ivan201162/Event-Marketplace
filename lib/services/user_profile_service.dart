@@ -1,430 +1,466 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:video_compress/video_compress.dart';
 
-import '../models/user.dart';
-import '../models/user_profile.dart';
-import '../utils/storage_guard.dart';
+import '../models/user_profile_enhanced.dart';
 
-/// Сервис для работы с профилями пользователей
+/// Сервис для работы с расширенным профилем пользователя
 class UserProfileService {
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  static final FirebaseStorage? _storage = getStorage();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final ImagePicker _imagePicker = ImagePicker();
 
-  // Коллекции
-  static const String _profilesCollection = 'user_profiles';
-  static const String _postsCollection = 'user_posts';
-  static const String _storiesCollection = 'user_stories';
-  static const String _reviewsCollection = 'user_reviews';
-
-  /// Получить профиль пользователя по ID
-  static Future<UserProfile?> getUserProfile(String userId) async {
+  /// Получить профиль пользователя
+  Future<UserProfileEnhanced?> getUserProfile(String userId) async {
     try {
-      final doc =
-          await _firestore.collection(_profilesCollection).doc(userId).get();
+      final doc = await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .get();
 
       if (doc.exists) {
-        return UserProfile.fromDocument(doc);
+        return UserProfileEnhanced.fromDocument(doc);
       }
       return null;
-    } on Exception {
-      // Логирование:'Ошибка получения профиля: $e');
+    } catch (e) {
+      debugPrint('Ошибка получения профиля: $e');
       return null;
     }
   }
 
-  /// Создать или обновить профиль пользователя
-  static Future<bool> saveUserProfile(UserProfile profile) async {
+  /// Получить текущий профиль пользователя
+  Future<UserProfileEnhanced?> getCurrentUserProfile() async {
+    final user = _auth.currentUser;
+    if (user == null) return null;
+    return getUserProfile(user.uid);
+  }
+
+  /// Создать или обновить профиль
+  Future<void> createOrUpdateProfile(UserProfileEnhanced profile) async {
     try {
       await _firestore
-          .collection(_profilesCollection)
+          .collection('user_profiles')
           .doc(profile.id)
           .set(profile.toMap(), SetOptions(merge: true));
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка сохранения профиля: $e');
-      return false;
+
+      debugPrint('✅ Профиль сохранен: ${profile.id}');
+    } catch (e) {
+      debugPrint('❌ Ошибка сохранения профиля: $e');
+      rethrow;
     }
   }
 
-  /// Создать профиль из AppUser
-  static Future<bool> createProfileFromUser(AppUser user) async {
-    try {
-      final profile = UserProfile.fromAppUser(user);
-      return await saveUserProfile(profile);
-    } on Exception {
-      // Логирование:'Ошибка создания профиля из пользователя: $e');
-      return false;
-    }
-  }
-
-  /// Обновить аватар пользователя
-  static Future<String?> updateAvatar(String userId, String imagePath) async {
-    try {
-      final ref = _storage.ref().child('avatars/$userId.jpg');
-      await ref.putFile(File(imagePath));
-      final downloadUrl = await ref.getDownloadURL();
-
-      await _firestore.collection(_profilesCollection).doc(userId).update({
-        'avatarUrl': downloadUrl,
-      });
-
-      return downloadUrl;
-    } on Exception {
-      // Логирование:'Ошибка обновления аватара: $e');
-      return null;
-    }
-  }
-
-  /// Обновить обложку профиля
-  static Future<String?> updateCover(String userId, String imagePath) async {
-    try {
-      final ref = _storage.ref().child('covers/$userId.jpg');
-      await ref.putFile(File(imagePath));
-      final downloadUrl = await ref.getDownloadURL();
-
-      await _firestore.collection(_profilesCollection).doc(userId).update({
-        'coverUrl': downloadUrl,
-      });
-
-      return downloadUrl;
-    } on Exception {
-      // Логирование:'Ошибка обновления обложки: $e');
-      return null;
-    }
-  }
-
-  /// Получить посты пользователя
-  static Stream<List<UserPost>> getUserPosts(String userId) => _firestore
-      .collection(_postsCollection)
-      .where('userId', isEqualTo: userId)
-      .orderBy('timestamp', descending: true)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => UserPost.fromMap(doc.data())).toList());
-
-  /// Создать пост
-  static Future<bool> createPost(UserPost post) async {
-    try {
-      await _firestore
-          .collection(_postsCollection)
-          .doc(post.id)
-          .set(post.toMap());
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка создания поста: $e');
-      return false;
-    }
-  }
-
-  /// Обновить пост
-  static Future<bool> updatePost(UserPost post) async {
-    try {
-      await _firestore
-          .collection(_postsCollection)
-          .doc(post.id)
-          .update(post.toMap());
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка обновления поста: $e');
-      return false;
-    }
-  }
-
-  /// Удалить пост
-  static Future<bool> deletePost(String postId) async {
-    try {
-      await _firestore.collection(_postsCollection).doc(postId).delete();
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка удаления поста: $e');
-      return false;
-    }
-  }
-
-  /// Лайкнуть/убрать лайк с поста
-  static Future<bool> togglePostLike(String postId, String userId) async {
-    try {
-      final postRef = _firestore.collection(_postsCollection).doc(postId);
-      final postDoc = await postRef.get();
-
-      if (!postDoc.exists) return false;
-
-      final post = UserPost.fromMap(postDoc.data()!);
-      final isLiked = post.likedBy.contains(userId);
-
-      if (isLiked) {
-        // Убираем лайк
-        await postRef.update({
-          'likes': FieldValue.increment(-1),
-          'likedBy': FieldValue.arrayRemove([userId]),
-        });
-      } else {
-        // Добавляем лайк
-        await postRef.update({
-          'likes': FieldValue.increment(1),
-          'likedBy': FieldValue.arrayUnion([userId]),
-        });
-      }
-
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка лайка поста: $e');
-      return false;
-    }
-  }
-
-  /// Получить активные сторис пользователя
-  static Stream<List<UserStory>> getUserStories(String userId) => _firestore
-      .collection(_storiesCollection)
-      .where('userId', isEqualTo: userId)
-      .where('expiresAt', isGreaterThan: Timestamp.now())
-      .orderBy('expiresAt')
-      .orderBy('timestamp', descending: true)
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => UserStory.fromMap(doc.data())).toList());
-
-  /// Создать сторис
-  static Future<bool> createStory(UserStory story) async {
-    try {
-      await _firestore
-          .collection(_storiesCollection)
-          .doc(story.id)
-          .set(story.toMap());
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка создания сторис: $e');
-      return false;
-    }
-  }
-
-  /// Удалить сторис
-  static Future<bool> deleteStory(String storyId) async {
-    try {
-      await _firestore.collection(_storiesCollection).doc(storyId).delete();
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка удаления сторис: $e');
-      return false;
-    }
-  }
-
-  /// Отметить сторис как просмотренную
-  static Future<bool> markStoryAsViewed(String storyId, String userId) async {
-    try {
-      await _firestore.collection(_storiesCollection).doc(storyId).update({
-        'viewedBy': FieldValue.arrayUnion([userId]),
-      });
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка отметки сторис как просмотренной: $e');
-      return false;
-    }
-  }
-
-  /// Получить отзывы специалиста
-  static Stream<List<UserReview>> getSpecialistReviews(String specialistId) =>
-      _firestore
-          .collection(_reviewsCollection)
-          .where('specialistId', isEqualTo: specialistId)
-          .orderBy('timestamp', descending: true)
-          .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map((doc) => UserReview.fromMap(doc.data()))
-              .toList());
-
-  /// Создать отзыв
-  static Future<bool> createReview(UserReview review) async {
-    try {
-      await _firestore
-          .collection(_reviewsCollection)
-          .doc(review.id)
-          .set(review.toMap());
-
-      // Обновляем рейтинг специалиста
-      await _updateSpecialistRating(review.specialistId);
-
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка создания отзыва: $e');
-      return false;
-    }
-  }
-
-  /// Обновить рейтинг специалиста
-  static Future<void> _updateSpecialistRating(String specialistId) async {
-    try {
-      final reviewsSnapshot = await _firestore
-          .collection(_reviewsCollection)
-          .where('specialistId', isEqualTo: specialistId)
-          .get();
-
-      if (reviewsSnapshot.docs.isEmpty) return;
-
-      double totalRating = 0;
-      for (final doc in reviewsSnapshot.docs) {
-        final review = UserReview.fromMap(doc.data());
-        totalRating += review.rating;
-      }
-
-      final averageRating = totalRating / reviewsSnapshot.docs.length;
-
-      await _firestore
-          .collection(_profilesCollection)
-          .doc(specialistId)
-          .update({
-        'rating': averageRating,
-      });
-    } on Exception {
-      // Логирование:'Ошибка обновления рейтинга: $e');
-    }
-  }
-
-  /// Обновить прайс-лист специалиста
-  static Future<bool> updateServices(
-      String userId, List<ServicePrice> services) async {
-    try {
-      await _firestore.collection(_profilesCollection).doc(userId).update({
-        'services': services.map((service) => service.toMap()).toList(),
-        'updatedAt': Timestamp.now(),
-      });
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка обновления прайс-листа: $e');
-      return false;
-    }
-  }
-
-  /// Подписаться/отписаться от пользователя
-  static Future<bool> toggleFollow(
-      String followerId, String followingId) async {
-    try {
-      final batch = _firestore.batch();
-
-      // Обновляем подписки подписчика
-      final followerRef =
-          _firestore.collection(_profilesCollection).doc(followerId);
-      final followerDoc = await followerRef.get();
-
-      if (followerDoc.exists) {
-        final followerProfile = UserProfile.fromDocument(followerDoc);
-        final isFollowing = followerProfile.additionalData['following']
-                ?.contains(followingId) ??
-            false;
-
-        if (isFollowing) {
-          batch.update(followerRef, {
-            'following': FieldValue.increment(-1),
-            'additionalData.following': FieldValue.arrayRemove([followingId]),
-          });
-        } else {
-          batch.update(followerRef, {
-            'following': FieldValue.increment(1),
-            'additionalData.following': FieldValue.arrayUnion([followingId]),
-          });
-        }
-      }
-
-      // Обновляем подписчиков пользователя
-      final followingRef =
-          _firestore.collection(_profilesCollection).doc(followingId);
-      final followingDoc = await followingRef.get();
-
-      if (followingDoc.exists) {
-        final followingProfile = UserProfile.fromDocument(followingDoc);
-        final hasFollower = followingProfile.additionalData['followers']
-                ?.contains(followerId) ??
-            false;
-
-        if (hasFollower) {
-          batch.update(followingRef, {
-            'followers': FieldValue.increment(-1),
-            'additionalData.followers': FieldValue.arrayRemove([followerId]),
-          });
-        } else {
-          batch.update(followingRef, {
-            'followers': FieldValue.increment(1),
-            'additionalData.followers': FieldValue.arrayUnion([followerId]),
-          });
-        }
-      }
-
-      await batch.commit();
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка подписки/отписки: $e');
-      return false;
-    }
-  }
-
-  /// Получить рекомендуемых специалистов
-  static Future<List<UserProfile>> getRecommendedSpecialists(
-    String userId, {
-    int limit = 10,
+  /// Обновить базовую информацию профиля
+  Future<void> updateBasicInfo({
+    required String userId,
+    String? firstName,
+    String? lastName,
+    String? username,
+    String? bio,
+    String? city,
+    String? region,
+    String? phone,
+    String? website,
   }) async {
     try {
-      final snapshot = await _firestore
-          .collection(_profilesCollection)
-          .where('role', isEqualTo: 'specialist')
-          .orderBy('rating', descending: true)
-          .limit(limit)
-          .get();
+      final updateData = <String, dynamic>{
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
 
-      return snapshot.docs.map(UserProfile.fromDocument).toList();
-    } on Exception {
-      // Логирование:'Ошибка получения рекомендуемых специалистов: $e');
-      return [];
+      if (firstName != null) updateData['firstName'] = firstName;
+      if (lastName != null) updateData['lastName'] = lastName;
+      if (username != null) updateData['username'] = username;
+      if (bio != null) updateData['bio'] = bio;
+      if (city != null) updateData['city'] = city;
+      if (region != null) updateData['region'] = region;
+      if (phone != null) updateData['phone'] = phone;
+      if (website != null) updateData['website'] = website;
+
+      // Обновляем displayName если изменились имя или фамилия
+      if (firstName != null || lastName != null) {
+        final currentProfile = await getUserProfile(userId);
+        final newFirstName = firstName ?? currentProfile?.firstName ?? '';
+        final newLastName = lastName ?? currentProfile?.lastName ?? '';
+        updateData['displayName'] = '$newFirstName $newLastName'.trim();
+      }
+
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update(updateData);
+
+      debugPrint('✅ Базовая информация профиля обновлена');
+    } catch (e) {
+      debugPrint('❌ Ошибка обновления базовой информации: $e');
+      rethrow;
     }
   }
 
-  /// Поиск специалистов
-  static Future<List<UserProfile>> searchSpecialists(String query) async {
+  /// Загрузить аватарку
+  Future<String?> uploadAvatar(String userId, XFile imageFile) async {
     try {
-      final snapshot = await _firestore
-          .collection(_profilesCollection)
-          .where('role', isEqualTo: 'specialist')
-          .get();
+      final file = File(imageFile.path);
+      final fileName = 'avatars/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      
+      final ref = _storage.ref().child(fileName);
+      final uploadTask = ref.putFile(file);
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
 
-      final profiles = snapshot.docs.map(UserProfile.fromDocument).toList();
+      // Обновляем URL аватарки в профиле
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'avatarUrl': downloadUrl,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
 
-      // Фильтруем по имени, биографии и городу
-      return profiles.where((profile) {
-        final searchText = query.toLowerCase();
-        return profile.name.toLowerCase().contains(searchText) ||
-            profile.bio.toLowerCase().contains(searchText) ||
-            profile.city.toLowerCase().contains(searchText);
-      }).toList();
-    } on Exception {
-      // Логирование:'Ошибка поиска специалистов: $e');
-      return [];
+      debugPrint('✅ Аватарка загружена: $downloadUrl');
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('❌ Ошибка загрузки аватарки: $e');
+      rethrow;
     }
   }
 
-  /// Загрузить медиа файл
-  static Future<String?> uploadMedia(
-      String userId, String filePath, String type) async {
+  /// Загрузить обложку профиля
+  Future<String?> uploadCover(String userId, XFile imageFile) async {
     try {
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final ref = _storage.ref().child('$type/$userId/$fileName');
-      await ref.putFile(File(filePath));
-      return await ref.getDownloadURL();
-    } on Exception {
-      // Логирование:'Ошибка загрузки медиа: $e');
+      final file = File(imageFile.path);
+      final fileName = 'covers/$userId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      
+      final ref = _storage.ref().child(fileName);
+      final uploadTask = ref.putFile(file);
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // Обновляем URL обложки в профиле
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'coverUrl': downloadUrl,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ Обложка загружена: $downloadUrl');
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('❌ Ошибка загрузки обложки: $e');
+      rethrow;
+    }
+  }
+
+  /// Загрузить видео-презентацию
+  Future<String?> uploadVideoPresentation(String userId, XFile videoFile) async {
+    try {
+      final file = File(videoFile.path);
+      
+      // Сжимаем видео до 30 секунд
+      final compressedVideo = await VideoCompress.compressVideo(
+        file.path,
+        quality: VideoQuality.MediumQuality,
+        deleteOrigin: false,
+        includeAudio: true,
+      );
+
+      if (compressedVideo == null) {
+        throw Exception('Ошибка сжатия видео');
+      }
+
+      final fileName = 'videos/$userId/${DateTime.now().millisecondsSinceEpoch}.mp4';
+      final ref = _storage.ref().child(fileName);
+      final uploadTask = ref.putFile(File(compressedVideo.path));
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // Обновляем URL видео в профиле
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'videoPresentation': downloadUrl,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ Видео-презентация загружена: $downloadUrl');
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('❌ Ошибка загрузки видео-презентации: $e');
+      rethrow;
+    }
+  }
+
+  /// Добавить социальную ссылку
+  Future<void> addSocialLink(String userId, SocialLink socialLink) async {
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'socialLinks': FieldValue.arrayUnion([socialLink.toMap()]),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ Социальная ссылка добавлена');
+    } catch (e) {
+      debugPrint('❌ Ошибка добавления социальной ссылки: $e');
+      rethrow;
+    }
+  }
+
+  /// Удалить социальную ссылку
+  Future<void> removeSocialLink(String userId, SocialLink socialLink) async {
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'socialLinks': FieldValue.arrayRemove([socialLink.toMap()]),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ Социальная ссылка удалена');
+    } catch (e) {
+      debugPrint('❌ Ошибка удаления социальной ссылки: $e');
+      rethrow;
+    }
+  }
+
+  /// Обновить настройки видимости
+  Future<void> updateVisibilitySettings(
+    String userId,
+    ProfileVisibilitySettings settings,
+  ) async {
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'visibilitySettings': settings.toMap(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ Настройки видимости обновлены');
+    } catch (e) {
+      debugPrint('❌ Ошибка обновления настроек видимости: $e');
+      rethrow;
+    }
+  }
+
+  /// Обновить настройки конфиденциальности
+  Future<void> updatePrivacySettings(
+    String userId,
+    PrivacySettings settings,
+  ) async {
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'privacySettings': settings.toMap(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ Настройки конфиденциальности обновлены');
+    } catch (e) {
+      debugPrint('❌ Ошибка обновления настроек конфиденциальности: $e');
+      rethrow;
+    }
+  }
+
+  /// Обновить настройки уведомлений
+  Future<void> updateNotificationSettings(
+    String userId,
+    NotificationSettings settings,
+  ) async {
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'notificationSettings': settings.toMap(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ Настройки уведомлений обновлены');
+    } catch (e) {
+      debugPrint('❌ Ошибка обновления настроек уведомлений: $e');
+      rethrow;
+    }
+  }
+
+  /// Обновить настройки внешнего вида
+  Future<void> updateAppearanceSettings(
+    String userId,
+    AppearanceSettings settings,
+  ) async {
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'appearanceSettings': settings.toMap(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ Настройки внешнего вида обновлены');
+    } catch (e) {
+      debugPrint('❌ Ошибка обновления настроек внешнего вида: $e');
+      rethrow;
+    }
+  }
+
+  /// Обновить настройки безопасности
+  Future<void> updateSecuritySettings(
+    String userId,
+    SecuritySettings settings,
+  ) async {
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'securitySettings': settings.toMap(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ Настройки безопасности обновлены');
+    } catch (e) {
+      debugPrint('❌ Ошибка обновления настроек безопасности: $e');
+      rethrow;
+    }
+  }
+
+  /// Переключить PRO-аккаунт
+  Future<void> toggleProAccount(String userId, bool isPro) async {
+    try {
+      await _firestore
+          .collection('user_profiles')
+          .doc(userId)
+          .update({
+        'isProAccount': isPro,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ PRO-аккаунт ${isPro ? 'включен' : 'отключен'}');
+    } catch (e) {
+      debugPrint('❌ Ошибка переключения PRO-аккаунта: $e');
+      rethrow;
+    }
+  }
+
+  /// Проверить доступность username
+  Future<bool> isUsernameAvailable(String username) async {
+    try {
+      final query = await _firestore
+          .collection('user_profiles')
+          .where('username', isEqualTo: username)
+          .get();
+
+      return query.docs.isEmpty;
+    } catch (e) {
+      debugPrint('❌ Ошибка проверки username: $e');
+      return false;
+    }
+  }
+
+  /// Получить предпросмотр профиля для других пользователей
+  Future<Map<String, dynamic>?> getProfilePreview(String userId, String viewerId) async {
+    try {
+      final profile = await getUserProfile(userId);
+      if (profile == null) return null;
+
+      final visibilitySettings = profile.visibilitySettings;
+      if (visibilitySettings == null) {
+        // Если настройки не заданы, показываем базовую информацию
+        return {
+          'id': profile.id,
+          'displayName': profile.displayName,
+          'username': profile.username,
+          'avatarUrl': profile.avatarUrl,
+          'bio': profile.bio,
+          'isProAccount': profile.isProAccount,
+          'isVerified': profile.isVerified,
+        };
+      }
+
+      final preview = <String, dynamic>{
+        'id': profile.id,
+        'displayName': profile.displayName,
+        'username': profile.username,
+        'avatarUrl': profile.avatarUrl,
+        'isProAccount': profile.isProAccount,
+        'isVerified': profile.isVerified,
+      };
+
+      // Добавляем поля в зависимости от настроек видимости
+      if (visibilitySettings.showCity && profile.city != null) {
+        preview['city'] = profile.city;
+      }
+      if (profile.bio != null) {
+        preview['bio'] = profile.bio;
+      }
+      if (visibilitySettings.showPhone && profile.phone != null) {
+        preview['phone'] = profile.phone;
+      }
+      if (visibilitySettings.showEmail && profile.email != null) {
+        preview['email'] = profile.email;
+      }
+
+      return preview;
+    } catch (e) {
+      debugPrint('❌ Ошибка получения предпросмотра профиля: $e');
       return null;
     }
   }
 
-  /// Удалить медиа файл
-  static Future<bool> deleteMedia(String url) async {
+  /// Отправить подтверждение изменений по email
+  Future<void> sendEmailConfirmation(String userId, String changes) async {
     try {
-      final ref = _storage.refFromURL(url);
-      await ref.delete();
-      return true;
-    } on Exception {
-      // Логирование:'Ошибка удаления медиа: $e');
-      return false;
+      // TODO: Интеграция с email сервисом
+      debugPrint('📧 Отправка подтверждения изменений: $changes');
+    } catch (e) {
+      debugPrint('❌ Ошибка отправки подтверждения: $e');
     }
+  }
+
+  /// Отправить подтверждение изменений по SMS
+  Future<void> sendSMSConfirmation(String phone, String changes) async {
+    try {
+      // TODO: Интеграция с SMS сервисом
+      debugPrint('📱 Отправка SMS подтверждения: $changes');
+    } catch (e) {
+      debugPrint('❌ Ошибка отправки SMS: $e');
+    }
+  }
+
+  /// Создать профиль из базового пользователя
+  Future<UserProfileEnhanced> createProfileFromUser(AppUser user) async {
+    final profile = UserProfileEnhanced(
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+      avatarUrl: user.photoURL,
+      createdAt: user.createdAt,
+      updatedAt: DateTime.now(),
+      lastLoginAt: user.lastLoginAt,
+      isActive: user.isActive,
+      role: user.role,
+      visibilitySettings: const ProfileVisibilitySettings(),
+      privacySettings: const PrivacySettings(),
+      notificationSettings: const NotificationSettings(),
+      appearanceSettings: const AppearanceSettings(),
+      securitySettings: const SecuritySettings(),
+    );
+
+    await createOrUpdateProfile(profile);
+    return profile;
   }
 }

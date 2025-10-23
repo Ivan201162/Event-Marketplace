@@ -99,11 +99,6 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
                         final review = _reviews[index];
                         return ReviewCard(
                           review: review,
-                          onEdit:
-                              review.canEdit ? () => _editReview(review) : null,
-                          onDelete: review.canDelete
-                              ? () => _deleteReview(review)
-                              : null,
                         );
                       },
                     ),

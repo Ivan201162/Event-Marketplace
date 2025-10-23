@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/idea.dart';
 import '../models/idea_collection.dart';
 
 /// Виджет коллекции идей
@@ -69,9 +68,9 @@ class IdeaCollectionWidget extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Описание
-                if (collection.description.isNotEmpty) ...[
+                if (collection.description?.isNotEmpty == true) ...[
                   Text(
-                    collection.description,
+                    collection.description!,
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -314,9 +313,9 @@ class IdeaCollectionGridTile extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // Описание
-                if (collection.description.isNotEmpty) ...[
+                if (collection.description?.isNotEmpty == true) ...[
                   Text(
-                    collection.description,
+                    collection.description!,
                     style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

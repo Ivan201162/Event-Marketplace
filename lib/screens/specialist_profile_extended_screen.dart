@@ -61,8 +61,8 @@ class _SpecialistProfileExtendedScreenState
       // Загружаем данные параллельно
       final results = await Future.wait([
         _specialistService.getSpecialistById(widget.specialistId),
-        _reviewService.getSpecialistReviews(widget.specialistId, limit: 10),
-        _bookingService.getSpecialistBookings(widget.specialistId, limit: 5),
+        _reviewService.getSpecialistReviews(widget.specialistId),
+        _bookingService.getSpecialistBookings(widget.specialistId),
       ]);
 
       setState(() {

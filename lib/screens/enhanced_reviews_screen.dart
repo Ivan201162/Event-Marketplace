@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/review.dart';
+import '../models/booking.dart';
 import '../providers/review_providers.dart';
 import '../services/enhanced_review_service.dart';
 import '../widgets/review_card.dart';
@@ -188,8 +189,6 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
                 padding: const EdgeInsets.only(bottom: 12),
                 child: ReviewCard(
                   review: review,
-                  onEdit: () => _editReview(review),
-                  onDelete: () => _deleteReview(review),
                 ),
               );
             },
@@ -425,7 +424,7 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
                 ...recentReviews.map(
                   (review) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: ReviewCard(review: review, compact: true),
+                    child: ReviewCard(review: review),
                   ),
                 ),
               ],
@@ -549,8 +548,22 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) => CreateReviewScreen(
-          specialistId: widget.specialistId,
-          specialistName: widget.specialistName,
+          booking: Booking(
+            id: 'temp_booking',
+            specialistId: widget.specialistId,
+            specialistName: widget.specialistName,
+            clientId: 'current_user',
+            clientName: 'Current User',
+            service: 'Service',
+            date: DateTime.now(),
+            time: '12:00',
+            duration: 2,
+            totalPrice: 1000,
+            notes: '',
+            status: BookingStatus.completed,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
         ),
       ),
     );
@@ -561,9 +574,22 @@ class _EnhancedReviewsScreenState extends ConsumerState<EnhancedReviewsScreen>
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) => CreateReviewScreen(
-          specialistId: widget.specialistId,
-          specialistName: widget.specialistName,
-          existingReview: review,
+          booking: Booking(
+            id: 'temp_booking',
+            specialistId: widget.specialistId,
+            specialistName: widget.specialistName,
+            clientId: 'current_user',
+            clientName: 'Current User',
+            service: 'Service',
+            date: DateTime.now(),
+            time: '12:00',
+            duration: 2,
+            totalPrice: 1000,
+            notes: '',
+            status: BookingStatus.completed,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
         ),
       ),
     );

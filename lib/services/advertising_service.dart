@@ -28,7 +28,7 @@ class AdvertisingService {
 
       final advertisement = Advertisement(
         id: adId,
-        advertiserId: advertiserId,
+        userId: advertiserId,
         type: type,
         title: title,
         description: description,

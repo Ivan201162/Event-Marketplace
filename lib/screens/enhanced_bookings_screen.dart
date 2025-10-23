@@ -223,8 +223,6 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                 padding: const EdgeInsets.only(bottom: 12),
                 child: BookingCard(
                   booking: booking,
-                  showActions: true,
-                  onCancel: () => _cancelBooking(booking),
                   onEdit: () => _editBooking(booking),
                 ),
               );
@@ -294,10 +292,6 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                 padding: const EdgeInsets.only(bottom: 12),
                 child: BookingCard(
                   booking: booking,
-                  showActions: true,
-                  onApprove: () => _approveBooking(booking),
-                  onReject: () => _rejectBooking(booking),
-                  onComplete: () => _completeBooking(booking),
                 ),
               );
             },

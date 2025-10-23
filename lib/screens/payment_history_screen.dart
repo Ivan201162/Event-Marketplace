@@ -38,16 +38,8 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
       });
 
       final payments = widget.isSpecialist
-          ? await _paymentService.getSpecialistPayments(
-              widget.userId,
-              status: _selectedStatus,
-              type: _selectedType,
-            )
-          : await _paymentService.getUserPayments(
-              widget.userId,
-              status: _selectedStatus,
-              type: _selectedType,
-            );
+          ? await _paymentService.getSpecialistPayments(widget.userId)
+          : await _paymentService.getUserPayments(widget.userId);
 
       setState(() {
         _payments = payments;
