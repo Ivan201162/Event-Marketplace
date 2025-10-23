@@ -459,14 +459,19 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
       return _buildAuthRequiredState();
     }
 
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('posts')
-          .orderBy('createdAt', descending: true)
-          .snapshots(),
-      builder: (context, snapshot) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        // Обновление данных
+        setState(() {});
+      },
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .orderBy('createdAt', descending: true)
+            .snapshots(),
+        builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return _buildLoadingState();
+          return _buildShimmerLoadingState();
         }
 
         if (snapshot.hasError) {
@@ -489,6 +494,7 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
           },
         );
       },
+      ),
     );
   }
 
@@ -863,6 +869,65 @@ class _FeedScreenEnhancedState extends ConsumerState<FeedScreenEnhanced>
           ),
         ],
       ),
+    );
+  }
+
+  /// Shimmer загрузка для постов
+  Widget _buildShimmerLoadingState() {
+    return ListView.builder(
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Shimmer для заголовка
+              Container(
+                height: 20,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Shimmer для текста
+              Container(
+                height: 16,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Shimmer для изображения
+              Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
