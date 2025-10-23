@@ -30,10 +30,8 @@ class EventOrganizerService {
       return null;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get organizer by user ID: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_organizer_by_user_id',
-        additionalData: {'userId': userId},
+        'Failed to get organizer by user ID: $e',
+        stackTrace,
       );
       return null;
     }
@@ -53,10 +51,8 @@ class EventOrganizerService {
       return null;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get organizer by ID: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_organizer_by_id',
-        additionalData: {'organizerId': organizerId},
+        'Failed to get organizer by ID: $e',
+        stackTrace,
       );
       return null;
     }
@@ -111,16 +107,8 @@ class EventOrganizerService {
       return organizers;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get all organizers: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_all_organizers',
-        additionalData: {
-          'city': city,
-          'eventTypes': eventTypes,
-          'specializations': specializations,
-          'minRating': minRating,
-          'isVerified': isVerified,
-        },
+        'Failed to get all organizers: $e',
+        stackTrace,
       );
       return [];
     }
@@ -190,10 +178,8 @@ class EventOrganizerService {
       return organizer;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to create organizer: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'create_organizer',
+        'Failed to create organizer: $e',
+        stackTrace,
       );
       return null;
     }
@@ -219,10 +205,8 @@ class EventOrganizerService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to update organizer: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'update_organizer',
-        additionalData: {'organizerId': organizerId},
+        'Failed to update organizer: $e',
+        stackTrace,
       );
       return false;
     }
@@ -242,10 +226,8 @@ class EventOrganizerService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to delete organizer: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'delete_organizer',
-        additionalData: {'organizerId': organizerId},
+        'Failed to delete organizer: $e',
+        stackTrace,
       );
       return false;
     }
@@ -329,18 +311,8 @@ class EventOrganizerService {
       return organizers.take(limit).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to search organizers: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'search_organizers',
-        additionalData: {
-          'query': query,
-          'city': city,
-          'eventTypes': eventTypes,
-          'specializations': specializations,
-          'minRating': minRating,
-          'maxRating': maxRating,
-          'isVerified': isVerified,
-        },
+        'Failed to search organizers: $e',
+        stackTrace,
       );
       return [];
     }
@@ -366,10 +338,8 @@ class EventOrganizerService {
       return snapshot.docs.map(EventOrganizer.fromDoc).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get top organizers: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_top_organizers',
-        additionalData: {'city': city, 'limit': limit},
+        'Failed to get top organizers: $e',
+        stackTrace,
       );
       return [];
     }
@@ -387,10 +357,8 @@ class EventOrganizerService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to update organizer rating: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'update_organizer_rating',
-        additionalData: {'organizerId': organizerId, 'newRating': newRating},
+        'Failed to update organizer rating: $e',
+        stackTrace,
       );
       return false;
     }
@@ -417,10 +385,8 @@ class EventOrganizerService {
       return true;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to increment event count: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'increment_event_count',
-        additionalData: {'organizerId': organizerId, 'completed': completed},
+        'Failed to increment event count: $e',
+        stackTrace,
       );
       return false;
     }
@@ -468,10 +434,8 @@ class EventOrganizerService {
       };
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get organizer stats: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_organizer_stats',
-        additionalData: {'organizerId': organizerId},
+        'Failed to get organizer stats: $e',
+        stackTrace,
       );
       return {};
     }
@@ -484,10 +448,8 @@ class EventOrganizerService {
       return organizer != null && organizer.isActive;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to check if user is organizer: $e',
-        stackTrace: stackTrace.toString(),
-        userId: userId,
-        action: 'is_user_organizer',
+        'Failed to check if user is organizer: $e',
+        stackTrace,
       );
       return false;
     }

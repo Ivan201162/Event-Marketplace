@@ -421,14 +421,14 @@ class NotificationService {
   }
 
   /// Получить поток уведомлений для пользователя
-  Stream<List<AppNotification>> getUserNotificationsStream(String userId) {
+  Stream<List<Map<String, dynamic>>> getUserNotificationsStream(String userId) {
     return _firestore
         .collection('notifications')
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs
-            .map((doc) => AppNotification.fromMap(doc.data()))
+            .map((doc) => doc.data())
             .toList());
   }
 

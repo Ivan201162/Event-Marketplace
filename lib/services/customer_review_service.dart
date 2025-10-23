@@ -472,10 +472,8 @@ class CustomerReviewService {
       return stats;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to calculate and save review stats: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'calculate_and_save_review_stats',
-        additionalData: {'specialistId': specialistId},
+        'Failed to calculate and save review stats: $e',
+        stackTrace,
       );
       return null;
     }
@@ -493,10 +491,8 @@ class CustomerReviewService {
       return snapshot.docs.map(CustomerReview.fromDoc).toList();
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to get user reviews: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'get_user_reviews',
-        additionalData: {'userId': userId},
+        'Failed to get user reviews: $e',
+        stackTrace,
       );
       return [];
     }
@@ -516,10 +512,8 @@ class CustomerReviewService {
       return existingReview.docs.isEmpty;
     } catch (e, stackTrace) {
       await _errorLogger.logError(
-        error: 'Failed to check if user can review: $e',
-        stackTrace: stackTrace.toString(),
-        action: 'can_user_review',
-        additionalData: {'userId': userId, 'orderId': orderId},
+        'Failed to check if user can review: $e',
+        stackTrace,
       );
       return false;
     }

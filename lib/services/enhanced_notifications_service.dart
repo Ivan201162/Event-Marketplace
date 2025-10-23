@@ -288,7 +288,6 @@ class EnhancedNotificationsService {
             notification: RemoteNotification(
               title: notification.title,
               body: notification.body,
-              imageUrl: notification.imageUrl,
             ),
           );
         }
