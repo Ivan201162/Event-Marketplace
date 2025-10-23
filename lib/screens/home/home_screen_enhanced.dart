@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../providers/auth_providers.dart';
 import '../../providers/notification_providers.dart';
+import '../../providers/specialist_providers.dart';
 import '../../services/navigation_service.dart';
 import '../../widgets/animated_skeleton.dart';
 
@@ -316,10 +317,35 @@ class _HomeScreenEnhancedState extends ConsumerState<HomeScreenEnhanced>
           hintText: 'Поиск специалистов...',
           hintStyle: TextStyle(color: Colors.grey[400]),
           prefixIcon: const Icon(Icons.search, color: Color(0xFF1E3A8A)),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.filter_list, color: Color(0xFF1E3A8A)),
-            onPressed: () {
-              NavigationService.safeGo(context, '/search');
+          suffixIcon: Consumer(
+            builder: (context, ref, child) {
+              final hasActiveFilters = ref.watch(currentSearchFiltersProvider).hasActiveFilters;
+              return Stack(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.filter_list,
+                      color: hasActiveFilters ? Colors.orange : const Color(0xFF1E3A8A),
+                    ),
+                    onPressed: () {
+                      NavigationService.safeGo(context, '/search');
+                    },
+                  ),
+                  if (hasActiveFilters)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: Colors.orange,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                ],
+              );
             },
           ),
           border: InputBorder.none,
