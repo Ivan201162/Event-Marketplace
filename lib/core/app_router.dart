@@ -13,10 +13,15 @@ import '../screens/notifications/notifications_screen.dart';
 import '../screens/profile/edit_profile_screen.dart';
 import '../screens/ideas/add_idea_screen.dart';
 import '../screens/ideas/create_idea_screen.dart';
-// import '../screens/chat/chat_screen.dart';
-// import '../screens/chat/chat_list_screen.dart';
+import '../screens/chat/chat_screen.dart';
+import '../screens/chat/chat_list_screen.dart';
 import '../screens/posts/create_post_screen.dart';
 import '../screens/search/search_screen.dart';
+import '../screens/feed/feed_screen.dart';
+import '../screens/requests/requests_screen.dart';
+import '../screens/ideas/ideas_screen.dart';
+import '../screens/profile/profile_screen.dart';
+import '../screens/settings/settings_screen.dart';
 
 /// App router provider
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -112,26 +117,61 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const NotificationsScreen(),
       ),
 
-      // Chat routes - temporarily disabled
-      // GoRoute(
-      //   path: '/chats',
-      //   name: 'chats',
-      //   builder: (context, state) => const ChatListScreen(),
-      // ),
-      // GoRoute(
-      //   path: '/chat/:chatId',
-      //   name: 'chat',
-      //   builder: (context, state) {
-      //     final chatId = state.pathParameters['chatId']!;
-      //     final extra = state.extra as Map<String, dynamic>?;
-      //     return ChatScreen(
-      //       chatId: chatId,
-      //       otherUserId: extra?['otherUserId'],
-      //       otherUserName: extra?['otherUserName'],
-      //       otherUserAvatar: extra?['otherUserAvatar'],
-      //     );
-      //   },
-      // ),
+      // Chat routes
+      GoRoute(
+        path: '/chats',
+        name: 'chats',
+        builder: (context, state) => const ChatListScreen(),
+      ),
+      GoRoute(
+        path: '/chat/:chatId',
+        name: 'chat',
+        builder: (context, state) {
+          final chatId = state.pathParameters['chatId']!;
+          final extra = state.extra as Map<String, dynamic>?;
+          return ChatScreen(
+            chatId: chatId,
+            otherUserId: extra?['otherUserId'],
+            otherUserName: extra?['otherUserName'],
+            otherUserAvatar: extra?['otherUserAvatar'],
+          );
+        },
+      ),
+
+      // Feed routes
+      GoRoute(
+        path: '/feed',
+        name: 'feed',
+        builder: (context, state) => const FeedScreen(),
+      ),
+
+      // Requests routes
+      GoRoute(
+        path: '/requests',
+        name: 'requests',
+        builder: (context, state) => const RequestsScreen(),
+      ),
+
+      // Ideas routes
+      GoRoute(
+        path: '/ideas',
+        name: 'ideas',
+        builder: (context, state) => const IdeasScreen(),
+      ),
+
+      // Profile routes
+      GoRoute(
+        path: '/profile',
+        name: 'profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
+
+      // Settings routes
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
 
       // Main app routes
       GoRoute(
