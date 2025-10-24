@@ -1,375 +1,190 @@
 import 'package:flutter/material.dart';
-import '../models/message.dart';
 
-/// Виджет для отображения сообщения в чате
+import '../models/chat_message.dart';
+
+/// Пузырёк сообщения в чате
 class MessageBubble extends StatelessWidget {
+  final ChatMessage message;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  final VoidCallback? onReact;
+
   const MessageBubble({
     super.key,
     required this.message,
-    required this.isFromCurrentUser,
-    this.onTap,
-    this.onLongPress,
+    this.onEdit,
+    this.onDelete,
+    this.onReact,
   });
-  final Message message;
-  final bool isFromCurrentUser;
-  final VoidCallback? onTap;
-  final VoidCallback? onLongPress;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 4),
-          child: Row(
-            mainAxisAlignment: isFromCurrentUser
-                ? MainAxisAlignment.end
-                : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              if (!isFromCurrentUser) ...[
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.grey[300],
-                  child: Text(
-                    message.senderName?.isNotEmpty ?? false
-                        ? message.senderName![0].toUpperCase()
-                        : '?',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-                const SizedBox(width: 8),
-              ],
-              Flexible(
-                child: Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.7),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isFromCurrentUser
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey[200],
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(20),
-                      topRight: const Radius.circular(20),
-                      bottomLeft: Radius.circular(isFromCurrentUser ? 20 : 4),
-                      bottomRight: Radius.circular(isFromCurrentUser ? 4 : 20),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (!isFromCurrentUser)
-                        Text(
-                          message.senderName ?? 'Пользователь',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      if (!isFromCurrentUser) const SizedBox(height: 4),
-                      _buildMessageContent(context),
-                      const SizedBox(height: 4),
-                      _buildMessageFooter(context),
-                    ],
-                  ),
-                ),
-              ),
-              if (isFromCurrentUser) ...[
-                const SizedBox(width: 8),
-                CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.grey[300],
-                  child: Text(
-                    message.senderName?.isNotEmpty ?? false
-                        ? message.senderName![0].toUpperCase()
-                        : '?',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildMessageContent(BuildContext context) {
-    switch (message.type) {
-      case MessageType.text:
-        return Text(
-          message.text ?? '',
-          style: TextStyle(
-              color: isFromCurrentUser ? Colors.white : Colors.black87,
-              fontSize: 16),
-        );
-      case MessageType.image:
-        return _buildImageMessage(context);
-      case MessageType.video:
-        return _buildVideoMessage(context);
-      case MessageType.audio:
-        return _buildAudioMessage(context);
-      case MessageType.document:
-        return _buildFileMessage(context);
-      case MessageType.location:
-        return _buildLocationMessage(context);
-      case MessageType.attachment:
-        return _buildAttachmentMessage(context);
-      default:
-        return _buildAttachmentMessage(context);
-    }
-  }
-
-  Widget _buildImageMessage(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget build(BuildContext context) {
+    final isMe = message.senderId == 'current_user_id'; // TODO: Получить ID текущего пользователя
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
-          if (message.mediaUrl != null)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                message.mediaUrl!,
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 200,
-                  height: 200,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.broken_image),
-                ),
-              ),
+          if (!isMe) ...[
+            CircleAvatar(
+              radius: 16,
+              backgroundImage: message.senderAvatar != null
+                  ? NetworkImage(message.senderAvatar!)
+                  : null,
+              child: message.senderAvatar == null
+                  ? const Icon(Icons.person, size: 16)
+                  : null,
             ),
-          if ((message.text ?? '').isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text(
-              message.text ?? '',
-              style: TextStyle(
-                  color: isFromCurrentUser ? Colors.white : Colors.black87,
-                  fontSize: 16),
-            ),
+            const SizedBox(width: 8),
           ],
-        ],
-      );
-
-  Widget _buildVideoMessage(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (message.mediaUrl != null)
-            Container(
-              width: 200,
-              height: 150,
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.7,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                  color: Colors.black, borderRadius: BorderRadius.circular(8)),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Icon(
-                      Icons.play_circle_filled,
-                      size: 48,
-                      color: Colors.white.withValues(alpha: 0.8),
-                    ),
-                  ),
-                  // TODO: Add thumbnail support if needed
-                ],
+                color: isMe 
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[300],
+                borderRadius: BorderRadius.circular(20).copyWith(
+                  bottomLeft: isMe ? const Radius.circular(20) : const Radius.circular(4),
+                  bottomRight: isMe ? const Radius.circular(4) : const Radius.circular(20),
+                ),
               ),
-            ),
-          if ((message.text ?? '').isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text(
-              message.text ?? '',
-              style: TextStyle(
-                  color: isFromCurrentUser ? Colors.white : Colors.black87,
-                  fontSize: 16),
-            ),
-          ],
-        ],
-      );
-
-  Widget _buildAudioMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.play_arrow,
-                color: isFromCurrentUser ? Colors.white : Colors.black87),
-            const SizedBox(width: 8),
-            Icon(Icons.audiotrack,
-                color: isFromCurrentUser ? Colors.white : Colors.black87),
-            const SizedBox(width: 8),
-            Text(
-              message.text ?? '',
-              style: TextStyle(
-                  color: isFromCurrentUser ? Colors.white : Colors.black87,
-                  fontSize: 14),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildFileMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(_getFileIcon(),
-                color: isFromCurrentUser ? Colors.white : Colors.black87),
-            const SizedBox(width: 8),
-            Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Текст сообщения
                   Text(
-                    message.fileName ?? (message.text ?? ''),
+                    message.text,
                     style: TextStyle(
-                      color: isFromCurrentUser ? Colors.white : Colors.black87,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                      color: isMe ? Colors.white : Colors.black87,
+                      fontSize: 16,
                     ),
                   ),
-                  if (message.fileSize != null)
-                    Text(
-                      message.formattedFileSize,
-                      style: TextStyle(
-                        color: isFromCurrentUser
-                            ? Colors.white70
-                            : Colors.grey[600],
-                        fontSize: 12,
-                      ),
+                  
+                  // Вложения
+                  if (message.attachments.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    ...message.attachments.map((attachment) => 
+                      _AttachmentWidget(attachment: attachment)
                     ),
+                  ],
+                  
+                  // Время и статус
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _formatTime(message.createdAt),
+                        style: TextStyle(
+                          color: isMe ? Colors.white70 : Colors.grey[600],
+                          fontSize: 12,
+                        ),
+                      ),
+                      if (message.isEdited) ...[
+                        const SizedBox(width: 4),
+                        Text(
+                          'изменено',
+                          style: TextStyle(
+                            color: isMe ? Colors.white70 : Colors.grey[600],
+                            fontSize: 12,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  
+                  // Реакции
+                  if (message.reactions.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Wrap(
+                      spacing: 4,
+                      children: message.reactions.entries.map((entry) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            '${entry.key} ${entry.value}',
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ],
               ),
             ),
-          ],
-        ),
-      );
-
-  Widget _buildLocationMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.location_on,
-                color: isFromCurrentUser ? Colors.white : Colors.black87),
+          ),
+          if (isMe) ...[
             const SizedBox(width: 8),
-            Text(
-              message.text ?? '',
-              style: TextStyle(
-                  color: isFromCurrentUser ? Colors.white : Colors.black87,
-                  fontSize: 14),
+            CircleAvatar(
+              radius: 16,
+              backgroundImage: message.senderAvatar != null
+                  ? NetworkImage(message.senderAvatar!)
+                  : null,
+              child: message.senderAvatar == null
+                  ? const Icon(Icons.person, size: 16)
+                  : null,
             ),
           ],
-        ),
-      );
+        ],
+      ),
+    );
+  }
 
-  Widget _buildSystemMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.blue[50],
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.blue[200]!),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.info, color: Colors.blue[600], size: 16),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(
-                message.text ?? '',
-                style: TextStyle(
-                    color: Colors.blue[800],
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic),
-              ),
-            ),
-          ],
-        ),
-      );
+  String _formatTime(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+    
+    if (difference.inDays > 0) {
+      return '${dateTime.day}.${dateTime.month} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+    } else if (difference.inHours > 0) {
+      return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}м назад';
+    } else {
+      return 'сейчас';
+    }
+  }
+}
 
-  Widget _buildAttachmentMessage(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            color: Colors.grey[100], borderRadius: BorderRadius.circular(8)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.attachment,
-                color: isFromCurrentUser ? Colors.white : Colors.black87),
-            const SizedBox(width: 8),
-            Text(
-              message.text ?? '',
-              style: TextStyle(
-                  color: isFromCurrentUser ? Colors.white : Colors.black87,
-                  fontSize: 14),
-            ),
-          ],
-        ),
-      );
+/// Виджет вложения
+class _AttachmentWidget extends StatelessWidget {
+  final String attachment;
 
-  Widget _buildMessageFooter(BuildContext context) => Row(
+  const _AttachmentWidget({required this.attachment});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            _formatTime(message.createdAt),
-            style: TextStyle(
-              color: isFromCurrentUser ? Colors.white70 : Colors.grey[600],
-              fontSize: 12,
+          const Icon(Icons.attach_file, size: 16),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              attachment,
+              style: const TextStyle(fontSize: 12),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (isFromCurrentUser) ...[
-            const SizedBox(width: 4),
-            Icon(_getStatusIcon(), size: 16, color: _getStatusColor()),
-          ],
-          // TODO: Add edited status if needed
         ],
-      );
-
-  IconData _getFileIcon() {
-    final fileName = message.fileName?.toLowerCase() ?? '';
-
-    if (fileName.endsWith('.pdf')) return Icons.picture_as_pdf;
-    if (fileName.endsWith('.doc') || fileName.endsWith('.docx')) {
-      return Icons.description;
-    }
-    if (fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) {
-      return Icons.table_chart;
-    }
-    if (fileName.endsWith('.ppt') || fileName.endsWith('.pptx')) {
-      return Icons.slideshow;
-    }
-    if (fileName.endsWith('.zip') || fileName.endsWith('.rar')) {
-      return Icons.archive;
-    }
-    if (fileName.endsWith('.txt')) return Icons.text_snippet;
-
-    return Icons.insert_drive_file;
-  }
-
-  IconData _getStatusIcon() {
-    // TODO: Implement message status logic
-    return Icons.done;
-  }
-
-  Color _getStatusColor() {
-    // TODO: Implement message status logic
-    return Colors.grey;
-  }
-
-  String _formatTime(DateTime time) {
-    final now = DateTime.now();
-    final difference = now.difference(time);
-
-    if (difference.inDays > 0) {
-      return '${time.day}.${time.month} ${time.hour}:${time.minute.toString().padLeft(2, '0')}';
-    } else {
-      return '${time.hour}:${time.minute.toString().padLeft(2, '0')}';
-    }
+      ),
+    );
   }
 }

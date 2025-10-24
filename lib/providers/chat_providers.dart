@@ -1,171 +1,169 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/chat.dart';
 import '../models/chat_message.dart';
 import '../services/chat_service.dart';
 
-/// Сервис чатов провайдер
+/// Провайдер сервиса чатов
 final chatServiceProvider = Provider<ChatService>((ref) {
   return ChatService();
 });
 
-/// Провайдер для списка чатов пользователя
-final userChatsProvider = StreamProvider<List<Chat>>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return Stream.value([]);
-
-  final chatService = ref.read(chatServiceProvider);
-  return chatService.getUserChats(user.uid);
+/// Провайдер состояния чатов
+final chatsProvider = StateNotifierProvider<ChatsNotifier, AsyncValue<List<Chat>>>((ref) {
+  return ChatsNotifier(ref.read(chatServiceProvider));
 });
 
-/// Провайдер для сообщений конкретного чата
-final chatMessagesProvider =
-    StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
-  final chatService = ref.read(chatServiceProvider);
-  return chatService.getChatMessages(chatId);
+/// Провайдер сообщений чата
+final chatMessagesProvider = StateNotifierProvider.family<ChatMessagesNotifier, AsyncValue<List<ChatMessage>>, String>((ref, chatId) {
+  return ChatMessagesNotifier(ref.read(chatServiceProvider), chatId);
 });
 
-/// Провайдер для информации о конкретном чате
-final chatProvider = FutureProvider.family<Chat?, String>((ref, chatId) {
-  final chatService = ref.read(chatServiceProvider);
-  return chatService.getChat(chatId);
-});
+/// Notifier для управления состоянием чатов
+class ChatsNotifier extends StateNotifier<AsyncValue<List<Chat>>> {
+  final ChatService _chatService;
 
-/// Провайдер для общего количества непрочитанных сообщений
-final totalUnreadCountProvider = StreamProvider<int>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return Stream.value(0);
-
-  final chatService = ref.read(chatServiceProvider);
-
-  // Создаем периодический стрим для обновления счетчика
-  return Stream.periodic(const Duration(seconds: 30), (_) {
-    return chatService.getTotalUnreadCount(user.uid);
-  }).asyncMap((_) => chatService.getTotalUnreadCount(user.uid));
-});
-
-/// Провайдер для состояния отправки сообщения
-final messageSendingProvider =
-    NotifierProvider<MessageSendingNotifier, bool>(() {
-  return MessageSendingNotifier();
-});
-
-/// Notifier для состояния отправки сообщения
-class MessageSendingNotifier extends Notifier<bool> {
-  @override
-  bool build() => false;
-
-  void setSending(bool isSending) {
-    state = isSending;
-  }
-}
-
-/// Провайдер для выбранного чата
-final selectedChatProvider =
-    NotifierProvider<SelectedChatNotifier, String?>(() {
-  return SelectedChatNotifier();
-});
-
-/// Notifier для выбранного чата
-class SelectedChatNotifier extends Notifier<String?> {
-  @override
-  String? build() => null;
-
-  void selectChat(String? chatId) {
-    state = chatId;
-  }
-}
-
-/// Провайдер для поиска в чатах
-final chatSearchProvider = NotifierProvider<ChatSearchNotifier, String>(() {
-  return ChatSearchNotifier();
-});
-
-/// Notifier для поиска в чатах
-class ChatSearchNotifier extends Notifier<String> {
-  @override
-  String build() => '';
-
-  void setSearchQuery(String query) {
-    state = query;
+  ChatsNotifier(this._chatService) : super(const AsyncValue.loading()) {
+    _loadInitialChats();
   }
 
-  void clearSearch() {
-    state = '';
+  Future<void> _loadInitialChats() async {
+    try {
+      state = const AsyncValue.loading();
+      final chats = await _chatService.getChats();
+      state = AsyncValue.data(chats);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
   }
-}
 
-/// Провайдер для отфильтрованных чатов
-final filteredChatsProvider = Provider<List<Chat>>((ref) {
-  final chats = ref.watch(userChatsProvider).value ?? [];
-  final searchQuery = ref.watch(chatSearchProvider);
+  Future<void> refreshChats() async {
+    await _loadInitialChats();
+  }
 
-  if (searchQuery.isEmpty) return chats;
-
-  return chats.where((chat) {
-    return chat.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-        (chat.lastMessageContent
-                ?.toLowerCase()
-                .contains(searchQuery.toLowerCase()) ??
-            false);
-  }).toList();
-});
-
-/// Провайдер для чата с пользователем (для отображения информации о собеседнике)
-final chatWithUserProvider =
-    FutureProvider.family<Map<String, dynamic>?, String>((ref, chatId) async {
-  final chat = await ref.watch(chatProvider(chatId).future);
-  if (chat == null) return null;
-
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) return null;
-
-  // Для прямых чатов получаем информацию о другом участнике
-  if (chat.isDirectChat) {
-    final otherUserId = chat.getOtherParticipantId(user.uid);
-    if (otherUserId != null) {
+  Future<void> loadMoreChats() async {
+    if (state.hasValue) {
       try {
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(otherUserId)
-            .get();
-
-        if (userDoc.exists) {
-          final userData = userDoc.data()!;
-          return {
-            'id': otherUserId,
-            'name': userData['name'] ?? 'Пользователь',
-            'avatarUrl': userData['avatarUrl'],
-            'isOnline': userData['isOnline'] ?? false,
-          };
-        }
-      } catch (e) {
-        // Игнорируем ошибки получения данных пользователя
+        final currentChats = state.value!;
+        final newChats = await _chatService.getMoreChats(currentChats.length);
+        state = AsyncValue.data([...currentChats, ...newChats]);
+      } catch (error, stackTrace) {
+        state = AsyncValue.error(error, stackTrace);
       }
     }
   }
 
-  return {
-    'id': chat.id,
-    'name': chat.name,
-    'avatarUrl': null,
-    'isOnline': false,
-  };
-});
+  Future<void> searchChats(String query) async {
+    try {
+      state = const AsyncValue.loading();
+      final chats = await _chatService.searchChats(query);
+      state = AsyncValue.data(chats);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Провайдер для состояния загрузки чатов
-final chatsLoadingProvider = NotifierProvider<ChatsLoadingNotifier, bool>(() {
-  return ChatsLoadingNotifier();
-});
+  Future<void> filterChats(String filter) async {
+    try {
+      state = const AsyncValue.loading();
+      final chats = await _chatService.filterChats(filter);
+      state = AsyncValue.data(chats);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
 
-/// Notifier для состояния загрузки чатов
-class ChatsLoadingNotifier extends Notifier<bool> {
-  @override
-  bool build() => false;
+  Future<void> createChat(String otherUserId, String otherUserName, String? otherUserAvatar) async {
+    try {
+      await _chatService.createChat(otherUserId, otherUserName, otherUserAvatar);
+      await refreshChats();
+    } catch (error) {
+      // Обработка ошибки создания чата
+      rethrow;
+    }
+  }
 
-  void setLoading(bool isLoading) {
-    state = isLoading;
+  Future<void> deleteChat(String chatId) async {
+    try {
+      await _chatService.deleteChat(chatId);
+      await refreshChats();
+    } catch (error) {
+      // Обработка ошибки удаления чата
+      rethrow;
+    }
+  }
+}
+
+/// Notifier для управления сообщениями чата
+class ChatMessagesNotifier extends StateNotifier<AsyncValue<List<ChatMessage>>> {
+  final ChatService _chatService;
+  final String _chatId;
+
+  ChatMessagesNotifier(this._chatService, this._chatId) : super(const AsyncValue.loading()) {
+    _loadInitialMessages();
+  }
+
+  Future<void> _loadInitialMessages() async {
+    try {
+      state = const AsyncValue.loading();
+      final messages = await _chatService.getMessages(_chatId);
+      state = AsyncValue.data(messages);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  Future<void> refreshMessages() async {
+    await _loadInitialMessages();
+  }
+
+  Future<void> loadMoreMessages() async {
+    if (state.hasValue) {
+      try {
+        final currentMessages = state.value!;
+        final newMessages = await _chatService.getMoreMessages(_chatId, currentMessages.length);
+        state = AsyncValue.data([...currentMessages, ...newMessages]);
+      } catch (error, stackTrace) {
+        state = AsyncValue.error(error, stackTrace);
+      }
+    }
+  }
+
+  Future<void> sendMessage(String text, {List<String>? attachments}) async {
+    try {
+      await _chatService.sendMessage(_chatId, text, attachments: attachments);
+      await refreshMessages();
+    } catch (error) {
+      // Обработка ошибки отправки сообщения
+      rethrow;
+    }
+  }
+
+  Future<void> editMessage(String messageId, String newText) async {
+    try {
+      await _chatService.editMessage(_chatId, messageId, newText);
+      await refreshMessages();
+    } catch (error) {
+      // Обработка ошибки редактирования сообщения
+      rethrow;
+    }
+  }
+
+  Future<void> deleteMessage(String messageId) async {
+    try {
+      await _chatService.deleteMessage(_chatId, messageId);
+      await refreshMessages();
+    } catch (error) {
+      // Обработка ошибки удаления сообщения
+      rethrow;
+    }
+  }
+
+  Future<void> markAsRead() async {
+    try {
+      await _chatService.markAsRead(_chatId);
+    } catch (error) {
+      // Обработка ошибки отметки как прочитанное
+    }
   }
 }

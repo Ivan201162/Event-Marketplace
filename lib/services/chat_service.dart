@@ -1,7 +1,4 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 
 import '../models/chat.dart';
 import '../models/chat_message.dart';
@@ -9,198 +6,206 @@ import '../models/chat_message.dart';
 /// Сервис для работы с чатами
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Получить список чатов пользователя
-  Stream<List<Chat>> getUserChats(String userId) {
-    return _firestore
-        .collection('chats')
-        .where('participants', arrayContains: userId)
-        .where('isActive', isEqualTo: true)
-        .orderBy('lastMessageAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => Chat.fromFirestore(doc)).toList();
-    });
-  }
-
-  /// Получить список чатов пользователя (Future)
-  Future<List<Chat>> getUserChatsFuture(String userId) async {
-    final snapshot = await _firestore
-        .collection('chats')
-        .where('participants', arrayContains: userId)
-        .where('isActive', isEqualTo: true)
-        .orderBy('lastMessageAt', descending: true)
-        .get();
-
-    return snapshot.docs.map((doc) => Chat.fromFirestore(doc)).toList();
-  }
-
-  /// Получить чат по ID
-  Future<Chat?> getChatById(String chatId) async {
+  /// Получить чаты пользователя
+  Future<List<Chat>> getChats() async {
     try {
-      final doc = await _firestore.collection('chats').doc(chatId).get();
-      if (doc.exists) {
-        return Chat.fromFirestore(doc);
-      }
-      return null;
+      final snapshot = await _firestore
+          .collection('chats')
+          .where('members', arrayContains: 'current_user_id') // TODO: Получить ID текущего пользователя
+          .orderBy('lastMessageAt', descending: true)
+          .limit(20)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Chat.fromMap(data, doc.id);
+      }).toList();
     } catch (e) {
-      return null;
+      throw Exception('Ошибка загрузки чатов: $e');
     }
   }
 
-  /// Получить сообщения чата (Future)
-  Future<List<ChatMessage>> getChatMessagesFuture(String chatId) async {
-    final snapshot = await _firestore
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .orderBy('createdAt', descending: true)
-        .limit(50)
-        .get();
+  /// Загрузить больше чатов
+  Future<List<Chat>> getMoreChats(int offset) async {
+    try {
+      final snapshot = await _firestore
+          .collection('chats')
+          .where('members', arrayContains: 'current_user_id')
+          .orderBy('lastMessageAt', descending: true)
+          .startAfter([offset])
+          .limit(10)
+          .get();
 
-    return snapshot.docs.map((doc) => ChatMessage.fromFirestore(doc)).toList();
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Chat.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка загрузки дополнительных чатов: $e');
+    }
   }
 
-  /// Получить поток чатов пользователя
-  Stream<List<Chat>> getUserChatsStream(String userId) {
-    return getUserChats(userId);
+  /// Поиск чатов
+  Future<List<Chat>> searchChats(String query) async {
+    try {
+      final snapshot = await _firestore
+          .collection('chats')
+          .where('members', arrayContains: 'current_user_id')
+          .where('lastMessage', isGreaterThanOrEqualTo: query)
+          .where('lastMessage', isLessThan: query + '\uf8ff')
+          .orderBy('lastMessage')
+          .orderBy('lastMessageAt', descending: true)
+          .limit(20)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Chat.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка поиска чатов: $e');
+    }
   }
 
-  /// Получить поток сообщений чата
-  Stream<List<ChatMessage>> getChatMessagesStream(String chatId) {
-    return getChatMessages(chatId);
+  /// Фильтрация чатов
+  Future<List<Chat>> filterChats(String filter) async {
+    try {
+      Query query = _firestore
+          .collection('chats')
+          .where('members', arrayContains: 'current_user_id');
+
+      switch (filter) {
+        case 'unread':
+          query = query.where('unreadCount', isGreaterThan: 0);
+          break;
+        case 'media':
+          query = query.where('hasMedia', isEqualTo: true);
+          break;
+        default:
+          // Все чаты
+          break;
+      }
+
+      query = query.orderBy('lastMessageAt', descending: true);
+      final snapshot = await query.limit(20).get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return Chat.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка фильтрации чатов: $e');
+    }
   }
 
-  /// Получить сообщения чата
-  Stream<List<ChatMessage>> getChatMessages(String chatId) {
-    return _firestore
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .orderBy('createdAt', descending: true)
-        .limit(50)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => ChatMessage.fromFirestore(doc))
-          .toList();
-    });
-  }
-
-  /// Создать новый чат
-  Future<String> createChat({
-    required List<String> participants,
-    String? name,
-    String? description,
-    ChatType type = ChatType.direct,
-  }) async {
+  /// Создать чат
+  Future<String> createChat(String otherUserId, String otherUserName, String? otherUserAvatar) async {
     try {
       final chatData = {
-        'name': name ?? _generateChatName(participants),
-        'description': description,
-        'type': type.value,
-        'participants': participants,
-        'lastMessageId': null,
-        'lastMessageContent': null,
-        'lastMessageSenderId': null,
-        'lastMessageAt': null,
-        'createdAt': Timestamp.now(),
-        'updatedAt': Timestamp.now(),
-        'isActive': true,
-        'unreadCounts': {},
+        'type': 'private',
+        'members': ['current_user_id', otherUserId], // TODO: Получить ID текущего пользователя
+        'memberNames': ['Текущий пользователь', otherUserName], // TODO: Получить имя текущего пользователя
+        'memberAvatars': [null, otherUserAvatar],
+        'lastMessage': '',
+        'lastMessageAt': FieldValue.serverTimestamp(),
+        'unreadCount': 0,
+        'hasMedia': false,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
       };
 
       final docRef = await _firestore.collection('chats').add(chatData);
-
-      // Инициализируем счетчики непрочитанных сообщений
-      for (final participantId in participants) {
-        await _firestore.collection('chats').doc(docRef.id).update({
-          'unreadCounts.$participantId': 0,
-        });
-      }
-
-      debugPrint('✅ Chat created successfully: ${docRef.id}');
       return docRef.id;
     } catch (e) {
-      debugPrint('❌ Error creating chat: $e');
-      rethrow;
+      throw Exception('Ошибка создания чата: $e');
+    }
+  }
+
+  /// Удалить чат
+  Future<void> deleteChat(String chatId) async {
+    try {
+      await _firestore.collection('chats').doc(chatId).delete();
+    } catch (e) {
+      throw Exception('Ошибка удаления чата: $e');
+    }
+  }
+
+  /// Получить сообщения чата
+  Future<List<ChatMessage>> getMessages(String chatId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('createdAt', descending: true)
+          .limit(50)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return ChatMessage.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка загрузки сообщений: $e');
+    }
+  }
+
+  /// Загрузить больше сообщений
+  Future<List<ChatMessage>> getMoreMessages(String chatId, int offset) async {
+    try {
+      final snapshot = await _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('createdAt', descending: true)
+          .startAfter([offset])
+          .limit(20)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return ChatMessage.fromMap(data, doc.id);
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка загрузки дополнительных сообщений: $e');
     }
   }
 
   /// Отправить сообщение
-  Future<String> sendMessage({
-    required String chatId,
-    required String content,
-    MessageType type = MessageType.text,
-    String? replyToMessageId,
-    Map<String, dynamic>? metadata,
-  }) async {
+  Future<void> sendMessage(String chatId, String text, {List<String>? attachments}) async {
     try {
-      final user = _auth.currentUser;
-      if (user == null) throw Exception('User not authenticated');
-
       final messageData = {
-        'chatId': chatId,
-        'senderId': user.uid,
-        'content': content,
-        'type': type.value,
-        'status': MessageStatus.sent.value,
-        'createdAt': Timestamp.now(),
-        'updatedAt': Timestamp.now(),
-        'metadata': metadata,
-        'replyToMessageId': replyToMessageId,
+        'text': text,
+        'senderId': 'current_user_id', // TODO: Получить ID текущего пользователя
+        'senderName': 'Текущий пользователь', // TODO: Получить имя текущего пользователя
+        'attachments': attachments ?? [],
+        'type': 'text',
         'isEdited': false,
+        'editedAt': null,
+        'reactions': {},
+        'createdAt': FieldValue.serverTimestamp(),
       };
 
-      // Добавляем сообщение в подколлекцию
-      final messageRef = await _firestore
+      await _firestore
           .collection('chats')
           .doc(chatId)
           .collection('messages')
           .add(messageData);
 
-      // Обновляем информацию о последнем сообщении в чате
+      // Обновить информацию о чате
       await _firestore.collection('chats').doc(chatId).update({
-        'lastMessageId': messageRef.id,
-        'lastMessageContent': content,
-        'lastMessageSenderId': user.uid,
-        'lastMessageAt': Timestamp.now(),
-        'updatedAt': Timestamp.now(),
+        'lastMessage': text,
+        'lastMessageAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
       });
-
-      // Увеличиваем счетчики непрочитанных сообщений для других участников
-      await _updateUnreadCounts(chatId, user.uid);
-
-      debugPrint('✅ Message sent successfully: ${messageRef.id}');
-      return messageRef.id;
     } catch (e) {
-      debugPrint('❌ Error sending message: $e');
-      rethrow;
-    }
-  }
-
-  /// Отметить сообщения как прочитанные
-  Future<void> markMessagesAsRead(String chatId, String userId) async {
-    try {
-      await _firestore.collection('chats').doc(chatId).update({
-        'unreadCounts.$userId': 0,
-        'updatedAt': Timestamp.now(),
-      });
-
-      debugPrint('✅ Messages marked as read for user: $userId');
-    } catch (e) {
-      debugPrint('❌ Error marking messages as read: $e');
-      rethrow;
+      throw Exception('Ошибка отправки сообщения: $e');
     }
   }
 
   /// Редактировать сообщение
-  Future<void> editMessage({
-    required String chatId,
-    required String messageId,
-    required String newContent,
-  }) async {
+  Future<void> editMessage(String chatId, String messageId, String newText) async {
     try {
       await _firestore
           .collection('chats')
@@ -208,25 +213,12 @@ class ChatService {
           .collection('messages')
           .doc(messageId)
           .update({
-        'content': newContent,
+        'text': newText,
         'isEdited': true,
-        'updatedAt': Timestamp.now(),
+        'editedAt': FieldValue.serverTimestamp(),
       });
-
-      // Обновляем последнее сообщение в чате, если это было последнее сообщение
-      final chatDoc = await _firestore.collection('chats').doc(chatId).get();
-      final chatData = chatDoc.data();
-      if (chatData?['lastMessageId'] == messageId) {
-        await _firestore.collection('chats').doc(chatId).update({
-          'lastMessageContent': newContent,
-          'updatedAt': Timestamp.now(),
-        });
-      }
-
-      debugPrint('✅ Message edited successfully: $messageId');
     } catch (e) {
-      debugPrint('❌ Error editing message: $e');
-      rethrow;
+      throw Exception('Ошибка редактирования сообщения: $e');
     }
   }
 
@@ -239,127 +231,20 @@ class ChatService {
           .collection('messages')
           .doc(messageId)
           .delete();
-
-      debugPrint('✅ Message deleted successfully: $messageId');
     } catch (e) {
-      debugPrint('❌ Error deleting message: $e');
-      rethrow;
+      throw Exception('Ошибка удаления сообщения: $e');
     }
   }
 
-  /// Получить или создать прямой чат между двумя пользователями
-  Future<String> getOrCreateDirectChat(String otherUserId) async {
-    try {
-      final user = _auth.currentUser;
-      if (user == null) throw Exception('User not authenticated');
-
-      // Проверяем, существует ли уже чат между этими пользователями
-      final existingChats = await _firestore
-          .collection('chats')
-          .where('participants', arrayContains: user.uid)
-          .where('type', isEqualTo: ChatType.direct.value)
-          .get();
-
-      for (final doc in existingChats.docs) {
-        final chat = Chat.fromFirestore(doc);
-        if (chat.participants.contains(otherUserId) &&
-            chat.participants.length == 2) {
-          return doc.id;
-        }
-      }
-
-      // Создаем новый чат
-      return await createChat(
-        participants: [user.uid, otherUserId],
-        type: ChatType.direct,
-      );
-    } catch (e) {
-      debugPrint('❌ Error getting or creating direct chat: $e');
-      rethrow;
-    }
-  }
-
-  /// Получить информацию о чате
-  Future<Chat?> getChat(String chatId) async {
-    try {
-      final doc = await _firestore.collection('chats').doc(chatId).get();
-      if (doc.exists) {
-        return Chat.fromFirestore(doc);
-      }
-      return null;
-    } catch (e) {
-      debugPrint('❌ Error getting chat: $e');
-      return null;
-    }
-  }
-
-  /// Удалить чат
-  Future<void> deleteChat(String chatId) async {
+  /// Отметить как прочитанное
+  Future<void> markAsRead(String chatId) async {
     try {
       await _firestore.collection('chats').doc(chatId).update({
-        'isActive': false,
-        'updatedAt': Timestamp.now(),
+        'unreadCount': 0,
+        'updatedAt': FieldValue.serverTimestamp(),
       });
-
-      debugPrint('✅ Chat deleted successfully: $chatId');
     } catch (e) {
-      debugPrint('❌ Error deleting chat: $e');
-      rethrow;
-    }
-  }
-
-  /// Генерировать имя чата
-  String _generateChatName(List<String> participants) {
-    if (participants.length == 2) {
-      return 'Прямой чат';
-    } else {
-      return 'Групповой чат (${participants.length})';
-    }
-  }
-
-  /// Обновить счетчики непрочитанных сообщений
-  Future<void> _updateUnreadCounts(String chatId, String senderId) async {
-    try {
-      final chatDoc = await _firestore.collection('chats').doc(chatId).get();
-      final chat = Chat.fromFirestore(chatDoc);
-
-      final batch = _firestore.batch();
-      final chatRef = _firestore.collection('chats').doc(chatId);
-
-      for (final participantId in chat.participants) {
-        if (participantId != senderId) {
-          final currentCount = chat.unreadCounts[participantId] ?? 0;
-          batch.update(chatRef, {
-            'unreadCounts.$participantId': currentCount + 1,
-          });
-        }
-      }
-
-      await batch.commit();
-    } catch (e) {
-      debugPrint('❌ Error updating unread counts: $e');
-    }
-  }
-
-  /// Получить количество непрочитанных сообщений для пользователя
-  Future<int> getTotalUnreadCount(String userId) async {
-    try {
-      final chats = await _firestore
-          .collection('chats')
-          .where('participants', arrayContains: userId)
-          .where('isActive', isEqualTo: true)
-          .get();
-
-      int totalUnread = 0;
-      for (final doc in chats.docs) {
-        final chat = Chat.fromFirestore(doc);
-        totalUnread += chat.getUnreadCount(userId);
-      }
-
-      return totalUnread;
-    } catch (e) {
-      debugPrint('❌ Error getting total unread count: $e');
-      return 0;
+      throw Exception('Ошибка отметки как прочитанное: $e');
     }
   }
 }
